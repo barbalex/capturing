@@ -1,9 +1,15 @@
+import { useContext } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
+import { observer } from 'mobx-react-lite'
 
 import styles from '../styles/Home.module.css'
+import StoreContext from '../storeContext'
 
-export default function Home() {
+const Home = () => {
+  const store = useContext(StoreContext)
+  console.log('Home', { supabase: store.supabase })
+
   return (
     <div className={styles.container}>
       <Head>
@@ -68,3 +74,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default observer(Home)
