@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   )
-  console.log({ supabase })
+  store.setSupabase(supabase)
 
   return (
     <DatabaseProvider database={db}>
