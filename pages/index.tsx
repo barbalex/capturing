@@ -9,11 +9,13 @@ import { definitions } from '../types/supabase'
 
 const Home = () => {
   const { supabase } = useContext(StoreContext)
+  console.log('Home, definitions:', definitions)
 
   const [projects, setProjects] = useState([])
   useEffect(() => {
     supabase
-      .from<definitions['field_types']>('field_types')
+      //.from<definitions['field_types']>('field_types')
+      .from('field_types')
       .select('*')
       .then((field_types) => {
         console.log('Home, field_types:', field_types)

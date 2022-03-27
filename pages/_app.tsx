@@ -10,12 +10,12 @@ import initiateDb from '../modules/initiateDb'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const store = MobxStore.create()
-  const db = initiateDb()
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   )
   store.setSupabase(supabase)
+  const db = initiateDb()
 
   return (
     <StyledEngineProvider injectFirst>
