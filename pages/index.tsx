@@ -1,14 +1,10 @@
 import Head from 'next/head'
 import Image from 'next/image'
 
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
-
-import materialTheme from '../modules/materialTheme'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
   return (
-    <ThemeProvider theme={materialTheme}>
     <div className={styles.container}>
       <Head>
         <title>Create Next App</title>
@@ -69,6 +65,6 @@ export default function Home() {
           </span>
         </a>
       </footer>
-    </div></ThemeProvider>
+    </div>
   )
 }
