@@ -1210,11 +1210,12 @@ __metadata:
     "@types/node": 17.0.23
     "@types/react": 17.0.43
     dayjs: 1.11.0
-    eslint: ^8.12.0
+    eslint: 8.12.0
     eslint-config-next: 12.1.1
-    eslint-config-prettier: ^8.5.0
-    eslint-plugin-react: ^7.29.4
-    eslint-plugin-react-hooks: ^4.3.0
+    eslint-config-prettier: 8.5.0
+    eslint-plugin-react: 7.29.4
+    eslint-plugin-react-hooks: 4.3.0
+    lodash: ^4.17.21
     mobx: 6.5.0
     mobx-react-lite: 3.3.0
     mobx-state-tree: 5.1.3
@@ -1226,14 +1227,15 @@ __metadata:
     react-dom: 17.0.2
     react-error-boundary: 3.1.4
     react-icons: 4.3.1
-    react-is: ^17.0.2
+    react-is: 17.0.2
     react-select: 5.2.2
     react-split-pane: 0.1.92
     rxjs: 7.5.2
     simplebar: 5.3.6
     simplebar-react: 2.3.6
-    styled-components: ^5.3.5
+    styled-components: 5.3.5
     typescript: 4.6.3
+    uuid: ^8.3.2
     vercel: 24.0.1
   languageName: unknown
   linkType: soft
@@ -1716,7 +1718,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:^8.5.0":
+"eslint-config-prettier@npm:8.5.0":
   version: 8.5.0
   resolution: "eslint-config-prettier@npm:8.5.0"
   peerDependencies:
@@ -1818,7 +1820,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:4.3.0, eslint-plugin-react-hooks@npm:^4.3.0":
+"eslint-plugin-react-hooks@npm:4.3.0":
   version: 4.3.0
   resolution: "eslint-plugin-react-hooks@npm:4.3.0"
   peerDependencies:
@@ -1851,7 +1853,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.29.4":
+"eslint-plugin-react@npm:7.29.4":
   version: 7.29.4
   resolution: "eslint-plugin-react@npm:7.29.4"
   dependencies:
@@ -1910,7 +1912,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.12.0":
+"eslint@npm:8.12.0":
   version: 8.12.0
   resolution: "eslint@npm:8.12.0"
   dependencies:
@@ -2774,7 +2776,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.11":
+"lodash@npm:^4.17.11, lodash@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -3410,17 +3412,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-is@npm:17.0.2, react-is@npm:^17.0.2":
+  version: 17.0.2
+  resolution: "react-is@npm:17.0.2"
+  checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f
-  languageName: node
-  linkType: hard
-
-"react-is@npm:^17.0.2":
-  version: 17.0.2
-  resolution: "react-is@npm:17.0.2"
-  checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
   languageName: node
   linkType: hard
 
@@ -3905,7 +3907,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"styled-components@npm:^5.3.5":
+"styled-components@npm:5.3.5":
   version: 5.3.5
   resolution: "styled-components@npm:5.3.5"
   dependencies:
@@ -4219,6 +4221,15 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0
   checksum: 96e64977a573244fd11350a3141b2cf57fb72dd9dd902f387c8a0a565d0a948bc81588bd7378c6ef6defc0d1119f37f73aac4a7a287c8443abd444bd4e7bbea8
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^8.3.2":
+  version: 8.3.2
+  resolution: "uuid@npm:8.3.2"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 5575a8a75c13120e2f10e6ddc801b2c7ed7d8f3c8ac22c7ed0c7b2ba6383ec0abda88c905085d630e251719e0777045ae3236f04c812184b7c765f63a70e58df
   languageName: node
   linkType: hard
 

@@ -1,6 +1,6 @@
 import { appSchema } from '@nozbe/watermelondb'
 
-// TODO: add tables
+// TODO: import and add tables
 export const tables = []
 
 export default appSchema({
