@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS users CASCADE;
 
 --
 CREATE TABLE users (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   name text DEFAULT NULL,
   -- TODO: email needs to be unique
   -- project manager can list project users by email without knowing if this user already exists
@@ -55,7 +55,7 @@ DROP TABLE IF EXISTS accounts CASCADE;
 
 --
 CREATE TABLE accounts (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   -- service_id is not needed - TODO: remove
   service_id text DEFAULT NULL,
   -- uid of firebase
@@ -95,7 +95,7 @@ ALTER TABLE users
 --drop table if exists account_managers cascade;
 --
 --create table account_managers (
---  id uuid primary key default uuid_generate_v1mc(),
+--  id uuid primary key default gen_random_uuid (),
 --  account_id uuid default null references accounts (id) on delete no action on update cascade,
 --  user_id uuid default null references users (id) on delete no action on update cascade,
 --);
@@ -110,7 +110,7 @@ DROP TABLE IF EXISTS projects CASCADE;
 
 --
 CREATE TABLE projects (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   account_id uuid DEFAULT NULL REFERENCES accounts (id) ON DELETE NO action ON UPDATE CASCADE,
   name text DEFAULT NULL,
   label text DEFAULT NULL,
@@ -195,7 +195,7 @@ DROP TABLE IF EXISTS option_types CASCADE;
 
 --
 CREATE TABLE option_types (
-  id uuid DEFAULT uuid_generate_v1mc (),
+  id uuid DEFAULT gen_random_uuid (),
   value text PRIMARY KEY,
   save_id boolean DEFAULT FALSE,
   sort smallint DEFAULT NULL,
@@ -230,7 +230,7 @@ COMMENT ON COLUMN option_types.server_rev_at IS 'time of last edit on server';
 
 --
 CREATE TABLE tables (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   project_id uuid DEFAULT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
   parent_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
   rel_type text DEFAULT 'n' REFERENCES rel_types (value) ON DELETE NO action ON UPDATE CASCADE,
@@ -395,7 +395,7 @@ DROP TABLE IF EXISTS fields CASCADE;
 
 --
 CREATE TABLE fields (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   table_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
   name text DEFAULT NULL,
   label text DEFAULT NULL,
@@ -461,7 +461,7 @@ DROP TABLE IF EXISTS ROWS CASCADE;
 
 --
 CREATE TABLE ROWS (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   table_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
   parent_id uuid DEFAULT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
   geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
@@ -525,7 +525,7 @@ DROP TABLE IF EXISTS row_revs CASCADE;
 
 --
 CREATE TABLE row_revs (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   row_id uuid DEFAULT NULL,
   table_id uuid DEFAULT NULL,
   parent_id uuid DEFAULT NULL,
@@ -581,7 +581,7 @@ DROP TABLE IF EXISTS files CASCADE;
 
 --
 CREATE TABLE files (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   row_id uuid DEFAULT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
   field_id uuid DEFAULT NULL REFERENCES fields (id) ON DELETE NO action ON UPDATE CASCADE,
   filename text DEFAULT NULL,
@@ -638,7 +638,7 @@ DROP TABLE IF EXISTS file_revs CASCADE;
 
 --
 CREATE TABLE file_revs (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   row_id uuid DEFAULT NULL,
   file_id uuid DEFAULT NULL,
   field_id uuid DEFAULT NULL,
@@ -724,7 +724,7 @@ DROP TABLE IF EXISTS project_users CASCADE;
 
 --
 CREATE TABLE project_users (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   project_id uuid DEFAULT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
   --user_id uuid default null references users (id) on delete no action on update cascade,
   user_email text DEFAULT NULL,
@@ -829,7 +829,7 @@ DROP TABLE IF EXISTS news CASCADE;
 
 --
 CREATE TABLE news (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   time timestamp with time zone DEFAULT now(),
   version_type text DEFAULT 'minor' REFERENCES version_types (value) ON DELETE NO action ON UPDATE CASCADE,
   version text DEFAULT NULL,
@@ -864,7 +864,7 @@ DROP TABLE IF EXISTS news_delivery CASCADE;
 
 --
 CREATE TABLE news_delivery (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   news_id uuid DEFAULT NULL REFERENCES news (id) ON DELETE NO action ON UPDATE CASCADE,
   user_id uuid DEFAULT NULL REFERENCES users (id) ON DELETE NO action ON UPDATE CASCADE,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -894,8 +894,10 @@ COMMENT ON COLUMN news_delivery.server_rev_at IS 'time of last edit on server';
 -- TODO: tile_layers
 --comment on table tile_layers IS 'Goal: Bring your own raster layers. File and/or wms. Not versioned (not recorded and only added by manager)';
 --
+DROP TABLE IF EXISTS tile_layers CASCADE;
+
 CREATE TABLE tile_layers (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   label text DEFAULT NULL,
   url_template text DEFAULT NULL,
   subdomains text[] DEFAULT NULL,
@@ -924,8 +926,10 @@ CREATE INDEX ON tile_layers USING btree (deleted);
 COMMENT ON TABLE project_users IS 'Goal: Bring your own tile layers. Not versioned (not recorded and only added by manager). Field definitions, see: https://pub.dev/documentation/flutter_map/latest/flutter_map/flutter_map-library.html';
 
 --
+DROP TABLE IF EXISTS project_tile_layers CASCADE;
+
 CREATE TABLE project_tile_layers (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v1mc (),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   label text DEFAULT NULL,
   ord smallint DEFAULT 0,
   active boolean DEFAULT FALSE,
