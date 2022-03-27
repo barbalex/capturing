@@ -27,21 +27,22 @@
     "react-dom": "17.0.2",
     "react-error-boundary": "3.1.4",
     "react-icons": "4.3.1",
-    "react-is": "^17.0.2",
+    "react-is": "17.0.2",
     "react-select": "5.2.2",
     "react-split-pane": "0.1.92",
     "rxjs": "7.5.2",
     "simplebar": "5.3.6",
     "simplebar-react": "2.3.6",
-    "styled-components": "^5.3.5"
+    "styled-components": "5.3.5"
   },
   "devDependencies": {
     "@types/node": "17.0.23",
     "@types/react": "17.0.43",
-    "eslint": "^8.12.0",
+    "eslint": "8.12.0",
     "eslint-config-next": "12.1.1",
-    "eslint-plugin-react": "^7.29.4",
-    "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-react": "7.29.4",
+    "eslint-plugin-react-hooks": "4.3.0",
     "typescript": "4.6.3",
     "vercel": "24.0.1"
   },
