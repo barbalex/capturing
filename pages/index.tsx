@@ -1,14 +1,26 @@
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import { observer } from 'mobx-react-lite'
 
 import styles from '../styles/Home.module.css'
 import StoreContext from '../storeContext'
+import { definitions } from '../types/supabase'
 
 const Home = () => {
-  const store = useContext(StoreContext)
-  console.log('Home', { supabase: store.supabase })
+  const { supabase } = useContext(StoreContext)
+  console.log('Home', { definitions, supabase })
+
+  const [projects, setProjects] = useState([])
+  useEffect(() => {
+    supabase
+      .from<definitions['field_types']>('field_types')
+      .select('*')
+      .then((field_types) => {
+        console.log('Home, field_types:', field_types)
+        setProjects(field_types)
+      })
+  }, [supabase])
 
   return (
     <div className={styles.container}>
