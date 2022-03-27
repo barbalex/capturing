@@ -1,6 +1,5 @@
 import type { AppProps } from 'next/app'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
-import DatabaseProvider from '@nozbe/watermelondb/DatabaseProvider'
 import { createClient } from '@supabase/supabase-js'
 
 import materialTheme from '../modules/materialTheme'
@@ -19,15 +18,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   store.setSupabase(supabase)
 
   return (
-    <DatabaseProvider database={db}>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={materialTheme}>
-          <MobxProvider value={store}>
-            <Component {...pageProps} />
-          </MobxProvider>
-        </ThemeProvider>
-      </StyledEngineProvider>
-    </DatabaseProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={materialTheme}>
+        <MobxProvider value={store}>
+          <Component {...pageProps} />
+        </MobxProvider>
+      </ThemeProvider>
+    </StyledEngineProvider>
   )
 }
 

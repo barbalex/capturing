@@ -154,7 +154,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.17.2, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.7":
+"@babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.17.2, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.7":
   version: 7.17.8
   resolution: "@babel/runtime@npm:7.17.8"
   dependencies:
@@ -649,49 +649,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nozbe/simdjson@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@nozbe/simdjson@npm:1.0.0"
-  checksum: 283eb33917a3a0ffc627ac87e39f3aa8bd3a2057e40607452ab497158dff90d791533028489264172a30476f1a217f4f0f75082f54e0c0e8fc0ece4a40e1e99b
-  languageName: node
-  linkType: hard
-
-"@nozbe/sqlite@npm:3.36.0":
-  version: 3.36.0
-  resolution: "@nozbe/sqlite@npm:3.36.0"
-  checksum: 2e432398aad78b6244339974ee9371dfecb78f46bc1aa179fbb74dff673dc728fad394aba0371599414b62842de7085635b74cb5eb0c5c6200578ecdac3453de
-  languageName: node
-  linkType: hard
-
-"@nozbe/watermelondb@npm:0.24.0":
-  version: 0.24.0
-  resolution: "@nozbe/watermelondb@npm:0.24.0"
-  dependencies:
-    "@babel/runtime": ^7.11.2
-    "@nozbe/simdjson": 1.0.0
-    "@nozbe/sqlite": 3.36.0
-    "@nozbe/with-observables": 1.4.0
-    hoist-non-react-statics: ^3.3.2
-    lokijs: "npm:@nozbe/lokijs@1.5.12-wmelon4"
-    rxjs: ^7.3.0
-    sql-escape-string: ^1.1.0
-  checksum: 7306e150857c90650d2872a8a368f5f25555a0ca3df40737424e546e8cc9c4de6f91f0ea782e29799882205436de25f45845b55454e1aa03f4dc42a740c96d45
-  languageName: node
-  linkType: hard
-
-"@nozbe/with-observables@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@nozbe/with-observables@npm:1.4.0"
-  dependencies:
-    hoist-non-react-statics: ^3.3.2
-  peerDependencies:
-    "@types/hoist-non-react-statics": ^3.3.1
-    "@types/react": ^16.9.23||^17
-    react: ^16.4.2||^17
-  checksum: 8d0212131c040ab8a4938de10c457de0c85cd2f3472897a99afde06c72a66e3977c55c934a6342eb9aec85490ce6126ef61d8118861fc086f47f54111abf001e
-  languageName: node
-  linkType: hard
-
 "@npmcli/fs@npm:^2.1.0":
   version: 2.1.0
   resolution: "@npmcli/fs@npm:2.1.0"
@@ -782,7 +739,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supabase/supabase-js@npm:^1.32.2":
+"@supabase/supabase-js@npm:1.32.2":
   version: 1.32.2
   resolution: "@supabase/supabase-js@npm:1.32.2"
   dependencies:
@@ -1424,8 +1381,7 @@ __metadata:
     "@mui/material": 5.5.2
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
     "@mui/styled-engine-sc": 5.5.2
-    "@nozbe/watermelondb": 0.24.0
-    "@supabase/supabase-js": ^1.32.2
+    "@supabase/supabase-js": 1.32.2
     "@types/node": 17.0.23
     "@types/react": 17.0.43
     dayjs: 1.11.0
@@ -1434,7 +1390,7 @@ __metadata:
     eslint-config-prettier: 8.5.0
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.3.0
-    lodash: ^4.17.21
+    lodash: 4.17.21
     mobx: 6.5.0
     mobx-react-lite: 3.3.0
     mobx-state-tree: 5.1.3
@@ -1454,7 +1410,7 @@ __metadata:
     simplebar-react: 2.3.6
     styled-components: 5.3.5
     typescript: 4.6.3
-    uuid: ^8.3.2
+    uuid: 8.3.2
     vercel: 24.0.1
   languageName: unknown
   linkType: soft
@@ -3228,17 +3184,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.11, lodash@npm:^4.17.21":
+"lodash@npm:4.17.21, lodash@npm:^4.17.11":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
-  languageName: node
-  linkType: hard
-
-"lokijs@npm:@nozbe/lokijs@1.5.12-wmelon4":
-  version: 1.5.12-wmelon4
-  resolution: "@nozbe/lokijs@npm:1.5.12-wmelon4"
-  checksum: 3b646ff9d7050d6dd283bc4c5e75ef62859e0eb8b7e5905c4f926db5cae9ba818d8b5f393297ca3a662e9d20f7d8633cc7c7a4c183bb23b2659a38cd7551898b
   languageName: node
   linkType: hard
 
@@ -4350,15 +4299,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^7.3.0":
-  version: 7.5.5
-  resolution: "rxjs@npm:7.5.5"
-  dependencies:
-    tslib: ^2.1.0
-  checksum: e034f60805210cce756dd2f49664a8108780b117cf5d0e2281506e9e6387f7b4f1532d974a8c8b09314fa7a16dd2f6cff3462072a5789672b5dcb45c4173f3c6
-  languageName: node
-  linkType: hard
-
 "safe-buffer@npm:~5.1.1":
   version: 5.1.2
   resolution: "safe-buffer@npm:5.1.2"
@@ -4557,13 +4497,6 @@ __metadata:
   version: 0.6.1
   resolution: "source-map@npm:0.6.1"
   checksum: 59ce8640cf3f3124f64ac289012c2b8bd377c238e316fb323ea22fbfe83da07d81e000071d7242cad7a23cd91c7de98e4df8830ec3f133cb6133a5f6e9f67bc2
-  languageName: node
-  linkType: hard
-
-"sql-escape-string@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "sql-escape-string@npm:1.1.0"
-  checksum: 4e65c06031ba81d2bf3d94301b606d2c0254a2b0725ae426bb32015e407dedd45942c85386a8cacad64a76714d296652f94500331657a7676a57b1be48b85380
   languageName: node
   linkType: hard
 
@@ -5049,7 +4982,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^8.3.2":
+"uuid@npm:8.3.2":
   version: 8.3.2
   resolution: "uuid@npm:8.3.2"
   bin:

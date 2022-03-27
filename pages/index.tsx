@@ -9,7 +9,6 @@ import { definitions } from '../types/supabase'
 
 const Home = () => {
   const { supabase } = useContext(StoreContext)
-  console.log('Home', { definitions, supabase })
 
   const [projects, setProjects] = useState([])
   useEffect(() => {
