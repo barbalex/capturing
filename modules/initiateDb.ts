@@ -127,9 +127,44 @@ export interface ProjectReader {
   deleted?: boolean
 }
 
+export interface ProjectTileLayer {
+  id: string
+  label?: string
+  ord?: number
+  active?: boolean
+  project_id?: string
+  url_template?: string
+  subdomains?: string[]
+  max_zoom?: number
+  min_zoom?: number
+  opacity?: number
+  wms_base_url?: string
+  wms_format?: string
+  wms_layers?: string[]
+  wms_parameters?: string
+  wms_request?: string
+  wms_service?: string
+  wms_styles?: string[]
+  wms_transparent?: boolean
+  wms_version?: string
+  client_rev_at?: string
+  client_rev_by?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+
+export interface ProjectUser {
+  id: string
+  project_id?: string
+  user_email?: string
+  role?: string
+  client_rev_at?: string
+  client_rev_by?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+
 // const {
-//   project_readers,
-//   project_tile_layers,
 //   project_users,
 //   projects,
 //   rel_types,
@@ -157,6 +192,8 @@ export class db extends Dexie {
   project_editors!: Table<ProjectEditor>
   project_managers!: Table<ProjectManager>
   project_readers!: Table<ProjectReader>
+  project_tile_layers!: Table<ProjectTileLayer>
+  project_users!: Table<ProjectTileLayer>
 
   constructor() {
     super('capturing')
@@ -172,6 +209,8 @@ export class db extends Dexie {
       project_editors: '++id, user_email, deleted, server_rev_at',
       project_managers: '++id, user_email, deleted, server_rev_at',
       project_readers: '++id, user_email, deleted, server_rev_at',
+      project_tile_layers: '++id, label, ord, active, deleted, server_rev_at',
+      project_users: '++id, user_email, deleted, server_rev_at',
     })
   }
 }
