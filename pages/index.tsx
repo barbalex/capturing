@@ -22,7 +22,7 @@ const Home = () => {
     }
     run()
   }, [supabase])
-  console.log('Home', { projects })
+  // console.log('Home', { projects })
 
   return (
     <div className={styles.container}>

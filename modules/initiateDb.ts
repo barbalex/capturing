@@ -77,9 +77,35 @@ export interface New {
   deleted?: boolean
 }
 
+export interface NewsDelivery {
+  id: string
+  news_id?: string
+  user_id?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+
+export interface OptionType {
+  id?: string
+  value: string
+  save_id?: boolean
+  sort?: number
+  comment?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+export interface ProjectEditor {
+  id?: string
+  project_id?: string
+  user_email?: string
+  role?: string
+  client_rev_at?: string
+  client_rev_by?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+
 // const {
-//   news_delivery,
-//   option_types,
 //   project_editors,
 //   project_managers,
 //   project_readers,
@@ -106,6 +132,9 @@ export class db extends Dexie {
   file_revs!: Table<FileRev>
   files!: Table<File>
   news!: Table<New>
+  news_delivery!: Table<Newsdelivery>
+  option_types!: Table<OptionType>
+  project_editors!: Table<ProjectEditor>
 
   constructor() {
     super('capturing')
@@ -116,6 +145,9 @@ export class db extends Dexie {
       file_revs: '++id, filename, deleted, server_rev_at',
       files: '++id, filename, deleted, server_rev_at',
       news: '++id, time, deleted, server_rev_at',
+      news_delivery: '++id, deleted, server_rev_at',
+      option_types: '++id, value, sort, deleted, server_rev_at',
+      project_editors: '++id, user_email, deleted, server_rev_at',
     })
   }
 }

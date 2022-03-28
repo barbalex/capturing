@@ -16,7 +16,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
   store.setSupabase(supabase)
   store.setDb(db)
-  console.log('app, db:', db)
 
   return (
     <StyledEngineProvider injectFirst>
