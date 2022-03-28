@@ -158,7 +158,8 @@ DROP TABLE IF EXISTS rel_types CASCADE;
 
 --
 CREATE TABLE rel_types (
-  value text PRIMARY KEY,
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+  value text unique,
   sort smallint DEFAULT NULL,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -195,8 +196,8 @@ DROP TABLE IF EXISTS option_types CASCADE;
 
 --
 CREATE TABLE option_types (
-  id uuid DEFAULT gen_random_uuid (),
-  value text PRIMARY KEY,
+  id uuid primary key DEFAULT gen_random_uuid (),
+  value text unique,
   save_id boolean DEFAULT FALSE,
   sort smallint DEFAULT NULL,
   comment text,
@@ -239,7 +240,7 @@ CREATE TABLE tables (
   single_label text DEFAULT NULL,
   label_fields text[] DEFAULT NULL,
   label_fields_separator text DEFAULT ', ',
-  ord smallint DEFAULT NULL,
+  sort smallint DEFAULT NULL,
   option_type text REFERENCES option_types (value) ON DELETE NO action ON UPDATE CASCADE,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
@@ -261,7 +262,7 @@ CREATE INDEX ON tables USING btree (name);
 
 CREATE INDEX ON tables USING btree (label);
 
-CREATE INDEX ON tables USING btree (ord);
+CREATE INDEX ON tables USING btree (sort);
 
 CREATE INDEX ON tables USING btree (option_type);
 
@@ -281,7 +282,7 @@ COMMENT ON COLUMN tables.name IS 'name for use in db and url (lowercase, no spec
 
 COMMENT ON COLUMN tables.label IS 'name for use when labeling';
 
-COMMENT ON COLUMN tables.ord IS 'enables ordering the tables of a project';
+COMMENT ON COLUMN tables.sort IS 'enables ordering the tables of a project';
 
 COMMENT ON COLUMN tables.label_fields IS 'fields used to label and sort rows';
 
@@ -299,7 +300,8 @@ DROP TABLE IF EXISTS field_types CASCADE;
 
 --
 CREATE TABLE field_types (
-  value text PRIMARY KEY,
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+  value text unique,
   sort smallint DEFAULT NULL,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -328,7 +330,8 @@ DROP TABLE IF EXISTS widget_types CASCADE;
 
 --
 CREATE TABLE widget_types (
-  value text PRIMARY KEY,
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+  value text unique,
   needs_list boolean DEFAULT FALSE,
   sort smallint DEFAULT NULL,
   comment text,
@@ -366,11 +369,12 @@ DROP TABLE IF EXISTS widgets_for_fields;
 
 --
 CREATE TABLE widgets_for_fields (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   field_value text REFERENCES field_types (value) ON DELETE CASCADE ON UPDATE CASCADE,
   widget_value text REFERENCES widget_types (value) ON DELETE CASCADE ON UPDATE CASCADE,
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted boolean DEFAULT FALSE,
-  PRIMARY KEY (field_value, widget_value)
+  unique (field_value, widget_value)
 );
 
 CREATE INDEX ON widgets_for_fields USING btree (field_value);
@@ -399,7 +403,7 @@ CREATE TABLE fields (
   table_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
   name text DEFAULT NULL,
   label text DEFAULT NULL,
-  ord smallint DEFAULT 0,
+  sort smallint DEFAULT 0,
   is_internal_id boolean DEFAULT FALSE,
   field_type text DEFAULT 'text' REFERENCES field_types (value) ON DELETE NO action ON UPDATE CASCADE,
   widget_type text DEFAULT 'text' REFERENCES widget_types (value) ON DELETE NO action ON UPDATE CASCADE,
@@ -423,7 +427,7 @@ CREATE INDEX ON fields USING btree (name);
 
 CREATE INDEX ON fields USING btree (label);
 
-CREATE INDEX ON fields USING btree (ord);
+CREATE INDEX ON fields USING btree (sort);
 
 CREATE INDEX ON fields USING btree (options_table);
 
@@ -439,7 +443,7 @@ COMMENT ON COLUMN fields.name IS 'name for use in db and url (lowercase, no spec
 
 COMMENT ON COLUMN fields.label IS 'name for use when labeling';
 
-COMMENT ON COLUMN fields.ord IS 'enables ordering the field list of a table';
+COMMENT ON COLUMN fields.sort IS 'enables ordering the field list of a table';
 
 COMMENT ON COLUMN fields.is_internal_id IS 'is this table used as an id in the users own system?';
 
@@ -689,7 +693,8 @@ DROP TABLE IF EXISTS role_types CASCADE;
 
 --
 CREATE TABLE role_types (
-  value text PRIMARY KEY,
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+  value text unique,
   sort smallint DEFAULT 1,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -794,7 +799,8 @@ DROP TABLE IF EXISTS version_types CASCADE;
 
 --
 CREATE TABLE version_types (
-  value text PRIMARY KEY,
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+  value text unique,
   sort smallint DEFAULT NULL,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -931,7 +937,7 @@ DROP TABLE IF EXISTS project_tile_layers CASCADE;
 CREATE TABLE project_tile_layers (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   label text DEFAULT NULL,
-  ord smallint DEFAULT 0,
+  sort smallint DEFAULT 0,
   active boolean DEFAULT FALSE,
   project_id uuid DEFAULT NULL REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE,
   url_template text DEFAULT NULL,
@@ -956,7 +962,7 @@ CREATE TABLE project_tile_layers (
 
 CREATE INDEX ON project_tile_layers USING btree (id);
 
-CREATE INDEX ON project_tile_layers USING btree (ord);
+CREATE INDEX ON project_tile_layers USING btree (sort);
 
 CREATE INDEX ON project_tile_layers USING btree (deleted);
 

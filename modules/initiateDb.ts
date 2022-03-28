@@ -20,7 +20,7 @@ export interface Field {
   table_id?: string
   name?: string
   label?: string
-  ord?: number
+  sort?: number
   is_internal_id?: boolean
   field_type?: string
   widget_type?: string
@@ -130,7 +130,7 @@ export interface ProjectReader {
 export interface ProjectTileLayer {
   id: string
   label?: string
-  ord?: number
+  sort?: number
   active?: boolean
   project_id?: string
   url_template?: string
@@ -244,7 +244,7 @@ export interface CTable {
   single_label?: string
   label_fields?: string[]
   label_fields_separator?: string
-  ord?: number
+  sort?: number
   option_type?: string
   client_rev_at?: string
   client_rev_by?: string
@@ -292,11 +292,20 @@ export interface VersionType {
   server_rev_at?: string
   deleted?: boolean
 }
+export interface WidgetType {
+  value: string
+  needs_list?: boolean
+  sort?: number
+  comment?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+export interface WidgetForField {
+  field_value: string
+  widget_value: string
+  server_rev_at?: string
+}
 
-// const {
-//   widget_types,
-//   widgets_for_fields,
-// } = definitions
 export class db extends Dexie {
   // 'friends' is added by dexie when declaring the stores()
   // We just tell the typing system this is the case
@@ -321,33 +330,36 @@ export class db extends Dexie {
   tables!: Table<CTable>
   tile_layers!: Table<TileLayer>
   users!: Table<User>
-  version_types!: Table<CTable>
+  version_types!: Table<VersionType>
+  widget_types!: Table<WidgetType>
+  widgets_for_fields!: Table<WidgetForField>
 
   constructor() {
     super('capturing')
     this.version(1).stores({
-      accounts: '++id, deleted, server_rev_at',
-      field_types: '++id, deleted, server_rev_at',
-      field_types: '++id, label, ord, deleted, server_rev_at',
-      file_revs: '++id, filename, deleted, server_rev_at',
-      files: '++id, filename, deleted, server_rev_at',
-      news: '++id, time, deleted, server_rev_at',
-      news_delivery: '++id, deleted, server_rev_at',
-      option_types: '++id, value, sort, deleted, server_rev_at',
-      project_editors: '++id, user_email, deleted, server_rev_at',
-      project_managers: '++id, user_email, deleted, server_rev_at',
-      project_readers: '++id, user_email, deleted, server_rev_at',
-      project_tile_layers: '++id, label, ord, active, deleted, server_rev_at',
-      project_users: '++id, user_email, deleted, server_rev_at',
-      projects: '++id, label, deleted, server_rev_at',
-      rel_types: '++id, sort, deleted, server_rev_at',
-      role_types: '++id, sort, deleted, server_rev_at',
-      row_revs: '++id, deleted, server_rev_at',
-      rows: '++id, deleted, server_rev_at',
-      tables: '++id, label, ord, deleted, server_rev_at',
-      tile_layers: '++id, label,  deleted, server_rev_at',
-      users: '++id, name,  deleted, server_rev_at',
-      version_types: '++id, value, sort,  deleted, server_rev_at',
+      accounts: 'id, deleted, server_rev_at',
+      field_types: 'id, &value, sort, deleted, server_rev_at',
+      file_revs: 'id, filename, deleted, server_rev_at',
+      files: 'id, filename, deleted, server_rev_at',
+      news: 'id, time, deleted, server_rev_at',
+      news_delivery: 'id, deleted, server_rev_at',
+      option_types: 'id, &value, sort, deleted, server_rev_at',
+      project_editors: 'id, user_email, deleted, server_rev_at',
+      project_managers: 'id, user_email, deleted, server_rev_at',
+      project_readers: 'id, user_email, deleted, server_rev_at',
+      project_tile_layers: 'id, label, sort, active, deleted, server_rev_at',
+      project_users: 'id, user_email, deleted, server_rev_at',
+      projects: 'id, label, deleted, server_rev_at',
+      rel_types: 'id, &value, sort, deleted, server_rev_at',
+      role_types: 'id, &value, sort, deleted, server_rev_at',
+      row_revs: 'id, deleted, server_rev_at',
+      rows: 'id, deleted, server_rev_at',
+      tables: 'id, label, sort, deleted, server_rev_at',
+      tile_layers: 'id, label,  deleted, server_rev_at',
+      users: 'id, name,  deleted, server_rev_at',
+      version_types: 'id, &value, sort, deleted, server_rev_at',
+      widget_types: 'id, &value, sort, deleted, server_rev_at',
+      widgets_for_fields: 'id, server_rev_at',
     })
   }
 }

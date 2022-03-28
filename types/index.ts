@@ -3,69 +3,6 @@
  * Do not make direct changes to the file.
  */
 
-export interface definitions {
-  version_types: {}
-  /** @description Goal: list of widget_types */
-  widget_types: {
-    /**
-     * Format: text
-     * @description the relation type
-     *
-     * Note:
-     * This is a Primary Key.<pk/>
-     */
-    value: string
-    /**
-     * Format: boolean
-     * @description whether the widget needs an options list
-     */
-    needs_list?: boolean
-    /**
-     * Format: smallint
-     * @description enables sorting at will
-     */
-    sort?: number
-    /**
-     * Format: text
-     * @description explains the version type
-     */
-    comment?: string
-    /**
-     * Format: timestamp with time zone
-     * @description time of last edit on server
-     * @default now()
-     */
-    server_rev_at?: string
-    /** Format: boolean */
-    deleted?: boolean
-  }
-  /** @description Goal: know what widgets can be choosen for what field_types */
-  widgets_for_fields: {
-    /**
-     * Format: text
-     * @description Note:
-     * This is a Primary Key.<pk/>
-     * This is a Foreign Key to `field_types.value`.<fk table='field_types' column='value'/>
-     */
-    field_value: string
-    /**
-     * Format: text
-     * @description Note:
-     * This is a Primary Key.<pk/>
-     * This is a Foreign Key to `widget_types.value`.<fk table='widget_types' column='value'/>
-     */
-    widget_value: string
-    /**
-     * Format: timestamp with time zone
-     * @description time of last edit on server
-     * @default now()
-     */
-    server_rev_at?: string
-    /** Format: boolean */
-    deleted?: boolean
-  }
-}
-
 export interface parameters {
   /**
    * @description Preference
