@@ -4,66 +4,6 @@
  */
 
 export interface definitions {
-  project_managers: {
-    /**
-     * Format: uuid
-     * @description Note:
-     * This is a Primary Key.<pk/>
-     */
-    id?: string
-    /**
-     * Format: uuid
-     * @description Note:
-     * This is a Foreign Key to `projects.id`.<fk table='projects' column='id'/>
-     */
-    project_id?: string
-    /** Format: text */
-    user_email?: string
-    /**
-     * Format: text
-     * @description Note:
-     * This is a Foreign Key to `role_types.value`.<fk table='role_types' column='value'/>
-     */
-    role?: string
-    /** Format: timestamp with time zone */
-    client_rev_at?: string
-    /** Format: text */
-    client_rev_by?: string
-    /** Format: timestamp with time zone */
-    server_rev_at?: string
-    /** Format: boolean */
-    deleted?: boolean
-  }
-  project_readers: {
-    /**
-     * Format: uuid
-     * @description Note:
-     * This is a Primary Key.<pk/>
-     */
-    id?: string
-    /**
-     * Format: uuid
-     * @description Note:
-     * This is a Foreign Key to `projects.id`.<fk table='projects' column='id'/>
-     */
-    project_id?: string
-    /** Format: text */
-    user_email?: string
-    /**
-     * Format: text
-     * @description Note:
-     * This is a Foreign Key to `role_types.value`.<fk table='role_types' column='value'/>
-     */
-    role?: string
-    /** Format: timestamp with time zone */
-    client_rev_at?: string
-    /** Format: text */
-    client_rev_by?: string
-    /** Format: timestamp with time zone */
-    server_rev_at?: string
-    /** Format: boolean */
-    deleted?: boolean
-  }
   project_tile_layers: {
     /**
      * Format: uuid

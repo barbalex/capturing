@@ -105,9 +105,29 @@ export interface ProjectEditor {
   deleted?: boolean
 }
 
+export interface ProjectManager {
+  id?: string
+  project_id?: string
+  user_email?: string
+  role?: string
+  client_rev_at?: string
+  client_rev_by?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+
+export interface ProjectReader {
+  id?: string
+  project_id?: string
+  user_email?: string
+  role?: string
+  client_rev_at?: string
+  client_rev_by?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+
 // const {
-//   project_editors,
-//   project_managers,
 //   project_readers,
 //   project_tile_layers,
 //   project_users,
@@ -135,6 +155,8 @@ export class db extends Dexie {
   news_delivery!: Table<Newsdelivery>
   option_types!: Table<OptionType>
   project_editors!: Table<ProjectEditor>
+  project_managers!: Table<ProjectManager>
+  project_readers!: Table<ProjectReader>
 
   constructor() {
     super('capturing')
@@ -148,6 +170,8 @@ export class db extends Dexie {
       news_delivery: '++id, deleted, server_rev_at',
       option_types: '++id, value, sort, deleted, server_rev_at',
       project_editors: '++id, user_email, deleted, server_rev_at',
+      project_managers: '++id, user_email, deleted, server_rev_at',
+      project_readers: '++id, user_email, deleted, server_rev_at',
     })
   }
 }
