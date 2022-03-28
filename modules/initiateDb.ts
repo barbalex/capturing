@@ -279,7 +279,7 @@ export interface User {
   name?: string
   email?: string
   account_id?: string
-  auth_id?: string
+  auth_user_id?: string
   client_rev_at?: string
   client_rev_by?: string
   server_rev_at?: string

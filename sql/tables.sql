@@ -17,7 +17,7 @@ CREATE TABLE users (
   email text UNIQUE DEFAULT NULL,
   account_id uuid DEFAULT NULL,
   -- references accounts (id) on delete no action on update cascade,
-  auth_id text,
+  auth_user_id uuid default null,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -32,7 +32,7 @@ CREATE INDEX ON users USING btree (email);
 
 CREATE INDEX ON users USING btree (account_id);
 
-CREATE INDEX ON users USING btree (auth_id);
+CREATE INDEX ON users USING btree (auth_user_id);
 
 CREATE INDEX ON users USING btree (deleted);
 
@@ -46,7 +46,7 @@ COMMENT ON COLUMN users.email IS 'email';
 
 COMMENT ON COLUMN users.account_id IS 'associated account';
 
-COMMENT ON COLUMN users.auth_id IS 'associated auth';
+COMMENT ON COLUMN users.auth_user_id IS 'associated auth';
 
 COMMENT ON COLUMN users.client_rev_at IS 'time of last edit on client';
 
@@ -57,16 +57,16 @@ COMMENT ON COLUMN users.server_rev_at IS 'time of last edit on server';
 alter table users enable row level security;
 create policy "Users can view own data"
   on users for select
-  using ( auth.uid() = auth_id );
+  using ( auth.uid() = auth_user_id );
 
 alter table users enable row level security;
 create policy "Users can insert own data"
   on users for insert
-  with check ( auth.uid() = auth_id );
+  with check ( auth.uid() = auth_user_id );
   
 create policy "Users can update own data"
   on users for update
-  using ( auth.uid() = auth_id );
+  using ( auth.uid() = auth_user_id );
 
 alter publication supabase_realtime add table users;
 
@@ -106,23 +106,6 @@ COMMENT ON COLUMN accounts.client_rev_at IS 'time of last edit on client';
 COMMENT ON COLUMN accounts.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN accounts.server_rev_at IS 'time of last edit on server';
-
-alter table users enable row level security;
--- TODO:
-create policy "Users can view own data"
-  on users for select
-  using ( auth.uid() = auth_id );
-
-alter table users enable row level security;
-create policy "Users can insert own data"
-  on users for insert
-  with check ( auth.uid() = auth_id );
-  
-create policy "Users can update own data"
-  on users for update
-  using ( auth.uid() = auth_id );
-
-alter publication supabase_realtime add table users;
 
 -- need to wait to create this reference until accounts exists:
 ALTER TABLE users

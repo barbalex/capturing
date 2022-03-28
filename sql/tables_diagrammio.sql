@@ -5,7 +5,7 @@ Table "users" {
   "name" text [default: null]
   "email" text [default: null]
   "account_id" uuid [default: null]
-  "auth_id" text
+  "auth_user_id" text
   "client_rev_at" timestamp [default: `now()`]
   "client_rev_by" uuid [default: null]
   "server_rev_at" timestamp [default: `now()`]

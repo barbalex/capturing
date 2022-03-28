@@ -3,3399 +3,3399 @@
  * Do not make direct changes to the file.
  */
 export const shit = 'shit'
-export interface paths { 
-  "/": {
+export interface paths {
+  '/': {
     get: {
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
-  "/accounts": {
+        200: unknown
+      }
+    }
+  }
+  '/accounts': {
     get: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.accounts.id"];
+          id?: parameters['rowFilter.accounts.id']
           /** id used by external service */
-          service_id?: parameters["rowFilter.accounts.service_id"];
+          service_id?: parameters['rowFilter.accounts.service_id']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.accounts.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.accounts.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.accounts.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.accounts.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.accounts.server_rev_at"];
-          deleted?: parameters["rowFilter.accounts.deleted"];
+          server_rev_at?: parameters['rowFilter.accounts.server_rev_at']
+          deleted?: parameters['rowFilter.accounts.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["accounts"][];
-        };
+          schema: definitions['accounts'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** accounts */
-          accounts?: definitions["accounts"];
-        };
+          accounts?: definitions['accounts']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.accounts.id"];
+          id?: parameters['rowFilter.accounts.id']
           /** id used by external service */
-          service_id?: parameters["rowFilter.accounts.service_id"];
+          service_id?: parameters['rowFilter.accounts.service_id']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.accounts.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.accounts.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.accounts.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.accounts.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.accounts.server_rev_at"];
-          deleted?: parameters["rowFilter.accounts.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.accounts.server_rev_at']
+          deleted?: parameters['rowFilter.accounts.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.accounts.id"];
+          id?: parameters['rowFilter.accounts.id']
           /** id used by external service */
-          service_id?: parameters["rowFilter.accounts.service_id"];
+          service_id?: parameters['rowFilter.accounts.service_id']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.accounts.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.accounts.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.accounts.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.accounts.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.accounts.server_rev_at"];
-          deleted?: parameters["rowFilter.accounts.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.accounts.server_rev_at']
+          deleted?: parameters['rowFilter.accounts.deleted']
+        }
         body: {
           /** accounts */
-          accounts?: definitions["accounts"];
-        };
+          accounts?: definitions['accounts']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/field_types": {
+        204: never
+      }
+    }
+  }
+  '/field_types': {
     get: {
       parameters: {
         query: {
           /** explains the version type */
-          value?: parameters["rowFilter.field_types.value"];
+          value?: parameters['rowFilter.field_types.value']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.field_types.sort"];
-          comment?: parameters["rowFilter.field_types.comment"];
+          sort?: parameters['rowFilter.field_types.sort']
+          comment?: parameters['rowFilter.field_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.field_types.server_rev_at"];
-          deleted?: parameters["rowFilter.field_types.deleted"];
+          server_rev_at?: parameters['rowFilter.field_types.server_rev_at']
+          deleted?: parameters['rowFilter.field_types.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["field_types"][];
-        };
+          schema: definitions['field_types'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** field_types */
-          field_types?: definitions["field_types"];
-        };
+          field_types?: definitions['field_types']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** explains the version type */
-          value?: parameters["rowFilter.field_types.value"];
+          value?: parameters['rowFilter.field_types.value']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.field_types.sort"];
-          comment?: parameters["rowFilter.field_types.comment"];
+          sort?: parameters['rowFilter.field_types.sort']
+          comment?: parameters['rowFilter.field_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.field_types.server_rev_at"];
-          deleted?: parameters["rowFilter.field_types.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.field_types.server_rev_at']
+          deleted?: parameters['rowFilter.field_types.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** explains the version type */
-          value?: parameters["rowFilter.field_types.value"];
+          value?: parameters['rowFilter.field_types.value']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.field_types.sort"];
-          comment?: parameters["rowFilter.field_types.comment"];
+          sort?: parameters['rowFilter.field_types.sort']
+          comment?: parameters['rowFilter.field_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.field_types.server_rev_at"];
-          deleted?: parameters["rowFilter.field_types.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.field_types.server_rev_at']
+          deleted?: parameters['rowFilter.field_types.deleted']
+        }
         body: {
           /** field_types */
-          field_types?: definitions["field_types"];
-        };
+          field_types?: definitions['field_types']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/fields": {
+        204: never
+      }
+    }
+  }
+  '/fields': {
     get: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.fields.id"];
+          id?: parameters['rowFilter.fields.id']
           /** associated table */
-          table_id?: parameters["rowFilter.fields.table_id"];
+          table_id?: parameters['rowFilter.fields.table_id']
           /** name for use in db and url (lowercase, no special characters) */
-          name?: parameters["rowFilter.fields.name"];
+          name?: parameters['rowFilter.fields.name']
           /** name for use when labeling */
-          label?: parameters["rowFilter.fields.label"];
+          label?: parameters['rowFilter.fields.label']
           /** enables ordering the field list of a table */
-          ord?: parameters["rowFilter.fields.ord"];
+          ord?: parameters['rowFilter.fields.ord']
           /** is this table used as an id in the users own system? */
-          is_internal_id?: parameters["rowFilter.fields.is_internal_id"];
+          is_internal_id?: parameters['rowFilter.fields.is_internal_id']
           /** what type of data will populate this field? */
-          field_type?: parameters["rowFilter.fields.field_type"];
+          field_type?: parameters['rowFilter.fields.field_type']
           /** what type of widget shall be used to enter data? */
-          widget_type?: parameters["rowFilter.fields.widget_type"];
+          widget_type?: parameters['rowFilter.fields.widget_type']
           /** for fields with field_type options-few and options-many: what table contains the options? */
-          options_table?: parameters["rowFilter.fields.options_table"];
+          options_table?: parameters['rowFilter.fields.options_table']
           /** Goal: Project-admin can pre-set standard values. These are either real values (that have to be converted from string when used and field_type is not a string). Or instructions like: last(), now()... */
-          standard_value?: parameters["rowFilter.fields.standard_value"];
+          standard_value?: parameters['rowFilter.fields.standard_value']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.fields.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.fields.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.fields.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.fields.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.fields.server_rev_at"];
-          deleted?: parameters["rowFilter.fields.deleted"];
+          server_rev_at?: parameters['rowFilter.fields.server_rev_at']
+          deleted?: parameters['rowFilter.fields.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["fields"][];
-        };
+          schema: definitions['fields'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** fields */
-          fields?: definitions["fields"];
-        };
+          fields?: definitions['fields']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.fields.id"];
+          id?: parameters['rowFilter.fields.id']
           /** associated table */
-          table_id?: parameters["rowFilter.fields.table_id"];
+          table_id?: parameters['rowFilter.fields.table_id']
           /** name for use in db and url (lowercase, no special characters) */
-          name?: parameters["rowFilter.fields.name"];
+          name?: parameters['rowFilter.fields.name']
           /** name for use when labeling */
-          label?: parameters["rowFilter.fields.label"];
+          label?: parameters['rowFilter.fields.label']
           /** enables ordering the field list of a table */
-          ord?: parameters["rowFilter.fields.ord"];
+          ord?: parameters['rowFilter.fields.ord']
           /** is this table used as an id in the users own system? */
-          is_internal_id?: parameters["rowFilter.fields.is_internal_id"];
+          is_internal_id?: parameters['rowFilter.fields.is_internal_id']
           /** what type of data will populate this field? */
-          field_type?: parameters["rowFilter.fields.field_type"];
+          field_type?: parameters['rowFilter.fields.field_type']
           /** what type of widget shall be used to enter data? */
-          widget_type?: parameters["rowFilter.fields.widget_type"];
+          widget_type?: parameters['rowFilter.fields.widget_type']
           /** for fields with field_type options-few and options-many: what table contains the options? */
-          options_table?: parameters["rowFilter.fields.options_table"];
+          options_table?: parameters['rowFilter.fields.options_table']
           /** Goal: Project-admin can pre-set standard values. These are either real values (that have to be converted from string when used and field_type is not a string). Or instructions like: last(), now()... */
-          standard_value?: parameters["rowFilter.fields.standard_value"];
+          standard_value?: parameters['rowFilter.fields.standard_value']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.fields.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.fields.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.fields.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.fields.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.fields.server_rev_at"];
-          deleted?: parameters["rowFilter.fields.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.fields.server_rev_at']
+          deleted?: parameters['rowFilter.fields.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.fields.id"];
+          id?: parameters['rowFilter.fields.id']
           /** associated table */
-          table_id?: parameters["rowFilter.fields.table_id"];
+          table_id?: parameters['rowFilter.fields.table_id']
           /** name for use in db and url (lowercase, no special characters) */
-          name?: parameters["rowFilter.fields.name"];
+          name?: parameters['rowFilter.fields.name']
           /** name for use when labeling */
-          label?: parameters["rowFilter.fields.label"];
+          label?: parameters['rowFilter.fields.label']
           /** enables ordering the field list of a table */
-          ord?: parameters["rowFilter.fields.ord"];
+          ord?: parameters['rowFilter.fields.ord']
           /** is this table used as an id in the users own system? */
-          is_internal_id?: parameters["rowFilter.fields.is_internal_id"];
+          is_internal_id?: parameters['rowFilter.fields.is_internal_id']
           /** what type of data will populate this field? */
-          field_type?: parameters["rowFilter.fields.field_type"];
+          field_type?: parameters['rowFilter.fields.field_type']
           /** what type of widget shall be used to enter data? */
-          widget_type?: parameters["rowFilter.fields.widget_type"];
+          widget_type?: parameters['rowFilter.fields.widget_type']
           /** for fields with field_type options-few and options-many: what table contains the options? */
-          options_table?: parameters["rowFilter.fields.options_table"];
+          options_table?: parameters['rowFilter.fields.options_table']
           /** Goal: Project-admin can pre-set standard values. These are either real values (that have to be converted from string when used and field_type is not a string). Or instructions like: last(), now()... */
-          standard_value?: parameters["rowFilter.fields.standard_value"];
+          standard_value?: parameters['rowFilter.fields.standard_value']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.fields.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.fields.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.fields.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.fields.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.fields.server_rev_at"];
-          deleted?: parameters["rowFilter.fields.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.fields.server_rev_at']
+          deleted?: parameters['rowFilter.fields.deleted']
+        }
         body: {
           /** fields */
-          fields?: definitions["fields"];
-        };
+          fields?: definitions['fields']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/file_revs": {
+        204: never
+      }
+    }
+  }
+  '/file_revs': {
     get: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.file_revs.id"];
-          row_id?: parameters["rowFilter.file_revs.row_id"];
+          id?: parameters['rowFilter.file_revs.id']
+          row_id?: parameters['rowFilter.file_revs.row_id']
           /** key of table files */
-          file_id?: parameters["rowFilter.file_revs.file_id"];
-          field_id?: parameters["rowFilter.file_revs.field_id"];
-          filename?: parameters["rowFilter.file_revs.filename"];
-          url?: parameters["rowFilter.file_revs.url"];
-          version?: parameters["rowFilter.file_revs.version"];
-          deleted?: parameters["rowFilter.file_revs.deleted"];
-          client_rev_at?: parameters["rowFilter.file_revs.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.file_revs.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.file_revs.server_rev_at"];
+          file_id?: parameters['rowFilter.file_revs.file_id']
+          field_id?: parameters['rowFilter.file_revs.field_id']
+          filename?: parameters['rowFilter.file_revs.filename']
+          url?: parameters['rowFilter.file_revs.url']
+          version?: parameters['rowFilter.file_revs.version']
+          deleted?: parameters['rowFilter.file_revs.deleted']
+          client_rev_at?: parameters['rowFilter.file_revs.client_rev_at']
+          client_rev_by?: parameters['rowFilter.file_revs.client_rev_by']
+          server_rev_at?: parameters['rowFilter.file_revs.server_rev_at']
           /** hashed value the fields: file_id, field_id, filename, hash, version, deleted */
-          rev?: parameters["rowFilter.file_revs.rev"];
+          rev?: parameters['rowFilter.file_revs.rev']
           /** hash of the previous revision */
-          parent_rev?: parameters["rowFilter.file_revs.parent_rev"];
+          parent_rev?: parameters['rowFilter.file_revs.parent_rev']
           /** array of hashes of all previous revisions */
-          revisions?: parameters["rowFilter.file_revs.revisions"];
+          revisions?: parameters['rowFilter.file_revs.revisions']
           /** depth of the revision tree */
-          depth?: parameters["rowFilter.file_revs.depth"];
+          depth?: parameters['rowFilter.file_revs.depth']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["file_revs"][];
-        };
+          schema: definitions['file_revs'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** file_revs */
-          file_revs?: definitions["file_revs"];
-        };
+          file_revs?: definitions['file_revs']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.file_revs.id"];
-          row_id?: parameters["rowFilter.file_revs.row_id"];
+          id?: parameters['rowFilter.file_revs.id']
+          row_id?: parameters['rowFilter.file_revs.row_id']
           /** key of table files */
-          file_id?: parameters["rowFilter.file_revs.file_id"];
-          field_id?: parameters["rowFilter.file_revs.field_id"];
-          filename?: parameters["rowFilter.file_revs.filename"];
-          url?: parameters["rowFilter.file_revs.url"];
-          version?: parameters["rowFilter.file_revs.version"];
-          deleted?: parameters["rowFilter.file_revs.deleted"];
-          client_rev_at?: parameters["rowFilter.file_revs.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.file_revs.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.file_revs.server_rev_at"];
+          file_id?: parameters['rowFilter.file_revs.file_id']
+          field_id?: parameters['rowFilter.file_revs.field_id']
+          filename?: parameters['rowFilter.file_revs.filename']
+          url?: parameters['rowFilter.file_revs.url']
+          version?: parameters['rowFilter.file_revs.version']
+          deleted?: parameters['rowFilter.file_revs.deleted']
+          client_rev_at?: parameters['rowFilter.file_revs.client_rev_at']
+          client_rev_by?: parameters['rowFilter.file_revs.client_rev_by']
+          server_rev_at?: parameters['rowFilter.file_revs.server_rev_at']
           /** hashed value the fields: file_id, field_id, filename, hash, version, deleted */
-          rev?: parameters["rowFilter.file_revs.rev"];
+          rev?: parameters['rowFilter.file_revs.rev']
           /** hash of the previous revision */
-          parent_rev?: parameters["rowFilter.file_revs.parent_rev"];
+          parent_rev?: parameters['rowFilter.file_revs.parent_rev']
           /** array of hashes of all previous revisions */
-          revisions?: parameters["rowFilter.file_revs.revisions"];
+          revisions?: parameters['rowFilter.file_revs.revisions']
           /** depth of the revision tree */
-          depth?: parameters["rowFilter.file_revs.depth"];
-        };
+          depth?: parameters['rowFilter.file_revs.depth']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.file_revs.id"];
-          row_id?: parameters["rowFilter.file_revs.row_id"];
+          id?: parameters['rowFilter.file_revs.id']
+          row_id?: parameters['rowFilter.file_revs.row_id']
           /** key of table files */
-          file_id?: parameters["rowFilter.file_revs.file_id"];
-          field_id?: parameters["rowFilter.file_revs.field_id"];
-          filename?: parameters["rowFilter.file_revs.filename"];
-          url?: parameters["rowFilter.file_revs.url"];
-          version?: parameters["rowFilter.file_revs.version"];
-          deleted?: parameters["rowFilter.file_revs.deleted"];
-          client_rev_at?: parameters["rowFilter.file_revs.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.file_revs.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.file_revs.server_rev_at"];
+          file_id?: parameters['rowFilter.file_revs.file_id']
+          field_id?: parameters['rowFilter.file_revs.field_id']
+          filename?: parameters['rowFilter.file_revs.filename']
+          url?: parameters['rowFilter.file_revs.url']
+          version?: parameters['rowFilter.file_revs.version']
+          deleted?: parameters['rowFilter.file_revs.deleted']
+          client_rev_at?: parameters['rowFilter.file_revs.client_rev_at']
+          client_rev_by?: parameters['rowFilter.file_revs.client_rev_by']
+          server_rev_at?: parameters['rowFilter.file_revs.server_rev_at']
           /** hashed value the fields: file_id, field_id, filename, hash, version, deleted */
-          rev?: parameters["rowFilter.file_revs.rev"];
+          rev?: parameters['rowFilter.file_revs.rev']
           /** hash of the previous revision */
-          parent_rev?: parameters["rowFilter.file_revs.parent_rev"];
+          parent_rev?: parameters['rowFilter.file_revs.parent_rev']
           /** array of hashes of all previous revisions */
-          revisions?: parameters["rowFilter.file_revs.revisions"];
+          revisions?: parameters['rowFilter.file_revs.revisions']
           /** depth of the revision tree */
-          depth?: parameters["rowFilter.file_revs.depth"];
-        };
+          depth?: parameters['rowFilter.file_revs.depth']
+        }
         body: {
           /** file_revs */
-          file_revs?: definitions["file_revs"];
-        };
+          file_revs?: definitions['file_revs']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/files": {
+        204: never
+      }
+    }
+  }
+  '/files': {
     get: {
       parameters: {
         query: {
           /** primary key. used as filename in internal and cloud storage */
-          id?: parameters["rowFilter.files.id"];
+          id?: parameters['rowFilter.files.id']
           /** associated row */
-          row_id?: parameters["rowFilter.files.row_id"];
+          row_id?: parameters['rowFilter.files.row_id']
           /** associated field */
-          field_id?: parameters["rowFilter.files.field_id"];
+          field_id?: parameters['rowFilter.files.field_id']
           /** filename is set to this when exporting files */
-          filename?: parameters["rowFilter.files.filename"];
+          filename?: parameters['rowFilter.files.filename']
           /** url to download the file at */
-          url?: parameters["rowFilter.files.url"];
+          url?: parameters['rowFilter.files.url']
           /** is incremented on every edit of a pre-existing file. Enables clients to re-sync */
-          version?: parameters["rowFilter.files.version"];
+          version?: parameters['rowFilter.files.version']
           /** marks if the file is deleted */
-          deleted?: parameters["rowFilter.files.deleted"];
+          deleted?: parameters['rowFilter.files.deleted']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.files.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.files.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.files.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.files.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.files.server_rev_at"];
-          rev?: parameters["rowFilter.files.rev"];
-          parent_rev?: parameters["rowFilter.files.parent_rev"];
-          revisions?: parameters["rowFilter.files.revisions"];
-          depth?: parameters["rowFilter.files.depth"];
-          conflicts?: parameters["rowFilter.files.conflicts"];
+          server_rev_at?: parameters['rowFilter.files.server_rev_at']
+          rev?: parameters['rowFilter.files.rev']
+          parent_rev?: parameters['rowFilter.files.parent_rev']
+          revisions?: parameters['rowFilter.files.revisions']
+          depth?: parameters['rowFilter.files.depth']
+          conflicts?: parameters['rowFilter.files.conflicts']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["files"][];
-        };
+          schema: definitions['files'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** files */
-          files?: definitions["files"];
-        };
+          files?: definitions['files']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** primary key. used as filename in internal and cloud storage */
-          id?: parameters["rowFilter.files.id"];
+          id?: parameters['rowFilter.files.id']
           /** associated row */
-          row_id?: parameters["rowFilter.files.row_id"];
+          row_id?: parameters['rowFilter.files.row_id']
           /** associated field */
-          field_id?: parameters["rowFilter.files.field_id"];
+          field_id?: parameters['rowFilter.files.field_id']
           /** filename is set to this when exporting files */
-          filename?: parameters["rowFilter.files.filename"];
+          filename?: parameters['rowFilter.files.filename']
           /** url to download the file at */
-          url?: parameters["rowFilter.files.url"];
+          url?: parameters['rowFilter.files.url']
           /** is incremented on every edit of a pre-existing file. Enables clients to re-sync */
-          version?: parameters["rowFilter.files.version"];
+          version?: parameters['rowFilter.files.version']
           /** marks if the file is deleted */
-          deleted?: parameters["rowFilter.files.deleted"];
+          deleted?: parameters['rowFilter.files.deleted']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.files.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.files.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.files.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.files.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.files.server_rev_at"];
-          rev?: parameters["rowFilter.files.rev"];
-          parent_rev?: parameters["rowFilter.files.parent_rev"];
-          revisions?: parameters["rowFilter.files.revisions"];
-          depth?: parameters["rowFilter.files.depth"];
-          conflicts?: parameters["rowFilter.files.conflicts"];
-        };
+          server_rev_at?: parameters['rowFilter.files.server_rev_at']
+          rev?: parameters['rowFilter.files.rev']
+          parent_rev?: parameters['rowFilter.files.parent_rev']
+          revisions?: parameters['rowFilter.files.revisions']
+          depth?: parameters['rowFilter.files.depth']
+          conflicts?: parameters['rowFilter.files.conflicts']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** primary key. used as filename in internal and cloud storage */
-          id?: parameters["rowFilter.files.id"];
+          id?: parameters['rowFilter.files.id']
           /** associated row */
-          row_id?: parameters["rowFilter.files.row_id"];
+          row_id?: parameters['rowFilter.files.row_id']
           /** associated field */
-          field_id?: parameters["rowFilter.files.field_id"];
+          field_id?: parameters['rowFilter.files.field_id']
           /** filename is set to this when exporting files */
-          filename?: parameters["rowFilter.files.filename"];
+          filename?: parameters['rowFilter.files.filename']
           /** url to download the file at */
-          url?: parameters["rowFilter.files.url"];
+          url?: parameters['rowFilter.files.url']
           /** is incremented on every edit of a pre-existing file. Enables clients to re-sync */
-          version?: parameters["rowFilter.files.version"];
+          version?: parameters['rowFilter.files.version']
           /** marks if the file is deleted */
-          deleted?: parameters["rowFilter.files.deleted"];
+          deleted?: parameters['rowFilter.files.deleted']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.files.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.files.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.files.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.files.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.files.server_rev_at"];
-          rev?: parameters["rowFilter.files.rev"];
-          parent_rev?: parameters["rowFilter.files.parent_rev"];
-          revisions?: parameters["rowFilter.files.revisions"];
-          depth?: parameters["rowFilter.files.depth"];
-          conflicts?: parameters["rowFilter.files.conflicts"];
-        };
+          server_rev_at?: parameters['rowFilter.files.server_rev_at']
+          rev?: parameters['rowFilter.files.rev']
+          parent_rev?: parameters['rowFilter.files.parent_rev']
+          revisions?: parameters['rowFilter.files.revisions']
+          depth?: parameters['rowFilter.files.depth']
+          conflicts?: parameters['rowFilter.files.conflicts']
+        }
         body: {
           /** files */
-          files?: definitions["files"];
-        };
+          files?: definitions['files']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/news": {
+        204: never
+      }
+    }
+  }
+  '/news': {
     get: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.news.id"];
+          id?: parameters['rowFilter.news.id']
           /** time the news was created */
-          time?: parameters["rowFilter.news.time"];
+          time?: parameters['rowFilter.news.time']
           /** associated version_type */
-          version_type?: parameters["rowFilter.news.version_type"];
+          version_type?: parameters['rowFilter.news.version_type']
           /** version the news refers to */
-          version?: parameters["rowFilter.news.version"];
+          version?: parameters['rowFilter.news.version']
           /** this is the news */
-          message?: parameters["rowFilter.news.message"];
+          message?: parameters['rowFilter.news.message']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.news.server_rev_at"];
-          deleted?: parameters["rowFilter.news.deleted"];
+          server_rev_at?: parameters['rowFilter.news.server_rev_at']
+          deleted?: parameters['rowFilter.news.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["news"][];
-        };
+          schema: definitions['news'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** news */
-          news?: definitions["news"];
-        };
+          news?: definitions['news']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.news.id"];
+          id?: parameters['rowFilter.news.id']
           /** time the news was created */
-          time?: parameters["rowFilter.news.time"];
+          time?: parameters['rowFilter.news.time']
           /** associated version_type */
-          version_type?: parameters["rowFilter.news.version_type"];
+          version_type?: parameters['rowFilter.news.version_type']
           /** version the news refers to */
-          version?: parameters["rowFilter.news.version"];
+          version?: parameters['rowFilter.news.version']
           /** this is the news */
-          message?: parameters["rowFilter.news.message"];
+          message?: parameters['rowFilter.news.message']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.news.server_rev_at"];
-          deleted?: parameters["rowFilter.news.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.news.server_rev_at']
+          deleted?: parameters['rowFilter.news.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.news.id"];
+          id?: parameters['rowFilter.news.id']
           /** time the news was created */
-          time?: parameters["rowFilter.news.time"];
+          time?: parameters['rowFilter.news.time']
           /** associated version_type */
-          version_type?: parameters["rowFilter.news.version_type"];
+          version_type?: parameters['rowFilter.news.version_type']
           /** version the news refers to */
-          version?: parameters["rowFilter.news.version"];
+          version?: parameters['rowFilter.news.version']
           /** this is the news */
-          message?: parameters["rowFilter.news.message"];
+          message?: parameters['rowFilter.news.message']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.news.server_rev_at"];
-          deleted?: parameters["rowFilter.news.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.news.server_rev_at']
+          deleted?: parameters['rowFilter.news.deleted']
+        }
         body: {
           /** news */
-          news?: definitions["news"];
-        };
+          news?: definitions['news']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/news_delivery": {
+        204: never
+      }
+    }
+  }
+  '/news_delivery': {
     get: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.news_delivery.id"];
+          id?: parameters['rowFilter.news_delivery.id']
           /** associated news */
-          news_id?: parameters["rowFilter.news_delivery.news_id"];
+          news_id?: parameters['rowFilter.news_delivery.news_id']
           /** associated user */
-          user_id?: parameters["rowFilter.news_delivery.user_id"];
+          user_id?: parameters['rowFilter.news_delivery.user_id']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.news_delivery.server_rev_at"];
-          deleted?: parameters["rowFilter.news_delivery.deleted"];
+          server_rev_at?: parameters['rowFilter.news_delivery.server_rev_at']
+          deleted?: parameters['rowFilter.news_delivery.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["news_delivery"][];
-        };
+          schema: definitions['news_delivery'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** news_delivery */
-          news_delivery?: definitions["news_delivery"];
-        };
+          news_delivery?: definitions['news_delivery']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.news_delivery.id"];
+          id?: parameters['rowFilter.news_delivery.id']
           /** associated news */
-          news_id?: parameters["rowFilter.news_delivery.news_id"];
+          news_id?: parameters['rowFilter.news_delivery.news_id']
           /** associated user */
-          user_id?: parameters["rowFilter.news_delivery.user_id"];
+          user_id?: parameters['rowFilter.news_delivery.user_id']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.news_delivery.server_rev_at"];
-          deleted?: parameters["rowFilter.news_delivery.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.news_delivery.server_rev_at']
+          deleted?: parameters['rowFilter.news_delivery.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.news_delivery.id"];
+          id?: parameters['rowFilter.news_delivery.id']
           /** associated news */
-          news_id?: parameters["rowFilter.news_delivery.news_id"];
+          news_id?: parameters['rowFilter.news_delivery.news_id']
           /** associated user */
-          user_id?: parameters["rowFilter.news_delivery.user_id"];
+          user_id?: parameters['rowFilter.news_delivery.user_id']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.news_delivery.server_rev_at"];
-          deleted?: parameters["rowFilter.news_delivery.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.news_delivery.server_rev_at']
+          deleted?: parameters['rowFilter.news_delivery.deleted']
+        }
         body: {
           /** news_delivery */
-          news_delivery?: definitions["news_delivery"];
-        };
+          news_delivery?: definitions['news_delivery']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/option_types": {
+        204: never
+      }
+    }
+  }
+  '/option_types': {
     get: {
       parameters: {
         query: {
           /** the id to use if id instead of value is to be saved */
-          id?: parameters["rowFilter.option_types.id"];
+          id?: parameters['rowFilter.option_types.id']
           /** explains the option type */
-          value?: parameters["rowFilter.option_types.value"];
+          value?: parameters['rowFilter.option_types.value']
           /** wether to save id instead of value */
-          save_id?: parameters["rowFilter.option_types.save_id"];
+          save_id?: parameters['rowFilter.option_types.save_id']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.option_types.sort"];
-          comment?: parameters["rowFilter.option_types.comment"];
+          sort?: parameters['rowFilter.option_types.sort']
+          comment?: parameters['rowFilter.option_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.option_types.server_rev_at"];
-          deleted?: parameters["rowFilter.option_types.deleted"];
+          server_rev_at?: parameters['rowFilter.option_types.server_rev_at']
+          deleted?: parameters['rowFilter.option_types.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["option_types"][];
-        };
+          schema: definitions['option_types'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** option_types */
-          option_types?: definitions["option_types"];
-        };
+          option_types?: definitions['option_types']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** the id to use if id instead of value is to be saved */
-          id?: parameters["rowFilter.option_types.id"];
+          id?: parameters['rowFilter.option_types.id']
           /** explains the option type */
-          value?: parameters["rowFilter.option_types.value"];
+          value?: parameters['rowFilter.option_types.value']
           /** wether to save id instead of value */
-          save_id?: parameters["rowFilter.option_types.save_id"];
+          save_id?: parameters['rowFilter.option_types.save_id']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.option_types.sort"];
-          comment?: parameters["rowFilter.option_types.comment"];
+          sort?: parameters['rowFilter.option_types.sort']
+          comment?: parameters['rowFilter.option_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.option_types.server_rev_at"];
-          deleted?: parameters["rowFilter.option_types.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.option_types.server_rev_at']
+          deleted?: parameters['rowFilter.option_types.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** the id to use if id instead of value is to be saved */
-          id?: parameters["rowFilter.option_types.id"];
+          id?: parameters['rowFilter.option_types.id']
           /** explains the option type */
-          value?: parameters["rowFilter.option_types.value"];
+          value?: parameters['rowFilter.option_types.value']
           /** wether to save id instead of value */
-          save_id?: parameters["rowFilter.option_types.save_id"];
+          save_id?: parameters['rowFilter.option_types.save_id']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.option_types.sort"];
-          comment?: parameters["rowFilter.option_types.comment"];
+          sort?: parameters['rowFilter.option_types.sort']
+          comment?: parameters['rowFilter.option_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.option_types.server_rev_at"];
-          deleted?: parameters["rowFilter.option_types.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.option_types.server_rev_at']
+          deleted?: parameters['rowFilter.option_types.deleted']
+        }
         body: {
           /** option_types */
-          option_types?: definitions["option_types"];
-        };
+          option_types?: definitions['option_types']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/project_editors": {
+        204: never
+      }
+    }
+  }
+  '/project_editors': {
     get: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.project_editors.id"];
-          project_id?: parameters["rowFilter.project_editors.project_id"];
-          user_email?: parameters["rowFilter.project_editors.user_email"];
-          role?: parameters["rowFilter.project_editors.role"];
-          client_rev_at?: parameters["rowFilter.project_editors.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.project_editors.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.project_editors.server_rev_at"];
-          deleted?: parameters["rowFilter.project_editors.deleted"];
+          id?: parameters['rowFilter.project_editors.id']
+          project_id?: parameters['rowFilter.project_editors.project_id']
+          user_email?: parameters['rowFilter.project_editors.user_email']
+          role?: parameters['rowFilter.project_editors.role']
+          client_rev_at?: parameters['rowFilter.project_editors.client_rev_at']
+          client_rev_by?: parameters['rowFilter.project_editors.client_rev_by']
+          server_rev_at?: parameters['rowFilter.project_editors.server_rev_at']
+          deleted?: parameters['rowFilter.project_editors.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["project_editors"][];
-        };
+          schema: definitions['project_editors'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** project_editors */
-          project_editors?: definitions["project_editors"];
-        };
+          project_editors?: definitions['project_editors']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.project_editors.id"];
-          project_id?: parameters["rowFilter.project_editors.project_id"];
-          user_email?: parameters["rowFilter.project_editors.user_email"];
-          role?: parameters["rowFilter.project_editors.role"];
-          client_rev_at?: parameters["rowFilter.project_editors.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.project_editors.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.project_editors.server_rev_at"];
-          deleted?: parameters["rowFilter.project_editors.deleted"];
-        };
+          id?: parameters['rowFilter.project_editors.id']
+          project_id?: parameters['rowFilter.project_editors.project_id']
+          user_email?: parameters['rowFilter.project_editors.user_email']
+          role?: parameters['rowFilter.project_editors.role']
+          client_rev_at?: parameters['rowFilter.project_editors.client_rev_at']
+          client_rev_by?: parameters['rowFilter.project_editors.client_rev_by']
+          server_rev_at?: parameters['rowFilter.project_editors.server_rev_at']
+          deleted?: parameters['rowFilter.project_editors.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.project_editors.id"];
-          project_id?: parameters["rowFilter.project_editors.project_id"];
-          user_email?: parameters["rowFilter.project_editors.user_email"];
-          role?: parameters["rowFilter.project_editors.role"];
-          client_rev_at?: parameters["rowFilter.project_editors.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.project_editors.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.project_editors.server_rev_at"];
-          deleted?: parameters["rowFilter.project_editors.deleted"];
-        };
+          id?: parameters['rowFilter.project_editors.id']
+          project_id?: parameters['rowFilter.project_editors.project_id']
+          user_email?: parameters['rowFilter.project_editors.user_email']
+          role?: parameters['rowFilter.project_editors.role']
+          client_rev_at?: parameters['rowFilter.project_editors.client_rev_at']
+          client_rev_by?: parameters['rowFilter.project_editors.client_rev_by']
+          server_rev_at?: parameters['rowFilter.project_editors.server_rev_at']
+          deleted?: parameters['rowFilter.project_editors.deleted']
+        }
         body: {
           /** project_editors */
-          project_editors?: definitions["project_editors"];
-        };
+          project_editors?: definitions['project_editors']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/project_managers": {
+        204: never
+      }
+    }
+  }
+  '/project_managers': {
     get: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.project_managers.id"];
-          project_id?: parameters["rowFilter.project_managers.project_id"];
-          user_email?: parameters["rowFilter.project_managers.user_email"];
-          role?: parameters["rowFilter.project_managers.role"];
-          client_rev_at?: parameters["rowFilter.project_managers.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.project_managers.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.project_managers.server_rev_at"];
-          deleted?: parameters["rowFilter.project_managers.deleted"];
+          id?: parameters['rowFilter.project_managers.id']
+          project_id?: parameters['rowFilter.project_managers.project_id']
+          user_email?: parameters['rowFilter.project_managers.user_email']
+          role?: parameters['rowFilter.project_managers.role']
+          client_rev_at?: parameters['rowFilter.project_managers.client_rev_at']
+          client_rev_by?: parameters['rowFilter.project_managers.client_rev_by']
+          server_rev_at?: parameters['rowFilter.project_managers.server_rev_at']
+          deleted?: parameters['rowFilter.project_managers.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["project_managers"][];
-        };
+          schema: definitions['project_managers'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** project_managers */
-          project_managers?: definitions["project_managers"];
-        };
+          project_managers?: definitions['project_managers']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.project_managers.id"];
-          project_id?: parameters["rowFilter.project_managers.project_id"];
-          user_email?: parameters["rowFilter.project_managers.user_email"];
-          role?: parameters["rowFilter.project_managers.role"];
-          client_rev_at?: parameters["rowFilter.project_managers.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.project_managers.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.project_managers.server_rev_at"];
-          deleted?: parameters["rowFilter.project_managers.deleted"];
-        };
+          id?: parameters['rowFilter.project_managers.id']
+          project_id?: parameters['rowFilter.project_managers.project_id']
+          user_email?: parameters['rowFilter.project_managers.user_email']
+          role?: parameters['rowFilter.project_managers.role']
+          client_rev_at?: parameters['rowFilter.project_managers.client_rev_at']
+          client_rev_by?: parameters['rowFilter.project_managers.client_rev_by']
+          server_rev_at?: parameters['rowFilter.project_managers.server_rev_at']
+          deleted?: parameters['rowFilter.project_managers.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.project_managers.id"];
-          project_id?: parameters["rowFilter.project_managers.project_id"];
-          user_email?: parameters["rowFilter.project_managers.user_email"];
-          role?: parameters["rowFilter.project_managers.role"];
-          client_rev_at?: parameters["rowFilter.project_managers.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.project_managers.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.project_managers.server_rev_at"];
-          deleted?: parameters["rowFilter.project_managers.deleted"];
-        };
+          id?: parameters['rowFilter.project_managers.id']
+          project_id?: parameters['rowFilter.project_managers.project_id']
+          user_email?: parameters['rowFilter.project_managers.user_email']
+          role?: parameters['rowFilter.project_managers.role']
+          client_rev_at?: parameters['rowFilter.project_managers.client_rev_at']
+          client_rev_by?: parameters['rowFilter.project_managers.client_rev_by']
+          server_rev_at?: parameters['rowFilter.project_managers.server_rev_at']
+          deleted?: parameters['rowFilter.project_managers.deleted']
+        }
         body: {
           /** project_managers */
-          project_managers?: definitions["project_managers"];
-        };
+          project_managers?: definitions['project_managers']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/project_readers": {
+        204: never
+      }
+    }
+  }
+  '/project_readers': {
     get: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.project_readers.id"];
-          project_id?: parameters["rowFilter.project_readers.project_id"];
-          user_email?: parameters["rowFilter.project_readers.user_email"];
-          role?: parameters["rowFilter.project_readers.role"];
-          client_rev_at?: parameters["rowFilter.project_readers.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.project_readers.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.project_readers.server_rev_at"];
-          deleted?: parameters["rowFilter.project_readers.deleted"];
+          id?: parameters['rowFilter.project_readers.id']
+          project_id?: parameters['rowFilter.project_readers.project_id']
+          user_email?: parameters['rowFilter.project_readers.user_email']
+          role?: parameters['rowFilter.project_readers.role']
+          client_rev_at?: parameters['rowFilter.project_readers.client_rev_at']
+          client_rev_by?: parameters['rowFilter.project_readers.client_rev_by']
+          server_rev_at?: parameters['rowFilter.project_readers.server_rev_at']
+          deleted?: parameters['rowFilter.project_readers.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["project_readers"][];
-        };
+          schema: definitions['project_readers'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** project_readers */
-          project_readers?: definitions["project_readers"];
-        };
+          project_readers?: definitions['project_readers']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.project_readers.id"];
-          project_id?: parameters["rowFilter.project_readers.project_id"];
-          user_email?: parameters["rowFilter.project_readers.user_email"];
-          role?: parameters["rowFilter.project_readers.role"];
-          client_rev_at?: parameters["rowFilter.project_readers.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.project_readers.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.project_readers.server_rev_at"];
-          deleted?: parameters["rowFilter.project_readers.deleted"];
-        };
+          id?: parameters['rowFilter.project_readers.id']
+          project_id?: parameters['rowFilter.project_readers.project_id']
+          user_email?: parameters['rowFilter.project_readers.user_email']
+          role?: parameters['rowFilter.project_readers.role']
+          client_rev_at?: parameters['rowFilter.project_readers.client_rev_at']
+          client_rev_by?: parameters['rowFilter.project_readers.client_rev_by']
+          server_rev_at?: parameters['rowFilter.project_readers.server_rev_at']
+          deleted?: parameters['rowFilter.project_readers.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.project_readers.id"];
-          project_id?: parameters["rowFilter.project_readers.project_id"];
-          user_email?: parameters["rowFilter.project_readers.user_email"];
-          role?: parameters["rowFilter.project_readers.role"];
-          client_rev_at?: parameters["rowFilter.project_readers.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.project_readers.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.project_readers.server_rev_at"];
-          deleted?: parameters["rowFilter.project_readers.deleted"];
-        };
+          id?: parameters['rowFilter.project_readers.id']
+          project_id?: parameters['rowFilter.project_readers.project_id']
+          user_email?: parameters['rowFilter.project_readers.user_email']
+          role?: parameters['rowFilter.project_readers.role']
+          client_rev_at?: parameters['rowFilter.project_readers.client_rev_at']
+          client_rev_by?: parameters['rowFilter.project_readers.client_rev_by']
+          server_rev_at?: parameters['rowFilter.project_readers.server_rev_at']
+          deleted?: parameters['rowFilter.project_readers.deleted']
+        }
         body: {
           /** project_readers */
-          project_readers?: definitions["project_readers"];
-        };
+          project_readers?: definitions['project_readers']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/project_tile_layers": {
+        204: never
+      }
+    }
+  }
+  '/project_tile_layers': {
     get: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.project_tile_layers.id"];
-          label?: parameters["rowFilter.project_tile_layers.label"];
-          ord?: parameters["rowFilter.project_tile_layers.ord"];
-          active?: parameters["rowFilter.project_tile_layers.active"];
-          project_id?: parameters["rowFilter.project_tile_layers.project_id"];
-          url_template?: parameters["rowFilter.project_tile_layers.url_template"];
-          subdomains?: parameters["rowFilter.project_tile_layers.subdomains"];
-          max_zoom?: parameters["rowFilter.project_tile_layers.max_zoom"];
-          min_zoom?: parameters["rowFilter.project_tile_layers.min_zoom"];
-          opacity?: parameters["rowFilter.project_tile_layers.opacity"];
-          wms_base_url?: parameters["rowFilter.project_tile_layers.wms_base_url"];
-          wms_format?: parameters["rowFilter.project_tile_layers.wms_format"];
-          wms_layers?: parameters["rowFilter.project_tile_layers.wms_layers"];
-          wms_parameters?: parameters["rowFilter.project_tile_layers.wms_parameters"];
-          wms_request?: parameters["rowFilter.project_tile_layers.wms_request"];
-          wms_service?: parameters["rowFilter.project_tile_layers.wms_service"];
-          wms_styles?: parameters["rowFilter.project_tile_layers.wms_styles"];
-          wms_transparent?: parameters["rowFilter.project_tile_layers.wms_transparent"];
-          wms_version?: parameters["rowFilter.project_tile_layers.wms_version"];
-          client_rev_at?: parameters["rowFilter.project_tile_layers.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.project_tile_layers.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.project_tile_layers.server_rev_at"];
-          deleted?: parameters["rowFilter.project_tile_layers.deleted"];
+          id?: parameters['rowFilter.project_tile_layers.id']
+          label?: parameters['rowFilter.project_tile_layers.label']
+          ord?: parameters['rowFilter.project_tile_layers.ord']
+          active?: parameters['rowFilter.project_tile_layers.active']
+          project_id?: parameters['rowFilter.project_tile_layers.project_id']
+          url_template?: parameters['rowFilter.project_tile_layers.url_template']
+          subdomains?: parameters['rowFilter.project_tile_layers.subdomains']
+          max_zoom?: parameters['rowFilter.project_tile_layers.max_zoom']
+          min_zoom?: parameters['rowFilter.project_tile_layers.min_zoom']
+          opacity?: parameters['rowFilter.project_tile_layers.opacity']
+          wms_base_url?: parameters['rowFilter.project_tile_layers.wms_base_url']
+          wms_format?: parameters['rowFilter.project_tile_layers.wms_format']
+          wms_layers?: parameters['rowFilter.project_tile_layers.wms_layers']
+          wms_parameters?: parameters['rowFilter.project_tile_layers.wms_parameters']
+          wms_request?: parameters['rowFilter.project_tile_layers.wms_request']
+          wms_service?: parameters['rowFilter.project_tile_layers.wms_service']
+          wms_styles?: parameters['rowFilter.project_tile_layers.wms_styles']
+          wms_transparent?: parameters['rowFilter.project_tile_layers.wms_transparent']
+          wms_version?: parameters['rowFilter.project_tile_layers.wms_version']
+          client_rev_at?: parameters['rowFilter.project_tile_layers.client_rev_at']
+          client_rev_by?: parameters['rowFilter.project_tile_layers.client_rev_by']
+          server_rev_at?: parameters['rowFilter.project_tile_layers.server_rev_at']
+          deleted?: parameters['rowFilter.project_tile_layers.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["project_tile_layers"][];
-        };
+          schema: definitions['project_tile_layers'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** project_tile_layers */
-          project_tile_layers?: definitions["project_tile_layers"];
-        };
+          project_tile_layers?: definitions['project_tile_layers']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.project_tile_layers.id"];
-          label?: parameters["rowFilter.project_tile_layers.label"];
-          ord?: parameters["rowFilter.project_tile_layers.ord"];
-          active?: parameters["rowFilter.project_tile_layers.active"];
-          project_id?: parameters["rowFilter.project_tile_layers.project_id"];
-          url_template?: parameters["rowFilter.project_tile_layers.url_template"];
-          subdomains?: parameters["rowFilter.project_tile_layers.subdomains"];
-          max_zoom?: parameters["rowFilter.project_tile_layers.max_zoom"];
-          min_zoom?: parameters["rowFilter.project_tile_layers.min_zoom"];
-          opacity?: parameters["rowFilter.project_tile_layers.opacity"];
-          wms_base_url?: parameters["rowFilter.project_tile_layers.wms_base_url"];
-          wms_format?: parameters["rowFilter.project_tile_layers.wms_format"];
-          wms_layers?: parameters["rowFilter.project_tile_layers.wms_layers"];
-          wms_parameters?: parameters["rowFilter.project_tile_layers.wms_parameters"];
-          wms_request?: parameters["rowFilter.project_tile_layers.wms_request"];
-          wms_service?: parameters["rowFilter.project_tile_layers.wms_service"];
-          wms_styles?: parameters["rowFilter.project_tile_layers.wms_styles"];
-          wms_transparent?: parameters["rowFilter.project_tile_layers.wms_transparent"];
-          wms_version?: parameters["rowFilter.project_tile_layers.wms_version"];
-          client_rev_at?: parameters["rowFilter.project_tile_layers.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.project_tile_layers.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.project_tile_layers.server_rev_at"];
-          deleted?: parameters["rowFilter.project_tile_layers.deleted"];
-        };
+          id?: parameters['rowFilter.project_tile_layers.id']
+          label?: parameters['rowFilter.project_tile_layers.label']
+          ord?: parameters['rowFilter.project_tile_layers.ord']
+          active?: parameters['rowFilter.project_tile_layers.active']
+          project_id?: parameters['rowFilter.project_tile_layers.project_id']
+          url_template?: parameters['rowFilter.project_tile_layers.url_template']
+          subdomains?: parameters['rowFilter.project_tile_layers.subdomains']
+          max_zoom?: parameters['rowFilter.project_tile_layers.max_zoom']
+          min_zoom?: parameters['rowFilter.project_tile_layers.min_zoom']
+          opacity?: parameters['rowFilter.project_tile_layers.opacity']
+          wms_base_url?: parameters['rowFilter.project_tile_layers.wms_base_url']
+          wms_format?: parameters['rowFilter.project_tile_layers.wms_format']
+          wms_layers?: parameters['rowFilter.project_tile_layers.wms_layers']
+          wms_parameters?: parameters['rowFilter.project_tile_layers.wms_parameters']
+          wms_request?: parameters['rowFilter.project_tile_layers.wms_request']
+          wms_service?: parameters['rowFilter.project_tile_layers.wms_service']
+          wms_styles?: parameters['rowFilter.project_tile_layers.wms_styles']
+          wms_transparent?: parameters['rowFilter.project_tile_layers.wms_transparent']
+          wms_version?: parameters['rowFilter.project_tile_layers.wms_version']
+          client_rev_at?: parameters['rowFilter.project_tile_layers.client_rev_at']
+          client_rev_by?: parameters['rowFilter.project_tile_layers.client_rev_by']
+          server_rev_at?: parameters['rowFilter.project_tile_layers.server_rev_at']
+          deleted?: parameters['rowFilter.project_tile_layers.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.project_tile_layers.id"];
-          label?: parameters["rowFilter.project_tile_layers.label"];
-          ord?: parameters["rowFilter.project_tile_layers.ord"];
-          active?: parameters["rowFilter.project_tile_layers.active"];
-          project_id?: parameters["rowFilter.project_tile_layers.project_id"];
-          url_template?: parameters["rowFilter.project_tile_layers.url_template"];
-          subdomains?: parameters["rowFilter.project_tile_layers.subdomains"];
-          max_zoom?: parameters["rowFilter.project_tile_layers.max_zoom"];
-          min_zoom?: parameters["rowFilter.project_tile_layers.min_zoom"];
-          opacity?: parameters["rowFilter.project_tile_layers.opacity"];
-          wms_base_url?: parameters["rowFilter.project_tile_layers.wms_base_url"];
-          wms_format?: parameters["rowFilter.project_tile_layers.wms_format"];
-          wms_layers?: parameters["rowFilter.project_tile_layers.wms_layers"];
-          wms_parameters?: parameters["rowFilter.project_tile_layers.wms_parameters"];
-          wms_request?: parameters["rowFilter.project_tile_layers.wms_request"];
-          wms_service?: parameters["rowFilter.project_tile_layers.wms_service"];
-          wms_styles?: parameters["rowFilter.project_tile_layers.wms_styles"];
-          wms_transparent?: parameters["rowFilter.project_tile_layers.wms_transparent"];
-          wms_version?: parameters["rowFilter.project_tile_layers.wms_version"];
-          client_rev_at?: parameters["rowFilter.project_tile_layers.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.project_tile_layers.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.project_tile_layers.server_rev_at"];
-          deleted?: parameters["rowFilter.project_tile_layers.deleted"];
-        };
+          id?: parameters['rowFilter.project_tile_layers.id']
+          label?: parameters['rowFilter.project_tile_layers.label']
+          ord?: parameters['rowFilter.project_tile_layers.ord']
+          active?: parameters['rowFilter.project_tile_layers.active']
+          project_id?: parameters['rowFilter.project_tile_layers.project_id']
+          url_template?: parameters['rowFilter.project_tile_layers.url_template']
+          subdomains?: parameters['rowFilter.project_tile_layers.subdomains']
+          max_zoom?: parameters['rowFilter.project_tile_layers.max_zoom']
+          min_zoom?: parameters['rowFilter.project_tile_layers.min_zoom']
+          opacity?: parameters['rowFilter.project_tile_layers.opacity']
+          wms_base_url?: parameters['rowFilter.project_tile_layers.wms_base_url']
+          wms_format?: parameters['rowFilter.project_tile_layers.wms_format']
+          wms_layers?: parameters['rowFilter.project_tile_layers.wms_layers']
+          wms_parameters?: parameters['rowFilter.project_tile_layers.wms_parameters']
+          wms_request?: parameters['rowFilter.project_tile_layers.wms_request']
+          wms_service?: parameters['rowFilter.project_tile_layers.wms_service']
+          wms_styles?: parameters['rowFilter.project_tile_layers.wms_styles']
+          wms_transparent?: parameters['rowFilter.project_tile_layers.wms_transparent']
+          wms_version?: parameters['rowFilter.project_tile_layers.wms_version']
+          client_rev_at?: parameters['rowFilter.project_tile_layers.client_rev_at']
+          client_rev_by?: parameters['rowFilter.project_tile_layers.client_rev_by']
+          server_rev_at?: parameters['rowFilter.project_tile_layers.server_rev_at']
+          deleted?: parameters['rowFilter.project_tile_layers.deleted']
+        }
         body: {
           /** project_tile_layers */
-          project_tile_layers?: definitions["project_tile_layers"];
-        };
+          project_tile_layers?: definitions['project_tile_layers']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/project_users": {
+        204: never
+      }
+    }
+  }
+  '/project_users': {
     get: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.project_users.id"];
+          id?: parameters['rowFilter.project_users.id']
           /** associated project */
-          project_id?: parameters["rowFilter.project_users.project_id"];
+          project_id?: parameters['rowFilter.project_users.project_id']
           /** associated user */
-          user_email?: parameters["rowFilter.project_users.user_email"];
+          user_email?: parameters['rowFilter.project_users.user_email']
           /** associated role */
-          role?: parameters["rowFilter.project_users.role"];
+          role?: parameters['rowFilter.project_users.role']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.project_users.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.project_users.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.project_users.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.project_users.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.project_users.server_rev_at"];
-          deleted?: parameters["rowFilter.project_users.deleted"];
+          server_rev_at?: parameters['rowFilter.project_users.server_rev_at']
+          deleted?: parameters['rowFilter.project_users.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["project_users"][];
-        };
+          schema: definitions['project_users'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** project_users */
-          project_users?: definitions["project_users"];
-        };
+          project_users?: definitions['project_users']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.project_users.id"];
+          id?: parameters['rowFilter.project_users.id']
           /** associated project */
-          project_id?: parameters["rowFilter.project_users.project_id"];
+          project_id?: parameters['rowFilter.project_users.project_id']
           /** associated user */
-          user_email?: parameters["rowFilter.project_users.user_email"];
+          user_email?: parameters['rowFilter.project_users.user_email']
           /** associated role */
-          role?: parameters["rowFilter.project_users.role"];
+          role?: parameters['rowFilter.project_users.role']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.project_users.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.project_users.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.project_users.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.project_users.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.project_users.server_rev_at"];
-          deleted?: parameters["rowFilter.project_users.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.project_users.server_rev_at']
+          deleted?: parameters['rowFilter.project_users.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.project_users.id"];
+          id?: parameters['rowFilter.project_users.id']
           /** associated project */
-          project_id?: parameters["rowFilter.project_users.project_id"];
+          project_id?: parameters['rowFilter.project_users.project_id']
           /** associated user */
-          user_email?: parameters["rowFilter.project_users.user_email"];
+          user_email?: parameters['rowFilter.project_users.user_email']
           /** associated role */
-          role?: parameters["rowFilter.project_users.role"];
+          role?: parameters['rowFilter.project_users.role']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.project_users.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.project_users.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.project_users.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.project_users.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.project_users.server_rev_at"];
-          deleted?: parameters["rowFilter.project_users.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.project_users.server_rev_at']
+          deleted?: parameters['rowFilter.project_users.deleted']
+        }
         body: {
           /** project_users */
-          project_users?: definitions["project_users"];
-        };
+          project_users?: definitions['project_users']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/projects": {
+        204: never
+      }
+    }
+  }
+  '/projects': {
     get: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.projects.id"];
+          id?: parameters['rowFilter.projects.id']
           /** associated account */
-          account_id?: parameters["rowFilter.projects.account_id"];
+          account_id?: parameters['rowFilter.projects.account_id']
           /** name for use in db and url (lowercase, no special characters) */
-          name?: parameters["rowFilter.projects.name"];
+          name?: parameters['rowFilter.projects.name']
           /** name for use when labeling */
-          label?: parameters["rowFilter.projects.label"];
+          label?: parameters['rowFilter.projects.label']
           /** crs used in geometry fields */
-          crs?: parameters["rowFilter.projects.crs"];
+          crs?: parameters['rowFilter.projects.crs']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.projects.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.projects.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.projects.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.projects.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.projects.server_rev_at"];
-          deleted?: parameters["rowFilter.projects.deleted"];
+          server_rev_at?: parameters['rowFilter.projects.server_rev_at']
+          deleted?: parameters['rowFilter.projects.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["projects"][];
-        };
+          schema: definitions['projects'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** projects */
-          projects?: definitions["projects"];
-        };
+          projects?: definitions['projects']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.projects.id"];
+          id?: parameters['rowFilter.projects.id']
           /** associated account */
-          account_id?: parameters["rowFilter.projects.account_id"];
+          account_id?: parameters['rowFilter.projects.account_id']
           /** name for use in db and url (lowercase, no special characters) */
-          name?: parameters["rowFilter.projects.name"];
+          name?: parameters['rowFilter.projects.name']
           /** name for use when labeling */
-          label?: parameters["rowFilter.projects.label"];
+          label?: parameters['rowFilter.projects.label']
           /** crs used in geometry fields */
-          crs?: parameters["rowFilter.projects.crs"];
+          crs?: parameters['rowFilter.projects.crs']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.projects.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.projects.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.projects.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.projects.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.projects.server_rev_at"];
-          deleted?: parameters["rowFilter.projects.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.projects.server_rev_at']
+          deleted?: parameters['rowFilter.projects.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.projects.id"];
+          id?: parameters['rowFilter.projects.id']
           /** associated account */
-          account_id?: parameters["rowFilter.projects.account_id"];
+          account_id?: parameters['rowFilter.projects.account_id']
           /** name for use in db and url (lowercase, no special characters) */
-          name?: parameters["rowFilter.projects.name"];
+          name?: parameters['rowFilter.projects.name']
           /** name for use when labeling */
-          label?: parameters["rowFilter.projects.label"];
+          label?: parameters['rowFilter.projects.label']
           /** crs used in geometry fields */
-          crs?: parameters["rowFilter.projects.crs"];
+          crs?: parameters['rowFilter.projects.crs']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.projects.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.projects.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.projects.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.projects.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.projects.server_rev_at"];
-          deleted?: parameters["rowFilter.projects.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.projects.server_rev_at']
+          deleted?: parameters['rowFilter.projects.deleted']
+        }
         body: {
           /** projects */
-          projects?: definitions["projects"];
-        };
+          projects?: definitions['projects']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/rel_types": {
+        204: never
+      }
+    }
+  }
+  '/rel_types': {
     get: {
       parameters: {
         query: {
           /** the relation type */
-          value?: parameters["rowFilter.rel_types.value"];
+          value?: parameters['rowFilter.rel_types.value']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.rel_types.sort"];
+          sort?: parameters['rowFilter.rel_types.sort']
           /** explains the version type */
-          comment?: parameters["rowFilter.rel_types.comment"];
+          comment?: parameters['rowFilter.rel_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.rel_types.server_rev_at"];
-          deleted?: parameters["rowFilter.rel_types.deleted"];
+          server_rev_at?: parameters['rowFilter.rel_types.server_rev_at']
+          deleted?: parameters['rowFilter.rel_types.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["rel_types"][];
-        };
+          schema: definitions['rel_types'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** rel_types */
-          rel_types?: definitions["rel_types"];
-        };
+          rel_types?: definitions['rel_types']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** the relation type */
-          value?: parameters["rowFilter.rel_types.value"];
+          value?: parameters['rowFilter.rel_types.value']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.rel_types.sort"];
+          sort?: parameters['rowFilter.rel_types.sort']
           /** explains the version type */
-          comment?: parameters["rowFilter.rel_types.comment"];
+          comment?: parameters['rowFilter.rel_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.rel_types.server_rev_at"];
-          deleted?: parameters["rowFilter.rel_types.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.rel_types.server_rev_at']
+          deleted?: parameters['rowFilter.rel_types.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** the relation type */
-          value?: parameters["rowFilter.rel_types.value"];
+          value?: parameters['rowFilter.rel_types.value']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.rel_types.sort"];
+          sort?: parameters['rowFilter.rel_types.sort']
           /** explains the version type */
-          comment?: parameters["rowFilter.rel_types.comment"];
+          comment?: parameters['rowFilter.rel_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.rel_types.server_rev_at"];
-          deleted?: parameters["rowFilter.rel_types.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.rel_types.server_rev_at']
+          deleted?: parameters['rowFilter.rel_types.deleted']
+        }
         body: {
           /** rel_types */
-          rel_types?: definitions["rel_types"];
-        };
+          rel_types?: definitions['rel_types']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/role_types": {
+        204: never
+      }
+    }
+  }
+  '/role_types': {
     get: {
       parameters: {
         query: {
           /** the role */
-          value?: parameters["rowFilter.role_types.value"];
+          value?: parameters['rowFilter.role_types.value']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.role_types.sort"];
+          sort?: parameters['rowFilter.role_types.sort']
           /** explains the role */
-          comment?: parameters["rowFilter.role_types.comment"];
+          comment?: parameters['rowFilter.role_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.role_types.server_rev_at"];
-          deleted?: parameters["rowFilter.role_types.deleted"];
+          server_rev_at?: parameters['rowFilter.role_types.server_rev_at']
+          deleted?: parameters['rowFilter.role_types.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["role_types"][];
-        };
+          schema: definitions['role_types'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** role_types */
-          role_types?: definitions["role_types"];
-        };
+          role_types?: definitions['role_types']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** the role */
-          value?: parameters["rowFilter.role_types.value"];
+          value?: parameters['rowFilter.role_types.value']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.role_types.sort"];
+          sort?: parameters['rowFilter.role_types.sort']
           /** explains the role */
-          comment?: parameters["rowFilter.role_types.comment"];
+          comment?: parameters['rowFilter.role_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.role_types.server_rev_at"];
-          deleted?: parameters["rowFilter.role_types.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.role_types.server_rev_at']
+          deleted?: parameters['rowFilter.role_types.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** the role */
-          value?: parameters["rowFilter.role_types.value"];
+          value?: parameters['rowFilter.role_types.value']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.role_types.sort"];
+          sort?: parameters['rowFilter.role_types.sort']
           /** explains the role */
-          comment?: parameters["rowFilter.role_types.comment"];
+          comment?: parameters['rowFilter.role_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.role_types.server_rev_at"];
-          deleted?: parameters["rowFilter.role_types.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.role_types.server_rev_at']
+          deleted?: parameters['rowFilter.role_types.deleted']
+        }
         body: {
           /** role_types */
-          role_types?: definitions["role_types"];
-        };
+          role_types?: definitions['role_types']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/row_revs": {
+        204: never
+      }
+    }
+  }
+  '/row_revs': {
     get: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.row_revs.id"];
+          id?: parameters['rowFilter.row_revs.id']
           /** key of table rows */
-          row_id?: parameters["rowFilter.row_revs.row_id"];
-          table_id?: parameters["rowFilter.row_revs.table_id"];
+          row_id?: parameters['rowFilter.row_revs.row_id']
+          table_id?: parameters['rowFilter.row_revs.table_id']
           /** associated row in the parent table (which means: this row is part of a child table) */
-          parent_id?: parameters["rowFilter.row_revs.parent_id"];
-          geometry?: parameters["rowFilter.row_revs.geometry"];
-          geometry_n?: parameters["rowFilter.row_revs.geometry_n"];
-          geometry_e?: parameters["rowFilter.row_revs.geometry_e"];
-          geometry_s?: parameters["rowFilter.row_revs.geometry_s"];
-          geometry_w?: parameters["rowFilter.row_revs.geometry_w"];
-          data?: parameters["rowFilter.row_revs.data"];
-          deleted?: parameters["rowFilter.row_revs.deleted"];
-          client_rev_at?: parameters["rowFilter.row_revs.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.row_revs.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.row_revs.server_rev_at"];
+          parent_id?: parameters['rowFilter.row_revs.parent_id']
+          geometry?: parameters['rowFilter.row_revs.geometry']
+          geometry_n?: parameters['rowFilter.row_revs.geometry_n']
+          geometry_e?: parameters['rowFilter.row_revs.geometry_e']
+          geometry_s?: parameters['rowFilter.row_revs.geometry_s']
+          geometry_w?: parameters['rowFilter.row_revs.geometry_w']
+          data?: parameters['rowFilter.row_revs.data']
+          deleted?: parameters['rowFilter.row_revs.deleted']
+          client_rev_at?: parameters['rowFilter.row_revs.client_rev_at']
+          client_rev_by?: parameters['rowFilter.row_revs.client_rev_by']
+          server_rev_at?: parameters['rowFilter.row_revs.server_rev_at']
           /** hashed value the fields: row_id, table_id, geometry, data, deleted */
-          rev?: parameters["rowFilter.row_revs.rev"];
+          rev?: parameters['rowFilter.row_revs.rev']
           /** hash of the previous revision */
-          parent_rev?: parameters["rowFilter.row_revs.parent_rev"];
+          parent_rev?: parameters['rowFilter.row_revs.parent_rev']
           /** array of hashes of all previous revisions */
-          revisions?: parameters["rowFilter.row_revs.revisions"];
+          revisions?: parameters['rowFilter.row_revs.revisions']
           /** depth of the revision tree */
-          depth?: parameters["rowFilter.row_revs.depth"];
+          depth?: parameters['rowFilter.row_revs.depth']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["row_revs"][];
-        };
+          schema: definitions['row_revs'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** row_revs */
-          row_revs?: definitions["row_revs"];
-        };
+          row_revs?: definitions['row_revs']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.row_revs.id"];
+          id?: parameters['rowFilter.row_revs.id']
           /** key of table rows */
-          row_id?: parameters["rowFilter.row_revs.row_id"];
-          table_id?: parameters["rowFilter.row_revs.table_id"];
+          row_id?: parameters['rowFilter.row_revs.row_id']
+          table_id?: parameters['rowFilter.row_revs.table_id']
           /** associated row in the parent table (which means: this row is part of a child table) */
-          parent_id?: parameters["rowFilter.row_revs.parent_id"];
-          geometry?: parameters["rowFilter.row_revs.geometry"];
-          geometry_n?: parameters["rowFilter.row_revs.geometry_n"];
-          geometry_e?: parameters["rowFilter.row_revs.geometry_e"];
-          geometry_s?: parameters["rowFilter.row_revs.geometry_s"];
-          geometry_w?: parameters["rowFilter.row_revs.geometry_w"];
-          data?: parameters["rowFilter.row_revs.data"];
-          deleted?: parameters["rowFilter.row_revs.deleted"];
-          client_rev_at?: parameters["rowFilter.row_revs.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.row_revs.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.row_revs.server_rev_at"];
+          parent_id?: parameters['rowFilter.row_revs.parent_id']
+          geometry?: parameters['rowFilter.row_revs.geometry']
+          geometry_n?: parameters['rowFilter.row_revs.geometry_n']
+          geometry_e?: parameters['rowFilter.row_revs.geometry_e']
+          geometry_s?: parameters['rowFilter.row_revs.geometry_s']
+          geometry_w?: parameters['rowFilter.row_revs.geometry_w']
+          data?: parameters['rowFilter.row_revs.data']
+          deleted?: parameters['rowFilter.row_revs.deleted']
+          client_rev_at?: parameters['rowFilter.row_revs.client_rev_at']
+          client_rev_by?: parameters['rowFilter.row_revs.client_rev_by']
+          server_rev_at?: parameters['rowFilter.row_revs.server_rev_at']
           /** hashed value the fields: row_id, table_id, geometry, data, deleted */
-          rev?: parameters["rowFilter.row_revs.rev"];
+          rev?: parameters['rowFilter.row_revs.rev']
           /** hash of the previous revision */
-          parent_rev?: parameters["rowFilter.row_revs.parent_rev"];
+          parent_rev?: parameters['rowFilter.row_revs.parent_rev']
           /** array of hashes of all previous revisions */
-          revisions?: parameters["rowFilter.row_revs.revisions"];
+          revisions?: parameters['rowFilter.row_revs.revisions']
           /** depth of the revision tree */
-          depth?: parameters["rowFilter.row_revs.depth"];
-        };
+          depth?: parameters['rowFilter.row_revs.depth']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.row_revs.id"];
+          id?: parameters['rowFilter.row_revs.id']
           /** key of table rows */
-          row_id?: parameters["rowFilter.row_revs.row_id"];
-          table_id?: parameters["rowFilter.row_revs.table_id"];
+          row_id?: parameters['rowFilter.row_revs.row_id']
+          table_id?: parameters['rowFilter.row_revs.table_id']
           /** associated row in the parent table (which means: this row is part of a child table) */
-          parent_id?: parameters["rowFilter.row_revs.parent_id"];
-          geometry?: parameters["rowFilter.row_revs.geometry"];
-          geometry_n?: parameters["rowFilter.row_revs.geometry_n"];
-          geometry_e?: parameters["rowFilter.row_revs.geometry_e"];
-          geometry_s?: parameters["rowFilter.row_revs.geometry_s"];
-          geometry_w?: parameters["rowFilter.row_revs.geometry_w"];
-          data?: parameters["rowFilter.row_revs.data"];
-          deleted?: parameters["rowFilter.row_revs.deleted"];
-          client_rev_at?: parameters["rowFilter.row_revs.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.row_revs.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.row_revs.server_rev_at"];
+          parent_id?: parameters['rowFilter.row_revs.parent_id']
+          geometry?: parameters['rowFilter.row_revs.geometry']
+          geometry_n?: parameters['rowFilter.row_revs.geometry_n']
+          geometry_e?: parameters['rowFilter.row_revs.geometry_e']
+          geometry_s?: parameters['rowFilter.row_revs.geometry_s']
+          geometry_w?: parameters['rowFilter.row_revs.geometry_w']
+          data?: parameters['rowFilter.row_revs.data']
+          deleted?: parameters['rowFilter.row_revs.deleted']
+          client_rev_at?: parameters['rowFilter.row_revs.client_rev_at']
+          client_rev_by?: parameters['rowFilter.row_revs.client_rev_by']
+          server_rev_at?: parameters['rowFilter.row_revs.server_rev_at']
           /** hashed value the fields: row_id, table_id, geometry, data, deleted */
-          rev?: parameters["rowFilter.row_revs.rev"];
+          rev?: parameters['rowFilter.row_revs.rev']
           /** hash of the previous revision */
-          parent_rev?: parameters["rowFilter.row_revs.parent_rev"];
+          parent_rev?: parameters['rowFilter.row_revs.parent_rev']
           /** array of hashes of all previous revisions */
-          revisions?: parameters["rowFilter.row_revs.revisions"];
+          revisions?: parameters['rowFilter.row_revs.revisions']
           /** depth of the revision tree */
-          depth?: parameters["rowFilter.row_revs.depth"];
-        };
+          depth?: parameters['rowFilter.row_revs.depth']
+        }
         body: {
           /** row_revs */
-          row_revs?: definitions["row_revs"];
-        };
+          row_revs?: definitions['row_revs']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/rows": {
+        204: never
+      }
+    }
+  }
+  '/rows': {
     get: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.rows.id"];
+          id?: parameters['rowFilter.rows.id']
           /** associated table */
-          table_id?: parameters["rowFilter.rows.table_id"];
+          table_id?: parameters['rowFilter.rows.table_id']
           /** associated row in the parent table (which means: this row is part of a child table) */
-          parent_id?: parameters["rowFilter.rows.parent_id"];
+          parent_id?: parameters['rowFilter.rows.parent_id']
           /** row geometry (GeometryCollection) */
-          geometry?: parameters["rowFilter.rows.geometry"];
+          geometry?: parameters['rowFilter.rows.geometry']
           /** Northernmost point of the geometry. Used to filter geometries for viewport client-side */
-          geometry_n?: parameters["rowFilter.rows.geometry_n"];
+          geometry_n?: parameters['rowFilter.rows.geometry_n']
           /** Easternmost point of the geometry. Used to filter geometries for viewport client-side */
-          geometry_e?: parameters["rowFilter.rows.geometry_e"];
+          geometry_e?: parameters['rowFilter.rows.geometry_e']
           /** Southernmost point of the geometry. Used to filter geometries for viewport client-side */
-          geometry_s?: parameters["rowFilter.rows.geometry_s"];
+          geometry_s?: parameters['rowFilter.rows.geometry_s']
           /** Westernmost point of the geometry. Used to filter geometries for viewport client-side */
-          geometry_w?: parameters["rowFilter.rows.geometry_w"];
+          geometry_w?: parameters['rowFilter.rows.geometry_w']
           /** fields (keys) and data (values) according to the related fields table */
-          data?: parameters["rowFilter.rows.data"];
+          data?: parameters['rowFilter.rows.data']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.rows.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.rows.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.rows.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.rows.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.rows.server_rev_at"];
-          rev?: parameters["rowFilter.rows.rev"];
-          parent_rev?: parameters["rowFilter.rows.parent_rev"];
-          revisions?: parameters["rowFilter.rows.revisions"];
-          depth?: parameters["rowFilter.rows.depth"];
+          server_rev_at?: parameters['rowFilter.rows.server_rev_at']
+          rev?: parameters['rowFilter.rows.rev']
+          parent_rev?: parameters['rowFilter.rows.parent_rev']
+          revisions?: parameters['rowFilter.rows.revisions']
+          depth?: parameters['rowFilter.rows.depth']
           /** marks if the row is deleted */
-          deleted?: parameters["rowFilter.rows.deleted"];
-          conflicts?: parameters["rowFilter.rows.conflicts"];
+          deleted?: parameters['rowFilter.rows.deleted']
+          conflicts?: parameters['rowFilter.rows.conflicts']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["rows"][];
-        };
+          schema: definitions['rows'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** rows */
-          rows?: definitions["rows"];
-        };
+          rows?: definitions['rows']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.rows.id"];
+          id?: parameters['rowFilter.rows.id']
           /** associated table */
-          table_id?: parameters["rowFilter.rows.table_id"];
+          table_id?: parameters['rowFilter.rows.table_id']
           /** associated row in the parent table (which means: this row is part of a child table) */
-          parent_id?: parameters["rowFilter.rows.parent_id"];
+          parent_id?: parameters['rowFilter.rows.parent_id']
           /** row geometry (GeometryCollection) */
-          geometry?: parameters["rowFilter.rows.geometry"];
+          geometry?: parameters['rowFilter.rows.geometry']
           /** Northernmost point of the geometry. Used to filter geometries for viewport client-side */
-          geometry_n?: parameters["rowFilter.rows.geometry_n"];
+          geometry_n?: parameters['rowFilter.rows.geometry_n']
           /** Easternmost point of the geometry. Used to filter geometries for viewport client-side */
-          geometry_e?: parameters["rowFilter.rows.geometry_e"];
+          geometry_e?: parameters['rowFilter.rows.geometry_e']
           /** Southernmost point of the geometry. Used to filter geometries for viewport client-side */
-          geometry_s?: parameters["rowFilter.rows.geometry_s"];
+          geometry_s?: parameters['rowFilter.rows.geometry_s']
           /** Westernmost point of the geometry. Used to filter geometries for viewport client-side */
-          geometry_w?: parameters["rowFilter.rows.geometry_w"];
+          geometry_w?: parameters['rowFilter.rows.geometry_w']
           /** fields (keys) and data (values) according to the related fields table */
-          data?: parameters["rowFilter.rows.data"];
+          data?: parameters['rowFilter.rows.data']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.rows.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.rows.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.rows.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.rows.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.rows.server_rev_at"];
-          rev?: parameters["rowFilter.rows.rev"];
-          parent_rev?: parameters["rowFilter.rows.parent_rev"];
-          revisions?: parameters["rowFilter.rows.revisions"];
-          depth?: parameters["rowFilter.rows.depth"];
+          server_rev_at?: parameters['rowFilter.rows.server_rev_at']
+          rev?: parameters['rowFilter.rows.rev']
+          parent_rev?: parameters['rowFilter.rows.parent_rev']
+          revisions?: parameters['rowFilter.rows.revisions']
+          depth?: parameters['rowFilter.rows.depth']
           /** marks if the row is deleted */
-          deleted?: parameters["rowFilter.rows.deleted"];
-          conflicts?: parameters["rowFilter.rows.conflicts"];
-        };
+          deleted?: parameters['rowFilter.rows.deleted']
+          conflicts?: parameters['rowFilter.rows.conflicts']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.rows.id"];
+          id?: parameters['rowFilter.rows.id']
           /** associated table */
-          table_id?: parameters["rowFilter.rows.table_id"];
+          table_id?: parameters['rowFilter.rows.table_id']
           /** associated row in the parent table (which means: this row is part of a child table) */
-          parent_id?: parameters["rowFilter.rows.parent_id"];
+          parent_id?: parameters['rowFilter.rows.parent_id']
           /** row geometry (GeometryCollection) */
-          geometry?: parameters["rowFilter.rows.geometry"];
+          geometry?: parameters['rowFilter.rows.geometry']
           /** Northernmost point of the geometry. Used to filter geometries for viewport client-side */
-          geometry_n?: parameters["rowFilter.rows.geometry_n"];
+          geometry_n?: parameters['rowFilter.rows.geometry_n']
           /** Easternmost point of the geometry. Used to filter geometries for viewport client-side */
-          geometry_e?: parameters["rowFilter.rows.geometry_e"];
+          geometry_e?: parameters['rowFilter.rows.geometry_e']
           /** Southernmost point of the geometry. Used to filter geometries for viewport client-side */
-          geometry_s?: parameters["rowFilter.rows.geometry_s"];
+          geometry_s?: parameters['rowFilter.rows.geometry_s']
           /** Westernmost point of the geometry. Used to filter geometries for viewport client-side */
-          geometry_w?: parameters["rowFilter.rows.geometry_w"];
+          geometry_w?: parameters['rowFilter.rows.geometry_w']
           /** fields (keys) and data (values) according to the related fields table */
-          data?: parameters["rowFilter.rows.data"];
+          data?: parameters['rowFilter.rows.data']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.rows.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.rows.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.rows.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.rows.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.rows.server_rev_at"];
-          rev?: parameters["rowFilter.rows.rev"];
-          parent_rev?: parameters["rowFilter.rows.parent_rev"];
-          revisions?: parameters["rowFilter.rows.revisions"];
-          depth?: parameters["rowFilter.rows.depth"];
+          server_rev_at?: parameters['rowFilter.rows.server_rev_at']
+          rev?: parameters['rowFilter.rows.rev']
+          parent_rev?: parameters['rowFilter.rows.parent_rev']
+          revisions?: parameters['rowFilter.rows.revisions']
+          depth?: parameters['rowFilter.rows.depth']
           /** marks if the row is deleted */
-          deleted?: parameters["rowFilter.rows.deleted"];
-          conflicts?: parameters["rowFilter.rows.conflicts"];
-        };
+          deleted?: parameters['rowFilter.rows.deleted']
+          conflicts?: parameters['rowFilter.rows.conflicts']
+        }
         body: {
           /** rows */
-          rows?: definitions["rows"];
-        };
+          rows?: definitions['rows']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/tables": {
+        204: never
+      }
+    }
+  }
+  '/tables': {
     get: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.tables.id"];
+          id?: parameters['rowFilter.tables.id']
           /** associated project */
-          project_id?: parameters["rowFilter.tables.project_id"];
+          project_id?: parameters['rowFilter.tables.project_id']
           /** parent table */
-          parent_id?: parameters["rowFilter.tables.parent_id"];
+          parent_id?: parameters['rowFilter.tables.parent_id']
           /** releation with parent table: 1:1 or 1:n */
-          rel_type?: parameters["rowFilter.tables.rel_type"];
+          rel_type?: parameters['rowFilter.tables.rel_type']
           /** name for use in db and url (lowercase, no special characters) */
-          name?: parameters["rowFilter.tables.name"];
+          name?: parameters['rowFilter.tables.name']
           /** name for use when labeling */
-          label?: parameters["rowFilter.tables.label"];
-          single_label?: parameters["rowFilter.tables.single_label"];
+          label?: parameters['rowFilter.tables.label']
+          single_label?: parameters['rowFilter.tables.single_label']
           /** fields used to label and sort rows */
-          label_fields?: parameters["rowFilter.tables.label_fields"];
+          label_fields?: parameters['rowFilter.tables.label_fields']
           /** characters used to separate fields when labelling rows */
-          label_fields_separator?: parameters["rowFilter.tables.label_fields_separator"];
+          label_fields_separator?: parameters['rowFilter.tables.label_fields_separator']
           /** enables ordering the tables of a project */
-          ord?: parameters["rowFilter.tables.ord"];
+          ord?: parameters['rowFilter.tables.ord']
           /** What type of options list will this be? */
-          option_type?: parameters["rowFilter.tables.option_type"];
+          option_type?: parameters['rowFilter.tables.option_type']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.tables.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.tables.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.tables.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.tables.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.tables.server_rev_at"];
-          deleted?: parameters["rowFilter.tables.deleted"];
+          server_rev_at?: parameters['rowFilter.tables.server_rev_at']
+          deleted?: parameters['rowFilter.tables.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["tables"][];
-        };
+          schema: definitions['tables'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** tables */
-          tables?: definitions["tables"];
-        };
+          tables?: definitions['tables']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.tables.id"];
+          id?: parameters['rowFilter.tables.id']
           /** associated project */
-          project_id?: parameters["rowFilter.tables.project_id"];
+          project_id?: parameters['rowFilter.tables.project_id']
           /** parent table */
-          parent_id?: parameters["rowFilter.tables.parent_id"];
+          parent_id?: parameters['rowFilter.tables.parent_id']
           /** releation with parent table: 1:1 or 1:n */
-          rel_type?: parameters["rowFilter.tables.rel_type"];
+          rel_type?: parameters['rowFilter.tables.rel_type']
           /** name for use in db and url (lowercase, no special characters) */
-          name?: parameters["rowFilter.tables.name"];
+          name?: parameters['rowFilter.tables.name']
           /** name for use when labeling */
-          label?: parameters["rowFilter.tables.label"];
-          single_label?: parameters["rowFilter.tables.single_label"];
+          label?: parameters['rowFilter.tables.label']
+          single_label?: parameters['rowFilter.tables.single_label']
           /** fields used to label and sort rows */
-          label_fields?: parameters["rowFilter.tables.label_fields"];
+          label_fields?: parameters['rowFilter.tables.label_fields']
           /** characters used to separate fields when labelling rows */
-          label_fields_separator?: parameters["rowFilter.tables.label_fields_separator"];
+          label_fields_separator?: parameters['rowFilter.tables.label_fields_separator']
           /** enables ordering the tables of a project */
-          ord?: parameters["rowFilter.tables.ord"];
+          ord?: parameters['rowFilter.tables.ord']
           /** What type of options list will this be? */
-          option_type?: parameters["rowFilter.tables.option_type"];
+          option_type?: parameters['rowFilter.tables.option_type']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.tables.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.tables.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.tables.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.tables.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.tables.server_rev_at"];
-          deleted?: parameters["rowFilter.tables.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.tables.server_rev_at']
+          deleted?: parameters['rowFilter.tables.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.tables.id"];
+          id?: parameters['rowFilter.tables.id']
           /** associated project */
-          project_id?: parameters["rowFilter.tables.project_id"];
+          project_id?: parameters['rowFilter.tables.project_id']
           /** parent table */
-          parent_id?: parameters["rowFilter.tables.parent_id"];
+          parent_id?: parameters['rowFilter.tables.parent_id']
           /** releation with parent table: 1:1 or 1:n */
-          rel_type?: parameters["rowFilter.tables.rel_type"];
+          rel_type?: parameters['rowFilter.tables.rel_type']
           /** name for use in db and url (lowercase, no special characters) */
-          name?: parameters["rowFilter.tables.name"];
+          name?: parameters['rowFilter.tables.name']
           /** name for use when labeling */
-          label?: parameters["rowFilter.tables.label"];
-          single_label?: parameters["rowFilter.tables.single_label"];
+          label?: parameters['rowFilter.tables.label']
+          single_label?: parameters['rowFilter.tables.single_label']
           /** fields used to label and sort rows */
-          label_fields?: parameters["rowFilter.tables.label_fields"];
+          label_fields?: parameters['rowFilter.tables.label_fields']
           /** characters used to separate fields when labelling rows */
-          label_fields_separator?: parameters["rowFilter.tables.label_fields_separator"];
+          label_fields_separator?: parameters['rowFilter.tables.label_fields_separator']
           /** enables ordering the tables of a project */
-          ord?: parameters["rowFilter.tables.ord"];
+          ord?: parameters['rowFilter.tables.ord']
           /** What type of options list will this be? */
-          option_type?: parameters["rowFilter.tables.option_type"];
+          option_type?: parameters['rowFilter.tables.option_type']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.tables.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.tables.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.tables.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.tables.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.tables.server_rev_at"];
-          deleted?: parameters["rowFilter.tables.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.tables.server_rev_at']
+          deleted?: parameters['rowFilter.tables.deleted']
+        }
         body: {
           /** tables */
-          tables?: definitions["tables"];
-        };
+          tables?: definitions['tables']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/tile_layers": {
+        204: never
+      }
+    }
+  }
+  '/tile_layers': {
     get: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.tile_layers.id"];
-          label?: parameters["rowFilter.tile_layers.label"];
-          url_template?: parameters["rowFilter.tile_layers.url_template"];
-          subdomains?: parameters["rowFilter.tile_layers.subdomains"];
-          max_zoom?: parameters["rowFilter.tile_layers.max_zoom"];
-          min_zoom?: parameters["rowFilter.tile_layers.min_zoom"];
-          opacity?: parameters["rowFilter.tile_layers.opacity"];
-          wms_base_url?: parameters["rowFilter.tile_layers.wms_base_url"];
-          wms_format?: parameters["rowFilter.tile_layers.wms_format"];
-          wms_layers?: parameters["rowFilter.tile_layers.wms_layers"];
-          wms_parameters?: parameters["rowFilter.tile_layers.wms_parameters"];
-          wms_request?: parameters["rowFilter.tile_layers.wms_request"];
-          wms_service?: parameters["rowFilter.tile_layers.wms_service"];
-          wms_styles?: parameters["rowFilter.tile_layers.wms_styles"];
-          wms_transparent?: parameters["rowFilter.tile_layers.wms_transparent"];
-          wms_version?: parameters["rowFilter.tile_layers.wms_version"];
-          client_rev_at?: parameters["rowFilter.tile_layers.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.tile_layers.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.tile_layers.server_rev_at"];
-          deleted?: parameters["rowFilter.tile_layers.deleted"];
+          id?: parameters['rowFilter.tile_layers.id']
+          label?: parameters['rowFilter.tile_layers.label']
+          url_template?: parameters['rowFilter.tile_layers.url_template']
+          subdomains?: parameters['rowFilter.tile_layers.subdomains']
+          max_zoom?: parameters['rowFilter.tile_layers.max_zoom']
+          min_zoom?: parameters['rowFilter.tile_layers.min_zoom']
+          opacity?: parameters['rowFilter.tile_layers.opacity']
+          wms_base_url?: parameters['rowFilter.tile_layers.wms_base_url']
+          wms_format?: parameters['rowFilter.tile_layers.wms_format']
+          wms_layers?: parameters['rowFilter.tile_layers.wms_layers']
+          wms_parameters?: parameters['rowFilter.tile_layers.wms_parameters']
+          wms_request?: parameters['rowFilter.tile_layers.wms_request']
+          wms_service?: parameters['rowFilter.tile_layers.wms_service']
+          wms_styles?: parameters['rowFilter.tile_layers.wms_styles']
+          wms_transparent?: parameters['rowFilter.tile_layers.wms_transparent']
+          wms_version?: parameters['rowFilter.tile_layers.wms_version']
+          client_rev_at?: parameters['rowFilter.tile_layers.client_rev_at']
+          client_rev_by?: parameters['rowFilter.tile_layers.client_rev_by']
+          server_rev_at?: parameters['rowFilter.tile_layers.server_rev_at']
+          deleted?: parameters['rowFilter.tile_layers.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["tile_layers"][];
-        };
+          schema: definitions['tile_layers'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** tile_layers */
-          tile_layers?: definitions["tile_layers"];
-        };
+          tile_layers?: definitions['tile_layers']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.tile_layers.id"];
-          label?: parameters["rowFilter.tile_layers.label"];
-          url_template?: parameters["rowFilter.tile_layers.url_template"];
-          subdomains?: parameters["rowFilter.tile_layers.subdomains"];
-          max_zoom?: parameters["rowFilter.tile_layers.max_zoom"];
-          min_zoom?: parameters["rowFilter.tile_layers.min_zoom"];
-          opacity?: parameters["rowFilter.tile_layers.opacity"];
-          wms_base_url?: parameters["rowFilter.tile_layers.wms_base_url"];
-          wms_format?: parameters["rowFilter.tile_layers.wms_format"];
-          wms_layers?: parameters["rowFilter.tile_layers.wms_layers"];
-          wms_parameters?: parameters["rowFilter.tile_layers.wms_parameters"];
-          wms_request?: parameters["rowFilter.tile_layers.wms_request"];
-          wms_service?: parameters["rowFilter.tile_layers.wms_service"];
-          wms_styles?: parameters["rowFilter.tile_layers.wms_styles"];
-          wms_transparent?: parameters["rowFilter.tile_layers.wms_transparent"];
-          wms_version?: parameters["rowFilter.tile_layers.wms_version"];
-          client_rev_at?: parameters["rowFilter.tile_layers.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.tile_layers.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.tile_layers.server_rev_at"];
-          deleted?: parameters["rowFilter.tile_layers.deleted"];
-        };
+          id?: parameters['rowFilter.tile_layers.id']
+          label?: parameters['rowFilter.tile_layers.label']
+          url_template?: parameters['rowFilter.tile_layers.url_template']
+          subdomains?: parameters['rowFilter.tile_layers.subdomains']
+          max_zoom?: parameters['rowFilter.tile_layers.max_zoom']
+          min_zoom?: parameters['rowFilter.tile_layers.min_zoom']
+          opacity?: parameters['rowFilter.tile_layers.opacity']
+          wms_base_url?: parameters['rowFilter.tile_layers.wms_base_url']
+          wms_format?: parameters['rowFilter.tile_layers.wms_format']
+          wms_layers?: parameters['rowFilter.tile_layers.wms_layers']
+          wms_parameters?: parameters['rowFilter.tile_layers.wms_parameters']
+          wms_request?: parameters['rowFilter.tile_layers.wms_request']
+          wms_service?: parameters['rowFilter.tile_layers.wms_service']
+          wms_styles?: parameters['rowFilter.tile_layers.wms_styles']
+          wms_transparent?: parameters['rowFilter.tile_layers.wms_transparent']
+          wms_version?: parameters['rowFilter.tile_layers.wms_version']
+          client_rev_at?: parameters['rowFilter.tile_layers.client_rev_at']
+          client_rev_by?: parameters['rowFilter.tile_layers.client_rev_by']
+          server_rev_at?: parameters['rowFilter.tile_layers.server_rev_at']
+          deleted?: parameters['rowFilter.tile_layers.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
-          id?: parameters["rowFilter.tile_layers.id"];
-          label?: parameters["rowFilter.tile_layers.label"];
-          url_template?: parameters["rowFilter.tile_layers.url_template"];
-          subdomains?: parameters["rowFilter.tile_layers.subdomains"];
-          max_zoom?: parameters["rowFilter.tile_layers.max_zoom"];
-          min_zoom?: parameters["rowFilter.tile_layers.min_zoom"];
-          opacity?: parameters["rowFilter.tile_layers.opacity"];
-          wms_base_url?: parameters["rowFilter.tile_layers.wms_base_url"];
-          wms_format?: parameters["rowFilter.tile_layers.wms_format"];
-          wms_layers?: parameters["rowFilter.tile_layers.wms_layers"];
-          wms_parameters?: parameters["rowFilter.tile_layers.wms_parameters"];
-          wms_request?: parameters["rowFilter.tile_layers.wms_request"];
-          wms_service?: parameters["rowFilter.tile_layers.wms_service"];
-          wms_styles?: parameters["rowFilter.tile_layers.wms_styles"];
-          wms_transparent?: parameters["rowFilter.tile_layers.wms_transparent"];
-          wms_version?: parameters["rowFilter.tile_layers.wms_version"];
-          client_rev_at?: parameters["rowFilter.tile_layers.client_rev_at"];
-          client_rev_by?: parameters["rowFilter.tile_layers.client_rev_by"];
-          server_rev_at?: parameters["rowFilter.tile_layers.server_rev_at"];
-          deleted?: parameters["rowFilter.tile_layers.deleted"];
-        };
+          id?: parameters['rowFilter.tile_layers.id']
+          label?: parameters['rowFilter.tile_layers.label']
+          url_template?: parameters['rowFilter.tile_layers.url_template']
+          subdomains?: parameters['rowFilter.tile_layers.subdomains']
+          max_zoom?: parameters['rowFilter.tile_layers.max_zoom']
+          min_zoom?: parameters['rowFilter.tile_layers.min_zoom']
+          opacity?: parameters['rowFilter.tile_layers.opacity']
+          wms_base_url?: parameters['rowFilter.tile_layers.wms_base_url']
+          wms_format?: parameters['rowFilter.tile_layers.wms_format']
+          wms_layers?: parameters['rowFilter.tile_layers.wms_layers']
+          wms_parameters?: parameters['rowFilter.tile_layers.wms_parameters']
+          wms_request?: parameters['rowFilter.tile_layers.wms_request']
+          wms_service?: parameters['rowFilter.tile_layers.wms_service']
+          wms_styles?: parameters['rowFilter.tile_layers.wms_styles']
+          wms_transparent?: parameters['rowFilter.tile_layers.wms_transparent']
+          wms_version?: parameters['rowFilter.tile_layers.wms_version']
+          client_rev_at?: parameters['rowFilter.tile_layers.client_rev_at']
+          client_rev_by?: parameters['rowFilter.tile_layers.client_rev_by']
+          server_rev_at?: parameters['rowFilter.tile_layers.server_rev_at']
+          deleted?: parameters['rowFilter.tile_layers.deleted']
+        }
         body: {
           /** tile_layers */
-          tile_layers?: definitions["tile_layers"];
-        };
+          tile_layers?: definitions['tile_layers']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/users": {
+        204: never
+      }
+    }
+  }
+  '/users': {
     get: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.users.id"];
+          id?: parameters['rowFilter.users.id']
           /** name */
-          name?: parameters["rowFilter.users.name"];
+          name?: parameters['rowFilter.users.name']
           /** email */
-          email?: parameters["rowFilter.users.email"];
+          email?: parameters['rowFilter.users.email']
           /** associated account */
-          account_id?: parameters["rowFilter.users.account_id"];
+          account_id?: parameters['rowFilter.users.account_id']
           /** associated auth */
-          auth_id?: parameters["rowFilter.users.auth_id"];
+          auth_user_id?: parameters['rowFilter.users.auth_user_id']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.users.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.users.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.users.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.users.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.users.server_rev_at"];
-          deleted?: parameters["rowFilter.users.deleted"];
+          server_rev_at?: parameters['rowFilter.users.server_rev_at']
+          deleted?: parameters['rowFilter.users.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["users"][];
-        };
+          schema: definitions['users'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** users */
-          users?: definitions["users"];
-        };
+          users?: definitions['users']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.users.id"];
+          id?: parameters['rowFilter.users.id']
           /** name */
-          name?: parameters["rowFilter.users.name"];
+          name?: parameters['rowFilter.users.name']
           /** email */
-          email?: parameters["rowFilter.users.email"];
+          email?: parameters['rowFilter.users.email']
           /** associated account */
-          account_id?: parameters["rowFilter.users.account_id"];
+          account_id?: parameters['rowFilter.users.account_id']
           /** associated auth */
-          auth_id?: parameters["rowFilter.users.auth_id"];
+          auth_user_id?: parameters['rowFilter.users.auth_user_id']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.users.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.users.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.users.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.users.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.users.server_rev_at"];
-          deleted?: parameters["rowFilter.users.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.users.server_rev_at']
+          deleted?: parameters['rowFilter.users.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** primary key */
-          id?: parameters["rowFilter.users.id"];
+          id?: parameters['rowFilter.users.id']
           /** name */
-          name?: parameters["rowFilter.users.name"];
+          name?: parameters['rowFilter.users.name']
           /** email */
-          email?: parameters["rowFilter.users.email"];
+          email?: parameters['rowFilter.users.email']
           /** associated account */
-          account_id?: parameters["rowFilter.users.account_id"];
+          account_id?: parameters['rowFilter.users.account_id']
           /** associated auth */
-          auth_id?: parameters["rowFilter.users.auth_id"];
+          auth_user_id?: parameters['rowFilter.users.auth_user_id']
           /** time of last edit on client */
-          client_rev_at?: parameters["rowFilter.users.client_rev_at"];
+          client_rev_at?: parameters['rowFilter.users.client_rev_at']
           /** user editing last on client */
-          client_rev_by?: parameters["rowFilter.users.client_rev_by"];
+          client_rev_by?: parameters['rowFilter.users.client_rev_by']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.users.server_rev_at"];
-          deleted?: parameters["rowFilter.users.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.users.server_rev_at']
+          deleted?: parameters['rowFilter.users.deleted']
+        }
         body: {
           /** users */
-          users?: definitions["users"];
-        };
+          users?: definitions['users']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/version_types": {
+        204: never
+      }
+    }
+  }
+  '/version_types': {
     get: {
       parameters: {
         query: {
           /** explains the version type */
-          value?: parameters["rowFilter.version_types.value"];
+          value?: parameters['rowFilter.version_types.value']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.version_types.sort"];
-          comment?: parameters["rowFilter.version_types.comment"];
+          sort?: parameters['rowFilter.version_types.sort']
+          comment?: parameters['rowFilter.version_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.version_types.server_rev_at"];
-          deleted?: parameters["rowFilter.version_types.deleted"];
+          server_rev_at?: parameters['rowFilter.version_types.server_rev_at']
+          deleted?: parameters['rowFilter.version_types.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["version_types"][];
-        };
+          schema: definitions['version_types'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** version_types */
-          version_types?: definitions["version_types"];
-        };
+          version_types?: definitions['version_types']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** explains the version type */
-          value?: parameters["rowFilter.version_types.value"];
+          value?: parameters['rowFilter.version_types.value']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.version_types.sort"];
-          comment?: parameters["rowFilter.version_types.comment"];
+          sort?: parameters['rowFilter.version_types.sort']
+          comment?: parameters['rowFilter.version_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.version_types.server_rev_at"];
-          deleted?: parameters["rowFilter.version_types.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.version_types.server_rev_at']
+          deleted?: parameters['rowFilter.version_types.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** explains the version type */
-          value?: parameters["rowFilter.version_types.value"];
+          value?: parameters['rowFilter.version_types.value']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.version_types.sort"];
-          comment?: parameters["rowFilter.version_types.comment"];
+          sort?: parameters['rowFilter.version_types.sort']
+          comment?: parameters['rowFilter.version_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.version_types.server_rev_at"];
-          deleted?: parameters["rowFilter.version_types.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.version_types.server_rev_at']
+          deleted?: parameters['rowFilter.version_types.deleted']
+        }
         body: {
           /** version_types */
-          version_types?: definitions["version_types"];
-        };
+          version_types?: definitions['version_types']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/widget_types": {
+        204: never
+      }
+    }
+  }
+  '/widget_types': {
     get: {
       parameters: {
         query: {
           /** the relation type */
-          value?: parameters["rowFilter.widget_types.value"];
+          value?: parameters['rowFilter.widget_types.value']
           /** whether the widget needs an options list */
-          needs_list?: parameters["rowFilter.widget_types.needs_list"];
+          needs_list?: parameters['rowFilter.widget_types.needs_list']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.widget_types.sort"];
+          sort?: parameters['rowFilter.widget_types.sort']
           /** explains the version type */
-          comment?: parameters["rowFilter.widget_types.comment"];
+          comment?: parameters['rowFilter.widget_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.widget_types.server_rev_at"];
-          deleted?: parameters["rowFilter.widget_types.deleted"];
+          server_rev_at?: parameters['rowFilter.widget_types.server_rev_at']
+          deleted?: parameters['rowFilter.widget_types.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["widget_types"][];
-        };
+          schema: definitions['widget_types'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** widget_types */
-          widget_types?: definitions["widget_types"];
-        };
+          widget_types?: definitions['widget_types']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
           /** the relation type */
-          value?: parameters["rowFilter.widget_types.value"];
+          value?: parameters['rowFilter.widget_types.value']
           /** whether the widget needs an options list */
-          needs_list?: parameters["rowFilter.widget_types.needs_list"];
+          needs_list?: parameters['rowFilter.widget_types.needs_list']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.widget_types.sort"];
+          sort?: parameters['rowFilter.widget_types.sort']
           /** explains the version type */
-          comment?: parameters["rowFilter.widget_types.comment"];
+          comment?: parameters['rowFilter.widget_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.widget_types.server_rev_at"];
-          deleted?: parameters["rowFilter.widget_types.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.widget_types.server_rev_at']
+          deleted?: parameters['rowFilter.widget_types.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
           /** the relation type */
-          value?: parameters["rowFilter.widget_types.value"];
+          value?: parameters['rowFilter.widget_types.value']
           /** whether the widget needs an options list */
-          needs_list?: parameters["rowFilter.widget_types.needs_list"];
+          needs_list?: parameters['rowFilter.widget_types.needs_list']
           /** enables sorting at will */
-          sort?: parameters["rowFilter.widget_types.sort"];
+          sort?: parameters['rowFilter.widget_types.sort']
           /** explains the version type */
-          comment?: parameters["rowFilter.widget_types.comment"];
+          comment?: parameters['rowFilter.widget_types.comment']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.widget_types.server_rev_at"];
-          deleted?: parameters["rowFilter.widget_types.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.widget_types.server_rev_at']
+          deleted?: parameters['rowFilter.widget_types.deleted']
+        }
         body: {
           /** widget_types */
-          widget_types?: definitions["widget_types"];
-        };
+          widget_types?: definitions['widget_types']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/widgets_for_fields": {
+        204: never
+      }
+    }
+  }
+  '/widgets_for_fields': {
     get: {
       parameters: {
         query: {
-          field_value?: parameters["rowFilter.widgets_for_fields.field_value"];
-          widget_value?: parameters["rowFilter.widgets_for_fields.widget_value"];
+          field_value?: parameters['rowFilter.widgets_for_fields.field_value']
+          widget_value?: parameters['rowFilter.widgets_for_fields.widget_value']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.widgets_for_fields.server_rev_at"];
-          deleted?: parameters["rowFilter.widgets_for_fields.deleted"];
+          server_rev_at?: parameters['rowFilter.widgets_for_fields.server_rev_at']
+          deleted?: parameters['rowFilter.widgets_for_fields.deleted']
           /** Filtering Columns */
-          select?: parameters["select"];
+          select?: parameters['select']
           /** Ordering */
-          order?: parameters["order"];
+          order?: parameters['order']
           /** Limiting and Pagination */
-          offset?: parameters["offset"];
+          offset?: parameters['offset']
           /** Limiting and Pagination */
-          limit?: parameters["limit"];
-        };
+          limit?: parameters['limit']
+        }
         header: {
           /** Limiting and Pagination */
-          Range?: parameters["range"];
+          Range?: parameters['range']
           /** Limiting and Pagination */
-          "Range-Unit"?: parameters["rangeUnit"];
+          'Range-Unit'?: parameters['rangeUnit']
           /** Preference */
-          Prefer?: parameters["preferCount"];
-        };
-      };
+          Prefer?: parameters['preferCount']
+        }
+      }
       responses: {
         /** OK */
         200: {
-          schema: definitions["widgets_for_fields"][];
-        };
+          schema: definitions['widgets_for_fields'][]
+        }
         /** Partial Content */
-        206: unknown;
-      };
-    };
+        206: unknown
+      }
+    }
     post: {
       parameters: {
         body: {
           /** widgets_for_fields */
-          widgets_for_fields?: definitions["widgets_for_fields"];
-        };
+          widgets_for_fields?: definitions['widgets_for_fields']
+        }
         query: {
           /** Filtering Columns */
-          select?: parameters["select"];
-        };
+          select?: parameters['select']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** Created */
-        201: unknown;
-      };
-    };
+        201: unknown
+      }
+    }
     delete: {
       parameters: {
         query: {
-          field_value?: parameters["rowFilter.widgets_for_fields.field_value"];
-          widget_value?: parameters["rowFilter.widgets_for_fields.widget_value"];
+          field_value?: parameters['rowFilter.widgets_for_fields.field_value']
+          widget_value?: parameters['rowFilter.widgets_for_fields.widget_value']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.widgets_for_fields.server_rev_at"];
-          deleted?: parameters["rowFilter.widgets_for_fields.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.widgets_for_fields.server_rev_at']
+          deleted?: parameters['rowFilter.widgets_for_fields.deleted']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
+        204: never
+      }
+    }
     patch: {
       parameters: {
         query: {
-          field_value?: parameters["rowFilter.widgets_for_fields.field_value"];
-          widget_value?: parameters["rowFilter.widgets_for_fields.widget_value"];
+          field_value?: parameters['rowFilter.widgets_for_fields.field_value']
+          widget_value?: parameters['rowFilter.widgets_for_fields.widget_value']
           /** time of last edit on server */
-          server_rev_at?: parameters["rowFilter.widgets_for_fields.server_rev_at"];
-          deleted?: parameters["rowFilter.widgets_for_fields.deleted"];
-        };
+          server_rev_at?: parameters['rowFilter.widgets_for_fields.server_rev_at']
+          deleted?: parameters['rowFilter.widgets_for_fields.deleted']
+        }
         body: {
           /** widgets_for_fields */
-          widgets_for_fields?: definitions["widgets_for_fields"];
-        };
+          widgets_for_fields?: definitions['widgets_for_fields']
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferReturn"];
-        };
-      };
+          Prefer?: parameters['preferReturn']
+        }
+      }
       responses: {
         /** No Content */
-        204: never;
-      };
-    };
-  };
-  "/rpc/file_revs_winner": {
+        204: never
+      }
+    }
+  }
+  '/rpc/file_revs_winner': {
     post: {
       parameters: {
         body: {
           args: {
             /** Format: boolean */
-            deleted?: boolean;
+            deleted?: boolean
             /** Format: uuid */
-            file_id: string;
-          };
-        };
+            file_id: string
+          }
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferParams"];
-        };
-      };
+          Prefer?: parameters['preferParams']
+        }
+      }
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
-  "/rpc/row_revs_children": {
+        200: unknown
+      }
+    }
+  }
+  '/rpc/row_revs_children': {
     post: {
       parameters: {
         body: {
           args: {
             /** Format: uuid */
-            row_id: string;
+            row_id: string
             /** Format: text */
-            parent_rev: string;
-          };
-        };
+            parent_rev: string
+          }
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferParams"];
-        };
-      };
+          Prefer?: parameters['preferParams']
+        }
+      }
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
-  "/rpc/file_revs_max_depth": {
+        200: unknown
+      }
+    }
+  }
+  '/rpc/file_revs_max_depth': {
     post: {
       parameters: {
         body: {
           args: {
             /** Format: boolean */
-            deleted?: boolean;
+            deleted?: boolean
             /** Format: uuid */
-            file_id: string;
-          };
-        };
+            file_id: string
+          }
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferParams"];
-        };
-      };
+          Prefer?: parameters['preferParams']
+        }
+      }
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
-  "/rpc/file_revs_children": {
+        200: unknown
+      }
+    }
+  }
+  '/rpc/file_revs_children': {
     post: {
       parameters: {
         body: {
           args: {
             /** Format: text */
-            parent_rev: string;
+            parent_rev: string
             /** Format: uuid */
-            file_id: string;
-          };
-        };
+            file_id: string
+          }
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferParams"];
-        };
-      };
+          Prefer?: parameters['preferParams']
+        }
+      }
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
-  "/rpc/file_conflicts_of_winner": {
+        200: unknown
+      }
+    }
+  }
+  '/rpc/file_conflicts_of_winner': {
     post: {
       parameters: {
         body: {
           args: {
             /** Format: boolean */
-            deleted?: boolean;
+            deleted?: boolean
             /** Format: uuid */
-            file_id: string;
-          };
-        };
+            file_id: string
+          }
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferParams"];
-        };
-      };
+          Prefer?: parameters['preferParams']
+        }
+      }
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
-  "/rpc/file_revs_winner_rev_value": {
+        200: unknown
+      }
+    }
+  }
+  '/rpc/file_revs_winner_rev_value': {
     post: {
       parameters: {
         body: {
           args: {
             /** Format: boolean */
-            deleted?: boolean;
+            deleted?: boolean
             /** Format: uuid */
-            file_id: string;
-          };
-        };
+            file_id: string
+          }
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferParams"];
-        };
-      };
+          Prefer?: parameters['preferParams']
+        }
+      }
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
-  "/rpc/row_revs_max_depth": {
+        200: unknown
+      }
+    }
+  }
+  '/rpc/row_revs_max_depth': {
     post: {
       parameters: {
         body: {
           args: {
             /** Format: uuid */
-            row_id: string;
+            row_id: string
             /** Format: boolean */
-            deleted?: boolean;
-          };
-        };
+            deleted?: boolean
+          }
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferParams"];
-        };
-      };
+          Prefer?: parameters['preferParams']
+        }
+      }
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
-  "/rpc/row_revs_winner": {
+        200: unknown
+      }
+    }
+  }
+  '/rpc/row_revs_winner': {
     post: {
       parameters: {
         body: {
           args: {
             /** Format: uuid */
-            row_id: string;
+            row_id: string
             /** Format: boolean */
-            deleted?: boolean;
-          };
-        };
+            deleted?: boolean
+          }
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferParams"];
-        };
-      };
+          Prefer?: parameters['preferParams']
+        }
+      }
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
-  "/rpc/row_revs_leaves": {
+        200: unknown
+      }
+    }
+  }
+  '/rpc/row_revs_leaves': {
     post: {
       parameters: {
         body: {
           args: {
             /** Format: uuid */
-            row_id: string;
+            row_id: string
             /** Format: boolean */
-            deleted?: boolean;
-          };
-        };
+            deleted?: boolean
+          }
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferParams"];
-        };
-      };
+          Prefer?: parameters['preferParams']
+        }
+      }
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
-  "/rpc/row_conflicts_of_winner": {
+        200: unknown
+      }
+    }
+  }
+  '/rpc/row_conflicts_of_winner': {
     post: {
       parameters: {
         body: {
           args: {
             /** Format: uuid */
-            row_id: string;
+            row_id: string
             /** Format: boolean */
-            deleted?: boolean;
-          };
-        };
+            deleted?: boolean
+          }
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferParams"];
-        };
-      };
+          Prefer?: parameters['preferParams']
+        }
+      }
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
-  "/rpc/row_revs_winner_rev_value": {
+        200: unknown
+      }
+    }
+  }
+  '/rpc/row_revs_winner_rev_value': {
     post: {
       parameters: {
         body: {
           args: {
             /** Format: uuid */
-            row_id: string;
+            row_id: string
             /** Format: boolean */
-            deleted?: boolean;
-          };
-        };
+            deleted?: boolean
+          }
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferParams"];
-        };
-      };
+          Prefer?: parameters['preferParams']
+        }
+      }
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
-  "/rpc/file_revs_leaves": {
+        200: unknown
+      }
+    }
+  }
+  '/rpc/file_revs_leaves': {
     post: {
       parameters: {
         body: {
           args: {
             /** Format: boolean */
-            deleted?: boolean;
+            deleted?: boolean
             /** Format: uuid */
-            file_id: string;
-          };
-        };
+            file_id: string
+          }
+        }
         header: {
           /** Preference */
-          Prefer?: parameters["preferParams"];
-        };
-      };
+          Prefer?: parameters['preferParams']
+        }
+      }
       responses: {
         /** OK */
-        200: unknown;
-      };
-    };
-  };
+        200: unknown
+      }
+    }
+  }
 }
 
 export interface definitions {
@@ -3409,32 +3409,32 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /**
      * Format: text
      * @description id used by external service
      */
-    service_id?: string;
+    service_id?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on client
      * @default now()
      */
-    client_rev_at?: string;
+    client_rev_at?: string
     /**
      * Format: text
      * @description user editing last on client
      */
-    client_rev_by?: string;
+    client_rev_by?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   /** @description Goal: list of field_types */
   field_types: {
     /**
@@ -3444,23 +3444,23 @@ export interface definitions {
      * Note:
      * This is a Primary Key.<pk/>
      */
-    value: string;
+    value: string
     /**
      * Format: smallint
      * @description enables sorting at will
      */
-    sort?: number;
+    sort?: number
     /** Format: text */
-    comment?: string;
+    comment?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   /** @description Goal: Define fields used per table. Defines structure and presentation of data column in rows. Not versioned (not recorded and only added by manager) */
   fields: {
     /**
@@ -3471,7 +3471,7 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /**
      * Format: uuid
      * @description associated table
@@ -3479,27 +3479,27 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `tables.id`.<fk table='tables' column='id'/>
      */
-    table_id?: string;
+    table_id?: string
     /**
      * Format: text
      * @description name for use in db and url (lowercase, no special characters)
      */
-    name?: string;
+    name?: string
     /**
      * Format: text
      * @description name for use when labeling
      */
-    label?: string;
+    label?: string
     /**
      * Format: smallint
      * @description enables ordering the field list of a table
      */
-    ord?: number;
+    ord?: number
     /**
      * Format: boolean
      * @description is this table used as an id in the users own system?
      */
-    is_internal_id?: boolean;
+    is_internal_id?: boolean
     /**
      * Format: text
      * @description what type of data will populate this field?
@@ -3508,7 +3508,7 @@ export interface definitions {
      * This is a Foreign Key to `field_types.value`.<fk table='field_types' column='value'/>
      * @default text
      */
-    field_type?: string;
+    field_type?: string
     /**
      * Format: text
      * @description what type of widget shall be used to enter data?
@@ -3517,7 +3517,7 @@ export interface definitions {
      * This is a Foreign Key to `widget_types.value`.<fk table='widget_types' column='value'/>
      * @default text
      */
-    widget_type?: string;
+    widget_type?: string
     /**
      * Format: uuid
      * @description for fields with field_type options-few and options-many: what table contains the options?
@@ -3525,32 +3525,32 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `tables.id`.<fk table='tables' column='id'/>
      */
-    options_table?: string;
+    options_table?: string
     /**
      * Format: text
      * @description Goal: Project-admin can pre-set standard values. These are either real values (that have to be converted from string when used and field_type is not a string). Or instructions like: last(), now()...
      */
-    standard_value?: string;
+    standard_value?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on client
      * @default now()
      */
-    client_rev_at?: string;
+    client_rev_at?: string
     /**
      * Format: text
      * @description user editing last on client
      */
-    client_rev_by?: string;
+    client_rev_by?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   /** @description Goal: Sync files and handle conflicts */
   file_revs: {
     /**
@@ -3561,54 +3561,54 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /** Format: uuid */
-    row_id?: string;
+    row_id?: string
     /**
      * Format: uuid
      * @description key of table files
      */
-    file_id?: string;
+    file_id?: string
     /** Format: uuid */
-    field_id?: string;
+    field_id?: string
     /** Format: text */
-    filename?: string;
+    filename?: string
     /** Format: text */
-    url?: string;
+    url?: string
     /** Format: integer */
-    version?: number;
+    version?: number
     /** Format: boolean */
-    deleted?: boolean;
+    deleted?: boolean
     /** Format: timestamp with time zone */
-    client_rev_at?: string;
+    client_rev_at?: string
     /** Format: text */
-    client_rev_by?: string;
+    client_rev_by?: string
     /**
      * Format: timestamp with time zone
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /**
      * Format: text
      * @description hashed value the fields: file_id, field_id, filename, hash, version, deleted
      */
-    rev?: string;
+    rev?: string
     /**
      * Format: text
      * @description hash of the previous revision
      */
-    parent_rev?: string;
+    parent_rev?: string
     /**
      * Format: ARRAY
      * @description array of hashes of all previous revisions
      */
-    revisions?: string[];
+    revisions?: string[]
     /**
      * Format: integer
      * @description depth of the revision tree
      */
-    depth?: number;
-  };
+    depth?: number
+  }
   /** @description Goal: Collect data. Versioned in db. Files managed following db data */
   files: {
     /**
@@ -3619,7 +3619,7 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /**
      * Format: uuid
      * @description associated row
@@ -3627,7 +3627,7 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `rows.id`.<fk table='rows' column='id'/>
      */
-    row_id?: string;
+    row_id?: string
     /**
      * Format: uuid
      * @description associated field
@@ -3635,56 +3635,56 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `fields.id`.<fk table='fields' column='id'/>
      */
-    field_id?: string;
+    field_id?: string
     /**
      * Format: text
      * @description filename is set to this when exporting files
      */
-    filename?: string;
+    filename?: string
     /**
      * Format: text
      * @description url to download the file at
      */
-    url?: string;
+    url?: string
     /**
      * Format: integer
      * @description is incremented on every edit of a pre-existing file. Enables clients to re-sync
      * @default 1
      */
-    version?: number;
+    version?: number
     /**
      * Format: boolean
      * @description marks if the file is deleted
      */
-    deleted?: boolean;
+    deleted?: boolean
     /**
      * Format: timestamp with time zone
      * @description time of last edit on client
      * @default now()
      */
-    client_rev_at?: string;
+    client_rev_at?: string
     /**
      * Format: text
      * @description user editing last on client
      */
-    client_rev_by?: string;
+    client_rev_by?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: text */
-    rev?: string;
+    rev?: string
     /** Format: text */
-    parent_rev?: string;
+    parent_rev?: string
     /** Format: ARRAY */
-    revisions?: string[];
+    revisions?: string[]
     /** Format: integer */
-    depth?: number;
+    depth?: number
     /** Format: ARRAY */
-    conflicts?: string[];
-  };
+    conflicts?: string[]
+  }
   news: {
     /**
      * Format: uuid
@@ -3694,13 +3694,13 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /**
      * Format: timestamp with time zone
      * @description time the news was created
      * @default now()
      */
-    time?: string;
+    time?: string
     /**
      * Format: text
      * @description associated version_type
@@ -3709,26 +3709,26 @@ export interface definitions {
      * This is a Foreign Key to `version_types.value`.<fk table='version_types' column='value'/>
      * @default minor
      */
-    version_type?: string;
+    version_type?: string
     /**
      * Format: text
      * @description version the news refers to
      */
-    version?: string;
+    version?: string
     /**
      * Format: text
      * @description this is the news
      */
-    message?: string;
+    message?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   news_delivery: {
     /**
      * Format: uuid
@@ -3738,7 +3738,7 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /**
      * Format: uuid
      * @description associated news
@@ -3746,7 +3746,7 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `news.id`.<fk table='news' column='id'/>
      */
-    news_id?: string;
+    news_id?: string
     /**
      * Format: uuid
      * @description associated user
@@ -3754,16 +3754,16 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `users.id`.<fk table='users' column='id'/>
      */
-    user_id?: string;
+    user_id?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   /** @description Goal: list of types of option tables */
   option_types: {
     /**
@@ -3771,7 +3771,7 @@ export interface definitions {
      * @description the id to use if id instead of value is to be saved
      * @default gen_random_uuid()
      */
-    id?: string;
+    id?: string
     /**
      * Format: text
      * @description explains the option type
@@ -3779,118 +3779,118 @@ export interface definitions {
      * Note:
      * This is a Primary Key.<pk/>
      */
-    value: string;
+    value: string
     /**
      * Format: boolean
      * @description wether to save id instead of value
      */
-    save_id?: boolean;
+    save_id?: boolean
     /**
      * Format: smallint
      * @description enables sorting at will
      */
-    sort?: number;
+    sort?: number
     /** Format: text */
-    comment?: string;
+    comment?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   project_editors: {
     /**
      * Format: uuid
      * @description Note:
      * This is a Primary Key.<pk/>
      */
-    id?: string;
+    id?: string
     /**
      * Format: uuid
      * @description Note:
      * This is a Foreign Key to `projects.id`.<fk table='projects' column='id'/>
      */
-    project_id?: string;
+    project_id?: string
     /** Format: text */
-    user_email?: string;
+    user_email?: string
     /**
      * Format: text
      * @description Note:
      * This is a Foreign Key to `role_types.value`.<fk table='role_types' column='value'/>
      */
-    role?: string;
+    role?: string
     /** Format: timestamp with time zone */
-    client_rev_at?: string;
+    client_rev_at?: string
     /** Format: text */
-    client_rev_by?: string;
+    client_rev_by?: string
     /** Format: timestamp with time zone */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   project_managers: {
     /**
      * Format: uuid
      * @description Note:
      * This is a Primary Key.<pk/>
      */
-    id?: string;
+    id?: string
     /**
      * Format: uuid
      * @description Note:
      * This is a Foreign Key to `projects.id`.<fk table='projects' column='id'/>
      */
-    project_id?: string;
+    project_id?: string
     /** Format: text */
-    user_email?: string;
+    user_email?: string
     /**
      * Format: text
      * @description Note:
      * This is a Foreign Key to `role_types.value`.<fk table='role_types' column='value'/>
      */
-    role?: string;
+    role?: string
     /** Format: timestamp with time zone */
-    client_rev_at?: string;
+    client_rev_at?: string
     /** Format: text */
-    client_rev_by?: string;
+    client_rev_by?: string
     /** Format: timestamp with time zone */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   project_readers: {
     /**
      * Format: uuid
      * @description Note:
      * This is a Primary Key.<pk/>
      */
-    id?: string;
+    id?: string
     /**
      * Format: uuid
      * @description Note:
      * This is a Foreign Key to `projects.id`.<fk table='projects' column='id'/>
      */
-    project_id?: string;
+    project_id?: string
     /** Format: text */
-    user_email?: string;
+    user_email?: string
     /**
      * Format: text
      * @description Note:
      * This is a Foreign Key to `role_types.value`.<fk table='role_types' column='value'/>
      */
-    role?: string;
+    role?: string
     /** Format: timestamp with time zone */
-    client_rev_at?: string;
+    client_rev_at?: string
     /** Format: text */
-    client_rev_by?: string;
+    client_rev_by?: string
     /** Format: timestamp with time zone */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   project_tile_layers: {
     /**
      * Format: uuid
@@ -3898,74 +3898,74 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /** Format: text */
-    label?: string;
+    label?: string
     /** Format: smallint */
-    ord?: number;
+    ord?: number
     /** Format: boolean */
-    active?: boolean;
+    active?: boolean
     /**
      * Format: uuid
      * @description Note:
      * This is a Foreign Key to `projects.id`.<fk table='projects' column='id'/>
      */
-    project_id?: string;
+    project_id?: string
     /** Format: text */
-    url_template?: string;
+    url_template?: string
     /** Format: ARRAY */
-    subdomains?: string[];
+    subdomains?: string[]
     /**
      * Format: numeric
      * @default 19
      */
-    max_zoom?: number;
+    max_zoom?: number
     /** Format: numeric */
-    min_zoom?: number;
+    min_zoom?: number
     /**
      * Format: numeric
      * @default 1
      */
-    opacity?: number;
+    opacity?: number
     /** Format: text */
-    wms_base_url?: string;
+    wms_base_url?: string
     /** Format: text */
-    wms_format?: string;
+    wms_format?: string
     /** Format: ARRAY */
-    wms_layers?: string[];
+    wms_layers?: string[]
     /** Format: jsonb */
-    wms_parameters?: string;
+    wms_parameters?: string
     /**
      * Format: text
      * @default GetMap
      */
-    wms_request?: string;
+    wms_request?: string
     /**
      * Format: text
      * @default WMS
      */
-    wms_service?: string;
+    wms_service?: string
     /** Format: ARRAY */
-    wms_styles?: string[];
+    wms_styles?: string[]
     /** Format: boolean */
-    wms_transparent?: boolean;
+    wms_transparent?: boolean
     /** Format: text */
-    wms_version?: string;
+    wms_version?: string
     /**
      * Format: timestamp with time zone
      * @default now()
      */
-    client_rev_at?: string;
+    client_rev_at?: string
     /** Format: text */
-    client_rev_by?: string;
+    client_rev_by?: string
     /**
      * Format: timestamp with time zone
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   /** @description Goal: Bring your own tile layers. Not versioned (not recorded and only added by manager). Field definitions, see: https://pub.dev/documentation/flutter_map/latest/flutter_map/flutter_map-library.html */
   project_users: {
     /**
@@ -3976,7 +3976,7 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /**
      * Format: uuid
      * @description associated project
@@ -3984,12 +3984,12 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `projects.id`.<fk table='projects' column='id'/>
      */
-    project_id?: string;
+    project_id?: string
     /**
      * Format: text
      * @description associated user
      */
-    user_email?: string;
+    user_email?: string
     /**
      * Format: text
      * @description associated role
@@ -3998,27 +3998,27 @@ export interface definitions {
      * This is a Foreign Key to `role_types.value`.<fk table='role_types' column='value'/>
      * @default project_reader
      */
-    role?: string;
+    role?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on client
      * @default now()
      */
-    client_rev_at?: string;
+    client_rev_at?: string
     /**
      * Format: text
      * @description user editing last on client
      */
-    client_rev_by?: string;
+    client_rev_by?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   /** @description Goal: Define data structure per project. Tables, rows and files depend on it. Not versioned (not recorded and only added by manager) */
   projects: {
     /**
@@ -4029,7 +4029,7 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /**
      * Format: uuid
      * @description associated account
@@ -4037,43 +4037,43 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `accounts.id`.<fk table='accounts' column='id'/>
      */
-    account_id?: string;
+    account_id?: string
     /**
      * Format: text
      * @description name for use in db and url (lowercase, no special characters)
      */
-    name?: string;
+    name?: string
     /**
      * Format: text
      * @description name for use when labeling
      */
-    label?: string;
+    label?: string
     /**
      * Format: integer
      * @description crs used in geometry fields
      * @default 4326
      */
-    crs?: number;
+    crs?: number
     /**
      * Format: timestamp with time zone
      * @description time of last edit on client
      * @default now()
      */
-    client_rev_at?: string;
+    client_rev_at?: string
     /**
      * Format: text
      * @description user editing last on client
      */
-    client_rev_by?: string;
+    client_rev_by?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   /** @description Goal: list of rel_types */
   rel_types: {
     /**
@@ -4083,26 +4083,26 @@ export interface definitions {
      * Note:
      * This is a Primary Key.<pk/>
      */
-    value: string;
+    value: string
     /**
      * Format: smallint
      * @description enables sorting at will
      */
-    sort?: number;
+    sort?: number
     /**
      * Format: text
      * @description explains the version type
      */
-    comment?: string;
+    comment?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   /** @description Goal: list of roles */
   role_types: {
     /**
@@ -4112,27 +4112,27 @@ export interface definitions {
      * Note:
      * This is a Primary Key.<pk/>
      */
-    value: string;
+    value: string
     /**
      * Format: smallint
      * @description enables sorting at will
      * @default 1
      */
-    sort?: number;
+    sort?: number
     /**
      * Format: text
      * @description explains the role
      */
-    comment?: string;
+    comment?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   /** @description Goal: Sync rows and handle conflicts */
   row_revs: {
     /**
@@ -4143,66 +4143,66 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /**
      * Format: uuid
      * @description key of table rows
      */
-    row_id?: string;
+    row_id?: string
     /** Format: uuid */
-    table_id?: string;
+    table_id?: string
     /**
      * Format: uuid
      * @description associated row in the parent table (which means: this row is part of a child table)
      */
-    parent_id?: string;
+    parent_id?: string
     /**
      * Format: extensions.geometry(GeometryCollection,4326)
      * @default NULL::extensions.geometry
      */
-    geometry?: string;
+    geometry?: string
     /** Format: real */
-    geometry_n?: number;
+    geometry_n?: number
     /** Format: real */
-    geometry_e?: number;
+    geometry_e?: number
     /** Format: real */
-    geometry_s?: number;
+    geometry_s?: number
     /** Format: real */
-    geometry_w?: number;
+    geometry_w?: number
     /** Format: jsonb */
-    data?: string;
+    data?: string
     /** Format: boolean */
-    deleted?: boolean;
+    deleted?: boolean
     /** Format: timestamp with time zone */
-    client_rev_at?: string;
+    client_rev_at?: string
     /** Format: text */
-    client_rev_by?: string;
+    client_rev_by?: string
     /**
      * Format: timestamp with time zone
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /**
      * Format: text
      * @description hashed value the fields: row_id, table_id, geometry, data, deleted
      */
-    rev?: string;
+    rev?: string
     /**
      * Format: text
      * @description hash of the previous revision
      */
-    parent_rev?: string;
+    parent_rev?: string
     /**
      * Format: ARRAY
      * @description array of hashes of all previous revisions
      */
-    revisions?: string[];
+    revisions?: string[]
     /**
      * Format: integer
      * @description depth of the revision tree
      */
-    depth?: number;
-  };
+    depth?: number
+  }
   /** @description Goal: Collect data. Versioned */
   rows: {
     /**
@@ -4213,7 +4213,7 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /**
      * Format: uuid
      * @description associated table
@@ -4221,7 +4221,7 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `tables.id`.<fk table='tables' column='id'/>
      */
-    table_id?: string;
+    table_id?: string
     /**
      * Format: uuid
      * @description associated row in the parent table (which means: this row is part of a child table)
@@ -4229,71 +4229,71 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `rows.id`.<fk table='rows' column='id'/>
      */
-    parent_id?: string;
+    parent_id?: string
     /**
      * Format: extensions.geometry(GeometryCollection,4326)
      * @description row geometry (GeometryCollection)
      * @default NULL::extensions.geometry
      */
-    geometry?: string;
+    geometry?: string
     /**
      * Format: real
      * @description Northernmost point of the geometry. Used to filter geometries for viewport client-side
      */
-    geometry_n?: number;
+    geometry_n?: number
     /**
      * Format: real
      * @description Easternmost point of the geometry. Used to filter geometries for viewport client-side
      */
-    geometry_e?: number;
+    geometry_e?: number
     /**
      * Format: real
      * @description Southernmost point of the geometry. Used to filter geometries for viewport client-side
      */
-    geometry_s?: number;
+    geometry_s?: number
     /**
      * Format: real
      * @description Westernmost point of the geometry. Used to filter geometries for viewport client-side
      */
-    geometry_w?: number;
+    geometry_w?: number
     /**
      * Format: jsonb
      * @description fields (keys) and data (values) according to the related fields table
      */
-    data?: string;
+    data?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on client
      * @default now()
      */
-    client_rev_at?: string;
+    client_rev_at?: string
     /**
      * Format: text
      * @description user editing last on client
      */
-    client_rev_by?: string;
+    client_rev_by?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: text */
-    rev?: string;
+    rev?: string
     /** Format: text */
-    parent_rev?: string;
+    parent_rev?: string
     /** Format: ARRAY */
-    revisions?: string[];
+    revisions?: string[]
     /** Format: integer */
-    depth?: number;
+    depth?: number
     /**
      * Format: boolean
      * @description marks if the row is deleted
      */
-    deleted?: boolean;
+    deleted?: boolean
     /** Format: ARRAY */
-    conflicts?: string[];
-  };
+    conflicts?: string[]
+  }
   /** @description Goal: Define tables used per project. Rows and files depend on it. Not versioned (not recorded and only added by manager) */
   tables: {
     /**
@@ -4304,7 +4304,7 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /**
      * Format: uuid
      * @description associated project
@@ -4312,7 +4312,7 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `projects.id`.<fk table='projects' column='id'/>
      */
-    project_id?: string;
+    project_id?: string
     /**
      * Format: uuid
      * @description parent table
@@ -4320,7 +4320,7 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `tables.id`.<fk table='tables' column='id'/>
      */
-    parent_id?: string;
+    parent_id?: string
     /**
      * Format: text
      * @description releation with parent table: 1:1 or 1:n
@@ -4329,35 +4329,35 @@ export interface definitions {
      * This is a Foreign Key to `rel_types.value`.<fk table='rel_types' column='value'/>
      * @default n
      */
-    rel_type?: string;
+    rel_type?: string
     /**
      * Format: text
      * @description name for use in db and url (lowercase, no special characters)
      */
-    name?: string;
+    name?: string
     /**
      * Format: text
      * @description name for use when labeling
      */
-    label?: string;
+    label?: string
     /** Format: text */
-    single_label?: string;
+    single_label?: string
     /**
      * Format: ARRAY
      * @description fields used to label and sort rows
      */
-    label_fields?: string[];
+    label_fields?: string[]
     /**
      * Format: text
      * @description characters used to separate fields when labelling rows
      * @default ,
      */
-    label_fields_separator?: string;
+    label_fields_separator?: string
     /**
      * Format: smallint
      * @description enables ordering the tables of a project
      */
-    ord?: number;
+    ord?: number
     /**
      * Format: text
      * @description What type of options list will this be?
@@ -4365,27 +4365,27 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `option_types.value`.<fk table='option_types' column='value'/>
      */
-    option_type?: string;
+    option_type?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on client
      * @default now()
      */
-    client_rev_at?: string;
+    client_rev_at?: string
     /**
      * Format: text
      * @description user editing last on client
      */
-    client_rev_by?: string;
+    client_rev_by?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   tile_layers: {
     /**
      * Format: uuid
@@ -4393,64 +4393,64 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /** Format: text */
-    label?: string;
+    label?: string
     /** Format: text */
-    url_template?: string;
+    url_template?: string
     /** Format: ARRAY */
-    subdomains?: string[];
+    subdomains?: string[]
     /**
      * Format: numeric
      * @default 19
      */
-    max_zoom?: number;
+    max_zoom?: number
     /** Format: numeric */
-    min_zoom?: number;
+    min_zoom?: number
     /**
      * Format: numeric
      * @default 1
      */
-    opacity?: number;
+    opacity?: number
     /** Format: text */
-    wms_base_url?: string;
+    wms_base_url?: string
     /** Format: text */
-    wms_format?: string;
+    wms_format?: string
     /** Format: ARRAY */
-    wms_layers?: string[];
+    wms_layers?: string[]
     /** Format: jsonb */
-    wms_parameters?: string;
+    wms_parameters?: string
     /**
      * Format: text
      * @default GetMap
      */
-    wms_request?: string;
+    wms_request?: string
     /**
      * Format: text
      * @default WMS
      */
-    wms_service?: string;
+    wms_service?: string
     /** Format: ARRAY */
-    wms_styles?: string[];
+    wms_styles?: string[]
     /** Format: boolean */
-    wms_transparent?: boolean;
+    wms_transparent?: boolean
     /** Format: text */
-    wms_version?: string;
+    wms_version?: string
     /**
      * Format: timestamp with time zone
      * @default now()
      */
-    client_rev_at?: string;
+    client_rev_at?: string
     /** Format: text */
-    client_rev_by?: string;
+    client_rev_by?: string
     /**
      * Format: timestamp with time zone
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   /** @description Goal: authentication, authorization, communication, configuration. Not versioned (not recorded and only added by manager) */
   users: {
     /**
@@ -4461,17 +4461,17 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * @default gen_random_uuid()
      */
-    id: string;
+    id: string
     /**
      * Format: text
      * @description name
      */
-    name?: string;
+    name?: string
     /**
      * Format: text
      * @description email
      */
-    email?: string;
+    email?: string
     /**
      * Format: uuid
      * @description associated account
@@ -4479,32 +4479,32 @@ export interface definitions {
      * Note:
      * This is a Foreign Key to `accounts.id`.<fk table='accounts' column='id'/>
      */
-    account_id?: string;
+    account_id?: string
     /**
      * Format: text
      * @description associated auth
      */
-    auth_id?: string;
+    auth_user_id?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on client
      * @default now()
      */
-    client_rev_at?: string;
+    client_rev_at?: string
     /**
      * Format: text
      * @description user editing last on client
      */
-    client_rev_by?: string;
+    client_rev_by?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   /** @description Goal: list of version_types */
   version_types: {
     /**
@@ -4514,23 +4514,23 @@ export interface definitions {
      * Note:
      * This is a Primary Key.<pk/>
      */
-    value: string;
+    value: string
     /**
      * Format: smallint
      * @description enables sorting at will
      */
-    sort?: number;
+    sort?: number
     /** Format: text */
-    comment?: string;
+    comment?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   /** @description Goal: list of widget_types */
   widget_types: {
     /**
@@ -4540,31 +4540,31 @@ export interface definitions {
      * Note:
      * This is a Primary Key.<pk/>
      */
-    value: string;
+    value: string
     /**
      * Format: boolean
      * @description whether the widget needs an options list
      */
-    needs_list?: boolean;
+    needs_list?: boolean
     /**
      * Format: smallint
      * @description enables sorting at will
      */
-    sort?: number;
+    sort?: number
     /**
      * Format: text
      * @description explains the version type
      */
-    comment?: string;
+    comment?: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
   /** @description Goal: know what widgets can be choosen for what field_types */
   widgets_for_fields: {
     /**
@@ -4573,23 +4573,23 @@ export interface definitions {
      * This is a Primary Key.<pk/>
      * This is a Foreign Key to `field_types.value`.<fk table='field_types' column='value'/>
      */
-    field_value: string;
+    field_value: string
     /**
      * Format: text
      * @description Note:
      * This is a Primary Key.<pk/>
      * This is a Foreign Key to `widget_types.value`.<fk table='widget_types' column='value'/>
      */
-    widget_value: string;
+    widget_value: string
     /**
      * Format: timestamp with time zone
      * @description time of last edit on server
      * @default now()
      */
-    server_rev_at?: string;
+    server_rev_at?: string
     /** Format: boolean */
-    deleted?: boolean;
-  };
+    deleted?: boolean
+  }
 }
 
 export interface parameters {
@@ -4597,943 +4597,943 @@ export interface parameters {
    * @description Preference
    * @enum {string}
    */
-  preferParams: "params=single-object";
+  preferParams: 'params=single-object'
   /**
    * @description Preference
    * @enum {string}
    */
-  preferReturn: "return=representation" | "return=minimal" | "return=none";
+  preferReturn: 'return=representation' | 'return=minimal' | 'return=none'
   /**
    * @description Preference
    * @enum {string}
    */
-  preferCount: "count=none";
+  preferCount: 'count=none'
   /** @description Filtering Columns */
-  select: string;
+  select: string
   /** @description On Conflict */
-  on_conflict: string;
+  on_conflict: string
   /** @description Ordering */
-  order: string;
+  order: string
   /** @description Limiting and Pagination */
-  range: string;
+  range: string
   /**
    * @description Limiting and Pagination
    * @default items
    */
-  rangeUnit: string;
+  rangeUnit: string
   /** @description Limiting and Pagination */
-  offset: string;
+  offset: string
   /** @description Limiting and Pagination */
-  limit: string;
+  limit: string
   /** @description accounts */
-  "body.accounts": definitions["accounts"];
+  'body.accounts': definitions['accounts']
   /**
    * Format: uuid
    * @description primary key
    */
-  "rowFilter.accounts.id": string;
+  'rowFilter.accounts.id': string
   /**
    * Format: text
    * @description id used by external service
    */
-  "rowFilter.accounts.service_id": string;
+  'rowFilter.accounts.service_id': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on client
    */
-  "rowFilter.accounts.client_rev_at": string;
+  'rowFilter.accounts.client_rev_at': string
   /**
    * Format: text
    * @description user editing last on client
    */
-  "rowFilter.accounts.client_rev_by": string;
+  'rowFilter.accounts.client_rev_by': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.accounts.server_rev_at": string;
+  'rowFilter.accounts.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.accounts.deleted": string;
+  'rowFilter.accounts.deleted': string
   /** @description field_types */
-  "body.field_types": definitions["field_types"];
+  'body.field_types': definitions['field_types']
   /**
    * Format: text
    * @description explains the version type
    */
-  "rowFilter.field_types.value": string;
+  'rowFilter.field_types.value': string
   /**
    * Format: smallint
    * @description enables sorting at will
    */
-  "rowFilter.field_types.sort": string;
+  'rowFilter.field_types.sort': string
   /** Format: text */
-  "rowFilter.field_types.comment": string;
+  'rowFilter.field_types.comment': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.field_types.server_rev_at": string;
+  'rowFilter.field_types.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.field_types.deleted": string;
+  'rowFilter.field_types.deleted': string
   /** @description fields */
-  "body.fields": definitions["fields"];
+  'body.fields': definitions['fields']
   /**
    * Format: uuid
    * @description primary key
    */
-  "rowFilter.fields.id": string;
+  'rowFilter.fields.id': string
   /**
    * Format: uuid
    * @description associated table
    */
-  "rowFilter.fields.table_id": string;
+  'rowFilter.fields.table_id': string
   /**
    * Format: text
    * @description name for use in db and url (lowercase, no special characters)
    */
-  "rowFilter.fields.name": string;
+  'rowFilter.fields.name': string
   /**
    * Format: text
    * @description name for use when labeling
    */
-  "rowFilter.fields.label": string;
+  'rowFilter.fields.label': string
   /**
    * Format: smallint
    * @description enables ordering the field list of a table
    */
-  "rowFilter.fields.ord": string;
+  'rowFilter.fields.ord': string
   /**
    * Format: boolean
    * @description is this table used as an id in the users own system?
    */
-  "rowFilter.fields.is_internal_id": string;
+  'rowFilter.fields.is_internal_id': string
   /**
    * Format: text
    * @description what type of data will populate this field?
    */
-  "rowFilter.fields.field_type": string;
+  'rowFilter.fields.field_type': string
   /**
    * Format: text
    * @description what type of widget shall be used to enter data?
    */
-  "rowFilter.fields.widget_type": string;
+  'rowFilter.fields.widget_type': string
   /**
    * Format: uuid
    * @description for fields with field_type options-few and options-many: what table contains the options?
    */
-  "rowFilter.fields.options_table": string;
+  'rowFilter.fields.options_table': string
   /**
    * Format: text
    * @description Goal: Project-admin can pre-set standard values. These are either real values (that have to be converted from string when used and field_type is not a string). Or instructions like: last(), now()...
    */
-  "rowFilter.fields.standard_value": string;
+  'rowFilter.fields.standard_value': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on client
    */
-  "rowFilter.fields.client_rev_at": string;
+  'rowFilter.fields.client_rev_at': string
   /**
    * Format: text
    * @description user editing last on client
    */
-  "rowFilter.fields.client_rev_by": string;
+  'rowFilter.fields.client_rev_by': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.fields.server_rev_at": string;
+  'rowFilter.fields.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.fields.deleted": string;
+  'rowFilter.fields.deleted': string
   /** @description file_revs */
-  "body.file_revs": definitions["file_revs"];
+  'body.file_revs': definitions['file_revs']
   /**
    * Format: uuid
    * @description primary key
    */
-  "rowFilter.file_revs.id": string;
+  'rowFilter.file_revs.id': string
   /** Format: uuid */
-  "rowFilter.file_revs.row_id": string;
+  'rowFilter.file_revs.row_id': string
   /**
    * Format: uuid
    * @description key of table files
    */
-  "rowFilter.file_revs.file_id": string;
+  'rowFilter.file_revs.file_id': string
   /** Format: uuid */
-  "rowFilter.file_revs.field_id": string;
+  'rowFilter.file_revs.field_id': string
   /** Format: text */
-  "rowFilter.file_revs.filename": string;
+  'rowFilter.file_revs.filename': string
   /** Format: text */
-  "rowFilter.file_revs.url": string;
+  'rowFilter.file_revs.url': string
   /** Format: integer */
-  "rowFilter.file_revs.version": string;
+  'rowFilter.file_revs.version': string
   /** Format: boolean */
-  "rowFilter.file_revs.deleted": string;
+  'rowFilter.file_revs.deleted': string
   /** Format: timestamp with time zone */
-  "rowFilter.file_revs.client_rev_at": string;
+  'rowFilter.file_revs.client_rev_at': string
   /** Format: text */
-  "rowFilter.file_revs.client_rev_by": string;
+  'rowFilter.file_revs.client_rev_by': string
   /** Format: timestamp with time zone */
-  "rowFilter.file_revs.server_rev_at": string;
+  'rowFilter.file_revs.server_rev_at': string
   /**
    * Format: text
    * @description hashed value the fields: file_id, field_id, filename, hash, version, deleted
    */
-  "rowFilter.file_revs.rev": string;
+  'rowFilter.file_revs.rev': string
   /**
    * Format: text
    * @description hash of the previous revision
    */
-  "rowFilter.file_revs.parent_rev": string;
+  'rowFilter.file_revs.parent_rev': string
   /**
    * Format: ARRAY
    * @description array of hashes of all previous revisions
    */
-  "rowFilter.file_revs.revisions": string;
+  'rowFilter.file_revs.revisions': string
   /**
    * Format: integer
    * @description depth of the revision tree
    */
-  "rowFilter.file_revs.depth": string;
+  'rowFilter.file_revs.depth': string
   /** @description files */
-  "body.files": definitions["files"];
+  'body.files': definitions['files']
   /**
    * Format: uuid
    * @description primary key. used as filename in internal and cloud storage
    */
-  "rowFilter.files.id": string;
+  'rowFilter.files.id': string
   /**
    * Format: uuid
    * @description associated row
    */
-  "rowFilter.files.row_id": string;
+  'rowFilter.files.row_id': string
   /**
    * Format: uuid
    * @description associated field
    */
-  "rowFilter.files.field_id": string;
+  'rowFilter.files.field_id': string
   /**
    * Format: text
    * @description filename is set to this when exporting files
    */
-  "rowFilter.files.filename": string;
+  'rowFilter.files.filename': string
   /**
    * Format: text
    * @description url to download the file at
    */
-  "rowFilter.files.url": string;
+  'rowFilter.files.url': string
   /**
    * Format: integer
    * @description is incremented on every edit of a pre-existing file. Enables clients to re-sync
    */
-  "rowFilter.files.version": string;
+  'rowFilter.files.version': string
   /**
    * Format: boolean
    * @description marks if the file is deleted
    */
-  "rowFilter.files.deleted": string;
+  'rowFilter.files.deleted': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on client
    */
-  "rowFilter.files.client_rev_at": string;
+  'rowFilter.files.client_rev_at': string
   /**
    * Format: text
    * @description user editing last on client
    */
-  "rowFilter.files.client_rev_by": string;
+  'rowFilter.files.client_rev_by': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.files.server_rev_at": string;
+  'rowFilter.files.server_rev_at': string
   /** Format: text */
-  "rowFilter.files.rev": string;
+  'rowFilter.files.rev': string
   /** Format: text */
-  "rowFilter.files.parent_rev": string;
+  'rowFilter.files.parent_rev': string
   /** Format: ARRAY */
-  "rowFilter.files.revisions": string;
+  'rowFilter.files.revisions': string
   /** Format: integer */
-  "rowFilter.files.depth": string;
+  'rowFilter.files.depth': string
   /** Format: ARRAY */
-  "rowFilter.files.conflicts": string;
+  'rowFilter.files.conflicts': string
   /** @description news */
-  "body.news": definitions["news"];
+  'body.news': definitions['news']
   /**
    * Format: uuid
    * @description primary key
    */
-  "rowFilter.news.id": string;
+  'rowFilter.news.id': string
   /**
    * Format: timestamp with time zone
    * @description time the news was created
    */
-  "rowFilter.news.time": string;
+  'rowFilter.news.time': string
   /**
    * Format: text
    * @description associated version_type
    */
-  "rowFilter.news.version_type": string;
+  'rowFilter.news.version_type': string
   /**
    * Format: text
    * @description version the news refers to
    */
-  "rowFilter.news.version": string;
+  'rowFilter.news.version': string
   /**
    * Format: text
    * @description this is the news
    */
-  "rowFilter.news.message": string;
+  'rowFilter.news.message': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.news.server_rev_at": string;
+  'rowFilter.news.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.news.deleted": string;
+  'rowFilter.news.deleted': string
   /** @description news_delivery */
-  "body.news_delivery": definitions["news_delivery"];
+  'body.news_delivery': definitions['news_delivery']
   /**
    * Format: uuid
    * @description primary key
    */
-  "rowFilter.news_delivery.id": string;
+  'rowFilter.news_delivery.id': string
   /**
    * Format: uuid
    * @description associated news
    */
-  "rowFilter.news_delivery.news_id": string;
+  'rowFilter.news_delivery.news_id': string
   /**
    * Format: uuid
    * @description associated user
    */
-  "rowFilter.news_delivery.user_id": string;
+  'rowFilter.news_delivery.user_id': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.news_delivery.server_rev_at": string;
+  'rowFilter.news_delivery.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.news_delivery.deleted": string;
+  'rowFilter.news_delivery.deleted': string
   /** @description option_types */
-  "body.option_types": definitions["option_types"];
+  'body.option_types': definitions['option_types']
   /**
    * Format: uuid
    * @description the id to use if id instead of value is to be saved
    */
-  "rowFilter.option_types.id": string;
+  'rowFilter.option_types.id': string
   /**
    * Format: text
    * @description explains the option type
    */
-  "rowFilter.option_types.value": string;
+  'rowFilter.option_types.value': string
   /**
    * Format: boolean
    * @description wether to save id instead of value
    */
-  "rowFilter.option_types.save_id": string;
+  'rowFilter.option_types.save_id': string
   /**
    * Format: smallint
    * @description enables sorting at will
    */
-  "rowFilter.option_types.sort": string;
+  'rowFilter.option_types.sort': string
   /** Format: text */
-  "rowFilter.option_types.comment": string;
+  'rowFilter.option_types.comment': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.option_types.server_rev_at": string;
+  'rowFilter.option_types.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.option_types.deleted": string;
+  'rowFilter.option_types.deleted': string
   /** @description project_editors */
-  "body.project_editors": definitions["project_editors"];
+  'body.project_editors': definitions['project_editors']
   /** Format: uuid */
-  "rowFilter.project_editors.id": string;
+  'rowFilter.project_editors.id': string
   /** Format: uuid */
-  "rowFilter.project_editors.project_id": string;
+  'rowFilter.project_editors.project_id': string
   /** Format: text */
-  "rowFilter.project_editors.user_email": string;
+  'rowFilter.project_editors.user_email': string
   /** Format: text */
-  "rowFilter.project_editors.role": string;
+  'rowFilter.project_editors.role': string
   /** Format: timestamp with time zone */
-  "rowFilter.project_editors.client_rev_at": string;
+  'rowFilter.project_editors.client_rev_at': string
   /** Format: text */
-  "rowFilter.project_editors.client_rev_by": string;
+  'rowFilter.project_editors.client_rev_by': string
   /** Format: timestamp with time zone */
-  "rowFilter.project_editors.server_rev_at": string;
+  'rowFilter.project_editors.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.project_editors.deleted": string;
+  'rowFilter.project_editors.deleted': string
   /** @description project_managers */
-  "body.project_managers": definitions["project_managers"];
+  'body.project_managers': definitions['project_managers']
   /** Format: uuid */
-  "rowFilter.project_managers.id": string;
+  'rowFilter.project_managers.id': string
   /** Format: uuid */
-  "rowFilter.project_managers.project_id": string;
+  'rowFilter.project_managers.project_id': string
   /** Format: text */
-  "rowFilter.project_managers.user_email": string;
+  'rowFilter.project_managers.user_email': string
   /** Format: text */
-  "rowFilter.project_managers.role": string;
+  'rowFilter.project_managers.role': string
   /** Format: timestamp with time zone */
-  "rowFilter.project_managers.client_rev_at": string;
+  'rowFilter.project_managers.client_rev_at': string
   /** Format: text */
-  "rowFilter.project_managers.client_rev_by": string;
+  'rowFilter.project_managers.client_rev_by': string
   /** Format: timestamp with time zone */
-  "rowFilter.project_managers.server_rev_at": string;
+  'rowFilter.project_managers.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.project_managers.deleted": string;
+  'rowFilter.project_managers.deleted': string
   /** @description project_readers */
-  "body.project_readers": definitions["project_readers"];
+  'body.project_readers': definitions['project_readers']
   /** Format: uuid */
-  "rowFilter.project_readers.id": string;
+  'rowFilter.project_readers.id': string
   /** Format: uuid */
-  "rowFilter.project_readers.project_id": string;
+  'rowFilter.project_readers.project_id': string
   /** Format: text */
-  "rowFilter.project_readers.user_email": string;
+  'rowFilter.project_readers.user_email': string
   /** Format: text */
-  "rowFilter.project_readers.role": string;
+  'rowFilter.project_readers.role': string
   /** Format: timestamp with time zone */
-  "rowFilter.project_readers.client_rev_at": string;
+  'rowFilter.project_readers.client_rev_at': string
   /** Format: text */
-  "rowFilter.project_readers.client_rev_by": string;
+  'rowFilter.project_readers.client_rev_by': string
   /** Format: timestamp with time zone */
-  "rowFilter.project_readers.server_rev_at": string;
+  'rowFilter.project_readers.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.project_readers.deleted": string;
+  'rowFilter.project_readers.deleted': string
   /** @description project_tile_layers */
-  "body.project_tile_layers": definitions["project_tile_layers"];
+  'body.project_tile_layers': definitions['project_tile_layers']
   /** Format: uuid */
-  "rowFilter.project_tile_layers.id": string;
+  'rowFilter.project_tile_layers.id': string
   /** Format: text */
-  "rowFilter.project_tile_layers.label": string;
+  'rowFilter.project_tile_layers.label': string
   /** Format: smallint */
-  "rowFilter.project_tile_layers.ord": string;
+  'rowFilter.project_tile_layers.ord': string
   /** Format: boolean */
-  "rowFilter.project_tile_layers.active": string;
+  'rowFilter.project_tile_layers.active': string
   /** Format: uuid */
-  "rowFilter.project_tile_layers.project_id": string;
+  'rowFilter.project_tile_layers.project_id': string
   /** Format: text */
-  "rowFilter.project_tile_layers.url_template": string;
+  'rowFilter.project_tile_layers.url_template': string
   /** Format: ARRAY */
-  "rowFilter.project_tile_layers.subdomains": string;
+  'rowFilter.project_tile_layers.subdomains': string
   /** Format: numeric */
-  "rowFilter.project_tile_layers.max_zoom": string;
+  'rowFilter.project_tile_layers.max_zoom': string
   /** Format: numeric */
-  "rowFilter.project_tile_layers.min_zoom": string;
+  'rowFilter.project_tile_layers.min_zoom': string
   /** Format: numeric */
-  "rowFilter.project_tile_layers.opacity": string;
+  'rowFilter.project_tile_layers.opacity': string
   /** Format: text */
-  "rowFilter.project_tile_layers.wms_base_url": string;
+  'rowFilter.project_tile_layers.wms_base_url': string
   /** Format: text */
-  "rowFilter.project_tile_layers.wms_format": string;
+  'rowFilter.project_tile_layers.wms_format': string
   /** Format: ARRAY */
-  "rowFilter.project_tile_layers.wms_layers": string;
+  'rowFilter.project_tile_layers.wms_layers': string
   /** Format: jsonb */
-  "rowFilter.project_tile_layers.wms_parameters": string;
+  'rowFilter.project_tile_layers.wms_parameters': string
   /** Format: text */
-  "rowFilter.project_tile_layers.wms_request": string;
+  'rowFilter.project_tile_layers.wms_request': string
   /** Format: text */
-  "rowFilter.project_tile_layers.wms_service": string;
+  'rowFilter.project_tile_layers.wms_service': string
   /** Format: ARRAY */
-  "rowFilter.project_tile_layers.wms_styles": string;
+  'rowFilter.project_tile_layers.wms_styles': string
   /** Format: boolean */
-  "rowFilter.project_tile_layers.wms_transparent": string;
+  'rowFilter.project_tile_layers.wms_transparent': string
   /** Format: text */
-  "rowFilter.project_tile_layers.wms_version": string;
+  'rowFilter.project_tile_layers.wms_version': string
   /** Format: timestamp with time zone */
-  "rowFilter.project_tile_layers.client_rev_at": string;
+  'rowFilter.project_tile_layers.client_rev_at': string
   /** Format: text */
-  "rowFilter.project_tile_layers.client_rev_by": string;
+  'rowFilter.project_tile_layers.client_rev_by': string
   /** Format: timestamp with time zone */
-  "rowFilter.project_tile_layers.server_rev_at": string;
+  'rowFilter.project_tile_layers.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.project_tile_layers.deleted": string;
+  'rowFilter.project_tile_layers.deleted': string
   /** @description project_users */
-  "body.project_users": definitions["project_users"];
+  'body.project_users': definitions['project_users']
   /**
    * Format: uuid
    * @description primary key
    */
-  "rowFilter.project_users.id": string;
+  'rowFilter.project_users.id': string
   /**
    * Format: uuid
    * @description associated project
    */
-  "rowFilter.project_users.project_id": string;
+  'rowFilter.project_users.project_id': string
   /**
    * Format: text
    * @description associated user
    */
-  "rowFilter.project_users.user_email": string;
+  'rowFilter.project_users.user_email': string
   /**
    * Format: text
    * @description associated role
    */
-  "rowFilter.project_users.role": string;
+  'rowFilter.project_users.role': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on client
    */
-  "rowFilter.project_users.client_rev_at": string;
+  'rowFilter.project_users.client_rev_at': string
   /**
    * Format: text
    * @description user editing last on client
    */
-  "rowFilter.project_users.client_rev_by": string;
+  'rowFilter.project_users.client_rev_by': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.project_users.server_rev_at": string;
+  'rowFilter.project_users.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.project_users.deleted": string;
+  'rowFilter.project_users.deleted': string
   /** @description projects */
-  "body.projects": definitions["projects"];
+  'body.projects': definitions['projects']
   /**
    * Format: uuid
    * @description primary key
    */
-  "rowFilter.projects.id": string;
+  'rowFilter.projects.id': string
   /**
    * Format: uuid
    * @description associated account
    */
-  "rowFilter.projects.account_id": string;
+  'rowFilter.projects.account_id': string
   /**
    * Format: text
    * @description name for use in db and url (lowercase, no special characters)
    */
-  "rowFilter.projects.name": string;
+  'rowFilter.projects.name': string
   /**
    * Format: text
    * @description name for use when labeling
    */
-  "rowFilter.projects.label": string;
+  'rowFilter.projects.label': string
   /**
    * Format: integer
    * @description crs used in geometry fields
    */
-  "rowFilter.projects.crs": string;
+  'rowFilter.projects.crs': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on client
    */
-  "rowFilter.projects.client_rev_at": string;
+  'rowFilter.projects.client_rev_at': string
   /**
    * Format: text
    * @description user editing last on client
    */
-  "rowFilter.projects.client_rev_by": string;
+  'rowFilter.projects.client_rev_by': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.projects.server_rev_at": string;
+  'rowFilter.projects.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.projects.deleted": string;
+  'rowFilter.projects.deleted': string
   /** @description rel_types */
-  "body.rel_types": definitions["rel_types"];
+  'body.rel_types': definitions['rel_types']
   /**
    * Format: text
    * @description the relation type
    */
-  "rowFilter.rel_types.value": string;
+  'rowFilter.rel_types.value': string
   /**
    * Format: smallint
    * @description enables sorting at will
    */
-  "rowFilter.rel_types.sort": string;
+  'rowFilter.rel_types.sort': string
   /**
    * Format: text
    * @description explains the version type
    */
-  "rowFilter.rel_types.comment": string;
+  'rowFilter.rel_types.comment': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.rel_types.server_rev_at": string;
+  'rowFilter.rel_types.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.rel_types.deleted": string;
+  'rowFilter.rel_types.deleted': string
   /** @description role_types */
-  "body.role_types": definitions["role_types"];
+  'body.role_types': definitions['role_types']
   /**
    * Format: text
    * @description the role
    */
-  "rowFilter.role_types.value": string;
+  'rowFilter.role_types.value': string
   /**
    * Format: smallint
    * @description enables sorting at will
    */
-  "rowFilter.role_types.sort": string;
+  'rowFilter.role_types.sort': string
   /**
    * Format: text
    * @description explains the role
    */
-  "rowFilter.role_types.comment": string;
+  'rowFilter.role_types.comment': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.role_types.server_rev_at": string;
+  'rowFilter.role_types.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.role_types.deleted": string;
+  'rowFilter.role_types.deleted': string
   /** @description row_revs */
-  "body.row_revs": definitions["row_revs"];
+  'body.row_revs': definitions['row_revs']
   /**
    * Format: uuid
    * @description primary key
    */
-  "rowFilter.row_revs.id": string;
+  'rowFilter.row_revs.id': string
   /**
    * Format: uuid
    * @description key of table rows
    */
-  "rowFilter.row_revs.row_id": string;
+  'rowFilter.row_revs.row_id': string
   /** Format: uuid */
-  "rowFilter.row_revs.table_id": string;
+  'rowFilter.row_revs.table_id': string
   /**
    * Format: uuid
    * @description associated row in the parent table (which means: this row is part of a child table)
    */
-  "rowFilter.row_revs.parent_id": string;
+  'rowFilter.row_revs.parent_id': string
   /** Format: extensions.geometry(GeometryCollection,4326) */
-  "rowFilter.row_revs.geometry": string;
+  'rowFilter.row_revs.geometry': string
   /** Format: real */
-  "rowFilter.row_revs.geometry_n": string;
+  'rowFilter.row_revs.geometry_n': string
   /** Format: real */
-  "rowFilter.row_revs.geometry_e": string;
+  'rowFilter.row_revs.geometry_e': string
   /** Format: real */
-  "rowFilter.row_revs.geometry_s": string;
+  'rowFilter.row_revs.geometry_s': string
   /** Format: real */
-  "rowFilter.row_revs.geometry_w": string;
+  'rowFilter.row_revs.geometry_w': string
   /** Format: jsonb */
-  "rowFilter.row_revs.data": string;
+  'rowFilter.row_revs.data': string
   /** Format: boolean */
-  "rowFilter.row_revs.deleted": string;
+  'rowFilter.row_revs.deleted': string
   /** Format: timestamp with time zone */
-  "rowFilter.row_revs.client_rev_at": string;
+  'rowFilter.row_revs.client_rev_at': string
   /** Format: text */
-  "rowFilter.row_revs.client_rev_by": string;
+  'rowFilter.row_revs.client_rev_by': string
   /** Format: timestamp with time zone */
-  "rowFilter.row_revs.server_rev_at": string;
+  'rowFilter.row_revs.server_rev_at': string
   /**
    * Format: text
    * @description hashed value the fields: row_id, table_id, geometry, data, deleted
    */
-  "rowFilter.row_revs.rev": string;
+  'rowFilter.row_revs.rev': string
   /**
    * Format: text
    * @description hash of the previous revision
    */
-  "rowFilter.row_revs.parent_rev": string;
+  'rowFilter.row_revs.parent_rev': string
   /**
    * Format: ARRAY
    * @description array of hashes of all previous revisions
    */
-  "rowFilter.row_revs.revisions": string;
+  'rowFilter.row_revs.revisions': string
   /**
    * Format: integer
    * @description depth of the revision tree
    */
-  "rowFilter.row_revs.depth": string;
+  'rowFilter.row_revs.depth': string
   /** @description rows */
-  "body.rows": definitions["rows"];
+  'body.rows': definitions['rows']
   /**
    * Format: uuid
    * @description primary key
    */
-  "rowFilter.rows.id": string;
+  'rowFilter.rows.id': string
   /**
    * Format: uuid
    * @description associated table
    */
-  "rowFilter.rows.table_id": string;
+  'rowFilter.rows.table_id': string
   /**
    * Format: uuid
    * @description associated row in the parent table (which means: this row is part of a child table)
    */
-  "rowFilter.rows.parent_id": string;
+  'rowFilter.rows.parent_id': string
   /**
    * Format: extensions.geometry(GeometryCollection,4326)
    * @description row geometry (GeometryCollection)
    */
-  "rowFilter.rows.geometry": string;
+  'rowFilter.rows.geometry': string
   /**
    * Format: real
    * @description Northernmost point of the geometry. Used to filter geometries for viewport client-side
    */
-  "rowFilter.rows.geometry_n": string;
+  'rowFilter.rows.geometry_n': string
   /**
    * Format: real
    * @description Easternmost point of the geometry. Used to filter geometries for viewport client-side
    */
-  "rowFilter.rows.geometry_e": string;
+  'rowFilter.rows.geometry_e': string
   /**
    * Format: real
    * @description Southernmost point of the geometry. Used to filter geometries for viewport client-side
    */
-  "rowFilter.rows.geometry_s": string;
+  'rowFilter.rows.geometry_s': string
   /**
    * Format: real
    * @description Westernmost point of the geometry. Used to filter geometries for viewport client-side
    */
-  "rowFilter.rows.geometry_w": string;
+  'rowFilter.rows.geometry_w': string
   /**
    * Format: jsonb
    * @description fields (keys) and data (values) according to the related fields table
    */
-  "rowFilter.rows.data": string;
+  'rowFilter.rows.data': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on client
    */
-  "rowFilter.rows.client_rev_at": string;
+  'rowFilter.rows.client_rev_at': string
   /**
    * Format: text
    * @description user editing last on client
    */
-  "rowFilter.rows.client_rev_by": string;
+  'rowFilter.rows.client_rev_by': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.rows.server_rev_at": string;
+  'rowFilter.rows.server_rev_at': string
   /** Format: text */
-  "rowFilter.rows.rev": string;
+  'rowFilter.rows.rev': string
   /** Format: text */
-  "rowFilter.rows.parent_rev": string;
+  'rowFilter.rows.parent_rev': string
   /** Format: ARRAY */
-  "rowFilter.rows.revisions": string;
+  'rowFilter.rows.revisions': string
   /** Format: integer */
-  "rowFilter.rows.depth": string;
+  'rowFilter.rows.depth': string
   /**
    * Format: boolean
    * @description marks if the row is deleted
    */
-  "rowFilter.rows.deleted": string;
+  'rowFilter.rows.deleted': string
   /** Format: ARRAY */
-  "rowFilter.rows.conflicts": string;
+  'rowFilter.rows.conflicts': string
   /** @description tables */
-  "body.tables": definitions["tables"];
+  'body.tables': definitions['tables']
   /**
    * Format: uuid
    * @description primary key
    */
-  "rowFilter.tables.id": string;
+  'rowFilter.tables.id': string
   /**
    * Format: uuid
    * @description associated project
    */
-  "rowFilter.tables.project_id": string;
+  'rowFilter.tables.project_id': string
   /**
    * Format: uuid
    * @description parent table
    */
-  "rowFilter.tables.parent_id": string;
+  'rowFilter.tables.parent_id': string
   /**
    * Format: text
    * @description releation with parent table: 1:1 or 1:n
    */
-  "rowFilter.tables.rel_type": string;
+  'rowFilter.tables.rel_type': string
   /**
    * Format: text
    * @description name for use in db and url (lowercase, no special characters)
    */
-  "rowFilter.tables.name": string;
+  'rowFilter.tables.name': string
   /**
    * Format: text
    * @description name for use when labeling
    */
-  "rowFilter.tables.label": string;
+  'rowFilter.tables.label': string
   /** Format: text */
-  "rowFilter.tables.single_label": string;
+  'rowFilter.tables.single_label': string
   /**
    * Format: ARRAY
    * @description fields used to label and sort rows
    */
-  "rowFilter.tables.label_fields": string;
+  'rowFilter.tables.label_fields': string
   /**
    * Format: text
    * @description characters used to separate fields when labelling rows
    */
-  "rowFilter.tables.label_fields_separator": string;
+  'rowFilter.tables.label_fields_separator': string
   /**
    * Format: smallint
    * @description enables ordering the tables of a project
    */
-  "rowFilter.tables.ord": string;
+  'rowFilter.tables.ord': string
   /**
    * Format: text
    * @description What type of options list will this be?
    */
-  "rowFilter.tables.option_type": string;
+  'rowFilter.tables.option_type': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on client
    */
-  "rowFilter.tables.client_rev_at": string;
+  'rowFilter.tables.client_rev_at': string
   /**
    * Format: text
    * @description user editing last on client
    */
-  "rowFilter.tables.client_rev_by": string;
+  'rowFilter.tables.client_rev_by': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.tables.server_rev_at": string;
+  'rowFilter.tables.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.tables.deleted": string;
+  'rowFilter.tables.deleted': string
   /** @description tile_layers */
-  "body.tile_layers": definitions["tile_layers"];
+  'body.tile_layers': definitions['tile_layers']
   /** Format: uuid */
-  "rowFilter.tile_layers.id": string;
+  'rowFilter.tile_layers.id': string
   /** Format: text */
-  "rowFilter.tile_layers.label": string;
+  'rowFilter.tile_layers.label': string
   /** Format: text */
-  "rowFilter.tile_layers.url_template": string;
+  'rowFilter.tile_layers.url_template': string
   /** Format: ARRAY */
-  "rowFilter.tile_layers.subdomains": string;
+  'rowFilter.tile_layers.subdomains': string
   /** Format: numeric */
-  "rowFilter.tile_layers.max_zoom": string;
+  'rowFilter.tile_layers.max_zoom': string
   /** Format: numeric */
-  "rowFilter.tile_layers.min_zoom": string;
+  'rowFilter.tile_layers.min_zoom': string
   /** Format: numeric */
-  "rowFilter.tile_layers.opacity": string;
+  'rowFilter.tile_layers.opacity': string
   /** Format: text */
-  "rowFilter.tile_layers.wms_base_url": string;
+  'rowFilter.tile_layers.wms_base_url': string
   /** Format: text */
-  "rowFilter.tile_layers.wms_format": string;
+  'rowFilter.tile_layers.wms_format': string
   /** Format: ARRAY */
-  "rowFilter.tile_layers.wms_layers": string;
+  'rowFilter.tile_layers.wms_layers': string
   /** Format: jsonb */
-  "rowFilter.tile_layers.wms_parameters": string;
+  'rowFilter.tile_layers.wms_parameters': string
   /** Format: text */
-  "rowFilter.tile_layers.wms_request": string;
+  'rowFilter.tile_layers.wms_request': string
   /** Format: text */
-  "rowFilter.tile_layers.wms_service": string;
+  'rowFilter.tile_layers.wms_service': string
   /** Format: ARRAY */
-  "rowFilter.tile_layers.wms_styles": string;
+  'rowFilter.tile_layers.wms_styles': string
   /** Format: boolean */
-  "rowFilter.tile_layers.wms_transparent": string;
+  'rowFilter.tile_layers.wms_transparent': string
   /** Format: text */
-  "rowFilter.tile_layers.wms_version": string;
+  'rowFilter.tile_layers.wms_version': string
   /** Format: timestamp with time zone */
-  "rowFilter.tile_layers.client_rev_at": string;
+  'rowFilter.tile_layers.client_rev_at': string
   /** Format: text */
-  "rowFilter.tile_layers.client_rev_by": string;
+  'rowFilter.tile_layers.client_rev_by': string
   /** Format: timestamp with time zone */
-  "rowFilter.tile_layers.server_rev_at": string;
+  'rowFilter.tile_layers.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.tile_layers.deleted": string;
+  'rowFilter.tile_layers.deleted': string
   /** @description users */
-  "body.users": definitions["users"];
+  'body.users': definitions['users']
   /**
    * Format: uuid
    * @description primary key
    */
-  "rowFilter.users.id": string;
+  'rowFilter.users.id': string
   /**
    * Format: text
    * @description name
    */
-  "rowFilter.users.name": string;
+  'rowFilter.users.name': string
   /**
    * Format: text
    * @description email
    */
-  "rowFilter.users.email": string;
+  'rowFilter.users.email': string
   /**
    * Format: uuid
    * @description associated account
    */
-  "rowFilter.users.account_id": string;
+  'rowFilter.users.account_id': string
   /**
    * Format: text
    * @description associated auth
    */
-  "rowFilter.users.auth_id": string;
+  'rowFilter.users.auth_user_id': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on client
    */
-  "rowFilter.users.client_rev_at": string;
+  'rowFilter.users.client_rev_at': string
   /**
    * Format: text
    * @description user editing last on client
    */
-  "rowFilter.users.client_rev_by": string;
+  'rowFilter.users.client_rev_by': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.users.server_rev_at": string;
+  'rowFilter.users.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.users.deleted": string;
+  'rowFilter.users.deleted': string
   /** @description version_types */
-  "body.version_types": definitions["version_types"];
+  'body.version_types': definitions['version_types']
   /**
    * Format: text
    * @description explains the version type
    */
-  "rowFilter.version_types.value": string;
+  'rowFilter.version_types.value': string
   /**
    * Format: smallint
    * @description enables sorting at will
    */
-  "rowFilter.version_types.sort": string;
+  'rowFilter.version_types.sort': string
   /** Format: text */
-  "rowFilter.version_types.comment": string;
+  'rowFilter.version_types.comment': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.version_types.server_rev_at": string;
+  'rowFilter.version_types.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.version_types.deleted": string;
+  'rowFilter.version_types.deleted': string
   /** @description widget_types */
-  "body.widget_types": definitions["widget_types"];
+  'body.widget_types': definitions['widget_types']
   /**
    * Format: text
    * @description the relation type
    */
-  "rowFilter.widget_types.value": string;
+  'rowFilter.widget_types.value': string
   /**
    * Format: boolean
    * @description whether the widget needs an options list
    */
-  "rowFilter.widget_types.needs_list": string;
+  'rowFilter.widget_types.needs_list': string
   /**
    * Format: smallint
    * @description enables sorting at will
    */
-  "rowFilter.widget_types.sort": string;
+  'rowFilter.widget_types.sort': string
   /**
    * Format: text
    * @description explains the version type
    */
-  "rowFilter.widget_types.comment": string;
+  'rowFilter.widget_types.comment': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.widget_types.server_rev_at": string;
+  'rowFilter.widget_types.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.widget_types.deleted": string;
+  'rowFilter.widget_types.deleted': string
   /** @description widgets_for_fields */
-  "body.widgets_for_fields": definitions["widgets_for_fields"];
+  'body.widgets_for_fields': definitions['widgets_for_fields']
   /** Format: text */
-  "rowFilter.widgets_for_fields.field_value": string;
+  'rowFilter.widgets_for_fields.field_value': string
   /** Format: text */
-  "rowFilter.widgets_for_fields.widget_value": string;
+  'rowFilter.widgets_for_fields.widget_value': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on server
    */
-  "rowFilter.widgets_for_fields.server_rev_at": string;
+  'rowFilter.widgets_for_fields.server_rev_at': string
   /** Format: boolean */
-  "rowFilter.widgets_for_fields.deleted": string;
+  'rowFilter.widgets_for_fields.deleted': string
 }
 
 export interface operations {}

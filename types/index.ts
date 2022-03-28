@@ -864,7 +864,7 @@ export interface parameters {
    * Format: text
    * @description associated auth
    */
-  'rowFilter.users.auth_id': string
+  'rowFilter.users.auth_user_id': string
   /**
    * Format: timestamp with time zone
    * @description time of last edit on client
