@@ -359,7 +359,7 @@ export class db extends Dexie {
       users: 'id, name, &email, deleted, server_rev_at',
       version_types: 'id, &value, sort, deleted, server_rev_at',
       widget_types: 'id, &value, sort, deleted, server_rev_at',
-      widgets_for_fields: 'id, server_rev_at',
+      widgets_for_fields: 'id, [field_value+widget_value], server_rev_at',
     })
   }
 }

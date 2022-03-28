@@ -1,10 +1,13 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 CREATE EXTENSION IF NOT EXISTS postgis;
-
-DROP TABLE IF EXISTS users CASCADE;
+ -- set up realtime
+begin;
+  drop publication if exists supabase_realtime;
+  create publication supabase_realtime;
+commit;
 
 --
+
+DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   name text DEFAULT NULL,
@@ -51,9 +54,25 @@ COMMENT ON COLUMN users.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN users.server_rev_at IS 'time of last edit on server';
 
-DROP TABLE IF EXISTS accounts CASCADE;
+alter table users enable row level security;
+create policy "Users can view own data"
+  on users for select
+  using ( auth.uid() = auth_id );
+
+alter table users enable row level security;
+create policy "Users can insert own data"
+  on users for insert
+  with check ( auth.uid() = auth_id );
+  
+create policy "Users can update own data"
+  on users for update
+  using ( auth.uid() = auth_id );
+
+alter publication supabase_realtime add table users;
 
 --
+
+DROP TABLE IF EXISTS accounts CASCADE;
 CREATE TABLE accounts (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   -- service_id is not needed - TODO: remove
@@ -87,6 +106,23 @@ COMMENT ON COLUMN accounts.client_rev_at IS 'time of last edit on client';
 COMMENT ON COLUMN accounts.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN accounts.server_rev_at IS 'time of last edit on server';
+
+alter table users enable row level security;
+-- TODO:
+create policy "Users can view own data"
+  on users for select
+  using ( auth.uid() = auth_id );
+
+alter table users enable row level security;
+create policy "Users can insert own data"
+  on users for insert
+  with check ( auth.uid() = auth_id );
+  
+create policy "Users can update own data"
+  on users for update
+  using ( auth.uid() = auth_id );
+
+alter publication supabase_realtime add table users;
 
 -- need to wait to create this reference until accounts exists:
 ALTER TABLE users
