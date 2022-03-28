@@ -164,10 +164,35 @@ export interface ProjectUser {
   deleted?: boolean
 }
 
+export interface Project {
+  id: string
+  account_id?: string
+  name?: string
+  label?: string
+  crs?: number
+  client_rev_at?: string
+  client_rev_by?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+
+export interface RelType {
+  value: string
+  sort?: number
+  comment?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+
+export interface RoleType {
+  value: string
+  sort?: number
+  comment?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+
 // const {
-//   project_users,
-//   projects,
-//   rel_types,
 //   role_types,
 //   row_revs,
 //   rows,
@@ -194,6 +219,9 @@ export class db extends Dexie {
   project_readers!: Table<ProjectReader>
   project_tile_layers!: Table<ProjectTileLayer>
   project_users!: Table<ProjectTileLayer>
+  projects!: Table<Project>
+  rel_types!: Table<RelType>
+  role_types!: Table<RoleType>
 
   constructor() {
     super('capturing')
@@ -211,6 +239,9 @@ export class db extends Dexie {
       project_readers: '++id, user_email, deleted, server_rev_at',
       project_tile_layers: '++id, label, ord, active, deleted, server_rev_at',
       project_users: '++id, user_email, deleted, server_rev_at',
+      projects: '++id, label, deleted, server_rev_at',
+      rel_types: '++id, sort, deleted, server_rev_at',
+      role_types: '++id, sort, deleted, server_rev_at',
     })
   }
 }
