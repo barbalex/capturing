@@ -32,6 +32,9 @@ export class Account implements IAccount {
     if (deleted) this.deleted = id
   }
   // TODO: add methods, see: https://dexie.org/docs/Typescript#storing-real-classes-instead-of-just-interfaces
+  // TODO: method for related datasets
+  // TODO: method for labels if helpful
+  // TODO: methode for edit, delete
 }
 
 // TODO: build classes for all interfaces
