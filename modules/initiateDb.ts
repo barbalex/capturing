@@ -49,10 +49,35 @@ export interface FileRev {
   depth?: number
 }
 
+export interface File {
+  id: string
+  row_id?: string
+  field_id?: string
+  filename?: string
+  url?: string
+  version?: number
+  deleted?: boolean
+  client_rev_at?: string
+  client_rev_by?: string
+  server_rev_at?: string
+  rev?: string
+  parent_rev?: string
+  revisions?: string[]
+  depth?: number
+  conflicts?: string[]
+}
+
+export interface New {
+  id: string
+  time?: string
+  version_type?: string
+  version?: string
+  message?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+
 // const {
-//   file_revs,
-//   files,
-//   news,
 //   news_delivery,
 //   option_types,
 //   project_editors,
@@ -79,6 +104,8 @@ export class db extends Dexie {
   field_types!: Table<FieldType>
   fields!: Table<Field>
   file_revs!: Table<FileRev>
+  files!: Table<File>
+  news!: Table<New>
 
   constructor() {
     super('capturing')
@@ -87,6 +114,8 @@ export class db extends Dexie {
       field_types: '++id, deleted, server_rev_at',
       field_types: '++id, label, ord, deleted, server_rev_at',
       file_revs: '++id, filename, deleted, server_rev_at',
+      files: '++id, filename, deleted, server_rev_at',
+      news: '++id, time, deleted, server_rev_at',
     })
   }
 }
