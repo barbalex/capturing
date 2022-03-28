@@ -1,18 +1,45 @@
 import Dexie, { Table } from 'dexie'
 
-export interface Account {
+export interface IAccount {
   id: string
   service_id?: string
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
+export class Account implements IAccount {
+  id: string
+  service_id?: string
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted?: boolean
+
+  constructor(
+    id?: string,
+    service_id?: string,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    deleted?: boolean,
+  ) {
+    if (id) this.id = id
+    if (service_id) this.service_id = id
+    if (client_rev_at) this.client_rev_at = id
+    if (client_rev_by) this.client_rev_by = id
+    if (server_rev_at) this.server_rev_at = id
+    if (deleted) this.deleted = id
+  }
+  // TODO: add methods, see: https://dexie.org/docs/Typescript#storing-real-classes-instead-of-just-interfaces
+}
+
+// TODO: build classes for all interfaces
 export interface FieldType {
   value: string
   sort?: number
   comment?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 export interface Field {
@@ -26,9 +53,9 @@ export interface Field {
   widget_type?: string
   options_table?: string
   standard_value?: string
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 export interface FileRev {
@@ -40,9 +67,9 @@ export interface FileRev {
   url?: string
   version?: number
   deleted?: boolean
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   rev?: string
   parent_rev?: string
   revisions?: string[]
@@ -57,9 +84,9 @@ export interface File {
   url?: string
   version?: number
   deleted?: boolean
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   rev?: string
   parent_rev?: string
   revisions?: string[]
@@ -69,11 +96,11 @@ export interface File {
 
 export interface New {
   id: string
-  time?: string
+  time?: Date
   version_type?: string
   version?: string
   message?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 
@@ -81,7 +108,7 @@ export interface NewsDelivery {
   id: string
   news_id?: string
   user_id?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 
@@ -91,7 +118,7 @@ export interface OptionType {
   save_id?: boolean
   sort?: number
   comment?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 export interface ProjectEditor {
@@ -99,9 +126,9 @@ export interface ProjectEditor {
   project_id?: string
   user_email?: string
   role?: string
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 
@@ -110,9 +137,9 @@ export interface ProjectManager {
   project_id?: string
   user_email?: string
   role?: string
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 
@@ -121,9 +148,9 @@ export interface ProjectReader {
   project_id?: string
   user_email?: string
   role?: string
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 
@@ -147,9 +174,9 @@ export interface ProjectTileLayer {
   wms_styles?: string[]
   wms_transparent?: boolean
   wms_version?: string
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 
@@ -158,9 +185,9 @@ export interface ProjectUser {
   project_id?: string
   user_email?: string
   role?: string
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 
@@ -170,9 +197,9 @@ export interface Project {
   name?: string
   label?: string
   crs?: number
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 
@@ -180,7 +207,7 @@ export interface RelType {
   value: string
   sort?: number
   comment?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 
@@ -188,7 +215,7 @@ export interface RoleType {
   value: string
   sort?: number
   comment?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 
@@ -204,9 +231,9 @@ export interface RowRev {
   geometry_w?: number
   data?: string
   deleted?: boolean
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   rev?: string
   parent_rev?: string
   revisions?: string[]
@@ -223,9 +250,9 @@ export interface Row {
   geometry_s?: number
   geometry_w?: number
   data?: string
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   rev?: string
   parent_rev?: string
   revisions?: string[]
@@ -246,9 +273,9 @@ export interface CTable {
   label_fields_separator?: string
   sort?: number
   option_type?: string
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 
@@ -269,9 +296,9 @@ export interface TileLayer {
   wms_styles?: string[]
   wms_transparent?: boolean
   wms_version?: string
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 export interface User {
@@ -280,16 +307,16 @@ export interface User {
   email?: string
   account_id?: string
   auth_user_id?: string
-  client_rev_at?: string
+  client_rev_at?: Date
   client_rev_by?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 export interface VersionType {
   value: string
   sort?: number
   comment?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 export interface WidgetType {
@@ -297,42 +324,42 @@ export interface WidgetType {
   needs_list?: boolean
   sort?: number
   comment?: string
-  server_rev_at?: string
+  server_rev_at?: Date
   deleted?: boolean
 }
 export interface WidgetForField {
   field_value: string
   widget_value: string
-  server_rev_at?: string
+  server_rev_at?: Date
 }
 
 export class db extends Dexie {
   // 'friends' is added by dexie when declaring the stores()
   // We just tell the typing system this is the case
-  accounts!: Table<Account>
-  field_types!: Table<FieldType>
-  fields!: Table<Field>
-  file_revs!: Table<FileRev>
-  files!: Table<File>
-  news!: Table<New>
-  news_delivery!: Table<Newsdelivery>
-  option_types!: Table<OptionType>
-  project_editors!: Table<ProjectEditor>
-  project_managers!: Table<ProjectManager>
-  project_readers!: Table<ProjectReader>
-  project_tile_layers!: Table<ProjectTileLayer>
-  project_users!: Table<ProjectTileLayer>
-  projects!: Table<Project>
-  rel_types!: Table<RelType>
-  role_types!: Table<RoleType>
-  row_revs!: Table<RowRev>
-  rows!: Table<Row>
-  tables!: Table<CTable>
-  tile_layers!: Table<TileLayer>
-  users!: Table<User>
-  version_types!: Table<VersionType>
-  widget_types!: Table<WidgetType>
-  widgets_for_fields!: Table<WidgetForField>
+  accounts!: Table<Account, string>
+  field_types!: Table<FieldType, string>
+  fields!: Table<Field, string>
+  file_revs!: Table<FileRev, string>
+  files!: Table<File, string>
+  news!: Table<New, string>
+  news_delivery!: Table<Newsdelivery, string>
+  option_types!: Table<OptionType, string>
+  project_editors!: Table<ProjectEditor, string>
+  project_managers!: Table<ProjectManager, string>
+  project_readers!: Table<ProjectReader, string>
+  project_tile_layers!: Table<ProjectTileLayer, string>
+  project_users!: Table<ProjectTileLayer, string>
+  projects!: Table<Project, string>
+  rel_types!: Table<RelType, string>
+  role_types!: Table<RoleType, string>
+  row_revs!: Table<RowRev, string>
+  rows!: Table<Row, string>
+  tables!: Table<CTable, string>
+  tile_layers!: Table<TileLayer, string>
+  users!: Table<User, string>
+  version_types!: Table<VersionType, string>
+  widget_types!: Table<WidgetType, string>
+  widgets_for_fields!: Table<WidgetForField, string>
 
   constructor() {
     super('capturing')
@@ -361,5 +388,6 @@ export class db extends Dexie {
       widget_types: 'id, &value, sort, server_rev_at',
       widgets_for_fields: 'id, [field_value+widget_value], server_rev_at',
     })
+    this.accounts.mapToClass(Account)
   }
 }
