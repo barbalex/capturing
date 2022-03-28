@@ -192,14 +192,108 @@ export interface RoleType {
   deleted?: boolean
 }
 
+export interface RowRev {
+  id: string
+  row_id?: string
+  table_id?: string
+  parent_id?: string
+  geometry?: string
+  geometry_n?: number
+  geometry_e?: number
+  geometry_s?: number
+  geometry_w?: number
+  data?: string
+  deleted?: boolean
+  client_rev_at?: string
+  client_rev_by?: string
+  server_rev_at?: string
+  rev?: string
+  parent_rev?: string
+  revisions?: string[]
+  depth?: number
+}
+
+export interface Row {
+  id: string
+  table_id?: string
+  parent_id?: string
+  geometry?: string
+  geometry_n?: number
+  geometry_e?: number
+  geometry_s?: number
+  geometry_w?: number
+  data?: string
+  client_rev_at?: string
+  client_rev_by?: string
+  server_rev_at?: string
+  rev?: string
+  parent_rev?: string
+  revisions?: string[]
+  depth?: number
+  deleted?: boolean
+  conflicts?: string[]
+}
+
+export interface CTable {
+  id: string
+  project_id?: string
+  parent_id?: string
+  rel_type?: string
+  name?: string
+  label?: string
+  single_label?: string
+  label_fields?: string[]
+  label_fields_separator?: string
+  ord?: number
+  option_type?: string
+  client_rev_at?: string
+  client_rev_by?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+
+export interface TileLayer {
+  id: string
+  label?: string
+  url_template?: string
+  subdomains?: string[]
+  max_zoom?: number
+  min_zoom?: number
+  opacity?: number
+  wms_base_url?: string
+  wms_format?: string
+  wms_layers?: string[]
+  wms_parameters?: string
+  wms_request?: string
+  wms_service?: string
+  wms_styles?: string[]
+  wms_transparent?: boolean
+  wms_version?: string
+  client_rev_at?: string
+  client_rev_by?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+export interface User {
+  id: string
+  name?: string
+  email?: string
+  account_id?: string
+  auth_id?: string
+  client_rev_at?: string
+  client_rev_by?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+export interface VersionType {
+  value: string
+  sort?: number
+  comment?: string
+  server_rev_at?: string
+  deleted?: boolean
+}
+
 // const {
-//   role_types,
-//   row_revs,
-//   rows,
-//   tables,
-//   tile_layers,
-//   users,
-//   version_types,
 //   widget_types,
 //   widgets_for_fields,
 // } = definitions
@@ -222,6 +316,12 @@ export class db extends Dexie {
   projects!: Table<Project>
   rel_types!: Table<RelType>
   role_types!: Table<RoleType>
+  row_revs!: Table<RowRev>
+  rows!: Table<Row>
+  tables!: Table<CTable>
+  tile_layers!: Table<TileLayer>
+  users!: Table<User>
+  version_types!: Table<CTable>
 
   constructor() {
     super('capturing')
@@ -242,6 +342,12 @@ export class db extends Dexie {
       projects: '++id, label, deleted, server_rev_at',
       rel_types: '++id, sort, deleted, server_rev_at',
       role_types: '++id, sort, deleted, server_rev_at',
+      row_revs: '++id, deleted, server_rev_at',
+      rows: '++id, deleted, server_rev_at',
+      tables: '++id, label, ord, deleted, server_rev_at',
+      tile_layers: '++id, label,  deleted, server_rev_at',
+      users: '++id, name,  deleted, server_rev_at',
+      version_types: '++id, value, sort,  deleted, server_rev_at',
     })
   }
 }
