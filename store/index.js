@@ -5,10 +5,13 @@ import NotificationType from './Notification'
 
 const myTypes = types
   .model({ notifications: types.map(NotificationType) })
-  .volatile(() => ({ supabase: null }))
+  .volatile(() => ({ supabase: null, db: null }))
   .actions((self) => ({
     setSupabase(val) {
       self.supabase = val
+    },
+    setDb(val) {
+      self.db = val
     },
     destroy(model) {
       destroy(model)

@@ -6,7 +6,7 @@ import materialTheme from '../modules/materialTheme'
 import '../styles/globals.css'
 import MobxStore from '../store'
 import { Provider as MobxProvider } from '../storeContext'
-import initiateDb from '../modules/initiateDb'
+import { db } from '../modules/initiateDb'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const store = MobxStore.create()
@@ -15,7 +15,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   )
   store.setSupabase(supabase)
-  const db = initiateDb()
+  store.setDb(db)
+  console.log('app, db:', db)
 
   return (
     <StyledEngineProvider injectFirst>

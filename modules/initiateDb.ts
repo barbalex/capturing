@@ -1,8 +1,22 @@
 import Dexie, { Table } from 'dexie'
-import { shit, paths } from '../types/supabase'
-import  {Accounts} from '../types'
 
-const initiateDb = (store) => {
+
+export interface Account {
+  id: string;
+  service_id?: string;
+  client_rev_at?: string;
+  client_rev_by?: string;
+  server_rev_at?: string;
+  deleted?: boolean;
+}
+export interface FieldType {
+  value: string;
+  sort?: number;
+  comment?: string;
+  server_rev_at?: string;
+  deleted?: boolean;
+}
+
   // const {
   //   accounts,
   //   field_types,
@@ -29,9 +43,18 @@ const initiateDb = (store) => {
   //   widget_types,
   //   widgets_for_fields,
   // } = definitions
-  console.log('initiateDb, Accounts:', Accounts )
-  const db = new Dexie('capturing')
-  return db
-}
+  export class db extends Dexie {
+    // 'friends' is added by dexie when declaring the stores()
+    // We just tell the typing system this is the case
+    accounts!: Table<Account>; 
+    field_types!: Table<FieldType>
+  
+    constructor() {
+      super('capturing');
+      this.version(1).stores({
+        accounts: '++id, deleted, server_rev_at',
+        field_types: '++id, deleted, server_rev_at'
+      });
+    }
+  }
 
-export default initiateDb

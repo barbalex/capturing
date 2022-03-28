@@ -4,40 +4,6 @@
  * Do not make direct changes to the file.
  */
 
-export interface Accounts {
-  /**
-   * Format: uuid
-   * @description primary key
-   *
-   * Note:
-   * This is a Primary Key.<pk/>
-   * @default gen_random_uuid()
-   */
-  id: string;
-  /**
-   * Format: text
-   * @description id used by external service
-   */
-  service_id?: string;
-  /**
-   * Format: timestamp with time zone
-   * @description time of last edit on client
-   * @default now()
-   */
-  client_rev_at?: string;
-  /**
-   * Format: text
-   * @description user editing last on client
-   */
-  client_rev_by?: string;
-  /**
-   * Format: timestamp with time zone
-   * @description time of last edit on server
-   * @default now()
-   */
-  server_rev_at?: string;
-  /** Format: boolean */
-  deleted?: boolean;}
  
 export interface definitions {
    /** @description Goal: earn money. Base table. Projects, tables, rows and files depend on it. Not versioned (not recorded and only added by manager) */
