@@ -1,5 +1,6 @@
 import Dexie, { Table } from 'dexie'
-import { definitions, paths } from '../types/supabase'
+import { shit, paths } from '../types/supabase'
+import  {Accounts} from '../types'
 
 const initiateDb = (store) => {
   // const {
@@ -28,7 +29,7 @@ const initiateDb = (store) => {
   //   widget_types,
   //   widgets_for_fields,
   // } = definitions
-  console.log('initiateDb, definitions:', { definitions, paths })
+  console.log('initiateDb, Accounts:', Accounts )
   const db = new Dexie('capturing')
   return db
 }

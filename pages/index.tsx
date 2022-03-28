@@ -5,22 +5,48 @@ import { observer } from 'mobx-react-lite'
 
 import styles from '../styles/Home.module.css'
 import StoreContext from '../storeContext'
-import { definitions } from '../types/supabase'
+// import { Accounts } from '../types'
 
 const Home = () => {
   const { supabase } = useContext(StoreContext)
-  console.log('Home, definitions:', definitions)
+
+  interface field_types {
+    /**
+     * Format: text
+     * @description explains the version type
+     *
+     * Note:
+     * This is a Primary Key.<pk/>
+     */
+    value: string
+    /**
+     * Format: smallint
+     * @description enables sorting at will
+     */
+    sort?: number
+    /** Format: text */
+    comment?: string
+    /**
+     * Format: timestamp with time zone
+     * @description time of last edit on server
+     * @default now()
+     */
+    server_rev_at?: string
+    /** Format: boolean */
+    deleted?: boolean
+  }
+  // console.log('Home, field_types:', field_types)
 
   const [projects, setProjects] = useState([])
   useEffect(() => {
-    supabase
-      //.from<definitions['field_types']>('field_types')
-      .from('field_types')
-      .select('*')
-      .then((field_types) => {
-        console.log('Home, field_types:', field_types)
-        setProjects(field_types)
-      })
+    const run = async () => {
+      const { data } = await supabase
+        .from<field_types>('field_types')
+        .select('*')
+      console.log('Home, field_types:', data)
+      setProjects(data)
+    }
+    run()
   }, [supabase])
 
   return (
