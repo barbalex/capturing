@@ -271,7 +271,7 @@ export class NewsDelivery implements INewsDelivery {
 }
 
 export interface IOptionType {
-  id?: string
+  id: string
   value: string
   save_id?: boolean
   sort?: number
@@ -307,7 +307,7 @@ export class OptionType implements IOptionType {
   }
 }
 export interface IProjectEditor {
-  id?: string
+  id: string
   project_id?: string
   user_email?: string
   role?: string
@@ -318,7 +318,7 @@ export interface IProjectEditor {
 }
 
 export interface IProjectManager {
-  id?: string
+  id: string
   project_id?: string
   user_email?: string
   role?: string
@@ -329,7 +329,7 @@ export interface IProjectManager {
 }
 
 export interface IProjectReader {
-  id?: string
+  id: string
   project_id?: string
   user_email?: string
   role?: string
@@ -499,6 +499,7 @@ export class Project implements IProject {
 }
 
 export interface IRelType {
+  id: string
   value: string
   sort?: number
   comment?: string
@@ -507,6 +508,7 @@ export interface IRelType {
 }
 
 export interface IRoleType {
+  id: string
   value: string
   sort?: number
   comment?: string
@@ -802,6 +804,7 @@ export class User implements IUser {
   }
 }
 export interface IVersionType {
+  id: string
   value: string
   sort?: number
   comment?: string
@@ -809,6 +812,7 @@ export interface IVersionType {
   deleted?: boolean
 }
 export interface IWidgetType {
+  id: string
   value: string
   needs_list?: boolean
   sort?: number
@@ -816,10 +820,30 @@ export interface IWidgetType {
   server_rev_at?: Date
   deleted?: boolean
 }
-export interface WidgetForField {
+export interface IWidgetForField {
+  id: string
   field_value: string
   widget_value: string
   server_rev_at?: Date
+}
+
+export class WidgetForField implements IWidgetForField {
+  id: string
+  field_value: string
+  widget_value: string
+  server_rev_at?: Date
+
+  constructor(
+    id?: string,
+    field_value: string,
+    widget_value: string,
+    server_rev_at?: Date,
+  ) {
+    this.id = id ?? uuidv1()
+    if (field_value) this.field_value = field_value
+    if (widget_value) this.widget_value = widget_value
+    if (server_rev_at) this.server_rev_at = server_rev_at
+  }
 }
 
 export class db extends Dexie {
@@ -886,5 +910,6 @@ export class db extends Dexie {
     this.tables.mapToClass(Table)
     this.tile_layers.mapToClass(TileLayer)
     this.users.mapToClass(User)
+    this.widgets_for_fields.mapToClass(WidgetForField)
   }
 }
