@@ -847,8 +847,6 @@ export class WidgetForField implements IWidgetForField {
 }
 
 export class db extends Dexie {
-  // 'friends' is added by dexie when declaring the stores()
-  // We just tell the typing system this is the case
   accounts!: DexieTable<Account, string>
   field_types!: DexieTable<FieldType, string>
   fields!: DexieTable<Field, string>
