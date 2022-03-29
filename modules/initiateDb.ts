@@ -756,7 +756,7 @@ export class TileLayer implements ITileLayer {
   }
 }
 
-export interface User {
+export interface IUser {
   id: string
   name?: string
   email?: string
@@ -767,14 +767,48 @@ export interface User {
   server_rev_at?: Date
   deleted?: boolean
 }
-export interface VersionType {
+
+export class User implements IUser {
+  id: string
+  name?: string
+  email?: string
+  account_id?: string
+  auth_user_id?: string
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted?: boolean
+
+  constructor(
+    id?: string,
+    name?: string,
+    email?: string,
+    account_id?: string,
+    auth_user_id?: string,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    deleted?: boolean,
+  ) {
+    this.id = id ?? uuidv1()
+    if (name) this.name = name
+    if (email) this.email = email
+    if (account_id) this.account_id = account_id
+    if (auth_user_id) this.auth_user_id = auth_user_id
+    if (client_rev_at) this.client_rev_at = client_rev_at
+    if (client_rev_by) this.client_rev_by = client_rev_by
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    if (deleted) this.deleted = deleted
+  }
+}
+export interface IVersionType {
   value: string
   sort?: number
   comment?: string
   server_rev_at?: Date
   deleted?: boolean
 }
-export interface WidgetType {
+export interface IWidgetType {
   value: string
   needs_list?: boolean
   sort?: number
@@ -808,10 +842,10 @@ export class db extends Dexie {
   role_types!: DexieTable<IRoleType, string>
   rows!: DexieTable<Row, string>
   tables!: DexieTable<Table, string>
-  tile_layers!: DexieTable<ITileLayer, string>
-  users!: DexieTable<User, string>
-  version_types!: DexieTable<VersionType, string>
-  widget_types!: DexieTable<WidgetType, string>
+  tile_layers!: DexieTable<TileLayer, string>
+  users!: DexieTable<IUser, string>
+  version_types!: DexieTable<IVersionType, string>
+  widget_types!: DexieTable<IWidgetType, string>
   widgets_for_fields!: DexieTable<WidgetForField, string>
 
   constructor() {
@@ -850,5 +884,6 @@ export class db extends Dexie {
     this.projects.mapToClass(Project)
     this.rows.mapToClass(Row)
     this.tables.mapToClass(Table)
+    this.tile_layers.mapToClass(TileLayer)
   }
 }
