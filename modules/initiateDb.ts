@@ -1,3 +1,4 @@
+import { ProjectUser } from './initiateDb'
 import Dexie, { Table } from 'dexie'
 import { v1 as uuidv1 } from 'uuid'
 
@@ -440,7 +441,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
   }
 }
 
-export interface ProjectUser {
+export interface IProjectUser {
   id: string
   project_id?: string
   user_email?: string
@@ -451,7 +452,7 @@ export interface ProjectUser {
   deleted?: boolean
 }
 
-export interface Project {
+export interface IProject {
   id: string
   account_id?: string
   name?: string
@@ -461,6 +462,40 @@ export interface Project {
   client_rev_by?: string
   server_rev_at?: Date
   deleted?: boolean
+}
+
+export class Project implements IProject {
+  id: string
+  account_id?: string
+  name?: string
+  label?: string
+  crs?: number
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted?: boolean
+
+  constructor(
+    id?: string,
+    account_id?: string,
+    name?: string,
+    label?: string,
+    crs?: number,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    deleted?: boolean,
+  ) {
+    this.id = id ?? uuidv1()
+    if (account_id) this.account_id = account_id
+    if (name) this.name = name
+    if (label) this.label = label
+    if (crs) this.crs = crs
+    if (client_rev_at) this.client_rev_at = client_rev_at
+    if (client_rev_by) this.client_rev_by = client_rev_by
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    if (deleted) this.deleted = deleted
+  }
 }
 
 export interface RelType {
@@ -606,8 +641,8 @@ export class db extends Dexie {
   project_editors!: Table<IProjectEditor, string>
   project_managers!: Table<IProjectManager, string>
   project_readers!: Table<IProjectReader, string>
-  project_tile_layers!: Table<IProjectTileLayer, string>
-  project_users!: Table<IProjectTileLayer, string>
+  project_tile_layers!: Table<ProjectTileLayer, string>
+  project_users!: Table<ProjectUser, string>
   projects!: Table<Project, string>
   rel_types!: Table<RelType, string>
   role_types!: Table<RoleType, string>
@@ -651,5 +686,7 @@ export class db extends Dexie {
     this.news.mapToClass(New)
     this.news_delivery.mapToClass(NewsDelivery)
     this.option_types.mapToClass(OptionType)
+    this.project_tile_layers.mapToClass(ProjectTileLayer)
+    this.projects.mapToClass(Project)
   }
 }
