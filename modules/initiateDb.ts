@@ -203,7 +203,7 @@ export class File implements IFile {
   }
 }
 
-export interface New {
+export interface INew {
   id: string
   time?: Date
   version_type?: string
@@ -211,6 +211,33 @@ export interface New {
   message?: string
   server_rev_at?: Date
   deleted?: boolean
+}
+export class New implements INew {
+  id: string
+  time?: Date
+  version_type?: string
+  version?: string
+  message?: string
+  server_rev_at?: Date
+  deleted?: boolean
+
+  constructor(
+    id: string,
+    time?: Date,
+    version_type?: string,
+    version?: string,
+    message?: string,
+    server_rev_at?: Date,
+    deleted?: boolean,
+  ) {
+    if (id) this.id = id
+    if (time) this.time = time
+    if (version_type) this.version_type = version_type
+    if (version) this.version = version
+    if (message) this.message = message
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    if (deleted) this.deleted = deleted
+  }
 }
 
 export interface NewsDelivery {
@@ -497,5 +524,6 @@ export class db extends Dexie {
     this.field_types.mapToClass(FieldType)
     this.fields.mapToClass(Field)
     this.files.mapToClass(File)
+    this.news.mapToClass(New)
   }
 }
