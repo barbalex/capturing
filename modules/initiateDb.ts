@@ -843,7 +843,7 @@ export class db extends Dexie {
   rows!: DexieTable<Row, string>
   tables!: DexieTable<Table, string>
   tile_layers!: DexieTable<TileLayer, string>
-  users!: DexieTable<IUser, string>
+  users!: DexieTable<User, string>
   version_types!: DexieTable<IVersionType, string>
   widget_types!: DexieTable<IWidgetType, string>
   widgets_for_fields!: DexieTable<WidgetForField, string>
@@ -885,5 +885,6 @@ export class db extends Dexie {
     this.rows.mapToClass(Row)
     this.tables.mapToClass(Table)
     this.tile_layers.mapToClass(TileLayer)
+    this.users.mapToClass(User)
   }
 }
