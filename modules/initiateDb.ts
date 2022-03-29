@@ -498,7 +498,7 @@ export class Project implements IProject {
   }
 }
 
-export interface RelType {
+export interface IRelType {
   value: string
   sort?: number
   comment?: string
@@ -506,7 +506,7 @@ export interface RelType {
   deleted?: boolean
 }
 
-export interface RoleType {
+export interface IRoleType {
   value: string
   sort?: number
   comment?: string
@@ -514,28 +514,7 @@ export interface RoleType {
   deleted?: boolean
 }
 
-export interface RowRev {
-  id: string
-  row_id?: string
-  table_id?: string
-  parent_id?: string
-  geometry?: string
-  geometry_n?: number
-  geometry_e?: number
-  geometry_s?: number
-  geometry_w?: number
-  data?: string
-  deleted?: boolean
-  client_rev_at?: Date
-  client_rev_by?: string
-  server_rev_at?: Date
-  rev?: string
-  parent_rev?: string
-  revisions?: string[]
-  depth?: number
-}
-
-export interface Row {
+export interface IRow {
   id: string
   table_id?: string
   parent_id?: string
@@ -554,6 +533,66 @@ export interface Row {
   depth?: number
   deleted?: boolean
   conflicts?: string[]
+}
+
+export class IRow implements IRow {
+  id: string
+  table_id?: string
+  parent_id?: string
+  geometry?: string
+  geometry_n?: number
+  geometry_e?: number
+  geometry_s?: number
+  geometry_w?: number
+  data?: string
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  rev?: string
+  parent_rev?: string
+  revisions?: string[]
+  depth?: number
+  deleted?: boolean
+  conflicts?: string[]
+  constructor(
+    id?: string,
+    table_id?: string,
+    parent_id?: string,
+    geometry?: string,
+    geometry_n?: number,
+    geometry_e?: number,
+    geometry_s?: number,
+    geometry_w?: number,
+    data?: string,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    rev?: string,
+    parent_rev?: string,
+    revisions?: string[],
+    depth?: number,
+    deleted?: boolean,
+    conflicts?: string[],
+  ) {
+    this.id = id ?? uuidv1()
+    if (table_id) this.table_id = table_id
+    if (parent_id) this.parent_id = parent_id
+    if (geometry) this.geometry = geometry
+    if (geometry_n) this.geometry_n = geometry_n
+    if (geometry_e) this.geometry_e = geometry_e
+    if (geometry_s) this.geometry_s = geometry_s
+    if (geometry_w) this.geometry_w = geometry_w
+    if (data) this.data = data
+    if (client_rev_at) this.client_rev_at = client_rev_at
+    if (client_rev_by) this.client_rev_by = client_rev_by
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    if (rev) this.rev = rev
+    if (parent_rev) this.parent_rev = parent_rev
+    if (revisions) this.revisions = revisions
+    if (depth) this.depth = depth
+    if (deleted) this.deleted = deleted
+    if (conflicts) this.conflicts = conflicts
+  }
 }
 
 export interface CTable {
@@ -644,8 +683,8 @@ export class db extends Dexie {
   project_tile_layers!: Table<ProjectTileLayer, string>
   project_users!: Table<ProjectUser, string>
   projects!: Table<Project, string>
-  rel_types!: Table<RelType, string>
-  role_types!: Table<RoleType, string>
+  rel_types!: Table<IRelType, string>
+  role_types!: Table<IRoleType, string>
   rows!: Table<Row, string>
   tables!: Table<CTable, string>
   tile_layers!: Table<TileLayer, string>
@@ -688,5 +727,6 @@ export class db extends Dexie {
     this.option_types.mapToClass(OptionType)
     this.project_tile_layers.mapToClass(ProjectTileLayer)
     this.projects.mapToClass(Project)
+    this.rows.mapToClass(Row)
   }
 }
