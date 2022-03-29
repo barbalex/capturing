@@ -535,7 +535,7 @@ export interface IRow {
   conflicts?: string[]
 }
 
-export class IRow implements IRow {
+export class Row implements IRow {
   id: string
   table_id?: string
   parent_id?: string
