@@ -240,12 +240,32 @@ export class New implements INew {
   }
 }
 
-export interface NewsDelivery {
+export interface INewsDelivery {
   id: string
   news_id?: string
   user_id?: string
   server_rev_at?: Date
   deleted?: boolean
+}
+export class NewsDelivery implements INewsDelivery {
+  id: string
+  news_id?: string
+  user_id?: string
+  server_rev_at?: Date
+  deleted?: boolean
+  constructor(
+    id: string,
+    news_id?: string,
+    user_id?: string,
+    server_rev_at?: Date,
+    deleted?: boolean,
+  ) {
+    if (id) this.id = id
+    if (news_id) this.news_id = news_id
+    if (user_id) this.user_id = user_id
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    if (deleted) this.deleted = deleted
+  }
 }
 
 export interface OptionType {
@@ -477,7 +497,7 @@ export class db extends Dexie {
   fields!: Table<Field, string>
   files!: Table<File, string>
   news!: Table<New, string>
-  news_delivery!: Table<Newsdelivery, string>
+  news_delivery!: Table<NewsDelivery, string>
   option_types!: Table<OptionType, string>
   project_editors!: Table<ProjectEditor, string>
   project_managers!: Table<ProjectManager, string>
@@ -525,5 +545,6 @@ export class db extends Dexie {
     this.fields.mapToClass(Field)
     this.files.mapToClass(File)
     this.news.mapToClass(New)
+    this.news_delivery.mapToClass(NewsDelivery)
   }
 }
