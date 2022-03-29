@@ -133,7 +133,7 @@ export class Field implements IField {
     if (deleted) this.deleted = deleted
   }
 }
-export interface FileRev {
+export interface IFileRev {
   id: string
   row_id?: string
   file_id?: string
@@ -149,6 +149,57 @@ export interface FileRev {
   parent_rev?: string
   revisions?: string[]
   depth?: number
+}
+export class FileRev implements IFileRev {
+  id: string
+  row_id?: string
+  file_id?: string
+  field_id?: string
+  filename?: string
+  url?: string
+  version?: number
+  deleted?: boolean
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  rev?: string
+  parent_rev?: string
+  revisions?: string[]
+  depth?: number
+
+  constructor(
+    id?: string,
+    row_id?: string,
+    file_id?: string,
+    field_id?: string,
+    filename?: string,
+    url?: string,
+    version?: number,
+    deleted?: boolean,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    rev?: string,
+    parent_rev?: string,
+    revisions?: string[],
+    depth?: number,
+  ) {
+    if (id) this.id = id
+    if (row_id) this.row_id = row_id
+    if (file_id) this.file_id = file_id
+    if (field_id) this.field_id = field_id
+    if (filename) this.filename = filename
+    if (url) this.url = url
+    if (version) this.version = version
+    if (deleted) this.deleted = deleted
+    if (client_rev_at) this.client_rev_at = client_rev_at
+    if (client_rev_by) this.client_rev_by = client_rev_by
+    if (server_rev_at) this.server_rev_at = iserver_rev_atd
+    if (rev) this.rev = rev
+    if (parent_rev) this.parent_rev = parent_rev
+    if (revisions) this.revisions = revisions
+    if (depth) this.depth = depth
+  }
 }
 
 export interface File {
@@ -414,7 +465,7 @@ export class db extends Dexie {
   accounts!: Table<Account, string>
   field_types!: Table<FieldType, string>
   fields!: Table<Field, string>
-  file_revs!: Table<FileRev, string>
+  file_revs!: Table<IFileRev, string>
   files!: Table<File, string>
   news!: Table<New, string>
   news_delivery!: Table<Newsdelivery, string>
