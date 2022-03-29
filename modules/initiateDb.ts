@@ -268,7 +268,7 @@ export class NewsDelivery implements INewsDelivery {
   }
 }
 
-export interface OptionType {
+export interface IOptionType {
   id?: string
   value: string
   save_id?: boolean
@@ -276,6 +276,32 @@ export interface OptionType {
   comment?: string
   server_rev_at?: Date
   deleted?: boolean
+}
+export class OptionType implements IOptionType {
+  id?: string
+  value: string
+  save_id?: boolean
+  sort?: number
+  comment?: string
+  server_rev_at?: Date
+  deleted?: boolean
+  constructor(
+    id?: string,
+    value: string,
+    save_id?: boolean,
+    sort?: number,
+    comment?: string,
+    server_rev_at?: Date,
+    deleted?: boolean,
+  ) {
+    if (id) this.id = id
+    this.value = value
+    if (save_id) this.save_id = save_id
+    if (sort) this.sort = sort
+    if (comment) this.comment = comment
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    if (deleted) this.deleted = deleted
+  }
 }
 export interface ProjectEditor {
   id?: string
@@ -546,5 +572,6 @@ export class db extends Dexie {
     this.files.mapToClass(File)
     this.news.mapToClass(New)
     this.news_delivery.mapToClass(NewsDelivery)
+    this.option_types.mapToClass(OptionType)
   }
 }
