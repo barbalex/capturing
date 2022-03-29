@@ -1,13 +1,14 @@
 CREATE EXTENSION IF NOT EXISTS postgis;
- -- set up realtime
-begin;
-  drop publication if exists supabase_realtime;
-  create publication supabase_realtime;
-commit;
+
+-- set up realtime
+BEGIN;
+DROP publication IF EXISTS supabase_realtime;
+CREATE publication supabase_realtime;
+COMMIT;
 
 --
-
 DROP TABLE IF EXISTS users CASCADE;
+
 CREATE TABLE users (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   name text DEFAULT NULL,
@@ -17,7 +18,7 @@ CREATE TABLE users (
   email text UNIQUE DEFAULT NULL,
   account_id uuid DEFAULT NULL,
   -- references accounts (id) on delete no action on update cascade,
-  auth_user_id uuid default null,
+  auth_user_id uuid DEFAULT NULL,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -54,25 +55,32 @@ COMMENT ON COLUMN users.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN users.server_rev_at IS 'time of last edit on server';
 
-alter table users enable row level security;
-create policy "Users can view own data"
-  on users for select
-  using ( auth.uid() = auth_user_id );
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
-alter table users enable row level security;
-create policy "Users can insert own data"
-  on users for insert
-  with check ( auth.uid() = auth_user_id );
-  
-create policy "Users can update own data"
-  on users for update
-  using ( auth.uid() = auth_user_id );
+DROP POLICY IF EXISTS "Users can view own user" ON users;
 
-alter publication supabase_realtime add table users;
+CREATE POLICY "Users can view own user" ON users
+  FOR SELECT
+    USING (auth.uid () = users.auth_user_id);
+
+DROP POLICY IF EXISTS "Users can insert own user" ON users;
+
+CREATE POLICY "Users can insert own user" ON users
+  FOR INSERT
+    WITH CHECK (auth.uid () = users.auth_user_id);
+
+DROP POLICY IF EXISTS "Users can update own user" ON users;
+
+CREATE POLICY "Users can update own user" ON users
+  FOR UPDATE
+    USING (auth.uid () = users.auth_user_id);
+
+ALTER publication supabase_realtime
+  ADD TABLE users;
 
 --
-
 DROP TABLE IF EXISTS accounts CASCADE;
+
 CREATE TABLE accounts (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   -- service_id is not needed - TODO: remove
@@ -106,6 +114,53 @@ COMMENT ON COLUMN accounts.client_rev_at IS 'time of last edit on client';
 COMMENT ON COLUMN accounts.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN accounts.server_rev_at IS 'time of last edit on server';
+
+ALTER TABLE accounts ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own account" ON accounts;
+
+CREATE POLICY "Users can view own account" ON accounts
+  FOR SELECT
+    USING (auth.uid () IN (
+      SELECT
+        auth_user_id
+      FROM
+        users
+      WHERE
+        account_id = accounts.id));
+
+DROP POLICY IF EXISTS "Users can insert own account" ON accounts;
+
+CREATE POLICY "Users can insert own account" ON accounts
+  FOR INSERT
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        auth_user_id
+      FROM
+        users
+      WHERE
+        account_id = accounts.id));
+
+DROP POLICY IF EXISTS "Users can update own account" ON accounts;
+
+CREATE POLICY "Users can update own account" ON accounts
+  FOR UPDATE
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        auth_user_id
+      FROM
+        users
+      WHERE
+        account_id = accounts.id));
+
+DROP POLICY IF EXISTS "Users cant delete accounts" ON accounts;
+
+CREATE POLICY "Users cant delete accounts" ON accounts
+  FOR UPDATE
+    WITH CHECK (FALSE);
+
+ALTER publication supabase_realtime
+  ADD TABLE accounts;
 
 -- need to wait to create this reference until accounts exists:
 ALTER TABLE users
@@ -175,10 +230,70 @@ COMMENT ON COLUMN projects.server_rev_at IS 'time of last edit on server';
 
 DROP TABLE IF EXISTS rel_types CASCADE;
 
+ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view assigned projects and projects of own accounts" ON projects;
+
+CREATE POLICY "Users can view assigned projects and projects of own accounts" ON projects
+  FOR SELECT
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+        INNER JOIN project_users ON users.email = project_users.user_email
+        INNER JOIN projects ON project_users.project_id = projects.id
+    UNION
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+        INNER JOIN accounts ON accounts.id = users.account_id
+        INNER JOIN projects ON accounts.id = projects.account_id));
+
+DROP POLICY IF EXISTS "Users can insert projects of own accounts" ON projects;
+
+CREATE POLICY "Users can insert projects of own accounts" ON projects
+  FOR INSERT
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+        INNER JOIN accounts ON accounts.id = users.account_id
+        INNER JOIN projects ON accounts.id = projects.account_id));
+
+DROP POLICY IF EXISTS "Users can update projects of own accounts" ON projects;
+
+CREATE POLICY "Users can update projects of own accounts" ON projects
+  FOR UPDATE
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+        INNER JOIN accounts ON accounts.id = users.account_id
+        INNER JOIN projects ON accounts.id = projects.account_id));
+
+DROP POLICY IF EXISTS "Users can delete projects of own accounts" ON projects;
+
+CREATE POLICY "Users can delete projects of own accounts" ON projects
+  FOR DELETE
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+        INNER JOIN accounts ON accounts.id = users.account_id
+        INNER JOIN projects ON accounts.id = projects.account_id));
+
+ALTER publication supabase_realtime
+  ADD TABLE projects;
+
 --
 CREATE TABLE rel_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  value text unique,
+  value text UNIQUE,
   sort smallint DEFAULT NULL,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -215,8 +330,8 @@ DROP TABLE IF EXISTS option_types CASCADE;
 
 --
 CREATE TABLE option_types (
-  id uuid primary key DEFAULT gen_random_uuid (),
-  value text unique,
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+  value text UNIQUE,
   save_id boolean DEFAULT FALSE,
   sort smallint DEFAULT NULL,
   comment text,
@@ -320,7 +435,7 @@ DROP TABLE IF EXISTS field_types CASCADE;
 --
 CREATE TABLE field_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  value text unique,
+  value text UNIQUE,
   sort smallint DEFAULT NULL,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -350,7 +465,7 @@ DROP TABLE IF EXISTS widget_types CASCADE;
 --
 CREATE TABLE widget_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  value text unique,
+  value text UNIQUE,
   needs_list boolean DEFAULT FALSE,
   sort smallint DEFAULT NULL,
   comment text,
@@ -393,7 +508,7 @@ CREATE TABLE widgets_for_fields (
   widget_value text REFERENCES widget_types (value) ON DELETE CASCADE ON UPDATE CASCADE,
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted boolean DEFAULT FALSE,
-  unique (field_value, widget_value)
+  UNIQUE (field_value, widget_value)
 );
 
 CREATE INDEX ON widgets_for_fields USING btree (field_value);
@@ -713,7 +828,7 @@ DROP TABLE IF EXISTS role_types CASCADE;
 --
 CREATE TABLE role_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  value text unique,
+  value text UNIQUE,
   sort smallint DEFAULT 1,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -819,7 +934,7 @@ DROP TABLE IF EXISTS version_types CASCADE;
 --
 CREATE TABLE version_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  value text unique,
+  value text UNIQUE,
   sort smallint DEFAULT NULL,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
