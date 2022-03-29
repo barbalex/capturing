@@ -655,16 +655,18 @@ export class Table implements ITable {
     if (label) this.label = label
     if (single_label) this.single_label = single_label
     if (label_fields) this.label_fields = label_fields
-    if (label_fields_separator) this.label_fields_separator = label_fields_separator
+    if (label_fields_separator)
+      this.label_fields_separator = label_fields_separator
     if (sort) this.sort = sort
     if (option_type) this.option_type = option_type
     if (client_rev_at) this.client_rev_at = client_rev_at
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     if (deleted) this.deleted = deleted
+  }
 }
 
-export interface TileLayer {
+export interface ITileLayer {
   id: string
   label?: string
   url_template?: string
@@ -686,6 +688,74 @@ export interface TileLayer {
   server_rev_at?: Date
   deleted?: boolean
 }
+
+export class TileLayer implements ITileLayer {
+  id: string
+  label?: string
+  url_template?: string
+  subdomains?: string[]
+  max_zoom?: number
+  min_zoom?: number
+  opacity?: number
+  wms_base_url?: string
+  wms_format?: string
+  wms_layers?: string[]
+  wms_parameters?: string
+  wms_request?: string
+  wms_service?: string
+  wms_styles?: string[]
+  wms_transparent?: boolean
+  wms_version?: string
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted?: boolean
+
+  constructor(
+    id?: string,
+    label?: string,
+    url_template?: string,
+    subdomains?: string[],
+    max_zoom?: number,
+    min_zoom?: number,
+    opacity?: number,
+    wms_base_url?: string,
+    wms_format?: string,
+    wms_layers?: string[],
+    wms_parameters?: string,
+    wms_request?: string,
+    wms_service?: string,
+    wms_styles?: string[],
+    wms_transparent?: boolean,
+    wms_version?: string,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    deleted?: boolean,
+  ) {
+    this.id = id ?? uuidv1()
+    if (label) this.label = label
+    if (url_template) this.url_template = url_template
+    if (subdomains) this.subdomains = subdomains
+    if (max_zoom) this.max_zoom = max_zoom
+    if (min_zoom) this.min_zoom = min_zoom
+    if (opacity) this.opacity = opacity
+    if (wms_base_url) this.wms_base_url = wms_base_url
+    if (wms_format) this.wms_format = wms_format
+    if (wms_layers) this.wms_layers = wms_layers
+    if (wms_parameters) this.wms_parameters = wms_parameters
+    if (wms_request) this.wms_request = wms_request
+    if (wms_service) this.wms_service = wms_service
+    if (wms_styles) this.wms_styles = wms_styles
+    if (wms_transparent) this.wms_transparent = wms_transparent
+    if (wms_version) this.wms_version = wms_version
+    if (client_rev_at) this.client_rev_at = client_rev_at
+    if (client_rev_by) this.client_rev_by = client_rev_by
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    if (deleted) this.deleted = deleted
+  }
+}
+
 export interface User {
   id: string
   name?: string
@@ -738,7 +808,7 @@ export class db extends Dexie {
   role_types!: DexieTable<IRoleType, string>
   rows!: DexieTable<Row, string>
   tables!: DexieTable<Table, string>
-  tile_layers!: DexieTable<TileLayer, string>
+  tile_layers!: DexieTable<ITileLayer, string>
   users!: DexieTable<User, string>
   version_types!: DexieTable<VersionType, string>
   widget_types!: DexieTable<WidgetType, string>
