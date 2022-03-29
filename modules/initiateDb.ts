@@ -38,14 +38,38 @@ export class Account implements IAccount {
 }
 
 // TODO: build classes for all interfaces
-export interface FieldType {
+export interface IFieldType {
+  id: string
   value: string
   sort?: number
   comment?: string
   server_rev_at?: Date
   deleted?: boolean
 }
-export interface Field {
+export class FieldType implements IFieldType {
+  id: string
+  value: string
+  sort?: number
+  comment?: string
+  server_rev_at?: Date
+  deleted?: boolean
+  constructor(
+    id?: string,
+    value: string,
+    sort?: number,
+    comment?: string,
+    server_rev_at?: Date,
+    deleted?: boolean,
+  ) {
+    if (id) this.id = id
+    this.value = value
+    if (sort) this.sort = sort
+    if (comment) this.comment = comment
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    if (deleted) this.deleted = deleted
+  }
+}
+export interface IField {
   id: string
   table_id?: string
   name?: string
@@ -60,6 +84,54 @@ export interface Field {
   client_rev_by?: string
   server_rev_at?: Date
   deleted?: boolean
+}
+export class Field implements IField {
+  id: string
+  table_id?: string
+  name?: string
+  label?: string
+  sort?: number
+  is_internal_id?: boolean
+  field_type?: string
+  widget_type?: string
+  options_table?: string
+  standard_value?: string
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted?: boolean
+
+  constructor(
+    id?: string,
+    table_id?: string,
+    name?: string,
+    label?: string,
+    sort?: number,
+    is_internal_id?: boolean,
+    field_type?: string,
+    widget_type?: string,
+    options_table?: string,
+    standard_value?: string,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    deleted?: boolean,
+  ) {
+    if (id) this.id = id
+    if (table_id) this.table_id = table_id
+    if (name) this.name = name
+    if (label) this.label = label
+    if (sort) this.sort = sort
+    if (is_internal_id) this.is_internal_id = is_internal_id
+    if (field_type) this.field_type = field_type
+    if (widget_type) this.widget_type = widget_type
+    if (options_table) this.options_table = options_table
+    if (standard_value) this.standard_value = standard_value
+    if (client_rev_at) this.client_rev_at = client_rev_at
+    if (client_rev_by) this.client_rev_by = client_rev_by
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    if (deleted) this.deleted = deleted
+  }
 }
 export interface FileRev {
   id: string
@@ -392,5 +464,7 @@ export class db extends Dexie {
       widgets_for_fields: 'id, [field_value+widget_value], server_rev_at',
     })
     this.accounts.mapToClass(Account)
+    this.field_types.mapToClass(FieldType)
+    this.fields.mapToClass(Field)
   }
 }
