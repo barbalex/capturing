@@ -1,5 +1,5 @@
 import { ProjectUser } from './initiateDb'
-import Dexie, { Table } from 'dexie'
+import Dexie, { DexieTable as DexieTable } from 'dexie'
 import { v1 as uuidv1 } from 'uuid'
 
 export interface IAccount {
@@ -595,7 +595,7 @@ export class Row implements IRow {
   }
 }
 
-export interface CTable {
+export interface ITable {
   id: string
   project_id?: string
   parent_id?: string
@@ -611,6 +611,57 @@ export interface CTable {
   client_rev_by?: string
   server_rev_at?: Date
   deleted?: boolean
+}
+
+export class Table implements ITable {
+  id: string
+  project_id?: string
+  parent_id?: string
+  rel_type?: string
+  name?: string
+  label?: string
+  single_label?: string
+  label_fields?: string[]
+  label_fields_separator?: string
+  sort?: number
+  option_type?: string
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted?: boolean
+
+  constructor(
+    id?: string,
+    project_id?: string,
+    parent_id?: string,
+    rel_type?: string,
+    name?: string,
+    label?: string,
+    single_label?: string,
+    label_fields?: string[],
+    label_fields_separator?: string,
+    sort?: number,
+    option_type?: string,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    deleted?: boolean,
+  ) {
+    this.id = id ?? uuidv1()
+    if (project_id) this.project_id = project_id
+    if (parent_id) this.parent_id = parent_id
+    if (rel_type) this.rel_type = rel_type
+    if (name) this.name = name
+    if (label) this.label = label
+    if (single_label) this.single_label = single_label
+    if (label_fields) this.label_fields = label_fields
+    if (label_fields_separator) this.label_fields_separator = label_fields_separator
+    if (sort) this.sort = sort
+    if (option_type) this.option_type = option_type
+    if (client_rev_at) this.client_rev_at = client_rev_at
+    if (client_rev_by) this.client_rev_by = client_rev_by
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    if (deleted) this.deleted = deleted
 }
 
 export interface TileLayer {
@@ -670,28 +721,28 @@ export interface WidgetForField {
 export class db extends Dexie {
   // 'friends' is added by dexie when declaring the stores()
   // We just tell the typing system this is the case
-  accounts!: Table<Account, string>
-  field_types!: Table<FieldType, string>
-  fields!: Table<Field, string>
-  files!: Table<File, string>
-  news!: Table<New, string>
-  news_delivery!: Table<NewsDelivery, string>
-  option_types!: Table<OptionType, string>
-  project_editors!: Table<IProjectEditor, string>
-  project_managers!: Table<IProjectManager, string>
-  project_readers!: Table<IProjectReader, string>
-  project_tile_layers!: Table<ProjectTileLayer, string>
-  project_users!: Table<ProjectUser, string>
-  projects!: Table<Project, string>
-  rel_types!: Table<IRelType, string>
-  role_types!: Table<IRoleType, string>
-  rows!: Table<Row, string>
-  tables!: Table<CTable, string>
-  tile_layers!: Table<TileLayer, string>
-  users!: Table<User, string>
-  version_types!: Table<VersionType, string>
-  widget_types!: Table<WidgetType, string>
-  widgets_for_fields!: Table<WidgetForField, string>
+  accounts!: DexieTable<Account, string>
+  field_types!: DexieTable<FieldType, string>
+  fields!: DexieTable<Field, string>
+  files!: DexieTable<File, string>
+  news!: DexieTable<New, string>
+  news_delivery!: DexieTable<NewsDelivery, string>
+  option_types!: DexieTable<OptionType, string>
+  project_editors!: DexieTable<IProjectEditor, string>
+  project_managers!: DexieTable<IProjectManager, string>
+  project_readers!: DexieTable<IProjectReader, string>
+  project_tile_layers!: DexieTable<ProjectTileLayer, string>
+  project_users!: DexieTable<ProjectUser, string>
+  projects!: DexieTable<Project, string>
+  rel_types!: DexieTable<IRelType, string>
+  role_types!: DexieTable<IRoleType, string>
+  rows!: DexieTable<Row, string>
+  tables!: DexieTable<Table, string>
+  tile_layers!: DexieTable<TileLayer, string>
+  users!: DexieTable<User, string>
+  version_types!: DexieTable<VersionType, string>
+  widget_types!: DexieTable<WidgetType, string>
+  widgets_for_fields!: DexieTable<WidgetForField, string>
 
   constructor() {
     super('capturing')
@@ -728,5 +779,6 @@ export class db extends Dexie {
     this.project_tile_layers.mapToClass(ProjectTileLayer)
     this.projects.mapToClass(Project)
     this.rows.mapToClass(Row)
+    this.tables.mapToClass(Table)
   }
 }
