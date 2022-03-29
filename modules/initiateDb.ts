@@ -1,4 +1,5 @@
 import Dexie, { Table } from 'dexie'
+import { v1 as uuidv1 } from 'uuid'
 
 export interface IAccount {
   id: string
@@ -24,7 +25,7 @@ export class Account implements IAccount {
     server_rev_at?: Date,
     deleted?: boolean,
   ) {
-    if (id) this.id = id
+    this.id = id ?? uuidv1()
     if (service_id) this.service_id = id
     if (client_rev_at) this.client_rev_at = id
     if (client_rev_by) this.client_rev_by = id
@@ -61,7 +62,7 @@ export class FieldType implements IFieldType {
     server_rev_at?: Date,
     deleted?: boolean,
   ) {
-    if (id) this.id = id
+    this.id = id ?? uuidv1()
     this.value = value
     if (sort) this.sort = sort
     if (comment) this.comment = comment
@@ -117,7 +118,7 @@ export class Field implements IField {
     server_rev_at?: Date,
     deleted?: boolean,
   ) {
-    if (id) this.id = id
+    this.id = id ?? uuidv1()
     if (table_id) this.table_id = table_id
     if (name) this.name = name
     if (label) this.label = label
@@ -169,7 +170,7 @@ export class File implements IFile {
   conflicts?: string[]
 
   constructor(
-    id: string,
+    id?: string,
     row_id?: string,
     field_id?: string,
     filename?: string,
@@ -185,7 +186,7 @@ export class File implements IFile {
     depth?: number,
     conflicts?: string[],
   ) {
-    if (id) this.id = id
+    this.id = id ?? uuidv1()
     if (row_id) this.row_id = row_id
     if (field_id) this.field_id = field_id
     if (filename) this.filename = filename
@@ -222,7 +223,7 @@ export class New implements INew {
   deleted?: boolean
 
   constructor(
-    id: string,
+    id?: string,
     time?: Date,
     version_type?: string,
     version?: string,
@@ -230,7 +231,7 @@ export class New implements INew {
     server_rev_at?: Date,
     deleted?: boolean,
   ) {
-    if (id) this.id = id
+    this.id = id ?? uuidv1()
     if (time) this.time = time
     if (version_type) this.version_type = version_type
     if (version) this.version = version
@@ -254,13 +255,13 @@ export class NewsDelivery implements INewsDelivery {
   server_rev_at?: Date
   deleted?: boolean
   constructor(
-    id: string,
+    id?: string,
     news_id?: string,
     user_id?: string,
     server_rev_at?: Date,
     deleted?: boolean,
   ) {
-    if (id) this.id = id
+    this.id = id ?? uuidv1()
     if (news_id) this.news_id = news_id
     if (user_id) this.user_id = user_id
     if (server_rev_at) this.server_rev_at = server_rev_at
@@ -277,6 +278,7 @@ export interface IOptionType {
   server_rev_at?: Date
   deleted?: boolean
 }
+
 export class OptionType implements IOptionType {
   id?: string
   value: string
@@ -294,7 +296,7 @@ export class OptionType implements IOptionType {
     server_rev_at?: Date,
     deleted?: boolean,
   ) {
-    if (id) this.id = id
+    this.id = id ?? uuidv1()
     this.value = value
     if (save_id) this.save_id = save_id
     if (sort) this.sort = sort
@@ -303,7 +305,7 @@ export class OptionType implements IOptionType {
     if (deleted) this.deleted = deleted
   }
 }
-export interface ProjectEditor {
+export interface IProjectEditor {
   id?: string
   project_id?: string
   user_email?: string
@@ -314,7 +316,7 @@ export interface ProjectEditor {
   deleted?: boolean
 }
 
-export interface ProjectManager {
+export interface IProjectManager {
   id?: string
   project_id?: string
   user_email?: string
@@ -325,7 +327,7 @@ export interface ProjectManager {
   deleted?: boolean
 }
 
-export interface ProjectReader {
+export interface IProjectReader {
   id?: string
   project_id?: string
   user_email?: string
@@ -336,7 +338,7 @@ export interface ProjectReader {
   deleted?: boolean
 }
 
-export interface ProjectTileLayer {
+export interface IProjectTileLayer {
   id: string
   label?: string
   sort?: number
@@ -360,6 +362,82 @@ export interface ProjectTileLayer {
   client_rev_by?: string
   server_rev_at?: Date
   deleted?: boolean
+}
+
+export class ProjectTileLayer implements IProjectTileLayer {
+  id: string
+  label?: string
+  sort?: number
+  active?: boolean
+  project_id?: string
+  url_template?: string
+  subdomains?: string[]
+  max_zoom?: number
+  min_zoom?: number
+  opacity?: number
+  wms_base_url?: string
+  wms_format?: string
+  wms_layers?: string[]
+  wms_parameters?: string
+  wms_request?: string
+  wms_service?: string
+  wms_styles?: string[]
+  wms_transparent?: boolean
+  wms_version?: string
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted?: boolean
+
+  constructor(
+    id?: string,
+    label?: string,
+    sort?: number,
+    active?: boolean,
+    project_id?: string,
+    url_template?: string,
+    subdomains?: string[],
+    max_zoom?: number,
+    min_zoom?: number,
+    opacity?: number,
+    wms_base_url?: string,
+    wms_format?: string,
+    wms_layers?: string[],
+    wms_parameters?: string,
+    wms_request?: string,
+    wms_service?: string,
+    wms_styles?: string[],
+    wms_transparent?: boolean,
+    wms_version?: string,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    deleted?: boolean,
+  ) {
+    this.id = id ?? uuidv1()
+    if (label) this.label = label
+    if (sort) this.sort = sort
+    if (active) this.active = active
+    if (project_id) this.project_id = project_id
+    if (url_template) this.url_template = url_template
+    if (subdomains) this.subdomains = subdomains
+    if (max_zoom) this.max_zoom = max_zoom
+    if (min_zoom) this.min_zoom = min_zoom
+    if (opacity) this.opacity = opacity
+    if (wms_base_url) this.wms_base_url = wms_base_url
+    if (wms_format) this.wms_format = wms_format
+    if (wms_layers) this.wms_layers = wms_layers
+    if (wms_parameters) this.wms_parameters = wms_parameters
+    if (wms_request) this.wms_request = wms_request
+    if (wms_service) this.wms_service = wms_service
+    if (wms_styles) this.wms_styles = wms_styles
+    if (wms_transparent) this.wms_transparent = wms_transparent
+    if (wms_version) this.wms_version = wms_version
+    if (client_rev_at) this.client_rev_at = client_rev_at
+    if (client_rev_by) this.client_rev_by = client_rev_by
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    if (deleted) this.deleted = deleted
+  }
 }
 
 export interface ProjectUser {
@@ -525,11 +603,11 @@ export class db extends Dexie {
   news!: Table<New, string>
   news_delivery!: Table<NewsDelivery, string>
   option_types!: Table<OptionType, string>
-  project_editors!: Table<ProjectEditor, string>
-  project_managers!: Table<ProjectManager, string>
-  project_readers!: Table<ProjectReader, string>
-  project_tile_layers!: Table<ProjectTileLayer, string>
-  project_users!: Table<ProjectTileLayer, string>
+  project_editors!: Table<IProjectEditor, string>
+  project_managers!: Table<IProjectManager, string>
+  project_readers!: Table<IProjectReader, string>
+  project_tile_layers!: Table<IProjectTileLayer, string>
+  project_users!: Table<IProjectTileLayer, string>
   projects!: Table<Project, string>
   rel_types!: Table<RelType, string>
   role_types!: Table<RoleType, string>
