@@ -133,76 +133,8 @@ export class Field implements IField {
     if (deleted) this.deleted = deleted
   }
 }
-export interface IFileRev {
-  id: string
-  row_id?: string
-  file_id?: string
-  field_id?: string
-  filename?: string
-  url?: string
-  version?: number
-  deleted?: boolean
-  client_rev_at?: Date
-  client_rev_by?: string
-  server_rev_at?: Date
-  rev?: string
-  parent_rev?: string
-  revisions?: string[]
-  depth?: number
-}
-export class FileRev implements IFileRev {
-  id: string
-  row_id?: string
-  file_id?: string
-  field_id?: string
-  filename?: string
-  url?: string
-  version?: number
-  deleted?: boolean
-  client_rev_at?: Date
-  client_rev_by?: string
-  server_rev_at?: Date
-  rev?: string
-  parent_rev?: string
-  revisions?: string[]
-  depth?: number
 
-  constructor(
-    id?: string,
-    row_id?: string,
-    file_id?: string,
-    field_id?: string,
-    filename?: string,
-    url?: string,
-    version?: number,
-    deleted?: boolean,
-    client_rev_at?: Date,
-    client_rev_by?: string,
-    server_rev_at?: Date,
-    rev?: string,
-    parent_rev?: string,
-    revisions?: string[],
-    depth?: number,
-  ) {
-    if (id) this.id = id
-    if (row_id) this.row_id = row_id
-    if (file_id) this.file_id = file_id
-    if (field_id) this.field_id = field_id
-    if (filename) this.filename = filename
-    if (url) this.url = url
-    if (version) this.version = version
-    if (deleted) this.deleted = deleted
-    if (client_rev_at) this.client_rev_at = client_rev_at
-    if (client_rev_by) this.client_rev_by = client_rev_by
-    if (server_rev_at) this.server_rev_at = iserver_rev_atd
-    if (rev) this.rev = rev
-    if (parent_rev) this.parent_rev = parent_rev
-    if (revisions) this.revisions = revisions
-    if (depth) this.depth = depth
-  }
-}
-
-export interface File {
+export interface IFile {
   id: string
   row_id?: string
   field_id?: string
@@ -218,6 +150,57 @@ export interface File {
   revisions?: string[]
   depth?: number
   conflicts?: string[]
+}
+export class File implements IFile {
+  id: string
+  row_id?: string
+  field_id?: string
+  filename?: string
+  url?: string
+  version?: number
+  deleted?: boolean
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  rev?: string
+  parent_rev?: string
+  revisions?: string[]
+  depth?: number
+  conflicts?: string[]
+
+  constructor(
+    id: string,
+    row_id?: string,
+    field_id?: string,
+    filename?: string,
+    url?: string,
+    version?: number,
+    deleted?: boolean,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    rev?: string,
+    parent_rev?: string,
+    revisions?: string[],
+    depth?: number,
+    conflicts?: string[],
+  ) {
+    if (id) this.id = id
+    if (row_id) this.row_id = row_id
+    if (field_id) this.field_id = field_id
+    if (filename) this.filename = filename
+    if (url) this.url = url
+    if (version) this.version = version
+    if (deleted) this.deleted = deleted
+    if (client_rev_at) this.client_rev_at = client_rev_at
+    if (client_rev_by) this.client_rev_by = client_rev_by
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    if (rev) this.rev = rev
+    if (parent_rev) this.parent_rev = parent_rev
+    if (revisions) this.revisions = revisions
+    if (depth) this.depth = depth
+    if (conflicts) this.conflicts = conflicts
+  }
 }
 
 export interface New {
@@ -465,7 +448,6 @@ export class db extends Dexie {
   accounts!: Table<Account, string>
   field_types!: Table<FieldType, string>
   fields!: Table<Field, string>
-  file_revs!: Table<IFileRev, string>
   files!: Table<File, string>
   news!: Table<New, string>
   news_delivery!: Table<Newsdelivery, string>
@@ -478,7 +460,6 @@ export class db extends Dexie {
   projects!: Table<Project, string>
   rel_types!: Table<RelType, string>
   role_types!: Table<RoleType, string>
-  row_revs!: Table<RowRev, string>
   rows!: Table<Row, string>
   tables!: Table<CTable, string>
   tile_layers!: Table<TileLayer, string>
@@ -492,7 +473,6 @@ export class db extends Dexie {
     this.version(1).stores({
       accounts: 'id, server_rev_at',
       field_types: 'id, &value, sort, server_rev_at',
-      file_revs: 'id, filename, server_rev_at',
       files: 'id, filename, server_rev_at',
       news: 'id, time, server_rev_at',
       news_delivery: 'id, server_rev_at',
@@ -505,7 +485,6 @@ export class db extends Dexie {
       projects: 'id, label, server_rev_at',
       rel_types: 'id, &value, sort, server_rev_at',
       role_types: 'id, &value, sort, server_rev_at',
-      row_revs: 'id, server_rev_at',
       rows: 'id, server_rev_at',
       tables: 'id, label, sort, server_rev_at',
       tile_layers: 'id, label, server_rev_at',
@@ -517,5 +496,6 @@ export class db extends Dexie {
     this.accounts.mapToClass(Account)
     this.field_types.mapToClass(FieldType)
     this.fields.mapToClass(Field)
+    this.files.mapToClass(File)
   }
 }
