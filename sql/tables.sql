@@ -263,11 +263,18 @@ CREATE POLICY "Users can insert projects of own accounts" ON projects
         INNER JOIN accounts ON accounts.id = users.account_id
         INNER JOIN projects ON accounts.id = projects.account_id));
 
-DROP POLICY IF EXISTS "Users can update projects of own accounts" ON projects;
+DROP POLICY IF EXISTS "Users can update assigned projects and projects of own accounts" ON projects;
 
-CREATE POLICY "Users can update projects of own accounts" ON projects
+CREATE POLICY "Users can update assigned projects and projects of own accounts" ON projects
   FOR UPDATE
     WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+        INNER JOIN project_users ON users.email = project_users.user_email
+        INNER JOIN projects ON project_users.project_id = projects.id
+    UNION
       SELECT
         users.auth_user_id
       FROM
@@ -328,6 +335,17 @@ DROP TABLE IF EXISTS tables CASCADE;
 
 DROP TABLE IF EXISTS option_types CASCADE;
 
+ALTER TABLE rel_types ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view rel types" ON rel_types;
+
+CREATE POLICY "Users can view rel types" ON rel_types
+  FOR SELECT
+    USING (TRUE);
+
+ALTER publication supabase_realtime
+  ADD TABLE rel_types;
+
 --
 CREATE TABLE option_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
@@ -362,6 +380,17 @@ COMMENT ON COLUMN option_types.value IS 'explains the option type';
 COMMENT ON COLUMN option_types.sort IS 'enables sorting at will';
 
 COMMENT ON COLUMN option_types.server_rev_at IS 'time of last edit on server';
+
+ALTER TABLE option_types ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view option types" ON option_types;
+
+CREATE POLICY "Users can view option types" ON option_types
+  FOR SELECT
+    USING (TRUE);
+
+ALTER publication supabase_realtime
+  ADD TABLE option_types;
 
 --
 CREATE TABLE tables (
@@ -430,9 +459,9 @@ COMMENT ON COLUMN tables.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN tables.server_rev_at IS 'time of last edit on server';
 
+--
 DROP TABLE IF EXISTS field_types CASCADE;
 
---
 CREATE TABLE field_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   value text UNIQUE,
@@ -460,9 +489,20 @@ COMMENT ON COLUMN field_types.sort IS 'enables sorting at will';
 
 COMMENT ON COLUMN field_types.server_rev_at IS 'time of last edit on server';
 
-DROP TABLE IF EXISTS widget_types CASCADE;
+ALTER TABLE field_types ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view field types" ON field_types;
+
+CREATE POLICY "Users can view field types" ON field_types
+  FOR SELECT
+    USING (TRUE);
+
+ALTER publication supabase_realtime
+  ADD TABLE field_types;
 
 --
+DROP TABLE IF EXISTS widget_types CASCADE;
+
 CREATE TABLE widget_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   value text UNIQUE,
@@ -499,9 +539,20 @@ ON CONFLICT ON CONSTRAINT widget_types_pkey
   DO UPDATE SET
     comment = excluded.comment;
 
-DROP TABLE IF EXISTS widgets_for_fields;
+ALTER TABLE widget_types ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view widget types" ON widget_types;
+
+CREATE POLICY "Users can view widget types" ON widget_types
+  FOR SELECT
+    USING (TRUE);
+
+ALTER publication supabase_realtime
+  ADD TABLE widget_types;
 
 --
+DROP TABLE IF EXISTS widgets_for_fields;
+
 CREATE TABLE widgets_for_fields (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   field_value text REFERENCES field_types (value) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -529,9 +580,9 @@ ON CONFLICT ON CONSTRAINT field_types_pkey
   DO UPDATE SET
     comment = excluded.comment;
 
+--
 DROP TABLE IF EXISTS fields CASCADE;
 
---
 CREATE TABLE fields (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   table_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
@@ -595,9 +646,9 @@ COMMENT ON COLUMN fields.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN fields.server_rev_at IS 'time of last edit on server';
 
+--
 DROP TABLE IF EXISTS ROWS CASCADE;
 
---
 CREATE TABLE ROWS (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   table_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
@@ -659,9 +710,9 @@ COMMENT ON COLUMN rows.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN rows.server_rev_at IS 'time of last edit on server';
 
+--
 DROP TABLE IF EXISTS row_revs CASCADE;
 
---
 CREATE TABLE row_revs (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   row_id uuid DEFAULT NULL,
@@ -715,9 +766,9 @@ COMMENT ON COLUMN row_revs.revisions IS 'array of hashes of all previous revisio
 
 COMMENT ON COLUMN row_revs.depth IS 'depth of the revision tree';
 
+--
 DROP TABLE IF EXISTS files CASCADE;
 
---
 CREATE TABLE files (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   row_id uuid DEFAULT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
@@ -772,9 +823,9 @@ COMMENT ON COLUMN files.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN files.server_rev_at IS 'time of last edit on server';
 
+--
 DROP TABLE IF EXISTS file_revs CASCADE;
 
---
 CREATE TABLE file_revs (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   row_id uuid DEFAULT NULL,
@@ -823,9 +874,9 @@ COMMENT ON COLUMN file_revs.revisions IS 'array of hashes of all previous revisi
 
 COMMENT ON COLUMN file_revs.depth IS 'depth of the revision tree';
 
+--
 DROP TABLE IF EXISTS role_types CASCADE;
 
---
 CREATE TABLE role_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   value text UNIQUE,
@@ -859,9 +910,20 @@ ON CONFLICT ON CONSTRAINT role_types_pkey
   DO UPDATE SET
     comment = excluded.comment;
 
-DROP TABLE IF EXISTS project_users CASCADE;
+ALTER TABLE role_types ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view role types" ON role_types;
+
+CREATE POLICY "Users can view role types" ON role_types
+  FOR SELECT
+    USING (TRUE);
+
+ALTER publication supabase_realtime
+  ADD TABLE role_types;
 
 --
+DROP TABLE IF EXISTS project_users CASCADE;
+
 CREATE TABLE project_users (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   project_id uuid DEFAULT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
@@ -929,9 +991,9 @@ FROM
 WHERE
   ROLE = 'project_manager';
 
+--
 DROP TABLE IF EXISTS version_types CASCADE;
 
---
 CREATE TABLE version_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   value text UNIQUE,
@@ -965,9 +1027,20 @@ ON CONFLICT ON CONSTRAINT version_types_pkey
   DO UPDATE SET
     comment = excluded.comment;
 
-DROP TABLE IF EXISTS news CASCADE;
+ALTER TABLE version_types ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view version types" ON version_types;
+
+CREATE POLICY "Users can view version types" ON version_types
+  FOR SELECT
+    USING (TRUE);
+
+ALTER publication supabase_realtime
+  ADD TABLE version_types;
 
 --
+DROP TABLE IF EXISTS news CASCADE;
+
 CREATE TABLE news (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   time timestamp with time zone DEFAULT now(),
@@ -1000,9 +1073,20 @@ COMMENT ON COLUMN news.message IS 'this is the news';
 
 COMMENT ON COLUMN news.server_rev_at IS 'time of last edit on server';
 
-DROP TABLE IF EXISTS news_delivery CASCADE;
+ALTER TABLE news ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view news" ON news;
+
+CREATE POLICY "Users can view news" ON news
+  FOR SELECT
+    USING (TRUE);
+
+ALTER publication supabase_realtime
+  ADD TABLE news;
 
 --
+DROP TABLE IF EXISTS news_delivery CASCADE;
+
 CREATE TABLE news_delivery (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   news_id uuid DEFAULT NULL REFERENCES news (id) ON DELETE NO action ON UPDATE CASCADE,
