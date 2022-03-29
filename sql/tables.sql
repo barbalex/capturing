@@ -180,12 +180,14 @@ ALTER TABLE users
 --comment on column account_managers.id IS 'primary key';
 --comment on column account_managers.account_id IS 'associated account';
 --comment on column account_managers.user_id IS 'associated user';
+--
 DROP TABLE IF EXISTS projects CASCADE;
 
---
 CREATE TABLE projects (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  account_id uuid DEFAULT NULL REFERENCES accounts (id) ON DELETE NO action ON UPDATE CASCADE,
+  -- account_id may not be null: is needed for policies
+  -- all account owners would see any project missing an account_id (or none)
+  account_id uuid NOT NULL REFERENCES accounts (id) ON DELETE NO action ON UPDATE CASCADE,
   name text DEFAULT NULL,
   label text DEFAULT NULL,
   crs integer DEFAULT 4326,
@@ -228,8 +230,6 @@ COMMENT ON COLUMN projects.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN projects.server_rev_at IS 'time of last edit on server';
 
-DROP TABLE IF EXISTS rel_types CASCADE;
-
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Users can view assigned projects and projects of own accounts" ON projects;
@@ -237,67 +237,62 @@ DROP POLICY IF EXISTS "Users can view assigned projects and projects of own acco
 CREATE POLICY "Users can view assigned projects and projects of own accounts" ON projects
   FOR SELECT
     USING (auth.uid () IN (
+    -- users assigned to this project
       SELECT
-        users.auth_user_id
-      FROM
-        users
+        users.auth_user_id FROM users
         INNER JOIN project_users ON users.email = project_users.user_email
-        INNER JOIN projects ON project_users.project_id = projects.id
-    UNION
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-        INNER JOIN accounts ON accounts.id = users.account_id
-        INNER JOIN projects ON accounts.id = projects.account_id));
+        WHERE
+          project_users.project_id = projects.id
+        UNION
+        -- user owning the project's account
+          SELECT
+            users.auth_user_id FROM users
+            WHERE
+              users.account_id = projects.account_id));
 
-DROP POLICY IF EXISTS "Users can insert projects of own accounts" ON projects;
+DROP POLICY IF EXISTS "account owners can insert projects for own account" ON projects;
 
-CREATE POLICY "Users can insert projects of own accounts" ON projects
+CREATE POLICY "account owners can insert projects for own account" ON projects
   FOR INSERT
     WITH CHECK (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-        INNER JOIN accounts ON accounts.id = users.account_id
-        INNER JOIN projects ON accounts.id = projects.account_id));
+    -- user owning the project's account
+    SELECT users.auth_user_id FROM users
+    WHERE
+      users.account_id = projects.account_id));
 
-DROP POLICY IF EXISTS "Users can update assigned projects and projects of own accounts" ON projects;
+DROP POLICY IF EXISTS "Users can update projects assigned and of own accounts" ON projects;
 
-CREATE POLICY "Users can update assigned projects and projects of own accounts" ON projects
+CREATE POLICY "Users can update projects assigned and of own accounts" ON projects
   FOR UPDATE
     WITH CHECK (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-        INNER JOIN project_users ON users.email = project_users.user_email
-        INNER JOIN projects ON project_users.project_id = projects.id
+    -- users assigned to this project as manager or editor
+    SELECT users.auth_user_id FROM users
+    INNER JOIN project_users ON users.email = project_users.user_email
+    WHERE
+      project_users.project_id = projects.id AND project_users.role IN ('project_manager', 'project_editor')
     UNION
+    -- user owning the project's account
       SELECT
-        users.auth_user_id
-      FROM
-        users
-        INNER JOIN accounts ON accounts.id = users.account_id
-        INNER JOIN projects ON accounts.id = projects.account_id));
+        users.auth_user_id FROM users
+        WHERE
+          users.account_id = projects.account_id));
 
-DROP POLICY IF EXISTS "Users can delete projects of own accounts" ON projects;
+DROP POLICY IF EXISTS "account owners can delete own projects" ON projects;
 
-CREATE POLICY "Users can delete projects of own accounts" ON projects
+CREATE POLICY "account owners can delete own projects" ON projects
   FOR DELETE
     USING (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-        INNER JOIN accounts ON accounts.id = users.account_id
-        INNER JOIN projects ON accounts.id = projects.account_id));
+    -- user owning the project's account
+    SELECT users.auth_user_id FROM users
+    WHERE
+      users.account_id = projects.account_id));
 
 ALTER publication supabase_realtime
   ADD TABLE projects;
 
 --
+DROP TABLE IF EXISTS rel_types CASCADE;
+
 CREATE TABLE rel_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   value text UNIQUE,
@@ -393,9 +388,12 @@ ALTER publication supabase_realtime
   ADD TABLE option_types;
 
 --
+DROP TABLE IF EXISTS tables;
+
 CREATE TABLE tables (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  project_id uuid DEFAULT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
+  -- project_id needs to exist for policies to work
+  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
   parent_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
   rel_type text DEFAULT 'n' REFERENCES rel_types (value) ON DELETE NO action ON UPDATE CASCADE,
   name text DEFAULT NULL,
@@ -458,6 +456,67 @@ COMMENT ON COLUMN tables.client_rev_at IS 'time of last edit on client';
 COMMENT ON COLUMN tables.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN tables.server_rev_at IS 'time of last edit on server';
+
+ALTER TABLE tables ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "project readers, editors and managers can view tables" ON tables;
+
+CREATE POLICY "project readers, editors and managers can view tables" ON tables
+  FOR SELECT
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        projects
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        projects.id = tables.project_id AND project_users.role IN ('project_manager', 'project_editor', 'project_reader')));
+
+DROP POLICY IF EXISTS "project managers can insert tables" ON tables;
+
+CREATE POLICY "project managers can insert tables" ON tables
+  FOR INSERT
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        projects
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        projects.id = tables.project_id AND project_users.role = 'project_manager'));
+
+DROP POLICY IF EXISTS "project managers can update tables" ON tables;
+
+CREATE POLICY "project managers can update tables" ON tables
+  FOR UPDATE
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        projects
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        projects.id = tables.project_id AND project_users.role = 'project_manager'));
+
+DROP POLICY IF EXISTS "project managers can delete tables" ON tables;
+
+CREATE POLICY "project managers can delete tables" ON tables
+  FOR DELETE
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        projects
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        projects.id = tables.project_id AND project_users.role = 'project_manager'));
+
+ALTER publication supabase_realtime
+  ADD TABLE tables;
 
 --
 DROP TABLE IF EXISTS field_types CASCADE;
@@ -585,7 +644,8 @@ DROP TABLE IF EXISTS fields CASCADE;
 
 CREATE TABLE fields (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  table_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
+  -- need table_id for policies
+  table_id uuid NOT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
   name text DEFAULT NULL,
   label text DEFAULT NULL,
   sort smallint DEFAULT 0,
@@ -646,12 +706,77 @@ COMMENT ON COLUMN fields.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN fields.server_rev_at IS 'time of last edit on server';
 
+ALTER TABLE fields ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "project readers, editors and managers can view fields" ON fields;
+
+CREATE POLICY "project readers, editors and managers can view fields" ON fields
+  FOR SELECT
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        tables
+        INNER JOIN projects ON projects.id = tables.project_id
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        tables.id = fields.table_id AND project_users.role IN ('project_manager', 'project_editor', 'project_reader')));
+
+DROP POLICY IF EXISTS "project managers can insert fields" ON fields;
+
+CREATE POLICY "project managers can insert fields" ON fields
+  FOR INSERT
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        tables
+        INNER JOIN projects ON projects.id = tables.project_id
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        tables.id = fields.table_id AND project_users.role = 'project_manager'));
+
+DROP POLICY IF EXISTS "project managers can update fields" ON fields;
+
+CREATE POLICY "project managers can update fields" ON fields
+  FOR UPDATE
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        tables
+        INNER JOIN projects ON projects.id = tables.project_id
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        tables.id = fields.table_id AND project_users.role = 'project_manager'));
+
+DROP POLICY IF EXISTS "project managers can delete fields" ON fields;
+
+CREATE POLICY "project managers can delete fields" ON fields
+  FOR DELETE
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        tables
+        INNER JOIN projects ON projects.id = tables.project_id
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        tables.id = fields.table_id AND project_users.role = 'project_manager'));
+
+ALTER publication supabase_realtime
+  ADD TABLE fields;
+
 --
 DROP TABLE IF EXISTS ROWS CASCADE;
 
 CREATE TABLE ROWS (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  table_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
+  table_id uuid NOT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
   parent_id uuid DEFAULT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
   geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
   geometry_n real DEFAULT NULL,
@@ -709,6 +834,71 @@ COMMENT ON COLUMN rows.client_rev_at IS 'time of last edit on client';
 COMMENT ON COLUMN rows.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN rows.server_rev_at IS 'time of last edit on server';
+
+ALTER TABLE ROWS ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "project readers, editors and managers can view rows" ON ROWS;
+
+CREATE POLICY "project readers, editors and managers can view rows" ON ROWS
+  FOR SELECT
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        tables
+        INNER JOIN projects ON projects.id = tables.project_id
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        tables.id = rows.table_id AND project_users.role IN ('project_manager', 'project_editor', 'project_reader')));
+
+DROP POLICY IF EXISTS "project managers and editors can insert rows" ON ROWS;
+
+CREATE POLICY "project managers and editors can insert rows" ON ROWS
+  FOR INSERT
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        tables
+        INNER JOIN projects ON projects.id = tables.project_id
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        tables.id = rows.table_id AND project_users.role IN ('project_manager', 'project_editor')));
+
+DROP POLICY IF EXISTS "project managers and editors can update rows" ON ROWS;
+
+CREATE POLICY "project managers and editors can update rows" ON ROWS
+  FOR UPDATE
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        tables
+        INNER JOIN projects ON projects.id = tables.project_id
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        tables.id = rows.table_id AND project_users.role IN ('project_manager', 'project_editor')));
+
+DROP POLICY IF EXISTS "project managers and editors can delete rows" ON ROWS;
+
+CREATE POLICY "project managers and editors can delete rows" ON ROWS
+  FOR DELETE
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        tables
+        INNER JOIN projects ON projects.id = tables.project_id
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        tables.id = rows.table_id AND project_users.role IN ('project_manager', 'project_editor')));
+
+ALTER publication supabase_realtime
+  ADD TABLE ROWS;
 
 --
 DROP TABLE IF EXISTS row_revs CASCADE;
@@ -771,7 +961,7 @@ DROP TABLE IF EXISTS files CASCADE;
 
 CREATE TABLE files (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  row_id uuid DEFAULT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
+  row_id uuid NOT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
   field_id uuid DEFAULT NULL REFERENCES fields (id) ON DELETE NO action ON UPDATE CASCADE,
   filename text DEFAULT NULL,
   url text DEFAULT NULL,
@@ -822,6 +1012,75 @@ COMMENT ON COLUMN files.client_rev_at IS 'time of last edit on client';
 COMMENT ON COLUMN files.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN files.server_rev_at IS 'time of last edit on server';
+
+ALTER TABLE files ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "project readers, editors and managers can view files" ON files;
+
+CREATE POLICY "project readers, editors and managers can view files" ON files
+  FOR SELECT
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        rows
+        INNER JOIN tables ON rows.table_id = tables.id
+        INNER JOIN projects ON projects.id = tables.project_id
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        rows.id = files.row_id AND project_users.role IN ('project_manager', 'project_editor', 'project_reader')));
+
+DROP POLICY IF EXISTS "project managers and editors can insert files" ON files;
+
+CREATE POLICY "project managers and editors can insert files" ON files
+  FOR INSERT
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        rows
+        INNER JOIN tables ON rows.table_id = tables.id
+        INNER JOIN projects ON projects.id = tables.project_id
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        rows.id = files.row_id AND project_users.role IN ('project_manager', 'project_editor')));
+
+DROP POLICY IF EXISTS "project managers and editors can update files" ON files;
+
+CREATE POLICY "project managers and editors can update files" ON files
+  FOR UPDATE
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        rows
+        INNER JOIN tables ON rows.table_id = tables.id
+        INNER JOIN projects ON projects.id = tables.project_id
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        rows.id = files.row_id AND project_users.role IN ('project_manager', 'project_editor')));
+
+DROP POLICY IF EXISTS "project managers and editors can delete files" ON files;
+
+CREATE POLICY "project managers and editors can delete files" ON files
+  FOR DELETE
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        rows
+        INNER JOIN tables ON rows.table_id = tables.id
+        INNER JOIN projects ON projects.id = tables.project_id
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        rows.id = files.row_id AND project_users.role IN ('project_manager', 'project_editor')));
+
+ALTER publication supabase_realtime
+  ADD TABLE files;
 
 --
 DROP TABLE IF EXISTS file_revs CASCADE;
@@ -926,9 +1185,9 @@ DROP TABLE IF EXISTS project_users CASCADE;
 
 CREATE TABLE project_users (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  project_id uuid DEFAULT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
+  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
   --user_id uuid default null references users (id) on delete no action on update cascade,
-  user_email text DEFAULT NULL,
+  user_email text NOT NULL,
   -- NO reference so project_user can be created before registering,
   role text DEFAULT 'project_reader' REFERENCES role_types (value) ON DELETE NO action ON UPDATE CASCADE,
   client_rev_at timestamp with time zone DEFAULT now(),
@@ -990,6 +1249,88 @@ FROM
   project_users
 WHERE
   ROLE = 'project_manager';
+
+ALTER TABLE project_users ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "project owners and same user can view project_users" ON project_users;
+
+CREATE POLICY "project owners and same user can view project_users" ON project_users
+  FOR SELECT
+    USING (auth.uid () IN (
+    -- project owner
+      SELECT
+        users.auth_user_id FROM users
+        WHERE
+          users.account_id = (
+            SELECT
+              projects.account_id
+            FROM projects
+            WHERE
+              id = project_users.project_id)
+            UNION
+            -- same user
+              SELECT
+                users.auth_user_id
+              FROM users
+              WHERE
+                email = project_users.user_email));
+
+DROP POLICY IF EXISTS "project owners can insert project_users" ON project_users;
+
+CREATE POLICY "project owners can insert project_users" ON project_users
+  FOR INSERT
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+      WHERE
+        users.account_id = (
+          SELECT
+            projects.account_id
+          FROM
+            projects
+          WHERE
+            id = project_users.project_id)));
+
+DROP POLICY IF EXISTS "project owners can update project_users" ON project_users;
+
+CREATE POLICY "project owners can update project_users" ON project_users
+  FOR UPDATE
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+      WHERE
+        users.account_id = (
+          SELECT
+            projects.account_id
+          FROM
+            projects
+          WHERE
+            id = project_users.project_id)));
+
+DROP POLICY IF EXISTS "project owners can delete project_users" ON project_users;
+
+CREATE POLICY "project owners can delete project_users" ON project_users
+  FOR DELETE
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+      WHERE
+        users.account_id = (
+          SELECT
+            projects.account_id
+          FROM
+            projects
+          WHERE
+            id = project_users.project_id)));
+
+ALTER publication supabase_realtime
+  ADD TABLE project_users;
 
 --
 DROP TABLE IF EXISTS version_types CASCADE;
@@ -1157,7 +1498,7 @@ CREATE TABLE project_tile_layers (
   label text DEFAULT NULL,
   sort smallint DEFAULT 0,
   active boolean DEFAULT FALSE,
-  project_id uuid DEFAULT NULL REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE,
   url_template text DEFAULT NULL,
   subdomains text[] DEFAULT NULL,
   max_zoom decimal DEFAULT 19,
