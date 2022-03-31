@@ -639,6 +639,17 @@ ON CONFLICT ON CONSTRAINT field_types_pkey
   DO UPDATE SET
     comment = excluded.comment;
 
+ALTER TABLE widgets_for_fields ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view widgets for fields" ON widgets_for_fields;
+
+CREATE POLICY "Users can view widgets for fields" ON widgets_for_fields
+  FOR SELECT
+    USING (TRUE);
+
+ALTER publication supabase_realtime
+  ADD TABLE widgets_for_fields;
+
 --
 DROP TABLE IF EXISTS fields CASCADE;
 
@@ -955,6 +966,39 @@ COMMENT ON COLUMN row_revs.parent_rev IS 'hash of the previous revision';
 COMMENT ON COLUMN row_revs.revisions IS 'array of hashes of all previous revisions';
 
 COMMENT ON COLUMN row_revs.depth IS 'depth of the revision tree';
+
+ALTER TABLE row_revs ENABLE ROW LEVEL SECURITY;
+
+-- this is problematic
+-- but there is no way to ensure references inside revs
+-- so project and user's roles can not be found
+-- TODO: find better solution
+-- maybe: allow only users who are editor or manager in any project to read? Fetch this via auth.email()
+CREATE POLICY "authenticated users can view row_revs" ON row_revs
+  FOR SELECT
+    USING (auth.role () = 'authenticated');
+
+DROP POLICY IF EXISTS "authenticated users can insert row_revs" ON row_revs;
+
+-- inserting possible BUT: revision trigger will fail depending on rls on files table
+CREATE POLICY "authenticated users can insert row_revs" ON row_revs
+  FOR INSERT
+    WITH CHECK (auth.role () = 'authenticated');
+
+DROP POLICY IF EXISTS "row_revs can not be updated" ON row_revs;
+
+CREATE POLICY "row_revs can not be updated" ON row_revs
+  FOR UPDATE
+    WITH CHECK (FALSE);
+
+DROP POLICY IF EXISTS "row_revs can not be deleted" ON row_revs;
+
+CREATE POLICY "row_revs can not be deleted" ON row_revs
+  FOR DELETE
+    USING (FALSE);
+
+ALTER publication supabase_realtime
+  ADD TABLE row_revs;
 
 --
 DROP TABLE IF EXISTS files CASCADE;
@@ -1543,6 +1587,58 @@ CREATE INDEX ON tile_layers USING btree (deleted);
 
 COMMENT ON TABLE project_users IS 'Goal: Bring your own tile layers. Not versioned (not recorded and only added by manager). Field definitions, see: https://pub.dev/documentation/flutter_map/latest/flutter_map/flutter_map-library.html';
 
+ALTER TABLE tile_layers ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "authenticated users can view tile_layers" ON tile_layers;
+
+CREATE POLICY "authenticated users can view tile_layers" ON tile_layers
+  FOR SELECT
+    USING (auth.role () = 'authenticated');
+
+DROP POLICY IF EXISTS "project_managers can insert tile_layers" ON tile_layers;
+
+-- inserting possible BUT: revision trigger will fail depending on rls on files table
+CREATE POLICY "project_managers can insert tile_layers" ON tile_layers
+  FOR INSERT
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+        INNER JOIN project_users ON users.email = project_users.user_email
+      WHERE
+        project_users.role = 'project_manager'));
+
+DROP POLICY IF EXISTS "project_managers can update tile_layers" ON tile_layers;
+
+CREATE POLICY "project_managers can update tile_layers" ON tile_layers
+  FOR UPDATE
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+        INNER JOIN project_users ON users.email = project_users.user_email
+      WHERE
+        project_users.role = 'project_manager'));
+
+DROP POLICY IF EXISTS "project_managers can delete tile_layers" ON tile_layers;
+
+-- but: deletion restricted by reference in project_tile_layers
+CREATE POLICY "project_managers can delete tile_layers" ON tile_layers
+  FOR DELETE
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+        INNER JOIN project_users ON users.email = project_users.user_email
+      WHERE
+        project_users.role = 'project_manager'));
+
+ALTER publication supabase_realtime
+  ADD TABLE tile_layers;
+
 --
 DROP TABLE IF EXISTS project_tile_layers CASCADE;
 
@@ -1551,7 +1647,7 @@ CREATE TABLE project_tile_layers (
   label text DEFAULT NULL,
   sort smallint DEFAULT 0,
   active boolean DEFAULT FALSE,
-  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
   url_template text DEFAULT NULL,
   subdomains text[] DEFAULT NULL,
   max_zoom decimal DEFAULT 19,
@@ -1579,4 +1675,65 @@ CREATE INDEX ON project_tile_layers USING btree (sort);
 CREATE INDEX ON project_tile_layers USING btree (deleted);
 
 COMMENT ON TABLE project_users IS 'Goal: Bring your own tile layers. Not versioned (not recorded and only added by manager). Field definitions, see: https://pub.dev/documentation/flutter_map/latest/flutter_map/flutter_map-library.html';
+
+ALTER TABLE project_tile_layers ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "project readers, editors and managers can view project_tile_layers" ON project_tile_layers;
+
+CREATE POLICY "project readers, editors and managers can view project_tile_layers" ON project_tile_layers
+  FOR SELECT
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        projects
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        projects.id = project_tile_layers.project_id AND project_users.role IN ('project_manager', 'project_editor', 'project_reader')));
+
+DROP POLICY IF EXISTS "project managers can insert project_tile_layers" ON project_tile_layers;
+
+CREATE POLICY "project managers can insert project_tile_layers" ON project_tile_layers
+  FOR INSERT
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        projects
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        projects.id = project_tile_layers.project_id AND project_users.role = 'project_manager'));
+
+DROP POLICY IF EXISTS "project managers can update project_tile_layers" ON project_tile_layers;
+
+CREATE POLICY "project managers can update project_tile_layers" ON project_tile_layers
+  FOR UPDATE
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        projects
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        projects.id = project_tile_layers.project_id AND project_users.role = 'project_manager'));
+
+DROP POLICY IF EXISTS "project managers can delete project_tile_layers" ON project_tile_layers;
+
+CREATE POLICY "project managers can delete project_tile_layers" ON project_tile_layers
+  FOR DELETE
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        projects
+        INNER JOIN project_users ON projects.id = project_users.project_id
+        INNER JOIN users ON users.email = project_users.user_email
+      WHERE
+        projects.id = project_tile_layers.project_id AND project_users.role = 'project_manager'));
+
+ALTER publication supabase_realtime
+  ADD TABLE project_tile_layers;
 
