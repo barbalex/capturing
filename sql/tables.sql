@@ -1133,6 +1133,41 @@ COMMENT ON COLUMN file_revs.revisions IS 'array of hashes of all previous revisi
 
 COMMENT ON COLUMN file_revs.depth IS 'depth of the revision tree';
 
+ALTER TABLE file_revs ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "authenticated users can view file_revs" ON file_revs;
+
+-- this is problematic
+-- but there is no way to ensure references inside revs
+-- so project and user's roles can not be found
+-- TODO: find better solution
+-- maybe: allow only users who are editor or manager in any project to read? Fetch this via auth.email()
+CREATE POLICY "authenticated users can view file_revs" ON file_revs
+  FOR SELECT
+    USING (auth.role () = 'authenticated');
+
+DROP POLICY IF EXISTS "authenticated users can insert file_revs" ON file_revs;
+
+-- inserting possible BUT: revision trigger will fail depending on rls on files table
+CREATE POLICY "authenticated users can insert file_revs" ON file_revs
+  FOR INSERT
+    WITH CHECK (auth.role () = 'authenticated');
+
+DROP POLICY IF EXISTS "file_revs can not be updated" ON file_revs;
+
+CREATE POLICY "file_revs can not be updated" ON file_revs
+  FOR UPDATE
+    WITH CHECK (FALSE);
+
+DROP POLICY IF EXISTS "file_revs can not be deleted" ON file_revs;
+
+CREATE POLICY "file_revs can not be deleted" ON file_revs
+  FOR DELETE
+    USING (FALSE);
+
+ALTER publication supabase_realtime
+  ADD TABLE file_revs;
+
 --
 DROP TABLE IF EXISTS role_types CASCADE;
 
@@ -1453,6 +1488,24 @@ COMMENT ON COLUMN news_delivery.news_id IS 'associated news';
 COMMENT ON COLUMN news_delivery.user_id IS 'associated user';
 
 COMMENT ON COLUMN news_delivery.server_rev_at IS 'time of last edit on server';
+
+ALTER TABLE news_delivery ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view their own option types" ON news_delivery;
+
+CREATE POLICY "Users can view their own option types" ON news_delivery
+  FOR SELECT
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+        INNER JOIN news_delivery nd ON users.auth_user_id = nd.user_id
+      WHERE
+        nd.id = news_delivery.id));
+
+ALTER publication supabase_realtime
+  ADD TABLE news_delivery;
 
 -- TODO: vector_layers
 --comment on table vector_layers IS 'Goal: Bring your own vector layers. File and/or wms. Not versioned (not recorded and only added by manager)';
