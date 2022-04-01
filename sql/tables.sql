@@ -18,12 +18,16 @@ CREATE TABLE users (
   email text UNIQUE DEFAULT NULL,
   account_id uuid DEFAULT NULL,
   -- references accounts (id) on delete no action on update cascade,
-  auth_user_id uuid DEFAULT NULL,
+  auth_user_id uuid DEFAULT NULL REFERENCES auth.users (id) ON DELETE NO action ON UPDATE CASCADE,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted boolean DEFAULT FALSE
 );
+
+-- TODO: errors on remote server: https://github.com/supabase/supabase/issues/6257
+ALTER TABLE "public"."users"
+  ADD FOREIGN KEY ("auth_user_id") REFERENCES "auth"."users" ("id") ON DELETE NO action ON UPDATE CASCADE;
 
 CREATE INDEX ON users USING btree (id);
 
