@@ -7,14 +7,15 @@ import '../styles/globals.css'
 import MobxStore from '../store'
 import { Provider as MobxProvider } from '../storeContext'
 import { useEffect } from 'react'
+import activeNodeArrayFromUrl from '../utils/activeNodeArrayFromUrl'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const store = MobxStore.create()
-  const { activeNodeArrayAsUrl, setActiveNodeArray, activeNodeArray } = store
+  const { activeNodeArrayAsUrl, setActiveNodeArray } = store
   const router = useRouter()
 
   useEffect(() => {
-    // if store.activeNodeArray is not home: navigate
+    // on first load: if store.activeNodeArray is not home: navigate
     if (activeNodeArrayAsUrl !== router.pathname) {
       console.log(
         `_app, navigating to ${activeNodeArrayAsUrl} because pathname not equal to activeNodeArray`,
@@ -27,13 +28,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     // need to update activeNodeArray on every navigation
     // https://nextjs.org/docs/api-reference/next/router#routerevents
-    const handleRouteChange = (url, { shallow }) => {
+    const handleRouteChange = (url) => {
       console.log(
-        `App is changing to ${url} ${
-          shallow ? 'with' : 'without'
-        } shallow routing > setting activeNodeArray`,
+        `_app, setting activeNodeArray to ${activeNodeArrayFromUrl(url)}`,
       )
-      setActiveNodeArray(activeNodeArray, 'nonavigate')
+      setActiveNodeArray(activeNodeArrayFromUrl(url), 'nonavigate')
     }
 
     router.events.on('routeChangeStart', handleRouteChange)
@@ -43,7 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return () => {
       router.events.off('routeChangeStart', handleRouteChange)
     }
-  }, [activeNodeArray, router, setActiveNodeArray])
+  }, [router, setActiveNodeArray])
 
   return (
     <StyledEngineProvider injectFirst>
