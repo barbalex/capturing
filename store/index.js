@@ -58,8 +58,6 @@ const myTypes = types
     setSession(val) {
       self.session = val
     },
-  }))
-  .views((self) => ({
     addNotification(valPassed) {
       const val = {
         // set default values
@@ -83,6 +81,11 @@ const myTypes = types
     },
     removeAllNotifications() {
       self.notifications.clear()
+    },
+  }))
+  .views((self) => ({
+    get activeNodeArrayAsUrl() {
+      return `/${self.activeNodeArray.join('/')}`
     },
   }))
 

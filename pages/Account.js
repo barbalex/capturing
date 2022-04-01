@@ -8,7 +8,7 @@ const Account = ({ session }) => {
   const [avatar_url, setAvatarUrl] = useState(null)
 
   useEffect(() => {
-    getProfile()
+    // getProfile()
   }, [session])
 
   const getProfile = async () => {
@@ -17,9 +17,9 @@ const Account = ({ session }) => {
       const user = supabase.auth.user()
 
       let { data, error, status } = await supabase
-        .from('profiles')
-        .select(`username, website, avatar_url`)
-        .eq('id', user.id)
+        .from('users')
+        .select(`email`)
+        .eq('auth_user_id', user.id)
         .single()
 
       if (error && status !== 406) {

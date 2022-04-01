@@ -894,7 +894,7 @@ export class MySubClassedDexie extends Dexie {
       ttables:
         'id, label, sort, project_id, parent_id, rel_type, option_type, server_rev_at',
       tile_layers: 'id, label, server_rev_at',
-      users: 'id, name, &email, server_rev_at',
+      users: 'id, name, &email, auth_user_id, server_rev_at',
       version_types: 'id, &value, sort, server_rev_at',
       widget_types: 'id, &value, sort, server_rev_at',
       widgets_for_fields: 'id, [field_value+widget_value], server_rev_at',

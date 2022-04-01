@@ -2,7 +2,6 @@ import { useEffect, useState, useContext } from 'react'
 // import Head from 'next/head'
 // import Image from 'next/image'
 import { observer } from 'mobx-react-lite'
-import { useRouter } from 'next/router'
 
 import StoreContext from '../storeContext'
 import { supabase } from '../supabaseClient'
@@ -14,18 +13,8 @@ import Account from './Account'
 
 const Projects = () => {
   const store = useContext(StoreContext)
-  const { activeNodeArray, setActiveNodeArray } = store
-
-  const router = useRouter()
 
   const [session, setSession] = useState(null)
-
-  // TODO: add this effect to all pages
-  // need to update activeNodeArray on every navigation
-  useEffect(
-    () => setActiveNodeArray(activeNodeArray, 'nonavigate'),
-    [activeNodeArray, router.pathname, setActiveNodeArray],
-  )
 
   useEffect(() => {
     setSession(supabase.auth.session())
