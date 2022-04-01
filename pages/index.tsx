@@ -1,12 +1,12 @@
-import { useContext, useEffect, useState } from 'react'
-import Head from 'next/head'
-import Image from 'next/image'
+import { useEffect, useState } from 'react'
+// import Head from 'next/head'
+// import Image from 'next/image'
 import { observer } from 'mobx-react-lite'
 
-import StoreContext from '../storeContext'
+// import StoreContext from '../storeContext'
 import { supabase } from '../supabaseClient'
 import Auth from './Auth'
-import { Account } from './Account'
+import Account from './Account'
 // import { Accounts } from '../types'
 
 const Home = () => {
@@ -20,30 +20,22 @@ const Home = () => {
     })
   }, [])
 
-  const store = useContext(StoreContext)
-  const [projects, setProjects] = useState([])
-  useEffect(() => {
-    const run = async () => {
-      const { data } = await supabase
-        .from<field_types>('field_types')
-        .select('*')
-      setProjects(data)
-    }
-    run()
-  }, [])
-  // console.log('Home', {
-  //   field_types: projects,
-  //   dexieClient: db,
-  //   storeDexie: store.db,
-  // })
+  // const store = useContext(StoreContext)
+  // const [projects, setProjects] = useState([])
+  // useEffect(() => {
+  //   const run = async () => {
+  //     const { data } = await supabase
+  //       .from<field_types>('field_types')
+  //       .select('*')
+  //     setProjects(data)
+  //   }
+  //   run()
+  // }, [])
+  console.log('Home, session:', { session, userId: session?.user?.id })
 
   return (
     <div className="container" style={{ padding: '50px 0 100px 0' }}>
-      {!session ? (
-        <Auth />
-      ) : (
-        <Account key={session.user.id} session={session} />
-      )}
+      {session ? <Account key={session.user.id} session={session} /> : <Auth />}
     </div>
   )
 }

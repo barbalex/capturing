@@ -48,3 +48,7 @@ yarn-error.log*
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Supabase
+**/supabase/.branches
+**/supabase/.temp

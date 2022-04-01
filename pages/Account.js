@@ -67,6 +67,8 @@ const Account = ({ session }) => {
     }
   }
 
+  // return <p>Account</p>
+
   return (
     <div aria-live="polite">
       {loading ? (

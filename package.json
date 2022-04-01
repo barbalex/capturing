@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "supabase": "supabase start",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
