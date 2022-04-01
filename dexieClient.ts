@@ -1,5 +1,5 @@
 import { ProjectUser } from './initiateDb'
-import Dexie, { DexieTable as DexieTable } from 'dexie'
+import Dexie, { DexieTable } from 'dexie'
 import { v1 as uuidv1 } from 'uuid'
 
 export interface IAccount {
@@ -846,7 +846,7 @@ export class WidgetForField implements IWidgetForField {
   }
 }
 
-export class db extends Dexie {
+export class MySubClassedDexie extends Dexie {
   accounts!: DexieTable<Account, string>
   field_types!: DexieTable<FieldType, string>
   fields!: DexieTable<Field, string>
@@ -863,7 +863,7 @@ export class db extends Dexie {
   rel_types!: DexieTable<IRelType, string>
   role_types!: DexieTable<IRoleType, string>
   rows!: DexieTable<Row, string>
-  tables!: DexieTable<Table, string>
+  ttables!: DexieTable<Table, string>
   tile_layers!: DexieTable<TileLayer, string>
   users!: DexieTable<User, string>
   version_types!: DexieTable<IVersionType, string>
@@ -875,6 +875,8 @@ export class db extends Dexie {
     this.version(1).stores({
       accounts: 'id, server_rev_at',
       field_types: 'id, &value, sort, server_rev_at',
+      fields:
+        'id, table_id, label, field_type, widget_type, options_table, sort, server_rev_at',
       files: 'id, filename, server_rev_at',
       news: 'id, time, server_rev_at',
       news_delivery: 'id, server_rev_at',
@@ -888,13 +890,17 @@ export class db extends Dexie {
       rel_types: 'id, &value, sort, server_rev_at',
       role_types: 'id, &value, sort, server_rev_at',
       rows: 'id, server_rev_at',
-      tables: 'id, label, sort, server_rev_at',
+      // name tables causes error, see: https://github.com/dexie/Dexie.js/issues/1537
+      ttables:
+        'id, label, sort, project_id, parent_id, rel_type, option_type, server_rev_at',
       tile_layers: 'id, label, server_rev_at',
       users: 'id, name, &email, server_rev_at',
       version_types: 'id, &value, sort, server_rev_at',
       widget_types: 'id, &value, sort, server_rev_at',
       widgets_for_fields: 'id, [field_value+widget_value], server_rev_at',
     })
+    // console.log('initiateDb, this:', this)
+    // console.log('initiateDb, this.ttables:', this.ttables)
     this.accounts.mapToClass(Account)
     this.field_types.mapToClass(FieldType)
     this.fields.mapToClass(Field)
@@ -905,9 +911,11 @@ export class db extends Dexie {
     this.project_tile_layers.mapToClass(ProjectTileLayer)
     this.projects.mapToClass(Project)
     this.rows.mapToClass(Row)
-    this.tables.mapToClass(Table)
+    this.ttables.mapToClass(Table)
     this.tile_layers.mapToClass(TileLayer)
     this.users.mapToClass(User)
     this.widgets_for_fields.mapToClass(WidgetForField)
   }
 }
+
+export const db = new MySubClassedDexie()

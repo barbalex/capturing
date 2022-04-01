@@ -6,9 +6,11 @@ import { observer } from 'mobx-react-lite'
 import styles from '../styles/Home.module.css'
 import StoreContext from '../storeContext'
 import { supabase } from '../supabaseClient'
+import { db } from '../dexieClient'
 // import { Accounts } from '../types'
 
 const Home = () => {
+  const store = useContext(StoreContext)
   const [projects, setProjects] = useState([])
   useEffect(() => {
     const run = async () => {
@@ -19,7 +21,11 @@ const Home = () => {
     }
     run()
   }, [supabase])
-  console.log('Home', { projects })
+  // console.log('Home', {
+  //   field_types: projects,
+  //   dexieClient: db,
+  //   storeDexie: store.db,
+  // })
 
   return (
     <div className={styles.container}>

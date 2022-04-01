@@ -6,11 +6,9 @@ import materialTheme from '../modules/materialTheme'
 import '../styles/globals.css'
 import MobxStore from '../store'
 import { Provider as MobxProvider } from '../storeContext'
-import { db } from '../modules/initiateDb'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const store = MobxStore.create()
-  store.setDb(db)
 
   return (
     <StyledEngineProvider injectFirst>
