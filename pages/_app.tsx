@@ -10,11 +10,6 @@ import { db } from '../modules/initiateDb'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const store = MobxStore.create()
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  )
-  store.setSupabase(supabase)
   store.setDb(db)
 
   return (

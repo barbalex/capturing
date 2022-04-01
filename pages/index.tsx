@@ -5,13 +5,10 @@ import { observer } from 'mobx-react-lite'
 
 import styles from '../styles/Home.module.css'
 import StoreContext from '../storeContext'
+import { supabase } from '../supabaseClient'
 // import { Accounts } from '../types'
 
 const Home = () => {
-  const { supabase } = useContext(StoreContext)
-
-  // console.log('Home, field_types:', field_types)
-
   const [projects, setProjects] = useState([])
   useEffect(() => {
     const run = async () => {
@@ -22,7 +19,7 @@ const Home = () => {
     }
     run()
   }, [supabase])
-  // console.log('Home', { projects })
+  console.log('Home', { projects })
 
   return (
     <div className={styles.container}>
