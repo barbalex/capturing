@@ -232,6 +232,262 @@ COMMENT ON COLUMN projects.server_rev_at IS 'time of last edit on server';
 
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 
+-- policies defined after creating project_users because referencing them
+ALTER publication supabase_realtime
+  ADD TABLE projects;
+
+--
+DROP TABLE IF EXISTS rel_types CASCADE;
+
+CREATE TABLE rel_types (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+  value text UNIQUE,
+  sort smallint DEFAULT NULL,
+  comment text,
+  server_rev_at timestamp with time zone DEFAULT now(),
+  deleted boolean DEFAULT FALSE
+);
+
+CREATE INDEX ON rel_types USING btree (value);
+
+CREATE INDEX ON rel_types USING btree (sort);
+
+CREATE INDEX ON rel_types USING btree (server_rev_at);
+
+CREATE INDEX ON rel_types USING btree (deleted);
+
+COMMENT ON TABLE rel_types IS 'Goal: list of rel_types';
+
+COMMENT ON COLUMN rel_types.value IS 'the relation type';
+
+COMMENT ON COLUMN rel_types.comment IS 'explains the version type';
+
+COMMENT ON COLUMN rel_types.sort IS 'enables sorting at will';
+
+COMMENT ON COLUMN rel_types.server_rev_at IS 'time of last edit on server';
+
+INSERT INTO rel_types (value, sort, comment)
+  VALUES ('1', 2, '1 to 1'), ('n', 1, '1 to n')
+ON CONFLICT ON CONSTRAINT rel_types_pkey
+  DO UPDATE SET
+    comment = excluded.comment;
+
+DROP TABLE IF EXISTS tables CASCADE;
+
+DROP TABLE IF EXISTS option_types CASCADE;
+
+ALTER TABLE rel_types ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view rel types" ON rel_types;
+
+CREATE POLICY "Users can view rel types" ON rel_types
+  FOR SELECT
+    USING (TRUE);
+
+ALTER publication supabase_realtime
+  ADD TABLE rel_types;
+
+--
+DROP TABLE IF EXISTS role_types CASCADE;
+
+CREATE TABLE role_types (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+  value text UNIQUE,
+  sort smallint DEFAULT 1,
+  comment text,
+  server_rev_at timestamp with time zone DEFAULT now(),
+  deleted boolean DEFAULT FALSE
+);
+
+CREATE INDEX ON role_types USING btree (value);
+
+CREATE INDEX ON role_types USING btree (sort);
+
+CREATE INDEX ON role_types USING btree (server_rev_at);
+
+CREATE INDEX ON role_types USING btree (deleted);
+
+COMMENT ON TABLE role_types IS 'Goal: list of roles';
+
+COMMENT ON COLUMN role_types.value IS 'the role';
+
+COMMENT ON COLUMN role_types.comment IS 'explains the role';
+
+COMMENT ON COLUMN role_types.sort IS 'enables sorting at will';
+
+COMMENT ON COLUMN role_types.server_rev_at IS 'time of last edit on server';
+
+INSERT INTO role_types (value, sort, comment)
+  VALUES ('account_manager', 1, 'Only role to: create project_users, give them roles, create projects'), ('project_manager', 2, 'Can edit projects and their structure'), ('project_editor', 3, 'Can edit rows and files'), ('project_reader', 4, 'Can read data')
+ON CONFLICT ON CONSTRAINT role_types_pkey
+  DO UPDATE SET
+    comment = excluded.comment;
+
+ALTER TABLE role_types ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view role types" ON role_types;
+
+CREATE POLICY "Users can view role types" ON role_types
+  FOR SELECT
+    USING (TRUE);
+
+ALTER publication supabase_realtime
+  ADD TABLE role_types;
+
+--
+DROP TABLE IF EXISTS project_users CASCADE;
+
+CREATE TABLE project_users (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
+  --user_id uuid default null references users (id) on delete no action on update cascade,
+  user_email text NOT NULL,
+  -- NO reference so project_user can be created before registering,
+  role text DEFAULT 'project_reader' REFERENCES role_types (value) ON DELETE NO action ON UPDATE CASCADE,
+  client_rev_at timestamp with time zone DEFAULT now(),
+  client_rev_by text DEFAULT NULL,
+  server_rev_at timestamp with time zone DEFAULT now(),
+  deleted boolean DEFAULT FALSE
+);
+
+CREATE UNIQUE INDEX project_users_project_email_idx ON project_users (project_id, user_email)
+WHERE
+  deleted IS FALSE;
+
+CREATE INDEX ON project_users USING btree (id);
+
+CREATE INDEX ON project_users USING btree (project_id);
+
+CREATE INDEX ON project_users USING btree (user_email);
+
+CREATE INDEX ON project_users USING btree (ROLE);
+
+CREATE INDEX ON project_users USING btree (deleted);
+
+COMMENT ON TABLE project_users IS 'Goal: Project manager can list users that get this project synced. And give them roles. Not versioned (not recorded and only added by manager)';
+
+COMMENT ON COLUMN project_users.id IS 'primary key';
+
+COMMENT ON COLUMN project_users.project_id IS 'associated project';
+
+COMMENT ON COLUMN project_users.user_email IS 'associated user';
+
+COMMENT ON COLUMN project_users.role IS 'associated role';
+
+COMMENT ON COLUMN project_users.client_rev_at IS 'time of last edit on client';
+
+COMMENT ON COLUMN project_users.client_rev_by IS 'user editing last on client';
+
+COMMENT ON COLUMN project_users.server_rev_at IS 'time of last edit on server';
+
+CREATE VIEW project_editors AS
+SELECT
+  *
+FROM
+  project_users
+WHERE
+  ROLE = 'project_editor';
+
+CREATE VIEW project_readers AS
+SELECT
+  *
+FROM
+  project_users
+WHERE
+  ROLE = 'project_reader';
+
+CREATE VIEW project_managers AS
+SELECT
+  *
+FROM
+  project_users
+WHERE
+  ROLE = 'project_manager';
+
+ALTER TABLE project_users ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "project owners and same user can view project_users" ON project_users;
+
+CREATE POLICY "project owners and same user can view project_users" ON project_users
+  FOR SELECT
+    USING (auth.uid () IN (
+    -- project owner
+      SELECT
+        users.auth_user_id FROM users
+        WHERE
+          users.account_id = (
+            SELECT
+              projects.account_id
+            FROM projects
+            WHERE
+              id = project_users.project_id)
+            UNION
+            -- same user
+              SELECT
+                users.auth_user_id
+              FROM users
+              WHERE
+                email = project_users.user_email));
+
+DROP POLICY IF EXISTS "project owners can insert project_users" ON project_users;
+
+CREATE POLICY "project owners can insert project_users" ON project_users
+  FOR INSERT
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+      WHERE
+        users.account_id = (
+          SELECT
+            projects.account_id
+          FROM
+            projects
+          WHERE
+            id = project_users.project_id)));
+
+DROP POLICY IF EXISTS "project owners can update project_users" ON project_users;
+
+CREATE POLICY "project owners can update project_users" ON project_users
+  FOR UPDATE
+    WITH CHECK (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+      WHERE
+        users.account_id = (
+          SELECT
+            projects.account_id
+          FROM
+            projects
+          WHERE
+            id = project_users.project_id)));
+
+DROP POLICY IF EXISTS "project owners can delete project_users" ON project_users;
+
+CREATE POLICY "project owners can delete project_users" ON project_users
+  FOR DELETE
+    USING (auth.uid () IN (
+      SELECT
+        users.auth_user_id
+      FROM
+        users
+      WHERE
+        users.account_id = (
+          SELECT
+            projects.account_id
+          FROM
+            projects
+          WHERE
+            id = project_users.project_id)));
+
+ALTER publication supabase_realtime
+  ADD TABLE project_users;
+
+--
+-- now that project_users is created, can define policies for projects as they reference project_users
 DROP POLICY IF EXISTS "Users can view assigned projects and projects of own accounts" ON projects;
 
 CREATE POLICY "Users can view assigned projects and projects of own accounts" ON projects
@@ -286,60 +542,6 @@ CREATE POLICY "account owners can delete own projects" ON projects
     SELECT users.auth_user_id FROM users
     WHERE
       users.account_id = projects.account_id));
-
-ALTER publication supabase_realtime
-  ADD TABLE projects;
-
---
-DROP TABLE IF EXISTS rel_types CASCADE;
-
-CREATE TABLE rel_types (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  value text UNIQUE,
-  sort smallint DEFAULT NULL,
-  comment text,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
-);
-
-CREATE INDEX ON rel_types USING btree (value);
-
-CREATE INDEX ON rel_types USING btree (sort);
-
-CREATE INDEX ON rel_types USING btree (server_rev_at);
-
-CREATE INDEX ON rel_types USING btree (deleted);
-
-COMMENT ON TABLE rel_types IS 'Goal: list of rel_types';
-
-COMMENT ON COLUMN rel_types.value IS 'the relation type';
-
-COMMENT ON COLUMN rel_types.comment IS 'explains the version type';
-
-COMMENT ON COLUMN rel_types.sort IS 'enables sorting at will';
-
-COMMENT ON COLUMN rel_types.server_rev_at IS 'time of last edit on server';
-
-INSERT INTO rel_types (value, sort, comment)
-  VALUES ('1', 2, '1 to 1'), ('n', 1, '1 to n')
-ON CONFLICT ON CONSTRAINT rel_types_pkey
-  DO UPDATE SET
-    comment = excluded.comment;
-
-DROP TABLE IF EXISTS tables CASCADE;
-
-DROP TABLE IF EXISTS option_types CASCADE;
-
-ALTER TABLE rel_types ENABLE ROW LEVEL SECURITY;
-
-DROP POLICY IF EXISTS "Users can view rel types" ON rel_types;
-
-CREATE POLICY "Users can view rel types" ON rel_types
-  FOR SELECT
-    USING (TRUE);
-
-ALTER publication supabase_realtime
-  ADD TABLE rel_types;
 
 --
 CREATE TABLE option_types (
@@ -1211,205 +1413,6 @@ CREATE POLICY "file_revs can not be deleted" ON file_revs
 
 ALTER publication supabase_realtime
   ADD TABLE file_revs;
-
---
-DROP TABLE IF EXISTS role_types CASCADE;
-
-CREATE TABLE role_types (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  value text UNIQUE,
-  sort smallint DEFAULT 1,
-  comment text,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
-);
-
-CREATE INDEX ON role_types USING btree (value);
-
-CREATE INDEX ON role_types USING btree (sort);
-
-CREATE INDEX ON role_types USING btree (server_rev_at);
-
-CREATE INDEX ON role_types USING btree (deleted);
-
-COMMENT ON TABLE role_types IS 'Goal: list of roles';
-
-COMMENT ON COLUMN role_types.value IS 'the role';
-
-COMMENT ON COLUMN role_types.comment IS 'explains the role';
-
-COMMENT ON COLUMN role_types.sort IS 'enables sorting at will';
-
-COMMENT ON COLUMN role_types.server_rev_at IS 'time of last edit on server';
-
-INSERT INTO role_types (value, sort, comment)
-  VALUES ('account_manager', 1, 'Only role to: create project_users, give them roles, create projects'), ('project_manager', 2, 'Can edit projects and their structure'), ('project_editor', 3, 'Can edit rows and files'), ('project_reader', 4, 'Can read data')
-ON CONFLICT ON CONSTRAINT role_types_pkey
-  DO UPDATE SET
-    comment = excluded.comment;
-
-ALTER TABLE role_types ENABLE ROW LEVEL SECURITY;
-
-DROP POLICY IF EXISTS "Users can view role types" ON role_types;
-
-CREATE POLICY "Users can view role types" ON role_types
-  FOR SELECT
-    USING (TRUE);
-
-ALTER publication supabase_realtime
-  ADD TABLE role_types;
-
---
-DROP TABLE IF EXISTS project_users CASCADE;
-
-CREATE TABLE project_users (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
-  --user_id uuid default null references users (id) on delete no action on update cascade,
-  user_email text NOT NULL,
-  -- NO reference so project_user can be created before registering,
-  role text DEFAULT 'project_reader' REFERENCES role_types (value) ON DELETE NO action ON UPDATE CASCADE,
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
-);
-
-CREATE UNIQUE INDEX project_users_project_email_idx ON project_users (project_id, user_email)
-WHERE
-  deleted IS FALSE;
-
-CREATE INDEX ON project_users USING btree (id);
-
-CREATE INDEX ON project_users USING btree (project_id);
-
-CREATE INDEX ON project_users USING btree (user_email);
-
-CREATE INDEX ON project_users USING btree (ROLE);
-
-CREATE INDEX ON project_users USING btree (deleted);
-
-COMMENT ON TABLE project_users IS 'Goal: Project manager can list users that get this project synced. And give them roles. Not versioned (not recorded and only added by manager)';
-
-COMMENT ON COLUMN project_users.id IS 'primary key';
-
-COMMENT ON COLUMN project_users.project_id IS 'associated project';
-
-COMMENT ON COLUMN project_users.user_email IS 'associated user';
-
-COMMENT ON COLUMN project_users.role IS 'associated role';
-
-COMMENT ON COLUMN project_users.client_rev_at IS 'time of last edit on client';
-
-COMMENT ON COLUMN project_users.client_rev_by IS 'user editing last on client';
-
-COMMENT ON COLUMN project_users.server_rev_at IS 'time of last edit on server';
-
-CREATE VIEW project_editors AS
-SELECT
-  *
-FROM
-  project_users
-WHERE
-  ROLE = 'project_editor';
-
-CREATE VIEW project_readers AS
-SELECT
-  *
-FROM
-  project_users
-WHERE
-  ROLE = 'project_reader';
-
-CREATE VIEW project_managers AS
-SELECT
-  *
-FROM
-  project_users
-WHERE
-  ROLE = 'project_manager';
-
-ALTER TABLE project_users ENABLE ROW LEVEL SECURITY;
-
-DROP POLICY IF EXISTS "project owners and same user can view project_users" ON project_users;
-
-CREATE POLICY "project owners and same user can view project_users" ON project_users
-  FOR SELECT
-    USING (auth.uid () IN (
-    -- project owner
-      SELECT
-        users.auth_user_id FROM users
-        WHERE
-          users.account_id = (
-            SELECT
-              projects.account_id
-            FROM projects
-            WHERE
-              id = project_users.project_id)
-            UNION
-            -- same user
-              SELECT
-                users.auth_user_id
-              FROM users
-              WHERE
-                email = project_users.user_email));
-
-DROP POLICY IF EXISTS "project owners can insert project_users" ON project_users;
-
-CREATE POLICY "project owners can insert project_users" ON project_users
-  FOR INSERT
-    WITH CHECK (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-      WHERE
-        users.account_id = (
-          SELECT
-            projects.account_id
-          FROM
-            projects
-          WHERE
-            id = project_users.project_id)));
-
-DROP POLICY IF EXISTS "project owners can update project_users" ON project_users;
-
-CREATE POLICY "project owners can update project_users" ON project_users
-  FOR UPDATE
-    WITH CHECK (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-      WHERE
-        users.account_id = (
-          SELECT
-            projects.account_id
-          FROM
-            projects
-          WHERE
-            id = project_users.project_id)));
-
-DROP POLICY IF EXISTS "project owners can delete project_users" ON project_users;
-
-CREATE POLICY "project owners can delete project_users" ON project_users
-  FOR DELETE
-    USING (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-      WHERE
-        users.account_id = (
-          SELECT
-            projects.account_id
-          FROM
-            projects
-          WHERE
-            id = project_users.project_id)));
-
-ALTER publication supabase_realtime
-  ADD TABLE project_users;
 
 --
 DROP TABLE IF EXISTS version_types CASCADE;
