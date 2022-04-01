@@ -4,11 +4,59 @@ import { v1 as uuidv1 } from 'uuid'
 import NotificationType from './Notification'
 
 const myTypes = types
-  .model({ notifications: types.map(NotificationType) })
-  .volatile(() => ({}))
+  .model({
+    activeNodeArray: types.optional(
+      types.array(types.union(types.string, types.number)),
+      [],
+    ),
+    openNodes: types.optional(
+      types.array(types.array(types.union(types.string, types.number))),
+      [],
+    ),
+    notifications: types.map(NotificationType),
+  })
+  .volatile(() => ({ session: undefined }))
   .actions((self) => ({
+    setActiveNodeArray(val, nonavigate) {
+      self.activeNodeArray = val
+      if (!nonavigate) {
+        navigate(`/Vermehrung/${val.join('/')}`)
+        self.addOpenNode(val)
+      }
+    },
+    setOpenNodes(val) {
+      // need set to ensure contained arrays are unique
+      const set = new Set(val.map(JSON.stringify))
+      self.openNodes = Array.from(set).map(JSON.parse)
+    },
+    removeOpenNode(val) {
+      self.openNodes = self.openNodes.filter((n) => !isEqual(n, val))
+    },
+    removeOpenNodeWithChildren(url) {
+      self.openNodes = self.openNodes.filter((n) => {
+        const urlPartWithEqualLength = n.slice(0, url.length)
+        return !isEqual(urlPartWithEqualLength, url)
+      })
+    },
+    addOpenNode(url) {
+      // add all parent nodes
+      let addedOpenNodes = []
+      for (let i = 1; i <= url.length; i++) {
+        addedOpenNodes.push(url.slice(0, i))
+      }
+      self.addOpenNodes(addedOpenNodes)
+    },
+    addOpenNodes(nodes) {
+      // need set to ensure contained arrays are unique
+      const set = new Set([...self.openNodes, ...nodes].map(JSON.stringify))
+      const newOpenNodes = Array.from(set).map(JSON.parse)
+      self.openNodes = newOpenNodes
+    },
     destroy(model) {
       destroy(model)
+    },
+    setSession(val) {
+      self.session = val
     },
   }))
   .views((self) => ({
