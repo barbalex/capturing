@@ -7,7 +7,8 @@
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "no-unused-vars": 1,
-    "no-empty": ["error", { "allowEmptyCatch": true }],"react/react-in-jsx-scope": "off"
+    "no-empty": ["error", { "allowEmptyCatch": true }],
+    "react/react-in-jsx-scope": "off"
   },
   "env": {
     "browser": true,
@@ -21,5 +22,9 @@
       "version": "999.999.999"
     }
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended","prettier"]
+  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier"],
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": true
+  }
 }
