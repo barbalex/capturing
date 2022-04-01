@@ -14,6 +14,7 @@ export default function Auth() {
       if (error) throw error
       alert('Check your email for the login link!')
     } catch (error) {
+      console.log(error.error_description || error.message)
       alert(error.error_description || error.message)
     } finally {
       setLoading(false)
