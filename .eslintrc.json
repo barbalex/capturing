@@ -1,4 +1,5 @@
 {
+  "extends": ["next/core-web-vitals", "prettier"],
   "rules": {
     "strict": 0,
     "react/prop-types": 0,
@@ -7,24 +8,6 @@
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "no-unused-vars": 1,
-    "no-empty": ["error", { "allowEmptyCatch": true }],
-    "react/react-in-jsx-scope": "off"
-  },
-  "env": {
-    "browser": true,
-    "amd": true,
-    "node": true,
-    "es6": true
-  },
-  "plugins": ["react", "react-hooks"],
-  "settings": {
-    "react": {
-      "version": "999.999.999"
-    }
-  },
-  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier"],
-  "parserOptions": {
-    "sourceType": "module",
-    "allowImportExportEverywhere": true
+    "no-empty": ["error", { "allowEmptyCatch": true }]
   }
 }

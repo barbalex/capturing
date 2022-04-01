@@ -1,8 +1,7 @@
 import type { AppProps } from 'next/app'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
-import { createClient } from '@supabase/supabase-js'
 
-import materialTheme from '../modules/materialTheme'
+import materialTheme from '../utils/materialTheme'
 import '../styles/globals.css'
 import MobxStore from '../store'
 import { Provider as MobxProvider } from '../storeContext'

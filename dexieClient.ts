@@ -890,7 +890,7 @@ export class MySubClassedDexie extends Dexie {
       rel_types: 'id, &value, sort, server_rev_at',
       role_types: 'id, &value, sort, server_rev_at',
       rows: 'id, server_rev_at',
-      // name tables causes error, see: https://github.com/dexie/Dexie.js/issues/1537
+      // name tables causes error because used internally, see: https://github.com/dexie/Dexie.js/issues/1537
       ttables:
         'id, label, sort, project_id, parent_id, rel_type, option_type, server_rev_at',
       tile_layers: 'id, label, server_rev_at',
@@ -899,8 +899,6 @@ export class MySubClassedDexie extends Dexie {
       widget_types: 'id, &value, sort, server_rev_at',
       widgets_for_fields: 'id, [field_value+widget_value], server_rev_at',
     })
-    // console.log('initiateDb, this:', this)
-    // console.log('initiateDb, this.ttables:', this.ttables)
     this.accounts.mapToClass(Account)
     this.field_types.mapToClass(FieldType)
     this.fields.mapToClass(Field)

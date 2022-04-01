@@ -20,7 +20,7 @@ const Home = () => {
       setProjects(data)
     }
     run()
-  }, [supabase])
+  }, [])
   // console.log('Home', {
   //   field_types: projects,
   //   dexieClient: db,
