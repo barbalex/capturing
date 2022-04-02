@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import Head from 'next/head'
+
 import { supabase } from '../supabaseClient'
 
 const Account = ({ session }) => {
@@ -71,6 +73,9 @@ const Account = ({ session }) => {
 
   return (
     <div aria-live="polite">
+      <Head>
+        <title>Capturing: Account</title>
+      </Head>
       {loading ? (
         'Saving ...'
       ) : (
