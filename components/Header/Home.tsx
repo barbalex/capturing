@@ -31,7 +31,8 @@ const Spacer = styled.div`
 `
 
 const NavButton = styled(Button)`
-  color: white !important;
+  color: ${(props) =>
+    props.disabled ? 'rgb(110, 84, 143) !important' : 'white !important'};
   border-color: rgba(255, 255, 255, 0.5) !important;
   border-width: 0 !important;
   text-transform: none !important;
@@ -66,18 +67,39 @@ const HeaderHome = () => {
               </IconButton>
             )
           ) : (
-            <SiteTitle variant="outlined" component={Link} to="/" title="Home">
+            <SiteTitle
+              variant="outlined"
+              component={Link}
+              to="/"
+              title="Home"
+              disabled={pathname === '/'}
+            >
               Capturing
             </SiteTitle>
           )}
           <Spacer />
-          <NavButton variant="outlined" component={Link} to="/projects/">
+          <NavButton
+            variant="outlined"
+            component={Link}
+            to="/projects"
+            disabled={pathname === '/projects'}
+          >
             Projects
           </NavButton>
-          <NavButton variant="outlined" component={Link} to="/docs">
+          <NavButton
+            variant="outlined"
+            component={Link}
+            to="/docs"
+            disabled={pathname === '/docs'}
+          >
             Docs
           </NavButton>
-          <NavButton variant="outlined" component={Link} to="/account/">
+          <NavButton
+            variant="outlined"
+            component={Link}
+            to="/account"
+            disabled={pathname === '/account'}
+          >
             Account
           </NavButton>
         </Toolbar>
