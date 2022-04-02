@@ -6,13 +6,14 @@ import StoreContext from '../storeContext'
 import { supabase } from '../supabaseClient'
 import Auth from './auth'
 import Account from './account'
+import Login from '../components/Login'
 // import { Accounts } from '../types'
 
 // TODO: ensure authenticated
 
 const Projects = () => {
   const store = useContext(StoreContext)
-  const { setSession } = store
+  const { setSession, session } = store
 
   useEffect(() => {
     setSession(supabase.auth.session())
@@ -39,7 +40,11 @@ const Projects = () => {
       <Head>
         <title>Capturing: Projects</title>
       </Head>
-      {session ? <Account key={session.user.id} session={session} /> : <Auth />}
+      {session ? (
+        <Account key={session.user.id} session={session} />
+      ) : (
+        <Login />
+      )}
     </div>
   )
 }

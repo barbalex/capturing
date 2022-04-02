@@ -8,6 +8,8 @@ import InputAdornment from '@mui/material/InputAdornment'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 import IconButton from '@mui/material/IconButton'
+import ToggleButton from '@mui/material/ToggleButton'
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import {
   MdVisibility as VisibilityIcon,
   MdVisibilityOff as VisibilityOffIcon,
@@ -17,7 +19,8 @@ import styled from 'styled-components'
 
 import ErrorBoundary from './shared/ErrorBoundary'
 import StoreContext from '../storeContext'
-import dexie from '../dexieClient'
+import { db as dexie } from '../dexieClient'
+import { supabase } from '../supabaseClient'
 
 const StyledDialog = styled(Dialog)``
 const StyledDiv = styled.div`
@@ -40,6 +43,7 @@ const ResetButton = styled(Button)`
 const Login = () => {
   const { setSession } = useContext(StoreContext)
 
+  const [authType, setAuthType] = useState('link') // or: 'email'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
@@ -49,6 +53,8 @@ const Login = () => {
   const emailInput = useRef(null)
   const passwordInput = useRef(null)
 
+  const onChangeAuthType = useCallback((event, at) => setAuthType(at), [])
+
   const fetchLogin = useCallback(
     // callbacks pass email or password
     // because state is not up to date yet
@@ -57,33 +63,26 @@ const Login = () => {
       // why? password-managers enter values but do not blur/change
       // if password-manager enters values and user clicks "Anmelden"
       // it will not work without previous blurring
-      const emailToUse = emailPassed || email || emailInput.current.value
+      const emailToUse = emailPassed ?? email ?? emailInput.current.value
       const passwordToUse =
-        passwordPassed || password || passwordInput.current.value
+        passwordPassed ?? password ?? passwordInput.current.value
       // do everything to clean up so no data is left
       await supabase.auth.signOut()
+      await dexie.delete()
       // TODO: destroy store
       // see: https://github.com/mobxjs/mobx-state-tree/issues/595#issuecomment-446028034
       // or better? what about mst-persist?
-
-      // empty dexie
-      await dexie.delete('capturing')
       setTimeout(async () => {
-        let result
-        try {
-          result = await supabase.auth.signIn({
-            email: emailToUse,
-            password: passwordToUse,
-          })
-        } catch (error) {
-          setEmailErrorText(error.message)
-          return setPasswordErrorText(error.message)
-        }
-        const { session, error } = result
+        console.log('signing in with:', { emailToUse, passwordToUse })
+        const { session, error } = await supabase.auth.signIn({
+          email: emailToUse,
+          password: passwordToUse,
+        })
         if (error) {
           setEmailErrorText(error.message)
           return setPasswordErrorText(error.message)
         }
+        console.log('session:', session)
         setEmailErrorText('')
         setPasswordErrorText('')
         setSession(session)
@@ -95,14 +94,16 @@ const Login = () => {
     (e) => {
       setEmailErrorText('')
       const email = e.target.value
-      setEmail(email)
-      if (!email) {
+      if (authType === 'link') {
+        return fetchLogin({ email })
+      } else if (!email) {
         setEmailErrorText('Bitte Email-Adresse eingeben')
       } else if (password) {
         fetchLogin({ email })
       }
+      setEmail(email)
     },
-    [fetchLogin, password],
+    [authType, fetchLogin, password],
   )
   const onBlurPassword = useCallback(
     (e) => {
@@ -118,7 +119,10 @@ const Login = () => {
     [fetchLogin, email],
   )
   const onKeyPressEmail = useCallback(
-    (e) => e.key === 'Enter' && onBlurEmail(e),
+    (e) => {
+      // console.log('key pressed in email, key:', e.key)
+      e.key === 'Enter' && onBlurEmail(e)
+    },
     [onBlurEmail],
   )
   const onKeyPressPassword = useCallback(
@@ -150,6 +154,16 @@ const Login = () => {
     <ErrorBoundary>
       <StyledDialog aria-labelledby="dialog-title" open={true}>
         <DialogTitle id="dialog-title">Anmeldung</DialogTitle>
+        <ToggleButtonGroup
+          color="primary"
+          value={authType}
+          exclusive
+          onChange={onChangeAuthType}
+          size="small"
+        >
+          <ToggleButton value="link">Email-Link</ToggleButton>
+          <ToggleButton value="password">Passwort</ToggleButton>
+        </ToggleButtonGroup>
         <StyledDiv>
           <FormControl
             error={!!emailErrorText}
@@ -163,7 +177,7 @@ const Login = () => {
               className="user-email"
               defaultValue={email}
               onBlur={onBlurEmail}
-              autoFocus
+              //autoFocus
               onKeyPress={onKeyPressEmail}
               inputRef={emailInput}
             />

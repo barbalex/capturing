@@ -15,12 +15,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   const store = MobxStore.create()
   const { activeNodeArrayAsUrl, setActiveNodeArray } = store
   const router = useRouter()
+  const { pathname } = router
 
   useEffect(() => {
     // on first load: if store.activeNodeArray is not home: navigate
-    if (activeNodeArrayAsUrl !== router.pathname) {
+    if (activeNodeArrayAsUrl !== pathname) {
       console.log(
-        `_app, navigating to ${activeNodeArrayAsUrl} because pathname not equal to activeNodeArray`,
+        `_app, navigating to ${activeNodeArrayAsUrl} because pathname not equal to activeNodeArray. pathname: ${pathname}, activeNodeArray: ${activeNodeArrayAsUrl}`,
       )
       router.push(activeNodeArrayAsUrl)
     }
@@ -31,10 +32,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     // need to update activeNodeArray on every navigation
     // https://nextjs.org/docs/api-reference/next/router#routerevents
     const handleRouteChange = (url) => {
+      const activeNodeArray = activeNodeArrayFromUrl(url)
       console.log(
-        `_app, setting activeNodeArray to ${activeNodeArrayFromUrl(url)}`,
+        `_app. url = ${url}. setting activeNodeArray to ${activeNodeArray}. typeof aNA: ${typeof activeNodeArray}`,
       )
-      setActiveNodeArray(activeNodeArrayFromUrl(url), 'nonavigate')
+      setActiveNodeArray(activeNodeArray, 'nonavigate')
     }
 
     router.events.on('routeChangeStart', handleRouteChange)
