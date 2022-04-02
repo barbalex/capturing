@@ -1,7 +1,6 @@
 import { useEffect, useState, useContext } from 'react'
-// import Head from 'next/head'
-// import Image from 'next/image'
 import { observer } from 'mobx-react-lite'
+import Head from 'next/head'
 
 import StoreContext from '../storeContext'
 import { supabase } from '../supabaseClient'
@@ -38,6 +37,9 @@ const Projects = () => {
 
   return (
     <div className="container" style={{ padding: '50px 0 100px 0' }}>
+      <Head>
+        <title>Capturing: Projects</title>
+      </Head>
       {session ? <Account key={session.user.id} session={session} /> : <Auth />}
     </div>
   )

@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 import materialTheme from '../utils/materialTheme'
 import '../globals.css'
@@ -49,6 +50,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={materialTheme}>
         <MobxProvider value={store}>
+          <Head>
+            <title>Capturing</title>
+          </Head>
           <Layout>
             <Component {...pageProps} />
           </Layout>

@@ -5,7 +5,6 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import { FaHome } from 'react-icons/fa'
 import styled from 'styled-components'
-import NextLink from 'next/link'
 import { useResizeDetector } from 'react-resize-detector'
 import { useRouter } from 'next/router'
 
@@ -41,13 +40,6 @@ const NavButton = styled(Button)`
   }
 `
 
-// https://github.com/mui/material-ui/issues/30858
-const LinkComponent = () => (
-  <NextLink href="/" passHref>
-    <a>MyLink</a>
-  </NextLink>
-)
-
 const HeaderHome = () => {
   const { pathname } = useRouter()
   const { width, ref: resizeRef } = useResizeDetector()
@@ -80,7 +72,7 @@ const HeaderHome = () => {
           )}
           <Spacer />
           <NavButton variant="outlined" component={Link} to="/projects/">
-            Data
+            Projects
           </NavButton>
           <NavButton variant="outlined" component={Link} to="/docs">
             Docs
