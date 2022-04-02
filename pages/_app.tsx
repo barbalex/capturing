@@ -3,11 +3,12 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { useRouter } from 'next/router'
 
 import materialTheme from '../utils/materialTheme'
-import '../styles/globals.css'
+import '../globals.css'
 import MobxStore from '../store'
 import { Provider as MobxProvider } from '../storeContext'
 import { useEffect } from 'react'
 import activeNodeArrayFromUrl from '../utils/activeNodeArrayFromUrl'
+import Layout from '../components/Layout'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const store = MobxStore.create()
@@ -48,7 +49,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={materialTheme}>
         <MobxProvider value={store}>
-          <Component {...pageProps} />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </MobxProvider>
       </ThemeProvider>
     </StyledEngineProvider>

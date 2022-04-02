@@ -3,18 +3,20 @@
 import { observer } from 'mobx-react-lite'
 import Link from 'next/link'
 
+import MyErrorBoundary from '../components/shared/ErrorBoundary'
+
 const Home = () => {
   return (
-    <div>
+    <MyErrorBoundary>
       <div>home</div>
-      <Link href="/Account">
+      <Link href="/account">
         <a>Account</a>
       </Link>
       <br />
-      <Link href="/Projects">
+      <Link href="/projects">
         <a>Projects</a>
       </Link>
-    </div>
+    </MyErrorBoundary>
   )
 }
 

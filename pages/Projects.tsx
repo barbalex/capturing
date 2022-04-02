@@ -5,8 +5,8 @@ import { observer } from 'mobx-react-lite'
 
 import StoreContext from '../storeContext'
 import { supabase } from '../supabaseClient'
-import Auth from './Auth'
-import Account from './Account'
+import Auth from './auth'
+import Account from './account'
 // import { Accounts } from '../types'
 
 // TODO: ensure authenticated

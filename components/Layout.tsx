@@ -4,6 +4,8 @@ import { useResizeDetector } from 'react-resize-detector'
 import { observer } from 'mobx-react-lite'
 
 import storeContext from '../storeContext'
+import Header from './Header'
+import constants from '../utils/constants'
 
 const Container = styled.div`
   height: 100%;
@@ -25,7 +27,12 @@ const Layout = ({ children }) => {
     }
   }, [setSingleColumnView, singleColumnView, width])
 
-  return <Container ref={resizeRef}>{children}</Container>
+  return (
+    <Container ref={resizeRef}>
+      <Header />
+      {children}
+    </Container>
+  )
 }
 
 export default observer(Layout)
