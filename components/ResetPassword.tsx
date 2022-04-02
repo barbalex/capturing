@@ -44,8 +44,9 @@ const ResetButton = styled(Button)`
   margin-right: 20px !important;
 `
 
-const Login = () => {
-  const { setSession } = useContext(StoreContext)
+const ResetPassword = () => {
+  const { setSession, setResetPassword } = useContext(StoreContext)
+  // TODO: setResetPassword(true)
 
   const [authType, setAuthType] = useState('link') // or: 'email'
   const [email, setEmail] = useState('')
@@ -160,7 +161,7 @@ const Login = () => {
   return (
     <ErrorBoundary>
       <StyledDialog aria-labelledby="dialog-title" open={true}>
-        <DialogTitle id="dialog-title">Anmeldung</DialogTitle>
+        <DialogTitle id="dialog-title">neues Passwort setzen</DialogTitle>
         <StyledDiv>
           <ToggleButtonGroup
             color="primary"
@@ -243,4 +244,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default ResetPassword

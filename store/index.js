@@ -14,10 +14,14 @@ const myTypes = types
       [],
     ),
     notifications: types.map(NotificationType),
+    resetPassword: types.optional(types.boolean, false),
     singleColumnView: types.optional(types.boolean, false),
   })
   .volatile(() => ({ session: undefined }))
   .actions((self) => ({
+    setResetPassword(val) {
+      self.resetPassword = val
+    },
     setActiveNodeArray(val, nonavigate) {
       self.activeNodeArray = val
       if (!nonavigate) {
