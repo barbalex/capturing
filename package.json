@@ -12,7 +12,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@mui/material": "5.5.3",
+    "@mui/material": "^5.5.3",
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
     "@mui/styled-engine-sc": "5.5.2",
     "@supabase/supabase-js": "1.33.2",
@@ -32,10 +32,11 @@
     "react-error-boundary": "3.1.4",
     "react-icons": "4.3.1",
     "react-is": "18.0.0",
+    "react-resize-detector": "^7.0.0",
     "react-select": "5.2.2",
     "react-split-pane": "0.1.92",
     "simplebar": "5.3.6",
-    "simplebar-react": "2.3.6",
+    "simplebar-react": "^2.3.6",
     "styled-components": "5.3.5",
     "uuid": "8.3.2"
   },

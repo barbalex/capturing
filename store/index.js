@@ -14,6 +14,7 @@ const myTypes = types
       [],
     ),
     notifications: types.map(NotificationType),
+    singleColumnView: types.optional(types.boolean, false),
   })
   .volatile(() => ({ session: undefined }))
   .actions((self) => ({
@@ -81,6 +82,9 @@ const myTypes = types
     },
     removeAllNotifications() {
       self.notifications.clear()
+    },
+    setSingleColumnView(val) {
+      self.singleColumnView = val
     },
   }))
   .views((self) => ({
