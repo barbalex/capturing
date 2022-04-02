@@ -1,7 +1,10 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+
 import { supabase } from '../supabaseClient'
+import storeContext from '../storeContext'
 
 export default function Auth() {
+  const store = useContext(storeContext)
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
 

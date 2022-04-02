@@ -1,4 +1,4 @@
-import { types, destroy } from 'mobx-state-tree'
+import { types } from 'mobx-state-tree'
 import { v1 as uuidv1 } from 'uuid'
 
 import NotificationType from './Notification'
@@ -52,9 +52,6 @@ const myTypes = types
       const set = new Set([...self.openNodes, ...nodes].map(JSON.stringify))
       const newOpenNodes = Array.from(set).map(JSON.parse)
       self.openNodes = newOpenNodes
-    },
-    destroy(model) {
-      destroy(model)
     },
     setSession(val) {
       self.session = val

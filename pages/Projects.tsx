@@ -12,8 +12,7 @@ import Account from './account'
 
 const Projects = () => {
   const store = useContext(StoreContext)
-
-  const [session, setSession] = useState(null)
+  const { setSession } = store
 
   useEffect(() => {
     setSession(supabase.auth.session())
@@ -21,7 +20,7 @@ const Projects = () => {
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
-  }, [])
+  }, [setSession])
 
   const [projects, setProjects] = useState([])
   useEffect(() => {

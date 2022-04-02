@@ -1,9 +1,12 @@
-// import Head from 'next/head'
-// import Image from 'next/image'
 import { observer } from 'mobx-react-lite'
 import Head from 'next/head'
+import styled from 'styled-components'
 
 import MyErrorBoundary from '../components/shared/ErrorBoundary'
+
+const Body = styled.div`
+  padding: 8px;
+`
 
 const Home = () => {
   return (
@@ -11,7 +14,9 @@ const Home = () => {
       <Head>
         <title>Capturing: Home</title>
       </Head>
-      <div>home</div>
+      <Body>
+        <p>home</p>
+      </Body>
     </MyErrorBoundary>
   )
 }

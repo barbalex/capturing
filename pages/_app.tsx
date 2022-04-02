@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app'
+import { useEffect } from 'react'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
@@ -7,7 +8,6 @@ import materialTheme from '../utils/materialTheme'
 import '../globals.css'
 import MobxStore from '../store'
 import { Provider as MobxProvider } from '../storeContext'
-import { useEffect } from 'react'
 import activeNodeArrayFromUrl from '../utils/activeNodeArrayFromUrl'
 import Layout from '../components/Layout'
 
