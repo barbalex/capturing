@@ -58,7 +58,7 @@ const HeaderHome = () => {
             ) : (
               <IconButton
                 color="inherit"
-                aria-label="Home"
+                //aria-label="Home"
                 component={Link}
                 to="/"
                 title="Home"

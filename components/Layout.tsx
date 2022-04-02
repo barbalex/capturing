@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useResizeDetector } from 'react-resize-detector'
 import { observer } from 'mobx-react-lite'
 import { useRouter } from 'next/router'
+import isEqual from 'lodash/isEqual'
 
 import storeContext from '../storeContext'
 import Header from './Header'
@@ -18,7 +19,7 @@ const Container = styled.div`
 const Layout = ({ children }) => {
   const { width, ref: resizeRef } = useResizeDetector()
   const router = useRouter()
-  const { pathname, query } = router
+  const { query } = router
 
   const store = useContext(storeContext)
   const {
@@ -28,7 +29,14 @@ const Layout = ({ children }) => {
     setResetPassword,
     activeNodeArrayAsUrl,
     setActiveNodeArray,
+    activeNodeArray,
   } = store
+
+  console.log('Layout', {
+    activeNodeArray: activeNodeArray.slice(),
+    activeNodeArrayAsUrl,
+    resetPassword,
+  })
 
   useEffect(() => {
     if (width > constants?.tree?.minimalWindowWidth && singleColumnView) {
@@ -43,41 +51,30 @@ const Layout = ({ children }) => {
     // detect type=recovery fragment in url > navigate to password reset form
     console.log('Layout, query from effect:', query)
     if (query?.type === 'recovery') {
+      console.log('Layout, setting resetPassword')
       return setResetPassword(true)
     }
-    // on first load: if store.activeNodeArray is not home: navigate
-    // if (activeNodeArrayAsUrl !== pathname) {
-    //   console.log(
-    //     `_app, navigating to ${activeNodeArrayAsUrl} because pathname not equal to activeNodeArray. pathname: ${pathname}, activeNodeArray: ${activeNodeArrayAsUrl}`,
-    //   )
-    //   router.push(activeNodeArrayAsUrl)
-    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query])
-
-  useEffect(() => {
-    // on first load: if store.activeNodeArray is not home: navigate
-    if (activeNodeArrayAsUrl !== pathname) {
-      console.log(
-        `_app, navigating to ${activeNodeArrayAsUrl} because pathname not equal to activeNodeArray. pathname: ${pathname}, activeNodeArray: ${activeNodeArrayAsUrl}`,
-      )
-      router.push(activeNodeArrayAsUrl)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   useEffect(() => {
     // need to update activeNodeArray on every navigation
     // https://nextjs.org/docs/api-reference/next/router#routerevents
     const handleRouteChange = (url) => {
       // TODO: need to remove query from url
-      const activeNodeArray = activeNodeArrayFromUrl(url.split(/[?#]/)[0])
-      console.log(
-        `_app. url = ${
-          url.split(/[?#]/)[0]
-        }. setting activeNodeArray to ${activeNodeArray}. typeof aNA: ${typeof activeNodeArray}`,
-      )
-      setActiveNodeArray(activeNodeArray, 'nonavigate')
+      const activeNodeArray = activeNodeArrayFromUrl(url)
+      if (
+        !resetPassword &&
+        !isEqual(activeNodeArray, store.activeNodeArray.slice())
+      ) {
+        console.log(`Layout, handleRouteChange`, {
+          activeNodeArrayFromUrl: activeNodeArray,
+          activeNodeArrayFromStore: store.activeNodeArray.slice(),
+          url,
+          resetPassword,
+        })
+        setActiveNodeArray(activeNodeArray, 'nonavigate')
+      }
     }
 
     router.events.on('routeChangeStart', handleRouteChange)
@@ -87,7 +84,7 @@ const Layout = ({ children }) => {
     return () => {
       router.events.off('routeChangeStart', handleRouteChange)
     }
-  }, [router, setActiveNodeArray])
+  }, [resetPassword, router.events, setActiveNodeArray, store.activeNodeArray])
 
   return (
     <Container ref={resizeRef}>
