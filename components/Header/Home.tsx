@@ -31,10 +31,11 @@ const Spacer = styled.div`
 `
 
 const NavButton = styled(Button)`
-  color: ${(props) =>
-    props.disabled ? 'rgb(110, 84, 143) !important' : 'white !important'};
+  color: white !important;
   border-color: rgba(255, 255, 255, 0.5) !important;
   border-width: 0 !important;
+  border-width: ${(props) =>
+    props.disabled ? '1px !important' : '0 !important'};
   text-transform: none !important;
   &:hover {
     border-width: 1px !important;
