@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import type { AppProps } from 'next/app'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import Head from 'next/head'
@@ -14,22 +14,29 @@ import initiateApp from '../utils/initiateApp'
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const router = useRouter()
   // Problem: useRouter makes compenent render twice, see: https://github.com/vercel/next.js/issues/12010
-  const firstRender = useRef(true)
-
-  console.log('_app rendering', {
-    queryType: router.query?.type,
-    firstRender: firstRender.current,
-  })
+  const renderCount = useRef(0)
 
   const store = MobxStore.create()
+  renderCount.current = renderCount.current + 1
 
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false
+    if (renderCount.current === 1) {
       initiateApp({ store, router })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  let params
+  if (typeof window !== 'undefined') {
+    const urlSearchParams = new URLSearchParams(window.location.search)
+    params = Object.fromEntries(urlSearchParams.entries())
+    if (params?.type === 'recovery') {
+      console.log('Layout, setting resetPassword')
+      return store.setResetPassword(true)
+    }
+  }
+
+  console.log('_app rendering, renderCount.current:', renderCount.current)
 
   return (
     <StyledEngineProvider injectFirst>

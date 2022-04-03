@@ -5,8 +5,7 @@ import isEqual from 'lodash/isEqual'
 import activeNodeArrayFromUrl from './activeNodeArrayFromUrl'
 
 const initiateApp = async ({ store, router }) => {
-  const { query } = router
-  console.log('initiateApp persisting mst, query:', query)
+  console.log('initiateApp persisting mst')
   const previousActiveNodeArray = [...store.activeNodeArray.slice()]
   const previousResetPassword = store.resetPassword
   await persist('store', store, {

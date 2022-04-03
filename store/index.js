@@ -20,6 +20,7 @@ const myTypes = types
   .volatile(() => ({ session: undefined }))
   .actions((self) => ({
     setResetPassword(val) {
+      console.log('store setting resetPassword to:', val)
       self.resetPassword = val
     },
     setActiveNodeArray(val, nonavigate) {

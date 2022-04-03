@@ -19,14 +19,12 @@ const Container = styled.div`
 const Layout = ({ children }) => {
   const { width, ref: resizeRef } = useResizeDetector()
   const router = useRouter()
-  const { query } = router
 
   const store = useContext(storeContext)
   const {
     singleColumnView,
     setSingleColumnView,
     resetPassword,
-    setResetPassword,
     activeNodeArrayAsUrl,
     setActiveNodeArray,
     activeNodeArray,
@@ -46,16 +44,6 @@ const Layout = ({ children }) => {
       setSingleColumnView(true)
     }
   }, [setSingleColumnView, singleColumnView, width])
-
-  useEffect(() => {
-    // detect type=recovery fragment in url > navigate to password reset form
-    console.log('Layout, query from effect:', query)
-    if (query?.type === 'recovery') {
-      console.log('Layout, setting resetPassword')
-      return setResetPassword(true)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query])
 
   useEffect(() => {
     // need to update activeNodeArray on every navigation
