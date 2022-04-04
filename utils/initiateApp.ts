@@ -17,11 +17,11 @@ const initiateApp = async ({ store, router }) => {
   // TODO: need to navigate to activeNodeArray if is different from url
 
   console.log('initiateApp pathname:', router.pathname)
-  const currentActiveNodeArray = activeNodeArrayFromUrl(router.pathname)
   // resetPassword was in the meantime set by Layout, in contained in url query
   if (previousResetPassword !== store.resetPassword) {
     store.setResetPassword(previousResetPassword)
   }
+  const currentActiveNodeArray = activeNodeArrayFromUrl(router.pathname)
   if (!isEqual(currentActiveNodeArray, previousActiveNodeArray)) {
     router.push(`/${currentActiveNodeArray.join('/')}`)
   }
