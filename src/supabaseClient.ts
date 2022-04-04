@@ -9,7 +9,7 @@ const options = {
 }
 
 export const supabase = createClient(
-  process.env.VITE_PUBLIC_SUPABASE_URL,
-  process.env.VITE_PUBLIC_SUPABASE_ANON_KEY,
+  import.meta.env.VITE_PUBLIC_SUPABASE_URL,
+  import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY,
   options,
 )

@@ -8,6 +8,7 @@ import materialTheme from './utils/materialTheme'
 import { Provider as MobxProvider } from './storeContext'
 import Home from './routes/Home'
 import Docs from './routes/Docs'
+import Projects from './routes/Projects'
 
 function App() {
   console.log('App rendering')
@@ -30,6 +31,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="docs" element={<Docs />} />
+            <Route path="projects" element={<Projects />} />
           </Routes>
         </MobxProvider>
       </ThemeProvider>
