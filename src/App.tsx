@@ -10,6 +10,16 @@ function App() {
   console.log('App rendering')
   const store = MobxStore.create()
   // TODO: initiate app
+  // TODO:
+  let params
+  if (typeof window !== 'undefined') {
+    const urlSearchParams = new URLSearchParams(window.location.search)
+    params = Object.fromEntries(urlSearchParams.entries())
+    if (params?.type === 'recovery') {
+      console.log('Layout, setting resetPassword to true')
+      return store.setResetPassword(true)
+    }
+  }
 
   return (
     <ThemeProvider theme={materialTheme}>
