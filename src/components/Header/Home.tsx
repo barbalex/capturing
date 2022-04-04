@@ -7,9 +7,9 @@ import { FaHome } from 'react-icons/fa'
 import styled from 'styled-components'
 import { useResizeDetector } from 'react-resize-detector'
 import { useRouter } from 'next/router'
+import { Link } from 'react-router-dom'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
-import Link from '../shared/Link'
 import constants from '../../utils/constants'
 
 const SiteTitle = styled(Button)`
