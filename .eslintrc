@@ -1,0 +1,27 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "rules": {
+    "strict": 0,
+    "react/prop-types": 0,
+    "react/display-name": "off",
+    "no-console": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-unused-vars": 1,
+    "no-empty": ["error", { "allowEmptyCatch": true }]
+  },
+  "env": {
+    "browser": true,
+    "amd": true,
+    "node": true,
+    "es6": true
+  },
+  "plugins": ["react", "react-hooks", "prettier"],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier"]
+}
