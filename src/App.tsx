@@ -9,7 +9,9 @@ import { Provider as MobxProvider } from './storeContext'
 import Home from './routes/Home'
 import Docs from './routes/Docs'
 import Projects from './routes/Projects'
+import Account from './routes/Account'
 import FourOhFour from './routes/404'
+import Layout from './components/Layout'
 
 function App() {
   console.log('App rendering')
@@ -29,12 +31,15 @@ function App() {
     <BrowserRouter>
       <ThemeProvider theme={materialTheme}>
         <MobxProvider value={store}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="docs" element={<Docs />} />
-            <Route path="projects" element={<Projects />} />
-            <Route path="*" element={<FourOhFour />} />
-          </Routes>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="docs" element={<Docs />} />
+              <Route path="projects" element={<Projects />} />
+              <Route path="account" element={<Account />} />
+              <Route path="*" element={<FourOhFour />} />
+            </Routes>
+          </Layout>
         </MobxProvider>
       </ThemeProvider>
     </BrowserRouter>
