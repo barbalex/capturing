@@ -12,6 +12,7 @@ import Projects from './routes/Projects'
 import Account from './routes/Account'
 import FourOhFour from './routes/404'
 import Layout from './components/Layout'
+import Notifications from './components/Notifications'
 
 function App() {
   console.log('App rendering')
@@ -40,6 +41,7 @@ function App() {
               <Route path="*" element={<FourOhFour />} />
             </Routes>
           </Layout>
+          <Notifications />
         </MobxProvider>
       </ThemeProvider>
     </BrowserRouter>

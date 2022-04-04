@@ -1,7 +1,8 @@
+import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import styled from 'styled-components'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
