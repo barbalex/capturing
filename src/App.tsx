@@ -9,6 +9,7 @@ import { Provider as MobxProvider } from './storeContext'
 import Home from './routes/Home'
 import Docs from './routes/Docs'
 import Projects from './routes/Projects'
+import FourOhFour from './routes/404'
 
 function App() {
   console.log('App rendering')
@@ -32,6 +33,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="docs" element={<Docs />} />
             <Route path="projects" element={<Projects />} />
+            <Route path="*" element={<FourOhFour />} />
           </Routes>
         </MobxProvider>
       </ThemeProvider>
