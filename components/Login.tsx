@@ -48,6 +48,7 @@ const Login = () => {
   const { setSession } = useContext(StoreContext)
 
   const [authType, setAuthType] = useState('link') // or: 'email'
+  const [signType, setSignType] = useState('signin')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
@@ -81,12 +82,19 @@ const Login = () => {
       // see: https://github.com/mobxjs/mobx-state-tree/issues/595#issuecomment-446028034
       // or better? what about mst-persist?
       setTimeout(async () => {
-        console.log('signing in with:', { emailToUse, passwordToUse })
-        const { session, error } = await supabase.auth.signIn({
-          email: emailToUse,
-          password: passwordToUse,
-        })
+        console.log('signing in with:', { emailToUse, passwordToUse, authType })
+        const { session, error } =
+          authType === 'login'
+            ? await supabase.auth.signIn({
+                email: emailToUse,
+              })
+            : await supabase.auth.signIn({
+                email: emailToUse,
+                password: passwordToUse,
+              })
         if (error) {
+          // TODO: if message is 'Invalid authentication credentials', signUp
+          console.log(error)
           setEmailErrorText(error.message)
           return setPasswordErrorText(error.message)
         }
@@ -96,7 +104,7 @@ const Login = () => {
         setSession(session)
       })
     },
-    [email, password, setSession],
+    [authType, email, password, setSession],
   )
   const onBlurEmail = useCallback(
     (e) => {
