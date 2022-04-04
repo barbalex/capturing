@@ -1,66 +1,42 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import type { AppProps } from 'next/app'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import Head from 'next/head'
-import isEqual from 'lodash/isEqual'
 import { useRouter } from 'next/router'
-import { observer } from 'mobx-react-lite'
 
 import materialTheme from '../utils/materialTheme'
 import '../globals.css'
 import MobxStore from '../store'
 import { Provider as MobxProvider } from '../storeContext'
 import Layout from '../components/Layout'
-import activeNodeArrayFromUrl from '../utils/activeNodeArrayFromUrl'
+import initiateApp from '../utils/initiateApp'
 
-function MyApp({ Component, pageProps }: AppProps) {
-  const [store, setStore] = useState()
-
-  useEffect(() => {
-    setStore(MobxStore.create())
-  }, [])
+const MyApp = ({ Component, pageProps }: AppProps) => {
   const router = useRouter()
-  const { pathname } = router
-  console.log('_app rendering')
-  useEffect(() => {
-    if (!store) return
-    const previousActiveNodeArray = [...store.activeNodeArray.slice()]
-    const previousResetPassword = store.resetPassword
-    import('localforage').then((_localForage) => {
-      import('mst-persist').then((_persist) => {
-        _persist
-          .default('store', store, {
-            storage: _localForage.default,
-            jsonify: false,
-            blacklist: [],
-          })
-          .then(() => {
-            // TODO: need to navigate to activeNodeArray if is different from url
-            const currentActiveNodeArray = activeNodeArrayFromUrl(pathname)
+  // Problem: useRouter makes compenent render twice, see: https://github.com/vercel/next.js/issues/12010
+  const renderCount = useRef(0)
 
-            console.log('_app, effect', {
-              previousActiveNodeArray,
-              currentActiveNodeArray,
-              query: router.query,
-              resetPassword: store.resetPassword,
-              previousResetPassword,
-            })
-            if (previousResetPassword !== store.resetPassword) {
-              store.setResetPassword(previousResetPassword)
-            }
-            if (!isEqual(currentActiveNodeArray, previousActiveNodeArray)) {
-              // TODO: navigate
-              router.push(`/${currentActiveNodeArray.join('/')}`)
-            }
-          })
-      })
-    })
+  const store = MobxStore.create()
+  renderCount.current = renderCount.current + 1
+
+  useEffect(() => {
+    if (renderCount.current === 1) {
+      initiateApp({ store, router })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  console.log('_app rendering')
+  let params
+  if (typeof window !== 'undefined') {
+    const urlSearchParams = new URLSearchParams(window.location.search)
+    params = Object.fromEntries(urlSearchParams.entries())
+    if (params?.type === 'recovery') {
+      console.log('Layout, setting resetPassword')
+      return store.setResetPassword(true)
+    }
+  }
 
-  if (!store) return null
+  console.log('_app rendering, renderCount.current:', renderCount.current)
 
   return (
     <StyledEngineProvider injectFirst>
@@ -78,4 +54,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 }
 
-export default observer(MyApp)
+export default MyApp
