@@ -6,8 +6,7 @@ import IconButton from '@mui/material/IconButton'
 import { FaHome } from 'react-icons/fa'
 import styled from 'styled-components'
 import { useResizeDetector } from 'react-resize-detector'
-import { useRouter } from 'next/router'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
@@ -43,7 +42,7 @@ const NavButton = styled(Button)`
 `
 
 const HeaderHome = () => {
-  const { pathname } = useRouter()
+  const { pathname } = useLocation()
   const { width, ref: resizeRef } = useResizeDetector()
   const mobile = width && width < constants?.tree?.minimalWindowWidth
   const isHome = pathname === '/'

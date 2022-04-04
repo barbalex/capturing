@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 
-const docs = () => {
+const Docs = () => {
+  const location = useLocation()
+  console.log('Docs, params:', location)
+
   useEffect(() => {
     document.title = 'Capturing: Docs'
   }, [])
@@ -12,4 +16,4 @@ const docs = () => {
   )
 }
 
-export default docs
+export default Docs

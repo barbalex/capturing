@@ -1,7 +1,7 @@
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import styled from 'styled-components'
-import { useRouter } from 'next/router'
+import { Link, useLocation } from 'react-router-dom'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
@@ -21,7 +21,7 @@ const StyledAppBar = styled(AppBar)`
   }
 `
 const Header = () => {
-  const { pathname } = useRouter()
+  const { pathname } = useLocation()
   const isHome = pathname === '/'
   const isProjects = pathname.startsWith('/projects')
 
