@@ -11,7 +11,7 @@ const Container = styled.div`
   width: 100%;
 `
 
-const Layout = () => {
+const ColumnController = () => {
   const { width, ref: resizeRef } = useResizeDetector()
 
   const store = useContext(storeContext)
@@ -29,4 +29,4 @@ const Layout = () => {
   return <Container ref={resizeRef} />
 }
 
-export default observer(Layout)
+export default observer(ColumnController)

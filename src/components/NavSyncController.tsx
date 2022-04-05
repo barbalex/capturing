@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import storeContext from '../storeContext'
 import getActiveNodeArrayFromUrl from '../utils/activeNodeArrayFromUrl'
 
-const NavSync = () => {
+const NavSyncController = () => {
   const { pathname } = useLocation()
 
   const navigate = useNavigate()
@@ -23,15 +23,15 @@ const NavSync = () => {
   // need to update activeNodeArray on every navigation
   useEffect(() => {
     const activeNodeArray = getActiveNodeArrayFromUrl(pathname)
-    console.log('NavSync, location changed:', {
-      pathname,
-      activeNodeArrayFromUrl: activeNodeArray,
-    })
+    // console.log('NavSync, location changed:', {
+    //   pathname,
+    //   activeNodeArrayFromUrl: activeNodeArray,
+    // })
     if (!isEqual(activeNodeArray, store.activeNodeArray.slice())) {
-      console.log(`NavSync, navigating due to changed location`, {
-        activeNodeArrayFromUrl: activeNodeArray,
-        activeNodeArrayFromStore: store.activeNodeArray.slice(),
-      })
+      // console.log(`NavSync, navigating due to changed location`, {
+      //   activeNodeArrayFromUrl: activeNodeArray,
+      //   activeNodeArrayFromStore: store.activeNodeArray.slice(),
+      // })
       setActiveNodeArray(activeNodeArray)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -40,4 +40,4 @@ const NavSync = () => {
   return null
 }
 
-export default observer(NavSync)
+export default observer(NavSyncController)

@@ -1,5 +1,5 @@
 import { types } from 'mobx-state-tree'
-import { autorun } from 'mobx'
+// import { autorun } from 'mobx'
 import { v1 as uuidv1 } from 'uuid'
 import isEqual from 'lodash/isEqual'
 
@@ -21,12 +21,12 @@ const myTypes = types
   })
   .volatile(() => ({ session: undefined, navigate: undefined }))
   .actions((self) => {
-    autorun(() =>
-      console.log(
-        'store, activeNodeArray changed to:',
-        self.activeNodeArray.slice(),
-      ),
-    )
+    // autorun(() =>
+    //   console.log(
+    //     'store, activeNodeArray changed to:',
+    //     self.activeNodeArray.slice(),
+    //   ),
+    // )
 
     return {
       setNavigate(val) {

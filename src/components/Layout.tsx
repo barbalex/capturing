@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { observer } from 'mobx-react-lite'
 
 import Header from './Header'
 
@@ -19,4 +18,4 @@ const Layout = ({ children }) => {
   )
 }
 
-export default observer(Layout)
+export default Layout

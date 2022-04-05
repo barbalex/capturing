@@ -16,7 +16,7 @@ import Layout from './components/Layout'
 import Notifications from './components/Notifications'
 import { db as dexie } from './dexieClient'
 import activeNodeArrayFromUrl from './utils/activeNodeArrayFromUrl'
-import NavSync from './components/NavSync'
+import NavSyncController from './components/NavSyncController'
 import ResetPassword from './components/ResetPassword'
 import ColumnController from './components/ColumnController'
 
@@ -41,12 +41,12 @@ function App() {
       }
       // persist store on every snapshot
       onSnapshot(st, (ss) => {
-        console.log('App, snapshot:', ss)
+        // console.log('App, snapshot:', ss)
         dexie.stores.put({ id: 'store', ...ss })
       })
     })
   }, [])
-  console.log('App rendering, store:', store)
+  // console.log('App rendering, store:', store)
 
   // on first render returns null
   if (!store) return null
@@ -57,10 +57,10 @@ function App() {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={materialTheme}>
           <MobxProvider value={store}>
-            <NavSync />
+            <NavSyncController />
             <ColumnController />
+            <ResetPassword />
             <Layout>
-              <ResetPassword />
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="docs" element={<Docs />} />
