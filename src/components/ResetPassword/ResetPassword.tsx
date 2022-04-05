@@ -18,10 +18,10 @@ import Button from '@mui/material/Button'
 import styled from 'styled-components'
 import { useSearchParams } from 'react-router-dom'
 
-import ErrorBoundary from './shared/ErrorBoundary'
-import StoreContext from '../storeContext'
-import { db as dexie } from '../dexieClient'
-import { supabase } from '../supabaseClient'
+import ErrorBoundary from '../shared/ErrorBoundary'
+import StoreContext from '../../storeContext'
+import { db as dexie } from '../../dexieClient'
+import { supabase } from '../../supabaseClient'
 
 const StyledDialog = styled(Dialog)`
   .MuiPaper-root {

@@ -17,6 +17,8 @@ import Notifications from './components/Notifications'
 import { db as dexie } from './dexieClient'
 import activeNodeArrayFromUrl from './utils/activeNodeArrayFromUrl'
 import NavSync from './components/NavSync'
+import ResetPassword from './components/ResetPassword'
+import ColumnController from './components/ColumnController'
 
 function App() {
   const [store, setStore] = useState()
@@ -56,7 +58,9 @@ function App() {
         <ThemeProvider theme={materialTheme}>
           <MobxProvider value={store}>
             <NavSync />
+            <ColumnController />
             <Layout>
+              <ResetPassword />
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="docs" element={<Docs />} />
