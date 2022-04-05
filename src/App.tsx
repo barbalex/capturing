@@ -1,8 +1,9 @@
+import { useEffect, useState } from 'react'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
+import { onSnapshot } from 'mobx-state-tree'
 
 import MobxStore from './store'
-import initiateApp from './utils/initiateApp'
 import materialTheme from './utils/materialTheme'
 import { Provider as MobxProvider } from './storeContext'
 import Home from './routes/Home'
@@ -12,12 +13,25 @@ import Account from './routes/Account'
 import FourOhFour from './routes/404'
 import Layout from './components/Layout'
 import Notifications from './components/Notifications'
+import { db as dexie } from './dexieClient'
 
 function App() {
-  console.log('App rendering')
   //const navigate = useNavigate()
-  const store = MobxStore.create()
-  initiateApp({ store })
+  const [store, setStore] = useState()
+  useEffect(() => {
+    dexie.stores.get('store').then((dbStore) => {
+      console.log('App, dbStore gotten from dexie:', dbStore)
+      const st = MobxStore.create(dbStore)
+      setStore(st)
+      onSnapshot(st, (ss) => {
+        console.log('App, snapshot:', ss)
+        dexie.stores.put({ id: 'store', ...ss })
+      })
+    })
+  }, [])
+  console.log('App rendering, store:', store)
+
+  if (!store) return <p>loading</p>
 
   return (
     <BrowserRouter>

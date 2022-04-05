@@ -846,6 +846,13 @@ export class WidgetForField implements IWidgetForField {
   }
 }
 
+export interface IStore {
+  id: string // always: 'store'
+  active_node_array: (string | number)[]
+  open_nodes: (string | number)[][]
+  single_column_view: boolean
+}
+
 export class MySubClassedDexie extends Dexie {
   accounts!: DexieTable<Account, string>
   field_types!: DexieTable<FieldType, string>
@@ -869,6 +876,7 @@ export class MySubClassedDexie extends Dexie {
   version_types!: DexieTable<IVersionType, string>
   widget_types!: DexieTable<IWidgetType, string>
   widgets_for_fields!: DexieTable<WidgetForField, string>
+  stores!: DexieTable<IStore, string>
 
   constructor() {
     super('capturing')
@@ -898,6 +906,7 @@ export class MySubClassedDexie extends Dexie {
       version_types: 'id, &value, sort, server_rev_at',
       widget_types: 'id, &value, sort, server_rev_at',
       widgets_for_fields: 'id, [field_value+widget_value], server_rev_at',
+      stores: 'id',
     })
     this.accounts.mapToClass(Account)
     this.field_types.mapToClass(FieldType)

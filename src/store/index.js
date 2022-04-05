@@ -1,5 +1,5 @@
 import { types } from 'mobx-state-tree'
-import { reaction, flow } from 'mobx'
+import { autorun } from 'mobx'
 import { v1 as uuidv1 } from 'uuid'
 import isEqual from 'lodash/isEqual'
 
@@ -17,26 +17,25 @@ const myTypes = types
     ),
     notifications: types.map(NotificationType),
     singleColumnView: types.optional(types.boolean, false),
-    storeRestored: types.optional(types.string, 'no'), // values: no, checkActiveNodeArray, done
   })
   .volatile(() => ({ session: undefined, navigate: undefined }))
   .actions((self) => {
-    reaction(
-      () => self.activeNodeArray,
-      (activeNodeArray) => {
-        console.log(
-          'store, activeNodeArray changed to:',
-          activeNodeArray.slice(),
-        )
-      },
+    autorun(() =>
+      console.log(
+        'store, activeNodeArray changed to:',
+        self.activeNodeArray.slice(),
+      ),
     )
 
     return {
-      setStoreRestored(val) {
-        self.storeRestored = val
-      },
       setNavigate(val) {
-        self.navigate = val
+        if (self?.navigate) {
+          return (self.navigate = val)
+        }
+        console.log(
+          'store, self.navigate is undefined, wanted to navigate to:',
+          val,
+        )
       },
       setActiveNodeArray(val, nonavigate) {
         self.activeNodeArray = val

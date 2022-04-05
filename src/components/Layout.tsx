@@ -40,24 +40,23 @@ const Layout = ({ children }) => {
     setSingleColumnView,
     setActiveNodeArray,
     setNavigate,
-    storeRestored,
-    setStoreRestored,
   } = store
 
-  console.log('Layout', { storeRestored })
+  console.log('Layout')
 
   // navigate to potentially new activeNodeArray after restoring store
   // can't do it in App.tsx/initateApp
   // because navigate can't be loaded in App.tsx without messing with rendering
   useEffect(() => {
-    if (storeRestored === 'no') return
-
     const currentActiveNodeArray = [...store.activeNodeArray.slice()]
     const activeNodeArrayFromUrl = getActiveNodeArrayFromUrl(pathname)
-    console.log('initiateApp:', {
-      activeNodeArrayFromUrl,
-      currentActiveNodeArray,
-    })
+    console.log(
+      'Layout, effect to navigate after restoring if aNA is different:',
+      {
+        activeNodeArrayFromUrl,
+        currentActiveNodeArray,
+      },
+    )
     if (!isEqual(currentActiveNodeArray, activeNodeArrayFromUrl)) {
       console.log(
         'initiateApp, need to navigate to:',
@@ -66,7 +65,7 @@ const Layout = ({ children }) => {
       navigate(`/${currentActiveNodeArray.join('/')}`)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [storeRestored])
+  }, [])
 
   useEffect(() => {
     if (width > constants?.tree?.minimalWindowWidth && singleColumnView) {
@@ -79,8 +78,6 @@ const Layout = ({ children }) => {
 
   // need to update activeNodeArray on every navigation
   useEffect(() => {
-    if (storeRestored !== 'checkActiveNodeArray') return
-
     const activeNodeArray = getActiveNodeArrayFromUrl(pathname)
     console.log('Layout, location changed:', {
       pathname,
@@ -93,19 +90,11 @@ const Layout = ({ children }) => {
       console.log(`Layout, navigating due to changed location`, {
         activeNodeArrayFromUrl: activeNodeArray,
         activeNodeArrayFromStore: store.activeNodeArray.slice(),
-        resetPassword,
       })
-      setStoreRestored('done')
       setActiveNodeArray(activeNodeArray)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    location,
-    resetPassword,
-    setActiveNodeArray,
-    store.activeNodeArray,
-    storeRestored,
-  ])
+  }, [location, resetPassword, setActiveNodeArray, store.activeNodeArray])
 
   return (
     <Container ref={resizeRef}>

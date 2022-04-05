@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
 
 import { supabase } from '../supabaseClient'
 
 const Account = ({ session }) => {
-  const location = useLocation()
-  console.log('Account, params:', location)
-
   const [loading, setLoading] = useState(true)
   const [username, setUsername] = useState(null)
   const [website, setWebsite] = useState(null)
