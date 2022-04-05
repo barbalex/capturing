@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { onSnapshot } from 'mobx-state-tree'
+import isEqual from 'lodash/isEqual'
 
 import MobxStore from './store'
 import materialTheme from './utils/materialTheme'
@@ -14,25 +15,40 @@ import FourOhFour from './routes/404'
 import Layout from './components/Layout'
 import Notifications from './components/Notifications'
 import { db as dexie } from './dexieClient'
+import activeNodeArrayFromUrl from './utils/activeNodeArrayFromUrl'
 
 function App() {
-  //const navigate = useNavigate()
   const [store, setStore] = useState()
   useEffect(() => {
+    // on first render regenerate store (if exists)
     dexie.stores.get('store').then((dbStore) => {
-      console.log('App, dbStore gotten from dexie:', dbStore)
       const st = MobxStore.create(dbStore)
       setStore(st)
+      // navigate to previous activeNodeArray - if exists
+      const shouldNavigate =
+        dbStore?.activeNodeArray?.length &&
+        !isEqual(
+          activeNodeArrayFromUrl(window.location.pathname),
+          dbStore.activeNodeArray,
+        )
+      if (shouldNavigate) {
+        window.location.href = `${
+          window.location.origin
+        }/${dbStore?.activeNodeArray.join('/')}`
+      }
+      // persist store on every snapshot
       onSnapshot(st, (ss) => {
         console.log('App, snapshot:', ss)
         dexie.stores.put({ id: 'store', ...ss })
       })
     })
   }, [])
-  console.log('App rendering, store:', store)
+  // console.log('App rendering, store:', store)
 
-  if (!store) return <p>loading</p>
+  // on first render returns null
+  if (!store) return null
 
+  // on second render returns app with regenerated store
   return (
     <BrowserRouter>
       <StyledEngineProvider injectFirst>

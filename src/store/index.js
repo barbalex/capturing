@@ -29,19 +29,19 @@ const myTypes = types
 
     return {
       setNavigate(val) {
-        if (self?.navigate) {
-          return (self.navigate = val)
-        }
-        console.log(
-          'store, self.navigate is undefined, wanted to navigate to:',
-          val,
-        )
+        return (self.navigate = val)
       },
       setActiveNodeArray(val, nonavigate) {
         self.activeNodeArray = val
         if (!nonavigate) {
-          self.navigate(`/${val.join('/')}`)
-          self.addOpenNode(val)
+          if (self?.navigate) {
+            self.navigate(`/${val.join('/')}`)
+            return self.addOpenNode(val)
+          }
+          console.log(
+            'store, self.navigate is undefined, wanted to navigate to:',
+            val,
+          )
         }
       },
       setOpenNodes(val) {
