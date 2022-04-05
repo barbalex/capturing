@@ -3,12 +3,13 @@ import styled from 'styled-components'
 import { useResizeDetector } from 'react-resize-detector'
 import { observer } from 'mobx-react-lite'
 import isEqual from 'lodash/isEqual'
+import { useLocation, useSearchParams, useNavigate } from 'react-router-dom'
 
 import storeContext from '../storeContext'
 import Header from './Header'
 import constants from '../utils/constants'
 import ResetPassword from './ResetPassword'
-import activeNodeArrayFromUrl from '../utils/activeNodeArrayFromUrl'
+import getActiveNodeArrayFromUrl from '../utils/activeNodeArrayFromUrl'
 
 const Container = styled.div`
   height: 100%;
@@ -17,22 +18,55 @@ const Container = styled.div`
 
 const Layout = ({ children }) => {
   const { width, ref: resizeRef } = useResizeDetector()
+  const location = useLocation()
+  const { pathname } = location
+
+  const navigate = useNavigate()
+  // enable navigating in store > set this as store value
+  // (can't be passed when creating store yet)
+  useEffect(() => {
+    setNavigate(navigate)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // detect type = recovery to open reset password modal
+  // eslint-disable-next-line no-unused-vars
+  const [searchParams, setSearchParams] = useSearchParams()
+  const resetPassword = searchParams.get('type') === 'recovery'
 
   const store = useContext(storeContext)
   const {
     singleColumnView,
     setSingleColumnView,
-    resetPassword,
-    activeNodeArrayAsUrl,
     setActiveNodeArray,
-    activeNodeArray,
+    setNavigate,
+    storeRestored,
+    setStoreRestored,
   } = store
 
-  // console.log('Layout', {
-  //   activeNodeArray: activeNodeArray.slice(),
-  //   activeNodeArrayAsUrl,
-  //   resetPassword,
-  // })
+  console.log('Layout', { storeRestored })
+
+  // navigate to potentially new activeNodeArray after restoring store
+  // can't do it in App.tsx/initateApp
+  // because navigate can't be loaded in App.tsx without messing with rendering
+  useEffect(() => {
+    if (storeRestored === 'no') return
+
+    const currentActiveNodeArray = [...store.activeNodeArray.slice()]
+    const activeNodeArrayFromUrl = getActiveNodeArrayFromUrl(pathname)
+    console.log('initiateApp:', {
+      activeNodeArrayFromUrl,
+      currentActiveNodeArray,
+    })
+    if (!isEqual(currentActiveNodeArray, activeNodeArrayFromUrl)) {
+      console.log(
+        'initiateApp, need to navigate to:',
+        `/${currentActiveNodeArray.join('/')}`,
+      )
+      navigate(`/${currentActiveNodeArray.join('/')}`)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storeRestored])
 
   useEffect(() => {
     if (width > constants?.tree?.minimalWindowWidth && singleColumnView) {
@@ -43,35 +77,35 @@ const Layout = ({ children }) => {
     }
   }, [setSingleColumnView, singleColumnView, width])
 
+  // need to update activeNodeArray on every navigation
   useEffect(() => {
-    // need to update activeNodeArray on every navigation
-    // https://nextjs.org/docs/api-reference/next/router#routerevents
-    const handleRouteChange = (url) => {
-      // TODO: need to remove query from url
-      const activeNodeArray = activeNodeArrayFromUrl(url)
-      if (
-        !resetPassword &&
-        !isEqual(activeNodeArray, store.activeNodeArray.slice())
-      ) {
-        console.log(`Layout, handleRouteChange`, {
-          activeNodeArrayFromUrl: activeNodeArray,
-          activeNodeArrayFromStore: store.activeNodeArray.slice(),
-          url,
-          resetPassword,
-        })
-        setActiveNodeArray(activeNodeArray, 'nonavigate')
-      }
+    if (storeRestored !== 'checkActiveNodeArray') return
+
+    const activeNodeArray = getActiveNodeArrayFromUrl(pathname)
+    console.log('Layout, location changed:', {
+      pathname,
+      activeNodeArrayFromUrl: activeNodeArray,
+    })
+    if (
+      !resetPassword &&
+      !isEqual(activeNodeArray, store.activeNodeArray.slice())
+    ) {
+      console.log(`Layout, navigating due to changed location`, {
+        activeNodeArrayFromUrl: activeNodeArray,
+        activeNodeArrayFromStore: store.activeNodeArray.slice(),
+        resetPassword,
+      })
+      setStoreRestored('done')
+      setActiveNodeArray(activeNodeArray)
     }
-
-    // TODO: get this working
-    // router.events.on('routeChangeStart', handleRouteChange)
-
-    // If the component is unmounted, unsubscribe
-    // from the event with the `off` method:
-    // return () => {
-    //   router.events.off('routeChangeStart', handleRouteChange)
-    // }
-  }, [resetPassword, setActiveNodeArray, store.activeNodeArray])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    location,
+    resetPassword,
+    setActiveNodeArray,
+    store.activeNodeArray,
+    storeRestored,
+  ])
 
   return (
     <Container ref={resizeRef}>

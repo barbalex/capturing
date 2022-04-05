@@ -4,25 +4,17 @@ import isEqual from 'lodash/isEqual'
 
 import activeNodeArrayFromUrl from './activeNodeArrayFromUrl'
 
-const initiateApp = async ({ store, router }) => {
+const initiateApp = async ({ store }) => {
   console.log('initiateApp persisting mst')
-  const previousActiveNodeArray = [...store.activeNodeArray.slice()]
-  const previousResetPassword = store.resetPassword
   await persist('store', store, {
     storage: localForage,
     jsonify: false,
     blacklist: [],
   })
-
-  // TODO: need to navigate to activeNodeArray if is different from url
-  const currentActiveNodeArray = activeNodeArrayFromUrl(router.pathname)
-  console.log('initiateApp:', {
-    previousActiveNodeArray,
-    currentActiveNodeArray,
-  })
-  if (!isEqual(currentActiveNodeArray, previousActiveNodeArray)) {
-    router.push(`/${currentActiveNodeArray.join('/')}`)
-  }
+  store.setStoreRestored('checkActiveNodeArray')
+  // can't navigate to potentially new activeNodeArray here
+  // because navigate can't be loaded in App.tsx without messing with rendering
+  // this this happens in Layout.tsx
 }
 
 export default initiateApp

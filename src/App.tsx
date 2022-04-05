@@ -1,5 +1,5 @@
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 
 import MobxStore from './store'
 import initiateApp from './utils/initiateApp'
@@ -15,17 +15,9 @@ import Notifications from './components/Notifications'
 
 function App() {
   console.log('App rendering')
+  //const navigate = useNavigate()
   const store = MobxStore.create()
-  // TODO: initiate app
-  // detect type = recovery to open reset password modal
-  if (typeof window !== 'undefined') {
-    const urlSearchParams = new URLSearchParams(window.location.search)
-    const params = Object.fromEntries(urlSearchParams.entries())
-    if (params?.type === 'recovery') {
-      console.log('Layout, setting resetPassword to true')
-      return store.setResetPassword(true)
-    }
-  }
+  initiateApp({ store })
 
   return (
     <BrowserRouter>

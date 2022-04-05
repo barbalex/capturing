@@ -16,6 +16,7 @@ import {
 } from 'react-icons/md'
 import Button from '@mui/material/Button'
 import styled from 'styled-components'
+import { useSearchParams } from 'react-router-dom'
 
 import ErrorBoundary from './shared/ErrorBoundary'
 import StoreContext from '../storeContext'
@@ -45,8 +46,11 @@ const ResetButton = styled(Button)`
 `
 
 const ResetPassword = () => {
-  const { setSession, setResetPassword } = useContext(StoreContext)
-  // TODO: setResetPassword(true)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { setSession } = useContext(StoreContext)
+
+  // TODO: remove type search param to close reset password modal:
+  // searchParams.delete('type'), need setSearchParams?
 
   const [authType, setAuthType] = useState('link') // or: 'email'
   const [email, setEmail] = useState('')
@@ -95,9 +99,11 @@ const ResetPassword = () => {
         setEmailErrorText('')
         setPasswordErrorText('')
         setSession(session)
+        setSearchParams(searchParams.delete('type'))
       })
+      searchParams.delete('type')
     },
-    [email, password, setSession],
+    [email, password, searchParams, setSearchParams, setSession],
   )
   const onBlurEmail = useCallback(
     (e) => {
