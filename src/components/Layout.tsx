@@ -28,11 +28,11 @@ const Layout = ({ children }) => {
     activeNodeArray,
   } = store
 
-  console.log('Layout', {
-    activeNodeArray: activeNodeArray.slice(),
-    activeNodeArrayAsUrl,
-    resetPassword,
-  })
+  // console.log('Layout', {
+  //   activeNodeArray: activeNodeArray.slice(),
+  //   activeNodeArrayAsUrl,
+  //   resetPassword,
+  // })
 
   useEffect(() => {
     if (width > constants?.tree?.minimalWindowWidth && singleColumnView) {
