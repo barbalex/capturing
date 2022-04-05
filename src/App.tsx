@@ -16,6 +16,7 @@ import Layout from './components/Layout'
 import Notifications from './components/Notifications'
 import { db as dexie } from './dexieClient'
 import activeNodeArrayFromUrl from './utils/activeNodeArrayFromUrl'
+import NavSync from './components/NavSync'
 
 function App() {
   const [store, setStore] = useState()
@@ -43,7 +44,7 @@ function App() {
       })
     })
   }, [])
-  // console.log('App rendering, store:', store)
+  console.log('App rendering, store:', store)
 
   // on first render returns null
   if (!store) return null
@@ -54,6 +55,7 @@ function App() {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={materialTheme}>
           <MobxProvider value={store}>
+            <NavSync />
             <Layout>
               <Routes>
                 <Route path="/" element={<Home />} />

@@ -846,6 +846,7 @@ export class WidgetForField implements IWidgetForField {
   }
 }
 
+// TODO: update on every change of store
 export interface IStore {
   id: string // always: 'store'
   active_node_array: (string | number)[]

@@ -5,6 +5,7 @@ import isEqual from 'lodash/isEqual'
 
 import NotificationType from './Notification'
 
+// TODO: update interface IStore on every change of store that needs to regenerate
 const myTypes = types
   .model({
     activeNodeArray: types.optional(
