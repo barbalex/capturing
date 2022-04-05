@@ -6,7 +6,7 @@ import { supabase } from '../supabaseClient'
 import Auth from './Auth'
 import Account from './Account'
 import Login from '../components/Login'
-// import { Accounts } from '../types'
+import { field_types } from '../types'
 
 // TODO: ensure authenticated
 
@@ -36,7 +36,7 @@ const Projects = () => {
     }
     run()
   }, [])
-  console.log('Home, session:', {
+  console.log('Projects', {
     session,
     userId: session?.user?.id,
     field_types: projects,

@@ -21,8 +21,6 @@ import ErrorBoundary from '../shared/ErrorBoundary'
 import StoreContext from '../../storeContext'
 import { db as dexie } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
-import Link from './Link'
-import Email from './Email'
 
 const StyledDialog = styled(Dialog)`
   .MuiPaper-root {
@@ -168,34 +166,24 @@ const Login = () => {
   }, [email])
 
   return (
-    <ErrorBoundary>
-      <StyledDialog aria-labelledby="dialog-title" open={true}>
-        <DialogTitle id="dialog-title">Anmeldung</DialogTitle>
-        <StyledDiv>
-          <ToggleButtonGroup
-            color="primary"
-            value={authType}
-            exclusive
-            onChange={onChangeAuthType}
-            size="small"
-          >
-            <ToggleButton value="link">Email mit Link</ToggleButton>
-            <ToggleButton value="password">Mit Passwort</ToggleButton>
-          </ToggleButtonGroup>
-          {authType === 'link' ? <Link /> : <Email />}
-        </StyledDiv>
-        <DialogActions>
-          {!!email && (
-            <ResetButton onClick={reset} color="inherit">
-              {resetTitle}
-            </ResetButton>
-          )}
-          <Button color="primary" onClick={fetchLogin}>
-            anmelden
-          </Button>
-        </DialogActions>
-      </StyledDialog>
-    </ErrorBoundary>
+    <FormControl
+      error={!!emailErrorText}
+      fullWidth
+      aria-describedby="emailHelper"
+      variant="standard"
+    >
+      <InputLabel htmlFor="email">Email</InputLabel>
+      <StyledInput
+        id="email"
+        className="user-email"
+        defaultValue={email}
+        onBlur={onBlurEmail}
+        //autoFocus
+        onKeyPress={onKeyPressEmail}
+        inputRef={emailInput}
+      />
+      <FormHelperText id="emailHelper">{emailErrorText}</FormHelperText>
+    </FormControl>
   )
 }
 

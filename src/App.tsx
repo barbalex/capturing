@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
@@ -30,20 +29,22 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ThemeProvider theme={materialTheme}>
-        <MobxProvider value={store}>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="docs" element={<Docs />} />
-              <Route path="projects" element={<Projects />} />
-              <Route path="account" element={<Account />} />
-              <Route path="*" element={<FourOhFour />} />
-            </Routes>
-          </Layout>
-          <Notifications />
-        </MobxProvider>
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={materialTheme}>
+          <MobxProvider value={store}>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="docs" element={<Docs />} />
+                <Route path="projects" element={<Projects />} />
+                <Route path="account" element={<Account />} />
+                <Route path="*" element={<FourOhFour />} />
+              </Routes>
+            </Layout>
+            <Notifications />
+          </MobxProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </BrowserRouter>
   )
 }
