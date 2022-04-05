@@ -1,6 +1,6 @@
 {
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": "latest",
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
@@ -19,14 +19,8 @@
   },
   "env": {
     "browser": true,
-    "amd": true,
-    "node": true,
-    "es6": true
+    "es2022": true
   },
   "plugins": ["react", "react-hooks", "prettier"],
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended"
-  ]
+  "extends": ["eslint:recommended", "plugin:react/recommended"]
 }
