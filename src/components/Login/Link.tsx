@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext, useRef } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import DialogActions from '@mui/material/DialogActions'
 import Input from '@mui/material/Input'
 import InputLabel from '@mui/material/InputLabel'
@@ -7,7 +7,6 @@ import FormHelperText from '@mui/material/FormHelperText'
 import Button from '@mui/material/Button'
 import styled from 'styled-components'
 
-import StoreContext from '../../storeContext'
 import { db as dexie } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 
@@ -23,8 +22,6 @@ const StyledInput = styled(Input)`
 `
 
 const Login = ({ emailErrorText, setEmailErrorText }) => {
-  const { setSession } = useContext(StoreContext)
-
   const [email, setEmail] = useState('')
 
   const emailInput = useRef(null)
@@ -45,8 +42,8 @@ const Login = ({ emailErrorText, setEmailErrorText }) => {
       // see: https://github.com/mobxjs/mobx-state-tree/issues/595#issuecomment-446028034
       // or better? what about mst-persist?
       setTimeout(async () => {
-        console.log('signing in with:', { emailToUse })
-        const { session, error } = await supabase.auth.signIn({
+        console.log('signing in with email:', emailToUse)
+        const { error } = await supabase.auth.signIn({
           email: emailToUse,
         })
         if (error) {
@@ -54,12 +51,10 @@ const Login = ({ emailErrorText, setEmailErrorText }) => {
           console.log(error)
           return setEmailErrorText(error.message)
         }
-        console.log('session:', session)
         setEmailErrorText('')
-        setSession(session)
       })
     },
-    [email, setEmailErrorText, setSession],
+    [email, setEmailErrorText],
   )
   const onBlurEmail = useCallback(
     (e) => {
