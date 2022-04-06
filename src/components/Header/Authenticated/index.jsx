@@ -8,8 +8,8 @@ import styled from 'styled-components'
 import { useResizeDetector } from 'react-resize-detector'
 import { Link, useLocation } from 'react-router-dom'
 
-import ErrorBoundary from '../shared/ErrorBoundary'
-import constants from '../../utils/constants'
+import ErrorBoundary from '../../shared/ErrorBoundary'
+import constants from '../../../utils/constants'
 
 const SiteTitle = styled(Button)`
   display: none;

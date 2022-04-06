@@ -2,7 +2,6 @@ import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import styled from 'styled-components'
-import { useLocation } from 'react-router-dom'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
@@ -10,7 +9,8 @@ import Anonymus from './Anonymus'
 import Authenticated from './Authenticated'
 import { supabase } from '../../supabaseClient'
 
-// TODO: add more header bars for projects and docs
+// TODO: add more header bars for: filter, search, online, account
+// TODO: make this adapt to screen width, see vermehrung
 
 const StyledAppBar = styled(AppBar)`
   min-height: ${constants.appBarHeight}px !important;
@@ -24,9 +24,6 @@ const StyledAppBar = styled(AppBar)`
   }
 `
 const Header = () => {
-  const { pathname } = useLocation()
-  const isHome = pathname === '/'
-  const isProjects = pathname.startsWith('/projects')
   const session = supabase.auth.session()
 
   return (

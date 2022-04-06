@@ -13,9 +13,10 @@ import {
 import Button from '@mui/material/Button'
 import styled from 'styled-components'
 
-import StoreContext from '../../storeContext'
+import storeContext from '../../storeContext'
 import { db as dexie } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
+import logout from '../../utils/logout'
 
 const Container = styled.div`
   display: flex;
@@ -40,7 +41,8 @@ const Login = ({
   passwordErrorText,
   setPasswordErrorText,
 }) => {
-  const { setSession } = useContext(StoreContext)
+  const store = useContext(storeContext)
+  const { setSession } = store
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -60,12 +62,7 @@ const Login = ({
       const emailToUse = emailPassed ?? email ?? emailInput.current.value
       const passwordToUse =
         passwordPassed ?? password ?? passwordInput.current.value
-      // do everything to clean up so no data is left
-      await supabase.auth.signOut()
-      await dexie.delete()
-      // TODO: destroy store
-      // see: https://github.com/mobxjs/mobx-state-tree/issues/595#issuecomment-446028034
-      // or better? what about mst-persist?
+      await logout({ store })
       setTimeout(async () => {
         console.log('signing in with:', { emailToUse, passwordToUse })
         const { session, error } = await supabase.auth.signIn({

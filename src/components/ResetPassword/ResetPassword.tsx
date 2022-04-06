@@ -19,9 +19,10 @@ import styled from 'styled-components'
 import { useSearchParams } from 'react-router-dom'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
-import StoreContext from '../../storeContext'
+import storeContext from '../../storeContext'
 import { db as dexie } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
+import logout from '../../utils/logout'
 
 const StyledDialog = styled(Dialog)`
   .MuiPaper-root {
@@ -47,7 +48,8 @@ const ResetButton = styled(Button)`
 
 const ResetPassword = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const { setSession } = useContext(StoreContext)
+  const store = useContext(storeContext)
+  const { setSession } = store
 
   // TODO: remove type search param to close reset password modal:
   // searchParams.delete('type'), need setSearchParams?
@@ -79,12 +81,7 @@ const ResetPassword = () => {
       const emailToUse = emailPassed ?? email ?? emailInput.current.value
       const passwordToUse =
         passwordPassed ?? password ?? passwordInput.current.value
-      // do everything to clean up so no data is left
-      await supabase.auth.signOut()
-      await dexie.delete()
-      // TODO: destroy store
-      // see: https://github.com/mobxjs/mobx-state-tree/issues/595#issuecomment-446028034
-      // or better? what about mst-persist?
+      await logout({ store })
       setTimeout(async () => {
         console.log('signing in with:', { emailToUse, passwordToUse })
         const { session, error } = await supabase.auth.signIn({

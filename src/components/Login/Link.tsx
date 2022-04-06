@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useState, useCallback, useRef, useContext } from 'react'
 import DialogActions from '@mui/material/DialogActions'
 import Input from '@mui/material/Input'
 import InputLabel from '@mui/material/InputLabel'
@@ -9,6 +9,8 @@ import styled from 'styled-components'
 
 import { db as dexie } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
+import storeContext from '../../storeContext'
+import logout from '../../utils/logout'
 
 const Container = styled.div`
   display: flex;
@@ -22,6 +24,7 @@ const StyledInput = styled(Input)`
 `
 
 const Login = ({ emailErrorText, setEmailErrorText }) => {
+  const store = useContext(storeContext)
   const [email, setEmail] = useState('')
 
   const emailInput = useRef(null)
@@ -35,12 +38,7 @@ const Login = ({ emailErrorText, setEmailErrorText }) => {
       // if password-manager enters values and user clicks "Anmelden"
       // it will not work without previous blurring
       const emailToUse = emailPassed ?? email ?? emailInput.current.value
-      // do everything to clean up so no data is left
-      await supabase.auth.signOut()
-      await dexie.delete()
-      // TODO: destroy store
-      // see: https://github.com/mobxjs/mobx-state-tree/issues/595#issuecomment-446028034
-      // or better? what about mst-persist?
+      await logout({ store })
       setTimeout(async () => {
         console.log('signing in with email:', emailToUse)
         const { error } = await supabase.auth.signIn({
@@ -54,7 +52,7 @@ const Login = ({ emailErrorText, setEmailErrorText }) => {
         setEmailErrorText('')
       })
     },
-    [email, setEmailErrorText],
+    [email, setEmailErrorText, store],
   )
   const onBlurEmail = useCallback(
     (e) => {
