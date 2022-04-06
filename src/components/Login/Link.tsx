@@ -23,9 +23,8 @@ const StyledInput = styled(Input)`
   }
 `
 
-const Login = ({ emailErrorText, setEmailErrorText }) => {
+const Login = ({ emailErrorText, setEmailErrorText, email, setEmail }) => {
   const store = useContext(storeContext)
-  const [email, setEmail] = useState('')
 
   const emailInput = useRef(null)
 
@@ -40,13 +39,17 @@ const Login = ({ emailErrorText, setEmailErrorText }) => {
       const emailToUse = emailPassed ?? email ?? emailInput.current.value
       await logout({ store })
       setTimeout(async () => {
-        console.log('signing in with email:', emailToUse)
         const { error } = await supabase.auth.signIn({
           email: emailToUse,
         })
         if (error) {
-          // TODO: if message is 'Invalid authentication credentials', signUp
           console.log(error)
+          // if message is 'Invalid authentication credentials', signUp
+          if (error.message === 'Invalid authentication credentials') {
+            return setEmailErrorText(
+              `${error.message}. Vielleicht funktioniert es mit Passwort`,
+            )
+          }
           return setEmailErrorText(error.message)
         }
         setEmailErrorText('')
@@ -61,7 +64,7 @@ const Login = ({ emailErrorText, setEmailErrorText }) => {
       fetchLogin({ email })
       setEmail(email)
     },
-    [fetchLogin, setEmailErrorText],
+    [fetchLogin, setEmail, setEmailErrorText],
   )
   const onKeyPressEmail = useCallback(
     (e) => {

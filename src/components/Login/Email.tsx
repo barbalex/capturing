@@ -14,7 +14,6 @@ import Button from '@mui/material/Button'
 import styled from 'styled-components'
 
 import storeContext from '../../storeContext'
-import { db as dexie } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import logout from '../../utils/logout'
 
@@ -28,25 +27,18 @@ const StyledInput = styled(Input)`
     border-bottom-color: rgba(0, 0, 0, 0.1) !important;
   }
 `
-const ResetButton = styled(Button)`
-  text-transform: none !important;
-  font-weight: 400 !important;
-  margin-left: 8px !important;
-  margin-right: 20px !important;
-`
-
-const Login = ({
+const LoginWithEmailAndPassword = ({
+  email,
+  setEmail,
   emailErrorText,
   setEmailErrorText,
   passwordErrorText,
   setPasswordErrorText,
   authType,
-  setAuthType,
 }) => {
   const store = useContext(storeContext)
   const { setSession } = store
 
-  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
 
@@ -66,11 +58,9 @@ const Login = ({
         passwordPassed ?? password ?? passwordInput.current.value
       await logout({ store })
       setTimeout(async () => {
-        console.log('signing in with:', { emailToUse, passwordToUse })
         // using signUp after link: error.message = 'User already registered'
         // using signIn after link / without signUp: error.message = 'Invalid login credentials'
         // using link after signUp: works
-
         const { session, error } =
           authType === 'email_signup'
             ? await supabase.auth.signUp({
@@ -88,19 +78,21 @@ const Login = ({
             error.message === 'User already registered' &&
             authType === 'email_signup'
           ) {
-            console.log('should signIn')
+            console.log('signing in instead of up')
             return await supabase.auth.signIn({
               email: emailToUse,
               password: passwordToUse,
             })
           }
           if (error.message === 'Invalid login credentials') {
-            // TODO: propose to change/set password
+            // propose to change/set password or create account
+            setEmailErrorText(`${error.message}. Neues Konto erstellen?`)
+            setPasswordErrorText(`${error.message}. Neues Passwort setzen?`)
+            return
           }
           setEmailErrorText(error.message)
           return setPasswordErrorText(error.message)
         }
-        console.log('session:', session)
         setEmailErrorText('')
         setPasswordErrorText('')
         setSession(session)
@@ -127,7 +119,7 @@ const Login = ({
       }
       setEmail(email)
     },
-    [fetchLogin, password, setEmailErrorText],
+    [fetchLogin, password, setEmail, setEmailErrorText],
   )
   const onBlurPassword = useCallback(
     (e) => {
@@ -154,23 +146,6 @@ const Login = ({
   )
   const onClickShowPass = useCallback(() => setShowPass(!showPass), [showPass])
   const onMouseDownShowPass = useCallback((e) => e.preventDefault(), [])
-
-  const [resetTitle, setResetTitle] = useState('neues Passwort setzen')
-  const reset = useCallback(async () => {
-    if (!email) setEmailErrorText('Bitte Email-Adresse eingeben')
-    setResetTitle('...')
-    const { error } = await supabase.auth.api.resetPasswordForEmail(email)
-    if (error) {
-      setResetTitle('Fehler: Passwort nicht zurückgesetzt')
-      setTimeout(() => {
-        setResetTitle('neues Passwort setzen')
-      }, 5000)
-    }
-    setResetTitle('Email ist unterwegs!')
-    setTimeout(() => {
-      setResetTitle('neues Passwort setzen')
-    }, 5000)
-  }, [email, setEmailErrorText])
 
   return (
     <>
@@ -230,11 +205,6 @@ const Login = ({
         </FormControl>
       </Container>
       <DialogActions>
-        {!!email && (
-          <ResetButton onClick={reset} color="inherit">
-            {resetTitle}
-          </ResetButton>
-        )}
         <Button color="primary" onClick={fetchLogin}>
           anmelden
         </Button>
@@ -243,4 +213,4 @@ const Login = ({
   )
 }
 
-export default Login
+export default LoginWithEmailAndPassword

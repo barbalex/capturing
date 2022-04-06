@@ -8,6 +8,8 @@ import styled from 'styled-components'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import Link from './Link'
 import Email from './Email'
+import ResetPassword from './ResetPassword'
+import { supabase } from '../../supabaseClient'
 
 const StyledDialog = styled(Dialog)`
   .MuiPaper-root {
@@ -15,7 +17,7 @@ const StyledDialog = styled(Dialog)`
   }
 `
 const TopContainer = styled.div`
-  padding: 0 24px 10px 24px;
+  padding: 0 24px 15px 24px;
 `
 const StyledToggleButton = styled(ToggleButton)`
   text-transform: none;
@@ -24,14 +26,18 @@ const StyledToggleButton = styled(ToggleButton)`
 `
 const ButtonComment = styled.div`
   font-size: x-small;
+  line-height: 13px;
 `
 
 const Login = () => {
-  const [authType, setAuthType] = useState('link') // values: ['link', 'email', 'email_signup']
+  const [authType, setAuthType] = useState('link') // values: ['link', 'email', 'email_signup', 'email_reset']
+  const [email, setEmail] = useState('')
   const [emailErrorText, setEmailErrorText] = useState('')
   const [passwordErrorText, setPasswordErrorText] = useState('')
 
-  const onChangeAuthType = useCallback((event, at) => {
+  const onChangeAuthType = useCallback(async (event, at) => {
+    // returns null when active auth type was clicked
+    if (!at) return
     setAuthType(at)
     setEmailErrorText('')
     setPasswordErrorText('')
@@ -59,22 +65,39 @@ const Login = () => {
               <ButtonComment>Konto wird automatisch erstellt.</ButtonComment>
             </StyledToggleButton>
             <StyledToggleButton value="email_signup">
-              Konto mit Passwort: erstellen
+              Konto mit Email und Passwort erstellen
             </StyledToggleButton>
             <StyledToggleButton value="email">
-              Konto mit Passwort: anmelden
+              Mit Email und Passwort anmelden
+            </StyledToggleButton>
+            <StyledToggleButton value="email_reset">
+              <div>Neues Passwort setzen</div>
+              <ButtonComment>
+                Sie erhalten ein Email mit einem Link,
+              </ButtonComment>
+              <ButtonComment>um ein neues Passwort zu setzen.</ButtonComment>
             </StyledToggleButton>
           </ToggleButtonGroup>
         </TopContainer>
         {authType === 'link' ? (
           <Link
+            email={email}
+            setEmail={setEmail}
+            emailErrorText={emailErrorText}
+            setEmailErrorText={setEmailErrorText}
+          />
+        ) : authType === 'email_reset' ? (
+          <ResetPassword
+            email={email}
+            setEmail={setEmail}
             emailErrorText={emailErrorText}
             setEmailErrorText={setEmailErrorText}
           />
         ) : (
           <Email
             authType={authType}
-            setAuthType={setAuthType}
+            email={email}
+            setEmail={setEmail}
             emailErrorText={emailErrorText}
             setEmailErrorText={setEmailErrorText}
             passwordErrorText={passwordErrorText}
