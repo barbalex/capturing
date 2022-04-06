@@ -22,5 +22,6 @@
     "es2022": true
   },
   "plugins": ["react", "react-hooks", "prettier"],
-  "extends": ["eslint:recommended", "plugin:react/recommended"]
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "settings": { "react": { "version": "detect" } }
 }
