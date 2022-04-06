@@ -19,6 +19,7 @@ import activeNodeArrayFromUrl from './utils/activeNodeArrayFromUrl'
 import NavSyncController from './components/NavSyncController'
 import ResetPassword from './components/ResetPassword'
 import ColumnController from './components/ColumnController'
+import AuthController from './components/AuthController'
 
 function App() {
   const [store, setStore] = useState()
@@ -60,6 +61,7 @@ function App() {
             <NavSyncController />
             <ColumnController />
             <ResetPassword />
+            <AuthController />
             <Layout>
               <Routes>
                 <Route path="/" element={<Home />} />

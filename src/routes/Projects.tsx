@@ -12,19 +12,11 @@ import { field_types } from '../types'
 
 const Projects = () => {
   const store = useContext(StoreContext)
-  const { setSession, session } = store
+  const { session } = store
 
   useEffect(() => {
     document.title = 'Capturing: Projects'
   }, [])
-
-  useEffect(() => {
-    setSession(supabase.auth.session())
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-  }, [setSession])
 
   const [projects, setProjects] = useState([])
   useEffect(() => {
