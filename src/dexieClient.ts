@@ -856,6 +856,13 @@ export interface IStore {
 
 export interface IQueuedUpdate {
   id?: number
+  time: Date
+  table: string
+  value: string // json of value or array of values
+  //operation: string // always upsert?
+  revert_id: string
+  revert_field: string
+  revert_value: string // json of value
 }
 
 export class MySubClassedDexie extends Dexie {
