@@ -1,6 +1,4 @@
 import React, { useState, useCallback, useContext, useRef } from 'react'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
 import DialogActions from '@mui/material/DialogActions'
 import Input from '@mui/material/Input'
 import InputLabel from '@mui/material/InputLabel'
@@ -8,8 +6,6 @@ import InputAdornment from '@mui/material/InputAdornment'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 import IconButton from '@mui/material/IconButton'
-import ToggleButton from '@mui/material/ToggleButton'
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import {
   MdVisibility as VisibilityIcon,
   MdVisibilityOff as VisibilityOffIcon,
@@ -17,17 +13,11 @@ import {
 import Button from '@mui/material/Button'
 import styled from 'styled-components'
 
-import ErrorBoundary from '../shared/ErrorBoundary'
 import StoreContext from '../../storeContext'
 import { db as dexie } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 
-const StyledDialog = styled(Dialog)`
-  .MuiPaper-root {
-    min-width: 302px !important;
-  }
-`
-const StyledDiv = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 24px;
@@ -44,25 +34,20 @@ const ResetButton = styled(Button)`
   margin-right: 20px !important;
 `
 
-const Login = () => {
+const Login = ({
+  emailErrorText,
+  setEmailErrorText,
+  passwordErrorText,
+  setPasswordErrorText,
+}) => {
   const { setSession } = useContext(StoreContext)
 
-  const [authType, setAuthType] = useState('link') // or: 'email'
-  const [signType, setSignType] = useState('signin')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
-  const [emailErrorText, setEmailErrorText] = useState('')
-  const [passwordErrorText, setPasswordErrorText] = useState('')
 
   const emailInput = useRef(null)
   const passwordInput = useRef(null)
-
-  const onChangeAuthType = useCallback((event, at) => {
-    setAuthType(at)
-    setEmailErrorText('')
-    setPasswordErrorText('')
-  }, [])
 
   const fetchLogin = useCallback(
     // callbacks pass email or password
@@ -82,16 +67,11 @@ const Login = () => {
       // see: https://github.com/mobxjs/mobx-state-tree/issues/595#issuecomment-446028034
       // or better? what about mst-persist?
       setTimeout(async () => {
-        console.log('signing in with:', { emailToUse, passwordToUse, authType })
-        const { session, error } =
-          authType === 'login'
-            ? await supabase.auth.signIn({
-                email: emailToUse,
-              })
-            : await supabase.auth.signIn({
-                email: emailToUse,
-                password: passwordToUse,
-              })
+        console.log('signing in with:', { emailToUse, passwordToUse })
+        const { session, error } = await supabase.auth.signIn({
+          email: emailToUse,
+          password: passwordToUse,
+        })
         if (error) {
           // TODO: if message is 'Invalid authentication credentials', signUp
           console.log(error)
@@ -104,22 +84,20 @@ const Login = () => {
         setSession(session)
       })
     },
-    [authType, email, password, setSession],
+    [email, password, setEmailErrorText, setPasswordErrorText, setSession],
   )
   const onBlurEmail = useCallback(
     (e) => {
       setEmailErrorText('')
       const email = e.target.value
-      if (authType === 'link') {
-        return fetchLogin({ email })
-      } else if (!email) {
+      if (!email) {
         setEmailErrorText('Bitte Email-Adresse eingeben')
       } else if (password) {
         fetchLogin({ email })
       }
       setEmail(email)
     },
-    [authType, fetchLogin, password],
+    [fetchLogin, password, setEmailErrorText],
   )
   const onBlurPassword = useCallback(
     (e) => {
@@ -132,11 +110,10 @@ const Login = () => {
         fetchLogin({ password })
       }
     },
-    [fetchLogin, email],
+    [setPasswordErrorText, email, fetchLogin],
   )
   const onKeyPressEmail = useCallback(
     (e) => {
-      // console.log('key pressed in email, key:', e.key)
       e.key === 'Enter' && onBlurEmail(e)
     },
     [onBlurEmail],
@@ -163,42 +140,76 @@ const Login = () => {
     setTimeout(() => {
       setResetTitle('neues Passwort setzen')
     }, 5000)
-  }, [email])
+  }, [email, setEmailErrorText])
 
   return (
-    <FormControl
-      error={!!passwordErrorText}
-      fullWidth
-      aria-describedby="passwortHelper"
-      variant="standard"
-    >
-      <InputLabel htmlFor="passwort">Passwort</InputLabel>
-      <StyledInput
-        id="passwort"
-        className="user-passwort"
-        type={showPass ? 'text' : 'password'}
-        defaultValue={password}
-        onBlur={onBlurPassword}
-        onKeyPress={onKeyPressPassword}
-        autoComplete="current-password"
-        autoCorrect="off"
-        spellCheck="false"
-        inputRef={passwordInput}
-        endAdornment={
-          <InputAdornment position="end">
-            <IconButton
-              onClick={onClickShowPass}
-              onMouseDown={onMouseDownShowPass}
-              title={showPass ? 'verstecken' : 'anzeigen'}
-              size="large"
-            >
-              {showPass ? <VisibilityOffIcon /> : <VisibilityIcon />}
-            </IconButton>
-          </InputAdornment>
-        }
-      />
-      <FormHelperText id="passwortHelper">{passwordErrorText}</FormHelperText>
-    </FormControl>
+    <>
+      <Container>
+        <FormControl
+          error={!!emailErrorText}
+          fullWidth
+          aria-describedby="emailHelper"
+          variant="standard"
+        >
+          <InputLabel htmlFor="email">Email</InputLabel>
+          <StyledInput
+            id="email"
+            className="user-email"
+            defaultValue={email}
+            onBlur={onBlurEmail}
+            //autoFocus
+            onKeyPress={onKeyPressEmail}
+            inputRef={emailInput}
+          />
+          <FormHelperText id="emailHelper">{emailErrorText}</FormHelperText>
+        </FormControl>
+        <FormControl
+          error={!!passwordErrorText}
+          fullWidth
+          aria-describedby="passwortHelper"
+          variant="standard"
+        >
+          <InputLabel htmlFor="passwort">Passwort</InputLabel>
+          <StyledInput
+            id="passwort"
+            className="user-passwort"
+            type={showPass ? 'text' : 'password'}
+            defaultValue={password}
+            onBlur={onBlurPassword}
+            onKeyPress={onKeyPressPassword}
+            autoComplete="current-password"
+            autoCorrect="off"
+            spellCheck="false"
+            inputRef={passwordInput}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={onClickShowPass}
+                  onMouseDown={onMouseDownShowPass}
+                  title={showPass ? 'verstecken' : 'anzeigen'}
+                  size="large"
+                >
+                  {showPass ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+          <FormHelperText id="passwortHelper">
+            {passwordErrorText}
+          </FormHelperText>
+        </FormControl>
+      </Container>
+      <DialogActions>
+        {!!email && (
+          <ResetButton onClick={reset} color="inherit">
+            {resetTitle}
+          </ResetButton>
+        )}
+        <Button color="primary" onClick={fetchLogin}>
+          anmelden
+        </Button>
+      </DialogActions>
+    </>
   )
 }
 
