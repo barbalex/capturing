@@ -41,7 +41,7 @@ const NavButton = styled(Button)`
   }
 `
 
-const HeaderHome = () => {
+const HeaderAnonymus = () => {
   const { pathname } = useLocation()
   const { width, ref: resizeRef } = useResizeDetector()
   const mobile = width && width < constants?.tree?.minimalWindowWidth
@@ -94,18 +94,10 @@ const HeaderHome = () => {
           >
             Docs
           </NavButton>
-          <NavButton
-            variant="outlined"
-            component={Link}
-            to="/account"
-            disabled={pathname === '/account'}
-          >
-            Account
-          </NavButton>
         </Toolbar>
       </AppBar>
     </ErrorBoundary>
   )
 }
 
-export default HeaderHome
+export default HeaderAnonymus

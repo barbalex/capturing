@@ -6,7 +6,9 @@ import { useLocation } from 'react-router-dom'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import Home from './Home'
+import Anonymus from './Anonymus'
+import Authenticated from './Authenticated'
+import { supabase } from '../../supabaseClient'
 
 // TODO: add more header bars for projects and docs
 
@@ -25,13 +27,12 @@ const Header = () => {
   const { pathname } = useLocation()
   const isHome = pathname === '/'
   const isProjects = pathname.startsWith('/projects')
+  const session = supabase.auth.session()
 
   return (
     <ErrorBoundary>
       <StyledAppBar position="static">
-        <Toolbar>
-          {isHome ? <Home /> : isProjects ? <Home /> : <Home />}
-        </Toolbar>
+        <Toolbar>{session ? <Authenticated /> : <Anonymus />}</Toolbar>
       </StyledAppBar>
     </ErrorBoundary>
   )
