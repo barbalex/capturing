@@ -21,6 +21,7 @@ import ResetPassword from './components/ResetPassword'
 import ColumnController from './components/ColumnController'
 import AuthController from './components/AuthController'
 import QueuedUpdatesWriter from './components/QueuedUpdatesWriter'
+import ServerSubscriber from './components/ServerSubscriber'
 
 function App() {
   const [store, setStore] = useState()
@@ -64,6 +65,7 @@ function App() {
             <ResetPassword />
             <AuthController />
             <QueuedUpdatesWriter />
+            <ServerSubscriber />
             <Layout>
               <Routes>
                 <Route path="/" element={<Home />} />
