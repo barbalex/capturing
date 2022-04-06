@@ -854,6 +854,10 @@ export interface IStore {
   single_column_view: boolean
 }
 
+export interface IQueuedUpdate {
+  id?: number
+}
+
 export class MySubClassedDexie extends Dexie {
   accounts!: DexieTable<Account, string>
   field_types!: DexieTable<FieldType, string>
@@ -878,6 +882,7 @@ export class MySubClassedDexie extends Dexie {
   widget_types!: DexieTable<IWidgetType, string>
   widgets_for_fields!: DexieTable<WidgetForField, string>
   stores!: DexieTable<IStore, string>
+  queued_updates!: DexieTable<IQueuedUpdate, number>
 
   constructor() {
     super('capturing')
@@ -908,6 +913,7 @@ export class MySubClassedDexie extends Dexie {
       widget_types: 'id, &value, sort, server_rev_at',
       widgets_for_fields: 'id, [field_value+widget_value], server_rev_at',
       stores: 'id',
+      queued_updates: '++id',
     })
     this.accounts.mapToClass(Account)
     this.field_types.mapToClass(FieldType)
