@@ -10,6 +10,7 @@ import { Link, useLocation } from 'react-router-dom'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import constants from '../../../utils/constants'
+import Account from './Account'
 
 const SiteTitle = styled(Button)`
   display: none;
@@ -94,14 +95,7 @@ const HeaderAuthenticated = () => {
           >
             Docs
           </NavButton>
-          <NavButton
-            variant="outlined"
-            component={Link}
-            to="/account"
-            disabled={pathname === '/account'}
-          >
-            Account
-          </NavButton>
+          <Account />
         </Toolbar>
       </AppBar>
     </ErrorBoundary>

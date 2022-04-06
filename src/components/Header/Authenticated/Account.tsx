@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react'
+import React, { useState, useCallback, useContext, useMemo } from 'react'
 import IconButton from '@mui/material/IconButton'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
@@ -31,7 +31,9 @@ const RiskyButton = styled(Button)`
 
 const Account = () => {
   const store = useContext(StoreContext)
-  const { user, online, queuedQueries } = store
+  const user = supabase.auth.user()
+  const queuedQueries = 'TODO:'
+  const online = 'TODO:'
 
   const [anchorEl, setAnchorEl] = useState(null)
   const [resetTitle, setResetTitle] = useState('Passwort zurücksetzen')
@@ -45,7 +47,6 @@ const Account = () => {
     useState(false)
   const onClickLogout = useCallback(async () => {
     setAnchorEl(null)
-    // TODO:
     // if exist pending operations
     // ask user if willing to loose them
     if (queuedQueries.size) {
@@ -54,7 +55,7 @@ const Account = () => {
     logout({ store })
   }, [queuedQueries.size, store])
 
-  const { email } = user || {}
+  const email = useMemo(() => user?.email ?? {}, [user?.email])
 
   const onClickResetPassword = useCallback(async () => {
     setResetTitle('...')
@@ -138,7 +139,6 @@ const Account = () => {
             <RiskyButton
               onClick={() => {
                 setPendingOperationsDialogOpen(false)
-                // TODO: logout
                 logout({ store })
               }}
               variant="outlined"

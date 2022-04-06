@@ -81,7 +81,14 @@ const Login = ({
         setSession(session)
       })
     },
-    [email, password, setEmailErrorText, setPasswordErrorText, setSession],
+    [
+      email,
+      password,
+      setEmailErrorText,
+      setPasswordErrorText,
+      setSession,
+      store,
+    ],
   )
   const onBlurEmail = useCallback(
     (e) => {
