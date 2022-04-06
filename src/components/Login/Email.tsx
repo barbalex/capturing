@@ -40,6 +40,8 @@ const Login = ({
   setEmailErrorText,
   passwordErrorText,
   setPasswordErrorText,
+  authType,
+  setAuthType,
 }) => {
   const store = useContext(storeContext)
   const { setSession } = store
@@ -65,13 +67,36 @@ const Login = ({
       await logout({ store })
       setTimeout(async () => {
         console.log('signing in with:', { emailToUse, passwordToUse })
-        const { session, error } = await supabase.auth.signIn({
-          email: emailToUse,
-          password: passwordToUse,
-        })
+        // using signUp after link: error.message = 'User already registered'
+        // using signIn after link / without signUp: error.message = 'Invalid login credentials'
+        // using link after signUp: works
+
+        const { session, error } =
+          authType === 'email_signup'
+            ? await supabase.auth.signUp({
+                email: emailToUse,
+                password: passwordToUse,
+              })
+            : await supabase.auth.signIn({
+                email: emailToUse,
+                password: passwordToUse,
+              })
         if (error) {
           // TODO: if message is 'Invalid authentication credentials', signUp
           console.log(error)
+          if (
+            error.message === 'User already registered' &&
+            authType === 'email_signup'
+          ) {
+            console.log('should signIn')
+            return await supabase.auth.signIn({
+              email: emailToUse,
+              password: passwordToUse,
+            })
+          }
+          if (error.message === 'Invalid login credentials') {
+            // TODO: propose to change/set password
+          }
           setEmailErrorText(error.message)
           return setPasswordErrorText(error.message)
         }
@@ -82,6 +107,7 @@ const Login = ({
       })
     },
     [
+      authType,
       email,
       password,
       setEmailErrorText,

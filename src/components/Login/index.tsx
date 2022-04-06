@@ -17,9 +17,17 @@ const StyledDialog = styled(Dialog)`
 const TopContainer = styled.div`
   padding: 0 24px 10px 24px;
 `
+const StyledToggleButton = styled(ToggleButton)`
+  text-transform: none;
+  display: flex;
+  flex-direction: column;
+`
+const ButtonComment = styled.div`
+  font-size: x-small;
+`
 
 const Login = () => {
-  const [authType, setAuthType] = useState('link') // or: 'email'
+  const [authType, setAuthType] = useState('link') // values: ['link', 'email', 'email_signup']
   const [emailErrorText, setEmailErrorText] = useState('')
   const [passwordErrorText, setPasswordErrorText] = useState('')
 
@@ -40,9 +48,22 @@ const Login = () => {
             exclusive
             onChange={onChangeAuthType}
             size="small"
+            orientation="vertical"
+            fullWidth
           >
-            <ToggleButton value="link">Email mit Link</ToggleButton>
-            <ToggleButton value="password">Mit Passwort</ToggleButton>
+            <StyledToggleButton value="link">
+              <div>Email mit Link </div>
+              <ButtonComment>
+                Sie erhalten ein Email mit einem Anmelde-Link.
+              </ButtonComment>
+              <ButtonComment>Konto wird automatisch erstellt.</ButtonComment>
+            </StyledToggleButton>
+            <StyledToggleButton value="email_signup">
+              Konto mit Passwort: erstellen
+            </StyledToggleButton>
+            <StyledToggleButton value="email">
+              Konto mit Passwort: anmelden
+            </StyledToggleButton>
           </ToggleButtonGroup>
         </TopContainer>
         {authType === 'link' ? (
@@ -52,6 +73,8 @@ const Login = () => {
           />
         ) : (
           <Email
+            authType={authType}
+            setAuthType={setAuthType}
             emailErrorText={emailErrorText}
             setEmailErrorText={setEmailErrorText}
             passwordErrorText={passwordErrorText}
