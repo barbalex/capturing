@@ -28,11 +28,6 @@ const Projects = () => {
     }
     run()
   }, [])
-  console.log('Projects', {
-    session,
-    userId: session?.user?.id,
-    field_types: projects,
-  })
 
   return (
     <div className="container" style={{ padding: '50px 0 100px 0' }}>
