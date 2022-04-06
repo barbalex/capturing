@@ -16,11 +16,11 @@ import Layout from './components/Layout'
 import Notifications from './components/Notifications'
 import { db as dexie } from './dexieClient'
 import activeNodeArrayFromUrl from './utils/activeNodeArrayFromUrl'
-import NavSyncController from './components/NavSyncController'
+import NavigationSyncController from './components/NavigationSyncController'
 import ResetPassword from './components/ResetPassword'
 import ColumnController from './components/ColumnController'
 import AuthController from './components/AuthController'
-import SyncController from './components/SyncController'
+import QueuedUpdatesWriter from './components/QueuedUpdatesWriter'
 
 function App() {
   const [store, setStore] = useState()
@@ -59,11 +59,11 @@ function App() {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={materialTheme}>
           <MobxProvider value={store}>
-            <NavSyncController />
+            <NavigationSyncController />
             <ColumnController />
             <ResetPassword />
             <AuthController />
-            <SyncController />
+            <QueuedUpdatesWriter />
             <Layout>
               <Routes>
                 <Route path="/" element={<Home />} />

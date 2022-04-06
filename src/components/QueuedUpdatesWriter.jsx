@@ -2,7 +2,7 @@ import { supabase } from '../supabaseClient'
 import { db as dexie } from '../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
 
-const SyncController = () => {
+const QueuedUpdatesWriter = () => {
   // 1. TODO: Only progress if online
   // 2. get first (= oldest) queued update
   const queuedUpdates = useLiveQuery(async () => {
@@ -11,4 +11,4 @@ const SyncController = () => {
   console.log('SyncController, queuedUpdates:', queuedUpdates)
 }
 
-export default SyncController
+export default QueuedUpdatesWriter
