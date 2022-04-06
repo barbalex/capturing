@@ -20,7 +20,6 @@ import { useSearchParams } from 'react-router-dom'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
 import storeContext from '../../storeContext'
-import { db as dexie } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import logout from '../../utils/logout'
 
@@ -100,7 +99,7 @@ const ResetPassword = () => {
       })
       searchParams.delete('type')
     },
-    [email, password, searchParams, setSearchParams, setSession],
+    [email, password, searchParams, setSearchParams, setSession, store],
   )
   const onBlurEmail = useCallback(
     (e) => {

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext, useEffect } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import IconButton from '@mui/material/IconButton'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
@@ -11,14 +11,11 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { FaUserCircle as UserIcon, FaExclamationCircle } from 'react-icons/fa'
 import styled from 'styled-components'
 import { observer } from 'mobx-react-lite'
-import { of as $of } from 'rxjs'
-import { Q } from '@nozbe/watermelondb'
-import { sendPasswordResetEmail } from 'firebase/auth'
 
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import logout from '../../../utils/logout'
-import constants from '../../../utils/constants'
+import { supabase } from '../../../supabaseClient'
 
 const StyledUserIcon = styled(UserIcon)`
   color: white;
@@ -34,7 +31,7 @@ const RiskyButton = styled(Button)`
 
 const Account = () => {
   const store = useContext(StoreContext)
-  const { user, online, queuedQueries, firebaseAuth } = store
+  const { user, online, queuedQueries } = store
 
   const [anchorEl, setAnchorEl] = useState(null)
   const [resetTitle, setResetTitle] = useState('Passwort zurücksetzen')
@@ -61,24 +58,21 @@ const Account = () => {
 
   const onClickResetPassword = useCallback(async () => {
     setResetTitle('...')
-    try {
-      await sendPasswordResetEmail(firebaseAuth, email, {
-        url: `${constants?.getAppUri()}/Vermehrung`,
-        handleCodeInApp: true,
-      })
-    } catch (error) {
+    const { error } = await supabase.auth.api.resetPasswordForEmail(email)
+    if (error) {
       setResetTitle('Fehler: Passwort nicht zurückgesetzt')
       setTimeout(() => {
         setResetTitle('Passwort zurücksetzen')
         setAnchorEl(null)
       }, 5000)
     }
+
     setResetTitle('Email ist unterwegs!')
     setTimeout(() => {
       setResetTitle('Passwort zurücksetzen')
       setAnchorEl(null)
     }, 5000)
-  }, [email, firebaseAuth])
+  }, [email])
 
   if (!online) return null
 
