@@ -105,6 +105,7 @@ SECURITY DEFINER;
 -- Function is owned by postgres which bypasses RLS
 --
 --
+--
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_account_owner_by_project_user (_auth_user_id uuid, _project_id uuid)
   RETURNS bool
