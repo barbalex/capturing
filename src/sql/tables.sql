@@ -419,10 +419,10 @@ CREATE POLICY "project owners and same user can view project_users" ON project_u
       SELECT
         users.auth_user_id FROM users
         WHERE
-          users.account_id = (
+          users.account_id IS NOT NULL AND users.account_id = (
             SELECT
-              projects.account_id
-            FROM projects
+              p.account_id
+            FROM projects p
             WHERE
               id = project_users.project_id)
             UNION
@@ -431,6 +431,7 @@ CREATE POLICY "project owners and same user can view project_users" ON project_u
                 users.auth_user_id
               FROM users
               WHERE
+                -- project_users.user_email is not null
                 email = project_users.user_email));
 
 DROP POLICY IF EXISTS "project owners can insert project_users" ON project_users;
@@ -443,7 +444,7 @@ CREATE POLICY "project owners can insert project_users" ON project_users
       FROM
         users
       WHERE
-        users.account_id = (
+        users.account_id IS NOT NULL AND users.account_id = (
           SELECT
             projects.account_id
           FROM
@@ -461,7 +462,7 @@ CREATE POLICY "project owners can update project_users" ON project_users
       FROM
         users
       WHERE
-        users.account_id = (
+        users.account_id IS NOT NULL AND users.account_id = (
           SELECT
             projects.account_id
           FROM
@@ -479,7 +480,7 @@ CREATE POLICY "project owners can delete project_users" ON project_users
       FROM
         users
       WHERE
-        users.account_id = (
+        users.account_id IS NOT NULL AND users.account_id = (
           SELECT
             projects.account_id
           FROM
@@ -500,15 +501,10 @@ CREATE POLICY "Users can view assigned projects and projects of own accounts" ON
     -- users assigned to this project
       SELECT
         users.auth_user_id FROM users
+        -- project_users.user_email is not null
         INNER JOIN project_users ON users.email = project_users.user_email
         WHERE
-          project_users.project_id = projects.id
-        UNION
-        -- user owning the project's account
-          SELECT
-            users.auth_user_id FROM users
-            WHERE
-              users.account_id IS NOT NULL AND users.account_id = projects.account_id));
+          project_users.project_id = projects.id) or is_account_owner(auth.uid (), account_id));
 
 DROP POLICY IF EXISTS "account owners can insert projects for own account" ON projects;
 
@@ -518,7 +514,8 @@ CREATE POLICY "account owners can insert projects for own account" ON projects
     -- user owning the project's account
     SELECT users.auth_user_id FROM users
     WHERE
-      users.account_id IS NOT NULL AND users.account_id = projects.account_id));
+      -- projects.account_id is not null
+      users.account_id = projects.account_id));
 
 DROP POLICY IF EXISTS "Users can update projects assigned and of own accounts" ON projects;
 
@@ -527,6 +524,7 @@ CREATE POLICY "Users can update projects assigned and of own accounts" ON projec
     WITH CHECK (auth.uid () IN (
     -- users assigned to this project as manager or editor
     SELECT users.auth_user_id FROM users
+    -- project_users.user_email is not null
     INNER JOIN project_users ON users.email = project_users.user_email
     WHERE
       project_users.project_id = projects.id AND project_users.role IN ('project_manager', 'project_editor')
@@ -535,7 +533,8 @@ CREATE POLICY "Users can update projects assigned and of own accounts" ON projec
       SELECT
         users.auth_user_id FROM users
         WHERE
-          users.account_id IS NOT NULL AND users.account_id = projects.account_id));
+          -- projects.account_id is not null
+          users.account_id = projects.account_id));
 
 DROP POLICY IF EXISTS "account owners can delete own projects" ON projects;
 
@@ -545,7 +544,8 @@ CREATE POLICY "account owners can delete own projects" ON projects
     -- user owning the project's account
     SELECT users.auth_user_id FROM users
     WHERE
-      users.account_id IS NOT NULL AND users.account_id = projects.account_id));
+      -- projects.account_id is not null
+      users.account_id = projects.account_id));
 
 --
 CREATE TABLE option_types (
@@ -675,6 +675,7 @@ CREATE POLICY "project readers, editors and managers can view tables" ON tables
       FROM
         projects
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         projects.id = tables.project_id AND project_users.role IN ('project_manager', 'project_editor', 'project_reader')));
@@ -689,6 +690,7 @@ CREATE POLICY "project managers can insert tables" ON tables
       FROM
         projects
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         projects.id = tables.project_id AND project_users.role = 'project_manager'));
@@ -703,6 +705,7 @@ CREATE POLICY "project managers can update tables" ON tables
       FROM
         projects
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         projects.id = tables.project_id AND project_users.role = 'project_manager'));
@@ -717,6 +720,7 @@ CREATE POLICY "project managers can delete tables" ON tables
       FROM
         projects
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         projects.id = tables.project_id AND project_users.role = 'project_manager'));
@@ -936,6 +940,7 @@ CREATE POLICY "project readers, editors and managers can view fields" ON fields
         tables
         INNER JOIN projects ON projects.id = tables.project_id
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         tables.id = fields.table_id AND project_users.role IN ('project_manager', 'project_editor', 'project_reader')));
@@ -951,6 +956,7 @@ CREATE POLICY "project managers can insert fields" ON fields
         tables
         INNER JOIN projects ON projects.id = tables.project_id
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         tables.id = fields.table_id AND project_users.role = 'project_manager'));
@@ -966,6 +972,7 @@ CREATE POLICY "project managers can update fields" ON fields
         tables
         INNER JOIN projects ON projects.id = tables.project_id
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         tables.id = fields.table_id AND project_users.role = 'project_manager'));
@@ -981,6 +988,7 @@ CREATE POLICY "project managers can delete fields" ON fields
         tables
         INNER JOIN projects ON projects.id = tables.project_id
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         tables.id = fields.table_id AND project_users.role = 'project_manager'));
@@ -1065,6 +1073,7 @@ CREATE POLICY "project readers, editors and managers can view rows" ON ROWS
         tables
         INNER JOIN projects ON projects.id = tables.project_id
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         tables.id = rows.table_id AND project_users.role IN ('project_manager', 'project_editor', 'project_reader')));
@@ -1080,6 +1089,7 @@ CREATE POLICY "project managers and editors can insert rows" ON ROWS
         tables
         INNER JOIN projects ON projects.id = tables.project_id
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         tables.id = rows.table_id AND project_users.role IN ('project_manager', 'project_editor')));
@@ -1095,6 +1105,7 @@ CREATE POLICY "project managers and editors can update rows" ON ROWS
         tables
         INNER JOIN projects ON projects.id = tables.project_id
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         tables.id = rows.table_id AND project_users.role IN ('project_manager', 'project_editor')));
@@ -1110,6 +1121,7 @@ CREATE POLICY "project managers and editors can delete rows" ON ROWS
         tables
         INNER JOIN projects ON projects.id = tables.project_id
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         tables.id = rows.table_id AND project_users.role IN ('project_manager', 'project_editor')));
@@ -1277,6 +1289,7 @@ CREATE POLICY "project readers, editors and managers can view files" ON files
         INNER JOIN tables ON rows.table_id = tables.id
         INNER JOIN projects ON projects.id = tables.project_id
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         rows.id = files.row_id AND project_users.role IN ('project_manager', 'project_editor', 'project_reader')));
@@ -1293,6 +1306,7 @@ CREATE POLICY "project managers and editors can insert files" ON files
         INNER JOIN tables ON rows.table_id = tables.id
         INNER JOIN projects ON projects.id = tables.project_id
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         rows.id = files.row_id AND project_users.role IN ('project_manager', 'project_editor')));
@@ -1309,6 +1323,7 @@ CREATE POLICY "project managers and editors can update files" ON files
         INNER JOIN tables ON rows.table_id = tables.id
         INNER JOIN projects ON projects.id = tables.project_id
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         rows.id = files.row_id AND project_users.role IN ('project_manager', 'project_editor')));
@@ -1325,6 +1340,7 @@ CREATE POLICY "project managers and editors can delete files" ON files
         INNER JOIN tables ON rows.table_id = tables.id
         INNER JOIN projects ON projects.id = tables.project_id
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         rows.id = files.row_id AND project_users.role IN ('project_manager', 'project_editor')));
@@ -1612,6 +1628,7 @@ CREATE POLICY "project_managers can insert tile_layers" ON tile_layers
         users.auth_user_id
       FROM
         users
+        -- project_users.user_email is not null
         INNER JOIN project_users ON users.email = project_users.user_email
       WHERE
         project_users.role = 'project_manager'));
@@ -1625,6 +1642,7 @@ CREATE POLICY "project_managers can update tile_layers" ON tile_layers
         users.auth_user_id
       FROM
         users
+        -- project_users.user_email is not null
         INNER JOIN project_users ON users.email = project_users.user_email
       WHERE
         project_users.role = 'project_manager'));
@@ -1639,6 +1657,7 @@ CREATE POLICY "project_managers can delete tile_layers" ON tile_layers
         users.auth_user_id
       FROM
         users
+        -- project_users.user_email is not null
         INNER JOIN project_users ON users.email = project_users.user_email
       WHERE
         project_users.role = 'project_manager'));
@@ -1695,6 +1714,7 @@ CREATE POLICY "project readers, editors and managers can view project_tile_layer
       FROM
         projects
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         projects.id = project_tile_layers.project_id AND project_users.role IN ('project_manager', 'project_editor', 'project_reader')));
@@ -1709,6 +1729,7 @@ CREATE POLICY "project managers can insert project_tile_layers" ON project_tile_
       FROM
         projects
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         projects.id = project_tile_layers.project_id AND project_users.role = 'project_manager'));
@@ -1723,6 +1744,7 @@ CREATE POLICY "project managers can update project_tile_layers" ON project_tile_
       FROM
         projects
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         projects.id = project_tile_layers.project_id AND project_users.role = 'project_manager'));
@@ -1737,6 +1759,7 @@ CREATE POLICY "project managers can delete project_tile_layers" ON project_tile_
       FROM
         projects
         INNER JOIN project_users ON projects.id = project_users.project_id
+        -- project_users.user_email is not null
         INNER JOIN users ON users.email = project_users.user_email
       WHERE
         projects.id = project_tile_layers.project_id AND project_users.role = 'project_manager'));
