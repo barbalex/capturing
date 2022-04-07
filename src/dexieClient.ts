@@ -873,9 +873,6 @@ export class MySubClassedDexie extends Dexie {
   news!: DexieTable<New, string>
   news_delivery!: DexieTable<NewsDelivery, string>
   option_types!: DexieTable<OptionType, string>
-  project_editors!: DexieTable<IProjectEditor, string>
-  project_managers!: DexieTable<IProjectManager, string>
-  project_readers!: DexieTable<IProjectReader, string>
   project_tile_layers!: DexieTable<ProjectTileLayer, string>
   project_users!: DexieTable<ProjectUser, string>
   projects!: DexieTable<Project, string>
@@ -902,9 +899,6 @@ export class MySubClassedDexie extends Dexie {
       news: 'id, time, server_rev_at',
       news_delivery: 'id, server_rev_at',
       option_types: 'id, &value, sort, server_rev_at',
-      project_editors: 'id, user_email, server_rev_at',
-      project_managers: 'id, user_email, server_rev_at',
-      project_readers: 'id, user_email, server_rev_at',
       project_tile_layers: 'id, label, sort, active, server_rev_at',
       project_users: 'id, user_email, server_rev_at',
       projects: 'id, label, server_rev_at',
