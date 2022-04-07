@@ -31,6 +31,7 @@ function App() {
     dexie.stores.get('store').then((dbStore) => {
       const st = MobxStore.create(dbStore)
       setStore(st)
+      fetchFromServer(st)
       // navigate to previous activeNodeArray - if exists
       const shouldNavigate =
         dbStore?.activeNodeArray?.length &&
@@ -50,11 +51,10 @@ function App() {
       })
     })
 
-    fetchFromServer()
-
     return () => {
       supabase.removeAllSubscriptions()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   // console.log('App rendering, store:', store)
 
