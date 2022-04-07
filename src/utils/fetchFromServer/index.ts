@@ -25,46 +25,39 @@ let hiddenError = false
 
 function visibilityListener() {
   if (document.visibilityState === 'visible' && hiddenError) {
-    console.log('restarting fetch stream due to visibility changes')
+    console.log('restarting fetch stream due to visibility changes', store)
     startStream() //going visible, start stopped stream
   }
 }
 
-const fetchFromServer = () => {
+const fetchFromServer = (store) => {
   document.addEventListener('visibilitychange', visibilityListener)
 
-  startStream()
+  startStream(store)
 }
 
-const startStream = async () => {
+const startStream = async (store) => {
+  console.log('fetchFromServer starting stream')
   hiddenError = false
-  processTable('projects', () => {
-    if (status === 'SUBSCRIPTION_ERROR') {
-      if (document.visibilityState === 'hidden') {
-        // page visible so let realtime reconnect and reload data
-        supabase.removeAllSubscriptions()
-        hiddenError = true
-      }
-    }
-  })
-  processTable('accounts')
-  processTable('field_types')
-  processTable('fields')
-  processTable('files')
-  processTable('news')
-  processTable('news_delivery')
-  processTable('option_types')
-  processTable('project_tile_layers')
-  processTable('project_users')
-  processTable('rel_types')
-  processTable('role_types')
-  processTable('rows')
-  processTable('tables')
-  processTable('tile_layers')
-  processTable('users')
-  processTable('version_types')
-  processTable('widget_types')
-  processTable('widgets_for_fields')
+  processTable({ table: 'projects', store, hiddenError })
+  processTable({ table: 'accounts', store, hiddenError })
+  processTable({ table: 'field_types', store, hiddenError })
+  processTable({ table: 'fields', store, hiddenError })
+  processTable({ table: 'files', store, hiddenError })
+  processTable({ table: 'news', store, hiddenError })
+  processTable({ table: 'news_delivery', store, hiddenError })
+  processTable({ table: 'option_types', store, hiddenError })
+  processTable({ table: 'project_tile_layers', store, hiddenError })
+  processTable({ table: 'project_users', store, hiddenError })
+  processTable({ table: 'rel_types', store, hiddenError })
+  processTable({ table: 'role_types', store, hiddenError })
+  processTable({ table: 'rows', store, hiddenError })
+  processTable({ table: 'tables', store, hiddenError })
+  processTable({ table: 'tile_layers', store, hiddenError })
+  processTable({ table: 'users', store, hiddenError })
+  processTable({ table: 'version_types', store, hiddenError })
+  processTable({ table: 'widget_types', store, hiddenError })
+  processTable({ table: 'widgets_for_fields', store, hiddenError })
 }
 
 export default fetchFromServer

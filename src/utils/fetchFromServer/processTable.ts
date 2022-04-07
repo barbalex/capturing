@@ -3,7 +3,7 @@ import { db as dexie, IProject } from '../../dexieClient'
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 
-const processTable = async (tableName, subscriptionErrorCallback) => {
+const processTable = async ({ table: tableName, store, hiddenError }) => {
   // dexie does not accept 'tables' as a table name > named it ttables
   const tableNameForDexie = tableName === 'tables' ? 'ttables' : tableName
   // 1. projects
@@ -13,7 +13,7 @@ const processTable = async (tableName, subscriptionErrorCallback) => {
     .orderBy('server_rev_at')
     .reverse()
     .first()
-  console.log(`ServerSubscriber, last ${tableName} in dexie:`, last)
+  // console.log(`ServerSubscriber, last ${tableName} in dexie:`, last)
   const lastUpdatedAt = last?.server_rev_at ?? fallbackRevAt
   // 1.2. subscribe for changes and update dexie with changes from subscription
   supabase
@@ -23,12 +23,17 @@ const processTable = async (tableName, subscriptionErrorCallback) => {
       dexie.table(tableNameForDexie).put(payload.new)
     })
     .subscribe((status) => {
-      console.log(`${tableName} subscription, status:`, status)
-      if (subscriptionErrorCallback && status === 'SUBSCRIPTION_ERROR') {
-        if (document.visibilityState === 'hidden') {
-          // page visible so let realtime reconnect and reload data
-          supabase.removeAllSubscriptions()
-          hiddenError = true
+      if (tableName === 'projects') {
+        // console.log(`processTable, subscribe callback, status:`, status)
+        if (store.subscriptionState !== status) {
+          store.setSubscriptionState(status)
+        }
+        if (status === 'SUBSCRIPTION_ERROR') {
+          if (document.visibilityState === 'hidden') {
+            // page visible so let realtime reconnect and reload data
+            supabase.removeAllSubscriptions()
+            hiddenError = true
+          }
         }
       }
     })
