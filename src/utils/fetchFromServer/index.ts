@@ -21,7 +21,6 @@ import processTable from './processTable'
  * 2. can lead to problems on version upgrades: https://github.com/dexie/Dexie.js/issues/789#issuecomment-1080767512
  */
 
-const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 let hiddenError = false
 
 function visibilityListener() {
@@ -39,68 +38,33 @@ const fetchFromServer = () => {
 
 const startStream = async () => {
   hiddenError = false
-  processTable({
-    tableName: 'projects',
-    subscriptionErrorCallback: () => {
-      if (status === 'SUBSCRIPTION_ERROR') {
-        if (document.visibilityState === 'hidden') {
-          // page visible so let realtime reconnect and reload data
-          supabase.removeAllSubscriptions()
-          hiddenError = true
-        }
+  processTable('projects', () => {
+    if (status === 'SUBSCRIPTION_ERROR') {
+      if (document.visibilityState === 'hidden') {
+        // page visible so let realtime reconnect and reload data
+        supabase.removeAllSubscriptions()
+        hiddenError = true
       }
-    },
+    }
   })
-  // // 1. projects
-  // // 1.1. get last_updated_at from dexie
-  // const lastProject = await db.projects
-  //   .orderBy('server_rev_at')
-  //   .reverse()
-  //   .first()
-  // console.log('ServerSubscriber, last project in dexie:', lastProject)
-  // const projectsLastUpdatedAt = lastProject?.server_rev_at ?? fallbackRevAt
-  // // 1.2. subscribe for changes and update dexie with changes from subscription
-  // supabase
-  //   .from('projects')
-  //   .on('*', (payload) => {
-  //     console.log('projectsSubscription', payload)
-  //     dexie.projects.put(payload.new)
-  //   })
-  //   .subscribe((status) => {
-  //     console.log('projectsSubscription, status:', status)
-  //     if (status === 'SUBSCRIPTION_ERROR') {
-  //       if (document.visibilityState === 'hidden') {
-  //         // page visible so let realtime reconnect and reload data
-  //         supabase.removeAllSubscriptions()
-  //         hiddenError = true
-  //       }
-  //     }
-  //   })
-  // // 1.3. fetch all with newer last_updated_at
-  // const { data: projectsData, error: projectsError } = await supabase
-  //   .from<IProject>('projects')
-  //   .select('*')
-  //   .gte('server_rev_at', projectsLastUpdatedAt)
-  // if (projectsError) {
-  //   console.log(
-  //     'ServerSubscriber, error fetching projects from supabase:',
-  //     projectsError,
-  //   )
-  // }
-  // console.log(
-  //   'ServerSubscriber, last projects fetched from supabase:',
-  //   projectsData,
-  // )
-  // // 1.4. update dexie with these changes
-  // if (projectsData) {
-  //   // TODO:
-  //   // use https://dexie.org/docs/Table/Table.bulkPut()
-  //   try {
-  //     await dexie.projects.bulkPut(projectsData)
-  //   } catch (error) {
-  //     console.log('error putting projects:', error)
-  //   }
-  // }
+  processTable('accounts')
+  processTable('field_types')
+  processTable('fields')
+  processTable('files')
+  processTable('news')
+  processTable('news_delivery')
+  processTable('option_types')
+  processTable('project_tile_layers')
+  processTable('project_users')
+  processTable('rel_types')
+  processTable('role_types')
+  processTable('rows')
+  processTable('tables')
+  processTable('tile_layers')
+  processTable('users')
+  processTable('version_types')
+  processTable('widget_types')
+  processTable('widgets_for_fields')
 }
 
 export default fetchFromServer

@@ -1,11 +1,15 @@
 import { supabase } from '../../supabaseClient'
 import { db as dexie, IProject } from '../../dexieClient'
 
-const processTable = async ({ subscriptionErrorCallback, tableName }) => {
+const fallbackRevAt = '1970-01-01T00:01:0.0Z'
+
+const processTable = async (tableName, subscriptionErrorCallback) => {
+  // dexie does not accept 'tables' as a table name > named it ttables
+  const tableNameForDexie = tableName === 'tables' ? 'ttables' : tableName
   // 1. projects
   // 1.1. get last_updated_at from dexie
   const last = await dexie
-    .table(tableName)
+    .table(tableNameForDexie)
     .orderBy('server_rev_at')
     .reverse()
     .first()
@@ -16,7 +20,7 @@ const processTable = async ({ subscriptionErrorCallback, tableName }) => {
     .from(tableName)
     .on('*', (payload) => {
       console.log(`${tableName} subscription, payload:`, payload)
-      dexie.table(tableName).put(payload.new)
+      dexie.table(tableNameForDexie).put(payload.new)
     })
     .subscribe((status) => {
       console.log(`${tableName} subscription, status:`, status)
@@ -46,7 +50,7 @@ const processTable = async ({ subscriptionErrorCallback, tableName }) => {
   // 1.4. update dexie with these changes
   if (data) {
     try {
-      await dexie.table(tableName).bulkPut(data)
+      await dexie.table(tableNameForDexie).bulkPut(data)
     } catch (error) {
       console.log(`error putting ${tableName}:`, error)
     }
