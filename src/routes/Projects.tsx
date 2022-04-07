@@ -14,6 +14,8 @@ const Projects = () => {
   const store = useContext(StoreContext)
   const { session } = store
 
+  console.log('Projects, subscriptionState:', store.subscriptionState)
+
   useEffect(() => {
     document.title = 'Capturing: Projects'
   }, [])
