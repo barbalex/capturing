@@ -18,6 +18,7 @@ const myTypes = types
     ),
     notifications: types.map(NotificationType),
     singleColumnView: types.optional(types.boolean, false),
+    subscriptionState: types.optional(types.string, 'INITIAL'),
   })
   .volatile(() => ({ session: undefined, navigate: undefined }))
   .actions((self) => {
@@ -29,6 +30,9 @@ const myTypes = types
     // )
 
     return {
+      setSubscriptionState(val) {
+        self.subscriptionState = val
+      },
       setNavigate(val) {
         return (self.navigate = val)
       },
