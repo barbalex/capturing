@@ -12,13 +12,14 @@ import { db, db as dexie, IProject } from '../dexieClient'
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 let hiddenError = false
 
-const fetchFromServer = () => {
-  function visibilityListener() {
-    if (document.visibilityState === 'visible' && hiddenError) {
-      startStream() //going visible, start stopped stream
-    }
+function visibilityListener() {
+  if (document.visibilityState === 'visible' && hiddenError) {
+    console.log('restarting fetch stream due to visibility changes')
+    startStream() //going visible, start stopped stream
   }
+}
 
+const fetchFromServer = () => {
   document.addEventListener('visibilitychange', visibilityListener)
 
   startStream()
