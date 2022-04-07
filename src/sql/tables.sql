@@ -83,6 +83,93 @@ ALTER publication supabase_realtime
   ADD TABLE users;
 
 --
+-- Parameters need to be prefixed because the name clashes with column names
+CREATE FUNCTION is_account_owner (_auth_user_id uuid, _account_id uuid)
+  RETURNS bool
+  AS $$
+  SELECT
+    EXISTS (
+      SELECT
+        1
+      FROM
+        users
+      WHERE
+        users.account_id = _account_id
+        AND users.auth_user_id = _auth_user_id);
+
+$$
+LANGUAGE sql
+SECURITY DEFINER;
+
+-- Function is owned by postgres which bypasses RLS
+--
+-- is_project_user is in tables to guarantee correct series of events when creating policies
+-- Parameters need to be prefixed because the name clashes with column names
+CREATE FUNCTION is_project_user (_auth_user_id uuid, _project_id uuid)
+  RETURNS bool
+  AS $$
+  SELECT
+    EXISTS (
+      SELECT
+        1
+      FROM
+        users
+        INNER JOIN project_users ON users.email = project_users.user_email
+      WHERE
+        project_users.project_id = _project_id
+        AND users.auth_user_id = _auth_user_id);
+
+$$
+LANGUAGE sql
+SECURITY DEFINER;
+
+-- Function is owned by postgres which bypasses RLS
+--
+-- Parameters need to be prefixed because the name clashes with column names
+CREATE FUNCTION is_project_editor_or_manager (_auth_user_id uuid, _project_id uuid)
+  RETURNS bool
+  AS $$
+  SELECT
+    EXISTS (
+      SELECT
+        1
+      FROM
+        users
+        INNER JOIN project_users ON users.email = project_users.user_email
+      WHERE
+        project_users.project_id = _project_id
+        AND project_users.role IN ('project_manager', 'project_editor')
+        AND users.auth_user_id = _auth_user_id);
+
+$$
+LANGUAGE sql
+SECURITY DEFINER;
+
+-- Function is owned by postgres which bypasses RLS
+--
+-- Parameters need to be prefixed because the name clashes with column names
+CREATE FUNCTION is_project_manager (_auth_user_id uuid, _project_id uuid)
+  RETURNS bool
+  AS $$
+  SELECT
+    EXISTS (
+      SELECT
+        1
+      FROM
+        users
+        INNER JOIN project_users ON users.email = project_users.user_email
+      WHERE
+        project_users.project_id = _project_id
+        AND project_users.role = 'project_manager'
+        AND users.auth_user_id = _auth_user_id);
+
+$$
+LANGUAGE sql
+SECURITY DEFINER;
+
+-- Function is owned by postgres which bypasses RLS
+--
+--
 DROP TABLE IF EXISTS accounts CASCADE;
 
 CREATE TABLE accounts (
@@ -384,30 +471,6 @@ COMMENT ON COLUMN project_users.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN project_users.server_rev_at IS 'time of last edit on server';
 
-CREATE VIEW project_editors AS
-SELECT
-  *
-FROM
-  project_users
-WHERE
-  ROLE = 'project_editor';
-
-CREATE VIEW project_readers AS
-SELECT
-  *
-FROM
-  project_users
-WHERE
-  ROLE = 'project_reader';
-
-CREATE VIEW project_managers AS
-SELECT
-  *
-FROM
-  project_users
-WHERE
-  ROLE = 'project_manager';
-
 ALTER TABLE project_users ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "project owners and same user can view project_users" ON project_users;
@@ -497,55 +560,26 @@ DROP POLICY IF EXISTS "Users can view assigned projects and projects of own acco
 
 CREATE POLICY "Users can view assigned projects and projects of own accounts" ON projects
   FOR SELECT
-    USING (auth.uid () IN (
-    -- users assigned to this project
-      SELECT
-        users.auth_user_id FROM users
-        -- project_users.user_email is not null
-        INNER JOIN project_users ON users.email = project_users.user_email
-        WHERE
-          project_users.project_id = projects.id) or is_account_owner(auth.uid (), account_id));
+    USING (is_project_user (auth.uid (), id)
+      OR is_account_owner (auth.uid (), account_id));
 
 DROP POLICY IF EXISTS "account owners can insert projects for own account" ON projects;
 
 CREATE POLICY "account owners can insert projects for own account" ON projects
   FOR INSERT
-    WITH CHECK (auth.uid () IN (
-    -- user owning the project's account
-    SELECT users.auth_user_id FROM users
-    WHERE
-      -- projects.account_id is not null
-      users.account_id = projects.account_id));
+    WITH CHECK (is_account_owner (auth.uid (), account_id));
 
 DROP POLICY IF EXISTS "Users can update projects assigned and of own accounts" ON projects;
 
 CREATE POLICY "Users can update projects assigned and of own accounts" ON projects
   FOR UPDATE
-    WITH CHECK (auth.uid () IN (
-    -- users assigned to this project as manager or editor
-    SELECT users.auth_user_id FROM users
-    -- project_users.user_email is not null
-    INNER JOIN project_users ON users.email = project_users.user_email
-    WHERE
-      project_users.project_id = projects.id AND project_users.role IN ('project_manager', 'project_editor')
-    UNION
-    -- user owning the project's account
-      SELECT
-        users.auth_user_id FROM users
-        WHERE
-          -- projects.account_id is not null
-          users.account_id = projects.account_id));
+    WITH CHECK (is_project_editor_or_manager (auth.uid (), id));
 
 DROP POLICY IF EXISTS "account owners can delete own projects" ON projects;
 
 CREATE POLICY "account owners can delete own projects" ON projects
   FOR DELETE
-    USING (auth.uid () IN (
-    -- user owning the project's account
-    SELECT users.auth_user_id FROM users
-    WHERE
-      -- projects.account_id is not null
-      users.account_id = projects.account_id));
+    USING (is_account_owner (auth.uid (), account_id));
 
 --
 CREATE TABLE option_types (
@@ -669,61 +703,25 @@ DROP POLICY IF EXISTS "project readers, editors and managers can view tables" ON
 
 CREATE POLICY "project readers, editors and managers can view tables" ON tables
   FOR SELECT
-    USING (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        projects
-        INNER JOIN project_users ON projects.id = project_users.project_id
-        -- project_users.user_email is not null
-        INNER JOIN users ON users.email = project_users.user_email
-      WHERE
-        projects.id = tables.project_id AND project_users.role IN ('project_manager', 'project_editor', 'project_reader')));
+    USING (auth.uid () IN (is_project_user (auth.uid (), project_id)));
 
 DROP POLICY IF EXISTS "project managers can insert tables" ON tables;
 
 CREATE POLICY "project managers can insert tables" ON tables
   FOR INSERT
-    WITH CHECK (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        projects
-        INNER JOIN project_users ON projects.id = project_users.project_id
-        -- project_users.user_email is not null
-        INNER JOIN users ON users.email = project_users.user_email
-      WHERE
-        projects.id = tables.project_id AND project_users.role = 'project_manager'));
+    WITH CHECK (is_project_manager (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can update tables" ON tables;
 
 CREATE POLICY "project managers can update tables" ON tables
   FOR UPDATE
-    WITH CHECK (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        projects
-        INNER JOIN project_users ON projects.id = project_users.project_id
-        -- project_users.user_email is not null
-        INNER JOIN users ON users.email = project_users.user_email
-      WHERE
-        projects.id = tables.project_id AND project_users.role = 'project_manager'));
+    WITH CHECK (is_project_manager (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can delete tables" ON tables;
 
 CREATE POLICY "project managers can delete tables" ON tables
   FOR DELETE
-    USING (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        projects
-        INNER JOIN project_users ON projects.id = project_users.project_id
-        -- project_users.user_email is not null
-        INNER JOIN users ON users.email = project_users.user_email
-      WHERE
-        projects.id = tables.project_id AND project_users.role = 'project_manager'));
+    USING (is_project_manager (auth.uid (), project_id));
 
 ALTER publication supabase_realtime
   ADD TABLE tables;
