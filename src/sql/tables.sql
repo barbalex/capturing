@@ -84,7 +84,7 @@ ALTER publication supabase_realtime
 
 --
 -- Parameters need to be prefixed because the name clashes with column names
-CREATE FUNCTION is_account_owner (_auth_user_id uuid, _account_id uuid)
+CREATE OR REPLACE FUNCTION is_account_owner (_auth_user_id uuid, _account_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -92,10 +92,11 @@ CREATE FUNCTION is_account_owner (_auth_user_id uuid, _account_id uuid)
       SELECT
         1
       FROM
-        users
+        auth.users au
+        INNER JOIN public.users pu ON au.id = pu.auth_user_id
       WHERE
-        users.account_id = _account_id
-        AND users.auth_user_id = _auth_user_id);
+        pu.account_id = _account_id
+        AND au.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -107,7 +108,7 @@ SECURITY DEFINER;
 -- Parameters need to be prefixed because the name clashes with column names
 DROP FUNCTION IF EXISTS is_project_user_by_project;
 
-CREATE FUNCTION is_project_user_by_project (_auth_user_id uuid, _project_id uuid)
+CREATE OR REPLACE FUNCTION is_project_user_by_project (_auth_user_id uuid, _project_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -115,11 +116,11 @@ CREATE FUNCTION is_project_user_by_project (_auth_user_id uuid, _project_id uuid
       SELECT
         1
       FROM
-        users
+        auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
       WHERE
         project_users.project_id = _project_id
-        AND users.auth_user_id = _auth_user_id);
+        AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -130,7 +131,7 @@ SECURITY DEFINER;
 --
 -- is_project_user_by_table is in tables to guarantee correct series of events when creating policies
 -- Parameters need to be prefixed because the name clashes with column names
-CREATE FUNCTION is_project_user_by_table (_auth_user_id uuid, _table_id uuid)
+CREATE OR REPLACE FUNCTION is_project_user_by_table (_auth_user_id uuid, _table_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -138,13 +139,13 @@ CREATE FUNCTION is_project_user_by_table (_auth_user_id uuid, _table_id uuid)
       SELECT
         1
       FROM
-        users
+        auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
         INNER JOIN projects ON projects.id = project_users.project_id
         INNER JOIN tables ON tables.project_id = projects.id
       WHERE
         tables.id = _table_id
-        AND users.auth_user_id = _auth_user_id);
+        AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -155,7 +156,7 @@ SECURITY DEFINER;
 --
 -- is_project_user_by_row is in tables to guarantee correct series of events when creating policies
 -- Parameters need to be prefixed because the name clashes with column names
-CREATE FUNCTION is_project_user_by_row (_auth_user_id uuid, _row_id uuid)
+CREATE OR REPLACE FUNCTION is_project_user_by_row (_auth_user_id uuid, _row_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -163,14 +164,14 @@ CREATE FUNCTION is_project_user_by_row (_auth_user_id uuid, _row_id uuid)
       SELECT
         1
       FROM
-        users
+        auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
         INNER JOIN projects ON projects.id = project_users.project_id
         INNER JOIN tables ON tables.project_id = projects.id
         INNER JOIN ROWS ON rows.table_id = tables.id
       WHERE
         rows.id = _row_id
-        AND users.auth_user_id = _auth_user_id);
+        AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -181,7 +182,7 @@ SECURITY DEFINER;
 -- Parameters need to be prefixed because the name clashes with column names
 DROP FUNCTION IF EXISTS is_project_editor_or_manager_by_project;
 
-CREATE FUNCTION is_project_editor_or_manager_by_project (_auth_user_id uuid, _project_id uuid)
+CREATE OR REPLACE FUNCTION is_project_editor_or_manager_by_project (_auth_user_id uuid, _project_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -189,12 +190,12 @@ CREATE FUNCTION is_project_editor_or_manager_by_project (_auth_user_id uuid, _pr
       SELECT
         1
       FROM
-        users
+        auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
       WHERE
         project_users.project_id = _project_id
         AND project_users.role IN ('project_manager', 'project_editor')
-        AND users.auth_user_id = _auth_user_id);
+        AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -204,7 +205,7 @@ SECURITY DEFINER;
 --
 --
 -- Parameters need to be prefixed because the name clashes with column names
-CREATE FUNCTION is_project_editor_or_manager_by_table (_auth_user_id uuid, _table_id uuid)
+CREATE OR REPLACE FUNCTION is_project_editor_or_manager_by_table (_auth_user_id uuid, _table_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -212,14 +213,14 @@ CREATE FUNCTION is_project_editor_or_manager_by_table (_auth_user_id uuid, _tabl
       SELECT
         1
       FROM
-        users
+        auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
         INNER JOIN projects ON projects.id = project_users.project_id
         INNER JOIN tables ON tables.project_id = projects.id
       WHERE
         tables.id = _table_id
         AND project_users.role IN ('project_manager', 'project_editor')
-        AND users.auth_user_id = _auth_user_id);
+        AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -229,7 +230,7 @@ SECURITY DEFINER;
 --
 --
 -- Parameters need to be prefixed because the name clashes with column names
-CREATE FUNCTION is_project_editor_or_manager_by_row (_auth_user_id uuid, _row_id uuid)
+CREATE OR REPLACE FUNCTION is_project_editor_or_manager_by_row (_auth_user_id uuid, _row_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -237,7 +238,7 @@ CREATE FUNCTION is_project_editor_or_manager_by_row (_auth_user_id uuid, _row_id
       SELECT
         1
       FROM
-        users
+        auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
         INNER JOIN projects ON projects.id = project_users.project_id
         INNER JOIN tables ON tables.project_id = projects.id
@@ -245,7 +246,7 @@ CREATE FUNCTION is_project_editor_or_manager_by_row (_auth_user_id uuid, _row_id
       WHERE
         rows.id = _row_id
         AND project_users.role IN ('project_manager', 'project_editor')
-        AND users.auth_user_id = _auth_user_id);
+        AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -254,9 +255,7 @@ SECURITY DEFINER;
 -- Function is owned by postgres which bypasses RLS
 --
 -- Parameters need to be prefixed because the name clashes with column names
-DROP FUNCTION IF EXISTS is_project_manager;
-
-CREATE FUNCTION is_project_manager (_auth_user_id uuid)
+CREATE OR REPLACE FUNCTION is_project_manager (_auth_user_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -264,11 +263,11 @@ CREATE FUNCTION is_project_manager (_auth_user_id uuid)
       SELECT
         1
       FROM
-        users
+        auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
       WHERE
         project_users.role = 'project_manager'
-        AND users.auth_user_id = _auth_user_id);
+        AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -278,9 +277,7 @@ SECURITY DEFINER;
 --
 --
 -- Parameters need to be prefixed because the name clashes with column names
-DROP FUNCTION IF EXISTS is_project_manager_by_project;
-
-CREATE FUNCTION is_project_manager_by_project (_auth_user_id uuid, _project_id uuid)
+CREATE OR REPLACE FUNCTION is_project_manager_by_project (_auth_user_id uuid, _project_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -288,12 +285,12 @@ CREATE FUNCTION is_project_manager_by_project (_auth_user_id uuid, _project_id u
       SELECT
         1
       FROM
-        users
+        auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
       WHERE
         project_users.project_id = _project_id
         AND project_users.role = 'project_manager'
-        AND users.auth_user_id = _auth_user_id);
+        AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -303,7 +300,7 @@ SECURITY DEFINER;
 --
 --
 -- Parameters need to be prefixed because the name clashes with column names
-CREATE FUNCTION is_project_manager_by_project_by_table (_auth_user_id uuid, _table_id uuid)
+CREATE OR REPLACE FUNCTION is_project_manager_by_project_by_table (_auth_user_id uuid, _table_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -311,13 +308,13 @@ CREATE FUNCTION is_project_manager_by_project_by_table (_auth_user_id uuid, _tab
       SELECT
         1
       FROM
-        users
+        auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
         INNER JOIN projects ON projects.id = project_users.project_id
         INNER JOIN tables ON tables.project_id = projects.id
       WHERE
         project_users.role = 'project_manager'
-        AND users.auth_user_id = _auth_user_id
+        AND users.id = _auth_user_id
         AND tables.id = _table_id);
 
 $$
@@ -719,6 +716,10 @@ CREATE POLICY "Users can view assigned projects and projects of own accounts" ON
   FOR SELECT
     USING (is_project_user_by_project (auth.uid (), id)
       OR is_account_owner (auth.uid (), account_id));
+
+CREATE POLICY "Users can view assigned projects and projects of own accounts" ON projects
+  FOR SELECT
+    USING (TRUE);
 
 DROP POLICY IF EXISTS "account owners can insert projects for own account" ON projects;
 
