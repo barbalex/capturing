@@ -508,7 +508,7 @@ CREATE POLICY "Users can view assigned projects and projects of own accounts" ON
           SELECT
             users.auth_user_id FROM users
             WHERE
-              users.account_id = projects.account_id));
+              users.account_id IS NOT NULL AND users.account_id = projects.account_id));
 
 DROP POLICY IF EXISTS "account owners can insert projects for own account" ON projects;
 
@@ -518,7 +518,7 @@ CREATE POLICY "account owners can insert projects for own account" ON projects
     -- user owning the project's account
     SELECT users.auth_user_id FROM users
     WHERE
-      users.account_id = projects.account_id));
+      users.account_id IS NOT NULL AND users.account_id = projects.account_id));
 
 DROP POLICY IF EXISTS "Users can update projects assigned and of own accounts" ON projects;
 
@@ -535,7 +535,7 @@ CREATE POLICY "Users can update projects assigned and of own accounts" ON projec
       SELECT
         users.auth_user_id FROM users
         WHERE
-          users.account_id = projects.account_id));
+          users.account_id IS NOT NULL AND users.account_id = projects.account_id));
 
 DROP POLICY IF EXISTS "account owners can delete own projects" ON projects;
 
@@ -545,7 +545,7 @@ CREATE POLICY "account owners can delete own projects" ON projects
     -- user owning the project's account
     SELECT users.auth_user_id FROM users
     WHERE
-      users.account_id = projects.account_id));
+      users.account_id IS NOT NULL AND users.account_id = projects.account_id));
 
 --
 CREATE TABLE option_types (
