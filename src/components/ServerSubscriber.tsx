@@ -21,11 +21,10 @@ const ServerSubscriber = () => {
         .reverse()
         .first()
       console.log('ServerSubscriber, last project in dexie:', lastProject)
-      // server_rev_at is seconds since 1.1.1970
       const projectsLastUpdatedAt = lastProject?.server_rev_at ?? fallbackRevAt
       const { data: projectsData, error: projectsError } = await supabase
         .from('projects')
-        .select('id, account_id, name, label, server_rev_at')
+        .select('*')
         .gte('server_rev_at', projectsLastUpdatedAt)
       if (projectsError) {
         console.log(
