@@ -11,9 +11,10 @@ const ServerSubscriber = () => {
   // 3. update dexie with these changes
   // 4. subscribe for changes
   // 5. update dexie with changes from subscription
+  // 6. deal with subscription problems due to: 1. internet outage 2. app moving to background 3. power saving mode
+  //    see: https://github.com/supabase/supabase/discussions/5641
 
   useEffect(() => {
-    let projectsSubscription
     const run = async () => {
       // 1. projects
       // 1.1. get last_updated_at from dexie
@@ -49,11 +50,12 @@ const ServerSubscriber = () => {
       supabase
         .from('projects')
         .on('*', (payload) => {
-          'TODO: handleProjectChanged'
           console.log('projectsSubscription', payload)
           dexie.projects.put(payload.new)
         })
-        .subscribe()
+        .subscribe((status) => {
+          console.log('projectsSubscription, status:', status)
+        })
     }
     run()
 

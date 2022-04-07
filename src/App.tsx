@@ -21,7 +21,8 @@ import ResetPassword from './components/ResetPassword'
 import ColumnController from './components/ColumnController'
 import AuthController from './components/AuthController'
 import QueuedUpdatesWriter from './components/QueuedUpdatesWriter'
-import ServerSubscriber from './components/ServerSubscriber'
+import { supabase } from './supabaseClient'
+import fetchFromServer from './utils/fetchFromServer'
 
 function App() {
   const [store, setStore] = useState()
@@ -48,6 +49,12 @@ function App() {
         dexie.stores.put({ id: 'store', ...ss })
       })
     })
+
+    fetchFromServer()
+
+    return () => {
+      supabase.removeAllSubscriptions()
+    }
   }, [])
   // console.log('App rendering, store:', store)
 
@@ -65,7 +72,6 @@ function App() {
             <ResetPassword />
             <AuthController />
             <QueuedUpdatesWriter />
-            <ServerSubscriber />
             <Layout>
               <Routes>
                 <Route path="/" element={<Home />} />
