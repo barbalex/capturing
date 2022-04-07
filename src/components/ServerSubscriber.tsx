@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { supabase } from '../supabaseClient'
-import { db, db as dexie } from '../dexieClient'
+import { db, db as dexie, IProject } from '../dexieClient'
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 
@@ -13,6 +13,7 @@ const ServerSubscriber = () => {
   // 5. update dexie with changes from subscription
 
   useEffect(() => {
+    let projectsSubscription
     const run = async () => {
       // 1. projects
       // 1.1. get last_updated_at from dexie
@@ -23,7 +24,7 @@ const ServerSubscriber = () => {
       console.log('ServerSubscriber, last project in dexie:', lastProject)
       const projectsLastUpdatedAt = lastProject?.server_rev_at ?? fallbackRevAt
       const { data: projectsData, error: projectsError } = await supabase
-        .from('projects')
+        .from<IProject>('projects')
         .select('*')
         .gte('server_rev_at', projectsLastUpdatedAt)
       if (projectsError) {
@@ -45,13 +46,20 @@ const ServerSubscriber = () => {
           console.log('error putting projects:', error)
         }
       }
-      const tablesSubscription = supabase
+      supabase
         .from('projects')
-        .on('insert', () => 'TODO:handleProjectInserted')
-        .on('update', () => 'TODO:handleProjectUpdated')
+        .on('*', (payload) => {
+          'TODO: handleProjectChanged'
+          console.log('projectsSubscription', payload)
+          dexie.projects.put(payload.new)
+        })
         .subscribe()
     }
     run()
+
+    return () => {
+      supabase.removeAllSubscriptions()
+    }
   }, [])
 }
 
