@@ -104,6 +104,31 @@ SECURITY DEFINER;
 
 -- Function is owned by postgres which bypasses RLS
 --
+--
+-- Parameters need to be prefixed because the name clashes with column names
+CREATE OR REPLACE FUNCTION is_account_owner_by_project_user (_auth_user_id uuid, _project_id uuid)
+  RETURNS bool
+  AS $$
+  SELECT
+    EXISTS (
+      SELECT
+        1
+      FROM
+        auth.users au
+        INNER JOIN public.users pu ON au.id = pu.auth_user_id
+        INNER JOIN project_users ON project_users.user_email = pu.email
+        INNER JOIN projects ON projects.id = project_users.project_id
+      WHERE
+        au.id = _auth_user_id
+        AND projects.account_id = pu.account_id
+        AND projects.id = _project_id);
+
+$$
+LANGUAGE sql
+SECURITY DEFINER;
+
+-- Function is owned by postgres which bypasses RLS
+--
 -- is_project_user_by_project is in tables to guarantee correct series of events when creating policies
 -- Parameters need to be prefixed because the name clashes with column names
 DROP FUNCTION IF EXISTS is_project_user_by_project;
@@ -631,79 +656,31 @@ DROP POLICY IF EXISTS "project owners and same user can view project_users" ON p
 
 CREATE POLICY "project owners and same user can view project_users" ON project_users
   FOR SELECT
-    USING (auth.uid () IN (
-    -- project owner
-      SELECT
-        users.auth_user_id FROM users
-        WHERE
-          users.account_id IS NOT NULL AND users.account_id = (
-            SELECT
-              p.account_id
-            FROM projects p
-            WHERE
-              id = project_users.project_id)
-            UNION
-            -- same user
-              SELECT
-                users.auth_user_id
-              FROM users
-              WHERE
-                -- project_users.user_email is not null
-                email = project_users.user_email));
+    USING (is_account_owner_by_project_user (auth.uid (), project_id)
+      OR auth.uid () IN (
+      -- same user
+        SELECT
+          users.auth_user_id FROM users
+          WHERE
+            email = user_email));
 
 DROP POLICY IF EXISTS "project owners can insert project_users" ON project_users;
 
 CREATE POLICY "project owners can insert project_users" ON project_users
   FOR INSERT
-    WITH CHECK (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-      WHERE
-        users.account_id IS NOT NULL AND users.account_id = (
-          SELECT
-            projects.account_id
-          FROM
-            projects
-          WHERE
-            id = project_users.project_id)));
+    WITH CHECK (is_account_owner_by_project_user (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project owners can update project_users" ON project_users;
 
 CREATE POLICY "project owners can update project_users" ON project_users
   FOR UPDATE
-    WITH CHECK (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-      WHERE
-        users.account_id IS NOT NULL AND users.account_id = (
-          SELECT
-            projects.account_id
-          FROM
-            projects
-          WHERE
-            id = project_users.project_id)));
+    WITH CHECK (is_account_owner_by_project_user (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project owners can delete project_users" ON project_users;
 
 CREATE POLICY "project owners can delete project_users" ON project_users
   FOR DELETE
-    USING (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-      WHERE
-        users.account_id IS NOT NULL AND users.account_id = (
-          SELECT
-            projects.account_id
-          FROM
-            projects
-          WHERE
-            id = project_users.project_id)));
+    USING (is_account_owner_by_project_user (auth.uid (), project_id));
 
 ALTER publication supabase_realtime
   ADD TABLE project_users;
