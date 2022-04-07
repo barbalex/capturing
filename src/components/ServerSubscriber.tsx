@@ -26,7 +26,7 @@ const ServerSubscriber = () => {
       const { data: projectsData, error: projectsError } = await supabase
         .from('projects')
         .select('id, account_id, name, label, server_rev_at')
-      //.gte('server_rev_at', projectsLastUpdatedAt)
+        .gte('server_rev_at', projectsLastUpdatedAt)
       if (projectsError) {
         console.log(
           'ServerSubscriber, error fetching projects from supabase:',
