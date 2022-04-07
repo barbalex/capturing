@@ -3,17 +3,46 @@ import { db, db as dexie, IProject } from '../dexieClient'
 
 // per table:
 // 1. get last_updated_at from dexie
-// 2. fetch all with newer last_updated_at
-// 3. update dexie with these changes
-// 4. subscribe for changes
-// 5. update dexie with changes from subscription
-// 6. deal with subscription problems due to: 1. internet outage 2. app moving to background 3. power saving mode
+// 2. subscribe for changes and update dexie with changes from subscription
+// 3. deal with subscription problems due to: 1. internet outage 2. app moving to background 3. power saving mode
 //    see: https://github.com/supabase/supabase/discussions/5641
+// 4. fetch all with newer last_updated_at
+// 5. update dexie with these changes
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
+let hiddenError = false
 
-const fetchFromServer = async () => {
+const fetchFromServer = () => {
+  function visibilityListener() {
+    if (document.visibilityState === 'visible' && hiddenError) {
+      startStream() //going visible, start stopped stream
+    }
+  }
+
+  document.addEventListener('visibilitychange', visibilityListener)
+
+  startStream()
+}
+
+const startStream = async () => {
+  hiddenError = false
   // 1. projects
+  const projectsSubscription = supabase
+    .from('projects')
+    .on('*', (payload) => {
+      console.log('projectsSubscription', payload)
+      dexie.projects.put(payload.new)
+    })
+    .subscribe((status) => {
+      console.log('projectsSubscription, status:', status)
+      if (status === 'SUBSCRIPTION_ERROR') {
+        if (document.visibilityState === 'hidden') {
+          // page visible so let realtime reconnect and reload data
+          supabase.removeAllSubscriptions()
+          hiddenError = true
+        }
+      }
+    })
   // 1.1. get last_updated_at from dexie
   const lastProject = await db.projects
     .orderBy('server_rev_at')
@@ -44,15 +73,6 @@ const fetchFromServer = async () => {
       console.log('error putting projects:', error)
     }
   }
-  supabase
-    .from('projects')
-    .on('*', (payload) => {
-      console.log('projectsSubscription', payload)
-      dexie.projects.put(payload.new)
-    })
-    .subscribe((status) => {
-      console.log('projectsSubscription, status:', status)
-    })
 }
 
 export default fetchFromServer
