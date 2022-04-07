@@ -103,9 +103,11 @@ SECURITY DEFINER;
 
 -- Function is owned by postgres which bypasses RLS
 --
--- is_project_user is in tables to guarantee correct series of events when creating policies
+-- is_project_user_by_project is in tables to guarantee correct series of events when creating policies
 -- Parameters need to be prefixed because the name clashes with column names
-CREATE FUNCTION is_project_user (_auth_user_id uuid, _project_id uuid)
+DROP FUNCTION IF EXISTS is_project_user_by_project;
+
+CREATE FUNCTION is_project_user_by_project (_auth_user_id uuid, _project_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -177,7 +179,9 @@ SECURITY DEFINER;
 -- Function is owned by postgres which bypasses RLS
 --
 -- Parameters need to be prefixed because the name clashes with column names
-CREATE FUNCTION is_project_editor_or_manager (_auth_user_id uuid, _project_id uuid)
+DROP FUNCTION IF EXISTS is_project_editor_or_manager_by_project;
+
+CREATE FUNCTION is_project_editor_or_manager_by_project (_auth_user_id uuid, _project_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -250,7 +254,33 @@ SECURITY DEFINER;
 -- Function is owned by postgres which bypasses RLS
 --
 -- Parameters need to be prefixed because the name clashes with column names
-CREATE FUNCTION is_project_manager (_auth_user_id uuid, _project_id uuid)
+DROP FUNCTION IF EXISTS is_project_manager;
+
+CREATE FUNCTION is_project_manager (_auth_user_id uuid)
+  RETURNS bool
+  AS $$
+  SELECT
+    EXISTS (
+      SELECT
+        1
+      FROM
+        users
+        INNER JOIN project_users ON users.email = project_users.user_email
+      WHERE
+        project_users.role = 'project_manager'
+        AND users.auth_user_id = _auth_user_id);
+
+$$
+LANGUAGE sql
+SECURITY DEFINER;
+
+-- Function is owned by postgres which bypasses RLS
+--
+--
+-- Parameters need to be prefixed because the name clashes with column names
+DROP FUNCTION IF EXISTS is_project_manager_by_project;
+
+CREATE FUNCTION is_project_manager_by_project (_auth_user_id uuid, _project_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -273,7 +303,7 @@ SECURITY DEFINER;
 --
 --
 -- Parameters need to be prefixed because the name clashes with column names
-CREATE FUNCTION is_project_manager_by_table (_auth_user_id uuid, _table_id uuid)
+CREATE FUNCTION is_project_manager_by_project_by_table (_auth_user_id uuid, _table_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -687,7 +717,7 @@ DROP POLICY IF EXISTS "Users can view assigned projects and projects of own acco
 
 CREATE POLICY "Users can view assigned projects and projects of own accounts" ON projects
   FOR SELECT
-    USING (is_project_user (auth.uid (), id)
+    USING (is_project_user_by_project (auth.uid (), id)
       OR is_account_owner (auth.uid (), account_id));
 
 DROP POLICY IF EXISTS "account owners can insert projects for own account" ON projects;
@@ -700,7 +730,7 @@ DROP POLICY IF EXISTS "Users can update projects assigned and of own accounts" O
 
 CREATE POLICY "Users can update projects assigned and of own accounts" ON projects
   FOR UPDATE
-    WITH CHECK (is_project_editor_or_manager (auth.uid (), id));
+    WITH CHECK (is_project_editor_or_manager_by_project (auth.uid (), id));
 
 DROP POLICY IF EXISTS "account owners can delete own projects" ON projects;
 
@@ -830,25 +860,25 @@ DROP POLICY IF EXISTS "project readers, editors and managers can view tables" ON
 
 CREATE POLICY "project readers, editors and managers can view tables" ON tables
   FOR SELECT
-    USING (auth.uid () IN (is_project_user (auth.uid (), project_id)));
+    USING (is_project_user_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can insert tables" ON tables;
 
 CREATE POLICY "project managers can insert tables" ON tables
   FOR INSERT
-    WITH CHECK (is_project_manager (auth.uid (), project_id));
+    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can update tables" ON tables;
 
 CREATE POLICY "project managers can update tables" ON tables
   FOR UPDATE
-    WITH CHECK (is_project_manager (auth.uid (), project_id));
+    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can delete tables" ON tables;
 
 CREATE POLICY "project managers can delete tables" ON tables
   FOR DELETE
-    USING (is_project_manager (auth.uid (), project_id));
+    USING (is_project_manager_by_project (auth.uid (), project_id));
 
 ALTER publication supabase_realtime
   ADD TABLE tables;
@@ -1064,19 +1094,19 @@ DROP POLICY IF EXISTS "project managers can insert fields" ON fields;
 
 CREATE POLICY "project managers can insert fields" ON fields
   FOR INSERT
-    WITH CHECK (is_project_manager_by_table (auth.uid (), table_id));
+    WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id));
 
 DROP POLICY IF EXISTS "project managers can update fields" ON fields;
 
 CREATE POLICY "project managers can update fields" ON fields
   FOR UPDATE
-    WITH CHECK (is_project_manager_by_table (auth.uid (), table_id));
+    WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id));
 
 DROP POLICY IF EXISTS "project managers can delete fields" ON fields;
 
 CREATE POLICY "project managers can delete fields" ON fields
   FOR DELETE
-    USING (is_project_manager_by_table (auth.uid (), table_id));
+    USING (is_project_manager_by_project_by_table (auth.uid (), table_id));
 
 ALTER publication supabase_realtime
   ADD TABLE fields;
@@ -1624,44 +1654,20 @@ DROP POLICY IF EXISTS "project_managers can insert tile_layers" ON tile_layers;
 -- inserting possible BUT: revision trigger will fail depending on rls on files table
 CREATE POLICY "project_managers can insert tile_layers" ON tile_layers
   FOR INSERT
-    WITH CHECK (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-        -- project_users.user_email is not null
-        INNER JOIN project_users ON users.email = project_users.user_email
-      WHERE
-        project_users.role = 'project_manager'));
+    WITH CHECK (is_project_manager (auth.uid ()));
 
 DROP POLICY IF EXISTS "project_managers can update tile_layers" ON tile_layers;
 
 CREATE POLICY "project_managers can update tile_layers" ON tile_layers
   FOR UPDATE
-    WITH CHECK (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-        -- project_users.user_email is not null
-        INNER JOIN project_users ON users.email = project_users.user_email
-      WHERE
-        project_users.role = 'project_manager'));
+    WITH CHECK (is_project_manager (auth.uid ()));
 
 DROP POLICY IF EXISTS "project_managers can delete tile_layers" ON tile_layers;
 
 -- but: deletion restricted by reference in project_tile_layers
 CREATE POLICY "project_managers can delete tile_layers" ON tile_layers
   FOR DELETE
-    USING (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-        -- project_users.user_email is not null
-        INNER JOIN project_users ON users.email = project_users.user_email
-      WHERE
-        project_users.role = 'project_manager'));
+    USING (is_project_manager (auth.uid ()));
 
 ALTER publication supabase_realtime
   ADD TABLE tile_layers;
@@ -1709,61 +1715,25 @@ DROP POLICY IF EXISTS "project readers, editors and managers can view project_ti
 
 CREATE POLICY "project readers, editors and managers can view project_tile_layers" ON project_tile_layers
   FOR SELECT
-    USING (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        projects
-        INNER JOIN project_users ON projects.id = project_users.project_id
-        -- project_users.user_email is not null
-        INNER JOIN users ON users.email = project_users.user_email
-      WHERE
-        projects.id = project_tile_layers.project_id AND project_users.role IN ('project_manager', 'project_editor', 'project_reader')));
+    USING (is_project_user_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can insert project_tile_layers" ON project_tile_layers;
 
 CREATE POLICY "project managers can insert project_tile_layers" ON project_tile_layers
   FOR INSERT
-    WITH CHECK (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        projects
-        INNER JOIN project_users ON projects.id = project_users.project_id
-        -- project_users.user_email is not null
-        INNER JOIN users ON users.email = project_users.user_email
-      WHERE
-        projects.id = project_tile_layers.project_id AND project_users.role = 'project_manager'));
+    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can update project_tile_layers" ON project_tile_layers;
 
 CREATE POLICY "project managers can update project_tile_layers" ON project_tile_layers
   FOR UPDATE
-    WITH CHECK (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        projects
-        INNER JOIN project_users ON projects.id = project_users.project_id
-        -- project_users.user_email is not null
-        INNER JOIN users ON users.email = project_users.user_email
-      WHERE
-        projects.id = project_tile_layers.project_id AND project_users.role = 'project_manager'));
+    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can delete project_tile_layers" ON project_tile_layers;
 
 CREATE POLICY "project managers can delete project_tile_layers" ON project_tile_layers
   FOR DELETE
-    USING (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        projects
-        INNER JOIN project_users ON projects.id = project_users.project_id
-        -- project_users.user_email is not null
-        INNER JOIN users ON users.email = project_users.user_email
-      WHERE
-        projects.id = project_tile_layers.project_id AND project_users.role = 'project_manager'));
+    USING (is_project_manager_by_project (auth.uid (), project_id));
 
 ALTER publication supabase_realtime
   ADD TABLE project_tile_layers;
