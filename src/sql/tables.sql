@@ -84,7 +84,7 @@ ALTER publication supabase_realtime
 
 --
 -- Parameters need to be prefixed because the name clashes with column names
-CREATE OR REPLACE FUNCTION is_account_owner (_auth_user_id uuid, _account_id uuid)
+CREATE OR REPLACE FUNCTION is_own_account (_auth_user_id uuid, _account_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -103,7 +103,6 @@ LANGUAGE sql
 SECURITY DEFINER;
 
 -- Function is owned by postgres which bypasses RLS
---
 --
 --
 -- Parameters need to be prefixed because the name clashes with column names
@@ -392,37 +391,19 @@ DROP POLICY IF EXISTS "Users can view own account" ON accounts;
 
 CREATE POLICY "Users can view own account" ON accounts
   FOR SELECT
-    USING (auth.uid () IN (
-      SELECT
-        auth_user_id
-      FROM
-        users
-      WHERE
-        account_id = accounts.id));
+    USING (is_own_account (auth.uid (), id));
 
 DROP POLICY IF EXISTS "Users can insert own account" ON accounts;
 
 CREATE POLICY "Users can insert own account" ON accounts
   FOR INSERT
-    WITH CHECK (auth.uid () IN (
-      SELECT
-        auth_user_id
-      FROM
-        users
-      WHERE
-        account_id = accounts.id));
+    WITH CHECK (is_own_account (auth.uid (), id));
 
 DROP POLICY IF EXISTS "Users can update own account" ON accounts;
 
 CREATE POLICY "Users can update own account" ON accounts
   FOR UPDATE
-    WITH CHECK (auth.uid () IN (
-      SELECT
-        auth_user_id
-      FROM
-        users
-      WHERE
-        account_id = accounts.id));
+    WITH CHECK (is_own_account (auth.uid (), id));
 
 DROP POLICY IF EXISTS "Users cant delete accounts" ON accounts;
 
@@ -693,7 +674,7 @@ DROP POLICY IF EXISTS "Users can view assigned projects and projects of own acco
 CREATE POLICY "Users can view assigned projects and projects of own accounts" ON projects
   FOR SELECT
     USING (is_project_user_by_project (auth.uid (), id)
-      OR is_account_owner (auth.uid (), account_id));
+      OR is_own_account (auth.uid (), account_id));
 
 CREATE POLICY "Users can view assigned projects and projects of own accounts" ON projects
   FOR SELECT
@@ -703,7 +684,7 @@ DROP POLICY IF EXISTS "account owners can insert projects for own account" ON pr
 
 CREATE POLICY "account owners can insert projects for own account" ON projects
   FOR INSERT
-    WITH CHECK (is_account_owner (auth.uid (), account_id));
+    WITH CHECK (is_own_account (auth.uid (), account_id));
 
 DROP POLICY IF EXISTS "Users can update projects assigned and of own accounts" ON projects;
 
@@ -715,7 +696,7 @@ DROP POLICY IF EXISTS "account owners can delete own projects" ON projects;
 
 CREATE POLICY "account owners can delete own projects" ON projects
   FOR DELETE
-    USING (is_account_owner (auth.uid (), account_id));
+    USING (is_own_account (auth.uid (), account_id));
 
 --
 CREATE TABLE option_types (
