@@ -37,7 +37,7 @@ const fetchFromServer = (store) => {
 }
 
 const startStream = async (store) => {
-  console.log('fetchFromServer starting stream')
+  // console.log('fetchFromServer starting stream')
   hiddenError = false
   processTable({ table: 'projects', store, hiddenError })
   processTable({ table: 'accounts', store, hiddenError })

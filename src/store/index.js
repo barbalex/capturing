@@ -113,6 +113,9 @@ const myTypes = types
     get activeNodeArrayAsUrl() {
       return `/${self.activeNodeArray.join('/')}`
     },
+    get serverConnected() {
+      return self.subscriptionState === 'SUBSCRIBED'
+    },
   }))
 
 export default myTypes

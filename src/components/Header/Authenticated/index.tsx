@@ -11,6 +11,7 @@ import { Link, useLocation } from 'react-router-dom'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import constants from '../../../utils/constants'
 import Account from './Account'
+import ServerConnected from './ServerConnected'
 
 const SiteTitle = styled(Button)`
   display: none;
@@ -95,6 +96,7 @@ const HeaderAuthenticated = () => {
           >
             Docs
           </NavButton>
+          <ServerConnected />
           <Account />
         </Toolbar>
       </AppBar>
