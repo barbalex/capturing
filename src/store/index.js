@@ -18,6 +18,8 @@ const myTypes = types
     ),
     notifications: types.map(NotificationType),
     singleColumnView: types.optional(types.boolean, false),
+    showTreeInSingleColumnView: types.optional(types.boolean, false),
+    treeWidthInPercentOfScreen: types.optional(types.number, 33),
     subscriptionState: types.optional(types.string, 'INITIAL'),
   })
   .volatile(() => ({ session: undefined, navigate: undefined }))
@@ -30,6 +32,12 @@ const myTypes = types
     // )
 
     return {
+      setTreeWidthInPercentOfScreen(val) {
+        self.treeWidthInPercentOfScreen = val
+      },
+      setShowTreeInSingleColumnView(val) {
+        self.showTreeInSingleColumnView = val
+      },
       setSubscriptionState(val) {
         self.subscriptionState = val
       },
