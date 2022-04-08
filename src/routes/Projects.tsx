@@ -61,17 +61,18 @@ const ProjectsPage = () => {
   const treeEl = useRef(null)
 
   const setDimensions = useCallback(() => {
-    console.log(
-      'ProjectsPage, setDimensions, formWidth:',
-      containerEl?.current?.clientWidth ?? standardWidth,
-    )
+    // console.log(
+    //   'ProjectsPage, setDimensions, formWidth:',
+    //   containerEl?.current?.clientHeight ?? standardWidth,
+    // )
     setTreeWidth(treeEl?.current?.clientWidth ?? standardWidth)
     setFormWidth(containerEl?.current?.clientWidth ?? standardWidth)
     setFormHeight(containerEl?.current?.clientHeight ?? standardWidth)
   }, [setFormHeight, setFormWidth, setTreeWidth])
   useEffect(() => {
     setDimensions()
-  }, [setDimensions])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setDimensions, containerEl?.current])
 
   useEffect(() => {
     document.title = 'Capturing: Projects'
