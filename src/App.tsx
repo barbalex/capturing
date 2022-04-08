@@ -9,7 +9,7 @@ import materialTheme from './utils/materialTheme'
 import { Provider as MobxProvider } from './storeContext'
 import Home from './routes/Home'
 import Docs from './routes/Docs'
-import Projects from './routes/Projects'
+import ProjectsPage from './routes/Projects'
 import Account from './routes/Account'
 import FourOhFour from './routes/404'
 import Layout from './components/Layout'
@@ -76,7 +76,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="docs" element={<Docs />} />
-                <Route path="projects" element={<Projects />} />
+                <Route path="projects" element={<ProjectsPage />} />
                 <Route path="account" element={<Account />} />
                 <Route path="*" element={<FourOhFour />} />
               </Routes>

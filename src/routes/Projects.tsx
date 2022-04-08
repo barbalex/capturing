@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SplitPane from 'react-split-pane'
+import { Routes, Route } from 'react-router-dom'
 
 import StoreContext from '../storeContext'
 import { supabase } from '../supabaseClient'
@@ -9,6 +10,8 @@ import Login from '../components/Login'
 import { field_types } from '../types'
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 import constants from '../utils/constants'
+import Projects from '../components/Projects'
+import Project from '../components/Project'
 
 const StyledSplitPane = styled(SplitPane)`
   .Resizer {
@@ -41,7 +44,7 @@ const Container = styled.div`
   position: relative;
 `
 
-const Projects = () => {
+const ProjectsPage = () => {
   const store = useContext(StoreContext)
   const { session, singleColumnView, treeWidthInPercentOfScreen } = store
 
@@ -69,6 +72,8 @@ const Projects = () => {
   // hide resizer when tree is hidden
   const resizerStyle = treeWidth === 0 ? { width: 0 } : {}
 
+  // TODO: add routes under projects?
+
   return (
     <ErrorBoundary>
       <Container>
@@ -79,11 +84,17 @@ const Projects = () => {
           resizerStyle={resizerStyle}
         >
           <div>tree</div>
-          <div>project</div>
+          <div>
+            <Routes>
+              <Route path="/" element={<Projects />}>
+                <Route path=":projectId" element={<Project />} />
+              </Route>
+            </Routes>
+          </div>
         </StyledSplitPane>
       </Container>
     </ErrorBoundary>
   )
 }
 
-export default observer(Projects)
+export default observer(ProjectsPage)
