@@ -95,9 +95,8 @@ const ProjectsPage = () => {
         >
           <div ref={treeEl}>tree</div>
           <Routes>
-            <Route path="/" element={<Projects />}>
-              <Route path=":projectId" element={<Project />} />
-            </Route>
+            <Route path="/" element={<Projects />} />
+            <Route path=":projectId" element={<Project />} />
           </Routes>
         </StyledSplitPane>
       </Container>

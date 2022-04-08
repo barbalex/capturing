@@ -31,8 +31,6 @@ const ProjectRow = ({ row }) => {
   const store = useContext(StoreContext)
   const { activeNodeArray, setActiveNodeArray } = store
 
-  console.log('Row, row:', row)
-
   const onClickRow = useCallback(
     () => setActiveNodeArray([...activeNodeArray, row.id]),
     [activeNodeArray, row.id, setActiveNodeArray],
