@@ -1,5 +1,88 @@
+import React, { useContext, useCallback, useEffect, useState } from 'react'
+import { observer } from 'mobx-react-lite'
+import styled from 'styled-components'
+import { FaPlus } from 'react-icons/fa'
+import IconButton from '@mui/material/IconButton'
+import { Virtuoso } from 'react-virtuoso'
+import { withResizeDetector } from 'react-resize-detector'
+
+import storeContext from '../../storeContext'
+import Row from './Row'
+import ErrorBoundary from '../shared/ErrorBoundary'
+import constants from '../../utils/constants'
+import UpSvg from '../../svg/to_up.inline.svg'
+
+const Container = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: ${(props) => (props.showfilter ? '#fff3e0' : 'unset')};
+`
+const TitleContainer = styled.div`
+  background-color: rgba(74, 20, 140, 0.1);
+  flex-shrink: 0;
+  display: flex;
+  @media print {
+    display: none !important;
+  }
+  height: ${constants.titleRowHeight}px;
+  justify-content: space-between;
+  padding 0 10px;
+`
+const Title = styled.div`
+  font-weight: bold;
+  margin-top: auto;
+  margin-bottom: auto;
+`
+const TitleSymbols = styled.div`
+  display: flex;
+  margin-top: auto;
+  margin-bottom: auto;
+`
+const FieldsContainer = styled.div`
+  height: 100%;
+`
+
 const Projects = () => {
-  return <div>projects list</div>
+  const store = useContext(storeContext)
+  const { activeNodeArray, setActiveNodeArray, removeOpenNode } = store
+
+  const add = useCallback(() => {
+    console.log('TODO: insert project')
+  }, [])
+
+  const onClickUp = useCallback(() => {
+    removeOpenNode(activeNodeArray)
+    setActiveNodeArray(activeNodeArray.slice(0, -1))
+  }, [activeNodeArray, removeOpenNode, setActiveNodeArray])
+  let upTitle = 'Eine Ebene höher'
+  if (activeNodeArray[0] === 'projects') {
+    upTitle = 'Zu allen Listen'
+  }
+
+  return (
+    <ErrorBoundary>
+      <Container showfilter={false}>
+        <TitleContainer>
+          <Title>Arten</Title>
+          <TitleSymbols>
+            <IconButton title={upTitle} onClick={onClickUp} size="large">
+              <UpSvg />
+            </IconButton>
+            <IconButton
+              aria-label="neue Art"
+              title="neue Art"
+              onClick={add}
+              size="large"
+            >
+              <FaPlus />
+            </IconButton>
+          </TitleSymbols>
+        </TitleContainer>
+        <FieldsContainer>projects list</FieldsContainer>
+      </Container>
+    </ErrorBoundary>
+  )
 }
 
-export default Projects
+export default observer(Projects)
