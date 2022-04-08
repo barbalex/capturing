@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 
 import StoreContext from '../../../storeContext'
 import FilterTitle from '../../shared/FilterTitle'
-import FormTitle from './FormTitle/FormTitle'
+import FormTitle from './FormTitle'
 
 const ProjectFormTitleChooser = ({ row }) => {
   const store = useContext(StoreContext)
