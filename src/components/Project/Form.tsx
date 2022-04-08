@@ -3,12 +3,12 @@ import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SimpleBar from 'simplebar-react'
 
-import StoreContext from '../../../../storeContext'
-import Checkbox2States from '../../../shared/Checkbox2States'
-import JesNo from '../../../shared/JesNo'
-import ifIsNumericAsNumber from '../../../../utils/ifIsNumericAsNumber'
-import ErrorBoundary from '../../../shared/ErrorBoundary'
-import ConflictList from '../../../shared/ConflictList'
+import StoreContext from '../../storeContext'
+import Checkbox2States from '../shared/Checkbox2States'
+import JesNo from '../shared/JesNo'
+import ifIsNumericAsNumber from '../../utils/ifIsNumericAsNumber'
+import ErrorBoundary from '../shared/ErrorBoundary'
+import ConflictList from '../shared/ConflictList'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -24,7 +24,7 @@ const Rev = styled.span`
   font-size: 0.8em;
 `
 
-const ArtForm = ({
+const ProjectForm = ({
   activeConflict,
   id,
   row,
@@ -105,4 +105,4 @@ const ArtForm = ({
   )
 }
 
-export default observer(ArtForm)
+export default observer(ProjectForm)
