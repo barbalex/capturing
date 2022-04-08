@@ -33,7 +33,8 @@ const ProjectForm = ({
   showHistory,
 }) => {
   const store = useContext(StoreContext)
-  const { filter, online, errors, unsetError } = store
+  const { filter, online, errors } = store
+  const unsetError = () => {} // TODO: add errors, unsetError in store
 
   useEffect(() => {
     unsetError('art')
@@ -58,7 +59,7 @@ const ProjectForm = ({
     [filter, row, showFilter, store],
   )
 
-  const showDeleted = filter.art._deleted !== false || row?._deleted
+  const showDeleted = filter?.art?.deleted !== false || row?.deleted
 
   return (
     <ErrorBoundary>
@@ -73,21 +74,21 @@ const ProjectForm = ({
             <>
               {showFilter ? (
                 <JesNo
-                  key={`${row.id}_deleted`}
+                  key={`${row.id}deleted`}
                   label="gelöscht"
-                  name="_deleted"
-                  value={row._deleted}
+                  name="deleted"
+                  value={row.deleted}
                   saveToDb={saveToDb}
-                  error={errors?.art?._deleted}
+                  error={errors?.art?.deleted}
                 />
               ) : (
                 <Checkbox2States
-                  key={`${row.id}_deleted`}
+                  key={`${row.id}deleted`}
                   label="gelöscht"
-                  name="_deleted"
-                  value={row._deleted}
+                  name="deleted"
+                  value={row.deleted}
                   saveToDb={saveToDb}
-                  error={errors?.art?._deleted}
+                  error={errors?.art?.deleted}
                 />
               )}
             </>
