@@ -2,6 +2,9 @@ import React, { useContext, useState, useEffect, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SplitPane from 'react-split-pane'
+import { useParams } from 'react-router-dom'
+import { db as dexie, IProject } from '../../dexieClient'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
@@ -47,18 +50,15 @@ const StyledSplitPane = styled(SplitPane)`
   }
 `
 
-const Project = ({
-  filter: showFilter,
-  id = '99999999-9999-9999-9999-999999999999',
-}) => {
+const Project = ({ filter: showFilter }) => {
+  const { projectId: id } = useParams()
+  console.log('Project, id:', id)
   const store = useContext(StoreContext)
   const { online } = store
   const filter = 'TODO: was in store'
 
-  const [row, setRow] = useState(null)
-  useEffect(() => {
-    // TODO: setRow
-  }, [id, showFilter])
+  const row = useLiveQuery(async () => await dexie.projects.get(id))
+  console.log('Project, row:', row)
 
   const [activeConflict, setActiveConflict] = useState(null)
   const conflictDisposalCallback = useCallback(

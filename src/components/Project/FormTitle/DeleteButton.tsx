@@ -24,9 +24,9 @@ const Title = styled.div`
 
 const ProjectDeleteButton = ({ row }) => {
   const store = useContext(StoreContext)
-  const { filter } = store
   const { activeNodeArray, setActiveNodeArray, removeOpenNodeWithChildren } =
-    store.tree
+    store
+  const filter = { todo: 'TODO: was in store' }
 
   const [anchorEl, setAnchorEl] = useState(null)
   const closeMenu = useCallback(() => {
@@ -38,21 +38,14 @@ const ProjectDeleteButton = ({ row }) => {
     [],
   )
   const remove = useCallback(() => {
-    row.delete({ store })
+    // row.delete({ store })
     setAnchorEl(null)
-    if (filter.art._deleted === false) {
-      // need to remove openNode from openNodes
-      removeOpenNodeWithChildren(activeNodeArray)
-      setActiveNodeArray(activeNodeArray.slice(0, -1))
-    }
-  }, [
-    activeNodeArray,
-    filter.art._deleted,
-    removeOpenNodeWithChildren,
-    row,
-    setActiveNodeArray,
-    store,
-  ])
+    // if (filter.art.deleted === false) {
+    //   // need to remove openNode from openNodes
+    //   removeOpenNodeWithChildren(activeNodeArray)
+    //   setActiveNodeArray(activeNodeArray.slice(0, -1))
+    // }
+  }, [])
 
   return (
     <ErrorBoundary>
@@ -62,7 +55,7 @@ const ProjectDeleteButton = ({ row }) => {
         aria-label="Projekt löschen"
         title="Projekt löschen"
         onClick={onClickButton}
-        disabled={row._deleted}
+        disabled={row.deleted}
         size="large"
       >
         <FaMinus />

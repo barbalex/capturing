@@ -26,11 +26,12 @@ const HistoryButton = ({ asMenu, id, showHistory, setShowHistory, table }) => {
   const store = useContext(StoreContext)
   const { online } = store
 
-  const [dataState, setDataState] = useState({ row })
+  const [dataState, setDataState] = useState()
   useEffect(() => {
     // TODO: setDataState({ row })
   }, [id])
-  const { row } = dataState
+  // const { row } = dataState
+  const row = {}
 
   const existMultipleRevisions =
     row?._revisions?.length && row?._revisions?.length > 1

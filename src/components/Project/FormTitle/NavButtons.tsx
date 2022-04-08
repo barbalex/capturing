@@ -7,8 +7,7 @@ import StoreContext from '../../../storeContext'
 
 const ProjectNavButtons = () => {
   const store = useContext(StoreContext)
-  const { tree } = store
-  const { activeNodeArray, setActiveNodeArray, removeOpenNode } = tree
+  const { activeNodeArray, setActiveNodeArray, removeOpenNode } = store
 
   const onClickUp = useCallback(() => {
     removeOpenNode(activeNodeArray)
