@@ -1,7 +1,7 @@
 import React, { useContext, useCallback, useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
-import { FaPlus } from 'react-icons/fa'
+import { FaPlus, FaLongArrowAltUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
 import { withResizeDetector } from 'react-resize-detector'
@@ -10,7 +10,6 @@ import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import UpSvg from '../../svg/to_up.inline.svg'
 
 const Container = styled.div`
   height: 100%;
@@ -67,7 +66,7 @@ const Projects = () => {
           <Title>Arten</Title>
           <TitleSymbols>
             <IconButton title={upTitle} onClick={onClickUp} size="large">
-              <UpSvg />
+              <FaLongArrowAltUp />
             </IconButton>
             <IconButton
               aria-label="neue Art"
