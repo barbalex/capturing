@@ -2,6 +2,13 @@ import axios from 'redaxios'
 
 import constants from './constants'
 
+/**
+ * TODO: do not know what url the live endpoint is on
+ * see:
+ * https://postgrest.org/en/latest/admin.html#health-check
+ * https://github.com/supabase/supabase/discussions/357#discussioncomment-2516469
+ */
+
 const config = {
   url: constants?.getHealthUri(),
   timeout: 5000, // timeout error happens after 5 seconds
