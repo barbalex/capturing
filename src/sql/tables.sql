@@ -1113,6 +1113,49 @@ SECURITY DEFINER;
 
 -- Function is owned by postgres which bypasses RLS
 --
+-- is_project_user is in tables to guarantee correct series of events when creating policies
+-- Parameters need to be prefixed because the name clashes with column names
+CREATE OR REPLACE FUNCTION is_project_user (_auth_user_id uuid)
+  RETURNS bool
+  AS $$
+  SELECT
+    EXISTS (
+      SELECT
+        1
+      FROM
+        auth.users users
+        INNER JOIN project_users ON users.email = project_users.user_email
+      WHERE
+        users.id = _auth_user_id);
+
+$$
+LANGUAGE sql
+SECURITY DEFINER;
+
+-- Function is owned by postgres which bypasses RLS
+--
+-- is_news_delivery_user is in tables to guarantee correct series of events when creating policies
+-- Parameters need to be prefixed because the name clashes with column names
+CREATE OR REPLACE FUNCTION is_news_delivery_user (_auth_user_id uuid)
+  RETURNS bool
+  AS $$
+  SELECT
+    EXISTS (
+      SELECT
+        1
+      FROM
+        auth.users au
+        INNER JOIN public.users pu ON pu.auth_user_id = au.id
+        INNER JOIN news_delivery ON pu.id = news_delivery.user_id
+      WHERE
+        au.id = _auth_user_id);
+
+$$
+LANGUAGE sql
+SECURITY DEFINER;
+
+-- Function is owned by postgres which bypasses RLS
+--
 -- is_project_user_by_project is in tables to guarantee correct series of events when creating policies
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_project_user_by_project (_auth_user_id uuid, _project_id uuid)
@@ -1462,37 +1505,37 @@ DROP POLICY IF EXISTS "Users can view rel types" ON rel_types;
 
 CREATE POLICY "Users can view rel types" ON rel_types
   FOR SELECT
-    USING (TRUE);
+    USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "Users can view role types" ON role_types;
 
 CREATE POLICY "Users can view role types" ON role_types
   FOR SELECT
-    USING (TRUE);
+    USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "Users can view option types" ON option_types;
 
 CREATE POLICY "Users can view option types" ON option_types
   FOR SELECT
-    USING (TRUE);
+    USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "Users can view field types" ON field_types;
 
 CREATE POLICY "Users can view field types" ON field_types
   FOR SELECT
-    USING (TRUE);
+    USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "Users can view widget types" ON widget_types;
 
 CREATE POLICY "Users can view widget types" ON widget_types
   FOR SELECT
-    USING (TRUE);
+    USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "Users can view widgets for fields" ON widgets_for_fields;
 
 CREATE POLICY "Users can view widgets for fields" ON widgets_for_fields
   FOR SELECT
-    USING (TRUE);
+    USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "project readers, editors and managers can view fields" ON fields;
 
@@ -1630,26 +1673,19 @@ DROP POLICY IF EXISTS "Users can view version types" ON version_types;
 
 CREATE POLICY "Users can view version types" ON version_types
   FOR SELECT
-    USING (TRUE);
+    USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "Users can view news" ON news;
 
 CREATE POLICY "Users can view news" ON news
   FOR SELECT
-    USING (TRUE);
+    USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "Users can view their own news delivery" ON news_delivery;
 
 CREATE POLICY "Users can view their own news delivery" ON news_delivery
   FOR SELECT
-    USING (auth.uid () IN (
-      SELECT
-        users.auth_user_id
-      FROM
-        users
-        INNER JOIN news_delivery nd ON users.auth_user_id = nd.user_id
-      WHERE
-        nd.id = news_delivery.id));
+    USING (is_news_delivery_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "authenticated users can view tile_layers" ON tile_layers;
 
