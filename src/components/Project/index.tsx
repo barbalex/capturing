@@ -1,19 +1,46 @@
-import styled from 'styled-components'
-import ErrorBoundary from '../shared/ErrorBoundary'
+import React, { useContext, useState, useEffect } from 'react'
+import { observer } from 'mobx-react-lite'
 
-const Container = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: ${(props) => (props.showfilter ? '#fff3e0' : 'unset')};
-`
+import StoreContext from '../../storeContext'
+import FilterTitle from '../shared/FilterTitle'
+import FormTitle from './FormTitle'
 
-const Project = () => {
+const ProjectFormTitleChooser = ({ row, rawRow }) => {
+  const store = useContext(StoreContext)
+  const showFilter = false // TODO:
+  const showHistory = false // TODO:
+  const setShowHistory = () => {} // TODO:
+
+  const [countState, setCountState] = useState({
+    totalCount: 0,
+    filteredCount: 0,
+  })
+  useEffect(() => {
+    // setCountState({ totalCount, filteredCount })
+  }, [])
+
+  const { totalCount, filteredCount } = countState
+
+  if (showFilter) {
+    return (
+      <FilterTitle
+        title="Art"
+        table="art"
+        totalCount={totalCount}
+        filteredCount={filteredCount}
+      />
+    )
+  }
+
   return (
-    <ErrorBoundary>
-      <Container showfilter={false}>project form</Container>
-    </ErrorBoundary>
+    <FormTitle
+      row={row}
+      totalCount={totalCount}
+      filteredCount={filteredCount}
+      showHistory={showHistory}
+      setShowHistory={setShowHistory}
+    />
   )
 }
 
-export default Project
+export default observer(ProjectFormTitleChooser)

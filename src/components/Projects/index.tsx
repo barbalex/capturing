@@ -48,19 +48,15 @@ const Projects = () => {
   const { activeNodeArray, setActiveNodeArray, removeOpenNode, formHeight } =
     store
 
-  const projects = useLiveQuery(async () => {
-    return await dexie.projects
-      //.where({ deleted: false }) TODO: booleans are not indexable in IndexedDB > use 0/1
-      //.equals('false')
-      .orderBy('label')
-      .toArray()
-  })
-  console.log('Projects', {
-    projects,
-    firstProject: (projects ?? [])[0],
-    totalCount: projects?.length ?? 0,
-    formHeight,
-  })
+  const projects = useLiveQuery(
+    async () =>
+      await dexie.projects
+        //.where({ deleted: false }) TODO: booleans are not indexable in IndexedDB > use 0/1
+        //.equals('false')
+        .orderBy('label')
+        .toArray(),
+  )
+  console.log('Projects, projects:', projects)
 
   const add = useCallback(() => {
     console.log('TODO: insert project')
