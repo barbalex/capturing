@@ -1,13 +1,11 @@
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useContext, useRef, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SplitPane from 'react-split-pane'
 import { Routes, Route } from 'react-router-dom'
 
 import StoreContext from '../storeContext'
-import { supabase } from '../supabaseClient'
 import Login from '../components/Login'
-import { field_types } from '../types'
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 import constants from '../utils/constants'
 import Projects from '../components/Projects'
@@ -44,25 +42,35 @@ const Container = styled.div`
   position: relative;
 `
 
+const standardWidth = 500
+
 const ProjectsPage = () => {
   const store = useContext(StoreContext)
-  const { session, singleColumnView, treeWidthInPercentOfScreen } = store
+  const {
+    session,
+    singleColumnView,
+    treeWidthInPercentOfScreen,
+    setTreeWidth,
+    setFormWidth,
+    setFormHeight,
+  } = store
 
   console.log('Projects, subscriptionState:', store.subscriptionState)
 
+  const containerEl = useRef(null)
+  const treeEl = useRef(null)
+
+  const setDimensions = useCallback(() => {
+    setTreeWidth(treeEl?.current?.clientWidth ?? standardWidth)
+    setFormWidth(containerEl?.current?.clientWidth ?? standardWidth)
+    setFormHeight(containerEl?.current?.clientHeight ?? standardWidth)
+  }, [setFormHeight, setFormWidth, setTreeWidth])
+  useEffect(() => {
+    setDimensions()
+  }, [setDimensions])
+
   useEffect(() => {
     document.title = 'Capturing: Projects'
-  }, [])
-
-  const [projects, setProjects] = useState([])
-  useEffect(() => {
-    const run = async () => {
-      const { data } = await supabase
-        .from<field_types>('field_types')
-        .select('*')
-      setProjects(data)
-    }
-    run()
   }, [])
 
   let treeWidth = singleColumnView ? 0 : `${treeWidthInPercentOfScreen}%`
@@ -72,18 +80,16 @@ const ProjectsPage = () => {
   // hide resizer when tree is hidden
   const resizerStyle = treeWidth === 0 ? { width: 0 } : {}
 
-  // TODO: add routes under projects?
-
   return (
     <ErrorBoundary>
-      <Container>
+      <Container ref={containerEl}>
         <StyledSplitPane
           split="vertical"
           size={treeWidth}
           maxSize={-10}
           resizerStyle={resizerStyle}
         >
-          <div>tree</div>
+          <div ref={treeEl}>tree</div>
           <div>
             <Routes>
               <Route path="/" element={<Projects />}>

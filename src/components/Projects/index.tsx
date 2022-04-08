@@ -5,6 +5,8 @@ import { FaPlus, FaLongArrowAltUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
 import { withResizeDetector } from 'react-resize-detector'
+import { db as dexie, IProject } from '../../dexieClient'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import storeContext from '../../storeContext'
 import Row from './Row'
@@ -44,7 +46,17 @@ const FieldsContainer = styled.div`
 
 const Projects = () => {
   const store = useContext(storeContext)
-  const { activeNodeArray, setActiveNodeArray, removeOpenNode } = store
+  const { activeNodeArray, setActiveNodeArray, removeOpenNode, formHeight } =
+    store
+
+  const projects = useLiveQuery(async () => {
+    return await dexie.projects
+      //.where({ deleted: false }) TODO: booleans are not indexable in IndexedDB > use 0/1
+      //.equals('false')
+      .orderBy('label')
+      .toArray()
+  })
+  console.log('Projects, projects:', projects)
 
   const add = useCallback(() => {
     console.log('TODO: insert project')
@@ -63,14 +75,14 @@ const Projects = () => {
     <ErrorBoundary>
       <Container showfilter={false}>
         <TitleContainer>
-          <Title>Arten</Title>
+          <Title>Projekte</Title>
           <TitleSymbols>
             <IconButton title={upTitle} onClick={onClickUp} size="large">
               <FaLongArrowAltUp />
             </IconButton>
             <IconButton
-              aria-label="neue Art"
-              title="neue Art"
+              aria-label="neues Projekt"
+              title="neues Projekt"
               onClick={add}
               size="large"
             >
@@ -78,7 +90,16 @@ const Projects = () => {
             </IconButton>
           </TitleSymbols>
         </TitleContainer>
-        <FieldsContainer>projects list</FieldsContainer>
+        <FieldsContainer>
+          <Virtuoso
+            //initialTopMostItemIndex={initialTopMostIndex}
+            height={formHeight}
+            totalCount={projects?.length ?? 0}
+            itemContent={(index) => (
+              <Row key={index} node={(projects ?? [])[index]} />
+            )}
+          />
+        </FieldsContainer>
       </Container>
     </ErrorBoundary>
   )

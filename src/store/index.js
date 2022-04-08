@@ -21,6 +21,10 @@ const myTypes = types
     showTreeInSingleColumnView: types.optional(types.boolean, false),
     treeWidthInPercentOfScreen: types.optional(types.number, 33),
     subscriptionState: types.optional(types.string, 'INITIAL'),
+    treeWidth: types.optional(types.number, 500),
+    formWidth: types.optional(types.number, 500),
+    formHeight: types.optional(types.number, 500),
+    filterWidth: types.optional(types.number, 500),
   })
   .volatile(() => ({ session: undefined, navigate: undefined }))
   .actions((self) => {
@@ -32,6 +36,18 @@ const myTypes = types
     // )
 
     return {
+      setTreeWidth(val) {
+        self.treeWidth = val
+      },
+      setFormWidth(val) {
+        self.formWidth = val
+      },
+      setFormHeight(val) {
+        self.formHeight = val
+      },
+      setFilterWidth(val) {
+        self.filterWidth = val
+      },
       setTreeWidthInPercentOfScreen(val) {
         self.treeWidthInPercentOfScreen = val
       },
