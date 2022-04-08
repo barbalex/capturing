@@ -749,9 +749,6 @@ COMMENT ON COLUMN row_revs.depth IS 'depth of the revision tree';
 
 ALTER TABLE row_revs ENABLE ROW LEVEL SECURITY;
 
-ALTER publication supabase_realtime
-  ADD TABLE row_revs;
-
 --
 DROP TABLE IF EXISTS files CASCADE;
 
@@ -866,9 +863,6 @@ COMMENT ON COLUMN file_revs.revisions IS 'array of hashes of all previous revisi
 COMMENT ON COLUMN file_revs.depth IS 'depth of the revision tree';
 
 ALTER TABLE file_revs ENABLE ROW LEVEL SECURITY;
-
-ALTER publication supabase_realtime
-  ADD TABLE file_revs;
 
 --
 DROP TABLE IF EXISTS version_types CASCADE;
