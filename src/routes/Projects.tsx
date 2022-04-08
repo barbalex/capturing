@@ -61,6 +61,10 @@ const ProjectsPage = () => {
   const treeEl = useRef(null)
 
   const setDimensions = useCallback(() => {
+    console.log(
+      'ProjectsPage, setDimensions, formWidth:',
+      containerEl?.current?.clientWidth ?? standardWidth,
+    )
     setTreeWidth(treeEl?.current?.clientWidth ?? standardWidth)
     setFormWidth(containerEl?.current?.clientWidth ?? standardWidth)
     setFormHeight(containerEl?.current?.clientHeight ?? standardWidth)
@@ -90,13 +94,11 @@ const ProjectsPage = () => {
           resizerStyle={resizerStyle}
         >
           <div ref={treeEl}>tree</div>
-          <div>
-            <Routes>
-              <Route path="/" element={<Projects />}>
-                <Route path=":projectId" element={<Project />} />
-              </Route>
-            </Routes>
-          </div>
+          <Routes>
+            <Route path="/" element={<Projects />}>
+              <Route path=":projectId" element={<Project />} />
+            </Route>
+          </Routes>
         </StyledSplitPane>
       </Container>
     </ErrorBoundary>

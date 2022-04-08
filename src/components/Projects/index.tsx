@@ -1,10 +1,9 @@
-import React, { useContext, useCallback, useEffect, useState } from 'react'
+import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { FaPlus, FaLongArrowAltUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
-import { withResizeDetector } from 'react-resize-detector'
 import { db as dexie, IProject } from '../../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
 
@@ -56,7 +55,12 @@ const Projects = () => {
       .orderBy('label')
       .toArray()
   })
-  console.log('Projects, projects:', projects)
+  console.log('Projects', {
+    projects,
+    firstProject: (projects ?? [])[0],
+    totalCount: projects?.length ?? 0,
+    formHeight,
+  })
 
   const add = useCallback(() => {
     console.log('TODO: insert project')
@@ -96,7 +100,7 @@ const Projects = () => {
             height={formHeight}
             totalCount={projects?.length ?? 0}
             itemContent={(index) => (
-              <Row key={index} node={(projects ?? [])[index]} />
+              <Row key={index} row={(projects ?? [])[index]} />
             )}
           />
         </FieldsContainer>
