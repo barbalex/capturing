@@ -37,3 +37,6 @@ dist-ssr
 # Supabase
 **/supabase/.branches
 **/supabase/.temp
+# Supabase
+**/supabase/.branches
+**/supabase/.temp
