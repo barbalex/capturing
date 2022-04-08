@@ -1234,6 +1234,7 @@ __metadata:
     react-router-dom: 6.3.0
     react-select: 5.2.2
     react-split-pane: 0.1.92
+    react-stylable-diff: ^2.0.0
     react-virtuoso: ^2.9.0
     redaxios: ^0.4.1
     simplebar: 5.3.6
@@ -1522,6 +1523,13 @@ __metadata:
   version: 3.2.1
   resolution: "dexie@npm:3.2.1"
   checksum: ba2608005de06b129460cd6c3bfc2ca22a8bcccc0d319b621775b93c82e932f2292b59843dffbecc32549aca789af1497b253b7082cf3da6d3c34eca99887283
+  languageName: node
+  linkType: hard
+
+"diff@npm:^1.2.0":
+  version: 1.4.0
+  resolution: "diff@npm:1.4.0"
+  checksum: 6c18f1f60461a6b84d2b9d8c658a4ba93f52bb6443ae916db8a1a66343d867c3b76cd6d4d5316576fc03a151a5a29416f1d46a5634b29cf0e494829ec623f8c4
   languageName: node
   linkType: hard
 
@@ -3638,6 +3646,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-stylable-diff@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "react-stylable-diff@npm:2.0.0"
+  dependencies:
+    diff: ^1.2.0
+    prop-types: ^15.6.0
+    react: ^16.0.0
+  checksum: b0d73259ba5ecfe96c705e3875d924864506d959b1fbd809fb7766b5fcfb738dd9d13d64e27887e44a3e30f3c8e348405cf2c064ac2fba17347f5e5c333acc77
+  languageName: node
+  linkType: hard
+
 "react-style-proptype@npm:^3.2.2":
   version: 3.2.2
   resolution: "react-style-proptype@npm:3.2.2"
@@ -3680,6 +3699,17 @@ __metadata:
   dependencies:
     loose-envify: ^1.1.0
   checksum: 293020b96536b3c7113ee57ca5c990a3f25649d1751b1c7a3aabd16dff0691fe9f1eed1206616d0906d05933536052037340a0c8d0941ff870b0eb469a2f975b
+  languageName: node
+  linkType: hard
+
+"react@npm:^16.0.0":
+  version: 16.14.0
+  resolution: "react@npm:16.14.0"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+    prop-types: ^15.6.2
+  checksum: 8484f3ecb13414526f2a7412190575fc134da785c02695eb92bb6028c930bfe1c238d7be2a125088fec663cc7cda0a3623373c46807cf2c281f49c34b79881ac
   languageName: node
   linkType: hard
 
