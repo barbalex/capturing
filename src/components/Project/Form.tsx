@@ -10,6 +10,7 @@ import ifIsNumericAsNumber from '../../utils/ifIsNumericAsNumber'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import ConflictList from '../shared/ConflictList'
 import { IProject } from '../../dexieClient'
+import TextField from '../shared/TextField'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -80,6 +81,7 @@ const ProjectForm = ({
               Aktuelle Version<Rev>{row._rev}</Rev>
             </CaseConflictTitle>
           )}
+
           {showDeleted && (
             <>
               {showFilter ? (
@@ -103,6 +105,31 @@ const ProjectForm = ({
               )}
             </>
           )}
+          <TextField
+            key={`${row.id}name`}
+            name="name"
+            label="Name"
+            value={row.name}
+            saveToDb={saveToDb}
+            error={errors?.project?.name}
+          />
+          <TextField
+            key={`${row.id}label`}
+            name="label"
+            label="Beschriftung"
+            value={row.label}
+            saveToDb={saveToDb}
+            error={errors?.project?.label}
+          />
+          <TextField
+            key={`${row.id}crs`}
+            name="crs"
+            label="CRS (Koordinate-Referenz-System)"
+            value={row.crs}
+            type="number"
+            saveToDb={saveToDb}
+            error={errors?.project?.crs}
+          />
           {online && !showFilter && row?._conflicts?.map && (
             <ConflictList
               conflicts={row._conflicts}
