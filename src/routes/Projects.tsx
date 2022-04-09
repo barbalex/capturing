@@ -61,14 +61,11 @@ const ProjectsPage = () => {
   const treeEl = useRef(null)
 
   const setDimensions = useCallback(() => {
-    // console.log(
-    //   'ProjectsPage, setDimensions, formWidth:',
-    //   containerEl?.current?.clientHeight ?? standardWidth,
-    // )
     setTreeWidth(treeEl?.current?.clientWidth ?? standardWidth)
     setFormWidth(containerEl?.current?.clientWidth ?? standardWidth)
     setFormHeight(containerEl?.current?.clientHeight ?? standardWidth)
   }, [setFormHeight, setFormWidth, setTreeWidth])
+  // re-calc dimensions every time containerEl changes
   useEffect(() => {
     setDimensions()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,7 +75,7 @@ const ProjectsPage = () => {
     document.title = 'Capturing: Projects'
   }, [])
 
-  let treeWidth = singleColumnView ? 0 : `${treeWidthInPercentOfScreen}%`
+  const treeWidth = singleColumnView ? 0 : `${treeWidthInPercentOfScreen}%`
 
   if (!session) return <Login />
 
