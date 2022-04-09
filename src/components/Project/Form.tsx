@@ -26,10 +26,10 @@ const Rev = styled.span`
 `
 
 type ProjectFormProps = {
-  activeConflict: boolean
+  activeConflict: string
   id: string
   row: IProject
-  setActiveConflict: (boolean) => void
+  setActiveConflict: (string) => void
   showFilter: (boolean) => void
   showHistory: (boolean) => void
 }

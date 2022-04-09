@@ -7,8 +7,16 @@ import Conflict from './Conflict'
 const Konflikte = styled.div`
   margin-bottom: 10px;
 `
-
-const ConflictList = ({ conflicts, activeConflict, setActiveConflict }) => (
+type ConflictListProps = {
+  conflicts: string[]
+  activeConflict: string
+  setActiveConflict: (string) => void
+}
+const ConflictList = ({
+  conflicts,
+  activeConflict,
+  setActiveConflict,
+}: ConflictListProps) => (
   <Konflikte>
     {[...conflicts].sort().map((conflict) => (
       <Conflict

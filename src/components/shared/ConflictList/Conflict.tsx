@@ -11,7 +11,17 @@ const Konflikt = styled.div`
   }
 `
 
-const Conflict = ({ conflict, activeConflict, setActiveConflict }) => {
+type ConflictProps = {
+  conflict: string
+  activeConflict: string
+  setActiveConflict: (string) => void
+}
+
+const Conflict = ({
+  conflict,
+  activeConflict,
+  setActiveConflict,
+}: ConflictProps) => {
   const onClick = useCallback(() => {
     setActiveConflict(
       !activeConflict
