@@ -26,7 +26,7 @@ const myTypes = types
     formHeight: types.optional(types.number, 500),
     filterWidth: types.optional(types.number, 500),
   })
-  .volatile(() => ({ session: undefined, navigate: undefined }))
+  .volatile(() => ({ navigate: undefined }))
   .actions((self) => {
     // autorun(() =>
     //   console.log(
@@ -100,9 +100,6 @@ const myTypes = types
         const set = new Set([...self.openNodes, ...nodes].map(JSON.stringify))
         const newOpenNodes = Array.from(set).map(JSON.parse)
         self.openNodes = newOpenNodes
-      },
-      setSession(val) {
-        self.session = val
       },
       addNotification(valPassed) {
         const val = {

@@ -37,7 +37,6 @@ const LoginWithEmailAndPassword = ({
   authType,
 }) => {
   const store = useContext(storeContext)
-  const { setSession } = store
 
   const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
@@ -61,7 +60,7 @@ const LoginWithEmailAndPassword = ({
         // using signUp after link: error.message = 'User already registered'
         // using signIn after link / without signUp: error.message = 'Invalid login credentials'
         // using link after signUp: works
-        const { session, error } =
+        const { error } =
           authType === 'email_signup'
             ? await supabase.auth.signUp({
                 email: emailToUse,
@@ -95,18 +94,9 @@ const LoginWithEmailAndPassword = ({
         }
         setEmailErrorText('')
         setPasswordErrorText('')
-        setSession(session)
       })
     },
-    [
-      authType,
-      email,
-      password,
-      setEmailErrorText,
-      setPasswordErrorText,
-      setSession,
-      store,
-    ],
+    [authType, email, password, setEmailErrorText, setPasswordErrorText, store],
   )
   const onBlurEmail = useCallback(
     (e) => {

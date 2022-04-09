@@ -48,7 +48,6 @@ const ResetButton = styled(Button)`
 const ResetPassword = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const store = useContext(storeContext)
-  const { setSession } = store
 
   // TODO: remove type search param to close reset password modal:
   // searchParams.delete('type'), need setSearchParams?
@@ -94,12 +93,11 @@ const ResetPassword = () => {
         console.log('session:', session)
         setEmailErrorText('')
         setPasswordErrorText('')
-        setSession(session)
         setSearchParams(searchParams.delete('type'))
       })
       searchParams.delete('type')
     },
-    [email, password, searchParams, setSearchParams, setSession, store],
+    [email, password, searchParams, setSearchParams, store],
   )
   const onBlurEmail = useCallback(
     (e) => {

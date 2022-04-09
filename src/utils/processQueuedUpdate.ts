@@ -14,6 +14,7 @@ const processQueuedUpdate = async ({
   queuedUpdate,
   store,
 }: ProcessQueuedUpdateProps) => {
+  const session = supabase.auth.session()
   const { online, setOnline } = store
   console.log('processQueuedUpdate', queuedUpdate)
   // TODO: ttables problem?

@@ -51,7 +51,7 @@ const Projects = () => {
   const projects: IProject[] = useLiveQuery(
     async () => await dexie.projects.where({ deleted: 0 }).sortBy('label'),
   )
-  console.log('Projects, projects:', projects)
+  // console.log('Projects, projects:', projects)
 
   const add = useCallback(() => {
     console.log('TODO: insert project')

@@ -8,8 +8,6 @@ import processQueuedUpdate from '../utils/processQueuedUpdate'
 const QueuedUpdatesWriter = () => {
   const store = useContext(storeContext)
   const { online } = store
-  // const { session } = store
-  // console.log('SyncController, session:', session)
 
   // 1. TODO: Only progress if online
   // 2. TODO: Get this to restart when online status changes or queuedUpdates.length changes (useEffect with offline status and queuedUpdates in [])

@@ -19,7 +19,6 @@ import activeNodeArrayFromUrl from './utils/activeNodeArrayFromUrl'
 import NavigationSyncController from './components/NavigationSyncController'
 import ResetPassword from './components/ResetPassword'
 import ColumnController from './components/ColumnController'
-import AuthController from './components/AuthController'
 import QueuedUpdatesWriter from './components/QueuedUpdatesWriter'
 import { supabase } from './supabaseClient'
 import fetchFromServer from './utils/fetchFromServer'
@@ -70,7 +69,6 @@ function App() {
             <NavigationSyncController />
             <ColumnController />
             <ResetPassword />
-            <AuthController />
             <QueuedUpdatesWriter />
             <Layout>
               <Routes>

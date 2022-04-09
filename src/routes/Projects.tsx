@@ -10,6 +10,7 @@ import ErrorBoundary from '../components/shared/ErrorBoundary'
 import constants from '../utils/constants'
 import Projects from '../components/Projects'
 import Project from '../components/Project'
+import { supabase } from '../supabaseClient'
 
 const StyledSplitPane = styled(SplitPane)`
   .Resizer {
@@ -46,8 +47,8 @@ const standardWidth = 500
 
 const ProjectsPage = () => {
   const store = useContext(StoreContext)
+  const session = supabase.auth.session()
   const {
-    session,
     singleColumnView,
     treeWidthInPercentOfScreen,
     setTreeWidth,
