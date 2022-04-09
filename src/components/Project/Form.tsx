@@ -47,7 +47,7 @@ const ProjectForm = ({
   const unsetError = () => {} // TODO: add errors, unsetError in store
 
   useEffect(() => {
-    unsetError('art')
+    unsetError('project')
   }, [id, unsetError])
 
   const saveToDb = useCallback(
@@ -58,7 +58,7 @@ const ProjectForm = ({
       if (event.target.value === '') value = null
 
       if (showFilter) {
-        return filter.setValue({ table: 'art', key: field, value })
+        return filter.setValue({ table: 'project', key: field, value })
       }
 
       // only update if value has changed
@@ -69,7 +69,7 @@ const ProjectForm = ({
     [filter, row, showFilter, store],
   )
 
-  const showDeleted = filter?.art?.deleted !== false || row?.deleted
+  const showDeleted = filter?.project?.deleted !== false || row?.deleted
 
   return (
     <ErrorBoundary>
@@ -89,7 +89,7 @@ const ProjectForm = ({
                   name="deleted"
                   value={row.deleted}
                   saveToDb={saveToDb}
-                  error={errors?.art?.deleted}
+                  error={errors?.project?.deleted}
                 />
               ) : (
                 <Checkbox2States
@@ -98,7 +98,7 @@ const ProjectForm = ({
                   name="deleted"
                   value={row.deleted}
                   saveToDb={saveToDb}
-                  error={errors?.art?.deleted}
+                  error={errors?.project?.deleted}
                 />
               )}
             </>
