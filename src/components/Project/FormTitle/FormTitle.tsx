@@ -44,14 +44,14 @@ const ProjectFormTitle = ({
   if (width < 520) {
     return (
       <TitleContainer>
-        <Title>Art</Title>
+        <Title>Projekt</Title>
         <TitleSymbols>
           <NavButtons />
           <AddButton />
           <DeleteButton row={row} />
           <Menu white={false}>
             <HistoryButton
-              table="art"
+              table="projects"
               id={row.id}
               showHistory={showHistory}
               setShowHistory={setShowHistory}
@@ -70,13 +70,13 @@ const ProjectFormTitle = ({
 
   return (
     <TitleContainer>
-      <Title>Art</Title>
+      <Title>Projekt</Title>
       <TitleSymbols>
         <NavButtons />
         <AddButton />
         <DeleteButton row={row} />
         <HistoryButton
-          table="art"
+          table="projects"
           id={row.id}
           showHistory={showHistory}
           setShowHistory={setShowHistory}
