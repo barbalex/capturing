@@ -14,6 +14,7 @@ const processQueuedUpdate = async ({
   queuedUpdate,
   store,
 }: ProcessQueuedUpdateProps) => {
+  const { online, setOnline } = store
   console.log('processQueuedUpdate', queuedUpdate)
   // TODO: ttables problem?
   const isRevTable = revTables.includes(queuedUpdate.table)
@@ -72,7 +73,8 @@ const processQueuedUpdate = async ({
     }
   }
   // 4. It worke. Clean up
-  // TODO: Set online true if was false
+  // Set online true if was false
+  if (!online) setOnline(true)
   // remove queuedUpdate
   await dexie.queued_updates.delete(queuedUpdate.id)
 }
