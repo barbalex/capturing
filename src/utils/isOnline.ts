@@ -18,6 +18,7 @@ const isOnline = async () => {
   let res
   try {
     // based on: https://hasura.io/docs/1.0/graphql/core/api-reference/health.html
+    // TODO: head request to root <ref>/rest/v1/
     res = await axios.get(config.url, { timeout: config.timeout })
   } catch (error) {
     // error can also be caused by timeout
