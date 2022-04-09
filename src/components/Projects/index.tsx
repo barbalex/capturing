@@ -48,13 +48,9 @@ const Projects = () => {
   const { activeNodeArray, setActiveNodeArray, removeOpenNode, formHeight } =
     store
 
-  const projects = useLiveQuery(
+  const projects: IProject[] = useLiveQuery(
     async () =>
-      await dexie.projects
-        //.where({ deleted: false }) TODO: booleans are not indexable in IndexedDB > use 0/1
-        //.equals('false')
-        .orderBy('label')
-        .toArray(),
+      await dexie.projects.where({ deleted: 0 }).orderBy('label').toArray(),
   )
   console.log('Projects, projects:', projects)
 
