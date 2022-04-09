@@ -1,3 +1,4 @@
+import { IQueuedUpdate } from './dexieClient'
 import { ProjectUser } from './initiateDb'
 import Dexie, { DexieTable } from 'dexie'
 import { v1 as uuidv1 } from 'uuid'
@@ -861,8 +862,33 @@ export interface IQueuedUpdate {
   value: string // json of value or array of values
   //operation: string // always upsert?
   revert_id: string
-  revert_field: string
   revert_value: string // json of value
+}
+
+// use a class to automatically set time
+export class QueuedUpdate implements IQueuedUpdate {
+  id?: number
+  time?: Date
+  table: string
+  value: string
+  revert_id: string
+  revert_value: string
+
+  constructor(
+    id?: number,
+    time: Date,
+    table: string,
+    value: string,
+    revert_id: string,
+    revert_value: string,
+  ) {
+    if (id) this.id = id
+    this.time = new Date().toISOString()
+    this.table = table
+    this.value = value
+    this.revert_id = revert_id
+    this.revert_value = revert_value
+  }
 }
 
 export class MySubClassedDexie extends Dexie {
@@ -886,7 +912,7 @@ export class MySubClassedDexie extends Dexie {
   widget_types!: DexieTable<IWidgetType, string>
   widgets_for_fields!: DexieTable<WidgetForField, string>
   stores!: DexieTable<IStore, string>
-  queued_updates!: DexieTable<IQueuedUpdate, number>
+  queued_updates!: DexieTable<QueuedUpdate, number>
 
   constructor() {
     super('capturing')

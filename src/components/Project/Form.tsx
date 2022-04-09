@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useCallback } from 'react'
+import React, { useContext, useEffect, useCallback, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SimpleBar from 'simplebar-react'
+import isEqual from 'lodash/isEqual'
 
 import StoreContext from '../../storeContext'
 import Checkbox2States from '../shared/Checkbox2States'
@@ -9,7 +10,7 @@ import JesNo from '../shared/JesNo'
 import ifIsNumericAsNumber from '../../utils/ifIsNumericAsNumber'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import ConflictList from '../shared/ConflictList'
-import { db as dexie, IProject } from '../../dexieClient'
+import { db as dexie, IProject, QueuedUpdate } from '../../dexieClient'
 import TextField from '../shared/TextField'
 
 const FieldsContainer = styled.div`
@@ -47,11 +48,42 @@ const ProjectForm = ({
   const { filter, online, errors } = store
   const unsetError = () => {} // TODO: add errors, unsetError in store
 
+  const [rowState, setRowState] = useState<IProject>()
+  // update rowState initially
+  // and every time it changed outside the form
+  useEffect(() => {
+    setRowState(row)
+  }, [row])
+
   useEffect(() => {
     unsetError('project')
   }, [id, unsetError])
 
-  const saveToDb = useCallback(
+  const queueUpdate = useCallback(() => {
+    // only update if is changed
+    if (!isEqual(rowState, row)) {
+      const update = new QueuedUpdate(
+        undefined,
+        undefined,
+        'projects',
+        JSON.stringify(rowState),
+        rowState?.id,
+        JSON.stringify(row),
+      )
+      console.log('queueUpdate, update:', update)
+      dexie.queued_updates.add(update)
+    }
+  }, [row, rowState])
+
+  useEffect(() => {
+    window.onbeforeunload = () => {
+      // save any data changed before closing tab or browser
+      queueUpdate()
+      return
+    }
+  }, [queueUpdate])
+
+  const onBlur = useCallback(
     async (event) => {
       const field: string = event.target.name
       let value = ifIsNumericAsNumber(event.target.value)
@@ -65,9 +97,10 @@ const ProjectForm = ({
       // only update if value has changed
       const previousValue = ifIsNumericAsNumber(row[field])
       if (value === previousValue) return
-      row.edit({ field, value, store })
+      const newRowState = { ...rowState, [field]: value }
+      setRowState(newRowState)
     },
-    [filter, row, showFilter, store],
+    [filter, row, rowState, showFilter],
   )
 
   const showDeleted = filter?.project?.deleted !== false || row?.deleted
@@ -77,14 +110,11 @@ const ProjectForm = ({
       <SimpleBar style={{ maxHeight: '100%', height: '100%' }}>
         <FieldsContainer
           onBlur={(e) => {
-            console.log('ProjectForm, FieldsContainer was blured', {
-              //target: e.target,
-              currentTarget: e.currentTarget,
-              relatedTarget: e.relatedTarget,
-              //equal: e.target === e.currentTarget,
+            if (!e.currentTarget.contains(e.relatedTarget)) {
+              // focus left the container
               // https://github.com/facebook/react/issues/6410#issuecomment-671915381
-              focusLeft: !e.currentTarget.contains(e.relatedTarget),
-            })
+              queueUpdate()
+            }
           }}
         >
           {(activeConflict || showHistory) && (
@@ -101,7 +131,7 @@ const ProjectForm = ({
                   label="gelöscht"
                   name="deleted"
                   value={row.deleted}
-                  saveToDb={saveToDb}
+                  onBlur={onBlur}
                   error={errors?.project?.deleted}
                 />
               ) : (
@@ -110,7 +140,7 @@ const ProjectForm = ({
                   label="gelöscht"
                   name="deleted"
                   value={row.deleted}
-                  saveToDb={saveToDb}
+                  onBlur={onBlur}
                   error={errors?.project?.deleted}
                 />
               )}
@@ -121,7 +151,7 @@ const ProjectForm = ({
             name="name"
             label="Name"
             value={row.name}
-            saveToDb={saveToDb}
+            onBlur={onBlur}
             error={errors?.project?.name}
           />
           <TextField
@@ -129,7 +159,7 @@ const ProjectForm = ({
             name="label"
             label="Beschriftung"
             value={row.label}
-            saveToDb={saveToDb}
+            onBlur={onBlur}
             error={errors?.project?.label}
           />
           <TextField
@@ -138,7 +168,7 @@ const ProjectForm = ({
             label="CRS (Koordinaten-Referenz-System)"
             value={row.crs}
             type="number"
-            saveToDb={saveToDb}
+            onBlur={onBlur}
             error={errors?.project?.crs}
           />
           <TextField
@@ -146,7 +176,7 @@ const ProjectForm = ({
             name="account_id"
             label="Konto"
             value={row.account_id}
-            saveToDb={saveToDb}
+            onBlur={onBlur}
             error={errors?.project?.account_id}
           />
           {online && !showFilter && row?._conflicts?.map && (

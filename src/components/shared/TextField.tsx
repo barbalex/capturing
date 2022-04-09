@@ -27,7 +27,7 @@ type TextFieldProps = {
   hintText?: string
   helperText?: string
   error?: string
-  saveToDb: (any) => void
+  onBlur: (any) => void
   schrinkLabel?: boolean
 }
 
@@ -42,7 +42,7 @@ const MyTextField = ({
   hintText = '',
   helperText = '',
   error,
-  saveToDb,
+  onBlur,
   schrinkLabel = true,
 }: TextFieldProps) => {
   const [stateValue, setStateValue] = useState(
@@ -56,10 +56,10 @@ const MyTextField = ({
   const onKeyPress = useCallback(
     (event) => {
       if (event.key === 'Enter') {
-        saveToDb(event)
+        onBlur(event)
       }
     },
-    [saveToDb],
+    [onBlur],
   )
 
   // once schrink is set, need to manually control ist
@@ -88,7 +88,7 @@ const MyTextField = ({
         type={type}
         multiline={multiLine}
         onChange={onChange}
-        onBlur={saveToDb}
+        onBlur={onBlur}
         onKeyPress={onKeyPress}
         placeholder={hintText}
       />

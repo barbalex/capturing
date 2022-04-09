@@ -47,7 +47,7 @@ const RadioButtonGroup = ({
   name,
   error,
   helperText = '',
-  saveToDb,
+  onBlur,
 }) => {
   const [stateValue, setStateValue] = useState(valuePassed)
   useEffect(() => {
@@ -73,10 +73,10 @@ const RadioButtonGroup = ({
             name,
           },
         }
-        return saveToDb(fakeEvent)
+        return onBlur(fakeEvent)
       }
     },
-    [stateValue, name, saveToDb],
+    [stateValue, name, onBlur],
   )
   const onChangeGroup = useCallback(
     (event) => {
@@ -91,9 +91,9 @@ const RadioButtonGroup = ({
           name,
         },
       }
-      saveToDb(fakeEvent)
+      onBlur(fakeEvent)
     },
-    [name, saveToDb],
+    [name, onBlur],
   )
 
   const valueSelected =

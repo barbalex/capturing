@@ -32,7 +32,7 @@ const Checkbox2States = ({
   name,
   value: valuePassed,
   error,
-  saveToDb,
+  onBlur,
 }) => {
   const [stateValue, setStateValue] = useState(valuePassed)
   useEffect(() => {
@@ -48,8 +48,8 @@ const Checkbox2States = ({
         name,
       },
     }
-    saveToDb(fakeEvent)
-  }, [stateValue, name, saveToDb])
+    onBlur(fakeEvent)
+  }, [stateValue, name, onBlur])
 
   const checked = stateValue === 1
 
