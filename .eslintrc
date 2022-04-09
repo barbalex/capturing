@@ -6,6 +6,8 @@
       "jsx": true
     }
   },
+  "parser": "@typescript-eslint/parser",
+  "root": true,
   "rules": {
     "strict": 0,
     "react/prop-types": 0,
@@ -13,7 +15,7 @@
     "no-console": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
-    "no-unused-vars": 1,
+    "no-unused-vars": "off",
     "no-empty": ["error", { "allowEmptyCatch": true }],
     "react/react-in-jsx-scope": "off"
   },
@@ -21,7 +23,13 @@
     "browser": true,
     "es2022": true
   },
-  "plugins": ["react", "react-hooks", "prettier"],
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "plugins": ["@typescript-eslint", "react", "react-hooks", "prettier"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    //"plugin:@typescript-eslint/eslint-recommended",
+    "prettier"
+  ],
   "settings": { "react": { "version": "detect" } }
 }
