@@ -360,7 +360,7 @@ ALTER publication supabase_realtime
   ADD TABLE option_types;
 
 --
-DROP TABLE IF EXISTS tables cascade;
+DROP TABLE IF EXISTS tables CASCADE;
 
 CREATE TABLE tables (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
@@ -516,7 +516,7 @@ ALTER publication supabase_realtime
   ADD TABLE widget_types;
 
 --
-DROP TABLE IF EXISTS widgets_for_fields cascade;
+DROP TABLE IF EXISTS widgets_for_fields CASCADE;
 
 CREATE TABLE widgets_for_fields (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
@@ -1738,4 +1738,33 @@ CREATE POLICY "project managers can delete project_tile_layers" ON project_tile_
     USING (is_project_manager_by_project (auth.uid (), project_id));
 
 COMMIT TRANSACTION;
+
+-- add test-data
+-- 1. create new user with email alex.barbalex@gmail.com
+INSERT INTO accounts (service_id)
+  VALUES ('test');
+
+INSERT INTO users (email, name, account_id, auth_user_id)
+  VALUES ('alex.barbalex@gmail.com', 'test-user', (
+      SELECT
+        id
+      FROM
+        accounts
+      WHERE
+        service_id = 'test'), (
+        SELECT
+          id
+        FROM
+          auth.users
+        WHERE
+          email = 'alex.barbalex@gmail.com'));
+
+INSERT INTO projects (name, label, account_id)
+  VALUES ('test-project', 'test-project', (
+      SELECT
+        id
+      FROM
+        accounts
+      WHERE
+        service_id = 'test'));
 
