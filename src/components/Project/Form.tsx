@@ -81,6 +81,7 @@ const ProjectForm = ({
       console.log('updating queue')
       dexie.queued_updates.add(update)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [row, rowState.current])
 
   useEffect(() => {

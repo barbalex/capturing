@@ -860,10 +860,9 @@ export interface IQueuedUpdate {
   id?: number
   time: Date
   table: string
-  value: string // json of value or array of values
-  //operation: string // always upsert?
-  revert_id: string
-  revert_value: string // json of value
+  value: string // json of value
+  revert_id?: string // only set on update, is undefined on insert
+  revert_value?: string // json of previous value. Only set on update, is undefined on insert
 }
 
 // use a class to automatically set time
@@ -872,23 +871,23 @@ export class QueuedUpdate implements IQueuedUpdate {
   time?: Date
   table: string
   value: string
-  revert_id: string
-  revert_value: string
+  revert_id?: string
+  revert_value?: string
 
   constructor(
     id?: number,
     time: Date,
     table: string,
     value: string,
-    revert_id: string,
-    revert_value: string,
+    revert_id?: string,
+    revert_value?: string,
   ) {
     if (id) this.id = id
     this.time = new Date().toISOString()
     this.table = table
     this.value = value
-    this.revert_id = revert_id
-    this.revert_value = revert_value
+    if (revert_id) this.revert_id = revert_id
+    if (revert_value) this.revert_value = revert_value
   }
 }
 
