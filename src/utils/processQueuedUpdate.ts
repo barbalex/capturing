@@ -5,13 +5,14 @@ import md5 from 'blueimp-md5'
 
 const revTables = ['rows', 'files']
 
-type ProcessQueuedUpdateProps = { queuedUpdate: QueuedUpdate }
+type ProcessQueuedUpdateProps = { queuedUpdate: QueuedUpdate; store: any }
 
 // TODO: test rev table
 // TODO: test regular table
 
 const processQueuedUpdate = async ({
   queuedUpdate,
+  store,
 }: ProcessQueuedUpdateProps) => {
   console.log('processQueuedUpdate', queuedUpdate)
   // TODO: ttables problem?
@@ -71,7 +72,7 @@ const processQueuedUpdate = async ({
     }
   }
   // 4. It worke. Clean up
-  // Set online true if was false
+  // TODO: Set online true if was false
   // remove queuedUpdate
   await dexie.queued_updates.delete(queuedUpdate.id)
 }
