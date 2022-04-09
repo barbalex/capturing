@@ -49,8 +49,7 @@ const Projects = () => {
     store
 
   const projects: IProject[] = useLiveQuery(
-    async () =>
-      await dexie.projects.where({ deleted: 0 }).orderBy('label').toArray(),
+    async () => await dexie.projects.where({ deleted: 0 }).sortBy('label'),
   )
   console.log('Projects, projects:', projects)
 
