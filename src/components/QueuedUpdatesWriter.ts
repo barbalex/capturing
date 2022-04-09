@@ -7,6 +7,7 @@ import processQueuedUpdate from '../utils/processQueuedUpdate'
 
 const QueuedUpdatesWriter = () => {
   const store = useContext(storeContext)
+  const { online } = store
   // const { session } = store
   // console.log('SyncController, session:', session)
 
@@ -18,8 +19,9 @@ const QueuedUpdatesWriter = () => {
   useEffect(() => {
     const queuedUpdate: QueuedUpdate = (queuedUpdates ?? [])[0]
     if (!queuedUpdate) return
+
     processQueuedUpdate({ queuedUpdate, store })
-  }, [queuedUpdates, 'TODO: online status / server connection status'])
+  }, [queuedUpdates, online, store])
 }
 
 export default QueuedUpdatesWriter
