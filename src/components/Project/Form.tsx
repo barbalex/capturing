@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useCallback, useState } from 'react'
+import React, { useContext, useEffect, useCallback, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SimpleBar from 'simplebar-react'
@@ -46,13 +46,21 @@ const ProjectForm = ({
 }: ProjectFormProps) => {
   const store = useContext(StoreContext)
   const { filter, online, errors } = store
-  const unsetError = () => {} // TODO: add errors, unsetError in store
+  const unsetError = useCallback(
+    () => () => {
+      console.log('TODO: unsetError')
+    },
+    [],
+  ) // TODO: add errors, unsetError in store
 
-  const [rowState, setRowState] = useState<IProject>()
+  console.log('ProjectForm rendering')
+
+  const rowState = useRef()
+  //const [rowState, setRowState] = useState<IProject>()
   // update rowState initially
   // and every time it changed outside the form
   useEffect(() => {
-    setRowState(row)
+    rowState.current = row
   }, [row])
 
   useEffect(() => {
@@ -61,19 +69,19 @@ const ProjectForm = ({
 
   const queueUpdate = useCallback(() => {
     // only update if is changed
-    if (!isEqual(rowState, row)) {
+    if (!isEqual(rowState.current, row)) {
       const update = new QueuedUpdate(
         undefined,
         undefined,
         'projects',
-        JSON.stringify(rowState),
-        rowState?.id,
+        JSON.stringify(rowState.current),
+        rowState.current?.id,
         JSON.stringify(row),
       )
-      console.log('queueUpdate, update:', update)
+      console.log('updating queue')
       dexie.queued_updates.add(update)
     }
-  }, [row, rowState])
+  }, [row, rowState.current])
 
   useEffect(() => {
     window.onbeforeunload = () => {
@@ -97,8 +105,8 @@ const ProjectForm = ({
       // only update if value has changed
       const previousValue = ifIsNumericAsNumber(row[field])
       if (value === previousValue) return
-      const newRowState = { ...rowState, [field]: value }
-      setRowState(newRowState)
+      const newRowState = { ...rowState.current, [field]: value }
+      rowState.current = newRowState
     },
     [filter, row, rowState, showFilter],
   )
