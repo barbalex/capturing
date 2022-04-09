@@ -37,7 +37,7 @@ CREATE OR REPLACE FUNCTION row_revs_children (row_id uuid, parent_rev text)
 $$
 LANGUAGE sql;
 
-CREATE OR REPLACE FUNCTION row_revs_leaves (row_id uuid, deleted boolean DEFAULT FALSE)
+CREATE OR REPLACE FUNCTION row_revs_leaves (row_id uuid, deleted integer DEFAULT 0)
   RETURNS SETOF row_revs
   AS $$
   SELECT
@@ -59,7 +59,7 @@ CREATE OR REPLACE FUNCTION row_revs_leaves (row_id uuid, deleted boolean DEFAULT
 $$
 LANGUAGE sql;
 
-CREATE OR REPLACE FUNCTION row_revs_max_depth (row_id uuid, deleted boolean DEFAULT FALSE)
+CREATE OR REPLACE FUNCTION row_revs_max_depth (row_id uuid, deleted integer DEFAULT 0)
   RETURNS int
   AS $$
   SELECT
@@ -70,7 +70,7 @@ CREATE OR REPLACE FUNCTION row_revs_max_depth (row_id uuid, deleted boolean DEFA
 $$
 LANGUAGE sql;
 
-CREATE OR REPLACE FUNCTION row_revs_winner_rev_value (row_id uuid, deleted boolean DEFAULT FALSE)
+CREATE OR REPLACE FUNCTION row_revs_winner_rev_value (row_id uuid, deleted integer DEFAULT 0)
   RETURNS text
   AS $$
   SELECT
@@ -83,7 +83,7 @@ WHERE
 $$
 LANGUAGE sql;
 
-CREATE OR REPLACE FUNCTION row_revs_winner (row_id uuid, deleted boolean DEFAULT FALSE)
+CREATE OR REPLACE FUNCTION row_revs_winner (row_id uuid, deleted integer DEFAULT 0)
   RETURNS SETOF row_revs
   AS $$
   SELECT
@@ -97,7 +97,7 @@ WHERE
 $$
 LANGUAGE sql;
 
-CREATE OR REPLACE FUNCTION row_conflicts_of_winner (row_id uuid, deleted boolean DEFAULT FALSE)
+CREATE OR REPLACE FUNCTION row_conflicts_of_winner (row_id uuid, deleted integer DEFAULT 0)
   RETURNS text[]
   AS $$
   SELECT

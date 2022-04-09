@@ -26,7 +26,7 @@ CREATE TABLE users (
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 -- TODO: errors on remote server: https://github.com/supabase/supabase/issues/6257
@@ -79,7 +79,7 @@ CREATE TABLE accounts (
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE -- any more?:
+  deleted integer DEFAULT 0 -- any more?:
   -- type
   -- from
   -- until
@@ -142,13 +142,13 @@ CREATE TABLE projects (
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE -- geometry?
+  deleted integer DEFAULT 0 -- geometry?
   -- data?
 );
 
 CREATE UNIQUE INDEX account_name_idx ON projects (account_id, name)
 WHERE
-  deleted IS FALSE;
+  deleted = 0;
 
 CREATE INDEX ON projects USING btree (id);
 
@@ -193,7 +193,7 @@ CREATE TABLE rel_types (
   sort smallint DEFAULT NULL,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON rel_types USING btree (value);
@@ -236,7 +236,7 @@ CREATE TABLE role_types (
   sort smallint DEFAULT 1,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON role_types USING btree (value);
@@ -281,12 +281,12 @@ CREATE TABLE project_users (
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 CREATE UNIQUE INDEX project_users_project_email_idx ON project_users (project_id, user_email)
 WHERE
-  deleted IS FALSE;
+  deleted = 0;
 
 CREATE INDEX ON project_users USING btree (id);
 
@@ -323,11 +323,11 @@ ALTER publication supabase_realtime
 CREATE TABLE option_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   value text UNIQUE,
-  save_id boolean DEFAULT FALSE,
+  save_id integer DEFAULT 0,
   sort smallint DEFAULT NULL,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON option_types USING btree (value);
@@ -360,7 +360,7 @@ ALTER publication supabase_realtime
   ADD TABLE option_types;
 
 --
-DROP TABLE IF EXISTS tables;
+DROP TABLE IF EXISTS tables cascade;
 
 CREATE TABLE tables (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
@@ -378,12 +378,12 @@ CREATE TABLE tables (
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 CREATE UNIQUE INDEX tables_project_name_idx ON tables (project_id, name)
 WHERE
-  deleted IS FALSE;
+  deleted = 0;
 
 CREATE INDEX ON tables USING btree (id);
 
@@ -445,7 +445,7 @@ CREATE TABLE field_types (
   sort smallint DEFAULT NULL,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON field_types USING btree (value);
@@ -477,11 +477,11 @@ DROP TABLE IF EXISTS widget_types CASCADE;
 CREATE TABLE widget_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   value text UNIQUE,
-  needs_list boolean DEFAULT FALSE,
+  needs_list integer DEFAULT 0,
   sort smallint DEFAULT NULL,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON widget_types USING btree (value);
@@ -516,14 +516,14 @@ ALTER publication supabase_realtime
   ADD TABLE widget_types;
 
 --
-DROP TABLE IF EXISTS widgets_for_fields;
+DROP TABLE IF EXISTS widgets_for_fields cascade;
 
 CREATE TABLE widgets_for_fields (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   field_value text REFERENCES field_types (value) ON DELETE CASCADE ON UPDATE CASCADE,
   widget_value text REFERENCES widget_types (value) ON DELETE CASCADE ON UPDATE CASCADE,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE,
+  deleted integer DEFAULT 0,
   UNIQUE (field_value, widget_value)
 );
 
@@ -560,7 +560,7 @@ CREATE TABLE fields (
   name text DEFAULT NULL,
   label text DEFAULT NULL,
   sort smallint DEFAULT 0,
-  is_internal_id boolean DEFAULT FALSE,
+  is_internal_id integer DEFAULT 0,
   field_type text DEFAULT 'text' REFERENCES field_types (value) ON DELETE NO action ON UPDATE CASCADE,
   widget_type text DEFAULT 'text' REFERENCES widget_types (value) ON DELETE NO action ON UPDATE CASCADE,
   options_table uuid REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
@@ -568,12 +568,12 @@ CREATE TABLE fields (
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 CREATE UNIQUE INDEX fields_table_name_idx ON fields (table_id, name)
 WHERE
-  deleted IS FALSE;
+  deleted = 0;
 
 CREATE INDEX ON fields USING btree (id);
 
@@ -642,7 +642,7 @@ CREATE TABLE ROWS (
   parent_rev text DEFAULT NULL,
   revisions text[] DEFAULT NULL,
   depth integer DEFAULT 0,
-  deleted boolean DEFAULT FALSE,
+  deleted integer DEFAULT 0,
   conflicts text[] DEFAULT NULL
 );
 
@@ -705,7 +705,7 @@ CREATE TABLE row_revs (
   geometry_s real DEFAULT NULL,
   geometry_w real DEFAULT NULL,
   data jsonb,
-  deleted boolean DEFAULT FALSE,
+  deleted integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT NULL,
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -759,7 +759,7 @@ CREATE TABLE files (
   filename text DEFAULT NULL,
   url text DEFAULT NULL,
   version integer DEFAULT 1,
-  deleted boolean DEFAULT FALSE,
+  deleted integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -772,7 +772,7 @@ CREATE TABLE files (
 
 CREATE UNIQUE INDEX files_row_field_filename_idx ON files (row_id, field_id, filename)
 WHERE
-  deleted IS FALSE;
+  deleted = 0;
 
 CREATE INDEX ON files USING btree (id);
 
@@ -822,7 +822,7 @@ CREATE TABLE file_revs (
   filename text DEFAULT NULL,
   url text DEFAULT NULL,
   version integer DEFAULT NULL,
-  deleted boolean DEFAULT FALSE,
+  deleted integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT NULL,
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -873,7 +873,7 @@ CREATE TABLE version_types (
   sort smallint DEFAULT NULL,
   comment text,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON version_types USING btree (value);
@@ -915,7 +915,7 @@ CREATE TABLE news (
   version text DEFAULT NULL,
   message text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON news USING btree (id);
@@ -953,7 +953,7 @@ CREATE TABLE news_delivery (
   news_id uuid DEFAULT NULL REFERENCES news (id) ON DELETE NO action ON UPDATE CASCADE,
   user_id uuid DEFAULT NULL REFERENCES users (id) ON DELETE NO action ON UPDATE CASCADE,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON news_delivery USING btree (id);
@@ -1001,12 +1001,12 @@ CREATE TABLE tile_layers (
   wms_request text DEFAULT 'GetMap',
   wms_service text DEFAULT 'WMS',
   wms_styles text[] DEFAULT NULL,
-  wms_transparent boolean DEFAULT FALSE,
+  wms_transparent integer DEFAULT 0,
   wms_version text DEFAULT NULL,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON tile_layers USING btree (id);
@@ -1027,7 +1027,7 @@ CREATE TABLE project_tile_layers (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   label text DEFAULT NULL,
   sort smallint DEFAULT 0,
-  active boolean DEFAULT FALSE,
+  active integer DEFAULT 0,
   project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
   url_template text DEFAULT NULL,
   subdomains text[] DEFAULT NULL,
@@ -1041,12 +1041,12 @@ CREATE TABLE project_tile_layers (
   wms_request text DEFAULT 'GetMap',
   wms_service text DEFAULT 'WMS',
   wms_styles text[] DEFAULT NULL,
-  wms_transparent boolean DEFAULT FALSE,
+  wms_transparent integer DEFAULT 0,
   wms_version text DEFAULT NULL,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted boolean DEFAULT FALSE
+  deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON project_tile_layers USING btree (id);

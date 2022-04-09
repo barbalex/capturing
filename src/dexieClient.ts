@@ -8,7 +8,7 @@ export interface IAccount {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 export class Account implements IAccount {
   id: string
@@ -16,7 +16,7 @@ export class Account implements IAccount {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 
   constructor(
     id?: string,
@@ -24,14 +24,14 @@ export class Account implements IAccount {
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
-    deleted?: boolean,
+    deleted: number,
   ) {
     this.id = id ?? uuidv1()
     if (service_id) this.service_id = id
     if (client_rev_at) this.client_rev_at = id
     if (client_rev_by) this.client_rev_by = id
     if (server_rev_at) this.server_rev_at = id
-    if (deleted) this.deleted = id
+    this.deleted = deleted ?? 0
   }
   // TODO: add methods, see: https://dexie.org/docs/Typescript#storing-real-classes-instead-of-just-interfaces
   // TODO: method for related datasets
@@ -46,7 +46,7 @@ export interface IFieldType {
   sort?: number
   comment?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 export class FieldType implements IFieldType {
   id: string
@@ -54,21 +54,21 @@ export class FieldType implements IFieldType {
   sort?: number
   comment?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
   constructor(
     id?: string,
     value: string,
     sort?: number,
     comment?: string,
     server_rev_at?: Date,
-    deleted?: boolean,
+    deleted: number,
   ) {
     this.id = id ?? uuidv1()
     this.value = value
-    if (sort) this.sort = sort
+    if (sort !== undefined) this.sort = sort
     if (comment) this.comment = comment
     if (server_rev_at) this.server_rev_at = server_rev_at
-    if (deleted) this.deleted = deleted
+    this.deleted = deleted ?? 0
   }
 }
 export interface IField {
@@ -77,7 +77,7 @@ export interface IField {
   name?: string
   label?: string
   sort?: number
-  is_internal_id?: boolean
+  is_internal_id?: number
   field_type?: string
   widget_type?: string
   options_table?: string
@@ -85,7 +85,7 @@ export interface IField {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 export class Field implements IField {
   id: string
@@ -93,7 +93,7 @@ export class Field implements IField {
   name?: string
   label?: string
   sort?: number
-  is_internal_id?: boolean
+  is_internal_id?: number
   field_type?: string
   widget_type?: string
   options_table?: string
@@ -101,7 +101,7 @@ export class Field implements IField {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 
   constructor(
     id?: string,
@@ -109,7 +109,7 @@ export class Field implements IField {
     name?: string,
     label?: string,
     sort?: number,
-    is_internal_id?: boolean,
+    is_internal_id?: number,
     field_type?: string,
     widget_type?: string,
     options_table?: string,
@@ -117,14 +117,14 @@ export class Field implements IField {
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
-    deleted?: boolean,
+    deleted: number,
   ) {
     this.id = id ?? uuidv1()
     if (table_id) this.table_id = table_id
     if (name) this.name = name
     if (label) this.label = label
-    if (sort) this.sort = sort
-    if (is_internal_id) this.is_internal_id = is_internal_id
+    if (sort !== undefined) this.sort = sort
+    if (is_internal_id !== undefined) this.is_internal_id = is_internal_id
     if (field_type) this.field_type = field_type
     if (widget_type) this.widget_type = widget_type
     if (options_table) this.options_table = options_table
@@ -132,7 +132,7 @@ export class Field implements IField {
     if (client_rev_at) this.client_rev_at = client_rev_at
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
-    if (deleted) this.deleted = deleted
+    this.deleted = deleted ?? 0
   }
 }
 
@@ -143,7 +143,7 @@ export interface IFile {
   filename?: string
   url?: string
   version?: number
-  deleted?: boolean
+  deleted: number
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -160,7 +160,7 @@ export class File implements IFile {
   filename?: string
   url?: string
   version?: number
-  deleted?: boolean
+  deleted: number
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -177,7 +177,7 @@ export class File implements IFile {
     filename?: string,
     url?: string,
     version?: number,
-    deleted?: boolean,
+    deleted: number,
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
@@ -192,15 +192,15 @@ export class File implements IFile {
     if (field_id) this.field_id = field_id
     if (filename) this.filename = filename
     if (url) this.url = url
-    if (version) this.version = version
-    if (deleted) this.deleted = deleted
+    if (version !== undefined) this.version = version
+    this.deleted = deleted ?? 0
     if (client_rev_at) this.client_rev_at = client_rev_at
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     if (rev) this.rev = rev
     if (parent_rev) this.parent_rev = parent_rev
     if (revisions) this.revisions = revisions
-    if (depth) this.depth = depth
+    if (depth !== undefined) this.depth = depth
     if (conflicts) this.conflicts = conflicts
   }
 }
@@ -212,7 +212,7 @@ export interface INew {
   version?: string
   message?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 export class New implements INew {
   id: string
@@ -221,7 +221,7 @@ export class New implements INew {
   version?: string
   message?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 
   constructor(
     id?: string,
@@ -230,7 +230,7 @@ export class New implements INew {
     version?: string,
     message?: string,
     server_rev_at?: Date,
-    deleted?: boolean,
+    deleted: number,
   ) {
     this.id = id ?? uuidv1()
     if (time) this.time = time
@@ -238,7 +238,7 @@ export class New implements INew {
     if (version) this.version = version
     if (message) this.message = message
     if (server_rev_at) this.server_rev_at = server_rev_at
-    if (deleted) this.deleted = deleted
+    this.deleted = deleted ?? 0
   }
 }
 
@@ -247,63 +247,63 @@ export interface INewsDelivery {
   news_id?: string
   user_id?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 export class NewsDelivery implements INewsDelivery {
   id: string
   news_id?: string
   user_id?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
   constructor(
     id?: string,
     news_id?: string,
     user_id?: string,
     server_rev_at?: Date,
-    deleted?: boolean,
+    deleted: number,
   ) {
     this.id = id ?? uuidv1()
     if (news_id) this.news_id = news_id
     if (user_id) this.user_id = user_id
     if (server_rev_at) this.server_rev_at = server_rev_at
-    if (deleted) this.deleted = deleted
+    this.deleted = deleted ?? 0
   }
 }
 
 export interface IOptionType {
   id: string
   value: string
-  save_id?: boolean
+  save_id?: number
   sort?: number
   comment?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 
 export class OptionType implements IOptionType {
   id?: string
   value: string
-  save_id?: boolean
+  save_id?: number
   sort?: number
   comment?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
   constructor(
     id?: string,
     value: string,
-    save_id?: boolean,
+    save_id?: number,
     sort?: number,
     comment?: string,
     server_rev_at?: Date,
-    deleted?: boolean,
+    deleted: number,
   ) {
     this.id = id ?? uuidv1()
     this.value = value
-    if (save_id) this.save_id = save_id
-    if (sort) this.sort = sort
+    if (save_id !== undefined) this.save_id = save_id
+    if (sort !== undefined) this.sort = sort
     if (comment) this.comment = comment
     if (server_rev_at) this.server_rev_at = server_rev_at
-    if (deleted) this.deleted = deleted
+    this.deleted = deleted ?? 0
   }
 }
 export interface IProjectEditor {
@@ -314,7 +314,7 @@ export interface IProjectEditor {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 
 export interface IProjectManager {
@@ -325,7 +325,7 @@ export interface IProjectManager {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 
 export interface IProjectReader {
@@ -336,14 +336,14 @@ export interface IProjectReader {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 
 export interface IProjectTileLayer {
   id: string
   label?: string
   sort?: number
-  active?: boolean
+  active?: number
   project_id?: string
   url_template?: string
   subdomains?: string[]
@@ -357,19 +357,19 @@ export interface IProjectTileLayer {
   wms_request?: string
   wms_service?: string
   wms_styles?: string[]
-  wms_transparent?: boolean
+  wms_transparent?: number
   wms_version?: string
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 
 export class ProjectTileLayer implements IProjectTileLayer {
   id: string
   label?: string
   sort?: number
-  active?: boolean
+  active?: number
   project_id?: string
   url_template?: string
   subdomains?: string[]
@@ -383,18 +383,18 @@ export class ProjectTileLayer implements IProjectTileLayer {
   wms_request?: string
   wms_service?: string
   wms_styles?: string[]
-  wms_transparent?: boolean
+  wms_transparent?: number
   wms_version?: string
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 
   constructor(
     id?: string,
     label?: string,
     sort?: number,
-    active?: boolean,
+    active?: number,
     project_id?: string,
     url_template?: string,
     subdomains?: string[],
@@ -408,23 +408,23 @@ export class ProjectTileLayer implements IProjectTileLayer {
     wms_request?: string,
     wms_service?: string,
     wms_styles?: string[],
-    wms_transparent?: boolean,
+    wms_transparent?: number,
     wms_version?: string,
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
-    deleted?: boolean,
+    deleted: number,
   ) {
     this.id = id ?? uuidv1()
     if (label) this.label = label
-    if (sort) this.sort = sort
-    if (active) this.active = active
+    if (sort !== undefined) this.sort = sort
+    if (active !== undefined) this.active = active
     if (project_id) this.project_id = project_id
     if (url_template) this.url_template = url_template
     if (subdomains) this.subdomains = subdomains
-    if (max_zoom) this.max_zoom = max_zoom
-    if (min_zoom) this.min_zoom = min_zoom
-    if (opacity) this.opacity = opacity
+    if (max_zoom !== undefined) this.max_zoom = max_zoom
+    if (min_zoom !== undefined) this.min_zoom = min_zoom
+    if (opacity !== undefined) this.opacity = opacity
     if (wms_base_url) this.wms_base_url = wms_base_url
     if (wms_format) this.wms_format = wms_format
     if (wms_layers) this.wms_layers = wms_layers
@@ -432,12 +432,12 @@ export class ProjectTileLayer implements IProjectTileLayer {
     if (wms_request) this.wms_request = wms_request
     if (wms_service) this.wms_service = wms_service
     if (wms_styles) this.wms_styles = wms_styles
-    if (wms_transparent) this.wms_transparent = wms_transparent
+    if (wms_transparent !== undefined) this.wms_transparent = wms_transparent
     if (wms_version) this.wms_version = wms_version
     if (client_rev_at) this.client_rev_at = client_rev_at
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
-    if (deleted) this.deleted = deleted
+    this.deleted = deleted ?? 0
   }
 }
 
@@ -449,7 +449,7 @@ export interface IProjectUser {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 
 export interface IProject {
@@ -461,7 +461,7 @@ export interface IProject {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 
 export class Project implements IProject {
@@ -473,7 +473,7 @@ export class Project implements IProject {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 
   constructor(
     id?: string,
@@ -484,17 +484,17 @@ export class Project implements IProject {
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
-    deleted?: boolean,
+    deleted: number,
   ) {
     this.id = id ?? uuidv1()
     if (account_id) this.account_id = account_id
     if (name) this.name = name
     if (label) this.label = label
-    if (crs) this.crs = crs
+    if (crs !== undefined) this.crs = crs
     if (client_rev_at) this.client_rev_at = client_rev_at
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
-    if (deleted) this.deleted = deleted
+    this.deleted = deleted ?? 0
   }
 }
 
@@ -504,7 +504,7 @@ export interface IRelType {
   sort?: number
   comment?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 
 export interface IRoleType {
@@ -513,7 +513,7 @@ export interface IRoleType {
   sort?: number
   comment?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 
 export interface IRow {
@@ -533,7 +533,7 @@ export interface IRow {
   parent_rev?: string
   revisions?: string[]
   depth?: number
-  deleted?: boolean
+  deleted: number
   conflicts?: string[]
 }
 
@@ -554,7 +554,7 @@ export class Row implements IRow {
   parent_rev?: string
   revisions?: string[]
   depth?: number
-  deleted?: boolean
+  deleted: number
   conflicts?: string[]
   constructor(
     id?: string,
@@ -573,7 +573,7 @@ export class Row implements IRow {
     parent_rev?: string,
     revisions?: string[],
     depth?: number,
-    deleted?: boolean,
+    deleted: number,
     conflicts?: string[],
   ) {
     this.id = id ?? uuidv1()
@@ -591,8 +591,8 @@ export class Row implements IRow {
     if (rev) this.rev = rev
     if (parent_rev) this.parent_rev = parent_rev
     if (revisions) this.revisions = revisions
-    if (depth) this.depth = depth
-    if (deleted) this.deleted = deleted
+    if (depth !== undefined) this.depth = depth
+    this.deleted = deleted ?? 0
     if (conflicts) this.conflicts = conflicts
   }
 }
@@ -612,7 +612,7 @@ export interface ITable {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 
 export class Table implements ITable {
@@ -630,7 +630,7 @@ export class Table implements ITable {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 
   constructor(
     id?: string,
@@ -647,7 +647,7 @@ export class Table implements ITable {
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
-    deleted?: boolean,
+    deleted: number,
   ) {
     this.id = id ?? uuidv1()
     if (project_id) this.project_id = project_id
@@ -659,12 +659,12 @@ export class Table implements ITable {
     if (label_fields) this.label_fields = label_fields
     if (label_fields_separator)
       this.label_fields_separator = label_fields_separator
-    if (sort) this.sort = sort
+    if (sort !== undefined) this.sort = sort
     if (option_type) this.option_type = option_type
     if (client_rev_at) this.client_rev_at = client_rev_at
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
-    if (deleted) this.deleted = deleted
+    this.deleted = deleted ?? 0
   }
 }
 
@@ -683,12 +683,12 @@ export interface ITileLayer {
   wms_request?: string
   wms_service?: string
   wms_styles?: string[]
-  wms_transparent?: boolean
+  wms_transparent?: number
   wms_version?: string
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 
 export class TileLayer implements ITileLayer {
@@ -706,12 +706,12 @@ export class TileLayer implements ITileLayer {
   wms_request?: string
   wms_service?: string
   wms_styles?: string[]
-  wms_transparent?: boolean
+  wms_transparent?: number
   wms_version?: string
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 
   constructor(
     id?: string,
@@ -728,20 +728,20 @@ export class TileLayer implements ITileLayer {
     wms_request?: string,
     wms_service?: string,
     wms_styles?: string[],
-    wms_transparent?: boolean,
+    wms_transparent?: number,
     wms_version?: string,
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
-    deleted?: boolean,
+    deleted: number,
   ) {
     this.id = id ?? uuidv1()
     if (label) this.label = label
     if (url_template) this.url_template = url_template
     if (subdomains) this.subdomains = subdomains
-    if (max_zoom) this.max_zoom = max_zoom
-    if (min_zoom) this.min_zoom = min_zoom
-    if (opacity) this.opacity = opacity
+    if (max_zoom !== undefined) this.max_zoom = max_zoom
+    if (min_zoom !== undefined) this.min_zoom = min_zoom
+    if (opacity !== undefined) this.opacity = opacity
     if (wms_base_url) this.wms_base_url = wms_base_url
     if (wms_format) this.wms_format = wms_format
     if (wms_layers) this.wms_layers = wms_layers
@@ -749,12 +749,12 @@ export class TileLayer implements ITileLayer {
     if (wms_request) this.wms_request = wms_request
     if (wms_service) this.wms_service = wms_service
     if (wms_styles) this.wms_styles = wms_styles
-    if (wms_transparent) this.wms_transparent = wms_transparent
+    if (wms_transparent !== undefined) this.wms_transparent = wms_transparent
     if (wms_version) this.wms_version = wms_version
     if (client_rev_at) this.client_rev_at = client_rev_at
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
-    if (deleted) this.deleted = deleted
+    this.deleted = deleted ?? 0
   }
 }
 
@@ -767,7 +767,7 @@ export interface IUser {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 
 export class User implements IUser {
@@ -779,7 +779,7 @@ export class User implements IUser {
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 
   constructor(
     id?: string,
@@ -790,7 +790,7 @@ export class User implements IUser {
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
-    deleted?: boolean,
+    deleted: number,
   ) {
     this.id = id ?? uuidv1()
     if (name) this.name = name
@@ -800,7 +800,7 @@ export class User implements IUser {
     if (client_rev_at) this.client_rev_at = client_rev_at
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
-    if (deleted) this.deleted = deleted
+    this.deleted = deleted ?? 0
   }
 }
 export interface IVersionType {
@@ -809,16 +809,16 @@ export interface IVersionType {
   sort?: number
   comment?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 export interface IWidgetType {
   id: string
   value: string
-  needs_list?: boolean
+  needs_list?: number
   sort?: number
   comment?: string
   server_rev_at?: Date
-  deleted?: boolean
+  deleted: number
 }
 export interface IWidgetForField {
   id: string
@@ -851,7 +851,7 @@ export interface IStore {
   id: string // always: 'store'
   active_node_array: (string | number)[]
   open_nodes: (string | number)[][]
-  single_column_view: boolean
+  single_column_view: number
 }
 
 export interface IQueuedUpdate {
@@ -891,28 +891,29 @@ export class MySubClassedDexie extends Dexie {
   constructor() {
     super('capturing')
     this.version(1).stores({
-      accounts: 'id, server_rev_at',
-      field_types: 'id, &value, sort, server_rev_at',
+      accounts: 'id, server_rev_at, deleted',
+      field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
-        'id, table_id, label, field_type, widget_type, options_table, sort, server_rev_at',
-      files: 'id, filename, server_rev_at',
-      news: 'id, time, server_rev_at',
-      news_delivery: 'id, server_rev_at',
-      option_types: 'id, &value, sort, server_rev_at',
-      project_tile_layers: 'id, label, sort, active, server_rev_at',
-      project_users: 'id, user_email, server_rev_at',
-      projects: 'id, label, server_rev_at',
-      rel_types: 'id, &value, sort, server_rev_at',
-      role_types: 'id, &value, sort, server_rev_at',
-      rows: 'id, server_rev_at',
+        'id, table_id, label, field_type, widget_type, options_table, sort, server_rev_at, deleted',
+      files: 'id, filename, server_rev_at, deleted',
+      news: 'id, time, server_rev_at, deleted',
+      news_delivery: 'id, server_rev_at, deleted',
+      option_types: 'id, &value, sort, server_rev_at, deleted',
+      project_tile_layers: 'id, label, sort, active, server_rev_at, deleted',
+      project_users: 'id, user_email, server_rev_at, deleted',
+      projects: 'id, label, server_rev_at, deleted',
+      rel_types: 'id, &value, sort, server_rev_at, deleted',
+      role_types: 'id, &value, sort, server_rev_at, deleted',
+      rows: 'id, server_rev_at, deleted',
       // name tables causes error because used internally, see: https://github.com/dexie/Dexie.js/issues/1537
       ttables:
-        'id, label, sort, project_id, parent_id, rel_type, option_type, server_rev_at',
-      tile_layers: 'id, label, server_rev_at',
-      users: 'id, name, &email, auth_user_id, server_rev_at',
-      version_types: 'id, &value, sort, server_rev_at',
-      widget_types: 'id, &value, sort, server_rev_at',
-      widgets_for_fields: 'id, [field_value+widget_value], server_rev_at',
+        'id, label, sort, project_id, parent_id, rel_type, option_type, server_rev_at, deleted',
+      tile_layers: 'id, label, server_rev_at, deleted',
+      users: 'id, name, &email, auth_user_id, server_rev_at, deleted',
+      version_types: 'id, &value, sort, server_rev_at, deleted',
+      widget_types: 'id, &value, sort, server_rev_at, deleted',
+      widgets_for_fields:
+        'id, [field_value+widget_value], server_rev_at, deleted',
       stores: 'id',
       queued_updates: '++id',
     })
