@@ -52,13 +52,13 @@ const StyledSplitPane = styled(SplitPane)`
 
 const Project = ({ filter: showFilter }) => {
   const { projectId: id } = useParams()
-  console.log('Project, id:', id)
   const store = useContext(StoreContext)
   const { online } = store
   const filter = 'TODO: was in store'
 
   const row: IProject = useLiveQuery(async () => await dexie.projects.get(id))
-  console.log('Project, row:', row)
+
+  // console.log('Project, row:', row)
 
   const [activeConflict, setActiveConflict] = useState(null)
   const conflictDisposalCallback = useCallback(
@@ -86,8 +86,6 @@ const Project = ({ filter: showFilter }) => {
   const firstPaneWidth = paneIsSplit ? '50%' : '100%'
   // hide resizer when tree is hidden
   const resizerStyle = !paneIsSplit ? { width: 0 } : {}
-
-  //console.log('Project, row:', row)
 
   return (
     <ErrorBoundary>
