@@ -57,7 +57,7 @@ const Project = ({ filter: showFilter }) => {
   const { online } = store
   const filter = 'TODO: was in store'
 
-  const row = useLiveQuery(async () => await dexie.projects.get(id))
+  const row: IProject = useLiveQuery(async () => await dexie.projects.get(id))
   console.log('Project, row:', row)
 
   const [activeConflict, setActiveConflict] = useState(null)

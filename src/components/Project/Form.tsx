@@ -9,6 +9,7 @@ import JesNo from '../shared/JesNo'
 import ifIsNumericAsNumber from '../../utils/ifIsNumericAsNumber'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import ConflictList from '../shared/ConflictList'
+import { IProject } from '../../dexieClient'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -24,6 +25,15 @@ const Rev = styled.span`
   font-size: 0.8em;
 `
 
+type ProjectFormProps = {
+  activeConflict: boolean
+  id: string
+  row: IProject
+  setActiveConflict: (boolean) => void
+  showFilter: (boolean) => void
+  showHistory: (boolean) => void
+}
+
 const ProjectForm = ({
   activeConflict,
   id,
@@ -31,7 +41,7 @@ const ProjectForm = ({
   setActiveConflict,
   showFilter,
   showHistory,
-}) => {
+}: ProjectFormProps) => {
   const store = useContext(StoreContext)
   const { filter, online, errors } = store
   const unsetError = () => {} // TODO: add errors, unsetError in store
@@ -42,7 +52,7 @@ const ProjectForm = ({
 
   const saveToDb = useCallback(
     async (event) => {
-      const field = event.target.name
+      const field: string = event.target.name
       let value = ifIsNumericAsNumber(event.target.value)
       if (event.target.value === undefined) value = null
       if (event.target.value === '') value = null
