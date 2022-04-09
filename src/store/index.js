@@ -5,8 +5,7 @@ import isEqual from 'lodash/isEqual'
 
 import NotificationType from './Notification'
 
-// TODO: update interface IStore on every change of store that needs to regenerate
-const myTypes = types
+export const MobxStore = types
   .model({
     activeNodeArray: types.optional(
       types.array(types.union(types.string, types.number)),
@@ -89,7 +88,7 @@ const myTypes = types
       },
       addOpenNode(url) {
         // add all parent nodes
-        let addedOpenNodes = []
+        const addedOpenNodes = []
         for (let i = 1; i <= url.length; i++) {
           addedOpenNodes.push(url.slice(0, i))
         }
@@ -139,4 +138,5 @@ const myTypes = types
     },
   }))
 
-export default myTypes
+// this errors: Uncaught SyntaxError: Unexpected token 'export'
+// export interface IStore extends Instance<typeof MobxStore> {}

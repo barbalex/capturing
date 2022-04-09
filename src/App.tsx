@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { onSnapshot } from 'mobx-state-tree'
 import isEqual from 'lodash/isEqual'
 
-import MobxStore from './store'
+import { MobxStore } from './store'
 import materialTheme from './utils/materialTheme'
 import { Provider as MobxProvider } from './storeContext'
 import Home from './routes/Home'
