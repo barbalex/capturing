@@ -51,7 +51,7 @@ const Checkbox2States = ({
     saveToDb(fakeEvent)
   }, [stateValue, name, saveToDb])
 
-  const checked = stateValue === true
+  const checked = stateValue === 1
 
   return (
     <Container>

@@ -32,11 +32,11 @@ const StyledRadio = styled(Radio)`
 `
 const dataSource = [
   {
-    value: true,
+    value: 1,
     label: 'Ja',
   },
   {
-    value: false,
+    value: 0,
     label: 'Nein',
   },
 ]
@@ -62,7 +62,7 @@ const RadioButtonGroup = ({
        * because that only fires on changes
        * Solution: do this in click event of button
        */
-      const targetValue = event.target.value === 'true'
+      const targetValue = event.target.value === '1'
       if (targetValue === stateValue) {
         // an already active option was clicked
         // set value null
@@ -83,7 +83,7 @@ const RadioButtonGroup = ({
       // group only changes if value changes
       const targetValue = event.target.value
       // values are passed as strings > need to convert
-      const newValue = targetValue === 'true'
+      const newValue = targetValue === '0'
       setStateValue(newValue)
       const fakeEvent = {
         target: {
