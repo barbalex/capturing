@@ -17,12 +17,10 @@ const processQueuedUpdate = async ({
   // TODO: ttables problem?
   const isRevTable = revTables.includes(queuedUpdate.table)
   const singularTableName = queuedUpdate.table.slice(0, -1)
+  const isInsert = !!queuedUpdate.revert_id
   // insert _rev or upsert regular table
   if (isRevTable) {
-    // https://stackoverflow.com/a/36630251/712005
-    const revTableName = queuedUpdate.table.replace(/.$/, '_rev')
-    const isInsert = !!queuedUpdate.revert_id
-    // TODO: insert revision
+    const revTableName = queuedUpdate.table.replace(/.$/, '_rev') // https://stackoverflow.com/a/36630251/712005
     // 1 create revision
     const newObject = JSON.parse(queuedUpdate.value)
     const id = newObject.id
@@ -40,10 +38,14 @@ const processQueuedUpdate = async ({
     newRevObject.rev = rev
     newRevObject.id = uuidv1()
     newObject.revisions = isInsert ? [rev] : [rev, ...newObject.revisions]
-    // send revision to server
-    try {
-      await supabase.from(revTableName).insert(newObject)
-    } catch (error) {
+    // 2. send revision to server
+    const { error } = await supabase.from(revTableName).insert(newObject)
+    if (error) {
+      // 3. deal with errors
+      console.log(
+        'processQueuedUpdate, revision table, error inserting:',
+        error,
+      )
       // TODO: if error due to offline, set online to false (error.message.includes('Failed to fetch')?). Return
       // TODO: if error due to auth, renew auth (error.message.includes('JWT')?) and return
       // TODO: if error due to exact same change (same rev): ignore error. Go on to remove update
@@ -53,12 +55,23 @@ const processQueuedUpdate = async ({
       // TODO: else inform user that change can not be written do server. Enable user to delete operation
       // TODO: restore previous value
     }
-    // TODO: if works, set online true if false
-    // TODO: remove queuedUpdate
-    await dexie.queued_updates.delete(queuedUpdate.id)
-    return
+  } else {
+    // TODO: upsert regular table
+    // 1. create new Object
+    const newObject = {
+      ...JSON.parse(queuedUpdate.value),
+      client_rev_at: new window.Date().toISOString(),
+      client_rev_by: session.user.email,
+    }
+    // 2. send revision to server
+    const { error } = await supabase.from(queuedUpdate.table).upsert(newObject)
+    if (error) {
+      // 3. deal with errors
+      console.log('processQueuedUpdate, regular table, error upserting:', error)
+    }
   }
-  // TODO: upsert regular table
+  // 4. It worke. Clean up
+  // Set online true if was false
   // remove queuedUpdate
   await dexie.queued_updates.delete(queuedUpdate.id)
 }
