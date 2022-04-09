@@ -30,7 +30,7 @@ export class Account implements IAccount {
     this.id = id ?? uuidv1()
     if (service_id) this.service_id = id
     if (client_rev_at) this.client_rev_at = id
-    if (client_rev_by) this.client_rev_by = id
+    if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = id
     this.deleted = deleted ?? 0
   }
@@ -130,7 +130,7 @@ export class Field implements IField {
     if (widget_type) this.widget_type = widget_type
     if (options_table) this.options_table = options_table
     if (standard_value) this.standard_value = standard_value
-    if (client_rev_at) this.client_rev_at = client_rev_at
+    this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     this.deleted = deleted ?? 0
@@ -195,13 +195,13 @@ export class File implements IFile {
     if (url) this.url = url
     if (version !== undefined) this.version = version
     this.deleted = deleted ?? 0
-    if (client_rev_at) this.client_rev_at = client_rev_at
+    this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     if (rev) this.rev = rev
     if (parent_rev) this.parent_rev = parent_rev
     if (revisions) this.revisions = revisions
-    if (depth !== undefined) this.depth = depth
+    this.depth = depth ?? 0
     if (conflicts) this.conflicts = conflicts
   }
 }
@@ -435,7 +435,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
     if (wms_styles) this.wms_styles = wms_styles
     if (wms_transparent !== undefined) this.wms_transparent = wms_transparent
     if (wms_version) this.wms_version = wms_version
-    if (client_rev_at) this.client_rev_at = client_rev_at
+    this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     this.deleted = deleted ?? 0
@@ -492,7 +492,7 @@ export class Project implements IProject {
     if (name) this.name = name
     this.label = label ?? name ?? undefined // TODO: test
     if (crs !== undefined) this.crs = crs
-    if (client_rev_at) this.client_rev_at = client_rev_at
+    this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     this.deleted = deleted ?? 0
@@ -557,6 +557,7 @@ export class Row implements IRow {
   depth?: number
   deleted: number
   conflicts?: string[]
+
   constructor(
     id?: string,
     table_id?: string,
@@ -586,13 +587,13 @@ export class Row implements IRow {
     if (geometry_s) this.geometry_s = geometry_s
     if (geometry_w) this.geometry_w = geometry_w
     if (data) this.data = data
-    if (client_rev_at) this.client_rev_at = client_rev_at
+    this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     if (rev) this.rev = rev
     if (parent_rev) this.parent_rev = parent_rev
     if (revisions) this.revisions = revisions
-    if (depth !== undefined) this.depth = depth
+    this.depth = depth ?? 0
     this.deleted = deleted ?? 0
     if (conflicts) this.conflicts = conflicts
   }
@@ -662,7 +663,7 @@ export class Table implements ITable {
       this.label_fields_separator = label_fields_separator
     if (sort !== undefined) this.sort = sort
     if (option_type) this.option_type = option_type
-    if (client_rev_at) this.client_rev_at = client_rev_at
+    this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     this.deleted = deleted ?? 0
@@ -752,7 +753,7 @@ export class TileLayer implements ITileLayer {
     if (wms_styles) this.wms_styles = wms_styles
     if (wms_transparent !== undefined) this.wms_transparent = wms_transparent
     if (wms_version) this.wms_version = wms_version
-    if (client_rev_at) this.client_rev_at = client_rev_at
+    this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     this.deleted = deleted ?? 0
@@ -798,7 +799,7 @@ export class User implements IUser {
     if (email) this.email = email
     if (account_id) this.account_id = account_id
     if (auth_user_id) this.auth_user_id = auth_user_id
-    if (client_rev_at) this.client_rev_at = client_rev_at
+    this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     this.deleted = deleted ?? 0
