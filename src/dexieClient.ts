@@ -490,7 +490,7 @@ export class Project implements IProject {
     this.id = id ?? uuidv1()
     if (account_id) this.account_id = account_id
     if (name) this.name = name
-    if (label) this.label = label
+    this.label = label ?? name ?? undefined // TODO: test
     if (crs !== undefined) this.crs = crs
     if (client_rev_at) this.client_rev_at = client_rev_at
     if (client_rev_by) this.client_rev_by = client_rev_by
