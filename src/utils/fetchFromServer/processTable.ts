@@ -48,10 +48,12 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
       error,
     )
   }
-  console.log(
-    `ServerSubscriber, last ${tableName} fetched from supabase:`,
-    data,
-  )
+  if (tableName === 'rows') {
+    console.log(
+      `ServerSubscriber, last ${tableName} fetched from supabase:`,
+      data,
+    )
+  }
   // 1.4. update dexie with these changes
   if (data) {
     try {
