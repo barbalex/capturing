@@ -53,7 +53,7 @@ const ProjectForm = ({
     [],
   ) // TODO: add errors, unsetError in store
 
-  console.log('ProjectForm rendering')
+  // console.log('ProjectForm rendering')
 
   const rowState = useRef()
   //const [rowState, setRowState] = useState<IProject>()
