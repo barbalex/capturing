@@ -9,7 +9,7 @@ import JesNo from '../shared/JesNo'
 import ifIsNumericAsNumber from '../../utils/ifIsNumericAsNumber'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import ConflictList from '../shared/ConflictList'
-import { IProject } from '../../dexieClient'
+import { db as dexie, IProject } from '../../dexieClient'
 import TextField from '../shared/TextField'
 
 const FieldsContainer = styled.div`
@@ -75,7 +75,18 @@ const ProjectForm = ({
   return (
     <ErrorBoundary>
       <SimpleBar style={{ maxHeight: '100%', height: '100%' }}>
-        <FieldsContainer>
+        <FieldsContainer
+          onBlur={(e) => {
+            console.log('ProjectForm, FieldsContainer was blured', {
+              //target: e.target,
+              currentTarget: e.currentTarget,
+              relatedTarget: e.relatedTarget,
+              //equal: e.target === e.currentTarget,
+              // https://github.com/facebook/react/issues/6410#issuecomment-671915381
+              focusLeft: !e.currentTarget.contains(e.relatedTarget),
+            })
+          }}
+        >
           {(activeConflict || showHistory) && (
             <CaseConflictTitle>
               Aktuelle Version<Rev>{row._rev}</Rev>
@@ -124,11 +135,19 @@ const ProjectForm = ({
           <TextField
             key={`${row.id}crs`}
             name="crs"
-            label="CRS (Koordinate-Referenz-System)"
+            label="CRS (Koordinaten-Referenz-System)"
             value={row.crs}
             type="number"
             saveToDb={saveToDb}
             error={errors?.project?.crs}
+          />
+          <TextField
+            key={`${row.id}account_id`}
+            name="account_id"
+            label="Konto"
+            value={row.account_id}
+            saveToDb={saveToDb}
+            error={errors?.project?.account_id}
           />
           {online && !showFilter && row?._conflicts?.map && (
             <ConflictList
