@@ -55,7 +55,7 @@ const ProjectDeleteButton = ({ row }) => {
         aria-label="Projekt löschen"
         title="Projekt löschen"
         onClick={onClickButton}
-        disabled={row.deleted}
+        disabled={row.deleted === 0}
         size="large"
       >
         <FaMinus />
