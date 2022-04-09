@@ -22,6 +22,7 @@ import ColumnController from './components/ColumnController'
 import QueuedUpdatesWriter from './components/QueuedUpdatesWriter'
 import { supabase } from './supabaseClient'
 import fetchFromServer from './utils/fetchFromServer'
+import ApiDetector from './components/ApiDetector'
 
 function App() {
   const [store, setStore] = useState()
@@ -70,6 +71,7 @@ function App() {
             <ColumnController />
             <ResetPassword />
             <QueuedUpdatesWriter />
+            <ApiDetector />
             <Layout>
               <Routes>
                 <Route path="/" element={<Home />} />

@@ -7,8 +7,10 @@ import {
 } from 'react-icons/md'
 import styled from 'styled-components'
 import { observer } from 'mobx-react-lite'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import storeContext from '../../../storeContext'
+import { db as dexie } from '../../../dexieClient'
 
 const OnlineButton = styled(IconButton)`
   /*cursor: default !important;*/
@@ -21,14 +23,21 @@ const StyledBadge = styled(Badge)`
 
 const ServerConnected = () => {
   const store = useContext(storeContext)
-  const { serverConnected } = store
-  const queuedQueries = 'TODO:'
+  // serverConnected not so helpful
+  const { online } = store
+
+  const queuedUpdatesCount: integer = useLiveQuery(async () => {
+    return await dexie.queued_updates.count()
+  })
+  console.log('ServerConnected, queuedUpdatesCount:', queuedUpdatesCount)
   const showQueuedQueries = 'TODO!'
-  const setShowQueuedQueries = () => {}
-  const title = serverConnected
+  const setShowQueuedQueries = useCallback(() => {
+    // TODO:
+  }, [])
+  const title = online
     ? 'Sie sind mit dem Server verbunden'
-    : queuedQueries.size
-    ? `Der Server ist nicht verbunden. ${queuedQueries.size} wartende Operationen`
+    : queuedUpdatesCount
+    ? `Der Server ist nicht verbunden. ${queuedUpdatesCount} wartende Operationen`
     : `Der Server ist nicht verbunden`
 
   // TODO:
@@ -45,8 +54,8 @@ const ServerConnected = () => {
       title={title}
       onClick={onClick}
     >
-      <StyledBadge color="primary" badgeContent={queuedQueries.size} max={999}>
-        {serverConnected ? <NetworkOn /> : <NetworkOff />}
+      <StyledBadge color="primary" badgeContent={queuedUpdatesCount} max={999}>
+        {online ? <NetworkOn /> : <NetworkOff />}
       </StyledBadge>
     </OnlineButton>
   )

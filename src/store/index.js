@@ -24,6 +24,7 @@ export const MobxStore = types
     formWidth: types.optional(types.number, 500),
     formHeight: types.optional(types.number, 500),
     filterWidth: types.optional(types.number, 500),
+    online: types.optional(types.boolean, true),
   })
   .volatile(() => ({ navigate: undefined }))
   .actions((self) => {
@@ -35,6 +36,9 @@ export const MobxStore = types
     // )
 
     return {
+      setOnline(val) {
+        self.online = val
+      },
       setTreeWidth(val) {
         self.treeWidth = val
       },
@@ -134,6 +138,7 @@ export const MobxStore = types
       return `/${self.activeNodeArray.join('/')}`
     },
     get serverConnected() {
+      // not sure if this is really helpful
       return self.subscriptionState === 'SUBSCRIBED'
     },
   }))

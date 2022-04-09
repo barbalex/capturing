@@ -1,7 +1,5 @@
 import axios from 'redaxios'
 
-import constants from './constants'
-
 /**
  * TODO: do not know what url the live endpoint is on
  * see:
@@ -9,21 +7,26 @@ import constants from './constants'
  * https://github.com/supabase/supabase/discussions/357#discussioncomment-2516469
  */
 
-const config = {
-  url: constants?.getHealthUri(),
-  timeout: 5000, // timeout error happens after 5 seconds
-}
-
-const isOnline = async () => {
+const isOnline = async (token) => {
+  const config = {
+    timeout: 5000, // timeout error happens after 5 seconds
+    headers: {
+      authorization: `Bearer ${token}`,
+      apikey: import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY,
+    },
+  }
   let res
   try {
-    // based on: https://hasura.io/docs/1.0/graphql/core/api-reference/health.html
-    // TODO: head request to root <ref>/rest/v1/
-    res = await axios.get(config.url, { timeout: config.timeout })
+    res = await axios.head(
+      `${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/rest/v1/`,
+      config,
+    )
   } catch (error) {
     // error can also be caused by timeout
+    console.log('isOnline, error:', error)
     return false
   }
+  // console.log('isOnline, res:', res)
   if (res.status === 200) return true
   return false
 }
