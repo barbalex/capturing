@@ -70,6 +70,7 @@ const ProjectForm = ({
   const queueUpdate = useCallback(() => {
     // only update if is changed
     if (!isEqual(rowState.current, row)) {
+      dexie.projects.put(rowState.current)
       const update = new QueuedUpdate(
         undefined,
         undefined,
@@ -78,7 +79,6 @@ const ProjectForm = ({
         rowState.current?.id,
         JSON.stringify(row),
       )
-      console.log('updating queue')
       dexie.queued_updates.add(update)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

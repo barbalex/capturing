@@ -4,13 +4,19 @@ import styled from 'styled-components'
 import { FaPlus, FaLongArrowAltUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
-import { db as dexie, IProject } from '../../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
+import {
+  db as dexie,
+  IProject,
+  Project,
+  IAccount,
+  QueuedUpdate,
+} from '../../dexieClient'
 
 const Container = styled.div`
   height: 100%;
@@ -48,13 +54,30 @@ const Projects = () => {
   const { activeNodeArray, setActiveNodeArray, removeOpenNode, formHeight } =
     store
 
-  const projects: IProject[] = useLiveQuery(
-    async () => await dexie.projects.where({ deleted: 0 }).sortBy('label'),
-  )
-  // console.log('Projects, projects:', projects)
+  const data = useLiveQuery(async () => {
+    const projects = await dexie.projects.where({ deleted: 0 }).sortBy('label')
+    const account = await dexie.accounts.orderBy('id').limit(1).first()
+    return { projects, account }
+  })
+  const projects = data?.projects
+  const account = data?.account
+  console.log('Projects', { projects, account })
 
   const add = useCallback(() => {
     console.log('TODO: insert project')
+    // TODO: get accountId of session user
+    // TODO: if session user has no account, can't insert project
+    const newProject = new Project(undefined)
+    dexie.projects.put(newProject)
+    const update = new QueuedUpdate(
+      undefined,
+      undefined,
+      'projects',
+      JSON.stringify(newProject),
+      undefined,
+      undefined,
+    )
+    dexie.queued_updates.add(update)
   }, [])
 
   const onClickUp = useCallback(() => {
