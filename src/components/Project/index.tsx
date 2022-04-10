@@ -51,14 +51,17 @@ const StyledSplitPane = styled(SplitPane)`
 `
 
 const ProjectComponent = ({ filter: showFilter }) => {
-  const { projectId: id } = useParams()
+  const { projectId } = useParams()
   const store = useContext(StoreContext)
   const { online } = store
   const filter = 'TODO: was in store'
 
-  const row: Project = useLiveQuery(async () => await dexie.projects.get(id))
+  const row: Project = useLiveQuery(
+    async () => await dexie.projects.get(projectId),
+    [projectId],
+  )
 
-  // console.log('Project, row:', row)
+  console.log('Project rendering row:', { row, projectId })
 
   const [activeConflict, setActiveConflict] = useState(null)
   const conflictDisposalCallback = useCallback(
@@ -73,7 +76,7 @@ const ProjectComponent = ({ filter: showFilter }) => {
   // when changing dataset
   useEffect(() => {
     setActiveConflict(null)
-  }, [id])
+  }, [projectId])
 
   const [showHistory, setShowHistory] = useState(null)
   const historyTakeoverCallback = useCallback(() => setShowHistory(null), [])
@@ -105,7 +108,7 @@ const ProjectComponent = ({ filter: showFilter }) => {
           >
             <Form
               showFilter={showFilter}
-              id={id}
+              id={projectId}
               row={row}
               activeConflict={activeConflict}
               setActiveConflict={setActiveConflict}
@@ -117,7 +120,7 @@ const ProjectComponent = ({ filter: showFilter }) => {
                   {activeConflict ? (
                     <div
                       rev={activeConflict}
-                      id={id}
+                      id={projectId}
                       row={row}
                       conflictDisposalCallback={conflictDisposalCallback}
                       conflictSelectionCallback={conflictSelectionCallback}

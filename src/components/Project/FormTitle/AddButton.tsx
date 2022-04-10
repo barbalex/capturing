@@ -5,12 +5,16 @@ import IconButton from '@mui/material/IconButton'
 
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
+import insertProject from '../../../utils/insertProject'
+import { dexie, IAccount } from '../../../dexieClient'
 
 const ProjectAddButton = () => {
-  const store = useContext(StoreContext)
-  const onClick = useCallback(() => {
-    console.log('TODO: insert new project')
-  }, [])
+  const { activeNodeArray, setActiveNodeArray } = useContext(StoreContext)
+  const onClick = useCallback(async () => {
+    const account: IAccount = await dexie.accounts.toCollection().first()
+    const newProjectId = await insertProject({ account })
+    setActiveNodeArray([...activeNodeArray.slice(0, -1), newProjectId])
+  }, [activeNodeArray, setActiveNodeArray])
 
   return (
     <ErrorBoundary>
