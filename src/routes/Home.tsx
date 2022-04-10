@@ -10,28 +10,31 @@ import constants from '../utils/constants'
 
 const StyledSimpleBar = styled(SimpleBar)`
   max-height: calc(100vh - ${constants.appBarHeight}px);
-  height: calc(100vh - ${constants.appBarHeight}px);
+  height: calc(100% - ${constants.appBarHeight}px);
   .simplebar-scrollbar:before {
-    /*background: #4a148c !important;
-    background: #003e0c !important;*/
-    background: grey !important;
+    background: #4a148c !important;
+    /*background: #003e0c !important;*/
+    /*background: grey !important;*/
   }
 `
 const ScrollContainer = styled.div`
-  height: calc(100vh - ${constants.appBarHeight}px);
+  height: calc(100% - ${constants.appBarHeight}px);
+  .simplebar-content {
+    height: calc(100% - ${constants.appBarHeight}px);
+  }
 `
 const Container = styled.div`
-  padding: 15px;
+  margin: 15px;
   position: relative;
-  min-height: 100%;
+  height: calc(100% - ${constants.appBarHeight}px);
   @media (min-width: 700px) {
-    padding: 20px;
+    margin: 20px;
   }
   @media (min-width: 1200px) {
-    padding: 25px;
+    margin: 25px;
   }
   @media (min-width: 1700px) {
-    padding: 30px;
+    margin: 30px;
   }
 `
 const CardContainer = styled.div`
