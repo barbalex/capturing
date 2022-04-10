@@ -12,6 +12,7 @@ import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
 import { dexie } from '../../dexieClient'
 import insertProject from '../../utils/insertProject'
+import FilterNumbers from '../shared/FilterNumbers'
 
 const Container = styled.div`
   height: 100%;
@@ -50,16 +51,19 @@ const Projects = () => {
     store
 
   const data = useLiveQuery(async () => {
-    const [projects, account] = await Promise.all([
+    const [projects, account, filteredCount, totalCount] = await Promise.all([
       dexie.projects.where({ deleted: 0 }).sortBy('name'), // TODO: if project.use_labels, use label
       dexie.accounts.orderBy('id').limit(1).first(),
+      dexie.projects.where({ deleted: 0 }).count(), // TODO: pass in filter
+      dexie.projects.where({ deleted: 0 }).count(),
     ])
 
-    return { projects, account }
+    return { projects, account, filteredCount, totalCount }
   })
   const projects = data?.projects
   const account = data?.account
-  // console.log('Projects', { projects, account })
+  const filteredCount = data?.filteredCount
+  const totalCount = data?.totalCount
 
   const add = useCallback(async () => {
     const newProjectId = await insertProject({ account })
@@ -93,6 +97,10 @@ const Projects = () => {
             >
               <FaPlus />
             </IconButton>
+            <FilterNumbers
+              filteredCount={filteredCount}
+              totalCount={totalCount}
+            />
           </TitleSymbols>
         </TitleContainer>
         <FieldsContainer>

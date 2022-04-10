@@ -1,25 +1,30 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
+import { useLiveQuery } from 'dexie-react-hooks'
 
-import StoreContext from '../../../storeContext'
+// import StoreContext from '../../../storeContext'
 import FilterTitle from '../../shared/FilterTitle'
 import FormTitle from './FormTitle'
+import { dexie } from '../../../dexieClient'
 
 const ProjectFormTitleChooser = ({ row }) => {
-  const store = useContext(StoreContext)
+  // const store = useContext(StoreContext)
   const showFilter = false // TODO:
   const showHistory = false // TODO:
-  const setShowHistory = () => {} // TODO:
-
-  const [countState, setCountState] = useState({
-    totalCount: 0,
-    filteredCount: 0,
-  })
-  useEffect(() => {
-    // setCountState({ totalCount, filteredCount })
+  const setShowHistory = useCallback(() => {
+    // TODO:
   }, [])
 
-  const { totalCount, filteredCount } = countState
+  const data = useLiveQuery(async () => {
+    const [filteredCount, totalCount] = await Promise.all([
+      dexie.projects.where({ deleted: 0 }).count(), // TODO: pass in filter
+      dexie.projects.where({ deleted: 0 }).count(),
+    ])
+
+    return { filteredCount, totalCount }
+  })
+  const filteredCount = data?.filteredCount
+  const totalCount = data?.totalCount
 
   if (showFilter) {
     return (
