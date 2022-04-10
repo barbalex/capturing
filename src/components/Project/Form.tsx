@@ -11,7 +11,7 @@ import JesNo from '../shared/JesNo'
 import ifIsNumericAsNumber from '../../utils/ifIsNumericAsNumber'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import ConflictList from '../shared/ConflictList'
-import { dexie, IProject, Project, QueuedUpdate } from '../../dexieClient'
+import { dexie, IProject, Project } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
 
@@ -94,19 +94,23 @@ const ProjectForm = ({
 
   const onBlur = useCallback(
     async (event) => {
-      const field: string = event.target.name
-      let value = ifIsNumericAsNumber(event.target.value)
-      if (event.target.value === undefined) value = null
-      if (event.target.value === '') value = null
-
-      if (showFilter) {
-        return filter.setValue({ table: 'project', key: field, value })
-      }
+      const { name: field, value, type, valueAsNumber } = event.target
+      let newValue = type === 'number' ? valueAsNumber : value
+      if ([undefined, '', NaN].includes(newValue)) newValue = null
 
       // only update if value has changed
-      const previousValue = ifIsNumericAsNumber(row[field])
-      if (value === previousValue) return
-      const newRow = { ...row, [field]: value }
+      const previousValue = rowState.current[field]
+      if (newValue === previousValue) return
+
+      if (showFilter) {
+        return filter.setValue({
+          table: 'project',
+          key: field,
+          value: newValue,
+        })
+      }
+
+      const newRow = { ...row, [field]: newValue }
       rowState.current = newRow
       dexie.projects.put(newRow)
     },
