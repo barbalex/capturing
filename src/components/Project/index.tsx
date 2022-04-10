@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SplitPane from 'react-split-pane'
 import { useParams } from 'react-router-dom'
-import { db as dexie, IProject } from '../../dexieClient'
+import { db as dexie, Project } from '../../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../storeContext'
@@ -50,13 +50,13 @@ const StyledSplitPane = styled(SplitPane)`
   }
 `
 
-const Project = ({ filter: showFilter }) => {
+const ProjectComponent = ({ filter: showFilter }) => {
   const { projectId: id } = useParams()
   const store = useContext(StoreContext)
   const { online } = store
   const filter = 'TODO: was in store'
 
-  const row: IProject = useLiveQuery(async () => await dexie.projects.get(id))
+  const row: Project = useLiveQuery(async () => await dexie.projects.get(id))
 
   // console.log('Project, row:', row)
 
@@ -143,4 +143,4 @@ const Project = ({ filter: showFilter }) => {
   )
 }
 
-export default observer(Project)
+export default observer(ProjectComponent)
