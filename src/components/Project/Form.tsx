@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SimpleBar from 'simplebar-react'
 import isEqual from 'lodash/isEqual'
+import { Session } from '@supabase/supabase-js'
 
 import StoreContext from '../../storeContext'
 import Checkbox2States from '../shared/Checkbox2States'
@@ -10,7 +11,8 @@ import JesNo from '../shared/JesNo'
 import ifIsNumericAsNumber from '../../utils/ifIsNumericAsNumber'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import ConflictList from '../shared/ConflictList'
-import { db as dexie, IProject, QueuedUpdate } from '../../dexieClient'
+import { db as dexie, IProject, Project, QueuedUpdate } from '../../dexieClient'
+import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
 
 const FieldsContainer = styled.div`
@@ -30,7 +32,7 @@ const Rev = styled.span`
 type ProjectFormProps = {
   activeConflict: string
   id: string
-  row: IProject
+  row: Project
   setActiveConflict: (string) => void
   showFilter: (boolean) => void
   showHistory: (boolean) => void
@@ -46,6 +48,7 @@ const ProjectForm = ({
 }: ProjectFormProps) => {
   const store = useContext(StoreContext)
   const { filter, online, errors } = store
+  const session: Session = supabase.auth.session()
   const unsetError = useCallback(
     () => () => {
       console.log('TODO: unsetError')
@@ -55,13 +58,12 @@ const ProjectForm = ({
 
   // console.log('ProjectForm rendering', { row })
 
-  const rowState = useRef<IProject>()
-  // update rowState initially
-  // and every time it changed outside the form
+  const originalRow = useRef<IProject>()
+  // update originalRow only initially
   useEffect(() => {
-    rowState.current = row
-  }, [row])
-  // console.log('ProjectForm rendering, rowState:', rowState.current)
+    originalRow.current = row
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     unsetError('project')
@@ -69,20 +71,26 @@ const ProjectForm = ({
 
   const queueUpdate = useCallback(async () => {
     // only update if is changed
-    if (!isEqual(rowState.current, row)) {
+    if (!isEqual(originalRow.current, row)) {
+      const newObject = {
+        ...row,
+        client_rev_at: new window.Date().toISOString(),
+        client_rev_by: session.user?.email ?? session.user?.id,
+      }
+      console.log('ProjectForm, queueUpdate, newObject:', newObject)
+      //row.update({row})
       const update = new QueuedUpdate(
         undefined,
         undefined,
         'projects',
-        JSON.stringify(rowState.current),
-        rowState.current?.id,
+        JSON.stringify(newObject),
+        newObject?.id,
         JSON.stringify(row),
       )
       await dexie.queued_updates.add(update)
     }
     return
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [row, rowState.current])
+  }, [row, session.user?.email, session.user?.id])
 
   useEffect(() => {
     window.onbeforeunload = async () => {
@@ -106,11 +114,10 @@ const ProjectForm = ({
       // only update if value has changed
       const previousValue = ifIsNumericAsNumber(row[field])
       if (value === previousValue) return
-      const newRowState = { ...rowState.current, [field]: value }
-      rowState.current = newRowState
-      dexie.projects.put(newRowState)
+      const newRow = { ...row, [field]: value }
+      dexie.projects.put(newRow)
     },
-    [filter, row, rowState, showFilter],
+    [filter, row, showFilter],
   )
 
   const showDeleted = filter?.project?.deleted !== false || row?.deleted
