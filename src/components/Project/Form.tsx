@@ -67,7 +67,7 @@ const ProjectForm = ({
     unsetError('project')
   }, [id, unsetError])
 
-  const queueUpdate = useCallback(() => {
+  const queueUpdate = useCallback(async () => {
     // only update if is changed
     if (!isEqual(rowState.current, row)) {
       const update = new QueuedUpdate(
@@ -78,15 +78,16 @@ const ProjectForm = ({
         rowState.current?.id,
         JSON.stringify(row),
       )
-      dexie.queued_updates.add(update)
+      await dexie.queued_updates.add(update)
     }
+    return
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [row, rowState.current])
 
   useEffect(() => {
-    window.onbeforeunload = () => {
+    window.onbeforeunload = async () => {
       // save any data changed before closing tab or browser
-      queueUpdate()
+      await queueUpdate()
       return
     }
   }, [queueUpdate])
