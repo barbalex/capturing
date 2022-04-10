@@ -50,7 +50,7 @@ const processQueuedUpdate = async ({
     const { error } = await supabase.from(revTableName).insert(newObject)
     if (error) {
       // 3. deal with errors
-      // new row violates row-level security policy (USING expression) for table "projects"
+      // TODO: error when updating: "new row violates row-level security policy (USING expression) for table \"projects\""
       console.log(
         'processQueuedUpdate, revision table, error inserting:',
         error,
