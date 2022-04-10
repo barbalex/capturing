@@ -40,7 +40,6 @@ const Checkbox2States = ({
 
   const onClickButton = useCallback(() => {
     const newValue = stateValue === 0 ? 1 : 0
-    console.log('Checkbox2States, onClick, newValue:', newValue)
     setStateValue(newValue)
     const fakeEvent = {
       target: {
@@ -52,16 +51,6 @@ const Checkbox2States = ({
   }, [stateValue, name, onBlur])
 
   const checked = stateValue === 1
-
-  if (name === 'use_labels') {
-    console.log('Checkbox2States', {
-      checked,
-      name,
-      label,
-      valuePassed,
-      stateValue,
-    })
-  }
 
   return (
     <Container>
