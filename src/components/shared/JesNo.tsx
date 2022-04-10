@@ -41,6 +41,8 @@ const dataSource = [
   },
 ]
 
+// TODO: test because of change true/false to 1/0
+
 const RadioButtonGroup = ({
   value: valuePassed,
   label,
