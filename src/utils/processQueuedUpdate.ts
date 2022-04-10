@@ -1,4 +1,5 @@
 import { supabase } from '../supabaseClient'
+import { Session } from '@supabase/supabase-js'
 import { db as dexie, QueuedUpdate } from '../dexieClient'
 import { v1 as uuidv1 } from 'uuid'
 import md5 from 'blueimp-md5'
@@ -19,7 +20,7 @@ const processQueuedUpdate = async ({
   queuedUpdate,
   store,
 }: ProcessQueuedUpdateProps) => {
-  const session = supabase.auth.session()
+  const session: Session = supabase.auth.session()
   const { online, setOnline } = store
   console.log('processQueuedUpdate', queuedUpdate)
   // TODO: ttables problem?
@@ -38,7 +39,7 @@ const processQueuedUpdate = async ({
       [`${singularTableName}_id`]: id,
       ...newObject,
       client_rev_at: new window.Date().toISOString(),
-      client_rev_by: session.user.email,
+      client_rev_by: session.user?.email ?? session.user?.id,
       depth,
       parent_rev: queuedUpdate.revert_value?.rev ?? null,
     }
