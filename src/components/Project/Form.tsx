@@ -163,6 +163,7 @@ const ProjectForm = ({
             onBlur={onBlur}
             error={errors?.project?.name}
           />
+          {/*TODO: only show label if use_labels is true*/}
           <TextField
             key={`${row.id}label`}
             name="label"

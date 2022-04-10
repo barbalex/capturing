@@ -63,7 +63,7 @@ const Projects = () => {
   // const account = data?.account
   const data = useLiveQuery(async () => {
     const [projects, account] = await Promise.all([
-      dexie.projects.where({ deleted: 0 }).sortBy('label'),
+      dexie.projects.where({ deleted: 0 }).sortBy('name'), // TODO: if project.use_labels, use label
       dexie.accounts.orderBy('id').limit(1).first(),
     ])
 
