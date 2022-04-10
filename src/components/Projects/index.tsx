@@ -10,7 +10,7 @@ import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import { dexie, Project, QueuedUpdate } from '../../dexieClient'
+import { dexie } from '../../dexieClient'
 import insertProject from '../../utils/insertProject'
 
 const Container = styled.div`
@@ -49,13 +49,6 @@ const Projects = () => {
   const { activeNodeArray, setActiveNodeArray, removeOpenNode, formHeight } =
     store
 
-  // const data = useLiveQuery(async () => {
-  //   const projects = await dexie.projects.where({ deleted: 0 }).sortBy('label')
-  //   const account = await dexie.accounts.orderBy('id').limit(1).first()
-  //   return { projects, account }
-  // })
-  // const projects = data?.projects
-  // const account = data?.account
   const data = useLiveQuery(async () => {
     const [projects, account] = await Promise.all([
       dexie.projects.where({ deleted: 0 }).sortBy('name'), // TODO: if project.use_labels, use label
