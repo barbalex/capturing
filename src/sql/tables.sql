@@ -1427,7 +1427,9 @@ DROP POLICY IF EXISTS "Users can update projects assigned and of own accounts" O
 
 CREATE POLICY "Users can update projects assigned and of own accounts" ON projects
   FOR UPDATE
-    WITH CHECK (is_project_editor_or_manager_by_project (auth.uid (), id));
+    USING (is_project_user_by_project (auth.uid (), id)
+      OR is_own_account (auth.uid (), account_id))
+      WITH CHECK (is_project_editor_or_manager_by_project (auth.uid (), id));
 
 DROP POLICY IF EXISTS "account owners can delete own projects" ON projects;
 
@@ -1767,4 +1769,47 @@ INSERT INTO projects (name, label, account_id)
         accounts
       WHERE
         service_id = 'test'));
+
+INSERT INTO project_users (project_id, user_email, ROLE)
+  VALUES ((
+      SELECT
+        id
+      FROM
+        projects
+      WHERE
+        name = 'test-project'), 'alex.barbalex@gmail.com', 'project_manager');
+
+--- test project policies
+SELECT
+  is_project_user_by_project ((
+    SELECT
+      id
+    FROM auth.users
+    WHERE
+      email = 'alex.barbalex@gmail.com'), (
+    SELECT
+      id
+    FROM projects
+    WHERE
+      name = 'test-project'));
+
+SELECT
+  is_project_user_by_project ('d4f6a987-6306-4da0-8ca6-3073ee5384aa', '20311e3f-791c-4e75-81ab-a55b309e85d7');
+
+-- true
+SELECT
+  is_own_account ((
+    SELECT
+      id
+    FROM auth.users
+    WHERE
+      email = 'alex.barbalex@gmail.com'), (
+    SELECT
+      id
+    FROM accounts
+    WHERE
+      service_id = 'test'));
+
+SELECT
+  is_own_account ('d4f6a987-6306-4da0-8ca6-3073ee5384aa', '22e0f582-9095-4469-a872-cf86ceaa7514');
 
