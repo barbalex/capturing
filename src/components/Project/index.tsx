@@ -58,7 +58,7 @@ const Project = ({ filter: showFilter }) => {
 
   const row: IProject = useLiveQuery(async () => await dexie.projects.get(id))
 
-  console.log('Project, row:', row)
+  // console.log('Project, row:', row)
 
   const [activeConflict, setActiveConflict] = useState(null)
   const conflictDisposalCallback = useCallback(
