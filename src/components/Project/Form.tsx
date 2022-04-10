@@ -74,10 +74,10 @@ const ProjectForm = ({
     unsetError('project')
   }, [id, unsetError])
 
-  const updateServer = useCallback(async () => {
+  const updateOnServer = useCallback(async () => {
     // only update if is changed
     if (!isEqual(originalRow.current, rowState.current)) {
-      row.updateServer({ row: rowState.current, session })
+      row.updateOnServer({ row: rowState.current, session })
     }
     return
   }, [row, session])
@@ -85,10 +85,10 @@ const ProjectForm = ({
   useEffect(() => {
     window.onbeforeunload = async () => {
       // save any data changed before closing tab or browser
-      await updateServer()
+      await updateOnServer()
       return
     }
-  }, [updateServer])
+  }, [updateOnServer])
 
   const onBlur = useCallback(
     async (event) => {
@@ -125,7 +125,7 @@ const ProjectForm = ({
             if (!e.currentTarget.contains(e.relatedTarget)) {
               // focus left the container
               // https://github.com/facebook/react/issues/6410#issuecomment-671915381
-              updateServer()
+              updateOnServer()
             }
           }}
         >
