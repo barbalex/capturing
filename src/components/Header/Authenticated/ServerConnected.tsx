@@ -29,7 +29,9 @@ const ServerConnected = () => {
   const queuedUpdatesCount: integer = useLiveQuery(async () => {
     return await dexie.queued_updates.count()
   })
-  console.log('ServerConnected, queuedUpdatesCount:', queuedUpdatesCount)
+  if (queuedUpdatesCount >= 0) {
+    console.log('ServerConnected, queuedUpdatesCount:', queuedUpdatesCount)
+  }
   const showQueuedQueries = 'TODO!'
   const setShowQueuedQueries = useCallback(() => {
     // TODO:
