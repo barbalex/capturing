@@ -7,7 +7,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 import Button from '@mui/material/Button'
 import styled from 'styled-components'
 
-import { db as dexie } from '../../dexieClient'
+import { dexie } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import storeContext from '../../storeContext'
 import logout from '../../utils/logout'

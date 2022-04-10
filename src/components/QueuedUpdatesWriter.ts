@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { db as dexie, QueuedUpdate } from '../dexieClient'
+import { dexie, QueuedUpdate } from '../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { observer } from 'mobx-react-lite'
 

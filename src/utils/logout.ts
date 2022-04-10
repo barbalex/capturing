@@ -1,4 +1,4 @@
-import { db as dexie } from '../dexieClient'
+import { dexie } from '../dexieClient'
 import { supabase } from '../supabaseClient'
 
 const logout = async ({ store }) => {

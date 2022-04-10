@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import storeContext from '../../../storeContext'
-import { db as dexie } from '../../../dexieClient'
+import { dexie } from '../../../dexieClient'
 
 const OnlineButton = styled(IconButton)`
   /*cursor: default !important;*/

@@ -11,7 +11,7 @@ import JesNo from '../shared/JesNo'
 import ifIsNumericAsNumber from '../../utils/ifIsNumericAsNumber'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import ConflictList from '../shared/ConflictList'
-import { db as dexie, IProject, Project, QueuedUpdate } from '../../dexieClient'
+import { dexie, IProject, Project, QueuedUpdate } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
 
@@ -65,40 +65,32 @@ const ProjectForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const rowState = useRef<IProject>()
+  // update originalRow only initially
+  useEffect(() => {
+    rowState.current = row
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [row])
+
   useEffect(() => {
     unsetError('project')
   }, [id, unsetError])
 
-  const queueUpdate = useCallback(async () => {
+  const updateServer = useCallback(async () => {
     // only update if is changed
-    if (!isEqual(originalRow.current, row)) {
-      const newObject = {
-        ...row,
-        client_rev_at: new window.Date().toISOString(),
-        client_rev_by: session.user?.email ?? session.user?.id,
-      }
-      console.log('ProjectForm, queueUpdate, newObject:', newObject)
-      //row.update({row})
-      const update = new QueuedUpdate(
-        undefined,
-        undefined,
-        'projects',
-        JSON.stringify(newObject),
-        newObject?.id,
-        JSON.stringify(row),
-      )
-      await dexie.queued_updates.add(update)
+    if (!isEqual(originalRow.current, rowState.current)) {
+      row.updateServer({ row: rowState.current, session })
     }
     return
-  }, [row, session.user?.email, session.user?.id])
+  }, [row, session])
 
   useEffect(() => {
     window.onbeforeunload = async () => {
       // save any data changed before closing tab or browser
-      await queueUpdate()
+      await updateServer()
       return
     }
-  }, [queueUpdate])
+  }, [updateServer])
 
   const onBlur = useCallback(
     async (event) => {
@@ -115,6 +107,7 @@ const ProjectForm = ({
       const previousValue = ifIsNumericAsNumber(row[field])
       if (value === previousValue) return
       const newRow = { ...row, [field]: value }
+      rowState.current = newRow
       dexie.projects.put(newRow)
     },
     [filter, row, showFilter],
@@ -130,7 +123,7 @@ const ProjectForm = ({
             if (!e.currentTarget.contains(e.relatedTarget)) {
               // focus left the container
               // https://github.com/facebook/react/issues/6410#issuecomment-671915381
-              queueUpdate()
+              updateServer()
             }
           }}
         >

@@ -10,7 +10,7 @@ import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import { db as dexie, Project, QueuedUpdate } from '../../dexieClient'
+import { dexie, Project, QueuedUpdate } from '../../dexieClient'
 import insertProject from '../../utils/insertProject'
 
 const Container = styled.div`

@@ -1,4 +1,4 @@
-import { db as dexie, Project, IAccount, QueuedUpdate } from '../dexieClient'
+import { dexie, Project, IAccount, QueuedUpdate } from '../dexieClient'
 
 type InsertProjectProps = {
   account: IAccount

@@ -1,6 +1,6 @@
 import { supabase } from '../supabaseClient'
 import { Session } from '@supabase/supabase-js'
-import { db as dexie, QueuedUpdate } from '../dexieClient'
+import { dexie, QueuedUpdate } from '../dexieClient'
 import { v1 as uuidv1 } from 'uuid'
 import md5 from 'blueimp-md5'
 // import { Instance } from 'mobx-state-tree'

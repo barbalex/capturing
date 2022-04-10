@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SplitPane from 'react-split-pane'
 import { useParams } from 'react-router-dom'
-import { db as dexie, Project } from '../../dexieClient'
+import { dexie, Project } from '../../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../storeContext'

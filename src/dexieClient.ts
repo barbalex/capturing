@@ -2,6 +2,7 @@ import { IQueuedUpdate } from './dexieClient'
 import { ProjectUser } from './initiateDb'
 import Dexie, { DexieTable } from 'dexie'
 import { v1 as uuidv1 } from 'uuid'
+import { Session } from '@supabase/supabase-js'
 
 export interface IAccount {
   id: string
@@ -466,6 +467,7 @@ export interface IProject {
   use_labels: number
 }
 
+type ProjectUpdateProps = { row: IProject; session: Session }
 export class Project implements IProject {
   id: string
   account_id?: string
@@ -500,6 +502,23 @@ export class Project implements IProject {
     if (server_rev_at) this.server_rev_at = server_rev_at
     this.deleted = deleted ?? 0
     this.use_labels = use_labels ?? 0
+  }
+
+  async updateServer({ row, session }: ProjectUpdateProps) {
+    const rowReved = {
+      ...row,
+      client_rev_at: new window.Date().toISOString(),
+      client_rev_by: session.user?.email ?? session.user?.id,
+    }
+    const update = new QueuedUpdate(
+      undefined,
+      undefined,
+      'projects',
+      JSON.stringify(rowReved),
+      row?.id,
+      JSON.stringify(this),
+    )
+    return dexie.queued_updates.add(update)
   }
 }
 
@@ -964,4 +983,4 @@ export class MySubClassedDexie extends Dexie {
   }
 }
 
-export const db = new MySubClassedDexie()
+export const dexie = new MySubClassedDexie()

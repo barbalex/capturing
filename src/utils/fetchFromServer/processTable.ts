@@ -1,5 +1,5 @@
 import { supabase } from '../../supabaseClient'
-import { db as dexie, IProject } from '../../dexieClient'
+import { dexie, IProject } from '../../dexieClient'
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 
