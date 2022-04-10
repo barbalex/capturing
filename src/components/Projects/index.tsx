@@ -71,7 +71,7 @@ const Projects = () => {
   })
   const projects = data?.projects
   const account = data?.account
-  console.log('Projects', { projects, account })
+  // console.log('Projects', { projects, account })
 
   const add = useCallback(() => {
     console.log('Projects, add')
