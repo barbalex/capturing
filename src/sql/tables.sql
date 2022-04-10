@@ -1438,7 +1438,8 @@ CREATE POLICY "Users can update projects assigned and of own accounts" ON projec
   FOR UPDATE
     USING (is_project_user_by_project (auth.uid (), id)
       OR is_own_account (auth.uid (), account_id))
-      WITH CHECK (is_project_editor_or_manager_by_project (auth.uid (), id));
+      WITH CHECK (is_project_editor_or_manager_by_project (auth.uid (), id)
+      OR is_own_account (auth.uid (), account_id));
 
 DROP POLICY IF EXISTS "account owners can delete own projects" ON projects;
 
