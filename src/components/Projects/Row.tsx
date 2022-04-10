@@ -38,7 +38,7 @@ const ProjectRow = ({ row }) => {
 
   return (
     <Row key={row.id} onClick={onClickRow}>
-      <div>{row.label}</div>
+      <div>{row.label ?? '(unbenannt)'}</div>
     </Row>
   )
 }
