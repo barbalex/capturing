@@ -65,6 +65,12 @@ body {
   }
 }
 
+/* labels should not be selectable */
+
+label {
+  user-select: none;
+}
+
 /* scrollbars */
 
 .simplebar-scrollbar:before {
