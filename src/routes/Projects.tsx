@@ -56,7 +56,7 @@ const ProjectsPage = () => {
     setFormHeight,
   } = store
 
-  console.log('Projects, subscriptionState:', store.subscriptionState)
+  // console.log('Projects, subscriptionState:', store.subscriptionState)
 
   const containerEl = useRef(null)
   const treeEl = useRef(null)

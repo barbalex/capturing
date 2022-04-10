@@ -61,7 +61,7 @@ const ProjectComponent = ({ filter: showFilter }) => {
     [projectId],
   )
 
-  console.log('Project rendering row:', { row, projectId })
+  // console.log('Project rendering row:', { row, projectId })
 
   const [activeConflict, setActiveConflict] = useState(null)
   const conflictDisposalCallback = useCallback(

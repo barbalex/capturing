@@ -10,6 +10,7 @@ import { dexie, IAccount } from '../../../dexieClient'
 
 const ProjectAddButton = () => {
   const { activeNodeArray, setActiveNodeArray } = useContext(StoreContext)
+
   const onClick = useCallback(async () => {
     const account: IAccount = await dexie.accounts.toCollection().first()
     const newProjectId = await insertProject({ account })

@@ -55,7 +55,7 @@ const ProjectForm = ({
     [],
   ) // TODO: add errors, unsetError in store
 
-  console.log('ProjectForm rendering row:', row)
+  // console.log('ProjectForm rendering row:', row)
 
   const originalRow = useRef<IProject>()
   // update originalRow only initially
