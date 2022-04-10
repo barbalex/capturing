@@ -5,9 +5,11 @@ import { FaMinus } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import { Session } from '@supabase/supabase-js'
 
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
+import { supabase } from '../../../supabaseClient'
 
 const TitleRow = styled.div`
   display: flex;
@@ -26,7 +28,8 @@ const ProjectDeleteButton = ({ row }) => {
   const store = useContext(StoreContext)
   const { activeNodeArray, setActiveNodeArray, removeOpenNodeWithChildren } =
     store
-  const filter = { todo: 'TODO: was in store' }
+  // const filter = { todo: 'TODO: was in store' }
+  const session: Session = supabase.auth.session()
 
   const [anchorEl, setAnchorEl] = useState(null)
   const closeMenu = useCallback(() => {
@@ -38,14 +41,18 @@ const ProjectDeleteButton = ({ row }) => {
     [],
   )
   const remove = useCallback(() => {
-    // row.delete({ store })
+    row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
-    // if (filter.art.deleted === false) {
-    //   // need to remove openNode from openNodes
-    //   removeOpenNodeWithChildren(activeNodeArray)
-    //   setActiveNodeArray(activeNodeArray.slice(0, -1))
-    // }
-  }, [])
+    // need to remove openNode from openNodes
+    removeOpenNodeWithChildren(activeNodeArray)
+    setActiveNodeArray(activeNodeArray.slice(0, -1))
+  }, [
+    activeNodeArray,
+    removeOpenNodeWithChildren,
+    row,
+    session,
+    setActiveNodeArray,
+  ])
 
   return (
     <ErrorBoundary>
@@ -55,7 +62,7 @@ const ProjectDeleteButton = ({ row }) => {
         aria-label="Projekt löschen"
         title="Projekt löschen"
         onClick={onClickButton}
-        disabled={row.deleted === 0}
+        disabled={row.deleted === 1}
         size="large"
       >
         <FaMinus />

@@ -468,6 +468,7 @@ export interface IProject {
 }
 
 type ProjectUpdateProps = { row: IProject; session: Session }
+type DeleteOnServerAndClientProps = { session: Session }
 export class Project implements IProject {
   id: string
   account_id?: string
@@ -504,7 +505,7 @@ export class Project implements IProject {
     this.use_labels = use_labels ?? 0
   }
 
-  async updateServer({ row, session }: ProjectUpdateProps) {
+  async updateOnServer({ row, session }: ProjectUpdateProps) {
     const rowReved = {
       ...row,
       client_rev_at: new window.Date().toISOString(),
@@ -519,6 +520,12 @@ export class Project implements IProject {
       JSON.stringify(this),
     )
     return dexie.queued_updates.add(update)
+  }
+
+  async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    this.deleted = 1
+    dexie.projects.put(this)
+    this.updateOnServer({ row: this, session })
   }
 }
 
