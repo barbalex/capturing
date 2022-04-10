@@ -54,20 +54,41 @@ const Projects = () => {
   const { activeNodeArray, setActiveNodeArray, removeOpenNode, formHeight } =
     store
 
+  // const data = useLiveQuery(async () => {
+  //   const projects = await dexie.projects.where({ deleted: 0 }).sortBy('label')
+  //   const account = await dexie.accounts.orderBy('id').limit(1).first()
+  //   return { projects, account }
+  // })
+  // const projects = data?.projects
+  // const account = data?.account
   const data = useLiveQuery(async () => {
-    const projects = await dexie.projects.where({ deleted: 0 }).sortBy('label')
-    const account = await dexie.accounts.orderBy('id').limit(1).first()
-    return [projects, account]
+    const [projects, account] = await Promise.all([
+      dexie.projects.where({ deleted: 0 }).sortBy('label'),
+      dexie.accounts.orderBy('id').limit(1).first(),
+    ])
+
+    return { projects, account }
   })
   const projects = data?.projects
   const account = data?.account
   console.log('Projects', { projects, account })
 
   const add = useCallback(() => {
-    console.log('TODO: insert project')
+    console.log('Projects, add')
     // TODO: get accountId of session user
     // TODO: if session user has no account, can't insert project
-    const newProject = new Project(undefined)
+    const newProject = new Project(
+      undefined,
+      account?.id,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+    )
+    console.log('Projects, add, newProject:', newProject)
     dexie.projects.put(newProject)
     const update = new QueuedUpdate(
       undefined,
@@ -77,8 +98,10 @@ const Projects = () => {
       undefined,
       undefined,
     )
+    console.log('Projects, add, update:', update)
     dexie.queued_updates.add(update)
-  }, [])
+    setActiveNodeArray([...activeNodeArray, newProject.id])
+  }, [account?.id, activeNodeArray, setActiveNodeArray])
 
   const onClickUp = useCallback(() => {
     removeOpenNode(activeNodeArray)
