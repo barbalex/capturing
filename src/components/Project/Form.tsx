@@ -115,7 +115,8 @@ const ProjectForm = ({
     [filter, row, showFilter],
   )
 
-  const showDeleted = filter?.project?.deleted !== false || row?.deleted
+  // const showDeleted = filter?.project?.deleted !== false || row?.deleted
+  const showDeleted = false
 
   return (
     <ErrorBoundary>
