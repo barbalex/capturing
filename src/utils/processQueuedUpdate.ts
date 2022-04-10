@@ -22,7 +22,7 @@ const processQueuedUpdate = async ({
 }: ProcessQueuedUpdateProps) => {
   const session: Session = supabase.auth.session()
   const { online, setOnline } = store
-  console.log('processQueuedUpdate', queuedUpdate)
+  //console.log('processQueuedUpdate', queuedUpdate)
   // TODO: ttables problem?
   const isRevTable = revTables.includes(queuedUpdate.table)
   const singularTableName = queuedUpdate.table.slice(0, -1)
