@@ -53,7 +53,7 @@ const ProjectForm = ({
     [],
   ) // TODO: add errors, unsetError in store
 
-  console.log('ProjectForm rendering', { row })
+  // console.log('ProjectForm rendering', { row })
 
   const rowState = useRef<IProject>()
   // update rowState initially
@@ -61,7 +61,7 @@ const ProjectForm = ({
   useEffect(() => {
     rowState.current = row
   }, [row])
-  console.log('ProjectForm rendering, rowState:', rowState.current)
+  // console.log('ProjectForm rendering, rowState:', rowState.current)
 
   useEffect(() => {
     unsetError('project')
@@ -70,7 +70,6 @@ const ProjectForm = ({
   const queueUpdate = useCallback(() => {
     // only update if is changed
     if (!isEqual(rowState.current, row)) {
-      dexie.projects.put(rowState.current)
       const update = new QueuedUpdate(
         undefined,
         undefined,
@@ -108,6 +107,7 @@ const ProjectForm = ({
       if (value === previousValue) return
       const newRowState = { ...rowState.current, [field]: value }
       rowState.current = newRowState
+      dexie.projects.put(newRowState)
     },
     [filter, row, rowState, showFilter],
   )
