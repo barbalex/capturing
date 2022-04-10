@@ -20,7 +20,7 @@ const ApiDetector = () => {
   useEffect(() => {
     let isActive = true
     const pollingId = setInterval(() => {
-      isOnline(session.access_token).then((nowOnline) => {
+      isOnline(session?.access_token).then((nowOnline) => {
         if (!isActive) return
 
         if (online !== nowOnline) {
@@ -33,7 +33,7 @@ const ApiDetector = () => {
       isActive = false
       clearInterval(pollingId)
     }
-  }, [online, session.access_token, setOnline])
+  }, [online, session?.access_token, setOnline])
 
   return null
 }

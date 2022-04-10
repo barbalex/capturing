@@ -143,6 +143,7 @@ CREATE TABLE projects (
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0 -- geometry?
+  use_labels integer DEFAULT 0
   -- data?
 );
 
@@ -159,6 +160,8 @@ CREATE INDEX ON projects USING btree (name);
 CREATE INDEX ON projects USING btree (label);
 
 CREATE INDEX ON projects USING btree (deleted);
+
+CREATE INDEX ON projects USING btree (use_labels);
 
 COMMENT ON TABLE projects IS 'Goal: Define data structure per project. Tables, rows and files depend on it. Not versioned (not recorded and only added by manager)';
 

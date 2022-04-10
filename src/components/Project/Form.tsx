@@ -53,15 +53,15 @@ const ProjectForm = ({
     [],
   ) // TODO: add errors, unsetError in store
 
-  // console.log('ProjectForm rendering')
+  console.log('ProjectForm rendering', { row })
 
-  const rowState = useRef()
-  //const [rowState, setRowState] = useState<IProject>()
+  const rowState = useRef<IProject>()
   // update rowState initially
   // and every time it changed outside the form
   useEffect(() => {
     rowState.current = row
   }, [row])
+  console.log('ProjectForm rendering, rowState:', rowState.current)
 
   useEffect(() => {
     unsetError('project')
@@ -163,15 +163,25 @@ const ProjectForm = ({
             onBlur={onBlur}
             error={errors?.project?.name}
           />
-          {/*TODO: only show label if use_labels is true*/}
-          <TextField
-            key={`${row.id}label`}
-            name="label"
-            label="Beschriftung"
-            value={row.label}
+
+          <Checkbox2States
+            key={`${row.id}use_labels`}
+            label="Zusätzlich zu Namen Beschriftungen verwenden"
+            name="use_labels"
+            value={row.use_labels}
             onBlur={onBlur}
-            error={errors?.project?.label}
+            error={errors?.project?.use_labels}
           />
+          {row.use_labels === 1 && (
+            <TextField
+              key={`${row.id}label`}
+              name="label"
+              label="Beschriftung"
+              value={row.label}
+              onBlur={onBlur}
+              error={errors?.project?.label}
+            />
+          )}
           <TextField
             key={`${row.id}crs`}
             name="crs"

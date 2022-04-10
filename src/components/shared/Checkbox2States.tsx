@@ -4,7 +4,6 @@ import FormLabel from '@mui/material/FormLabel'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 import styled from 'styled-components'
-import { observer } from 'mobx-react-lite'
 
 // without slight padding radio is slightly cut off!
 const Container = styled.div`
@@ -40,7 +39,8 @@ const Checkbox2States = ({
   }, [valuePassed])
 
   const onClickButton = useCallback(() => {
-    const newValue = !stateValue
+    const newValue = stateValue === 0 ? 1 : 0
+    console.log('Checkbox2States, onClick, newValue:', newValue)
     setStateValue(newValue)
     const fakeEvent = {
       target: {
@@ -52,6 +52,16 @@ const Checkbox2States = ({
   }, [stateValue, name, onBlur])
 
   const checked = stateValue === 1
+
+  if (name === 'use_labels') {
+    console.log('Checkbox2States', {
+      checked,
+      name,
+      label,
+      valuePassed,
+      stateValue,
+    })
+  }
 
   return (
     <Container>
@@ -76,4 +86,4 @@ const Checkbox2States = ({
   )
 }
 
-export default observer(Checkbox2States)
+export default Checkbox2States

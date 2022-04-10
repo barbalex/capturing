@@ -463,6 +463,7 @@ export interface IProject {
   client_rev_by?: string
   server_rev_at?: Date
   deleted: number
+  use_labels: number
 }
 
 export class Project implements IProject {
@@ -475,6 +476,7 @@ export class Project implements IProject {
   client_rev_by?: string
   server_rev_at?: Date
   deleted: number
+  use_labels: number
 
   constructor(
     id?: string,
@@ -486,6 +488,7 @@ export class Project implements IProject {
     client_rev_by?: string,
     server_rev_at?: Date,
     deleted: number,
+    use_labels: number,
   ) {
     this.id = id ?? uuidv1()
     if (account_id) this.account_id = account_id
@@ -496,6 +499,7 @@ export class Project implements IProject {
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     this.deleted = deleted ?? 0
+    this.use_labels = use_labels ?? 0
   }
 }
 
@@ -927,7 +931,7 @@ export class MySubClassedDexie extends Dexie {
       option_types: 'id, &value, sort, server_rev_at, deleted',
       project_tile_layers: 'id, label, sort, active, server_rev_at, deleted',
       project_users: 'id, user_email, server_rev_at, deleted',
-      projects: 'id, label, server_rev_at, deleted',
+      projects: 'id, label, server_rev_at, deleted, use_labels',
       rel_types: 'id, &value, sort, server_rev_at, deleted',
       role_types: 'id, &value, sort, server_rev_at, deleted',
       rows: 'id, server_rev_at, deleted',
