@@ -4,6 +4,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { onSnapshot } from 'mobx-state-tree'
 import isEqual from 'lodash/isEqual'
 
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
+import '@fontsource/roboto/700.css'
+
 import { MobxStore } from './store'
 import materialTheme from './utils/materialTheme'
 import { Provider as MobxProvider } from './storeContext'
