@@ -10,13 +10,8 @@ import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import {
-  db as dexie,
-  IProject,
-  Project,
-  IAccount,
-  QueuedUpdate,
-} from '../../dexieClient'
+import { db as dexie, Project, QueuedUpdate } from '../../dexieClient'
+import insertProject from '../../utils/insertProject'
 
 const Container = styled.div`
   height: 100%;
@@ -73,35 +68,11 @@ const Projects = () => {
   const account = data?.account
   // console.log('Projects', { projects, account })
 
-  const add = useCallback(() => {
+  const add = useCallback(async () => {
     console.log('Projects, add')
-    // TODO: get accountId of session user
-    // TODO: if session user has no account, can't insert project
-    const newProject = new Project(
-      undefined,
-      account?.id,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-    )
-    console.log('Projects, add, newProject:', newProject)
-    dexie.projects.put(newProject)
-    const update = new QueuedUpdate(
-      undefined,
-      undefined,
-      'projects',
-      JSON.stringify(newProject),
-      undefined,
-      undefined,
-    )
-    console.log('Projects, add, update:', update)
-    dexie.queued_updates.add(update)
-    setActiveNodeArray([...activeNodeArray, newProject.id])
-  }, [account?.id, activeNodeArray, setActiveNodeArray])
+    const newProjectId = await insertProject({ account })
+    setActiveNodeArray([...activeNodeArray, newProjectId])
+  }, [account, activeNodeArray, setActiveNodeArray])
 
   const onClickUp = useCallback(() => {
     removeOpenNode(activeNodeArray)
