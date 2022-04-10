@@ -1,6 +1,10 @@
-import { db as dexie, Project, QueuedUpdate } from '../dexieClient'
+import { db as dexie, Project, IAccount, QueuedUpdate } from '../dexieClient'
 
-const insertProject = async ({ account }) => {
+type InsertProjectProps = {
+  account: IAccount
+}
+
+const insertProject = async ({ account }: InsertProjectProps) => {
   const newProject = new Project(
     undefined,
     account?.id,
