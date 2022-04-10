@@ -1396,6 +1396,12 @@ DROP POLICY IF EXISTS "project owners can update project_users" ON project_users
 
 CREATE POLICY "project owners can update project_users" ON project_users
   FOR UPDATE
+    USING (is_account_owner_by_project_user (auth.uid (), project_id)
+      OR auth.uid () IN (
+      -- same user
+      SELECT users.auth_user_id FROM users
+      WHERE
+        email = user_email))
     WITH CHECK (is_account_owner_by_project_user (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project owners can delete project_users" ON project_users;
@@ -1453,6 +1459,7 @@ DROP POLICY IF EXISTS "project managers can update tables" ON tables;
 
 CREATE POLICY "project managers can update tables" ON tables
   FOR UPDATE
+    USING (is_project_user_by_project (auth.uid (), project_id))
     WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can delete tables" ON tables;
@@ -1477,7 +1484,8 @@ DROP POLICY IF EXISTS "Users can update own user" ON users;
 
 CREATE POLICY "Users can update own user" ON users
   FOR UPDATE
-    USING (auth.uid () = users.auth_user_id);
+    USING (auth.uid () = users.auth_user_id)
+    WITH CHECK (auth.uid () = users.auth_user_id);
 
 DROP POLICY IF EXISTS "Users can view own account" ON accounts;
 
@@ -1495,13 +1503,14 @@ DROP POLICY IF EXISTS "Users can update own account" ON accounts;
 
 CREATE POLICY "Users can update own account" ON accounts
   FOR UPDATE
+    USING (is_own_account (auth.uid (), id))
     WITH CHECK (is_own_account (auth.uid (), id));
 
 DROP POLICY IF EXISTS "Users cant delete accounts" ON accounts;
 
 CREATE POLICY "Users cant delete accounts" ON accounts
-  FOR UPDATE
-    WITH CHECK (FALSE);
+  FOR DELETE
+    USING (FALSE);
 
 DROP POLICY IF EXISTS "Users can view rel types" ON rel_types;
 
@@ -1555,6 +1564,7 @@ DROP POLICY IF EXISTS "project managers can update fields" ON fields;
 
 CREATE POLICY "project managers can update fields" ON fields
   FOR UPDATE
+    USING (is_project_user_by_table (auth.uid (), table_id))
     WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id));
 
 DROP POLICY IF EXISTS "project managers can delete fields" ON fields;
@@ -1579,6 +1589,7 @@ DROP POLICY IF EXISTS "project managers and editors can update rows" ON ROWS;
 
 CREATE POLICY "project managers and editors can update rows" ON ROWS
   FOR UPDATE
+    USING (is_project_user_by_table (auth.uid (), table_id))
     WITH CHECK (is_project_editor_or_manager_by_table (auth.uid (), table_id));
 
 DROP POLICY IF EXISTS "project managers and editors can delete rows" ON ROWS;
@@ -1633,6 +1644,7 @@ DROP POLICY IF EXISTS "project managers and editors can update files" ON files;
 
 CREATE POLICY "project managers and editors can update files" ON files
   FOR UPDATE
+    USING (is_project_user_by_row (auth.uid (), row_id))
     WITH CHECK (is_project_editor_or_manager_by_row (auth.uid (), row_id));
 
 DROP POLICY IF EXISTS "project managers and editors can delete files" ON files;
@@ -1706,6 +1718,7 @@ DROP POLICY IF EXISTS "project_managers can update tile_layers" ON tile_layers;
 
 CREATE POLICY "project_managers can update tile_layers" ON tile_layers
   FOR UPDATE
+    USING (auth.role () = 'authenticated')
     WITH CHECK (is_project_manager (auth.uid ()));
 
 DROP POLICY IF EXISTS "project_managers can delete tile_layers" ON tile_layers;
@@ -1731,6 +1744,7 @@ DROP POLICY IF EXISTS "project managers can update project_tile_layers" ON proje
 
 CREATE POLICY "project managers can update project_tile_layers" ON project_tile_layers
   FOR UPDATE
+    USING (is_project_user_by_project (auth.uid (), project_id))
     WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can delete project_tile_layers" ON project_tile_layers;
