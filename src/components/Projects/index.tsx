@@ -57,7 +57,7 @@ const Projects = () => {
   const data = useLiveQuery(async () => {
     const projects = await dexie.projects.where({ deleted: 0 }).sortBy('label')
     const account = await dexie.accounts.orderBy('id').limit(1).first()
-    return { projects, account }
+    return [projects, account]
   })
   const projects = data?.projects
   const account = data?.account
@@ -103,6 +103,7 @@ const Projects = () => {
               title="neues Projekt"
               onClick={add}
               size="large"
+              disabled={!account}
             >
               <FaPlus />
             </IconButton>
