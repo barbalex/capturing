@@ -8,7 +8,6 @@ import { Session } from '@supabase/supabase-js'
 import StoreContext from '../../storeContext'
 import Checkbox2States from '../shared/Checkbox2States'
 import JesNo from '../shared/JesNo'
-import ifIsNumericAsNumber from '../../utils/ifIsNumericAsNumber'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import ConflictList from '../shared/ConflictList'
 import { dexie, IProject, Project } from '../../dexieClient'
@@ -69,7 +68,6 @@ const ProjectForm = ({
   // update originalRow only initially
   useEffect(() => {
     rowState.current = row
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [row])
 
   useEffect(() => {
