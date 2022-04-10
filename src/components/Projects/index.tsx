@@ -69,7 +69,6 @@ const Projects = () => {
   // console.log('Projects', { projects, account })
 
   const add = useCallback(async () => {
-    console.log('Projects, add')
     const newProjectId = await insertProject({ account })
     setActiveNodeArray([...activeNodeArray, newProjectId])
   }, [account, activeNodeArray, setActiveNodeArray])
