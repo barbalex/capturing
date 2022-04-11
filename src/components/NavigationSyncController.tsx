@@ -25,7 +25,7 @@ const NavigationSyncController = () => {
   useEffect(() => {
     const activeNodeArray = getActiveNodeArrayFromUrl(pathname)
 
-    if (!isEqual(activeNodeArray, store.activeNodeArray.slice())) {
+    if (!isEqual(activeNodeArray, store.activeNodeArray?.slice())) {
       setActiveNodeArray(activeNodeArray)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
