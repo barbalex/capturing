@@ -96,11 +96,13 @@ const ProjectsPage = () => {
         >
           <div ref={treeEl}>tree</div>
           <Routes>
-            <Route index path="/" element={<ProjectsComponent />} />
-            <Route path=":projectId" element={<ProjectComponent />}>
-              <Route path="tables" element={<TablesComponent />} />
-              <Route path=":tableId" element={<TableComponent />} />
-            </Route>
+            <Route path="/" element={<ProjectsComponent />} />
+            <Route path=":projectId" element={<ProjectComponent />}></Route>
+            <Route path=":projectId/tables/*" element={<TablesComponent />} />
+            <Route
+              path=":projectId/tables/:tableId"
+              element={<TableComponent />}
+            />
           </Routes>
         </StyledSplitPane>
       </Container>

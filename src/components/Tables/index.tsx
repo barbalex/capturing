@@ -73,7 +73,6 @@ const TablesComponent = () => {
   const add = useCallback(async () => {
     const newTableId = await insertTable({ project })
     navigate(newTableId)
-    //setActiveNodeArray([...activeNodeArray, newTableId])
   }, [navigate, project])
 
   const onClickUp = useCallback(() => {

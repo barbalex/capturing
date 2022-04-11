@@ -1,7 +1,7 @@
-import { useCallback, useContext } from 'react'
+import { useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { dexie, Project } from '../../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
 import Button from '@mui/material/Button'
@@ -24,17 +24,13 @@ const Container = styled.div`
 const ProjectComponent = ({ filter: showFilter }) => {
   const { projectId } = useParams()
   const store = useContext(storeContext)
-  const { activeNodeArray, setActiveNodeArray } = store
+  const { activeNodeArray } = store
   const filter = 'TODO: was in store'
 
   const row: Project = useLiveQuery(
     async () => await dexie.projects.get(projectId),
     [projectId],
   )
-
-  const onClickTabellen = useCallback(() => {
-    setActiveNodeArray([...activeNodeArray, 'tables'])
-  }, [activeNodeArray, setActiveNodeArray])
 
   console.log('Project rendering, activeNodeArray:', activeNodeArray.slice())
 
@@ -50,7 +46,9 @@ const ProjectComponent = ({ filter: showFilter }) => {
           <Button
             variant="outlined"
             endIcon={<FaArrowRight />}
-            onClick={onClickTabellen}
+            //onClick={onClickTabellen}
+            component={Link}
+            to="tables"
           >
             Tabellen
           </Button>
