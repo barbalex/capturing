@@ -647,6 +647,8 @@ export interface ITable {
   deleted: number
 }
 
+type TableUpdateProps = { row: ITable; session: Session }
+
 export class Table implements ITable {
   id: string
   project_id?: string
@@ -697,6 +699,29 @@ export class Table implements ITable {
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     this.deleted = deleted ?? 0
+  }
+
+  async updateOnServer({ row, session }: TableUpdateProps) {
+    const rowReved = {
+      ...row,
+      client_rev_at: new window.Date().toISOString(),
+      client_rev_by: session.user?.email ?? session.user?.id,
+    }
+    const update = new QueuedUpdate(
+      undefined,
+      undefined,
+      'tables',
+      JSON.stringify(rowReved),
+      row?.id,
+      JSON.stringify(this),
+    )
+    return dexie.queued_updates.add(update)
+  }
+
+  async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    this.deleted = 1
+    dexie.projects.put(this)
+    this.updateOnServer({ row: this, session })
   }
 }
 
