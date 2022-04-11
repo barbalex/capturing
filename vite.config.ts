@@ -45,7 +45,7 @@ export default defineConfig({
         screenshots: [],
       },
       devOptions: {
-        enabled: true,
+        //enabled: true,
       },
     }),
     react(),
