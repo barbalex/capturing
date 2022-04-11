@@ -85,6 +85,7 @@ const ProjectsPage = () => {
   // hide resizer when tree is hidden
   const resizerStyle = treeWidth === 0 ? { width: 0 } : {}
 
+  // TODO: FormContainer with scrolling
   return (
     <ErrorBoundary>
       <Container ref={containerEl}>

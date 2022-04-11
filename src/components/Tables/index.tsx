@@ -1,7 +1,7 @@
 import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
-import { FaPlus, FaLongArrowAltUp } from 'react-icons/fa'
+import { FaPlus, FaArrowUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -87,7 +87,7 @@ const TablesComponent = () => {
           <Title>Tabellen</Title>
           <TitleSymbols>
             <IconButton title="Zum Projekt" onClick={onClickUp} size="large">
-              <FaLongArrowAltUp />
+              <FaArrowUp />
             </IconButton>
             <IconButton
               aria-label="neue Tabelle"

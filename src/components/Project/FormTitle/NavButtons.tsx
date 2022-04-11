@@ -1,7 +1,7 @@
 import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import IconButton from '@mui/material/IconButton'
-import { FaLongArrowAltUp } from 'react-icons/fa'
+import { FaArrowUp } from 'react-icons/fa'
 
 import StoreContext from '../../../storeContext'
 
@@ -17,7 +17,7 @@ const ProjectNavButtons = () => {
   return (
     <>
       <IconButton title="Zur Liste" onClick={onClickUp} size="large">
-        <FaLongArrowAltUp />
+        <FaArrowUp />
       </IconButton>
     </>
   )
