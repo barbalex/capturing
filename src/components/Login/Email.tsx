@@ -195,9 +195,7 @@ const LoginWithEmailAndPassword = ({
         </FormControl>
       </Container>
       <DialogActions>
-        <Button color="primary" onClick={fetchLogin}>
-          anmelden
-        </Button>
+        <Button color="primary">anmelden</Button>
       </DialogActions>
     </>
   )
