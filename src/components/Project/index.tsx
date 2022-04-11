@@ -1,4 +1,3 @@
-import { useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { useParams, Link } from 'react-router-dom'
@@ -11,7 +10,6 @@ import ErrorBoundary from '../shared/ErrorBoundary'
 import Spinner from '../shared/Spinner'
 import FormTitle from './FormTitle'
 import Form from './Form'
-import storeContext from '../../storeContext'
 
 const Container = styled.div`
   height: 100%;
@@ -22,13 +20,11 @@ const Container = styled.div`
 const TopNavContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  padding: 5px;
+  padding: 5px 10px 5px 10px;
 `
 
 const ProjectComponent = ({ filter: showFilter }) => {
   const { projectId } = useParams()
-  const store = useContext(storeContext)
-  const { activeNodeArray } = store
   const filter = 'TODO: was in store'
 
   const row: Project = useLiveQuery(
@@ -36,7 +32,7 @@ const ProjectComponent = ({ filter: showFilter }) => {
     [projectId],
   )
 
-  console.log('Project rendering, activeNodeArray:', activeNodeArray.slice())
+  // console.log('Project rendering, activeNodeArray:', activeNodeArray.slice())
 
   if (!row) return <Spinner />
   if (!showFilter && filter.show) return null
