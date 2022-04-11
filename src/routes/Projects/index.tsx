@@ -4,15 +4,16 @@ import styled from 'styled-components'
 import SplitPane from 'react-split-pane'
 import { Routes, Route } from 'react-router-dom'
 
-import StoreContext from '../storeContext'
-import Login from '../components/Login'
-import ErrorBoundary from '../components/shared/ErrorBoundary'
-import constants from '../utils/constants'
-import ProjectsComponent from '../components/Projects'
-import ProjectComponent from '../components/Project'
-import TablesComponent from '../components/Tables'
-import TableComponent from '../components/Table'
-import { supabase } from '../supabaseClient'
+import StoreContext from '../../storeContext'
+import Login from '../../components/Login'
+import ErrorBoundary from '../../components/shared/ErrorBoundary'
+import constants from '../../utils/constants'
+import ProjectsComponent from '../../components/Projects'
+import ProjectComponent from '../../components/Project'
+import TablesComponent from '../../components/Tables'
+import TableComponent from '../../components/Table'
+import { supabase } from '../../supabaseClient'
+import FormContainer from './FormContainer'
 
 const StyledSplitPane = styled(SplitPane)`
   .Resizer {
@@ -96,15 +97,17 @@ const ProjectsPage = () => {
           resizerStyle={resizerStyle}
         >
           <div ref={treeEl}>tree</div>
-          <Routes>
-            <Route path="/" element={<ProjectsComponent />} />
-            <Route path=":projectId" element={<ProjectComponent />}></Route>
-            <Route path=":projectId/tables/*" element={<TablesComponent />} />
-            <Route
-              path=":projectId/tables/:tableId"
-              element={<TableComponent />}
-            />
-          </Routes>
+          <FormContainer>
+            <Routes>
+              <Route path="/" element={<ProjectsComponent />} />
+              <Route path=":projectId" element={<ProjectComponent />}></Route>
+              <Route path=":projectId/tables/*" element={<TablesComponent />} />
+              <Route
+                path=":projectId/tables/:tableId"
+                element={<TableComponent />}
+              />
+            </Routes>
+          </FormContainer>
         </StyledSplitPane>
       </Container>
     </ErrorBoundary>
