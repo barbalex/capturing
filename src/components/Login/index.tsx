@@ -9,7 +9,6 @@ import ErrorBoundary from '../shared/ErrorBoundary'
 import Link from './Link'
 import Email from './Email'
 import ResetPassword from './ResetPassword'
-import { supabase } from '../../supabaseClient'
 
 const StyledDialog = styled(Dialog)`
   .MuiPaper-root {
@@ -20,7 +19,6 @@ const TopContainer = styled.div`
   padding: 0 24px 15px 24px;
 `
 const StyledToggleButton = styled(ToggleButton)`
-  text-transform: none;
   display: flex;
   flex-direction: column;
 `

@@ -17,7 +17,6 @@ const SiteTitle = styled(Button)`
   font-size: 20px !important;
   border-color: rgba(255, 255, 255, 0.5) !important;
   border-width: 0 !important;
-  text-transform: unset !important;
   @media (min-width: 700px) {
     display: block;
   }
@@ -35,7 +34,6 @@ const NavButton = styled(Button)`
   border-width: 0 !important;
   border-width: ${(props) =>
     props.disabled ? '1px !important' : '0 !important'};
-  text-transform: none !important;
   &:hover {
     border-width: 1px !important;
   }

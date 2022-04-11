@@ -42,6 +42,18 @@ const theme = createTheme({
     secondary: { main: orange[900] },
   },
   typography: { fontFamily: ['Roboto'] },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: { textTransform: 'none' },
+      },
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: { textTransform: 'none' },
+      },
+    },
+  },
 })
 
 export default theme

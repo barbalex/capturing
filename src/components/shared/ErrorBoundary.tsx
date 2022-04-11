@@ -10,9 +10,6 @@ const ButtonContainer = styled.div`
   margin-right: 10px;
   margin-bottom: 10px;
 `
-const StyledButton = styled(Button)`
-  text-transform: none !important;
-`
 const Details = styled.details`
   margin-bottom: 25px;
 `
@@ -44,18 +41,14 @@ const ErrorFallback = ({ error, componentStack, resetErrorBoundary }) => (
       <Pre>{componentStack}</Pre>
     </Details>
     <ButtonContainer>
-      <StyledButton variant="outlined" onClick={onReload} color="inherit">
+      <Button variant="outlined" onClick={onReload} color="inherit">
         neu starten
-      </StyledButton>
+      </Button>
     </ButtonContainer>
     <ButtonContainer>
-      <StyledButton
-        variant="outlined"
-        onClick={resetErrorBoundary}
-        color="inherit"
-      >
+      <Button variant="outlined" onClick={resetErrorBoundary} color="inherit">
         Cache leeren und neu starten (neue Anmeldung nötig)
-      </StyledButton>
+      </Button>
     </ButtonContainer>
   </Container>
 )

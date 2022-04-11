@@ -20,11 +20,7 @@ import { supabase } from '../../../supabaseClient'
 const StyledUserIcon = styled(UserIcon)`
   color: white;
 `
-const StyledButton = styled(Button)`
-  text-transform: none !important;
-`
 const RiskyButton = styled(Button)`
-  text-transform: none !important;
   color: #d84315 !important;
   border-color: #d84315 !important;
 `
@@ -127,7 +123,7 @@ const Account = () => {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <StyledButton
+            <Button
               onClick={() => setPendingOperationsDialogOpen(false)}
               color="primary"
               autoFocus
@@ -135,7 +131,7 @@ const Account = () => {
             >
               Ich bleibe angemeldet, um die ausstehenden Operationen nicht zu
               verlieren
-            </StyledButton>
+            </Button>
             <RiskyButton
               onClick={() => {
                 setPendingOperationsDialogOpen(false)

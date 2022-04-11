@@ -20,7 +20,6 @@ const StyledInput = styled(Input)`
   }
 `
 const ResetButton = styled(Button)`
-  text-transform: none !important;
   font-weight: 400 !important;
 `
 
