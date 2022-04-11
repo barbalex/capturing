@@ -473,7 +473,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fontsource/roboto@npm:^4.5.5":
+"@fontsource/roboto@npm:4.5.5":
   version: 4.5.5
   resolution: "@fontsource/roboto@npm:4.5.5"
   checksum: ab6675e04392ccd5def878762be67dbbf64f77c49c26030c6a1d03c34ce33045b0eb1199ad1bd3f398f362e5fa1fcbcbe25c18af8dda855ab43df45561eea569
@@ -914,7 +914,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^5.18.0":
+"@typescript-eslint/eslint-plugin@npm:5.18.0":
   version: 5.18.0
   resolution: "@typescript-eslint/eslint-plugin@npm:5.18.0"
   dependencies:
@@ -937,7 +937,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^5.18.0":
+"@typescript-eslint/parser@npm:5.18.0":
   version: 5.18.0
   resolution: "@typescript-eslint/parser@npm:5.18.0"
   dependencies:
@@ -1263,7 +1263,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"blueimp-md5@npm:^2.19.0":
+"blueimp-md5@npm:2.19.0":
   version: 2.19.0
   resolution: "blueimp-md5@npm:2.19.0"
   checksum: 28095dcbd2c67152a2938006e8d7c74c3406ba6556071298f872505432feb2c13241b0476644160ee0a5220383ba94cb8ccdac0053b51f68d168728f9c382530
@@ -1382,7 +1382,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "capturing@workspace:."
   dependencies:
-    "@fontsource/roboto": ^4.5.5
+    "@fontsource/roboto": 4.5.5
     "@mui/material": 5.6.0
     "@mui/styled-engine": 5.6.0
     "@mui/styled-engine-sc": 5.5.2
@@ -1390,10 +1390,10 @@ __metadata:
     "@types/node": 17.0.23
     "@types/react": 18.0.1
     "@types/react-dom": 18.0.0
-    "@typescript-eslint/eslint-plugin": ^5.18.0
-    "@typescript-eslint/parser": ^5.18.0
+    "@typescript-eslint/eslint-plugin": 5.18.0
+    "@typescript-eslint/parser": 5.18.0
     "@vitejs/plugin-react": 1.3.0
-    blueimp-md5: ^2.19.0
+    blueimp-md5: 2.19.0
     dayjs: 1.11.0
     dexie: 3.2.1
     dexie-react-hooks: 1.1.1
@@ -1417,11 +1417,11 @@ __metadata:
     react-is: 18.0.0
     react-resize-detector: 7.0.0
     react-router-dom: 6.3.0
-    react-select: 5.2.2
+    react-select: 5.3.0
     react-split-pane: 0.1.92
-    react-stylable-diff: ^2.0.0
-    react-virtuoso: ^2.9.0
-    redaxios: ^0.4.1
+    react-stylable-diff: 2.0.0
+    react-virtuoso: 2.9.0
+    redaxios: 0.4.1
     simplebar: 5.3.6
     simplebar-react: 2.3.6
     styled-components: 5.3.5
@@ -3910,9 +3910,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-select@npm:5.2.2":
-  version: 5.2.2
-  resolution: "react-select@npm:5.2.2"
+"react-select@npm:5.3.0":
+  version: 5.3.0
+  resolution: "react-select@npm:5.3.0"
   dependencies:
     "@babel/runtime": ^7.12.0
     "@emotion/cache": ^11.4.0
@@ -3922,9 +3922,9 @@ __metadata:
     prop-types: ^15.6.0
     react-transition-group: ^4.3.0
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0
-    react-dom: ^16.8.0 || ^17.0.0
-  checksum: 02cf76a31df6d957b15e8664957ece85afb0e9538f0686f77e8dd7cdc47cb59b71e295cd373912f2dd641724f140a1f701c91e7e7f89bb7e845a04bf5d6c67ad
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 4a37248c6f711c7b0ffe2c3414abc501d36b65ef8a51ac3962d850a713f5dec3d9ce8b38f88909b3731e9295def5279240ad2e421db866a52c868d7a5f58321d
   languageName: node
   linkType: hard
 
@@ -3942,7 +3942,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-stylable-diff@npm:^2.0.0":
+"react-stylable-diff@npm:2.0.0":
   version: 2.0.0
   resolution: "react-stylable-diff@npm:2.0.0"
   dependencies:
@@ -3977,7 +3977,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^2.9.0":
+"react-virtuoso@npm:2.9.0":
   version: 2.9.0
   resolution: "react-virtuoso@npm:2.9.0"
   dependencies:
@@ -4020,7 +4020,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redaxios@npm:^0.4.1":
+"redaxios@npm:0.4.1":
   version: 0.4.1
   resolution: "redaxios@npm:0.4.1"
   checksum: 9e67aee2c9e64461221a583b1b2a5cf859e268a101fbc54d57de651e98cba9a9e94935731916ab4e6fb4eba1cb9284a03522b376512272f26cb4be6b16f06221
