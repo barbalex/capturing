@@ -27,7 +27,7 @@ const Row = styled.div`
   }
 `
 
-const ProjectRow = ({ row }) => {
+const TableRow = ({ row }) => {
   const store = useContext(StoreContext)
   const { activeNodeArray, setActiveNodeArray } = store
 
@@ -37,10 +37,10 @@ const ProjectRow = ({ row }) => {
   )
 
   return (
-    <Row key={row.id} onClick={onClickRow}>
+    <Row onClick={onClickRow}>
       <div>{row.label ?? row.name ?? '(unbenannt)'}</div>
     </Row>
   )
 }
 
-export default observer(ProjectRow)
+export default observer(TableRow)

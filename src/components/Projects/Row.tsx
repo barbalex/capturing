@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import StoreContext from '../../storeContext'
 import constants from '../../utils/constants'
+import { Project } from '../../dexieClient'
 
 const Row = styled.div`
   display: flex;
@@ -26,8 +27,9 @@ const Row = styled.div`
     background-color: rgba(74, 20, 140, 0.03);
   }
 `
+type ProjectRowProps = { row: Project }
 
-const ProjectRow = ({ row }) => {
+const ProjectRow = ({ row }: ProjectRowProps) => {
   const store = useContext(StoreContext)
   const { activeNodeArray, setActiveNodeArray } = store
 
@@ -36,9 +38,14 @@ const ProjectRow = ({ row }) => {
     [activeNodeArray, row.id, setActiveNodeArray],
   )
 
+  const label =
+    row.use_labels === 1 && row.label ? row.label : row.name ?? '(unbenannt)'
+
+  console.log('ProjectRow', { row, label })
+
   return (
-    <Row key={row.id} onClick={onClickRow}>
-      <div>{row.label ?? row.name ?? '(unbenannt)'}</div>
+    <Row onClick={onClickRow}>
+      <div>{label}</div>
     </Row>
   )
 }

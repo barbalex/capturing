@@ -60,7 +60,7 @@ const Projects = () => {
 
     return { projects, account, filteredCount, totalCount }
   })
-  const projects = data?.projects
+  const projects = data?.projects ?? []
   const account = data?.account
   const filteredCount = data?.filteredCount
   const totalCount = data?.totalCount
@@ -107,10 +107,12 @@ const Projects = () => {
           <Virtuoso
             //initialTopMostItemIndex={initialTopMostIndex}
             height={formHeight}
-            totalCount={projects?.length ?? 0}
-            itemContent={(index) => (
-              <Row key={index} row={(projects ?? [])[index]} />
-            )}
+            totalCount={projects.length}
+            itemContent={(index) => {
+              const row = projects[index]
+
+              return <Row key={row?.id} row={row} />
+            }}
           />
         </FieldsContainer>
       </Container>

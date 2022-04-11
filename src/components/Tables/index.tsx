@@ -11,7 +11,7 @@ import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import { dexie } from '../../dexieClient'
+import { dexie, Table, Project } from '../../dexieClient'
 import insertTable from '../../utils/insertTable'
 import FilterNumbers from '../shared/FilterNumbers'
 
@@ -42,7 +42,7 @@ const TitleSymbols = styled.div`
   margin-top: auto;
   margin-bottom: auto;
 `
-const FieldsContainer = styled.div`
+const RowsContainer = styled.div`
   height: 100%;
 `
 
@@ -54,26 +54,26 @@ const TablesComponent = () => {
     store
 
   const data = useLiveQuery(async () => {
-    const [tables, project, filteredCount, totalCount] = await Promise.all([
+    const [tables, filteredCount, totalCount, project] = await Promise.all([
       dexie.ttables.where({ deleted: 0 }).sortBy('name'), // TODO: if project.use_labels, use label
-      dexie.projects.where({ id: projectId }).first(),
       dexie.ttables.where({ deleted: 0 }).count(), // TODO: pass in filter
       dexie.ttables.where({ deleted: 0 }).count(),
+      dexie.projects.where({ id: projectId }).first(),
     ])
 
-    return { tables, project, filteredCount, totalCount }
+    return { tables, filteredCount, totalCount }
   })
-  const tables = data?.tables
-  const project = data?.project
+  const tables: Table = data?.tables ?? []
   const filteredCount = data?.filteredCount
   const totalCount = data?.totalCount
+  const project: Project = data?.project
 
-  console.log('TablesComponent rendering', { tables, projectId, project })
+  // TODO: find if user may edit
 
   const add = useCallback(async () => {
-    const newTableId = await insertTable({ project })
+    const newTableId = await insertTable({ projectId })
     navigate(newTableId)
-  }, [navigate, project])
+  }, [navigate, projectId])
 
   const onClickUp = useCallback(() => {
     removeOpenNode(activeNodeArray)
@@ -95,7 +95,7 @@ const TablesComponent = () => {
               onClick={add}
               size="large"
               // TODO: get users role for this project
-              disabled={!project}
+              disabled={false}
             >
               <FaPlus />
             </IconButton>
@@ -105,16 +105,18 @@ const TablesComponent = () => {
             />
           </TitleSymbols>
         </TitleContainer>
-        <FieldsContainer>
+        <RowsContainer>
           <Virtuoso
             //initialTopMostItemIndex={initialTopMostIndex}
             height={formHeight}
-            totalCount={tables?.length ?? 0}
-            itemContent={(index) => (
-              <Row key={index} row={(tables ?? [])[index]} />
-            )}
+            totalCount={tables.length}
+            itemContent={(index) => {
+              const row = tables[index]
+
+              return <Row key={row.id} row={row} />
+            }}
           />
-        </FieldsContainer>
+        </RowsContainer>
       </Container>
     </ErrorBoundary>
   )
