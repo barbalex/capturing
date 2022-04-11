@@ -11,9 +11,10 @@ import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import { dexie, Table, Project } from '../../dexieClient'
+import { dexie, Table, Project, IProjectUser } from '../../dexieClient'
 import insertTable from '../../utils/insertTable'
 import FilterNumbers from '../shared/FilterNumbers'
+import { supabase } from '../../supabaseClient'
 
 const Container = styled.div`
   height: 100%;
@@ -47,6 +48,7 @@ const RowsContainer = styled.div`
 `
 
 const TablesComponent = () => {
+  const session = supabase.auth.session()
   const { projectId } = useParams()
   const navigate = useNavigate()
   const store = useContext(storeContext)
@@ -54,21 +56,23 @@ const TablesComponent = () => {
     store
 
   const data = useLiveQuery(async () => {
-    const [tables, filteredCount, totalCount, project] = await Promise.all([
+    const [tables, filteredCount, totalCount, projectUser] = await Promise.all([
       dexie.ttables.where({ deleted: 0 }).sortBy('name'), // TODO: if project.use_labels, use label
       dexie.ttables.where({ deleted: 0 }).count(), // TODO: pass in filter
       dexie.ttables.where({ deleted: 0 }).count(),
-      dexie.projects.where({ id: projectId }).first(),
+      dexie.project_users.where({
+        project_id: projectId,
+        user_email: session?.user?.email,
+      }),
     ])
 
-    return { tables, filteredCount, totalCount }
+    return { tables, filteredCount, totalCount, projectUser }
   })
   const tables: Table = data?.tables ?? []
   const filteredCount = data?.filteredCount
   const totalCount = data?.totalCount
-  const project: Project = data?.project
-
-  // TODO: find if user may edit
+  const userRole = data.projectUser?.role
+  const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
 
   const add = useCallback(async () => {
     const newTableId = await insertTable({ projectId })
@@ -95,7 +99,7 @@ const TablesComponent = () => {
               onClick={add}
               size="large"
               // TODO: get users role for this project
-              disabled={false}
+              disabled={!userMayEdit}
             >
               <FaPlus />
             </IconButton>
