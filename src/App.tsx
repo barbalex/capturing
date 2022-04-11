@@ -37,12 +37,12 @@ function App() {
         dbStore?.activeNodeArray?.length &&
         !isEqual(
           activeNodeArrayFromUrl(window.location.pathname),
-          dbStore.activeNodeArray,
+          dbStore?.activeNodeArray,
         )
       if (shouldNavigate) {
         window.location.href = `${
           window.location.origin
-        }/${dbStore?.activeNodeArray.join('/')}`
+        }/${dbStore?.activeNodeArray?.join('/')}`
       }
       // persist store on every snapshot
       onSnapshot(st, (ss) => {
