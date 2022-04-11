@@ -1,13 +1,13 @@
-import { dexie, Table, IProject, QueuedUpdate } from '../dexieClient'
+import { dexie, Table, QueuedUpdate } from '../dexieClient'
 
 type InsertTableProps = {
-  project: IProject
+  projectId: string
 }
 
-const insertTable = async ({ project }: InsertTableProps) => {
+const insertTable = async ({ projectId }: InsertTableProps) => {
   const newTable = new Table(
     undefined,
-    project.id,
+    projectId,
     undefined,
     undefined,
     undefined,
