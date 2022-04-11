@@ -13,7 +13,6 @@ const StyledSimpleBar = styled(SimpleBar)`
   height: calc(100% - ${constants.appBarHeight}px);
   .simplebar-scrollbar:before {
     background: #4a148c !important;
-    /*background: #003e0c !important;*/
     /*background: grey !important;*/
   }
 `
