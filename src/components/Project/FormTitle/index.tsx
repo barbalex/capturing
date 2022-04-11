@@ -1,4 +1,3 @@
-import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
 
@@ -10,10 +9,6 @@ import { dexie } from '../../../dexieClient'
 const ProjectFormTitleChooser = ({ row }) => {
   // const store = useContext(StoreContext)
   const showFilter = false // TODO:
-  const showHistory = false // TODO:
-  const setShowHistory = useCallback(() => {
-    // TODO:
-  }, [])
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount] = await Promise.all([
@@ -42,8 +37,6 @@ const ProjectFormTitleChooser = ({ row }) => {
       row={row}
       totalCount={totalCount}
       filteredCount={filteredCount}
-      showHistory={showHistory}
-      setShowHistory={setShowHistory}
     />
   )
 }

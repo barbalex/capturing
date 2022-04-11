@@ -9,7 +9,6 @@ import StoreContext from '../../storeContext'
 import Checkbox2States from '../shared/Checkbox2States'
 import JesNo from '../shared/JesNo'
 import ErrorBoundary from '../shared/ErrorBoundary'
-import ConflictList from '../shared/ConflictList'
 import { dexie, IProject, Project } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
@@ -18,35 +17,16 @@ const FieldsContainer = styled.div`
   padding: 10px;
   height: 100%;
 `
-const CaseConflictTitle = styled.h4`
-  margin-bottom: 10px;
-`
-const Rev = styled.span`
-  font-weight: normal;
-  padding-left: 7px;
-  color: rgba(0, 0, 0, 0.4);
-  font-size: 0.8em;
-`
 
 type ProjectFormProps = {
-  activeConflict: string
   id: string
   row: Project
-  setActiveConflict: (string) => void
   showFilter: (boolean) => void
-  showHistory: (boolean) => void
 }
 
-const ProjectForm = ({
-  activeConflict,
-  id,
-  row,
-  setActiveConflict,
-  showFilter,
-  showHistory,
-}: ProjectFormProps) => {
+const ProjectForm = ({ id, row, showFilter }: ProjectFormProps) => {
   const store = useContext(StoreContext)
-  const { filter, online, errors } = store
+  const { filter, errors } = store
   const session: Session = supabase.auth.session()
   const unsetError = useCallback(
     () => () => {
@@ -130,12 +110,6 @@ const ProjectForm = ({
             }
           }}
         >
-          {(activeConflict || showHistory) && (
-            <CaseConflictTitle>
-              Aktuelle Version<Rev>{row._rev}</Rev>
-            </CaseConflictTitle>
-          )}
-
           {showDeleted && (
             <>
               {showFilter ? (
@@ -203,13 +177,6 @@ const ProjectForm = ({
             onBlur={onBlur}
             error={errors?.project?.account_id}
           />
-          {online && !showFilter && row?._conflicts?.map && (
-            <ConflictList
-              conflicts={row._conflicts}
-              activeConflict={activeConflict}
-              setActiveConflict={setActiveConflict}
-            />
-          )}
         </FieldsContainer>
       </SimpleBar>
     </ErrorBoundary>

@@ -8,7 +8,6 @@ import AddButton from './AddButton'
 import NavButtons from './NavButtons'
 import FilterNumbers from '../../shared/FilterNumbers'
 import Menu from '../../shared/Menu'
-import HistoryButton from '../../shared/HistoryButton'
 import constants from '../../../utils/constants'
 
 const TitleContainer = styled.div`
@@ -34,14 +33,7 @@ const TitleSymbols = styled.div`
   margin-bottom: auto;
 `
 
-const ProjectFormTitle = ({
-  row,
-  totalCount,
-  filteredCount,
-  width,
-  showHistory,
-  setShowHistory,
-}) => {
+const ProjectFormTitle = ({ row, totalCount, filteredCount, width }) => {
   if (width < 520) {
     return (
       <TitleContainer>
@@ -51,13 +43,6 @@ const ProjectFormTitle = ({
           <AddButton />
           <DeleteButton row={row} />
           <Menu white={false}>
-            <HistoryButton
-              table="projects"
-              id={row.id}
-              showHistory={showHistory}
-              setShowHistory={setShowHistory}
-              asMenu
-            />
             <FilterNumbers
               filteredCount={filteredCount}
               totalCount={totalCount}
@@ -76,12 +61,6 @@ const ProjectFormTitle = ({
         <NavButtons />
         <AddButton />
         <DeleteButton row={row} />
-        <HistoryButton
-          table="projects"
-          id={row.id}
-          showHistory={showHistory}
-          setShowHistory={setShowHistory}
-        />
         <FilterNumbers filteredCount={filteredCount} totalCount={totalCount} />
       </TitleSymbols>
     </TitleContainer>
