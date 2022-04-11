@@ -975,20 +975,20 @@ export class MySubClassedDexie extends Dexie {
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
-        'id, table_id, label, field_type, widget_type, options_table, sort, server_rev_at, deleted',
+        'id, table_id, label, name, field_type, widget_type, options_table, sort, server_rev_at, deleted',
       files: 'id, filename, server_rev_at, deleted',
       news: 'id, time, server_rev_at, deleted',
       news_delivery: 'id, server_rev_at, deleted',
       option_types: 'id, &value, sort, server_rev_at, deleted',
       project_tile_layers: 'id, label, sort, active, server_rev_at, deleted',
       project_users: 'id, user_email, server_rev_at, deleted',
-      projects: 'id, label, server_rev_at, deleted, use_labels',
+      projects: 'id, label, name, server_rev_at, deleted, use_labels',
       rel_types: 'id, &value, sort, server_rev_at, deleted',
       role_types: 'id, &value, sort, server_rev_at, deleted',
       rows: 'id, server_rev_at, deleted',
       // name tables causes error because used internally, see: https://github.com/dexie/Dexie.js/issues/1537
       ttables:
-        'id, label, sort, project_id, parent_id, rel_type, option_type, server_rev_at, deleted',
+        'id, label, name, sort, project_id, parent_id, rel_type, option_type, server_rev_at, deleted',
       tile_layers: 'id, label, server_rev_at, deleted',
       users: 'id, name, &email, auth_user_id, server_rev_at, deleted',
       version_types: 'id, &value, sort, server_rev_at, deleted',
