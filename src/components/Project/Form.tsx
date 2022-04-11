@@ -141,7 +141,6 @@ const ProjectForm = ({ id, row, showFilter }: ProjectFormProps) => {
             onBlur={onBlur}
             error={errors?.project?.name}
           />
-
           <Checkbox2States
             key={`${row.id}use_labels`}
             label="Zusätzlich zu Namen Beschriftungen verwenden"
