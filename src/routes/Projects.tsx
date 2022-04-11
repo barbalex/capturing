@@ -8,8 +8,10 @@ import StoreContext from '../storeContext'
 import Login from '../components/Login'
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 import constants from '../utils/constants'
-import Projects from '../components/Projects'
+import ProjectsComponent from '../components/Projects'
 import ProjectComponent from '../components/Project'
+import TablesComponent from '../components/Tables'
+import TableComponent from '../components/Table'
 import { supabase } from '../supabaseClient'
 
 const StyledSplitPane = styled(SplitPane)`
@@ -94,8 +96,11 @@ const ProjectsPage = () => {
         >
           <div ref={treeEl}>tree</div>
           <Routes>
-            <Route path="/" element={<Projects />} />
-            <Route path=":projectId" element={<ProjectComponent />} />
+            <Route index path="/" element={<ProjectsComponent />} />
+            <Route path=":projectId" element={<ProjectComponent />}>
+              <Route path="tables" element={<TablesComponent />} />
+              <Route path=":tableId" element={<TableComponent />} />
+            </Route>
           </Routes>
         </StyledSplitPane>
       </Container>

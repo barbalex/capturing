@@ -1,13 +1,18 @@
+import { useCallback, useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { dexie, Project } from '../../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import { FaArrowRight } from 'react-icons/fa'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
 import Spinner from '../shared/Spinner'
 import FormTitle from './FormTitle'
 import Form from './Form'
+import storeContext from '../../storeContext'
 
 const Container = styled.div`
   height: 100%;
@@ -18,6 +23,8 @@ const Container = styled.div`
 
 const ProjectComponent = ({ filter: showFilter }) => {
   const { projectId } = useParams()
+  const store = useContext(storeContext)
+  const { activeNodeArray, setActiveNodeArray } = store
   const filter = 'TODO: was in store'
 
   const row: Project = useLiveQuery(
@@ -25,7 +32,11 @@ const ProjectComponent = ({ filter: showFilter }) => {
     [projectId],
   )
 
-  // console.log('Project rendering row:', { row, projectId })
+  const onClickTabellen = useCallback(() => {
+    setActiveNodeArray([...activeNodeArray, 'tables'])
+  }, [activeNodeArray, setActiveNodeArray])
+
+  console.log('Project rendering, activeNodeArray:', activeNodeArray.slice())
 
   if (!row) return <Spinner />
   if (!showFilter && filter.show) return null
@@ -35,6 +46,15 @@ const ProjectComponent = ({ filter: showFilter }) => {
       <Container showfilter={showFilter}>
         <FormTitle row={row} showFilter={showFilter} />
         <Form showFilter={showFilter} id={projectId} row={row} />
+        <Stack direction="row" spacing={2}>
+          <Button
+            variant="outlined"
+            endIcon={<FaArrowRight />}
+            onClick={onClickTabellen}
+          >
+            Tabellen
+          </Button>
+        </Stack>
       </Container>
     </ErrorBoundary>
   )

@@ -5,13 +5,14 @@ import { FaPlus, FaLongArrowAltUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { useParams, useNavigate } from 'react-router-dom'
 
 import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
 import { dexie } from '../../dexieClient'
-import insertProject from '../../utils/insertProject'
+import insertTable from '../../utils/insertTable'
 import FilterNumbers from '../shared/FilterNumbers'
 
 const Container = styled.div`
@@ -45,55 +46,57 @@ const FieldsContainer = styled.div`
   height: 100%;
 `
 
-const Projects = () => {
+const TablesComponent = () => {
+  const { projectId } = useParams()
+  const navigate = useNavigate()
   const store = useContext(storeContext)
   const { activeNodeArray, setActiveNodeArray, removeOpenNode, formHeight } =
     store
 
   const data = useLiveQuery(async () => {
-    const [projects, account, filteredCount, totalCount] = await Promise.all([
-      dexie.projects.where({ deleted: 0 }).sortBy('name'), // TODO: if project.use_labels, use label
-      dexie.accounts.orderBy('id').limit(1).first(),
-      dexie.projects.where({ deleted: 0 }).count(), // TODO: pass in filter
-      dexie.projects.where({ deleted: 0 }).count(),
+    const [tables, project, filteredCount, totalCount] = await Promise.all([
+      dexie.ttables.where({ deleted: 0 }).sortBy('name'), // TODO: if project.use_labels, use label
+      dexie.projects.where({ id: projectId }).first(),
+      dexie.ttables.where({ deleted: 0 }).count(), // TODO: pass in filter
+      dexie.ttables.where({ deleted: 0 }).count(),
     ])
 
-    return { projects, account, filteredCount, totalCount }
+    return { tables, project, filteredCount, totalCount }
   })
-  const projects = data?.projects
-  const account = data?.account
+  const tables = data?.tables
+  const project = data?.project
   const filteredCount = data?.filteredCount
   const totalCount = data?.totalCount
 
+  console.log('TablesComponent rendering', { tables, projectId, project })
+
   const add = useCallback(async () => {
-    const newProjectId = await insertProject({ account })
-    setActiveNodeArray([...activeNodeArray, newProjectId])
-  }, [account, activeNodeArray, setActiveNodeArray])
+    const newTableId = await insertTable({ project })
+    navigate(newTableId)
+    //setActiveNodeArray([...activeNodeArray, newTableId])
+  }, [navigate, project])
 
   const onClickUp = useCallback(() => {
     removeOpenNode(activeNodeArray)
     setActiveNodeArray(activeNodeArray.slice(0, -1))
   }, [activeNodeArray, removeOpenNode, setActiveNodeArray])
-  let upTitle = 'Eine Ebene höher'
-  if (activeNodeArray[0] === 'projects') {
-    upTitle = 'Zu allen Listen'
-  }
 
   return (
     <ErrorBoundary>
       <Container showfilter={false}>
         <TitleContainer>
-          <Title>Projekte</Title>
+          <Title>Tabellen</Title>
           <TitleSymbols>
-            <IconButton title={upTitle} onClick={onClickUp} size="large">
+            <IconButton title="Zum Projekt" onClick={onClickUp} size="large">
               <FaLongArrowAltUp />
             </IconButton>
             <IconButton
-              aria-label="neues Projekt"
-              title="neues Projekt"
+              aria-label="neue Tabelle"
+              title="neue Tabelle"
               onClick={add}
               size="large"
-              disabled={!account}
+              // TODO: get users role for this project
+              disabled={!project}
             >
               <FaPlus />
             </IconButton>
@@ -107,9 +110,9 @@ const Projects = () => {
           <Virtuoso
             //initialTopMostItemIndex={initialTopMostIndex}
             height={formHeight}
-            totalCount={projects?.length ?? 0}
+            totalCount={tables?.length ?? 0}
             itemContent={(index) => (
-              <Row key={index} row={(projects ?? [])[index]} />
+              <Row key={index} row={(tables ?? [])[index]} />
             )}
           />
         </FieldsContainer>
@@ -118,4 +121,4 @@ const Projects = () => {
   )
 }
 
-export default observer(Projects)
+export default observer(TablesComponent)
