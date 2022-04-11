@@ -5,7 +5,6 @@ import { useParams, Link } from 'react-router-dom'
 import { dexie, Project } from '../../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
 import Button from '@mui/material/Button'
-import Stack from '@mui/material/Stack'
 import { FaArrowRight } from 'react-icons/fa'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
@@ -19,6 +18,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${(props) => (props.showfilter ? '#fff3e0' : 'unset')};
+`
+const TopNavContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px;
 `
 
 const ProjectComponent = ({ filter: showFilter }) => {
@@ -41,18 +45,12 @@ const ProjectComponent = ({ filter: showFilter }) => {
     <ErrorBoundary>
       <Container showfilter={showFilter}>
         <FormTitle row={row} showFilter={showFilter} />
-        <Form showFilter={showFilter} id={projectId} row={row} />
-        <Stack direction="row" spacing={2}>
-          <Button
-            variant="outlined"
-            endIcon={<FaArrowRight />}
-            //onClick={onClickTabellen}
-            component={Link}
-            to="tables"
-          >
+        <TopNavContainer>
+          <Button endIcon={<FaArrowRight />} component={Link} to="tables">
             Tabellen
           </Button>
-        </Stack>
+        </TopNavContainer>
+        <Form showFilter={showFilter} id={projectId} row={row} />
       </Container>
     </ErrorBoundary>
   )
