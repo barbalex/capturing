@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { Session } from '@supabase/supabase-js'
+import { useNavigate } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
@@ -24,10 +25,10 @@ const Title = styled.div`
   user-select: none;
 `
 
-const ProjectDeleteButton = ({ row }) => {
+const TableDeleteButton = ({ row, userMayEdit }) => {
+  const navigate = useNavigate()
   const store = useContext(StoreContext)
-  const { activeNodeArray, setActiveNodeArray, removeOpenNodeWithChildren } =
-    store
+  const { activeNodeArray, removeOpenNodeWithChildren } = store
   // const filter = { todo: 'TODO: was in store' }
   const session: Session = supabase.auth.session()
 
@@ -45,24 +46,18 @@ const ProjectDeleteButton = ({ row }) => {
     setAnchorEl(null)
     // need to remove openNode from openNodes
     removeOpenNodeWithChildren(activeNodeArray)
-    setActiveNodeArray(activeNodeArray.slice(0, -1))
-  }, [
-    activeNodeArray,
-    removeOpenNodeWithChildren,
-    row,
-    session,
-    setActiveNodeArray,
-  ])
+    navigate(`/${activeNodeArray.slice(0, -1).join('/')}`)
+  }, [activeNodeArray, navigate, removeOpenNodeWithChildren, row, session])
 
   return (
     <ErrorBoundary>
       <IconButton
         aria-controls="menu"
         aria-haspopup="true"
-        aria-label="Projekt löschen"
-        title="Projekt löschen"
+        aria-label="Tabelle löschen"
+        title="Tabelle löschen"
         onClick={onClickButton}
-        disabled={row.deleted === 1}
+        disabled={row.deleted === 1 || !userMayEdit}
         size="large"
       >
         <FaMinus />
@@ -84,4 +79,4 @@ const ProjectDeleteButton = ({ row }) => {
   )
 }
 
-export default observer(ProjectDeleteButton)
+export default observer(TableDeleteButton)
