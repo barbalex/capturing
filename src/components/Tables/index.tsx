@@ -60,10 +60,12 @@ const TablesComponent = () => {
       dexie.ttables.where({ deleted: 0 }).sortBy('name'), // TODO: if project.use_labels, use label
       dexie.ttables.where({ deleted: 0 }).count(), // TODO: pass in filter
       dexie.ttables.where({ deleted: 0 }).count(),
-      dexie.project_users.where({
-        project_id: projectId,
-        user_email: session?.user?.email,
-      }),
+      dexie.project_users
+        .where({
+          project_id: projectId,
+          user_email: session?.user?.email,
+        })
+        .first(),
     ])
 
     return { tables, filteredCount, totalCount, projectUser }
@@ -71,8 +73,14 @@ const TablesComponent = () => {
   const tables: Table = data?.tables ?? []
   const filteredCount = data?.filteredCount
   const totalCount = data?.totalCount
-  const userRole = data.projectUser?.role
+  const userRole = data?.projectUser?.role
   const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
+
+  console.log('TablesComponent', {
+    projectUser: data?.projectUser,
+    userRole,
+    userMayEdit,
+  })
 
   const add = useCallback(async () => {
     const newTableId = await insertTable({ projectId })
