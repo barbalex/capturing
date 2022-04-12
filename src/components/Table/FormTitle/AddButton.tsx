@@ -2,28 +2,30 @@ import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import { FaPlus } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
+import { useParams, useNavigate } from 'react-router-dom'
 
-import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
-import insertProject from '../../../utils/insertProject'
-import { dexie, IAccount } from '../../../dexieClient'
+import insertTable from '../../../utils/insertTable'
+import StoreContext from '../../../storeContext'
 
-const ProjectAddButton = () => {
-  const { activeNodeArray, setActiveNodeArray } = useContext(StoreContext)
+const TableAddButton = ({ userMayEdit }) => {
+  const { activeNodeArray } = useContext(StoreContext)
+  const { projectId } = useParams()
+  const navigate = useNavigate()
 
   const onClick = useCallback(async () => {
-    const account: IAccount = await dexie.accounts.toCollection().first()
-    const newProjectId = await insertProject({ account })
-    setActiveNodeArray([...activeNodeArray.slice(0, -1), newProjectId])
-  }, [activeNodeArray, setActiveNodeArray])
+    const newProjectId = await insertTable({ projectId })
+    navigate(`/${[...activeNodeArray.slice(0, -1), newProjectId].join('/')}`)
+  }, [activeNodeArray, navigate, projectId])
 
   return (
     <ErrorBoundary>
       <IconButton
-        aria-label="neues Projekt"
-        title="neues Projekt"
+        aria-label="neue Tabelle"
+        title="neue Tabelle"
         onClick={onClick}
         size="large"
+        disabled={!userMayEdit}
       >
         <FaPlus />
       </IconButton>
@@ -31,4 +33,4 @@ const ProjectAddButton = () => {
   )
 }
 
-export default observer(ProjectAddButton)
+export default observer(TableAddButton)
