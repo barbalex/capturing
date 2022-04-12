@@ -9,6 +9,8 @@ body {
 }
 #root {
   height: 100%;
+  /* works in firefox, not yet in chrome. https://caniuse.com/?search=scrollbar-color */
+  scrollbar-color: #4a148c rgba(0, 0, 0, 0.4);
 }
 
 /*
