@@ -11,6 +11,8 @@ const ScrollContainer = styled.div`
   height: calc(100% - ${constants.appBarHeight}px);
   position: relative;
   overflow-y: auto;
+  /* prevent layout shift when scrollbar appears */
+  scrollbar-gutter: stable;
 `
 const Container = styled.div`
   height: 100%;
