@@ -6,14 +6,14 @@ import FilterTitle from '../../shared/FilterTitle'
 import FormTitle from './FormTitle'
 import { dexie } from '../../../dexieClient'
 
-const ProjectFormTitleChooser = ({ row }) => {
+const ProjectFormTitleChooser = ({ row, userMayEdit }) => {
   // const store = useContext(StoreContext)
   const showFilter = false // TODO:
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount] = await Promise.all([
-      dexie.projects.where({ deleted: 0 }).count(), // TODO: pass in filter
-      dexie.projects.where({ deleted: 0 }).count(),
+      dexie.ttables.where({ deleted: 0 }).count(), // TODO: pass in filter
+      dexie.ttables.where({ deleted: 0 }).count(),
     ])
 
     return { filteredCount, totalCount }
@@ -24,8 +24,8 @@ const ProjectFormTitleChooser = ({ row }) => {
   if (showFilter) {
     return (
       <FilterTitle
-        title="Projekt"
-        table="projects"
+        title="Tabelle"
+        table="tables"
         totalCount={totalCount}
         filteredCount={filteredCount}
       />
@@ -37,6 +37,7 @@ const ProjectFormTitleChooser = ({ row }) => {
       row={row}
       totalCount={totalCount}
       filteredCount={filteredCount}
+      userMayEdit={userMayEdit}
     />
   )
 }
