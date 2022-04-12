@@ -1,9 +1,12 @@
 import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
+import { useParams, useNavigate } from 'react-router-dom'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../storeContext'
 import constants from '../../utils/constants'
+import { dexie, Project } from '../../dexieClient'
 
 const Row = styled.div`
   display: flex;
@@ -29,16 +32,26 @@ const Row = styled.div`
 
 const TableRow = ({ row }) => {
   const store = useContext(StoreContext)
-  const { activeNodeArray, setActiveNodeArray } = store
+  const { activeNodeArray } = store
+  const { projectId } = useParams()
+  const navigate = useNavigate()
+
+  const project: Project = useLiveQuery(
+    async () => await dexie.projects.where({ id: projectId }).first(),
+  )
 
   const onClickRow = useCallback(
-    () => setActiveNodeArray([...activeNodeArray, row.id]),
-    [activeNodeArray, row.id, setActiveNodeArray],
+    () => navigate(`/${[...activeNodeArray, row.id].join('/')}`),
+    [activeNodeArray, navigate, row.id],
   )
+  const label =
+    project?.use_labels === 1 && row.label
+      ? row.label
+      : row.name ?? '(unbenannt)'
 
   return (
     <Row onClick={onClickRow}>
-      <div>{row.label ?? row.name ?? '(unbenannt)'}</div>
+      <div>{label}</div>
     </Row>
   )
 }
