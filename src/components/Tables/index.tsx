@@ -64,9 +64,9 @@ const TablesComponent = () => {
 
   const data: DataProps = useLiveQuery(async () => {
     const [tables, filteredCount, totalCount, projectUser] = await Promise.all([
-      dexie.ttables.where({ deleted: 0 }).sortBy('name'), // TODO: if project.use_labels, use label
-      dexie.ttables.where({ deleted: 0 }).count(), // TODO: pass in filter
-      dexie.ttables.where({ deleted: 0 }).count(),
+      dexie.ttables.where({ deleted: 0, project_id: projectId }).sortBy('name'), // TODO: if project.use_labels, use label
+      dexie.ttables.where({ deleted: 0, project_id: projectId }).count(), // TODO: pass in filter
+      dexie.ttables.where({ deleted: 0, project_id: projectId }).count(),
       dexie.project_users
         .where({
           project_id: projectId,
@@ -82,6 +82,12 @@ const TablesComponent = () => {
   const totalCount = data?.totalCount
   const userRole = data?.projectUser?.role
   const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
+  // console.log('Tables', {
+  //   userMayEdit,
+  //   projectUser: data?.projectUser,
+  //   userRole,
+  //   projectId,
+  // })
 
   const add = useCallback(async () => {
     const newTableId = await insertTable({ projectId })
