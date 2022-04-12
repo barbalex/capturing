@@ -9,9 +9,11 @@ import NavButtons from './NavButtons'
 import FilterNumbers from '../../shared/FilterNumbers'
 import Menu from '../../shared/Menu'
 
-const TitleContainer = styled.div`
+const TitleContainer = styled.div` 
   background-color: rgba(74, 20, 140, 0.1);
+  display: flex;
   flex-shrink: 0;
+  flex-grow: 0;
   flex-wrap: wrap;
   display: flex;
   @media print {

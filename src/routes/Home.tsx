@@ -3,37 +3,27 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import Typography from '@mui/material/Typography'
 import MaterialCard from '@mui/material/Card'
-import SimpleBar from 'simplebar-react'
 
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 import constants from '../utils/constants'
 
-const StyledSimpleBar = styled(SimpleBar)`
-  max-height: calc(100vh - ${constants.appBarHeight}px);
-  height: calc(100% - ${constants.appBarHeight}px);
-  .simplebar-scrollbar:before {
-    background: #4a148c !important;
-    /*background: grey !important;*/
-  }
-`
 const ScrollContainer = styled.div`
   height: calc(100% - ${constants.appBarHeight}px);
-  .simplebar-content {
-    height: calc(100% - ${constants.appBarHeight}px);
-  }
+  position: relative;
+  overflow-y: auto;
 `
 const Container = styled.div`
-  margin: 15px;
-  position: relative;
-  height: calc(100% - ${constants.appBarHeight}px);
+  height: 100%;
+  box-sizing: border-box;
+  padding: 15px;
   @media (min-width: 700px) {
-    margin: 20px;
+    padding: 20px;
   }
   @media (min-width: 1200px) {
-    margin: 25px;
+    padding: 25px;
   }
   @media (min-width: 1700px) {
-    margin: 30px;
+    padding: 30px;
   }
 `
 const CardContainer = styled.div`
@@ -97,6 +87,18 @@ const PageTitle = styled(Typography)`
 const CardTitle = styled.h3`
   font-weight: 700;
 `
+const BottomSpacer = styled.div`
+  height: 15px;
+  @media (min-width: 700px) {
+    height: 20px;
+  }
+  @media (min-width: 1200px) {
+    height: 25px;
+  }
+  @media (min-width: 1700px) {
+    height: 30px;
+  }
+`
 
 const Home = () => {
   useEffect(() => {
@@ -105,48 +107,47 @@ const Home = () => {
 
   return (
     <ErrorBoundary>
-      <StyledSimpleBar>
-        <ScrollContainer>
-          <Container>
-            <PageTitle align="center" variant="h6" color="inherit">
-              Erfassen Sie Daten:
-            </PageTitle>
-            <CardContainer>
-              <Card>
-                <CardTitle>Aller Art</CardTitle>
-                Text, Pläne, Fotos, Audio, beliebige Dateien.
-              </Card>
-              <Card>
-                <CardTitle>Wie Sie wollen</CardTitle>
-                Daten-Strukturen sind individuell und flexibel konfigurierbar.
-              </Card>
-              <Card>
-                <CardTitle>Wo Sie wollen</CardTitle>
-                Kein Internet-Empfang? Egal!
-              </Card>
-              <Card>
-                <CardTitle>Mit wem Sie wollen</CardTitle>
-                <p>Neue Mitarbeiter einfach und rasch ergänzen.</p>
-                <p>Es können beliebig viele Personen mitarbeiten.</p>
-              </Card>
-              <Card>
-                <CardTitle>Wann Sie wollen</CardTitle>
-                Daten werden live synchronisiert.
-              </Card>
-              <Card>
-                <CardTitle>Mit dem Gerät Ihrer Wahl</CardTitle>
-                <p>Handy, Tablet, Notebook, PC…</p>
-                <p>Windows, MacOS, Android, iOS, Linux…</p>
-              </Card>
-              <Card>
-                <CardTitle>Mit minimalem Aufwand</CardTitle>
-                <p>Nur einmal vor- und nachbereiten.</p>
-                <p>Egal wie viele Mitarbeiter.</p>
-              </Card>
-            </CardContainer>
-          </Container>
-        </ScrollContainer>
-      </StyledSimpleBar>
+      <ScrollContainer>
+        <Container>
+          <PageTitle align="center" variant="h6" color="inherit">
+            Erfassen Sie Daten:
+          </PageTitle>
+          <CardContainer>
+            <Card>
+              <CardTitle>Aller Art</CardTitle>
+              Text, Pläne, Fotos, Audio, beliebige Dateien.
+            </Card>
+            <Card>
+              <CardTitle>Wie Sie wollen</CardTitle>
+              Daten-Strukturen sind individuell und flexibel konfigurierbar.
+            </Card>
+            <Card>
+              <CardTitle>Wo Sie wollen</CardTitle>
+              Kein Internet-Empfang? Egal!
+            </Card>
+            <Card>
+              <CardTitle>Mit wem Sie wollen</CardTitle>
+              <p>Neue Mitarbeiter einfach und rasch ergänzen.</p>
+              <p>Es können beliebig viele Personen mitarbeiten.</p>
+            </Card>
+            <Card>
+              <CardTitle>Wann Sie wollen</CardTitle>
+              Daten werden live synchronisiert.
+            </Card>
+            <Card>
+              <CardTitle>Mit dem Gerät Ihrer Wahl</CardTitle>
+              <p>Handy, Tablet, Notebook, PC…</p>
+              <p>Windows, MacOS, Android, iOS, Linux…</p>
+            </Card>
+            <Card>
+              <CardTitle>Mit minimalem Aufwand</CardTitle>
+              <p>Nur einmal vor- und nachbereiten.</p>
+              <p>Egal wie viele Mitarbeiter.</p>
+            </Card>
+          </CardContainer>
+          <BottomSpacer />
+        </Container>
+      </ScrollContainer>
     </ErrorBoundary>
   )
 }

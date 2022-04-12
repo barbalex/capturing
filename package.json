@@ -38,7 +38,6 @@
     "react-virtuoso": "2.9.0",
     "redaxios": "0.4.1",
     "simplebar": "5.3.6",
-    "simplebar-react": "2.3.6",
     "styled-components": "5.3.5",
     "uuid": "8.3.2"
   },

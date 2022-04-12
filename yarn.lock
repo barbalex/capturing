@@ -2699,7 +2699,6 @@ __metadata:
     react-virtuoso: 2.9.0
     redaxios: 0.4.1
     simplebar: 5.3.6
-    simplebar-react: 2.3.6
     styled-components: 5.3.5
     typescript: 4.6.3
     uuid: 8.3.2
@@ -5242,7 +5241,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.5.4, prop-types@npm:^15.6.0, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.4, prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -5863,20 +5862,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simplebar-react@npm:2.3.6":
-  version: 2.3.6
-  resolution: "simplebar-react@npm:2.3.6"
-  dependencies:
-    prop-types: ^15.6.1
-    simplebar: ^5.3.6
-  peerDependencies:
-    react: ^0.14.9 || ^15.3.0 || ^16.0.0-rc || ^16.0 || ^17.0
-    react-dom: ^0.14.9 || ^15.3.0 || ^16.0.0-rc || ^16.0 || ^17.0
-  checksum: 5487200fefd8f9f7aba349637b6f5f777aab4470239bc4f3fcb4e86ff4fa5d12dea68684df80e6cea644d9dffb062fbde7d9504762d9d82f7e5083cc260cf0c1
-  languageName: node
-  linkType: hard
-
-"simplebar@npm:5.3.6, simplebar@npm:^5.3.6":
+"simplebar@npm:5.3.6":
   version: 5.3.6
   resolution: "simplebar@npm:5.3.6"
   dependencies:

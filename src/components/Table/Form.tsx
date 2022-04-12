@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useCallback, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
-import SimpleBar from 'simplebar-react'
 import isEqual from 'lodash/isEqual'
 import { Session } from '@supabase/supabase-js'
 
@@ -16,6 +15,7 @@ import TextField from '../shared/TextField'
 const FieldsContainer = styled.div`
   padding: 10px;
   height: 100%;
+  overflow-y: auto;
 `
 
 type TableFormProps = {
@@ -100,68 +100,66 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
 
   return (
     <ErrorBoundary>
-      <SimpleBar style={{ maxHeight: '100%', height: '100%' }}>
-        <FieldsContainer
-          onBlur={(e) => {
-            if (!e.currentTarget.contains(e.relatedTarget)) {
-              // focus left the container
-              // https://github.com/facebook/react/issues/6410#issuecomment-671915381
-              updateOnServer()
-            }
-          }}
-        >
-          {showDeleted && (
-            <>
-              {showFilter ? (
-                <JesNo
-                  key={`${row.id}deleted`}
-                  label="gelöscht"
-                  name="deleted"
-                  value={row.deleted}
-                  onBlur={onBlur}
-                  error={errors?.table?.deleted}
-                />
-              ) : (
-                <Checkbox2States
-                  key={`${row.id}deleted`}
-                  label="gelöscht"
-                  name="deleted"
-                  value={row.deleted}
-                  onBlur={onBlur}
-                  error={errors?.table?.deleted}
-                />
-              )}
-            </>
-          )}
-          <TextField
-            key={`${row.id}name`}
-            name="name"
-            label="Name"
-            value={row.name}
-            onBlur={onBlur}
-            error={errors?.table?.name}
-          />
+      <FieldsContainer
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            // focus left the container
+            // https://github.com/facebook/react/issues/6410#issuecomment-671915381
+            updateOnServer()
+          }
+        }}
+      >
+        {showDeleted && (
+          <>
+            {showFilter ? (
+              <JesNo
+                key={`${row.id}deleted`}
+                label="gelöscht"
+                name="deleted"
+                value={row.deleted}
+                onBlur={onBlur}
+                error={errors?.table?.deleted}
+              />
+            ) : (
+              <Checkbox2States
+                key={`${row.id}deleted`}
+                label="gelöscht"
+                name="deleted"
+                value={row.deleted}
+                onBlur={onBlur}
+                error={errors?.table?.deleted}
+              />
+            )}
+          </>
+        )}
+        <TextField
+          key={`${row.id}name`}
+          name="name"
+          label="Name"
+          value={row.name}
+          onBlur={onBlur}
+          error={errors?.table?.name}
+        />
 
-          <Checkbox2States
-            key={`${row.id}use_labels`}
-            label="Zusätzlich zu Namen Beschriftungen verwenden"
-            name="use_labels"
-            value={row.use_labels}
+        <Checkbox2States
+          key={`${row.id}use_labels`}
+          label="Zusätzlich zu Namen Beschriftungen verwenden"
+          name="use_labels"
+          value={row.use_labels}
+          onBlur={onBlur}
+          error={errors?.table?.use_labels}
+        />
+        {row.use_labels === 1 && (
+          <TextField
+            key={`${row.id}label`}
+            name="label"
+            label="Beschriftung"
+            value={row.label}
             onBlur={onBlur}
-            error={errors?.table?.use_labels}
+            error={errors?.table?.label}
           />
-          {row.use_labels === 1 && (
-            <TextField
-              key={`${row.id}label`}
-              name="label"
-              label="Beschriftung"
-              value={row.label}
-              onBlur={onBlur}
-              error={errors?.table?.label}
-            />
-          )}
-        </FieldsContainer>
-      </SimpleBar>
+        )}
+      </FieldsContainer>
     </ErrorBoundary>
   )
 }
