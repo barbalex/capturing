@@ -97,17 +97,15 @@ const ProjectsPage = () => {
           resizerStyle={resizerStyle}
         >
           <div ref={treeEl}>tree</div>
-          <FormContainer>
-            <Routes>
-              <Route path="/" element={<ProjectsComponent />} />
-              <Route path=":projectId" element={<ProjectComponent />}></Route>
-              <Route path=":projectId/tables/*" element={<TablesComponent />} />
-              <Route
-                path=":projectId/tables/:tableId"
-                element={<TableComponent />}
-              />
-            </Routes>
-          </FormContainer>
+          <Routes>
+            <Route path="/" element={<ProjectsComponent />} />
+            <Route path=":projectId" element={<ProjectComponent />}></Route>
+            <Route path=":projectId/tables/*" element={<TablesComponent />} />
+            <Route
+              path=":projectId/tables/:tableId"
+              element={<TableComponent />}
+            />
+          </Routes>
         </StyledSplitPane>
       </Container>
     </ErrorBoundary>
