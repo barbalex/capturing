@@ -981,7 +981,8 @@ export class MySubClassedDexie extends Dexie {
       news_delivery: 'id, server_rev_at, deleted',
       option_types: 'id, &value, sort, server_rev_at, deleted',
       project_tile_layers: 'id, label, sort, active, server_rev_at, deleted',
-      project_users: 'id, user_email, server_rev_at, deleted',
+      project_users:
+        'id, user_email, [project_id+user_email], project_id, server_rev_at, deleted',
       projects: 'id, label, name, server_rev_at, deleted, use_labels',
       rel_types: 'id, &value, sort, server_rev_at, deleted',
       role_types: 'id, &value, sort, server_rev_at, deleted',
