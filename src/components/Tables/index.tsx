@@ -11,7 +11,7 @@ import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import { dexie, Table } from '../../dexieClient'
+import { dexie, Table, IProjectUser } from '../../dexieClient'
 import insertTable from '../../utils/insertTable'
 import FilterNumbers from '../shared/FilterNumbers'
 import { supabase } from '../../supabaseClient'
@@ -47,6 +47,13 @@ const RowsContainer = styled.div`
   height: 100%;
 `
 
+type DataProps = {
+  tables: Table
+  filteredCount: integer
+  totalCount: integer
+  projectUser: IProjectUser
+}
+
 const TablesComponent = () => {
   const session = supabase.auth.session()
   const { projectId } = useParams()
@@ -55,7 +62,7 @@ const TablesComponent = () => {
   const { activeNodeArray, setActiveNodeArray, removeOpenNode, formHeight } =
     store
 
-  const data = useLiveQuery(async () => {
+  const data: DataProps = useLiveQuery(async () => {
     const [tables, filteredCount, totalCount, projectUser] = await Promise.all([
       dexie.ttables.where({ deleted: 0 }).sortBy('name'), // TODO: if project.use_labels, use label
       dexie.ttables.where({ deleted: 0 }).count(), // TODO: pass in filter
@@ -75,12 +82,6 @@ const TablesComponent = () => {
   const totalCount = data?.totalCount
   const userRole = data?.projectUser?.role
   const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
-
-  console.log('TablesComponent', {
-    projectUser: data?.projectUser,
-    userRole,
-    userMayEdit,
-  })
 
   const add = useCallback(async () => {
     const newTableId = await insertTable({ projectId })
