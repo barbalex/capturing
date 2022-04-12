@@ -26,6 +26,7 @@ const Title = styled.div`
   margin-top: auto;
   margin-bottom: auto;
   user-select: none;
+  padding-right: 40px;
 `
 const TitleSymbols = styled.div`
   display: flex;

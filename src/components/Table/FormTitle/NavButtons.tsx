@@ -23,25 +23,9 @@ const ProjectNavButtons = () => {
   )
 
   return (
-    <>
-      <IconButton title="Zur Liste" onClick={onClickUp} size="large">
-        <FaArrowUp />
-      </IconButton>
-      <IconButton
-        title="Zu den Sammlungen dieser Projektes"
-        onClick={onClickToSammlungen}
-        size="large"
-      >
-        <FaArrowDown />
-      </IconButton>
-      <IconButton
-        title="Zu den Kulturen dieser Projektes"
-        onClick={onClickToKulturen}
-        size="large"
-      >
-        <FaArrowDown />
-      </IconButton>
-    </>
+    <IconButton title="Zur Liste" onClick={onClickUp} size="large">
+      <FaArrowUp />
+    </IconButton>
   )
 }
 

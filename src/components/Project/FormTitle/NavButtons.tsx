@@ -1,7 +1,9 @@
 import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import IconButton from '@mui/material/IconButton'
-import { FaArrowUp } from 'react-icons/fa'
+import Button from '@mui/material/Button'
+import { FaArrowUp, FaArrowRight } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
 
@@ -19,6 +21,9 @@ const ProjectNavButtons = () => {
       <IconButton title="Zur Liste" onClick={onClickUp} size="large">
         <FaArrowUp />
       </IconButton>
+      <Button endIcon={<FaArrowRight />} component={Link} to="tables">
+        Tabellen
+      </Button>
     </>
   )
 }

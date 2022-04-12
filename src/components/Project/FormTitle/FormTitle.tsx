@@ -8,16 +8,15 @@ import AddButton from './AddButton'
 import NavButtons from './NavButtons'
 import FilterNumbers from '../../shared/FilterNumbers'
 import Menu from '../../shared/Menu'
-import constants from '../../../utils/constants'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
   flex-shrink: 0;
+  flex-wrap: wrap;
   display: flex;
   @media print {
     display: none !important;
   }
-  height: ${constants.titleRowHeight}px;
   justify-content: space-between;
   padding 0 10px;
 `
@@ -25,12 +24,19 @@ const Title = styled.div`
   font-weight: bold;
   margin-top: auto;
   margin-bottom: auto;
+  padding-right: 40px;
   user-select: none;
+  height: 52px;
+  line-height: 52px;
+  text-align: center;
 `
 const TitleSymbols = styled.div`
   display: flex;
   margin-top: auto;
   margin-bottom: auto;
+  justify-content: flex-end;
+  flex-grow: 1;
+  flex-wrap: wrap;
 `
 
 const ProjectFormTitle = ({ row, totalCount, filteredCount, width }) => {

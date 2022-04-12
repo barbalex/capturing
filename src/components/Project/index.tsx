@@ -1,10 +1,8 @@
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { dexie, Project } from '../../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
-import Button from '@mui/material/Button'
-import { FaArrowRight } from 'react-icons/fa'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
 import Spinner from '../shared/Spinner'
@@ -16,11 +14,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${(props) => (props.showfilter ? '#fff3e0' : 'unset')};
-`
-const TopNavContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  padding: 5px 10px 5px 10px;
 `
 
 const ProjectComponent = ({ filter: showFilter }) => {
@@ -41,11 +34,6 @@ const ProjectComponent = ({ filter: showFilter }) => {
     <ErrorBoundary>
       <Container showfilter={showFilter}>
         <FormTitle row={row} showFilter={showFilter} />
-        <TopNavContainer>
-          <Button endIcon={<FaArrowRight />} component={Link} to="tables">
-            Tabellen
-          </Button>
-        </TopNavContainer>
         <Form showFilter={showFilter} id={projectId} row={row} />
       </Container>
     </ErrorBoundary>
