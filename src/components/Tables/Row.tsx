@@ -42,7 +42,7 @@ const TableRow = ({ row }) => {
       component={Link}
       to={`/${[...activeNodeArray, row.id].join('/')}`}
     >
-      <div>{label}</div>
+      {label}
     </StyledListItem>
   )
 }
