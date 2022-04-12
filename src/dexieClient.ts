@@ -989,7 +989,7 @@ export class MySubClassedDexie extends Dexie {
       rows: 'id, server_rev_at, deleted',
       // name tables causes error because used internally, see: https://github.com/dexie/Dexie.js/issues/1537
       ttables:
-        'id, label, name, sort, project_id, parent_id, rel_type, option_type, server_rev_at, deleted',
+        'id, label, name, sort, project_id, parent_id, rel_type, option_type, server_rev_at, deleted, [deleted+project_id]',
       tile_layers: 'id, label, server_rev_at, deleted',
       users: 'id, name, &email, auth_user_id, server_rev_at, deleted',
       version_types: 'id, &value, sort, server_rev_at, deleted',
