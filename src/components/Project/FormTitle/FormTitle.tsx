@@ -15,12 +15,11 @@ const TitleContainer = styled.div`
   flex-shrink: 0;
   flex-grow: 0;
   flex-wrap: wrap;
-  display: flex;
+  justify-content: space-between;
+  padding 0 10px;
   @media print {
     display: none !important;
   }
-  justify-content: space-between;
-  padding 0 10px;
 `
 const Title = styled.div`
   font-weight: bold;

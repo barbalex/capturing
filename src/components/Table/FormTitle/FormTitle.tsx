@@ -12,26 +12,33 @@ import constants from '../../../utils/constants'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
-  flex-shrink: 0;
   display: flex;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding 0 10px;
   @media print {
     display: none !important;
   }
-  height: ${constants.titleRowHeight}px;
-  justify-content: space-between;
-  padding 0 10px;
 `
 const Title = styled.div`
   font-weight: bold;
   margin-top: auto;
   margin-bottom: auto;
-  user-select: none;
   padding-right: 40px;
+  user-select: none;
+  height: 52px;
+  line-height: 52px;
+  text-align: center;
 `
 const TitleSymbols = styled.div`
   display: flex;
   margin-top: auto;
   margin-bottom: auto;
+  justify-content: flex-end;
+  flex-grow: 1;
+  flex-wrap: wrap;
 `
 
 const TableFormTitle = ({
