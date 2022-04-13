@@ -244,7 +244,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           name="project_id"
           value={row.project_id}
           field="project_id"
-          label="Projekt"
+          label="Gehört zum Projekt"
           options={projectSelectValues}
           saveToDb={onBlur}
           error={errors?.table?.project_id}
@@ -288,6 +288,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           disabled={!userMayEdit}
           type="number"
         />
+        {/* TODO: add row_label once fields exist */}
       </FieldsContainer>
     </ErrorBoundary>
   )
