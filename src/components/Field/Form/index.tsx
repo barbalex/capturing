@@ -12,8 +12,8 @@ import JesNo from '../../shared/JesNo'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import {
   dexie,
-  ITable,
-  Table,
+  IField,
+  Field,
   Project,
   IProjectUser,
 } from '../../../dexieClient'
@@ -43,21 +43,21 @@ const relTypeDataSource = [
   },
 ]
 
-type TableFormProps = {
+type FieldFormProps = {
   id: string
-  row: Table
+  row: Field
   showFilter: (boolean) => void
 }
 type DataProps = {
   project: Project
   projects: Project[]
-  tables: Table[]
-  relTable: Table
+  tables: Field[]
+  relTable: Field
   projectUser: IProjectUser
 }
 
 // = '99999999-9999-9999-9999-999999999999'
-const TableForm = ({ id, row, showFilter }: TableFormProps) => {
+const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
   const { projectId } = useParams()
   const store = useContext(StoreContext)
   const { filter, errors } = store
@@ -93,7 +93,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
   }, [projectId, row?.parent_id, session?.user?.email])
   const project = data?.project
   const projects = sortProjectsByLabelName(data?.projects ?? [])
-  const tables: Table[] = sortByLabelName({
+  const tables: Field[] = sortByLabelName({
     objects: data?.tables ?? [],
     useLabels: row.use_labels,
   })
@@ -119,14 +119,14 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
 
   // console.log('ProjectForm rendering row:', row)
 
-  const originalRow = useRef<ITable>()
+  const originalRow = useRef<IField>()
   // update originalRow only initially
   useEffect(() => {
     originalRow.current = row
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const rowState = useRef<ITable>()
+  const rowState = useRef<IField>()
   // update originalRow only initially
   useEffect(() => {
     rowState.current = row
