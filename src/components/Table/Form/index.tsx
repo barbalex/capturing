@@ -56,6 +56,7 @@ type DataProps = {
   projectUser: IProjectUser
 }
 
+// = '99999999-9999-9999-9999-999999999999'
 const TableForm = ({ id, row, showFilter }: TableFormProps) => {
   const { projectId } = useParams()
   const store = useContext(StoreContext)
@@ -68,13 +69,18 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
     [],
   ) // TODO: add errors, unsetError in store
 
+  // const data = {}
   const data: DataProps = useLiveQuery(async () => {
     const [project, projects, tables, relTable, projectUser] =
       await Promise.all([
         dexie.projects.where({ id: projectId }).first(),
         dexie.projects.where({ deleted: 0 }).toArray(),
         dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
-        dexie.ttables.where({ id: row.parent_id }).first(),
+        dexie.ttables
+          .where({
+            id: row?.parent_id ?? '99999999-9999-9999-9999-999999999999',
+          })
+          .first(),
         dexie.project_users
           .where({
             project_id: projectId,
@@ -107,7 +113,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
       value: t.id,
       label: labelFromLabeledTable({
         object: t,
-        useLabels: project.use_labels,
+        useLabels: project?.use_labels,
       }),
     }))
 
@@ -189,7 +195,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           <>
             {showFilter ? (
               <JesNo
-                key={`${row.id}deleted`}
+                key={`${row.id}filterDeleted`}
                 label="gelöscht"
                 name="deleted"
                 value={row.deleted}
@@ -240,7 +246,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           />
         )}
         <Select
-          key={`${row.id}${row.project_id}project_id`}
+          key={`${row.id}${row?.project_id ?? ''}project_id`}
           name="project_id"
           value={row.project_id}
           field="project_id"
@@ -251,7 +257,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           disabled={!userMayEdit}
         />
         <Select
-          key={`${row.id}${row.parent_id}parent_id`}
+          key={`${row.id}${row?.parent_id ?? ''}parent_id`}
           name="parent_id"
           value={row.parent_id}
           field="parent_id"
@@ -261,7 +267,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           error={errors?.table?.parent_id}
           disabled={!userMayEdit}
         />
-        {row.parent_id && (
+        {!!row.parent_id && (
           <RadioButtonGroupWithInfo
             value={row.rel_type}
             name="rel_type"
@@ -279,7 +285,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           />
         )}
         <TextField
-          key={`${row.id}sort`}
+          key={`${row?.id ?? ''}sort`}
           name="sort"
           label="Sortierung"
           value={row.sort}
@@ -288,7 +294,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           disabled={!userMayEdit}
           type="number"
         />
-        {/* TODO: add row_label once fields exist */}
+        <p>{'TODO: add row_label once fields exist '}</p>
       </FieldsContainer>
     </ErrorBoundary>
   )

@@ -175,6 +175,7 @@ const ProjectForm = ({ id, row, showFilter }: ProjectFormProps) => {
           onBlur={onBlur}
           error={errors?.project?.account_id}
         />
+        <p>{'TODO: add project_users'}</p>
       </FieldsContainer>
     </ErrorBoundary>
   )
