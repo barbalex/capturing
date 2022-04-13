@@ -14,6 +14,9 @@ import { dexie, ITable, Table, Project, IProjectUser } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
 import Select from '../shared/Select'
+import sortProjectsByLabelName from '../../utils/sortProjectsByLabelName'
+import sortByLabelName from '../../utils/sortByLabelName'
+import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -27,7 +30,9 @@ type TableFormProps = {
   showFilter: (boolean) => void
 }
 type DataProps = {
+  project: Project
   projects: Project[]
+  tables: Table[]
   projectUser: IProjectUser
 }
 
@@ -44,8 +49,10 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
   ) // TODO: add errors, unsetError in store
 
   const data: DataProps = useLiveQuery(async () => {
-    const [projects, projectUser] = await Promise.all([
-      dexie.projects.where({ deleted: 0, id: projectId }).sortBy('name'), // TODO: if project.use_labels, use label
+    const [project, projects, tables, projectUser] = await Promise.all([
+      dexie.projects.where({ id: projectId }).first(),
+      dexie.projects.where({ deleted: 0 }).toArray(),
+      dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
       dexie.project_users
         .where({
           project_id: projectId,
@@ -54,22 +61,32 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
         .first(),
     ])
 
-    return { projects, projectUser }
+    return { project, projects, tables, projectUser }
   })
-  const projects: Project[] = (data?.projects ?? []).sort((a, b) => {
-    al = a.use_labels ? a.label : a.name
-    bl = b.use_labels ? b.label : b.name
-    if (al < bl) return -1
-    if (al === bl) return 0
-    return 1
+  const project = data?.project
+  const projects = sortProjectsByLabelName(data?.projects ?? [])
+  const tables: Table[] = sortByLabelName({
+    objects: data?.tables ?? [],
+    use_labels: row.use_labels,
   })
   const userRole = data?.projectUser?.role
   const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
 
   const projectSelectValues = projects.map((p) => ({
     value: p.id,
-    label: p.use_labels ? p.label : p.name,
+    label: labelFromLabeledTable({ object: p, use_labels: p.use_labels }),
   }))
+
+  const tablesSelectValues = tables
+    // do not list own table
+    .filter((t) => t.id !== id)
+    .map((t) => ({
+      value: t.id,
+      label: labelFromLabeledTable({
+        object: t,
+        use_labels: project.use_labels,
+      }),
+    }))
 
   // console.log('ProjectForm rendering row:', row)
 
@@ -209,6 +226,17 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           options={projectSelectValues}
           saveToDb={onBlur}
           error={errors?.table?.project_id}
+          disabled={!userMayEdit}
+        />
+        <Select
+          key={`${row.id}${row.parent_id}parent_id`}
+          name="parent_id"
+          value={row.parent_id}
+          field="parent_id"
+          label="Eltern-Tabelle"
+          options={tablesSelectValues}
+          saveToDb={onBlur}
+          error={errors?.table?.parent_id}
           disabled={!userMayEdit}
         />
       </FieldsContainer>

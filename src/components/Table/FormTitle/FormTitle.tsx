@@ -44,7 +44,7 @@ const TableFormTitle = ({
   if (width < 520) {
     return (
       <TitleContainer>
-        <Title>Projekt</Title>
+        <Title>Tabelle</Title>
         <TitleSymbols>
           <NavButtons />
           <AddButton userMayEdit={userMayEdit} />
@@ -63,7 +63,7 @@ const TableFormTitle = ({
 
   return (
     <TitleContainer>
-      <Title>Projekt</Title>
+      <Title>Tabelle</Title>
       <TitleSymbols>
         <NavButtons />
         <AddButton userMayEdit={userMayEdit} />
