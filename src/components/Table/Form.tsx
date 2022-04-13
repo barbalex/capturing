@@ -239,6 +239,16 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           error={errors?.table?.parent_id}
           disabled={!userMayEdit}
         />
+        <TextField
+          key={`${row.id}sort`}
+          name="sort"
+          label="Sortierung"
+          value={row.sort}
+          onBlur={onBlur}
+          error={errors?.table?.sort}
+          disabled={!userMayEdit}
+          type="number"
+        />
       </FieldsContainer>
     </ErrorBoundary>
   )

@@ -223,8 +223,6 @@ ON CONFLICT ON CONSTRAINT rel_types_pkey
   DO UPDATE SET
     comment = excluded.comment;
 
-DROP TABLE IF EXISTS option_types CASCADE;
-
 ALTER TABLE rel_types ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
@@ -323,9 +321,17 @@ ALTER publication supabase_realtime
   ADD TABLE project_users;
 
 --
-CREATE TABLE option_types (
+CREATE TYPE table_type AS enum (
+  'standard',
+  'value_list',
+  'id_value_list'
+);
+
+DROP TABLE IF EXISTS table_types CASCADE;
+
+CREATE TABLE table_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  value text UNIQUE,
+  name table_type UNIQUE,
   save_id integer DEFAULT 0,
   sort smallint DEFAULT NULL,
   comment text,
@@ -333,34 +339,33 @@ CREATE TABLE option_types (
   deleted integer DEFAULT 0
 );
 
-CREATE INDEX ON option_types USING btree (value);
+CREATE INDEX ON table_types USING btree (id);
 
-CREATE INDEX ON option_types USING btree (id);
+CREATE INDEX ON table_types USING btree (sort);
 
-CREATE INDEX ON option_types USING btree (sort);
+CREATE INDEX ON table_types USING btree (server_rev_at);
 
-CREATE INDEX ON option_types USING btree (server_rev_at);
+CREATE INDEX ON table_types USING btree (deleted);
 
-CREATE INDEX ON option_types USING btree (deleted);
+COMMENT ON TABLE table_types IS 'Goal: list of types of option tables';
 
-COMMENT ON TABLE option_types IS 'Goal: list of types of option tables';
+COMMENT ON COLUMN table_types.id IS 'the id to use if id instead of value is to be saved';
 
-COMMENT ON COLUMN option_types.value IS 'the option type';
+COMMENT ON COLUMN table_types.name IS 'used to choose human readably in code';
 
-COMMENT ON COLUMN option_types.save_id IS 'wether to save id instead of value';
+COMMENT ON COLUMN table_types.sort IS 'enables sorting at will';
 
-COMMENT ON COLUMN option_types.id IS 'the id to use if id instead of value is to be saved';
+COMMENT ON COLUMN table_types.comment IS 'explains the option type';
 
-COMMENT ON COLUMN option_types.value IS 'explains the option type';
+COMMENT ON COLUMN table_types.server_rev_at IS 'time of last edit on server';
 
-COMMENT ON COLUMN option_types.sort IS 'enables sorting at will';
-
-COMMENT ON COLUMN option_types.server_rev_at IS 'time of last edit on server';
-
-ALTER TABLE option_types ENABLE ROW LEVEL SECURITY;
+ALTER TABLE table_types ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE option_types;
+  ADD TABLE table_types;
+
+INSERT INTO table_types (id, name, save_id, sort, comment)
+  VALUES ('98270f16-bb21-11ec-8422-0242ac120002', 'standard', 0, 1, 'None: This table does not contain a list of options meant to be choosen for a field of another table. The Table needs field ''value'''), ('149d7be8-bb22-11ec-8422-0242ac120002', 'value_list', 0, 2, 'List of Values: The choosen value is saved in the field of another table'), ('1bb0c8cc-bb22-11ec-8422-0242ac120002', 'id_value_list', 1, 3, 'List of values with id: When a value is choosen, it''s id is saved in the field of another table. The table needs fields: ''id'' (which it gets anyway) and ''value''');
 
 --
 DROP TABLE IF EXISTS tables CASCADE;
@@ -373,11 +378,9 @@ CREATE TABLE tables (
   rel_type text DEFAULT 'n' REFERENCES rel_types (value) ON DELETE NO action ON UPDATE CASCADE,
   name text DEFAULT NULL,
   label text DEFAULT NULL,
-  single_label text DEFAULT NULL,
-  label_fields text[] DEFAULT NULL,
-  label_fields_separator text DEFAULT ', ',
+  row_label jsonb DEFAULT NULL,
   sort smallint DEFAULT NULL,
-  option_type text REFERENCES option_types (value) ON DELETE NO action ON UPDATE CASCADE,
+  type uuid DEFAULT '98270f16-bb21-11ec-8422-0242ac120002' REFERENCES table_types (id) ON DELETE NO action ON UPDATE CASCADE,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -400,7 +403,7 @@ CREATE INDEX ON tables USING btree (label);
 
 CREATE INDEX ON tables USING btree (sort);
 
-CREATE INDEX ON tables USING btree (option_type);
+CREATE INDEX ON tables USING btree (type);
 
 CREATE INDEX ON tables USING btree (deleted);
 
@@ -416,15 +419,15 @@ COMMENT ON COLUMN tables.rel_type IS 'releation with parent table: 1:1 or 1:n';
 
 COMMENT ON COLUMN tables.name IS 'name for use in db and url (lowercase, no special characters)';
 
-COMMENT ON COLUMN tables.label IS 'name for use when labeling';
+COMMENT ON COLUMN tables.label IS 'name for use when labeling this table';
 
 COMMENT ON COLUMN tables.sort IS 'enables ordering the tables of a project';
 
+COMMENT ON COLUMN tables.row_label IS 'Array of objects with: 1. field names 2. character separators. Concatenated to label rows';
+
 COMMENT ON COLUMN tables.label_fields IS 'fields used to label and sort rows';
 
-COMMENT ON COLUMN tables.label_fields_separator IS 'characters used to separate fields when labelling rows';
-
-COMMENT ON COLUMN tables.option_type IS 'What type of options list will this be?';
+COMMENT ON COLUMN tables.type IS 'What type of table will this be?';
 
 COMMENT ON COLUMN tables.client_rev_at IS 'time of last edit on client';
 
@@ -1528,9 +1531,9 @@ CREATE POLICY "Users can view role types" ON role_types
   FOR SELECT
     USING (is_project_user (auth.uid ()));
 
-DROP POLICY IF EXISTS "Users can view option types" ON option_types;
+DROP POLICY IF EXISTS "Users can view table types" ON table_types;
 
-CREATE POLICY "Users can view option types" ON option_types
+CREATE POLICY "Users can view table types" ON table_types
   FOR SELECT
     USING (is_project_user (auth.uid ()));
 

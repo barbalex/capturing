@@ -272,9 +272,14 @@ export class NewsDelivery implements INewsDelivery {
   }
 }
 
-export interface IOptionType {
+export enum TableTypeEnum {
+  none = 'standard',
+  value_list = 'value_list',
+  id_value_list = 'id_value_list',
+}
+export interface ITableType {
   id: string
-  value: string
+  name: TableTypeEnum
   save_id?: number
   sort?: number
   comment?: string
@@ -282,32 +287,6 @@ export interface IOptionType {
   deleted: number
 }
 
-export class OptionType implements IOptionType {
-  id?: string
-  value: string
-  save_id?: number
-  sort?: number
-  comment?: string
-  server_rev_at?: Date
-  deleted: number
-  constructor(
-    id?: string,
-    value: string,
-    save_id?: number,
-    sort?: number,
-    comment?: string,
-    server_rev_at?: Date,
-    deleted: number,
-  ) {
-    this.id = id ?? uuidv1()
-    this.value = value
-    if (save_id !== undefined) this.save_id = save_id
-    if (sort !== undefined) this.sort = sort
-    if (comment) this.comment = comment
-    if (server_rev_at) this.server_rev_at = server_rev_at
-    this.deleted = deleted ?? 0
-  }
-}
 export interface IProjectEditor {
   id: string
   project_id?: string
@@ -636,11 +615,9 @@ export interface ITable {
   rel_type?: string
   name?: string
   label?: string
-  single_label?: string
-  label_fields?: string[]
-  label_fields_separator?: string
+  row_label?: string
   sort?: number
-  option_type?: string
+  type?: string
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -656,11 +633,9 @@ export class Table implements ITable {
   rel_type?: string
   name?: string
   label?: string
-  single_label?: string
-  label_fields?: string[]
-  label_fields_separator?: string
+  row_label?: string
   sort?: number
-  option_type?: string
+  type?: string
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -673,11 +648,9 @@ export class Table implements ITable {
     rel_type?: string,
     name?: string,
     label?: string,
-    single_label?: string,
-    label_fields?: string[],
-    label_fields_separator?: string,
+    row_label?: string,
     sort?: number,
-    option_type?: string,
+    type?: string,
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
@@ -689,12 +662,9 @@ export class Table implements ITable {
     if (rel_type) this.rel_type = rel_type
     if (name) this.name = name
     if (label) this.label = label
-    if (single_label) this.single_label = single_label
-    if (label_fields) this.label_fields = label_fields
-    if (label_fields_separator)
-      this.label_fields_separator = label_fields_separator
+    if (row_label) this.row_label = row_label
     if (sort !== undefined) this.sort = sort
-    if (option_type) this.option_type = option_type
+    this.type ?? '98270f16-bb21-11ec-8422-0242ac120002'
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
@@ -953,7 +923,7 @@ export class MySubClassedDexie extends Dexie {
   files!: DexieTable<File, string>
   news!: DexieTable<New, string>
   news_delivery!: DexieTable<NewsDelivery, string>
-  option_types!: DexieTable<OptionType, string>
+  table_types!: DexieTable<ITableType, string>
   project_tile_layers!: DexieTable<ProjectTileLayer, string>
   project_users!: DexieTable<ProjectUser, string>
   projects!: DexieTable<Project, string>
@@ -979,7 +949,7 @@ export class MySubClassedDexie extends Dexie {
       files: 'id, filename, server_rev_at, deleted',
       news: 'id, time, server_rev_at, deleted',
       news_delivery: 'id, server_rev_at, deleted',
-      option_types: 'id, &value, sort, server_rev_at, deleted',
+      table_types: 'id, &name, sort, server_rev_at, deleted',
       project_tile_layers: 'id, label, sort, active, server_rev_at, deleted',
       project_users:
         'id, user_email, [project_id+user_email], project_id, server_rev_at, deleted',
@@ -990,7 +960,7 @@ export class MySubClassedDexie extends Dexie {
       rows: 'id, server_rev_at, deleted',
       // name tables causes error because used internally, see: https://github.com/dexie/Dexie.js/issues/1537
       ttables:
-        'id, label, name, sort, project_id, parent_id, rel_type, option_type, server_rev_at, deleted, [deleted+project_id]',
+        'id, label, name, sort, project_id, parent_id, rel_type, type, server_rev_at, deleted, [deleted+project_id]',
       tile_layers: 'id, label, server_rev_at, deleted',
       users: 'id, name, &email, auth_user_id, server_rev_at, deleted',
       version_types: 'id, &value, sort, server_rev_at, deleted',
@@ -1006,7 +976,6 @@ export class MySubClassedDexie extends Dexie {
     this.files.mapToClass(File)
     this.news.mapToClass(New)
     this.news_delivery.mapToClass(NewsDelivery)
-    this.option_types.mapToClass(OptionType)
     this.project_tile_layers.mapToClass(ProjectTileLayer)
     this.projects.mapToClass(Project)
     this.rows.mapToClass(Row)
