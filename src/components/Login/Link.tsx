@@ -26,12 +26,15 @@ const StyledInput = styled(Input)`
 const Login = ({ emailErrorText, setEmailErrorText, email, setEmail }) => {
   const store = useContext(storeContext)
 
+  const [buttonTxt, setButtonTxt] = useState('anmelden')
+
   const emailInput = useRef(null)
 
   const fetchLogin = useCallback(
     // callbacks pass email or password
     // because state is not up to date yet
     async ({ email: emailPassed }) => {
+      setButtonTxt('Email wird verschickt...')
       // need to fetch values from ref
       // why? password-managers enter values but do not blur/change
       // if password-manager enters values and user clicks "Anmelden"
@@ -44,6 +47,7 @@ const Login = ({ emailErrorText, setEmailErrorText, email, setEmail }) => {
         })
         if (error) {
           console.log(error)
+          setButtonTxt('anmelden')
           // if message is 'Invalid authentication credentials', signUp
           if (error.message === 'Invalid authentication credentials') {
             return setEmailErrorText(
@@ -53,6 +57,10 @@ const Login = ({ emailErrorText, setEmailErrorText, email, setEmail }) => {
           return setEmailErrorText(error.message)
         }
         setEmailErrorText('')
+        setButtonTxt('Email wurde verschickt!')
+        setTimeout(() => {
+          setButtonTxt('anmelden')
+        }, 5000)
       })
     },
     [email, setEmailErrorText, store],
@@ -96,7 +104,7 @@ const Login = ({ emailErrorText, setEmailErrorText, email, setEmail }) => {
         </FormControl>
       </Container>
       <DialogActions>
-        <Button color="primary">anmelden</Button>
+        <Button color="primary">{buttonTxt}</Button>
       </DialogActions>
     </>
   )
