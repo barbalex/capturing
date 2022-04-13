@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
 import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
 import Checkbox2States from '../../shared/Checkbox2States'
