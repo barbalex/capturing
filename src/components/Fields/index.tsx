@@ -110,7 +110,7 @@ const FieldsComponent = () => {
     <ErrorBoundary>
       <Container showfilter={false}>
         <TitleContainer>
-          <Title>Tabellen</Title>
+          <Title>Felder</Title>
           <TitleSymbols>
             <IconButton
               title="Zur Tabelle"
@@ -122,8 +122,8 @@ const FieldsComponent = () => {
               <FaArrowUp />
             </IconButton>
             <IconButton
-              aria-label="neue Tabelle"
-              title="neue Tabelle"
+              aria-label="neues Feld"
+              title="neues Feld"
               onClick={add}
               size="large"
               // TODO: get users role for this project

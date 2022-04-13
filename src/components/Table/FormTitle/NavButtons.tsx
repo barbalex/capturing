@@ -11,7 +11,7 @@ import StoreContext from '../../../storeContext'
 import { dexie, IProjectUser } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 
-const ProjectNavButtons = () => {
+const TableNavButtons = () => {
   const { projectId } = useParams()
   const session: Session = supabase.auth.session()
   const store = useContext(StoreContext)
@@ -57,4 +57,4 @@ const ProjectNavButtons = () => {
   )
 }
 
-export default observer(ProjectNavButtons)
+export default observer(TableNavButtons)

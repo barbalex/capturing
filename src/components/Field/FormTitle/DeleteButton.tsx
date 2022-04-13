@@ -25,7 +25,7 @@ const Title = styled.div`
   user-select: none;
 `
 
-const TableDeleteButton = ({ row, userMayEdit }) => {
+const FieldDeleteButton = ({ row, userMayEdit }) => {
   const navigate = useNavigate()
   const store = useContext(StoreContext)
   const { activeNodeArray, removeOpenNodeWithChildren } = store
@@ -54,8 +54,8 @@ const TableDeleteButton = ({ row, userMayEdit }) => {
       <IconButton
         aria-controls="menu"
         aria-haspopup="true"
-        aria-label="Tabelle löschen"
-        title="Tabelle löschen"
+        aria-label="Feld löschen"
+        title="Feld löschen"
         onClick={onClickButton}
         disabled={row.deleted === 1 || !userMayEdit}
         size="large"
@@ -79,4 +79,4 @@ const TableDeleteButton = ({ row, userMayEdit }) => {
   )
 }
 
-export default observer(TableDeleteButton)
+export default observer(FieldDeleteButton)

@@ -89,6 +89,8 @@ export interface IField {
   server_rev_at?: Date
   deleted: number
 }
+
+type FieldUpdateProps = { row: IField; session: Session }
 export class Field implements IField {
   id: string
   table_id?: string
@@ -135,6 +137,29 @@ export class Field implements IField {
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     this.deleted = deleted ?? 0
+  }
+
+  async updateOnServer({ row, session }: FieldUpdateProps) {
+    const rowReved = {
+      ...row,
+      client_rev_at: new window.Date().toISOString(),
+      client_rev_by: session.user?.email ?? session.user?.id,
+    }
+    const update = new QueuedUpdate(
+      undefined,
+      undefined,
+      'fields',
+      JSON.stringify(rowReved),
+      row?.id,
+      JSON.stringify(this),
+    )
+    return dexie.queued_updates.add(update)
+  }
+
+  async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    this.deleted = 1
+    dexie.projects.put(this)
+    this.updateOnServer({ row: this, session })
   }
 }
 

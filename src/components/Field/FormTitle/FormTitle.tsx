@@ -8,7 +8,6 @@ import AddButton from './AddButton'
 import NavButtons from './NavButtons'
 import FilterNumbers from '../../shared/FilterNumbers'
 import Menu from '../../shared/Menu'
-import constants from '../../../utils/constants'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
@@ -41,7 +40,7 @@ const TitleSymbols = styled.div`
   flex-wrap: wrap;
 `
 
-const TableFormTitle = ({
+const FieldFormTitle = ({
   row,
   totalCount,
   filteredCount,
@@ -51,7 +50,7 @@ const TableFormTitle = ({
   if (width < 520) {
     return (
       <TitleContainer>
-        <Title>Tabelle</Title>
+        <Title>Feld</Title>
         <TitleSymbols>
           <NavButtons />
           <AddButton userMayEdit={userMayEdit} />
@@ -70,7 +69,7 @@ const TableFormTitle = ({
 
   return (
     <TitleContainer>
-      <Title>Tabelle</Title>
+      <Title>Feld</Title>
       <TitleSymbols>
         <NavButtons />
         <AddButton userMayEdit={userMayEdit} />
@@ -81,4 +80,4 @@ const TableFormTitle = ({
   )
 }
 
-export default withResizeDetector(observer(TableFormTitle))
+export default withResizeDetector(observer(FieldFormTitle))

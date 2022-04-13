@@ -5,24 +5,24 @@ import IconButton from '@mui/material/IconButton'
 import { useParams, useNavigate } from 'react-router-dom'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
-import insertTable from '../../../utils/insertTable'
+import insertField from '../../../utils/insertField'
 import StoreContext from '../../../storeContext'
 
-const TableAddButton = ({ userMayEdit }) => {
+const FieldAddButton = ({ userMayEdit }) => {
   const { activeNodeArray } = useContext(StoreContext)
-  const { projectId } = useParams()
+  const { tableId } = useParams()
   const navigate = useNavigate()
 
   const onClick = useCallback(async () => {
-    const newProjectId = await insertTable({ projectId })
-    navigate(`/${[...activeNodeArray.slice(0, -1), newProjectId].join('/')}`)
-  }, [activeNodeArray, navigate, projectId])
+    const newId = await insertField({ tableId })
+    navigate(`/${[...activeNodeArray.slice(0, -1), newId].join('/')}`)
+  }, [activeNodeArray, navigate, tableId])
 
   return (
     <ErrorBoundary>
       <IconButton
-        aria-label="neue Tabelle"
-        title="neue Tabelle"
+        aria-label="neues Feld"
+        title="neues Feld"
         onClick={onClick}
         size="large"
         disabled={!userMayEdit}
@@ -33,4 +33,4 @@ const TableAddButton = ({ userMayEdit }) => {
   )
 }
 
-export default observer(TableAddButton)
+export default observer(FieldAddButton)

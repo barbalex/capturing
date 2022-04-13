@@ -1,19 +1,21 @@
 import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { useParams } from 'react-router-dom'
 
 // import StoreContext from '../../../storeContext'
 import FilterTitle from '../../shared/FilterTitle'
 import FormTitle from './FormTitle'
 import { dexie } from '../../../dexieClient'
 
-const ProjectFormTitleChooser = ({ row, userMayEdit }) => {
+const TableFormTitleChooser = ({ row, userMayEdit }) => {
+  const { projectId } = useParams()
   // const store = useContext(StoreContext)
   const showFilter = false // TODO:
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount] = await Promise.all([
-      dexie.ttables.where({ deleted: 0 }).count(), // TODO: pass in filter
-      dexie.ttables.where({ deleted: 0 }).count(),
+      dexie.ttables.where({ deleted: 0, project_id: projectId }).count(), // TODO: pass in filter
+      dexie.ttables.where({ deleted: 0, project_id: projectId }).count(),
     ])
 
     return { filteredCount, totalCount }
@@ -42,4 +44,4 @@ const ProjectFormTitleChooser = ({ row, userMayEdit }) => {
   )
 }
 
-export default observer(ProjectFormTitleChooser)
+export default observer(TableFormTitleChooser)
