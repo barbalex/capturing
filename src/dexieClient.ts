@@ -983,7 +983,8 @@ export class MySubClassedDexie extends Dexie {
       project_tile_layers: 'id, label, sort, active, server_rev_at, deleted',
       project_users:
         'id, user_email, [project_id+user_email], project_id, server_rev_at, deleted',
-      projects: 'id, label, name, server_rev_at, deleted, use_labels',
+      projects:
+        'id, label, name, server_rev_at, deleted, use_labels, [deleted+id]',
       rel_types: 'id, &value, sort, server_rev_at, deleted',
       role_types: 'id, &value, sort, server_rev_at, deleted',
       rows: 'id, server_rev_at, deleted',
