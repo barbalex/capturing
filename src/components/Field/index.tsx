@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
-import { dexie, Table, IProjectUser } from '../../dexieClient'
+import { dexie, Field, IProjectUser } from '../../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
@@ -18,18 +18,18 @@ const Container = styled.div`
 `
 
 type DataProps = {
-  row: Table
+  row: Field
   projectUser: IProjectUser
 }
 
-const TableComponent = ({ filter: showFilter }) => {
+const FieldComponent = ({ filter: showFilter }) => {
   const session = supabase.auth.session()
-  const { tableId, projectId } = useParams()
+  const { tableId, projectId, fieldId } = useParams()
   const filter = 'TODO: was in store'
 
   const data: DataProps = useLiveQuery(async () => {
     const [row, projectUser] = await Promise.all(
-      dexie.ttables.get(tableId),
+      dexie.fields.get(fieldId),
       dexie.project_users
         .where({
           project_id: projectId,
@@ -38,10 +38,10 @@ const TableComponent = ({ filter: showFilter }) => {
         .first(),
     )
     return { row, projectUser }
-  }, [tableId, projectId, session?.user?.email])
+  }, [fieldId, projectId, session?.user?.email])
   const row = data?.row
   const userRole = data?.projectUser?.role
-  const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
+  const userMayEdit = userRole === 'project_manager'
 
   // console.log('Project rendering row:', { row, projectId })
 
@@ -56,10 +56,10 @@ const TableComponent = ({ filter: showFilter }) => {
           showFilter={showFilter}
           userMayEdit={userMayEdit}
         />
-        <Form showFilter={showFilter} id={tableId} row={row} />
+        <Form showFilter={showFilter} id={fieldId} row={row} />
       </Container>
     </ErrorBoundary>
   )
 }
 
-export default observer(TableComponent)
+export default observer(FieldComponent)
