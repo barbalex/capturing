@@ -142,7 +142,7 @@ CREATE TABLE projects (
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0 -- geometry?
+  deleted integer DEFAULT 0, -- geometry?
   use_labels integer DEFAULT 0
   -- data?
 );
@@ -321,6 +321,8 @@ ALTER publication supabase_realtime
   ADD TABLE project_users;
 
 --
+DROP TYPE IF EXISTS table_type;
+
 CREATE TYPE table_type AS enum (
   'standard',
   'value_list',
@@ -424,8 +426,6 @@ COMMENT ON COLUMN tables.label IS 'name for use when labeling this table';
 COMMENT ON COLUMN tables.sort IS 'enables ordering the tables of a project';
 
 COMMENT ON COLUMN tables.row_label IS 'Array of objects with: 1. field names 2. character separators. Concatenated to label rows';
-
-COMMENT ON COLUMN tables.label_fields IS 'fields used to label and sort rows';
 
 COMMENT ON COLUMN tables.type IS 'What type of table will this be?';
 
