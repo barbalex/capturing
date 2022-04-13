@@ -1,9 +1,30 @@
 import { DragDropContext } from 'react-beautiful-dnd'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
+import styled from 'styled-components'
 
 import { dexie, Field, Table, Project } from '../../../dexieClient'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
+
+const Container = styled.div`
+  margin: 0;
+  border: 1px solid lightgrey;
+  border-radius: 2px;
+`
+const Title = styled.h4`
+  margin 0;
+  padding: 8px;
+`
+const Target = styled.div`
+  padding: 8px;
+`
+const FieldList = styled.div``
+const FieldContainer = styled.div`
+  padding: 8px;
+  border: 1px solid lightgrey;
+  margin-bottom: 8px;
+  border-radius: 2px;
+`
 
 /**
  * Have two versions:
@@ -28,6 +49,14 @@ const RowLabel = ({ project }: Props) => {
     [tableId],
   )
 
+  const fieldsMap = new Map(
+    fields.map((f) => [
+      f.id,
+      labelFromLabeledTable({ object: f, useLabels: project.use_labels }),
+    ]),
+  )
+  const targetFields: Field[] = []
+
   console.log('RowLabel, fields:', fields)
 
   const initialData = {
@@ -37,11 +66,37 @@ const RowLabel = ({ project }: Props) => {
         labelFromLabeledTable({ object: f, useLabels: project.use_labels }),
       ]),
     ),
-    columns: { target: { id: 'target', fieldIds: [] } },
+    columns: {
+      target: { id: 'target', title: 'Datensatz-Beschriftung', fieldIds: [] },
+    },
   }
   console.log('RowLabel, initialData:', initialData)
 
-  return <div>row label tool</div>
+  return (
+    <Container>
+      <Title>Datensatz-Beschriftung</Title>
+      <Target>
+        {targetFields.map((f) => (
+          <div key={f.id}>
+            {labelFromLabeledTable({
+              object: f,
+              useLabels: project.use_labels,
+            })}
+          </div>
+        ))}
+      </Target>
+      <FieldList>
+        {fields.map((f) => (
+          <FieldContainer key={f.id}>
+            {labelFromLabeledTable({
+              object: f,
+              useLabels: project.use_labels,
+            })}
+          </FieldContainer>
+        ))}
+      </FieldList>
+    </Container>
+  )
 }
 
 export default RowLabel
