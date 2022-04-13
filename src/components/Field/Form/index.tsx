@@ -320,7 +320,7 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
           value={row.widget_type}
           field="widget_type"
           label="Widget"
-          dataSource={fieldTypeValues}
+          dataSource={widgetTypeValues}
           onBlur={onBlur}
           error={errors?.field?.widget_type}
           disabled={!userMayEdit}
