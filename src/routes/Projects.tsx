@@ -12,8 +12,8 @@ import ProjectsComponent from '../components/Projects'
 import ProjectComponent from '../components/Project'
 import TablesComponent from '../components/Tables'
 import TableComponent from '../components/Table'
+import FieldsComponent from '../components/Fields'
 import { supabase } from '../supabaseClient'
-import FormContainer from './FormContainer'
 
 const StyledSplitPane = styled(SplitPane)`
   .Resizer {
@@ -104,6 +104,10 @@ const ProjectsPage = () => {
             <Route
               path=":projectId/tables/:tableId"
               element={<TableComponent />}
+            />
+            <Route
+              path=":projectId/tables/:tableId/fields/*"
+              element={<FieldsComponent />}
             />
           </Routes>
         </StyledSplitPane>

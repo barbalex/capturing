@@ -950,7 +950,7 @@ export class MySubClassedDexie extends Dexie {
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
-        'id, table_id, label, name, field_type, widget_type, options_table, sort, server_rev_at, deleted',
+        'id, table_id, label, name, field_type, widget_type, options_table, sort, server_rev_at, deleted, [deleted+table_id]',
       files: 'id, filename, server_rev_at, deleted',
       news: 'id, time, server_rev_at, deleted',
       news_delivery: 'id, server_rev_at, deleted',

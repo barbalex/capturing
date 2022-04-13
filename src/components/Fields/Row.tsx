@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 import StoreContext from '../../storeContext'
 import constants from '../../utils/constants'
 import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
-import { dexie, Project } from '../../dexieClient'
+import { dexie, Field } from '../../dexieClient'
 
 const StyledListItem = styled(ListItem)`
   min-height: ${constants.singleRowHeight};
@@ -24,12 +24,12 @@ const StyledListItem = styled(ListItem)`
   }
 `
 
-const TableRow = ({ row }) => {
+const FieldRow = ({ row }) => {
   const store = useContext(StoreContext)
   const { activeNodeArray } = store
   const { projectId } = useParams()
 
-  const project: Project = useLiveQuery(
+  const project: Field = useLiveQuery(
     async () => await dexie.projects.where({ id: projectId }).first(),
     [projectId],
   )
@@ -49,4 +49,4 @@ const TableRow = ({ row }) => {
   )
 }
 
-export default observer(TableRow)
+export default observer(FieldRow)
