@@ -3,14 +3,17 @@ import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
 import { Session } from '@supabase/supabase-js'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { useParams, useNavigate } from 'react-router-dom'
 
 import StoreContext from '../../storeContext'
 import Checkbox2States from '../shared/Checkbox2States'
 import JesNo from '../shared/JesNo'
 import ErrorBoundary from '../shared/ErrorBoundary'
-import { dexie, ITable, Table } from '../../dexieClient'
+import { dexie, ITable, Table, Project, IProjectUser } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
+import Select from '../shared/Select'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -23,8 +26,13 @@ type TableFormProps = {
   row: Table
   showFilter: (boolean) => void
 }
+type DataProps = {
+  projects: Project[]
+  projectUser: IProjectUser
+}
 
 const TableForm = ({ id, row, showFilter }: TableFormProps) => {
+  const { projectId } = useParams()
   const store = useContext(StoreContext)
   const { filter, errors } = store
   const session: Session = supabase.auth.session()
@@ -34,6 +42,34 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
     },
     [],
   ) // TODO: add errors, unsetError in store
+
+  const data: DataProps = useLiveQuery(async () => {
+    const [projects, projectUser] = await Promise.all([
+      dexie.projects.where({ deleted: 0, id: projectId }).sortBy('name'), // TODO: if project.use_labels, use label
+      dexie.project_users
+        .where({
+          project_id: projectId,
+          user_email: session?.user?.email,
+        })
+        .first(),
+    ])
+
+    return { projects, projectUser }
+  })
+  const projects: Project[] = (data?.projects ?? []).sort((a, b) => {
+    al = a.use_labels ? a.label : a.name
+    bl = b.use_labels ? b.label : b.name
+    if (al < bl) return -1
+    if (al === bl) return 0
+    return 1
+  })
+  const userRole = data?.projectUser?.role
+  const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
+
+  const projectSelectValues = projects.map((p) => ({
+    value: p.id,
+    label: p.use_labels ? p.label : p.name,
+  }))
 
   // console.log('ProjectForm rendering row:', row)
 
@@ -119,6 +155,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
                 value={row.deleted}
                 onBlur={onBlur}
                 error={errors?.table?.deleted}
+                disabled={!userMayEdit}
               />
             ) : (
               <Checkbox2States
@@ -128,6 +165,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
                 value={row.deleted}
                 onBlur={onBlur}
                 error={errors?.table?.deleted}
+                disabled={!userMayEdit}
               />
             )}
           </>
@@ -139,6 +177,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           value={row.name}
           onBlur={onBlur}
           error={errors?.table?.name}
+          disabled={!userMayEdit}
         />
 
         <Checkbox2States
@@ -148,6 +187,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           value={row.use_labels}
           onBlur={onBlur}
           error={errors?.table?.use_labels}
+          disabled={!userMayEdit}
         />
         {row.use_labels === 1 && (
           <TextField
@@ -157,8 +197,20 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
             value={row.label}
             onBlur={onBlur}
             error={errors?.table?.label}
+            disabled={!userMayEdit}
           />
         )}
+        <Select
+          key={`${row.id}${row.project_id}project_id`}
+          name="project_id"
+          value={row.project_id}
+          field="project_id"
+          label="Projekt"
+          options={projectSelectValues}
+          saveToDb={onBlur}
+          error={errors?.table?.project_id}
+          disabled={!userMayEdit}
+        />
       </FieldsContainer>
     </ErrorBoundary>
   )
