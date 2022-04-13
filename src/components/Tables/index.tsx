@@ -80,7 +80,7 @@ const TablesComponent = () => {
       ])
 
     return { tables, filteredCount, totalCount, projectUser, project }
-  })
+  }, [projectId, session?.user?.email])
   const project = data?.project
   const tables: Tables[] = sortByLabelName({
     objects: data?.tables ?? [],

@@ -90,7 +90,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
       ])
 
     return { project, projects, tables, relTable, projectUser }
-  })
+  }, [projectId, row?.parent_id, session?.user?.email])
   const project = data?.project
   const projects = sortProjectsByLabelName(data?.projects ?? [])
   const tables: Table[] = sortByLabelName({

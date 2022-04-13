@@ -38,7 +38,7 @@ const TableComponent = ({ filter: showFilter }) => {
         .first(),
     )
     return { row, projectUser }
-  }, [tableId])
+  }, [tableId, projectId, session?.user?.email])
   const row = data?.row
   const userRole = data?.projectUser?.role
   const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)

@@ -25,6 +25,7 @@ const ProjectNavButtons = () => {
           user_email: session?.user?.email,
         })
         .first(),
+    [projectId, session?.user?.email],
   )
   const userRole = projectUser?.role
   const userMayManage = userRole === 'project_manager'

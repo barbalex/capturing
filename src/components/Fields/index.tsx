@@ -12,7 +12,7 @@ import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
 import { dexie, Field, IProjectUser, Project } from '../../dexieClient'
-import insertTable from '../../utils/insertTable'
+import insertField from '../../utils/insertField'
 import sortByLabelName from '../../utils/sortByLabelName'
 import FilterNumbers from '../shared/FilterNumbers'
 import { supabase } from '../../supabaseClient'
@@ -68,8 +68,8 @@ const FieldsComponent = () => {
     const [fields, filteredCount, totalCount, projectUser, project] =
       await Promise.all([
         dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
-        dexie.fields.where({ deleted: 0, table_id: projectId }).count(), // TODO: pass in filter
-        dexie.fields.where({ deleted: 0, table_id: projectId }).count(),
+        dexie.fields.where({ deleted: 0, table_id: tableId }).count(), // TODO: pass in filter
+        dexie.fields.where({ deleted: 0, table_id: tableId }).count(),
         dexie.project_users
           .where({
             project_id: projectId,
@@ -80,7 +80,7 @@ const FieldsComponent = () => {
       ])
 
     return { fields, filteredCount, totalCount, projectUser, project }
-  })
+  }, [tableId, projectId, session?.user?.email])
   const project = data?.project
   const fields: Fields[] = sortByLabelName({
     objects: data?.fields ?? [],
@@ -98,9 +98,9 @@ const FieldsComponent = () => {
   // })
 
   const add = useCallback(async () => {
-    const newTableId = await insertTable({ projectId })
-    navigate(newTableId)
-  }, [navigate, projectId])
+    const newId = await insertField({ tableId })
+    navigate(newId)
+  }, [navigate, tableId])
 
   const onClickUp = useCallback(() => {
     removeOpenNode(activeNodeArray)

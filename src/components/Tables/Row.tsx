@@ -31,6 +31,7 @@ const TableRow = ({ row }) => {
 
   const project: Project = useLiveQuery(
     async () => await dexie.projects.where({ id: projectId }).first(),
+    [projectId],
   )
 
   const label = labelFromLabeledTable({
