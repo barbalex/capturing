@@ -11,7 +11,7 @@ import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import { dexie, Table, IProjectUser, Project } from '../../dexieClient'
+import { dexie, Field, IProjectUser, Project } from '../../dexieClient'
 import insertTable from '../../utils/insertTable'
 import sortByLabelName from '../../utils/sortByLabelName'
 import FilterNumbers from '../shared/FilterNumbers'
@@ -49,27 +49,27 @@ const RowsContainer = styled.div`
 `
 
 type DataProps = {
-  tables: Table[]
+  fields: Field[]
   filteredCount: integer
   totalCount: integer
   projectUser: IProjectUser
   project: Project
 }
 
-const TablesComponent = () => {
+const FieldsComponent = () => {
   const session = supabase.auth.session()
-  const { projectId } = useParams()
+  const { projectId, tableId } = useParams()
   const navigate = useNavigate()
   const store = useContext(storeContext)
   const { activeNodeArray, setActiveNodeArray, removeOpenNode, formHeight } =
     store
 
   const data: DataProps = useLiveQuery(async () => {
-    const [tables, filteredCount, totalCount, projectUser, project] =
+    const [fields, filteredCount, totalCount, projectUser, project] =
       await Promise.all([
-        dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(), // TODO: if project.use_labels, use label
-        dexie.ttables.where({ deleted: 0, project_id: projectId }).count(), // TODO: pass in filter
-        dexie.ttables.where({ deleted: 0, project_id: projectId }).count(),
+        dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
+        dexie.fields.where({ deleted: 0, table_id: projectId }).count(), // TODO: pass in filter
+        dexie.fields.where({ deleted: 0, table_id: projectId }).count(),
         dexie.project_users
           .where({
             project_id: projectId,
@@ -79,18 +79,18 @@ const TablesComponent = () => {
         dexie.projects.where({ id: projectId }).first(),
       ])
 
-    return { tables, filteredCount, totalCount, projectUser, project }
+    return { fields, filteredCount, totalCount, projectUser, project }
   })
   const project = data?.project
-  const tables: Tables[] = sortByLabelName({
-    objects: data?.tables ?? [],
+  const fields: Fields[] = sortByLabelName({
+    objects: data?.fields ?? [],
     useLabels: project?.use_labels,
   })
   const filteredCount = data?.filteredCount
   const totalCount = data?.totalCount
   const userRole = data?.projectUser?.role
   const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
-  // console.log('Tables', {
+  // console.log('Fields', {
   //   userMayEdit,
   //   projectUser: data?.projectUser,
   //   userRole,
@@ -136,9 +136,9 @@ const TablesComponent = () => {
           <Virtuoso
             //initialTopMostItemIndex={initialTopMostIndex}
             height={formHeight}
-            totalCount={tables.length}
+            totalCount={fields.length}
             itemContent={(index) => {
-              const row = tables[index]
+              const row = fields[index]
 
               return <Row key={row.id} row={row} />
             }}
@@ -149,4 +149,4 @@ const TablesComponent = () => {
   )
 }
 
-export default observer(TablesComponent)
+export default observer(FieldsComponent)
