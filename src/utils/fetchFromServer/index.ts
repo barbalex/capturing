@@ -1,5 +1,3 @@
-import { supabase } from '../../supabaseClient'
-import { dexie, dexie, IProject } from '../../dexieClient'
 import processTable from './processTable'
 
 // per table:
