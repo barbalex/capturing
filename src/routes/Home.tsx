@@ -112,7 +112,7 @@ const Home = () => {
       <ScrollContainer>
         <Container>
           <PageTitle align="center" variant="h6" color="inherit">
-            Erfassen Sie Daten:
+            Daten erfassen:
           </PageTitle>
           <CardContainer>
             <Card>
