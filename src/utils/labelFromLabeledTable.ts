@@ -3,11 +3,11 @@ import { Table, Field, Row, Project } from '../dexieClient'
 type Obj = Project | Table | Field | Row
 type Props = {
   object: Obj
-  use_labels: boolean
+  useLabels: integer
 }
 // works for any table with label and name that is not projects itself
-const labelFromLabeledTable = ({ object, use_labels: useLabels }: Props): Obj =>
-  useLabels
+const labelFromLabeledTable = ({ object, useLabels }: Props): Obj =>
+  useLabels === 1
     ? object.label ?? object.name ?? '(unbenannt)'
     : object.name ?? '(unbenannt)'
 

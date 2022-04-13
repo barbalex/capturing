@@ -11,7 +11,7 @@ const Container = styled.div`
 type Props = {
   ownTable: Table
   parentTable: Table
-  useLabels: boolean
+  useLabels: integer
 }
 
 const RelTypePopover = ({ ownTable, parentTable, useLabels }: Props) => {

@@ -4,7 +4,7 @@ import labelFromLabeledTable from './labelFromLabeledTable'
 type Objects = Table[] | Field[] | Row[]
 type Props = {
   objects: Objects
-  useLabels: boolean
+  useLabels: integer
 }
 // works for any table with label and name that is not projects itself
 const sortByLabelName = ({ objects, useLabels }: Props): Objects =>
