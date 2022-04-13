@@ -33,8 +33,6 @@ const ProjectRow = ({ row }: ProjectRowProps) => {
     useLabels: row.use_labels,
   })
 
-  console.log('ProjectRow', { label, row })
-
   return (
     <StyledListItem
       component={Link}
