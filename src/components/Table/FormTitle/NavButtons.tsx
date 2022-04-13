@@ -1,11 +1,13 @@
 import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import IconButton from '@mui/material/IconButton'
-import { FaArrowUp, FaArrowDown } from 'react-icons/fa'
+import { FaArrowUp, FaArrowRight } from 'react-icons/fa'
+import { Link, useNavigate } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
 
 const ProjectNavButtons = () => {
+  const navigate = useNavigate()
   const store = useContext(StoreContext)
   const { activeNodeArray, setActiveNodeArray, removeOpenNode } = store
 
