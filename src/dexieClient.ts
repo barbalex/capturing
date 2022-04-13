@@ -680,7 +680,7 @@ export class Table implements ITable {
     label?: string,
     row_label?: string,
     sort?: number,
-    type?: string,
+    type?: TableTypeEnum,
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
@@ -694,7 +694,7 @@ export class Table implements ITable {
     if (label) this.label = label
     if (row_label) this.row_label = row_label
     if (sort !== undefined) this.sort = sort
-    this.type ?? '98270f16-bb21-11ec-8422-0242ac120002'
+    this.type ?? 'standard'
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at

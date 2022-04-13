@@ -17,6 +17,7 @@ import {
   Project,
   IProjectUser,
   Table,
+  TableRelTypeEnum,
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
@@ -25,7 +26,6 @@ import RadioButtonGroupWithInfo from '../../shared/RadioButtonGroupWithInfo'
 import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
 import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
-import RelTypePopover from './RelTypePopover'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -33,16 +33,10 @@ const FieldsContainer = styled.div`
   overflow-y: auto;
 `
 
-const relTypeDataSource = [
-  {
-    value: '1',
-    label: '1',
-  },
-  {
-    value: 'n',
-    label: 'n',
-  },
-]
+const relTypeDataSource = Object.values(TableRelTypeEnum).map((v) => ({
+  value: v?.toString(),
+  label: v?.toString(),
+}))
 
 type FieldFormProps = {
   id: string
@@ -72,44 +66,50 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
 
   // const data = {}
   const data: DataProps = useLiveQuery(async () => {
-    const [project, optionsTables, fields, optionsTable, projectUser] =
-      await Promise.all([
-        dexie.projects.where({ id: projectId }).first(),
-        dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
-        dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
-        dexie.ttables
-          .where('type')
-          .anyOf(['value_list', 'id_value_list'])
-          .toArray(),
-        dexie.project_users
-          .where({
-            project_id: projectId,
-            user_email: session?.user?.email,
-          })
-          .first(),
-      ])
+    const [project, optionsTables, fields, projectUser] = await Promise.all([
+      dexie.projects.where({ id: projectId }).first(),
+      dexie.ttables
+        .filter(
+          (t) =>
+            t.deleted === 0 &&
+            t.project_id === projectId &&
+            ['value_list', 'id_value_list'].includes(t.type),
+        )
+        .toArray(),
+      dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
+      dexie.project_users
+        .where({
+          project_id: projectId,
+          user_email: session?.user?.email,
+        })
+        .first(),
+    ])
 
-    return { project, optionsTables, fields, optionsTable, projectUser }
+    return { project, optionsTables, fields, projectUser }
   }, [projectId, row?.parent_id, session?.user?.email])
   const project = data?.project
   const optionsTables = sortByLabelName({
-    objects: data?.tables ?? [],
+    objects: data?.optionsTables ?? [],
     useLabels: row.use_labels,
   })
   const fields: Field[] = sortByLabelName({
     objects: data?.fields ?? [],
     useLabels: row.use_labels,
   })
-  const optionsTable = data?.optionsTable
   const userRole = data?.projectUser?.role
   const userMayEdit = userRole === 'project_manager'
 
-  const tableSelectValues = optionsTables.map((t) => ({
+  const optionsTableSelectValues = optionsTables.map((t) => ({
     value: t.id,
     label: labelFromLabeledTable({ object: t, useLabels: project.use_labels }),
   }))
 
-  // console.log('ProjectForm rendering row:', row)
+  console.log('FieldForm', {
+    optionsTableSelectValues,
+    optionsTables,
+    data,
+    projectId,
+  })
 
   const originalRow = useRef<IField>()
   // update originalRow only initially
@@ -252,8 +252,8 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
           name="options_table"
           value={row.options_table}
           field="options_table"
-          label="Optionen-Tabelle"
-          options={tableSelectValues}
+          label="Werte-Liste"
+          options={optionsTableSelectValues}
           saveToDb={onBlur}
           error={errors?.table?.options_table}
           disabled={!userMayEdit}

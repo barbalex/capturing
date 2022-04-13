@@ -16,11 +16,14 @@ import {
   Table,
   Project,
   IProjectUser,
+  TableTypeEnum,
+  TableRelTypeEnum,
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Select from '../../shared/Select'
 import RadioButtonGroupWithInfo from '../../shared/RadioButtonGroupWithInfo'
+import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
 import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
@@ -32,16 +35,10 @@ const FieldsContainer = styled.div`
   overflow-y: auto;
 `
 
-const relTypeDataSource = [
-  {
-    value: '1',
-    label: '1',
-  },
-  {
-    value: 'n',
-    label: 'n',
-  },
-]
+const relTypeDataSource = Object.values(TableRelTypeEnum).map((v) => ({
+  value: v?.toString(),
+  label: v?.toString(),
+}))
 
 type TableFormProps = {
   id: string
@@ -56,6 +53,13 @@ type DataProps = {
   projectUser: IProjectUser
 }
 
+const typeValueLabels = {
+  id_value_list:
+    'Werte-Liste, enthält für jeden Wert eine ID und speichert jeweils die ID',
+  standard: 'normale Tabelle, Sie definieren die Felder',
+  value_list: 'Werte-Liste, enthält nur die Werte',
+}
+
 // = '99999999-9999-9999-9999-999999999999'
 const TableForm = ({ id, row, showFilter }: TableFormProps) => {
   const { projectId } = useParams()
@@ -68,7 +72,6 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
     },
     [],
   ) // TODO: add errors, unsetError in store
-
   // const data = {}
   const data: DataProps = useLiveQuery(async () => {
     const [project, projects, tables, relTable, projectUser] =
@@ -105,6 +108,10 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
     value: p.id,
     label: labelFromLabeledTable({ object: p, useLabels: p.use_labels }),
   }))
+  const tableTypeValues = Object.values(TableTypeEnum).map((v) => ({
+    value: v,
+    label: typeValueLabels[v],
+  }))
 
   const tablesSelectValues = tables
     // do not list own table
@@ -140,6 +147,9 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
     // only update if is changed
     if (!isEqual(originalRow.current, rowState.current)) {
       row.updateOnServer({ row: rowState.current, session })
+      // TODO: if typ changed
+      // 1. remove all fields. But first ask user if is o.k.
+      // 2. create new if value_list or id_value_list
     }
     return
   }, [row, session])
@@ -255,6 +265,14 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           saveToDb={onBlur}
           error={errors?.table?.project_id}
           disabled={!userMayEdit}
+        />
+        <RadioButtonGroup
+          value={row.type}
+          name="type"
+          dataSource={tableTypeValues}
+          onBlur={onBlur}
+          label="Tabellen-Typ"
+          error={errors?.table?.type}
         />
         <Select
           key={`${row.id}${row?.parent_id ?? ''}parent_id`}

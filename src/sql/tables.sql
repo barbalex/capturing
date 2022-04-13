@@ -196,7 +196,7 @@ CREATE TYPE table_type AS enum (
   'id_value_list'
 );
 
-DROP TYPE IF EXISTS table_rel_types_enum cascade;
+DROP TYPE IF EXISTS table_rel_types_enum CASCADE;
 
 CREATE TYPE table_rel_types_enum AS enum (
   '1',
@@ -296,53 +296,13 @@ ALTER publication supabase_realtime
   ADD TABLE project_users;
 
 --
-DROP TYPE IF EXISTS table_types_enum;
+DROP TYPE IF EXISTS table_types_enum CASCADE;
 
 CREATE TYPE table_types_enum AS enum (
   'standard',
   'value_list',
   'id_value_list'
 );
-
-DROP TABLE IF EXISTS table_types CASCADE;
-
-CREATE TABLE table_types (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  name table_types_enum UNIQUE,
-  save_id integer DEFAULT 0,
-  sort smallint DEFAULT NULL,
-  comment text,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
-);
-
-CREATE INDEX ON table_types USING btree (id);
-
-CREATE INDEX ON table_types USING btree (sort);
-
-CREATE INDEX ON table_types USING btree (server_rev_at);
-
-CREATE INDEX ON table_types USING btree (deleted);
-
-COMMENT ON TABLE table_types IS 'Goal: list of types of option tables';
-
-COMMENT ON COLUMN table_types.id IS 'the id to use if id instead of value is to be saved';
-
-COMMENT ON COLUMN table_types.name IS 'used to choose human readably in code';
-
-COMMENT ON COLUMN table_types.sort IS 'enables sorting at will';
-
-COMMENT ON COLUMN table_types.comment IS 'explains the option type';
-
-COMMENT ON COLUMN table_types.server_rev_at IS 'time of last edit on server';
-
-ALTER TABLE table_types ENABLE ROW LEVEL SECURITY;
-
-ALTER publication supabase_realtime
-  ADD TABLE table_types;
-
-INSERT INTO table_types (id, name, save_id, sort, comment)
-  VALUES ('98270f16-bb21-11ec-8422-0242ac120002', 'standard', 0, 1, 'None: This table does not contain a list of options meant to be choosen for a field of another table. The Table needs field ''value'''), ('149d7be8-bb22-11ec-8422-0242ac120002', 'value_list', 0, 2, 'List of Values: The choosen value is saved in the field of another table'), ('1bb0c8cc-bb22-11ec-8422-0242ac120002', 'id_value_list', 1, 3, 'List of values with id: When a value is choosen, it''s id is saved in the field of another table. The table needs fields: ''id'' (which it gets anyway) and ''value''');
 
 --
 DROP TABLE IF EXISTS tables CASCADE;
@@ -357,7 +317,7 @@ CREATE TABLE tables (
   label text DEFAULT NULL,
   row_label jsonb DEFAULT NULL,
   sort smallint DEFAULT NULL,
-  type uuid DEFAULT '98270f16-bb21-11ec-8422-0242ac120002' REFERENCES table_types (id) ON DELETE NO action ON UPDATE CASCADE,
+  type table_types_enum DEFAULT 'standard',
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -582,7 +542,7 @@ COMMENT ON COLUMN fields.label IS 'name for use when labeling';
 
 COMMENT ON COLUMN fields.sort IS 'enables ordering the field list of a table';
 
-COMMENT ON COLUMN fields.is_internal_id IS 'is this table used as an id in the users own system?';
+COMMENT ON COLUMN fields.is_internal_id IS 'is this field used as an id in the users own system?';
 
 COMMENT ON COLUMN fields.field_type IS 'what type of data will populate this field?';
 
@@ -1497,12 +1457,6 @@ CREATE POLICY "Users cant delete accounts" ON accounts
 DROP POLICY IF EXISTS "Users can view role types" ON role_types;
 
 CREATE POLICY "Users can view role types" ON role_types
-  FOR SELECT
-    USING (is_project_user (auth.uid ()));
-
-DROP POLICY IF EXISTS "Users can view table types" ON table_types;
-
-CREATE POLICY "Users can view table types" ON table_types
   FOR SELECT
     USING (is_project_user (auth.uid ()));
 
