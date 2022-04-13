@@ -50,29 +50,6 @@ export interface IFieldType {
   server_rev_at?: Date
   deleted: number
 }
-export class FieldType implements IFieldType {
-  id: string
-  value: string
-  sort?: number
-  comment?: string
-  server_rev_at?: Date
-  deleted: number
-  constructor(
-    id?: string,
-    value: string,
-    sort?: number,
-    comment?: string,
-    server_rev_at?: Date,
-    deleted: number,
-  ) {
-    this.id = id ?? uuidv1()
-    this.value = value
-    if (sort !== undefined) this.sort = sort
-    if (comment) this.comment = comment
-    if (server_rev_at) this.server_rev_at = server_rev_at
-    this.deleted = deleted ?? 0
-  }
-}
 export interface IField {
   id: string
   table_id?: string
@@ -948,7 +925,7 @@ export class QueuedUpdate implements IQueuedUpdate {
 
 export class MySubClassedDexie extends Dexie {
   accounts!: DexieTable<Account, string>
-  field_types!: DexieTable<FieldType, string>
+  field_types!: DexieTable<IFieldType, string>
   fields!: DexieTable<Field, string>
   files!: DexieTable<File, string>
   news!: DexieTable<New, string>
@@ -1001,7 +978,6 @@ export class MySubClassedDexie extends Dexie {
       queued_updates: '++id',
     })
     this.accounts.mapToClass(Account)
-    this.field_types.mapToClass(FieldType)
     this.fields.mapToClass(Field)
     this.files.mapToClass(File)
     this.news.mapToClass(New)

@@ -14,6 +14,7 @@ import {
   dexie,
   IField,
   Field,
+  IFieldType,
   Project,
   IProjectUser,
   Table,
@@ -22,8 +23,7 @@ import {
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Select from '../../shared/Select'
-import RadioButtonGroupWithInfo from '../../shared/RadioButtonGroupWithInfo'
-import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
+import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 
@@ -66,26 +66,28 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
 
   // const data = {}
   const data: DataProps = useLiveQuery(async () => {
-    const [project, optionsTables, fields, projectUser] = await Promise.all([
-      dexie.projects.where({ id: projectId }).first(),
-      dexie.ttables
-        .filter(
-          (t) =>
-            t.deleted === 0 &&
-            t.project_id === projectId &&
-            ['value_list', 'id_value_list'].includes(t.type),
-        )
-        .toArray(),
-      dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
-      dexie.project_users
-        .where({
-          project_id: projectId,
-          user_email: session?.user?.email,
-        })
-        .first(),
-    ])
+    const [project, optionsTables, fields, fieldTypes, projectUser] =
+      await Promise.all([
+        dexie.projects.where({ id: projectId }).first(),
+        dexie.ttables
+          .filter(
+            (t) =>
+              t.deleted === 0 &&
+              t.project_id === projectId &&
+              ['value_list', 'id_value_list'].includes(t.type),
+          )
+          .toArray(),
+        dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
+        dexie.field_types.where({ deleted: 0 }).toArray(),
+        dexie.project_users
+          .where({
+            project_id: projectId,
+            user_email: session?.user?.email,
+          })
+          .first(),
+      ])
 
-    return { project, optionsTables, fields, projectUser }
+    return { project, optionsTables, fields, fieldTypes, projectUser }
   }, [projectId, row?.parent_id, session?.user?.email])
   const project = data?.project
   const optionsTables = sortByLabelName({
@@ -96,6 +98,7 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
     objects: data?.fields ?? [],
     useLabels: row.use_labels,
   })
+  const fieldTypes: IFieldType = data?.fieldTypes ?? []
   const userRole = data?.projectUser?.role
   const userMayEdit = userRole === 'project_manager'
 
@@ -103,12 +106,22 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
     value: t.id,
     label: labelFromLabeledTable({ object: t, useLabels: project.use_labels }),
   }))
+  const fieldTypeValues = fieldTypes
+    .map((t) => ({
+      value: t.value,
+      label: t.value,
+    }))
+    .sort((a, b) => {
+      const aVal = a.sort ?? a.value
+      const bVal = b.sort ?? b.value
+
+      if (aVal < bVal) return -1
+      if (aVal === bVal) return 0
+      return 1
+    })
 
   console.log('FieldForm', {
-    optionsTableSelectValues,
-    optionsTables,
-    data,
-    projectId,
+    row,
   })
 
   const originalRow = useRef<IField>()
@@ -247,8 +260,18 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
           disabled={!userMayEdit}
           type="number"
         />
+
+        <JesNo
+          key={`${row.id}is_internal_id`}
+          label="Dieses Feld wird von Ihnen als ID verwendet"
+          name="is_internal_id"
+          value={row.is_internal_id}
+          onBlur={onBlur}
+          error={errors?.table?.is_internal_id}
+          disabled={!userMayEdit}
+        />
         <Select
-          key={`${row.id}${row?.options_table ?? ''}options_table`}
+          key={`${row.id}options_table`}
           name="options_table"
           value={row.options_table}
           field="options_table"
@@ -256,6 +279,17 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
           options={optionsTableSelectValues}
           saveToDb={onBlur}
           error={errors?.table?.options_table}
+          disabled={!userMayEdit}
+        />
+        <RadioButtonGroup
+          key={`${row.id}field_type`}
+          name="field_type"
+          value={row.field_type}
+          field="field_type"
+          label="Feld-Typ"
+          dataSource={fieldTypeValues}
+          onBlur={onBlur}
+          error={errors?.table?.field_type}
           disabled={!userMayEdit}
         />
         <p>{'TODO: add row_label once fields exist '}</p>
