@@ -5,6 +5,7 @@ import { FaPlus, FaArrowUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { Link, useNavigate } from 'react-router-dom'
 
 import storeContext from '../../storeContext'
 import Row from './Row'
@@ -47,9 +48,9 @@ const FieldsContainer = styled.div`
 `
 
 const Projects = () => {
+  const navigate = useNavigate()
   const store = useContext(storeContext)
-  const { activeNodeArray, setActiveNodeArray, removeOpenNode, formHeight } =
-    store
+  const { activeNodeArray, removeOpenNode, formHeight } = store
 
   const data = useLiveQuery(async () => {
     const [projects, account, filteredCount, totalCount] = await Promise.all([
@@ -68,13 +69,12 @@ const Projects = () => {
 
   const add = useCallback(async () => {
     const newProjectId = await insertProject({ account })
-    setActiveNodeArray([...activeNodeArray, newProjectId])
-  }, [account, activeNodeArray, setActiveNodeArray])
+    navigate(`/${[...activeNodeArray, newProjectId].join('/')}`)
+  }, [account, activeNodeArray, navigate])
 
   const onClickUp = useCallback(() => {
     removeOpenNode(activeNodeArray)
-    setActiveNodeArray(activeNodeArray.slice(0, -1))
-  }, [activeNodeArray, removeOpenNode, setActiveNodeArray])
+  }, [activeNodeArray, removeOpenNode])
   let upTitle = 'Eine Ebene höher'
   if (activeNodeArray[0] === 'projects') {
     upTitle = 'Zu allen Listen'
@@ -86,7 +86,13 @@ const Projects = () => {
         <TitleContainer>
           <Title>Projekte</Title>
           <TitleSymbols>
-            <IconButton title={upTitle} onClick={onClickUp} size="large">
+            <IconButton
+              title={upTitle}
+              component={Link}
+              to={`/${activeNodeArray.slice(0, -1).join('/')}`}
+              onClick={onClickUp}
+              size="large"
+            >
               <FaArrowUp />
             </IconButton>
             <IconButton

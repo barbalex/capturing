@@ -5,7 +5,7 @@ import { FaPlus, FaArrowUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 
 import storeContext from '../../storeContext'
 import Row from './Row'
@@ -61,8 +61,7 @@ const TablesComponent = () => {
   const { projectId } = useParams()
   const navigate = useNavigate()
   const store = useContext(storeContext)
-  const { activeNodeArray, setActiveNodeArray, removeOpenNode, formHeight } =
-    store
+  const { activeNodeArray, removeOpenNode, formHeight } = store
 
   const data: DataProps = useLiveQuery(async () => {
     const [tables, filteredCount, totalCount, projectUser, project] =
@@ -104,8 +103,7 @@ const TablesComponent = () => {
 
   const onClickUp = useCallback(() => {
     removeOpenNode(activeNodeArray)
-    setActiveNodeArray(activeNodeArray.slice(0, -1))
-  }, [activeNodeArray, removeOpenNode, setActiveNodeArray])
+  }, [activeNodeArray, removeOpenNode])
 
   return (
     <ErrorBoundary>
@@ -113,7 +111,13 @@ const TablesComponent = () => {
         <TitleContainer>
           <Title>Tabellen</Title>
           <TitleSymbols>
-            <IconButton title="Zum Projekt" onClick={onClickUp} size="large">
+            <IconButton
+              title="Zum Projekt"
+              component={Link}
+              to={`/${activeNodeArray.slice(0, -1).join('/')}`}
+              onClick={onClickUp}
+              size="large"
+            >
               <FaArrowUp />
             </IconButton>
             <IconButton

@@ -61,8 +61,7 @@ const FieldsComponent = () => {
   const { projectId, tableId } = useParams()
   const navigate = useNavigate()
   const store = useContext(storeContext)
-  const { activeNodeArray, setActiveNodeArray, removeOpenNode, formHeight } =
-    store
+  const { activeNodeArray, removeOpenNode, formHeight } = store
 
   const data: DataProps = useLiveQuery(async () => {
     const [fields, filteredCount, totalCount, projectUser, project] =
