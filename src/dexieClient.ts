@@ -272,6 +272,11 @@ export class NewsDelivery implements INewsDelivery {
   }
 }
 
+export enum TableRelTypeEnum {
+  '1' = '1',
+  n = 'n',
+}
+
 export enum TableTypeEnum {
   none = 'standard',
   value_list = 'value_list',
@@ -612,7 +617,7 @@ export interface ITable {
   id: string
   project_id?: string
   parent_id?: string
-  rel_type?: string
+  rel_type?: TableRelTypeEnum
   name?: string
   label?: string
   row_label?: string
@@ -630,7 +635,7 @@ export class Table implements ITable {
   id: string
   project_id?: string
   parent_id?: string
-  rel_type?: string
+  rel_type?: TableRelTypeEnum
   name?: string
   label?: string
   row_label?: string
@@ -645,7 +650,7 @@ export class Table implements ITable {
     id?: string,
     project_id?: string,
     parent_id?: string,
-    rel_type?: string,
+    rel_type?: TableRelTypeEnum,
     name?: string,
     label?: string,
     row_label?: string,
@@ -659,7 +664,7 @@ export class Table implements ITable {
     this.id = id ?? uuidv1()
     if (project_id) this.project_id = project_id
     if (parent_id) this.parent_id = parent_id
-    if (rel_type) this.rel_type = rel_type
+    this.rel_type = rel_type ?? 'n'
     if (name) this.name = name
     if (label) this.label = label
     if (row_label) this.row_label = row_label
