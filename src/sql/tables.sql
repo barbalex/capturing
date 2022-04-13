@@ -188,45 +188,20 @@ ALTER publication supabase_realtime
   ADD TABLE projects;
 
 --
-DROP TABLE IF EXISTS rel_types CASCADE;
+DROP TYPE IF EXISTS table_type CASCADE;
 
-CREATE TABLE rel_types (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  value text UNIQUE,
-  sort smallint DEFAULT NULL,
-  comment text,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+CREATE TYPE table_type AS enum (
+  'standard',
+  'value_list',
+  'id_value_list'
 );
 
-CREATE INDEX ON rel_types USING btree (value);
+DROP TYPE IF EXISTS table_rel_types_enum cascade;
 
-CREATE INDEX ON rel_types USING btree (sort);
-
-CREATE INDEX ON rel_types USING btree (server_rev_at);
-
-CREATE INDEX ON rel_types USING btree (deleted);
-
-COMMENT ON TABLE rel_types IS 'Goal: list of rel_types';
-
-COMMENT ON COLUMN rel_types.value IS 'the relation type';
-
-COMMENT ON COLUMN rel_types.comment IS 'explains the version type';
-
-COMMENT ON COLUMN rel_types.sort IS 'enables sorting at will';
-
-COMMENT ON COLUMN rel_types.server_rev_at IS 'time of last edit on server';
-
-INSERT INTO rel_types (value, sort, comment)
-  VALUES ('1', 2, '1 to 1'), ('n', 1, '1 to n')
-ON CONFLICT ON CONSTRAINT rel_types_pkey
-  DO UPDATE SET
-    comment = excluded.comment;
-
-ALTER TABLE rel_types ENABLE ROW LEVEL SECURITY;
-
-ALTER publication supabase_realtime
-  ADD TABLE rel_types;
+CREATE TYPE table_rel_types_enum AS enum (
+  '1',
+  'n'
+);
 
 --
 DROP TABLE IF EXISTS role_types CASCADE;
@@ -321,9 +296,9 @@ ALTER publication supabase_realtime
   ADD TABLE project_users;
 
 --
-DROP TYPE IF EXISTS table_type;
+DROP TYPE IF EXISTS table_types_enum;
 
-CREATE TYPE table_type AS enum (
+CREATE TYPE table_types_enum AS enum (
   'standard',
   'value_list',
   'id_value_list'
@@ -333,7 +308,7 @@ DROP TABLE IF EXISTS table_types CASCADE;
 
 CREATE TABLE table_types (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  name table_type UNIQUE,
+  name table_types_enum UNIQUE,
   save_id integer DEFAULT 0,
   sort smallint DEFAULT NULL,
   comment text,
@@ -377,7 +352,7 @@ CREATE TABLE tables (
   -- project_id needs to exist for policies to work
   project_id uuid NOT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
   parent_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
-  rel_type text DEFAULT 'n' REFERENCES rel_types (value) ON DELETE NO action ON UPDATE CASCADE,
+  rel_type table_rel_types_enum DEFAULT 'n',
   name text DEFAULT NULL,
   label text DEFAULT NULL,
   row_label jsonb DEFAULT NULL,
@@ -1518,12 +1493,6 @@ DROP POLICY IF EXISTS "Users cant delete accounts" ON accounts;
 CREATE POLICY "Users cant delete accounts" ON accounts
   FOR DELETE
     USING (FALSE);
-
-DROP POLICY IF EXISTS "Users can view rel types" ON rel_types;
-
-CREATE POLICY "Users can view rel types" ON rel_types
-  FOR SELECT
-    USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "Users can view role types" ON role_types;
 
