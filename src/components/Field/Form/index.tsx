@@ -15,10 +15,10 @@ import {
   IField,
   Field,
   IFieldType,
+  IWidgetType,
   Project,
   IProjectUser,
   Table,
-  TableRelTypeEnum,
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
@@ -32,11 +32,6 @@ const FieldsContainer = styled.div`
   height: 100%;
   overflow-y: auto;
 `
-
-const relTypeDataSource = Object.values(TableRelTypeEnum).map((v) => ({
-  value: v?.toString(),
-  label: v?.toString(),
-}))
 
 type FieldFormProps = {
   id: string
@@ -66,28 +61,42 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
 
   // const data = {}
   const data: DataProps = useLiveQuery(async () => {
-    const [project, optionsTables, fields, fieldTypes, projectUser] =
-      await Promise.all([
-        dexie.projects.where({ id: projectId }).first(),
-        dexie.ttables
-          .filter(
-            (t) =>
-              t.deleted === 0 &&
-              t.project_id === projectId &&
-              ['value_list', 'id_value_list'].includes(t.type),
-          )
-          .toArray(),
-        dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
-        dexie.field_types.where({ deleted: 0 }).toArray(),
-        dexie.project_users
-          .where({
-            project_id: projectId,
-            user_email: session?.user?.email,
-          })
-          .first(),
-      ])
+    const [
+      project,
+      optionsTables,
+      fields,
+      fieldTypes,
+      widgetTypes,
+      projectUser,
+    ] = await Promise.all([
+      dexie.projects.where({ id: projectId }).first(),
+      dexie.ttables
+        .filter(
+          (t) =>
+            t.deleted === 0 &&
+            t.project_id === projectId &&
+            ['value_list', 'id_value_list'].includes(t.type),
+        )
+        .toArray(),
+      dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
+      dexie.field_types.where({ deleted: 0 }).toArray(),
+      dexie.widget_types.where({ deleted: 0 }).toArray(),
+      dexie.project_users
+        .where({
+          project_id: projectId,
+          user_email: session?.user?.email,
+        })
+        .first(),
+    ])
 
-    return { project, optionsTables, fields, fieldTypes, projectUser }
+    return {
+      project,
+      optionsTables,
+      fields,
+      fieldTypes,
+      widgetTypes,
+      projectUser,
+    }
   }, [projectId, row?.parent_id, session?.user?.email])
   const project = data?.project
   const optionsTables = sortByLabelName({
@@ -99,6 +108,7 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
     useLabels: row.use_labels,
   })
   const fieldTypes: IFieldType = data?.fieldTypes ?? []
+  const widgetTypes: IWidgetType = data?.widgetTypes ?? []
   const userRole = data?.projectUser?.role
   const userMayEdit = userRole === 'project_manager'
 
@@ -119,10 +129,23 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
       if (aVal === bVal) return 0
       return 1
     })
+  const widgetTypeValues = widgetTypes
+    .map((t) => ({
+      value: t.value,
+      label: t.value,
+    }))
+    .sort((a, b) => {
+      const aVal = a.sort ?? a.value
+      const bVal = b.sort ?? b.value
 
-  console.log('FieldForm', {
-    row,
-  })
+      if (aVal < bVal) return -1
+      if (aVal === bVal) return 0
+      return 1
+    })
+
+  // console.log('FieldForm', {
+  //   row,
+  // })
 
   const originalRow = useRef<IField>()
   // update originalRow only initially
@@ -205,7 +228,7 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
                 name="deleted"
                 value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.table?.deleted}
+                error={errors?.field?.deleted}
                 disabled={!userMayEdit}
               />
             ) : (
@@ -215,7 +238,7 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
                 name="deleted"
                 value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.table?.deleted}
+                error={errors?.field?.deleted}
                 disabled={!userMayEdit}
               />
             )}
@@ -227,7 +250,7 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
           label="Name"
           value={row.name}
           onBlur={onBlur}
-          error={errors?.table?.name}
+          error={errors?.field?.name}
           disabled={!userMayEdit}
         />
         <Checkbox2States
@@ -236,7 +259,7 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
           name="use_labels"
           value={row.use_labels}
           onBlur={onBlur}
-          error={errors?.table?.use_labels}
+          error={errors?.field?.use_labels}
           disabled={!userMayEdit}
         />
         {row.use_labels === 1 && (
@@ -246,7 +269,7 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
             label="Beschriftung"
             value={row.label}
             onBlur={onBlur}
-            error={errors?.table?.label}
+            error={errors?.field?.label}
             disabled={!userMayEdit}
           />
         )}
@@ -256,18 +279,17 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
           label="Sortierung"
           value={row.sort}
           onBlur={onBlur}
-          error={errors?.table?.sort}
+          error={errors?.field?.sort}
           disabled={!userMayEdit}
           type="number"
         />
-
         <JesNo
           key={`${row.id}is_internal_id`}
           label="Dieses Feld wird von Ihnen als ID verwendet"
           name="is_internal_id"
           value={row.is_internal_id}
           onBlur={onBlur}
-          error={errors?.table?.is_internal_id}
+          error={errors?.field?.is_internal_id}
           disabled={!userMayEdit}
         />
         <Select
@@ -278,7 +300,7 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
           label="Werte-Liste"
           options={optionsTableSelectValues}
           saveToDb={onBlur}
-          error={errors?.table?.options_table}
+          error={errors?.field?.options_table}
           disabled={!userMayEdit}
         />
         <RadioButtonGroup
@@ -289,8 +311,29 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
           label="Feld-Typ"
           dataSource={fieldTypeValues}
           onBlur={onBlur}
-          error={errors?.table?.field_type}
+          error={errors?.field?.field_type}
           disabled={!userMayEdit}
+        />
+        <RadioButtonGroup
+          key={`${row.id}widget_type`}
+          name="widget_type"
+          value={row.widget_type}
+          field="widget_type"
+          label="Widget"
+          dataSource={fieldTypeValues}
+          onBlur={onBlur}
+          error={errors?.field?.widget_type}
+          disabled={!userMayEdit}
+        />
+        <TextField
+          key={`${row?.id ?? ''}standard_value`}
+          name="standard_value"
+          label="Standard-Wert (wird in neue Datensätze eingesetzt)"
+          value={row.standard_value}
+          onBlur={onBlur}
+          error={errors?.field?.standard_value}
+          disabled={!userMayEdit}
+          type="text"
         />
         <p>{'TODO: add row_label once fields exist '}</p>
       </FieldsContainer>
