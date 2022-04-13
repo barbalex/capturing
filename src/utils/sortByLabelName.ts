@@ -4,13 +4,13 @@ import labelFromLabeledTable from './labelFromLabeledTable'
 type Objects = Table[] | Field[] | Row[]
 type Props = {
   objects: Objects
-  use_labels: boolean
+  useLabels: boolean
 }
 // works for any table with label and name that is not projects itself
-const sortByLabelName = ({ objects, use_labels }: Props): Objects =>
+const sortByLabelName = ({ objects, useLabels }: Props): Objects =>
   objects.sort((a, b) => {
-    const al = labelFromLabeledTable({ object: a, use_labels })
-    const bl = labelFromLabeledTable({ object: b, use_labels })
+    const al = labelFromLabeledTable({ object: a, useLabels })
+    const bl = labelFromLabeledTable({ object: b, useLabels })
 
     if (al < bl) return -1
     if (al === bl) return 0

@@ -84,7 +84,7 @@ const TablesComponent = () => {
   const project = data?.project
   const tables: tables[] = sortByLabelName({
     objects: data?.tables ?? [],
-    use_labels: project?.use_labels,
+    useLabels: project?.use_labels,
   })
   const filteredCount = data?.filteredCount
   const totalCount = data?.totalCount

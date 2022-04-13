@@ -35,7 +35,7 @@ const TableRow = ({ row }) => {
 
   const label = labelFromLabeledTable({
     object: row,
-    use_labels: project?.use_labels,
+    useLabels: project?.use_labels,
   })
 
   return (

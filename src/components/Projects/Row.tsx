@@ -30,7 +30,7 @@ const ProjectRow = ({ row }: ProjectRowProps) => {
 
   const label = labelFromLabeledTable({
     object: row,
-    use_labels: row.use_labels,
+    useLabels: row.use_labels,
   })
 
   return (

@@ -6,18 +6,25 @@ import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams, useNavigate } from 'react-router-dom'
 
-import StoreContext from '../../storeContext'
-import Checkbox2States from '../shared/Checkbox2States'
-import JesNo from '../shared/JesNo'
-import ErrorBoundary from '../shared/ErrorBoundary'
-import { dexie, ITable, Table, Project, IProjectUser } from '../../dexieClient'
-import { supabase } from '../../supabaseClient'
-import TextField from '../shared/TextField'
-import Select from '../shared/Select'
-import RadioButtonGroupWithInfo from '../shared/RadioButtonGroupWithInfo'
-import sortProjectsByLabelName from '../../utils/sortProjectsByLabelName'
-import sortByLabelName from '../../utils/sortByLabelName'
-import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
+import StoreContext from '../../../storeContext'
+import Checkbox2States from '../../shared/Checkbox2States'
+import JesNo from '../../shared/JesNo'
+import ErrorBoundary from '../../shared/ErrorBoundary'
+import {
+  dexie,
+  ITable,
+  Table,
+  Project,
+  IProjectUser,
+} from '../../../dexieClient'
+import { supabase } from '../../../supabaseClient'
+import TextField from '../../shared/TextField'
+import Select from '../../shared/Select'
+import RadioButtonGroupWithInfo from '../../shared/RadioButtonGroupWithInfo'
+import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
+import sortByLabelName from '../../../utils/sortByLabelName'
+import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
+import RelTypePopover from './RelTypePopover'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -45,6 +52,7 @@ type DataProps = {
   project: Project
   projects: Project[]
   tables: Table[]
+  relTable: Table
   projectUser: IProjectUser
 }
 
@@ -61,32 +69,35 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
   ) // TODO: add errors, unsetError in store
 
   const data: DataProps = useLiveQuery(async () => {
-    const [project, projects, tables, projectUser] = await Promise.all([
-      dexie.projects.where({ id: projectId }).first(),
-      dexie.projects.where({ deleted: 0 }).toArray(),
-      dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
-      dexie.project_users
-        .where({
-          project_id: projectId,
-          user_email: session?.user?.email,
-        })
-        .first(),
-    ])
+    const [project, projects, tables, relTable, projectUser] =
+      await Promise.all([
+        dexie.projects.where({ id: projectId }).first(),
+        dexie.projects.where({ deleted: 0 }).toArray(),
+        dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
+        dexie.ttables.where({ id: row.parent_id }).first(),
+        dexie.project_users
+          .where({
+            project_id: projectId,
+            user_email: session?.user?.email,
+          })
+          .first(),
+      ])
 
-    return { project, projects, tables, projectUser }
+    return { project, projects, tables, relTable, projectUser }
   })
   const project = data?.project
   const projects = sortProjectsByLabelName(data?.projects ?? [])
   const tables: Table[] = sortByLabelName({
     objects: data?.tables ?? [],
-    use_labels: row.use_labels,
+    useLabels: row.use_labels,
   })
+  const relTable = data?.relTable
   const userRole = data?.projectUser?.role
   const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
 
   const projectSelectValues = projects.map((p) => ({
     value: p.id,
-    label: labelFromLabeledTable({ object: p, use_labels: p.use_labels }),
+    label: labelFromLabeledTable({ object: p, useLabels: p.use_labels }),
   }))
 
   const tablesSelectValues = tables
@@ -96,7 +107,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
       value: t.id,
       label: labelFromLabeledTable({
         object: t,
-        use_labels: project.use_labels,
+        useLabels: project.use_labels,
       }),
     }))
 
@@ -163,17 +174,6 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
   // const showDeleted = filter?.table?.deleted !== false || row?.deleted
   const showDeleted = false
 
-  const RelTypePopover = (
-    <>
-      <p>
-        {`1 heisst: Pro Datensatz in der verknüpften Tabelle ('Geschwister') soll höchstens einer in dieser Tabelle existieren können`}
-      </p>
-      <p>
-        {`n heisst: Pro Datensatz in der verknüpften Tabelle ('Mutter') sollen mehrere (n) in dieser Tabelle existieren können`}
-      </p>
-    </>
-  )
-
   return (
     <ErrorBoundary>
       <FieldsContainer
@@ -219,7 +219,6 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           error={errors?.table?.name}
           disabled={!userMayEdit}
         />
-
         <Checkbox2States
           key={`${row.id}use_labels`}
           label="Zusätzlich zu Namen Beschriftungen verwenden"
@@ -270,7 +269,13 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
             onBlur={onBlur}
             label="Beziehung zur verknüpften Tabelle"
             error={errors?.table?.rel_type}
-            popover={RelTypePopover}
+            popover={
+              <RelTypePopover
+                ownTable={row}
+                parentTable={relTable}
+                useLabels={row.use_labels}
+              />
+            }
           />
         )}
         <TextField
