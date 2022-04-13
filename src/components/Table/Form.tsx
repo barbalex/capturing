@@ -14,6 +14,7 @@ import { dexie, ITable, Table, Project, IProjectUser } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
 import Select from '../shared/Select'
+import RadioButtonGroupWithInfo from '../shared/RadioButtonGroupWithInfo'
 import sortProjectsByLabelName from '../../utils/sortProjectsByLabelName'
 import sortByLabelName from '../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
@@ -23,6 +24,17 @@ const FieldsContainer = styled.div`
   height: 100%;
   overflow-y: auto;
 `
+
+const relTypeDataSource = [
+  {
+    value: '1',
+    label: '1',
+  },
+  {
+    value: 'n',
+    label: 'n',
+  },
+]
 
 type TableFormProps = {
   id: string
@@ -151,6 +163,17 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
   // const showDeleted = filter?.table?.deleted !== false || row?.deleted
   const showDeleted = false
 
+  const RelTypePopover = (
+    <>
+      <p>
+        {`1 heisst: Pro Datensatz in der verknüpften Tabelle ('Geschwister') soll höchstens einer in dieser Tabelle existieren können`}
+      </p>
+      <p>
+        {`n heisst: Pro Datensatz in der verknüpften Tabelle ('Mutter') sollen mehrere (n) in dieser Tabelle existieren können`}
+      </p>
+    </>
+  )
+
   return (
     <ErrorBoundary>
       <FieldsContainer
@@ -233,12 +256,23 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           name="parent_id"
           value={row.parent_id}
           field="parent_id"
-          label="Eltern-Tabelle"
+          label="Verknüpfte Tabelle (Mutter: 1:n, Geschwister: 1:1)"
           options={tablesSelectValues}
           saveToDb={onBlur}
           error={errors?.table?.parent_id}
           disabled={!userMayEdit}
         />
+        {row.parent_id && (
+          <RadioButtonGroupWithInfo
+            value={row.rel_type}
+            name="rel_type"
+            dataSource={relTypeDataSource}
+            onBlur={onBlur}
+            label="Beziehung zur verknüpften Tabelle"
+            error={errors?.table?.rel_type}
+            popover={RelTypePopover}
+          />
+        )}
         <TextField
           key={`${row.id}sort`}
           name="sort"
