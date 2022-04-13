@@ -11,8 +11,9 @@ import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import { dexie, Table, IProjectUser } from '../../dexieClient'
+import { dexie, Table, IProjectUser, Project } from '../../dexieClient'
 import insertTable from '../../utils/insertTable'
+import sortByLabelName from '../../utils/sortByLabelName'
 import FilterNumbers from '../shared/FilterNumbers'
 import { supabase } from '../../supabaseClient'
 
@@ -52,6 +53,7 @@ type DataProps = {
   filteredCount: integer
   totalCount: integer
   projectUser: IProjectUser
+  project: Project
 }
 
 const TablesComponent = () => {
@@ -63,21 +65,27 @@ const TablesComponent = () => {
     store
 
   const data: DataProps = useLiveQuery(async () => {
-    const [tables, filteredCount, totalCount, projectUser] = await Promise.all([
-      dexie.ttables.where({ deleted: 0, project_id: projectId }).sortBy('name'), // TODO: if project.use_labels, use label
-      dexie.ttables.where({ deleted: 0, project_id: projectId }).count(), // TODO: pass in filter
-      dexie.ttables.where({ deleted: 0, project_id: projectId }).count(),
-      dexie.project_users
-        .where({
-          project_id: projectId,
-          user_email: session?.user?.email,
-        })
-        .first(),
-    ])
+    const [tables, filteredCount, totalCount, projectUser, project] =
+      await Promise.all([
+        dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(), // TODO: if project.use_labels, use label
+        dexie.ttables.where({ deleted: 0, project_id: projectId }).count(), // TODO: pass in filter
+        dexie.ttables.where({ deleted: 0, project_id: projectId }).count(),
+        dexie.project_users
+          .where({
+            project_id: projectId,
+            user_email: session?.user?.email,
+          })
+          .first(),
+        dexie.projects.where({ id: projectId }).first(),
+      ])
 
-    return { tables, filteredCount, totalCount, projectUser }
+    return { tables, filteredCount, totalCount, projectUser, project }
   })
-  const tables: Table = data?.tables ?? []
+  const project = data?.project
+  const tables: tables[] = sortByLabelName({
+    objects: data?.tables ?? [],
+    use_labels: project?.use_labels,
+  })
   const filteredCount = data?.filteredCount
   const totalCount = data?.totalCount
   const userRole = data?.projectUser?.role
