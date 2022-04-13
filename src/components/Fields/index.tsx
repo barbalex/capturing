@@ -5,7 +5,7 @@ import { FaPlus, FaArrowUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 
 import storeContext from '../../storeContext'
 import Row from './Row'
@@ -81,6 +81,7 @@ const FieldsComponent = () => {
 
     return { fields, filteredCount, totalCount, projectUser, project }
   }, [tableId, projectId, session?.user?.email])
+
   const project = data?.project
   const fields: Fields[] = sortByLabelName({
     objects: data?.fields ?? [],
@@ -89,7 +90,7 @@ const FieldsComponent = () => {
   const filteredCount = data?.filteredCount
   const totalCount = data?.totalCount
   const userRole = data?.projectUser?.role
-  const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
+  const userMayEdit = userRole === 'project_manager'
   // console.log('Fields', {
   //   userMayEdit,
   //   projectUser: data?.projectUser,
@@ -104,8 +105,7 @@ const FieldsComponent = () => {
 
   const onClickUp = useCallback(() => {
     removeOpenNode(activeNodeArray)
-    setActiveNodeArray(activeNodeArray.slice(0, -1))
-  }, [activeNodeArray, removeOpenNode, setActiveNodeArray])
+  }, [activeNodeArray, removeOpenNode])
 
   return (
     <ErrorBoundary>
@@ -113,7 +113,13 @@ const FieldsComponent = () => {
         <TitleContainer>
           <Title>Tabellen</Title>
           <TitleSymbols>
-            <IconButton title="Zum Projekt" onClick={onClickUp} size="large">
+            <IconButton
+              title="Zur Tabelle"
+              component={Link}
+              to={`/${activeNodeArray.slice(0, -1).join('/')}`}
+              onClick={onClickUp}
+              size="large"
+            >
               <FaArrowUp />
             </IconButton>
             <IconButton
