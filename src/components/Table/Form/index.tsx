@@ -28,6 +28,7 @@ import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
 import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import RelTypePopover from './RelTypePopover'
+import RowLabel from './RowLabel'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -312,7 +313,12 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           disabled={!userMayEdit}
           type="number"
         />
-        <p>{'TODO: add row_label once fields exist '}</p>
+        <p>
+          {
+            'TODO: add row_label once fields exist. Use: https://github.com/atlassian/react-beautiful-dnd, https://react-beautiful-dnd.netlify.app/?path=/story/board--simple '
+          }
+        </p>
+        <RowLabel project={project} />
       </FieldsContainer>
     </ErrorBoundary>
   )
