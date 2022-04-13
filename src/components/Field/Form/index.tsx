@@ -16,6 +16,7 @@ import {
   Field,
   Project,
   IProjectUser,
+  Table,
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
@@ -51,14 +52,14 @@ type FieldFormProps = {
 type DataProps = {
   project: Project
   projects: Project[]
-  tables: Field[]
-  relTable: Field
+  fields: Field[]
+  optionsTable: Table
   projectUser: IProjectUser
 }
 
 // = '99999999-9999-9999-9999-999999999999'
 const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
-  const { projectId } = useParams()
+  const { projectId, tableId } = useParams()
   const store = useContext(StoreContext)
   const { filter, errors } = store
   const session: Session = supabase.auth.session()
@@ -71,16 +72,15 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
 
   // const data = {}
   const data: DataProps = useLiveQuery(async () => {
-    const [project, projects, tables, relTable, projectUser] =
+    const [project, optionsTables, fields, optionsTable, projectUser] =
       await Promise.all([
         dexie.projects.where({ id: projectId }).first(),
-        dexie.projects.where({ deleted: 0 }).toArray(),
         dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
+        dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
         dexie.ttables
-          .where({
-            id: row?.parent_id ?? '99999999-9999-9999-9999-999999999999',
-          })
-          .first(),
+          .where('type')
+          .anyOf(['value_list', 'id_value_list'])
+          .toArray(),
         dexie.project_users
           .where({
             project_id: projectId,
@@ -89,33 +89,25 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
           .first(),
       ])
 
-    return { project, projects, tables, relTable, projectUser }
+    return { project, optionsTables, fields, optionsTable, projectUser }
   }, [projectId, row?.parent_id, session?.user?.email])
   const project = data?.project
-  const projects = sortProjectsByLabelName(data?.projects ?? [])
-  const tables: Field[] = sortByLabelName({
+  const optionsTables = sortByLabelName({
     objects: data?.tables ?? [],
     useLabels: row.use_labels,
   })
-  const relTable = data?.relTable
+  const fields: Field[] = sortByLabelName({
+    objects: data?.fields ?? [],
+    useLabels: row.use_labels,
+  })
+  const optionsTable = data?.optionsTable
   const userRole = data?.projectUser?.role
-  const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
+  const userMayEdit = userRole === 'project_manager'
 
-  const projectSelectValues = projects.map((p) => ({
-    value: p.id,
-    label: labelFromLabeledTable({ object: p, useLabels: p.use_labels }),
+  const tableSelectValues = optionsTables.map((t) => ({
+    value: t.id,
+    label: labelFromLabeledTable({ object: t, useLabels: project.use_labels }),
   }))
-
-  const tablesSelectValues = tables
-    // do not list own table
-    .filter((t) => t.id !== id)
-    .map((t) => ({
-      value: t.id,
-      label: labelFromLabeledTable({
-        object: t,
-        useLabels: project?.use_labels,
-      }),
-    }))
 
   // console.log('ProjectForm rendering row:', row)
 
@@ -164,7 +156,7 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
 
       if (showFilter) {
         return filter.setValue({
-          table: 'table',
+          table: 'field',
           key: field,
           value: newValue,
         })
@@ -172,7 +164,7 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
 
       const newRow = { ...row, [field]: newValue }
       rowState.current = newRow
-      dexie.ttables.put(newRow)
+      dexie.fields.put(newRow)
     },
     [filter, row, showFilter],
   )
@@ -245,45 +237,6 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
             disabled={!userMayEdit}
           />
         )}
-        <Select
-          key={`${row.id}${row?.project_id ?? ''}project_id`}
-          name="project_id"
-          value={row.project_id}
-          field="project_id"
-          label="Gehört zum Projekt"
-          options={projectSelectValues}
-          saveToDb={onBlur}
-          error={errors?.table?.project_id}
-          disabled={!userMayEdit}
-        />
-        <Select
-          key={`${row.id}${row?.parent_id ?? ''}parent_id`}
-          name="parent_id"
-          value={row.parent_id}
-          field="parent_id"
-          label="Verknüpfte Tabelle (Mutter: 1:n, Geschwister: 1:1)"
-          options={tablesSelectValues}
-          saveToDb={onBlur}
-          error={errors?.table?.parent_id}
-          disabled={!userMayEdit}
-        />
-        {!!row.parent_id && (
-          <RadioButtonGroupWithInfo
-            value={row.rel_type}
-            name="rel_type"
-            dataSource={relTypeDataSource}
-            onBlur={onBlur}
-            label="Beziehung zur verknüpften Tabelle"
-            error={errors?.table?.rel_type}
-            popover={
-              <RelTypePopover
-                ownTable={row}
-                parentTable={relTable}
-                useLabels={row.use_labels}
-              />
-            }
-          />
-        )}
         <TextField
           key={`${row?.id ?? ''}sort`}
           name="sort"
@@ -293,6 +246,17 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
           error={errors?.table?.sort}
           disabled={!userMayEdit}
           type="number"
+        />
+        <Select
+          key={`${row.id}${row?.options_table ?? ''}options_table`}
+          name="options_table"
+          value={row.options_table}
+          field="options_table"
+          label="Optionen-Tabelle"
+          options={tableSelectValues}
+          saveToDb={onBlur}
+          error={errors?.table?.options_table}
+          disabled={!userMayEdit}
         />
         <p>{'TODO: add row_label once fields exist '}</p>
       </FieldsContainer>
