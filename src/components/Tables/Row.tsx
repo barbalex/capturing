@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 
 import StoreContext from '../../storeContext'
 import constants from '../../utils/constants'
+import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
 import { dexie, Project } from '../../dexieClient'
 
 const StyledListItem = styled(ListItem)`
@@ -32,10 +33,10 @@ const TableRow = ({ row }) => {
     async () => await dexie.projects.where({ id: projectId }).first(),
   )
 
-  const label =
-    project?.use_labels === 1 && row.label
-      ? row.label
-      : row.name ?? '(unbenannt)'
+  const label = labelFromLabeledTable({
+    object: row,
+    use_labels: project?.use_labels,
+  })
 
   return (
     <StyledListItem

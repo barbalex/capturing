@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 
 import StoreContext from '../../storeContext'
 import constants from '../../utils/constants'
+import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
 import { Project } from '../../dexieClient'
 
 const StyledListItem = styled(ListItem)`
@@ -27,8 +28,10 @@ const ProjectRow = ({ row }: ProjectRowProps) => {
   const store = useContext(StoreContext)
   const { activeNodeArray } = store
 
-  const label =
-    row.use_labels === 1 && row.label ? row.label : row.name ?? '(unbenannt)'
+  const label = labelFromLabeledTable({
+    object: row,
+    use_labels: row.use_labels,
+  })
 
   return (
     <StyledListItem
