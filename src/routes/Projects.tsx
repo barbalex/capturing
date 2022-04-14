@@ -14,6 +14,8 @@ import TablesComponent from '../components/Tables'
 import TableComponent from '../components/Table'
 import FieldsComponent from '../components/Fields'
 import FieldComponent from '../components/Field'
+import RowsComponent from '../components/Rows'
+import RowComponent from '../components/Row'
 import { supabase } from '../supabaseClient'
 
 const StyledSplitPane = styled(SplitPane)`
@@ -113,6 +115,14 @@ const ProjectsPage = () => {
             <Route
               path=":projectId/tables/:tableId/fields/:fieldId"
               element={<FieldComponent />}
+            />
+            <Route
+              path=":projectId/tables/:tableId/rows/*"
+              element={<RowsComponent />}
+            />
+            <Route
+              path=":projectId/tables/:tableId/rows/:rowId"
+              element={<RowComponent />}
             />
           </Routes>
         </StyledSplitPane>

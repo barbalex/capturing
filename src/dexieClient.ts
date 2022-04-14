@@ -4,6 +4,9 @@ import Dexie, { DexieTable } from 'dexie'
 import relationships from 'dexie-relationships'
 import { v1 as uuidv1 } from 'uuid'
 import { Session } from '@supabase/supabase-js'
+import sortBy from 'lodash/sortBy'
+
+import labelFromLabeledTable from './utils/labelFromLabeledTable'
 
 export interface IAccount {
   id: string
@@ -577,7 +580,7 @@ export class Row implements IRow {
 
   constructor(
     id?: string,
-    table_id?: string,
+    table_id: string,
     parent_id?: string,
     geometry?: string,
     geometry_n?: number,
@@ -596,7 +599,7 @@ export class Row implements IRow {
     conflicts?: string[],
   ) {
     this.id = id ?? uuidv1()
-    if (table_id) this.table_id = table_id
+    this.table_id = table_id
     if (parent_id) this.parent_id = parent_id
     if (geometry) this.geometry = geometry
     if (geometry_n) this.geometry_n = geometry_n
@@ -613,6 +616,39 @@ export class Row implements IRow {
     this.depth = depth ?? 0
     this.deleted = deleted ?? 0
     if (conflicts) this.conflicts = conflicts
+  }
+
+  get label() {
+    // TODO:
+    // 1. fetch this row's table
+    // 2. read table.row_label
+    // 3. fetch all the field's labels
+    // 4. return string concatenated from field labels and text's
+    // need an iife because javascript has no async getters
+    return (async () => {
+      const table: Table = await dexie.ttables.get(this.table_id)
+      const project: Project = await dexie.projects.get(table.project_id)
+      const labelArray = table.row_label
+        ? JSON.parse(table.row_label)
+        : undefined
+      if (!labelArray) return this.id
+      let label = ''
+      const lASorted = sortBy(labelArray, 'index')
+      // array elements are: {field: field_id, text: 'field', index: 1}
+      for (const el of labelArray) {
+        // TODO:
+        if (el.field_id) {
+          const field: Field = await dexie.fields.get(el.field_id)
+          label += labelFromLabeledTable({
+            object: field,
+            useLabels: project.use_labels ?? 0,
+          })
+        } else {
+          label += el.text ?? ''
+        }
+      }
+      return label
+    })()
   }
 }
 
@@ -641,7 +677,7 @@ export class Table implements ITable {
   rel_type?: TableRelTypeEnum
   name?: string
   label?: string
-  row_label?: string
+  row_label?: string // stringified json
   sort?: number
   type?: string
   client_rev_at?: Date
