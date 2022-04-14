@@ -31,7 +31,7 @@ const Target = styled.div`
  *      or
  *         have a table 'table_row_label_parts' with fields: table_id, sort, type, value
  *         and in class Table a get function to fetch the table's row label or use https://github.com/ignasbernotas/dexie-relationships
- *         No, because: new table needs to be synced... Much easier to have a jsonb field in already synced table
+ *         No, because: new table needs to be policied and synced. Much easier to have a jsonb field in already synced table
  * 2. presentation: only the drop area
  * 3. remind user to first define the fields
  */
