@@ -609,13 +609,13 @@ COMMENT ON COLUMN rows.parent_id IS 'associated row in the parent table (which m
 
 COMMENT ON COLUMN rows.geometry IS 'row geometry (GeometryCollection)';
 
-COMMENT ON COLUMN rows.geometry_n IS 'Northernmost point of the geometry. Used to filter geometries for viewport client-side';
+COMMENT ON COLUMN rows.geometry_n IS 'Northernmost point of the geometry. Set client-side on every change of geometry. Used to filter geometries for viewport client-side';
 
-COMMENT ON COLUMN rows.geometry_e IS 'Easternmost point of the geometry. Used to filter geometries for viewport client-side';
+COMMENT ON COLUMN rows.geometry_e IS 'Easternmost point of the geometry. Set client-side on every change of geometry. Used to filter geometries for viewport client-side';
 
-COMMENT ON COLUMN rows.geometry_s IS 'Southernmost point of the geometry. Used to filter geometries for viewport client-side';
+COMMENT ON COLUMN rows.geometry_s IS 'Southernmost point of the geometry. Set client-side on every change of geometry. Used to filter geometries for viewport client-side';
 
-COMMENT ON COLUMN rows.geometry_w IS 'Westernmost point of the geometry. Used to filter geometries for viewport client-side';
+COMMENT ON COLUMN rows.geometry_w IS 'Westernmost point of the geometry. Set client-side on every change of geometry. Used to filter geometries for viewport client-side';
 
 COMMENT ON COLUMN rows.data IS 'fields (keys) and data (values) according to the related fields table';
 
