@@ -43,7 +43,7 @@ const processQueuedUpdate = async ({
       depth,
       parent_rev: queuedUpdate.revert_value?.rev ?? null,
     }
-    const rev = `${_depth}-${md5(JSON.stringify(newRevObject))}`
+    const rev = `${depth}-${md5(JSON.stringify(newRevObject))}`
     newRevObject.rev = rev
     newRevObject.id = uuidv1()
     newObject.revisions = isInsert ? [rev] : [rev, ...newObject.revisions]

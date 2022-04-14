@@ -207,7 +207,7 @@ export class File implements IFile {
     if (server_rev_at) this.server_rev_at = server_rev_at
     if (rev) this.rev = rev
     if (parent_rev) this.parent_rev = parent_rev
-    if (revisions) this.revisions = revisions
+    this.revisions = revisions ?? []
     this.depth = depth ?? 0
     if (conflicts) this.conflicts = conflicts
   }
@@ -613,7 +613,7 @@ export class Row implements IRow {
     if (server_rev_at) this.server_rev_at = server_rev_at
     if (rev) this.rev = rev
     if (parent_rev) this.parent_rev = parent_rev
-    if (revisions) this.revisions = revisions
+    this.revisions = revisions ?? []
     this.depth = depth ?? 0
     this.deleted = deleted ?? 0
     if (conflicts) this.conflicts = conflicts
