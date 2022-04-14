@@ -76,7 +76,7 @@ const RowForm = ({
     row.label.then((v) => setLabel(v))
   }, [row])
 
-  console.log('RowForm rendering row:', { row, label })
+  // console.log('RowForm rendering row:', { row, label })
 
   useEffect(() => {
     unsetError('row')
