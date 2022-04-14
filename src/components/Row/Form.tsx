@@ -9,15 +9,28 @@ import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
 import { Session } from '@supabase/supabase-js'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { useParams } from 'react-router-dom'
 
 import StoreContext from '../../storeContext'
-import Checkbox2States from '../shared/Checkbox2States'
-import JesNo from '../shared/JesNo'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import ConflictList from '../shared/ConflictList'
-import { dexie, Row, IRow } from '../../dexieClient'
+import {
+  dexie,
+  Row,
+  IRow,
+  Project,
+  Field,
+  IFieldType,
+  IWidgetType,
+  IProjectUser,
+} from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
+import Select from '../shared/Select'
+import Checkbox2States from '../shared/Checkbox2States'
+import JesNo from '../shared/JesNo'
+import RadioButtonGroup from '../shared/RadioButtonGroup'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -33,6 +46,9 @@ const Rev = styled.span`
   color: rgba(0, 0, 0, 0.4);
   font-size: 0.8em;
 `
+const FieldContainer = styled.div`
+  border-bottom: 1px solid lightgrey;
+`
 
 type RowFormProps = {
   activeConflict: string
@@ -43,6 +59,13 @@ type RowFormProps = {
   showHistory: (boolean) => void
 }
 
+type DataProps = {
+  project: Project
+  rows: Row[]
+  fields: Field[]
+  projectUser: IProjectUser
+}
+
 const RowForm = ({
   activeConflict,
   id,
@@ -51,6 +74,7 @@ const RowForm = ({
   showFilter,
   showHistory,
 }: RowFormProps) => {
+  const { tableId, projectId } = useParams()
   const store = useContext(StoreContext)
   const { filter, online, errors } = store
   const session: Session = supabase.auth.session()
@@ -77,6 +101,40 @@ const RowForm = ({
   }, [row])
 
   // console.log('RowForm rendering row:', { row, label })
+  // TODO: build right queries
+  const data: DataProps = useLiveQuery(async () => {
+    const [project, rows, fields, fieldTypes, widgetTypes, projectUser] =
+      await Promise.all([
+        dexie.projects.get(projectId),
+        dexie.rows.where({ deleted: 0, table_id: tableId }).toArray(),
+        dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
+        dexie.field_types.where({ deleted: 0 }).toArray(),
+        dexie.widget_types.where({ deleted: 0 }).toArray(),
+        dexie.project_users.get({
+          project_id: projectId,
+          user_email: session?.user?.email,
+        }),
+      ])
+
+    return {
+      project,
+      rows,
+      fields,
+      fieldTypes,
+      widgetTypes,
+      projectUser,
+    }
+  }, [projectId, tableId, session?.user?.email])
+
+  const project: Project = data?.project
+  const rows: Row[] = data?.rows ?? []
+  const fields: Field[] = data?.fields ?? []
+  const fieldTypes: IFieldType[] = data?.fieldTypes ?? []
+  const widgetTypes: IWidgetType[] = data?.widgetTypes ?? []
+  const userRole = data?.projectUser?.role
+  const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
+
+  console.log('RowForm', { row, fields })
 
   useEffect(() => {
     unsetError('row')
@@ -174,6 +232,87 @@ const RowForm = ({
           error={errors?.row?.id}
           disabled={true}
         />
+        {fields.map((f) => {
+          const widgetByType = {
+            text: TextField,
+            textarea: () => <div>textarea</div>,
+          }
+          switch (f.widget_type) {
+            case 'datepicker':
+              return (
+                <FieldContainer key={f.id}>
+                  <div>datepicker</div>
+                  <div>{JSON.stringify(f)}</div>
+                </FieldContainer>
+              )
+              break
+            case 'filepicker':
+              return (
+                <FieldContainer key={f.id}>
+                  <div>filepicker</div>
+                  <div>{JSON.stringify(f)}</div>
+                </FieldContainer>
+              )
+              break
+            case 'markdown':
+              return (
+                <FieldContainer key={f.id}>
+                  <div>markdown</div>
+                  <div>{JSON.stringify(f)}</div>
+                </FieldContainer>
+              )
+              break
+            case 'options-2':
+              return (
+                <FieldContainer key={f.id}>
+                  <div>options-2</div>
+                  <div>{JSON.stringify(f)}</div>
+                </FieldContainer>
+              )
+              break
+            case 'options-3':
+              return (
+                <FieldContainer key={f.id}>
+                  <div>options-3</div>
+                  <div>{JSON.stringify(f)}</div>
+                </FieldContainer>
+              )
+              break
+            case 'options-few':
+              return (
+                <FieldContainer key={f.id}>
+                  <div>options-few</div>
+                  <div>{JSON.stringify(f)}</div>
+                </FieldContainer>
+              )
+              break
+            case 'options-many':
+              return (
+                <FieldContainer key={f.id}>
+                  <div>options-many</div>
+                  <div>{JSON.stringify(f)}</div>
+                </FieldContainer>
+              )
+              break
+            case 'textarea':
+              return (
+                <FieldContainer key={f.id}>
+                  <div>textarea</div>
+                  <div>{JSON.stringify(f)}</div>
+                </FieldContainer>
+              )
+              break
+            case 'text':
+            default:
+              return (
+                <FieldContainer key={f.id}>
+                  <div>text</div>
+                  <div>{JSON.stringify(f)}</div>
+                </FieldContainer>
+              )
+              break
+          }
+        })}
 
         {online && !showFilter && row?._conflicts?.map && (
           <ConflictList
