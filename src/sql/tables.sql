@@ -491,6 +491,9 @@ ALTER TABLE widgets_for_fields ENABLE ROW LEVEL SECURITY;
 ALTER publication supabase_realtime
   ADD TABLE widgets_for_fields;
 
+INSERT INTO widgets_for_fields (id, field_value, widget_value, server_rev_at, deleted)
+  VALUES ('48248dd4-bc27-11ec-8422-0242ac120002', 'text', 'text', '2021-04-27 15:14:25.180827+00', 0), ('48249068-bc27-11ec-8422-0242ac120002', 'text', 'markdown', '2021-04-27 15:14:25.180827+00', 0), ('48249194-bc27-11ec-8422-0242ac120002', 'boolean', 'options-2', '2021-04-27 15:14:25.180827+00', 0), ('482492ca-bc27-11ec-8422-0242ac120002', 'boolean', 'options-3', '2021-04-27 15:14:25.180827+00', 0), ('482495b8-bc27-11ec-8422-0242ac120002', 'integer', 'text', '2021-04-27 15:14:25.180827+00', 0), ('482496e4-bc27-11ec-8422-0242ac120002', 'decimal', 'text', '2021-04-27 15:14:25.180827+00', 0), ('48249810-bc27-11ec-8422-0242ac120002', 'text', 'options-many', '2021-04-27 15:14:25.180827+00', 0), ('48249932-bc27-11ec-8422-0242ac120002', 'integer', 'options-many', '2021-04-27 15:14:25.180827+00', 0), ('48249a5e-bc27-11ec-8422-0242ac120002', 'text', 'options-few', '2021-04-27 15:14:25.180827+00', 0), ('48249b6c-bc27-11ec-8422-0242ac120002', 'integer', 'options-few', '2021-04-27 15:14:25.180827+00', 0), ('48249c7a-bc27-11ec-8422-0242ac120002', 'date', 'datepicker', '2021-04-27 15:14:25.180827+00', 0), ('48249fae-bc27-11ec-8422-0242ac120002', 'date-time', 'datepicker', '2021-04-27 15:14:25.180827+00', 0), ('4824a0c6-bc27-11ec-8422-0242ac120002', 'text', 'textarea', '2021-04-27 15:14:25.180827+00', 0), ('4824a1d4-bc27-11ec-8422-0242ac120002', 'file-reference', 'filepicker', '2021-04-27 15:14:25.180827+00', 0);
+
 --
 DROP TABLE IF EXISTS fields CASCADE;
 
