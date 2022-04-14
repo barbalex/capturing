@@ -558,6 +558,7 @@ export interface IRow {
   conflicts?: string[]
 }
 
+type RowUpdateProps = { row: IRow; session: Session }
 export class Row implements IRow {
   id: string
   table_id?: string
@@ -631,11 +632,12 @@ export class Row implements IRow {
       const labelArray = table.row_label
         ? JSON.parse(table.row_label)
         : undefined
-      if (!labelArray) return this.id
+      if (!labelArray)
+        return `${this.id} (labels are not configured for '${table.name}')`
       let label = ''
       const lASorted = sortBy(labelArray, 'index')
       // array elements are: {field: field_id, text: 'field', index: 1}
-      for (const el of labelArray) {
+      for (const el of lASorted) {
         // TODO:
         if (el.field_id) {
           const field: Field = await dexie.fields.get(el.field_id)
@@ -649,6 +651,29 @@ export class Row implements IRow {
       }
       return label
     })()
+  }
+
+  async updateOnServer({ row, session }: RowUpdateProps) {
+    const rowReved = {
+      ...row,
+      client_rev_at: new window.Date().toISOString(),
+      client_rev_by: session.user?.email ?? session.user?.id,
+    }
+    const update = new QueuedUpdate(
+      undefined,
+      undefined,
+      'row_revs',
+      JSON.stringify(rowReved),
+      row?.id,
+      JSON.stringify(this),
+    )
+    return dexie.queued_updates.add(update)
+  }
+
+  async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    this.deleted = 1
+    dexie.rows.put(this)
+    this.updateOnServer({ row: this, session })
   }
 }
 
@@ -1001,7 +1026,7 @@ export class MySubClassedDexie extends Dexie {
         'id, label, name, server_rev_at, deleted, use_labels, [deleted+id]',
       rel_types: 'id, &value, sort, server_rev_at, deleted',
       role_types: 'id, &value, sort, server_rev_at, deleted',
-      rows: 'id, server_rev_at, deleted',
+      rows: 'id, server_rev_at, deleted, [deleted+table_id]',
       // name tables causes error because used internally, see: https://github.com/dexie/Dexie.js/issues/1537
       ttables:
         'id, label, name, sort, project_id, parent_id, rel_type, type, server_rev_at, deleted, [deleted+project_id]',

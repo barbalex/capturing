@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SplitPane from 'react-split-pane'
 import { useParams } from 'react-router-dom'
-import { dexie, Project } from '../../dexieClient'
+import { dexie, Row } from '../../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../storeContext'
@@ -50,15 +50,15 @@ const StyledSplitPane = styled(SplitPane)`
   }
 `
 
-const ProjectComponent = ({ filter: showFilter }) => {
-  const { projectId } = useParams()
+const RowComponent = ({ filter: showFilter }) => {
+  const { rowId } = useParams()
   const store = useContext(StoreContext)
   const { online } = store
   const filter = 'TODO: was in store'
 
-  const row: Project = useLiveQuery(
-    async () => await dexie.projects.get(projectId),
-    [projectId],
+  const row: Row = useLiveQuery(
+    async () => await dexie.rows.get(rowId),
+    [rowId],
   )
 
   // console.log('Project rendering row:', { row, projectId })
@@ -76,7 +76,7 @@ const ProjectComponent = ({ filter: showFilter }) => {
   // when changing dataset
   useEffect(() => {
     setActiveConflict(null)
-  }, [projectId])
+  }, [rowId])
 
   const [showHistory, setShowHistory] = useState(null)
   const historyTakeoverCallback = useCallback(() => setShowHistory(null), [])
@@ -108,7 +108,7 @@ const ProjectComponent = ({ filter: showFilter }) => {
           >
             <Form
               showFilter={showFilter}
-              id={projectId}
+              id={rowId}
               row={row}
               activeConflict={activeConflict}
               setActiveConflict={setActiveConflict}
@@ -120,7 +120,7 @@ const ProjectComponent = ({ filter: showFilter }) => {
                   {activeConflict ? (
                     <div
                       rev={activeConflict}
-                      id={projectId}
+                      id={rowId}
                       row={row}
                       conflictDisposalCallback={conflictDisposalCallback}
                       conflictSelectionCallback={conflictSelectionCallback}
@@ -146,4 +146,4 @@ const ProjectComponent = ({ filter: showFilter }) => {
   )
 }
 
-export default observer(ProjectComponent)
+export default observer(RowComponent)

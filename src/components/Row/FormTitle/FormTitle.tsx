@@ -34,7 +34,7 @@ const TitleSymbols = styled.div`
   margin-bottom: auto;
 `
 
-const ProjectFormTitle = ({
+const RowFormTitle = ({
   row,
   totalCount,
   filteredCount,
@@ -45,14 +45,14 @@ const ProjectFormTitle = ({
   if (width < 520) {
     return (
       <TitleContainer>
-        <Title>Projekt</Title>
+        <Title>Datensatz</Title>
         <TitleSymbols>
           <NavButtons />
           <AddButton />
           <DeleteButton row={row} />
           <Menu white={false}>
             <HistoryButton
-              table="projects"
+              table="rows"
               id={row.id}
               showHistory={showHistory}
               setShowHistory={setShowHistory}
@@ -71,13 +71,13 @@ const ProjectFormTitle = ({
 
   return (
     <TitleContainer>
-      <Title>Projekt</Title>
+      <Title>Datensatz</Title>
       <TitleSymbols>
         <NavButtons />
         <AddButton />
         <DeleteButton row={row} />
         <HistoryButton
-          table="projects"
+          table="rows"
           id={row.id}
           showHistory={showHistory}
           setShowHistory={setShowHistory}
@@ -88,4 +88,4 @@ const ProjectFormTitle = ({
   )
 }
 
-export default withResizeDetector(observer(ProjectFormTitle))
+export default withResizeDetector(observer(RowFormTitle))

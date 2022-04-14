@@ -1,15 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
-import { useParams } from 'react-router-dom'
-import { useLiveQuery } from 'dexie-react-hooks'
 import ListItem from '@mui/material/ListItem'
 import { Link } from 'react-router-dom'
 
 import StoreContext from '../../storeContext'
 import constants from '../../utils/constants'
-import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
-import { dexie, Row } from '../../dexieClient'
 
 const StyledListItem = styled(ListItem)`
   min-height: ${constants.singleRowHeight};
@@ -27,17 +23,12 @@ const StyledListItem = styled(ListItem)`
 const RowRow = ({ row }) => {
   const store = useContext(StoreContext)
   const { activeNodeArray } = store
-  const { projectId } = useParams()
 
-  const project: Row = useLiveQuery(
-    async () => await dexie.projects.get(projectId),
-    [projectId],
-  )
+  const [label, setLabel] = useState('')
 
-  const label = labelFromLabeledTable({
-    object: row,
-    useLabels: project?.use_labels,
-  })
+  useEffect(() => {
+    row.label.then((v) => setLabel(v))
+  }, [row])
 
   return (
     <StyledListItem

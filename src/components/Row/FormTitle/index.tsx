@@ -29,8 +29,8 @@ const ProjectFormTitleChooser = ({ row }) => {
   if (showFilter) {
     return (
       <FilterTitle
-        title="Projekt"
-        table="projects"
+        title="Datensatz"
+        table="rows"
         totalCount={totalCount}
         filteredCount={filteredCount}
       />

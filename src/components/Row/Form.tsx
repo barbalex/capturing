@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useCallback, useRef } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useCallback,
+  useRef,
+  useState,
+} from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
@@ -9,7 +15,7 @@ import Checkbox2States from '../shared/Checkbox2States'
 import JesNo from '../shared/JesNo'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import ConflictList from '../shared/ConflictList'
-import { dexie, IProject, Project } from '../../dexieClient'
+import { dexie, Row, IRow } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
 
@@ -28,23 +34,23 @@ const Rev = styled.span`
   font-size: 0.8em;
 `
 
-type ProjectFormProps = {
+type RowFormProps = {
   activeConflict: string
   id: string
-  row: Project
+  row: Row
   setActiveConflict: (string) => void
   showFilter: (boolean) => void
   showHistory: (boolean) => void
 }
 
-const ProjectForm = ({
+const RowForm = ({
   activeConflict,
   id,
   row,
   setActiveConflict,
   showFilter,
   showHistory,
-}: ProjectFormProps) => {
+}: RowFormProps) => {
   const store = useContext(StoreContext)
   const { filter, online, errors } = store
   const session: Session = supabase.auth.session()
@@ -55,23 +61,25 @@ const ProjectForm = ({
     [],
   ) // TODO: add errors, unsetError in store
 
-  // console.log('ProjectForm rendering row:', row)
-
-  const originalRow = useRef<IProject>()
+  const originalRow = useRef<IRow>()
   // update originalRow only initially
   useEffect(() => {
     originalRow.current = row
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const rowState = useRef<IProject>()
+  const rowState = useRef<IRow>()
+  const [label, setLabel] = useState<string>()
   // update originalRow only initially
   useEffect(() => {
     rowState.current = row
+    row.label.then((v) => setLabel(v))
   }, [row])
 
+  console.log('RowForm rendering row:', { row, label })
+
   useEffect(() => {
-    unsetError('project')
+    unsetError('row')
   }, [id, unsetError])
 
   const updateOnServer = useCallback(async () => {
@@ -102,7 +110,7 @@ const ProjectForm = ({
 
       if (showFilter) {
         return filter.setValue({
-          table: 'project',
+          table: 'row',
           key: field,
           value: newValue,
         })
@@ -110,12 +118,12 @@ const ProjectForm = ({
 
       const newRow = { ...row, [field]: newValue }
       rowState.current = newRow
-      dexie.projects.put(newRow)
+      dexie.rows.put(newRow)
     },
     [filter, row, showFilter],
   )
 
-  // const showDeleted = filter?.project?.deleted !== false || row?.deleted
+  // const showDeleted = filter?.row?.deleted !== false || row?.deleted
   const showDeleted = false
 
   return (
@@ -134,7 +142,6 @@ const ProjectForm = ({
             Aktuelle Version<Rev>{row._rev}</Rev>
           </CaseConflictTitle>
         )}
-
         {showDeleted && (
           <>
             {showFilter ? (
@@ -144,7 +151,7 @@ const ProjectForm = ({
                 name="deleted"
                 value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.project?.deleted}
+                error={errors?.row?.deleted}
               />
             ) : (
               <Checkbox2States
@@ -153,55 +160,21 @@ const ProjectForm = ({
                 name="deleted"
                 value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.project?.deleted}
+                error={errors?.row?.deleted}
               />
             )}
           </>
         )}
         <TextField
-          key={`${row.id}name`}
-          name="name"
-          label="Name"
-          value={row.name}
+          key={`${row.id}id`}
+          name="id"
+          label="id"
+          value={row.id}
           onBlur={onBlur}
-          error={errors?.project?.name}
+          error={errors?.row?.id}
+          disabled={true}
         />
 
-        <Checkbox2States
-          key={`${row.id}use_labels`}
-          label="Zusätzlich zu Namen Beschriftungen verwenden"
-          name="use_labels"
-          value={row.use_labels}
-          onBlur={onBlur}
-          error={errors?.project?.use_labels}
-        />
-        {row.use_labels === 1 && (
-          <TextField
-            key={`${row.id}label`}
-            name="label"
-            label="Beschriftung"
-            value={row.label}
-            onBlur={onBlur}
-            error={errors?.project?.label}
-          />
-        )}
-        <TextField
-          key={`${row.id}crs`}
-          name="crs"
-          label="CRS (Koordinaten-Referenz-System)"
-          value={row.crs}
-          type="number"
-          onBlur={onBlur}
-          error={errors?.project?.crs}
-        />
-        <TextField
-          key={`${row.id}account_id`}
-          name="account_id"
-          label="Konto"
-          value={row.account_id}
-          onBlur={onBlur}
-          error={errors?.project?.account_id}
-        />
         {online && !showFilter && row?._conflicts?.map && (
           <ConflictList
             conflicts={row._conflicts}
@@ -214,4 +187,4 @@ const ProjectForm = ({
   )
 }
 
-export default observer(ProjectForm)
+export default observer(RowForm)
