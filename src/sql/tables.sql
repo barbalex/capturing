@@ -360,7 +360,7 @@ COMMENT ON COLUMN tables.label IS 'name for use when labeling this table';
 
 COMMENT ON COLUMN tables.sort IS 'enables ordering the tables of a project';
 
-COMMENT ON COLUMN tables.row_label IS 'Array of objects with: 1. field names 2. character separators. Concatenated to label rows';
+COMMENT ON COLUMN tables.row_label IS 'Array of objects with: 1. field id (to represent the value contained in that field) 2. text (as character separators) 3. index (representing the position in the label). Concatenated to label rows. Example value: {field: field_id, text: text, index: 1}';
 
 COMMENT ON COLUMN tables.type IS 'What type of table will this be?';
 
@@ -1004,35 +1004,7 @@ ALTER publication supabase_realtime
   ADD TABLE project_tile_layers;
 
 --
-DROP TABLE IF EXISTS table_row_label_parts CASCADE;
-
-CREATE TABLE table_row_label_parts (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  table_id uuid NOT NULL REFERENCES tables (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  sort smallint DEFAULT 0,
-  field_id uuid DEFAULT NULL REFERENCES fields (id) ON DELETE SET NULL ON UPDATE CASCADE,
-  text text DEFAULT NULL
-);
-
-COMMENT ON TABLE table_row_label_parts IS 'Goal: enable flexible labelling of a table''s rows using the content of fieds concatenated with text';
-
-COMMENT ON COLUMN table_row_label_parts.id IS 'primary key';
-
-COMMENT ON COLUMN table_row_label_parts.table_id IS 'What table''s rows shall be labelled';
-
-COMMENT ON COLUMN table_row_label_parts.sort IS 'Enables ordering the label parts';
-
-COMMENT ON COLUMN table_row_label_parts.field_id IS 'This part represents the value of a field';
-
-COMMENT ON COLUMN table_row_label_parts.text IS 'This part represents some characters';
-
-ALTER TABLE table_row_label_parts ENABLE ROW LEVEL SECURITY;
-
-ALTER publication supabase_realtime
-  ADD TABLE table_row_label_parts;
-
---
--- IMPORTANG: create functions at end but before policies
+-- IMPORTANT: create functions at end but before policies
 -- to ensure they never reference a structur not yet created
 --
 --
@@ -1710,31 +1682,6 @@ DROP POLICY IF EXISTS "project managers can delete project_tile_layers" ON proje
 CREATE POLICY "project managers can delete project_tile_layers" ON project_tile_layers
   FOR DELETE
     USING (is_project_manager_by_project (auth.uid (), project_id));
-
-DROP POLICY IF EXISTS "project readers, editors and managers can view table_row_label_parts" ON table_row_label_parts;
-
-CREATE POLICY "project readers, editors and managers can view table_row_label_parts" ON table_row_label_parts
-  FOR SELECT
-    USING (is_project_user_by_table (auth.uid (), table_id));
-
-DROP POLICY IF EXISTS "project managers can insert table_row_label_parts" ON table_row_label_parts;
-
-CREATE POLICY "project managers can insert table_row_label_parts" ON table_row_label_parts
-  FOR INSERT
-    WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id));
-
-DROP POLICY IF EXISTS "project managers can update table_row_label_parts" ON table_row_label_parts;
-
-CREATE POLICY "project managers can update table_row_label_parts" ON table_row_label_parts
-  FOR UPDATE
-    USING (is_project_user_by_table (auth.uid (), table_id))
-    WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id));
-
-DROP POLICY IF EXISTS "project managers can delete table_row_label_parts" ON table_row_label_parts;
-
-CREATE POLICY "project managers can delete table_row_label_parts" ON table_row_label_parts
-  FOR DELETE
-    USING (is_project_manager_by_project_by_table (auth.uid (), table_id));
 
 COMMIT TRANSACTION;
 
