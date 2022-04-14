@@ -30,12 +30,10 @@ const FieldComponent = ({ filter: showFilter }) => {
   const data: DataProps = useLiveQuery(async () => {
     const [row, projectUser] = await Promise.all(
       dexie.fields.get(fieldId),
-      dexie.project_users
-        .where({
-          project_id: projectId,
-          user_email: session?.user?.email,
-        })
-        .first(),
+      dexie.project_users.get({
+        project_id: projectId,
+        user_email: session?.user?.email,
+      }),
     )
     return { row, projectUser }
   }, [fieldId, projectId, session?.user?.email])

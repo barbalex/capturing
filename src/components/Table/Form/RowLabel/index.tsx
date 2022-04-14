@@ -27,7 +27,10 @@ const Target = styled.div`
  *    - (horizontal?) list of draggable fields
  *    - text field element to drag between field elements and input some text
  *    - drop area, horizontally sortable
- *      edit creates array of: {field: id, type: 'field'},{text, type: 'text'}
+ *      edit creates array of: {value: id, type: 'field'},{value: 'text', type: 'text'}
+ *      or
+ *         have a table 'table_row_label_parts' with fields: table_id, sort, type, value
+ *         and in class Table a get function to fetch the table's row label or use https://github.com/ignasbernotas/dexie-relationships
  * 2. presentation: only the drop area
  * 3. remind user to first define the fields
  */
@@ -38,6 +41,7 @@ type Props = {
 const RowLabel = ({ project }: Props) => {
   const { tableId } = useParams()
 
+  // TODO: on with https://egghead.io/lessons/react-persist-list-reordering-with-react-beautiful-dnd-using-the-ondragend-callback
   const onDragEnd = useCallback((result) => {
     // TODO:
   }, [])

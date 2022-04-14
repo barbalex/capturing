@@ -30,12 +30,10 @@ const TableComponent = ({ filter: showFilter }) => {
   const data: DataProps = useLiveQuery(async () => {
     const [row, projectUser] = await Promise.all(
       dexie.ttables.get(tableId),
-      dexie.project_users
-        .where({
-          project_id: projectId,
-          user_email: session?.user?.email,
-        })
-        .first(),
+      dexie.project_users.get({
+        project_id: projectId,
+        user_email: session?.user?.email,
+      }),
     )
     return { row, projectUser }
   }, [tableId, projectId, session?.user?.email])

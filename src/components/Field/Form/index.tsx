@@ -69,7 +69,7 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
       widgetTypes,
       projectUser,
     ] = await Promise.all([
-      dexie.projects.where({ id: projectId }).first(),
+      dexie.projects.get(projectId),
       dexie.ttables
         .filter(
           (t) =>
@@ -81,12 +81,10 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
       dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
       dexie.field_types.where({ deleted: 0 }).toArray(),
       dexie.widget_types.where({ deleted: 0 }).toArray(),
-      dexie.project_users
-        .where({
-          project_id: projectId,
-          user_email: session?.user?.email,
-        })
-        .first(),
+      dexie.project_users.get({
+        project_id: projectId,
+        user_email: session?.user?.email,
+      }),
     ])
 
     return {
@@ -335,7 +333,6 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
           disabled={!userMayEdit}
           type="text"
         />
-        <p>{'TODO: add row_label once fields exist '}</p>
       </FieldsContainer>
     </ErrorBoundary>
   )

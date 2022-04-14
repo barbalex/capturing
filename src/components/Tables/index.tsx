@@ -66,16 +66,14 @@ const TablesComponent = () => {
   const data: DataProps = useLiveQuery(async () => {
     const [tables, filteredCount, totalCount, projectUser, project] =
       await Promise.all([
-        dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(), // TODO: if project.use_labels, use label
+        dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
         dexie.ttables.where({ deleted: 0, project_id: projectId }).count(), // TODO: pass in filter
         dexie.ttables.where({ deleted: 0, project_id: projectId }).count(),
-        dexie.project_users
-          .where({
-            project_id: projectId,
-            user_email: session?.user?.email,
-          })
-          .first(),
-        dexie.projects.where({ id: projectId }).first(),
+        dexie.project_users.get({
+          project_id: projectId,
+          user_email: session?.user?.email,
+        }),
+        dexie.projects.get(projectId),
       ])
 
     return { tables, filteredCount, totalCount, projectUser, project }

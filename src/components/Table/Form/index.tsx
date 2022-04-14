@@ -77,20 +77,16 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
   const data: DataProps = useLiveQuery(async () => {
     const [project, projects, tables, relTable, projectUser] =
       await Promise.all([
-        dexie.projects.where({ id: projectId }).first(),
+        dexie.projects.get(projectId),
         dexie.projects.where({ deleted: 0 }).toArray(),
         dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
-        dexie.ttables
-          .where({
-            id: row?.parent_id ?? '99999999-9999-9999-9999-999999999999',
-          })
-          .first(),
-        dexie.project_users
-          .where({
-            project_id: projectId,
-            user_email: session?.user?.email,
-          })
-          .first(),
+        dexie.ttables.get({
+          id: row?.parent_id ?? '99999999-9999-9999-9999-999999999999',
+        }),
+        dexie.project_users.get({
+          project_id: projectId,
+          user_email: session?.user?.email,
+        }),
       ])
 
     return { project, projects, tables, relTable, projectUser }

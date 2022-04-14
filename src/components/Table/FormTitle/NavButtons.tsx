@@ -19,12 +19,10 @@ const TableNavButtons = () => {
 
   const projectUser: IProjectUser = useLiveQuery(
     async () =>
-      await dexie.project_users
-        .where({
-          project_id: projectId,
-          user_email: session?.user?.email,
-        })
-        .first(),
+      await dexie.project_users.get({
+        project_id: projectId,
+        user_email: session?.user?.email,
+      }),
     [projectId, session?.user?.email],
   )
   const userRole = projectUser?.role

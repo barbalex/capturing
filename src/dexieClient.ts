@@ -1,6 +1,7 @@
 import { IQueuedUpdate } from './dexieClient'
 import { ProjectUser } from './initiateDb'
 import Dexie, { DexieTable } from 'dexie'
+import relationships from 'dexie-relationships'
 import { v1 as uuidv1 } from 'uuid'
 import { Session } from '@supabase/supabase-js'
 
@@ -992,4 +993,6 @@ export class MySubClassedDexie extends Dexie {
   }
 }
 
-export const dexie = new MySubClassedDexie()
+export const dexie = new MySubClassedDexie('capturing', {
+  addons: [relationships],
+})

@@ -69,13 +69,11 @@ const FieldsComponent = () => {
         dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
         dexie.fields.where({ deleted: 0, table_id: tableId }).count(), // TODO: pass in filter
         dexie.fields.where({ deleted: 0, table_id: tableId }).count(),
-        dexie.project_users
-          .where({
-            project_id: projectId,
-            user_email: session?.user?.email,
-          })
-          .first(),
-        dexie.projects.where({ id: projectId }).first(),
+        dexie.project_users.get({
+          project_id: projectId,
+          user_email: session?.user?.email,
+        }),
+        dexie.projects.get(projectId),
       ])
 
     return { fields, filteredCount, totalCount, projectUser, project }

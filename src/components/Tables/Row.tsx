@@ -30,7 +30,7 @@ const TableRow = ({ row }) => {
   const { projectId } = useParams()
 
   const project: Project = useLiveQuery(
-    async () => await dexie.projects.where({ id: projectId }).first(),
+    async () => await dexie.projects.get(projectId),
     [projectId],
   )
 
