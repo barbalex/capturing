@@ -28,7 +28,7 @@ const insertRow = async ({ tableId }: InsertRowProps) => {
   const update = new QueuedUpdate(
     undefined,
     undefined,
-    'row_revs',
+    'rows',
     JSON.stringify(newRow),
     undefined,
     undefined,
