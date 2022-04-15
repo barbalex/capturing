@@ -89,7 +89,7 @@ const RowForm = ({
   // update originalRow only initially
   useEffect(() => {
     originalRow.current = row
-    originalData.current = row.data ? JSON.parse(row.data) : null
+    originalData.current = row.data
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -97,11 +97,11 @@ const RowForm = ({
   const [label, setLabel] = useState<string>()
   // update originalRow only initially
   useEffect(() => {
-    rowDataState.current = row.data ? JSON.parse(row.data) : null
+    rowDataState.current = row.data
     row.label.then((v) => setLabel(v))
   }, [row])
 
-  console.log('RowForm rendering row:', row)
+  console.log('RowForm rendering', { row, rowDataState: rowDataState.current })
   // TODO: build right queries
   const data: DataProps = useLiveQuery(async () => {
     const [fields, projectUser] = await Promise.all([
@@ -132,10 +132,8 @@ const RowForm = ({
     // only update if is changed
     if (!isEqual(originalData.current, rowDataState.current)) {
       const newRow = {
-        ...originalData.current,
-        data: rowDataState.current
-          ? JSON.stringify(rowDataState.current)
-          : null,
+        ...originalRow.current,
+        data: rowDataState.current,
       }
       row.updateOnServer({ row: newRow, session })
     }
@@ -168,14 +166,14 @@ const RowForm = ({
         })
       }
 
-      // TODO: build new data
-      const oldData = row.data ? JSON.parse(row.data) : undefined
+      // build new data
+      const oldData = row.data
       const newData =
         newValue === null && oldData === undefined
           ? null
           : { ...oldData, [field]: newValue }
-      const newRow = { ...row, data: newData ? JSON.stringify(newData) : null }
-      rowDataState.current = newRow
+      const newRow = { ...row, data: newData }
+      rowDataState.current = newData
       dexie.rows.put(newRow)
     },
     [filter, row, showFilter],

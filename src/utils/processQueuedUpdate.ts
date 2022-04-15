@@ -39,6 +39,7 @@ const processQueuedUpdate = async ({
     const newRevObject = {
       [`${singularTableName}_id`]: id,
       ...newObject,
+      data: newObject.data ? JSON.stringify(newObject.data) : null,
       client_rev_at: new window.Date().toISOString(),
       client_rev_by: session.user?.email ?? session.user?.id,
       depth,

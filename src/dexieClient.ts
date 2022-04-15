@@ -662,7 +662,7 @@ export class Row implements IRow {
     const update = new QueuedUpdate(
       undefined,
       undefined,
-      'rows',
+      'rows', // processQueuedUpdate writes this into row_revs
       JSON.stringify(rowReved),
       row?.id,
       JSON.stringify(this),
