@@ -278,13 +278,33 @@ const RowForm = ({
               break
             case 'textarea':
               return (
-                <FieldContainer key={f.id}>
-                  <div>textarea</div>
-                  <div>{JSON.stringify(f)}</div>
-                </FieldContainer>
+                <TextField
+                  key={f.id}
+                  name={f.name}
+                  label={f.label ?? f.name}
+                  value={row.data?.[f.name] ?? ''}
+                  onBlur={onBlur}
+                  error={errors?.row?.[f.name]}
+                  disabled={!userMayEdit}
+                  type="text"
+                  multiLine
+                />
               )
               break
             case 'text':
+              return (
+                <TextField
+                  key={f.id}
+                  name={f.name}
+                  label={f.label ?? f.name}
+                  value={row.data?.[f.name] ?? ''}
+                  onBlur={onBlur}
+                  error={errors?.row?.[f.name]}
+                  disabled={!userMayEdit}
+                  type={f.field_type == 'text' ? 'text' : 'number'}
+                />
+              )
+              break
             default:
               return (
                 <TextField
@@ -297,10 +317,6 @@ const RowForm = ({
                   disabled={!userMayEdit}
                   type="text"
                 />
-                // <FieldContainer key={f.id}>
-                //   <div>text</div>
-                //   <div>{JSON.stringify(f)}</div>
-                // </FieldContainer>
               )
               break
           }
