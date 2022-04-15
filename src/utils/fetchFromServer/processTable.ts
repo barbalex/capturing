@@ -38,7 +38,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
       }
     })
   // 1.3. fetch all with newer last_updated_at
-  let { data, error: error } = await supabase
+  const { data, error: error } = await supabase
     .from(tableName)
     .select('*')
     .gte('server_rev_at', lastUpdatedAt)
@@ -56,15 +56,6 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
   }
   // 1.4. update dexie with these changes
   if (data) {
-    if (['rows', 'files'].includes(tableName)) {
-      // if is revved table, need to parse data field
-      data = data.map((d) => {
-        if (d.data) {
-          return { ...d, data: JSON.parse(d.data) }
-        }
-        return d
-      })
-    }
     try {
       await dexie.table(tableNameForDexie).bulkPut(data)
     } catch (error) {
