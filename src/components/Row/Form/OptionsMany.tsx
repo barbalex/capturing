@@ -32,27 +32,27 @@ const OptionsMany = ({
     )
     return { optionRows, optionTable }
   })
-  const optionRowsData = data?.optionRows.map((r) => JSON.parse(r.data)) ?? []
+  const optionRowsData = data?.optionRows.map((r) => r.data) ?? []
   const optionTable: Table = data?.optionTable
   const isIdValueList = optionTable?.type === 'id_value_list'
   const optionValues = optionRowsData.map((d) => ({
     value: isIdValueList ? d.id : d.value,
     label: d.value,
   }))
-  console.log('OptionsMany', {
-    optionValues,
-    isIdValueList,
-    optionTable,
-    optionRowsData,
-    field,
-    row,
-  })
+  // console.log('OptionsMany', {
+  //   optionValues,
+  //   isIdValueList,
+  //   optionTable,
+  //   optionRowsData,
+  //   field,
+  //   row,
+  // })
 
   return (
     <Select
       key={field.id}
       name={field.name}
-      value={rowDataState.current?.[field.name] ?? ''}
+      value={rowDataState?.current?.[field.name] ?? ''}
       field={field.name}
       label={field.label ?? field.name}
       options={optionValues}
