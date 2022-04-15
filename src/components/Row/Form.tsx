@@ -60,8 +60,6 @@ type RowFormProps = {
 }
 
 type DataProps = {
-  project: Project
-  rows: Row[]
   fields: Field[]
   projectUser: IProjectUser
 }
@@ -103,38 +101,25 @@ const RowForm = ({
   // console.log('RowForm rendering row:', { row, label })
   // TODO: build right queries
   const data: DataProps = useLiveQuery(async () => {
-    const [project, rows, fields, fieldTypes, widgetTypes, projectUser] =
-      await Promise.all([
-        dexie.projects.get(projectId),
-        dexie.rows.where({ deleted: 0, table_id: tableId }).toArray(),
-        dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
-        dexie.field_types.where({ deleted: 0 }).toArray(),
-        dexie.widget_types.where({ deleted: 0 }).toArray(),
-        dexie.project_users.get({
-          project_id: projectId,
-          user_email: session?.user?.email,
-        }),
-      ])
+    const [fields, projectUser] = await Promise.all([
+      dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
+      dexie.project_users.get({
+        project_id: projectId,
+        user_email: session?.user?.email,
+      }),
+    ])
 
     return {
-      project,
-      rows,
       fields,
-      fieldTypes,
-      widgetTypes,
       projectUser,
     }
   }, [projectId, tableId, session?.user?.email])
 
-  const project: Project = data?.project
-  const rows: Row[] = data?.rows ?? []
   const fields: Field[] = data?.fields ?? []
-  const fieldTypes: IFieldType[] = data?.fieldTypes ?? []
-  const widgetTypes: IWidgetType[] = data?.widgetTypes ?? []
   const userRole = data?.projectUser?.role
   const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
 
-  console.log('RowForm', { row, data: row?.data, fields })
+  // console.log('RowForm', { row, data: row?.data, fields })
 
   useEffect(() => {
     unsetError('row')
