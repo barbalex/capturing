@@ -122,7 +122,7 @@ const RowForm = ({
   const userRole = data?.projectUser?.role
   const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
 
-  // console.log('RowForm', { row, data: row?.data, fields })
+  console.log('RowForm', { row, data: row?.data, fields })
 
   useEffect(() => {
     unsetError('row')
