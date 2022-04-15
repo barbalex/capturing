@@ -189,7 +189,7 @@ ELSE
     winner.revisions,
     winner.parent_rev,
     winner.depth,
-    row_conflicts_of_winner (NEW.row_id, TRUE) AS conflicts
+    row_conflicts_of_winner (NEW.row_id, 1) AS conflicts
   FROM
     row_revs_winner (NEW.row_id, 1) AS winner
 ON CONFLICT (id)
