@@ -22,7 +22,7 @@ const processQueuedUpdate = async ({
 }: ProcessQueuedUpdateProps) => {
   const session: Session = supabase.auth.session()
   const { online, setOnline } = store
-  //console.log('processQueuedUpdate', queuedUpdate)
+  console.log('processQueuedUpdate', queuedUpdate)
   // TODO: ttables problem?
   const isRevTable = revTables.includes(queuedUpdate.table)
   const singularTableName = queuedUpdate.table.slice(0, -1)
@@ -35,6 +35,7 @@ const processQueuedUpdate = async ({
     const id = newObject.id
     const depth = isInsert ? 1 : newObject.depth + 1
     delete newObject.id
+    delete newObject.conflicts
     const newRevObject = {
       [`${singularTableName}_id`]: id,
       ...newObject,
@@ -46,9 +47,12 @@ const processQueuedUpdate = async ({
     const rev = `${depth}-${md5(JSON.stringify(newRevObject))}`
     newRevObject.rev = rev
     newRevObject.id = uuidv1()
-    newObject.revisions = isInsert ? [rev] : [rev, ...newObject.revisions]
+    newObject.revisions = isInsert
+      ? [rev]
+      : [rev, ...(newObject.revisions ?? [])]
+    console.log('processQueuedUpdate, newRevObject:', newRevObject)
     // 2. send revision to server
-    const { error } = await supabase.from(revTableName).insert(newObject)
+    const { error } = await supabase.from(revTableName).insert(newRevObject)
     if (error) {
       // 3. deal with errors
       // TODO: error when updating: "new row violates row-level security policy (USING expression) for table \"projects\""

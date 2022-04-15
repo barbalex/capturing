@@ -85,21 +85,23 @@ const RowForm = ({
   ) // TODO: add errors, unsetError in store
 
   const originalRow = useRef<IRow>()
+  const originalData = useRef()
   // update originalRow only initially
   useEffect(() => {
     originalRow.current = row
+    originalData.current = row.data ? JSON.parse(row.data) : null
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const rowState = useRef<IRow>()
+  const rowDataState = useRef<IRow>()
   const [label, setLabel] = useState<string>()
   // update originalRow only initially
   useEffect(() => {
-    rowState.current = row
+    rowDataState.current = row.data ? JSON.parse(row.data) : null
     row.label.then((v) => setLabel(v))
   }, [row])
 
-  // console.log('RowForm rendering row:', { row, label })
+  console.log('RowForm rendering row:', row)
   // TODO: build right queries
   const data: DataProps = useLiveQuery(async () => {
     const [fields, projectUser] = await Promise.all([
@@ -128,8 +130,14 @@ const RowForm = ({
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
-    if (!isEqual(originalRow.current, rowState.current)) {
-      row.updateOnServer({ row: rowState.current, session })
+    if (!isEqual(originalData.current, rowDataState.current)) {
+      const newRow = {
+        ...originalData.current,
+        data: rowDataState.current
+          ? JSON.stringify(rowDataState.current)
+          : null,
+      }
+      row.updateOnServer({ row: newRow, session })
     }
     return
   }, [row, session])
@@ -149,7 +157,7 @@ const RowForm = ({
       if ([undefined, '', NaN].includes(newValue)) newValue = null
 
       // only update if value has changed
-      const previousValue = rowState.current[field]
+      const previousValue = rowDataState.current?.[field]
       if (newValue === previousValue) return
 
       if (showFilter) {
@@ -167,7 +175,7 @@ const RowForm = ({
           ? null
           : { ...oldData, [field]: newValue }
       const newRow = { ...row, data: newData ? JSON.stringify(newData) : null }
-      rowState.current = newRow
+      rowDataState.current = newRow
       dexie.rows.put(newRow)
     },
     [filter, row, showFilter],
@@ -199,7 +207,7 @@ const RowForm = ({
                 key={`${row.id}deleted`}
                 label="gelöscht"
                 name="deleted"
-                value={row.deleted}
+                value={rowDataState.current.deleted}
                 onBlur={onBlur}
                 error={errors?.row?.deleted}
               />
@@ -208,7 +216,7 @@ const RowForm = ({
                 key={`${row.id}deleted`}
                 label="gelöscht"
                 name="deleted"
-                value={row.deleted}
+                value={rowDataState.current.deleted}
                 onBlur={onBlur}
                 error={errors?.row?.deleted}
               />
@@ -279,7 +287,7 @@ const RowForm = ({
                 <OptionsMany
                   key={`${row.id}/${f.id}/options-many`}
                   field={f}
-                  row={row}
+                  rowDataState={rowDataState.current}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                   disabled={!userMayEdit}
@@ -292,7 +300,7 @@ const RowForm = ({
                   key={`${row.id}/${f.id}/textarea`}
                   name={f.name}
                   label={f.label ?? f.name}
-                  value={row.data?.[f.name] ?? ''}
+                  value={rowDataState.current?.[f.name] ?? ''}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                   disabled={!userMayEdit}
@@ -307,7 +315,7 @@ const RowForm = ({
                   key={`${row.id}/${f.id}/text`}
                   name={f.name}
                   label={f.label ?? f.name}
-                  value={row.data?.[f.name] ?? ''}
+                  value={rowDataState.current?.[f.name] ?? ''}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                   disabled={!userMayEdit}
@@ -321,7 +329,7 @@ const RowForm = ({
                   key={`${row.id}/${f.id}/text`}
                   name={f.name}
                   label={f.label ?? f.name}
-                  value={row.data?.[f.name] ?? ''}
+                  value={rowDataState.current?.[f.name] ?? ''}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                   disabled={!userMayEdit}

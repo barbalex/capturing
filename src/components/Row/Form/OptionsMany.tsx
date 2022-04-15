@@ -6,17 +6,23 @@ import { dexie, Row, Field, Table } from '../../../dexieClient'
 
 type Props = {
   field: Field
-  row: Row
-}
-type DataType = {
-  optionRows: Row[]
-  optionTable: Table
+  rowDataState: any
   onBlur: () => void
   error: string
   disabled: boolean
 }
+type DataType = {
+  optionRows: Row[]
+  optionTable: Table
+}
 
-const OptionsMany = ({ field, row, onBlur, error, disabled }: Props) => {
+const OptionsMany = ({
+  field,
+  rowDataState,
+  onBlur,
+  error,
+  disabled,
+}: Props) => {
   const data: DataType = useLiveQuery(async () => {
     const [optionRows, optionTable] = await Promise.all(
       dexie.rows
@@ -46,7 +52,7 @@ const OptionsMany = ({ field, row, onBlur, error, disabled }: Props) => {
     <Select
       key={field.id}
       name={field.name}
-      value={row.data?.[field.name] ?? ''}
+      value={rowDataState.current?.[field.name] ?? ''}
       field={field.name}
       label={field.label ?? field.name}
       options={optionValues}
