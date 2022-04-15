@@ -16,11 +16,9 @@
 -- END;
 -- $$
 -- LANGUAGE plpgsql;
-
 -- CREATE TRIGGER trigger_row_revs_set_revision_fields
 --   BEFORE INSERT ON row_revs FOR EACH ROW
 --   EXECUTE PROCEDURE trigger_row_revs_set_revision_fields ();
-
 -- 2. now that the revision fields are set (either by client or before insert trigger),
 --    choose winner and upsert row
 CREATE OR REPLACE FUNCTION row_revs_children (row_id uuid, parent_rev text)
@@ -121,7 +119,7 @@ BEGIN
     SELECT
       1
     FROM
-      row_revs_winner (NEW.row_id, FALSE))
+      row_revs_winner (NEW.row_id, 0))
   -- 1. if a winning undeleted leaf exists, use this
   --    (else pick a winner from the deleted leaves)
   THEN
@@ -139,12 +137,12 @@ BEGIN
     winner.deleted,
     winner.client_rev_at,
     winner.client_rev_by,
-    now() as server_rev_at,
-    winner.rev,
-    winner.revisions,
-    winner.parent_rev,
-    winner.depth,
-    row_conflicts_of_winner (NEW.row_id) AS conflicts
+    now() AS server_rev_at,
+  winner.rev,
+  winner.revisions,
+  winner.parent_rev,
+  winner.depth,
+  row_conflicts_of_winner (NEW.row_id) AS conflicts
 FROM
   row_revs_winner (NEW.row_id) AS winner
 ON CONFLICT (id)
@@ -186,14 +184,14 @@ ELSE
     winner.deleted,
     winner.client_rev_at,
     winner.client_rev_by,
-    now() as server_rev_at,
+    now() AS server_rev_at,
     winner.rev,
     winner.revisions,
     winner.parent_rev,
     winner.depth,
     row_conflicts_of_winner (NEW.row_id, TRUE) AS conflicts
   FROM
-    row_revs_winner (NEW.row_id, TRUE) AS winner
+    row_revs_winner (NEW.row_id, 1) AS winner
 ON CONFLICT (id)
   DO UPDATE SET
     -- do not update the id
@@ -221,6 +219,7 @@ $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_row_revs_set_winning_revision
-  AFTER INSERT ON row_revs FOR EACH ROW
+  AFTER INSERT ON row_revs
+  FOR EACH ROW
   EXECUTE PROCEDURE row_revs_set_winning_revision ();
 

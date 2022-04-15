@@ -29,7 +29,7 @@ const processQueuedUpdate = async ({
   const isInsert = !!queuedUpdate.revert_id
   // insert _rev or upsert regular table
   if (isRevTable) {
-    const revTableName = queuedUpdate.table.replace(/.$/, '_rev') // https://stackoverflow.com/a/36630251/712005
+    const revTableName = queuedUpdate.table.replace(/.$/, '_revs') // https://stackoverflow.com/a/36630251/712005
     // 1 create revision
     const newObject = JSON.parse(queuedUpdate.value)
     const id = newObject.id

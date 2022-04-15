@@ -12,9 +12,9 @@ import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
-import StoreContext from '../../storeContext'
-import ErrorBoundary from '../shared/ErrorBoundary'
-import ConflictList from '../shared/ConflictList'
+import StoreContext from '../../../storeContext'
+import ErrorBoundary from '../../shared/ErrorBoundary'
+import ConflictList from '../../shared/ConflictList'
 import {
   dexie,
   Row,
@@ -24,13 +24,13 @@ import {
   IFieldType,
   IWidgetType,
   IProjectUser,
-} from '../../dexieClient'
-import { supabase } from '../../supabaseClient'
-import TextField from '../shared/TextField'
-import Select from '../shared/Select'
-import Checkbox2States from '../shared/Checkbox2States'
-import JesNo from '../shared/JesNo'
-import RadioButtonGroup from '../shared/RadioButtonGroup'
+} from '../../../dexieClient'
+import { supabase } from '../../../supabaseClient'
+import TextField from '../../shared/TextField'
+import Select from '../../shared/Select'
+import Checkbox2States from '../../shared/Checkbox2States'
+import JesNo from '../../shared/JesNo'
+import RadioButtonGroup from '../../shared/RadioButtonGroup'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -160,7 +160,12 @@ const RowForm = ({
       }
 
       // TODO: build new data
-      const newRow = { ...row, [field]: newValue }
+      const oldData = row.data ? JSON.parse(row.data) : undefined
+      const newData =
+        newValue === null && oldData === undefined
+          ? null
+          : { ...oldData, [field]: newValue }
+      const newRow = { ...row, data: newData ? JSON.stringify(newData) : null }
       rowState.current = newRow
       dexie.rows.put(newRow)
     },
@@ -270,16 +275,23 @@ const RowForm = ({
               break
             case 'options-many':
               return (
-                <FieldContainer key={f.id}>
-                  <div>options-many</div>
-                  <div>{JSON.stringify(f)}</div>
-                </FieldContainer>
+                <Select
+                  key={`${row.id}/${f.id}/options-many`}
+                  name={f.name}
+                  value={row.data?.[f.name] ?? ''}
+                  field={f.name}
+                  label={f.label ?? f.name}
+                  options={'selectValues'} // TODO:
+                  saveToDb={onBlur}
+                  error={errors?.row?.[f.name]}
+                  disabled={!userMayEdit}
+                />
               )
               break
             case 'textarea':
               return (
                 <TextField
-                  key={f.id}
+                  key={`${row.id}/${f.id}/textarea`}
                   name={f.name}
                   label={f.label ?? f.name}
                   value={row.data?.[f.name] ?? ''}
@@ -294,7 +306,7 @@ const RowForm = ({
             case 'text':
               return (
                 <TextField
-                  key={f.id}
+                  key={`${row.id}/${f.id}/text`}
                   name={f.name}
                   label={f.label ?? f.name}
                   value={row.data?.[f.name] ?? ''}
@@ -308,7 +320,7 @@ const RowForm = ({
             default:
               return (
                 <TextField
-                  key={f.id}
+                  key={`${row.id}/${f.id}/text`}
                   name={f.name}
                   label={f.label ?? f.name}
                   value={row.data?.[f.name] ?? ''}
