@@ -65,12 +65,6 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
         return d
       })
     }
-    if (tableName === 'rows') {
-      console.log(
-        `ServerSubscriber, last ${tableName} fetched from supabase:`,
-        data,
-      )
-    }
     try {
       await dexie.table(tableNameForDexie).bulkPut(data)
     } catch (error) {

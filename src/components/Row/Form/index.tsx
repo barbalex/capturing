@@ -101,7 +101,7 @@ const RowForm = ({
     row.label.then((v) => setLabel(v))
   }, [row])
 
-  console.log('RowForm rendering', { row, rowDataState: rowDataState.current })
+  //console.log('RowForm rendering', { row, rowDataState: rowDataState.current })
   // TODO: build right queries
   const data: DataProps = useLiveQuery(async () => {
     const [fields, projectUser] = await Promise.all([
