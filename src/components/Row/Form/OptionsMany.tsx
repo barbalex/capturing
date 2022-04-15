@@ -11,10 +11,13 @@ type Props = {
 type DataType = {
   optionRows: Row[]
   optionTable: Table
+  onBlur: () => void
+  error: string
+  disabled: boolean
 }
 
-const OptionsMany = ({ field, row }: Props) => {
-  const data: DataType = await useLiveQuery(async () => {
+const OptionsMany = ({ field, row, onBlur, error, disabled }: Props) => {
+  const data: DataType = useLiveQuery(async () => {
     const [optionRows, optionTable] = await Promise.all(
       dexie.rows
         .filter((r) => r.table_id === field.options_table && !!r.data)
@@ -25,23 +28,31 @@ const OptionsMany = ({ field, row }: Props) => {
   })
   const optionRowsData = data?.optionRows.map((r) => JSON.parse(r.data)) ?? []
   const optionTable: Table = data?.optionTable
-  const isIdValueList = optionTable.type === 'id_value_list'
+  const isIdValueList = optionTable?.type === 'id_value_list'
   const optionValues = optionRowsData.map((d) => ({
     value: isIdValueList ? d.id : d.value,
     label: d.value,
   }))
+  console.log('OptionsMany', {
+    optionValues,
+    isIdValueList,
+    optionTable,
+    optionRowsData,
+    field,
+    row,
+  })
 
   return (
     <Select
-      key={f.id}
-      name={f.name}
-      value={row.data?.[f.name] ?? ''}
-      field={f.name}
-      label={f.label ?? f.name}
+      key={field.id}
+      name={field.name}
+      value={row.data?.[field.name] ?? ''}
+      field={field.name}
+      label={field.label ?? field.name}
       options={optionValues}
       saveToDb={onBlur}
-      error={errors?.row?.[f.name]}
-      disabled={!userMayEdit}
+      error={error}
+      disabled={disabled}
     />
   )
 }

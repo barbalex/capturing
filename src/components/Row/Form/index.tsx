@@ -31,6 +31,7 @@ import Select from '../../shared/Select'
 import Checkbox2States from '../../shared/Checkbox2States'
 import JesNo from '../../shared/JesNo'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
+import OptionsMany from './OptionsMany'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -275,14 +276,11 @@ const RowForm = ({
               break
             case 'options-many':
               return (
-                <Select
+                <OptionsMany
                   key={`${row.id}/${f.id}/options-many`}
-                  name={f.name}
-                  value={row.data?.[f.name] ?? ''}
-                  field={f.name}
-                  label={f.label ?? f.name}
-                  options={'selectValues'} // TODO:
-                  saveToDb={onBlur}
+                  field={f}
+                  row={row}
+                  onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                   disabled={!userMayEdit}
                 />
