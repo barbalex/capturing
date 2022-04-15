@@ -37,17 +37,10 @@ const FieldContainer = styled.div`
  */
 type Props = {
   project: Project
+  fields: Field[]
 }
 
-const RowLabel = ({ project }: Props) => {
-  const { tableId } = useParams()
-
-  const fields: Field[] = useLiveQuery(
-    async () =>
-      await dexie.fields.where({ table_id: tableId, deleted: 0 }).toArray(),
-    [tableId],
-  )
-
+const RowLabel = ({ project, fields }: Props) => {
   // const fieldsMap = new Map(
   //   fields.map((f) => [
   //     f.id,
@@ -60,7 +53,7 @@ const RowLabel = ({ project }: Props) => {
   return (
     <Container>
       <Title>Felder</Title>
-      <Droppable droppableId="target">
+      <Droppable droppableId="fieldList">
         {(provided) => (
           <FieldList ref={provided.innerRef} {...provided.droppableProps}>
             {(fields ?? []).map((f, index) => (

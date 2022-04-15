@@ -187,6 +187,8 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
   // const showDeleted = filter?.table?.deleted !== false || row?.deleted
   const showDeleted = false
 
+  console.log('TableForm, row:', row)
+
   return (
     <ErrorBoundary>
       <FieldsContainer
@@ -314,7 +316,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
             'TODO: add row_label once fields exist. Use: https://github.com/atlassian/react-beautiful-dnd, https://react-beautiful-dnd.netlify.app/?path=/story/board--simple '
           }
         </p>
-        <RowLabel project={project} />
+        <RowLabel project={project} table={row} rowState={rowState} />
       </FieldsContainer>
     </ErrorBoundary>
   )
