@@ -134,7 +134,7 @@ const RowForm = ({
   const userRole = data?.projectUser?.role
   const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
 
-  console.log('RowForm', { row, fields })
+  console.log('RowForm', { row, data: row?.data, fields })
 
   useEffect(() => {
     unsetError('row')
@@ -174,6 +174,7 @@ const RowForm = ({
         })
       }
 
+      // TODO: build new data
       const newRow = { ...row, [field]: newValue }
       rowState.current = newRow
       dexie.rows.put(newRow)
@@ -233,10 +234,6 @@ const RowForm = ({
           disabled={true}
         />
         {fields.map((f) => {
-          const widgetByType = {
-            text: TextField,
-            textarea: () => <div>textarea</div>,
-          }
           switch (f.widget_type) {
             case 'datepicker':
               return (
@@ -305,10 +302,20 @@ const RowForm = ({
             case 'text':
             default:
               return (
-                <FieldContainer key={f.id}>
-                  <div>text</div>
-                  <div>{JSON.stringify(f)}</div>
-                </FieldContainer>
+                <TextField
+                  key={f.id}
+                  name={f.name}
+                  label={f.label ?? f.name}
+                  value={row.data?.[f.name] ?? ''}
+                  onBlur={onBlur}
+                  error={errors?.row?.[f.name]}
+                  disabled={!userMayEdit}
+                  type="text"
+                />
+                // <FieldContainer key={f.id}>
+                //   <div>text</div>
+                //   <div>{JSON.stringify(f)}</div>
+                // </FieldContainer>
               )
               break
           }
