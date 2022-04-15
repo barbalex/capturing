@@ -630,8 +630,6 @@ export class Row implements IRow {
       const table: Table = await dexie.ttables.get(this.table_id)
       const project: Project = await dexie.projects.get(table.project_id)
       const labelArray = table.row_label
-        ? JSON.parse(table.row_label)
-        : undefined
       if (!labelArray)
         return `${this.id} (labels are not configured for '${table.name}')`
       let label = ''
