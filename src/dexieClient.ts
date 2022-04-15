@@ -628,6 +628,12 @@ export class Row implements IRow {
     // need an iife because javascript has no async getters
     return (async () => {
       const table: Table = await dexie.ttables.get(this.table_id)
+      const isOptionsTable = ['value_list', 'id_value_list'].includes(
+        table.type,
+      )
+      if (isOptionsTable) {
+        return this.data?.value ?? '(kein Wert)'
+      }
       const project: Project = await dexie.projects.get(table.project_id)
       const labelArray = table.row_label
       if (!labelArray)
