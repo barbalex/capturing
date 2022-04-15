@@ -1035,7 +1035,7 @@ export class MySubClassedDexie extends Dexie {
       version_types: 'id, &value, sort, server_rev_at, deleted',
       widget_types: 'id, &value, sort, server_rev_at, deleted',
       widgets_for_fields:
-        'id, [field_value+widget_value], server_rev_at, deleted',
+        'id, [field_value+widget_value], server_rev_at, deleted, [deleted+field_value]',
       stores: 'id',
       queued_updates: '++id',
     })

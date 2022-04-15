@@ -446,10 +446,10 @@ COMMENT ON COLUMN widget_types.sort IS 'enables sorting at will';
 COMMENT ON COLUMN widget_types.server_rev_at IS 'time of last edit on server';
 
 INSERT INTO widget_types (value, sort, comment)
-  VALUES ('text', 1, 'Short field accepting text'), ('textarea', 2, 'Field accepting text, lines can break'), ('markdown', 3, 'Field accepting text, expressing markdown'), ('options-2', 4, 'boolean field showing true and false (not null)'), ('options-3', 5, 'boolean field showing true, false and null'), ('options-few', 6, 'short list, showing every entry'), ('options-many', 7, 'long dropdown-list'), ('datepicker', 8, 'enables choosing a date'), ('filepicker', 9, 'enables choosing a file')
-ON CONFLICT ON CONSTRAINT widget_types_pkey
+  VALUES ('text', 1, 'Short field accepting text'), ('textarea', 2, 'Field accepting text, lines can break'), ('markdown', 3, 'Field accepting text, expressing markdown'), ('options-2', 4, 'single boolean field showing one option for true (active) and false (not active)'), ('options-3', 5, 'single boolean field showing true, false and null'), ('options-few', 7, 'short list, showing every entry'), ('options-many', 8, 'long dropdown-list'), ('datepicker', 9, 'enables choosing a date'), ('filepicker', 10, 'enables choosing a file'), ('jes-no', 6, 'boolean field presenting one option for true and false each')
+ON CONFLICT ON CONSTRAINT widget_types_value_key
   DO UPDATE SET
-    comment = excluded.comment;
+    comment = excluded.comment, sort = excluded.sort;
 
 ALTER TABLE widget_types ENABLE ROW LEVEL SECURITY;
 
@@ -491,8 +491,10 @@ ALTER TABLE widgets_for_fields ENABLE ROW LEVEL SECURITY;
 ALTER publication supabase_realtime
   ADD TABLE widgets_for_fields;
 
-INSERT INTO widgets_for_fields (id, field_value, widget_value, server_rev_at, deleted)
-  VALUES ('48248dd4-bc27-11ec-8422-0242ac120002', 'text', 'text', '2021-04-27 15:14:25.180827+00', 0), ('48249068-bc27-11ec-8422-0242ac120002', 'text', 'markdown', '2021-04-27 15:14:25.180827+00', 0), ('48249194-bc27-11ec-8422-0242ac120002', 'boolean', 'options-2', '2021-04-27 15:14:25.180827+00', 0), ('482492ca-bc27-11ec-8422-0242ac120002', 'boolean', 'options-3', '2021-04-27 15:14:25.180827+00', 0), ('482495b8-bc27-11ec-8422-0242ac120002', 'integer', 'text', '2021-04-27 15:14:25.180827+00', 0), ('482496e4-bc27-11ec-8422-0242ac120002', 'decimal', 'text', '2021-04-27 15:14:25.180827+00', 0), ('48249810-bc27-11ec-8422-0242ac120002', 'text', 'options-many', '2021-04-27 15:14:25.180827+00', 0), ('48249932-bc27-11ec-8422-0242ac120002', 'integer', 'options-many', '2021-04-27 15:14:25.180827+00', 0), ('48249a5e-bc27-11ec-8422-0242ac120002', 'text', 'options-few', '2021-04-27 15:14:25.180827+00', 0), ('48249b6c-bc27-11ec-8422-0242ac120002', 'integer', 'options-few', '2021-04-27 15:14:25.180827+00', 0), ('48249c7a-bc27-11ec-8422-0242ac120002', 'date', 'datepicker', '2021-04-27 15:14:25.180827+00', 0), ('48249fae-bc27-11ec-8422-0242ac120002', 'date-time', 'datepicker', '2021-04-27 15:14:25.180827+00', 0), ('4824a0c6-bc27-11ec-8422-0242ac120002', 'text', 'textarea', '2021-04-27 15:14:25.180827+00', 0), ('4824a1d4-bc27-11ec-8422-0242ac120002', 'file-reference', 'filepicker', '2021-04-27 15:14:25.180827+00', 0);
+INSERT INTO widgets_for_fields (field_value, widget_value)
+  VALUES ('text', 'text'), ('text', 'markdown'), ('boolean', 'options-2'), ('boolean', 'options-3'), ('integer', 'text'), ('decimal', 'text'), ('decimal', 'options-few'), ('decimal', 'options-many'), ('text', 'options-many'), ('integer', 'options-many'), ('text', 'options-few'), ('integer', 'options-few'), ('date', 'datepicker'), ('date-time', 'datepicker'), ('text', 'textarea'), ('file-reference', 'filepicker'), ('boolean', 'jes-no')
+ON CONFLICT ON CONSTRAINT widgets_for_fields_field_value_widget_value_key
+  DO NOTHING;
 
 --
 DROP TABLE IF EXISTS fields CASCADE;

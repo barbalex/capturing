@@ -16,6 +16,7 @@ import {
   Field,
   IFieldType,
   IWidgetType,
+  IWidgetForField,
   Project,
   IProjectUser,
   Table,
@@ -47,7 +48,7 @@ type DataProps = {
 }
 
 // = '99999999-9999-9999-9999-999999999999'
-const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
+const FieldForm = ({ id, row, showFilter }: FieldFormProps) => {
   const { projectId, tableId } = useParams()
   const store = useContext(StoreContext)
   const { filter, errors } = store
@@ -61,38 +62,30 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
 
   // const data = {}
   const data: DataProps = useLiveQuery(async () => {
-    const [
-      project,
-      optionsTables,
-      fields,
-      fieldTypes,
-      widgetTypes,
-      projectUser,
-    ] = await Promise.all([
-      dexie.projects.get(projectId),
-      dexie.ttables
-        .filter(
-          (t) =>
-            t.deleted === 0 &&
-            t.project_id === projectId &&
-            ['value_list', 'id_value_list'].includes(t.type),
-        )
-        .toArray(),
-      dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
-      dexie.field_types.where({ deleted: 0 }).toArray(),
-      dexie.widget_types.where({ deleted: 0 }).toArray(),
-      dexie.project_users.get({
-        project_id: projectId,
-        user_email: session?.user?.email,
-      }),
-    ])
+    const [project, optionsTables, fields, fieldTypes, projectUser] =
+      await Promise.all([
+        dexie.projects.get(projectId),
+        dexie.ttables
+          .filter(
+            (t) =>
+              t.deleted === 0 &&
+              t.project_id === projectId &&
+              ['value_list', 'id_value_list'].includes(t.type),
+          )
+          .toArray(),
+        dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
+        dexie.field_types.where({ deleted: 0 }).sortBy('sort'),
+        dexie.project_users.get({
+          project_id: projectId,
+          user_email: session?.user?.email,
+        }),
+      ])
 
     return {
       project,
       optionsTables,
       fields,
       fieldTypes,
-      widgetTypes,
       projectUser,
     }
   }, [projectId, row?.parent_id, session?.user?.email])
@@ -101,14 +94,30 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
     objects: data?.optionsTables ?? [],
     useLabels: row.use_labels,
   })
-  const fields: Field[] = sortByLabelName({
-    objects: data?.fields ?? [],
-    useLabels: row.use_labels,
-  })
   const fieldTypes: IFieldType = data?.fieldTypes ?? []
-  const widgetTypes: IWidgetType = data?.widgetTypes ?? []
+  //const widgetTypes: IWidgetType = data?.widgetTypes ?? []
+  // const widgetsForFields: IWidgetForField = data?.widgetsForFields ?? []
   const userRole = data?.projectUser?.role
   const userMayEdit = userRole === 'project_manager'
+
+  const widgetsForFields: IWidgetForField[] =
+    useLiveQuery(
+      async () =>
+        await dexie.widgets_for_fields
+          .where({ deleted: 0, field_value: row.field_type ?? '' })
+          .sortBy('sort'),
+      [row.field_type],
+    ) ?? []
+  const widgetValues = widgetsForFields.map((w) => w.widget_value)
+
+  const widgetTypes: IWidgetType =
+    useLiveQuery(
+      async () =>
+        dexie.widget_types
+          .filter((wt) => wt.deleted === 0 && widgetValues.includes(wt.value))
+          .sortBy('sort'),
+      [row?.field_type, widgetsForFields],
+    ) ?? []
 
   const optionsTableSelectValues = optionsTables.map((t) => ({
     value: t.id,
@@ -319,6 +328,7 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
           field="widget_type"
           label="Widget"
           dataSource={widgetTypeValues}
+          noDataMessage="(verfügbar, wenn ein Feld-Typ gewählt wurde)"
           onBlur={onBlur}
           error={errors?.field?.widget_type}
           disabled={!userMayEdit}
@@ -338,4 +348,4 @@ const TableForm = ({ id, row, showFilter }: FieldFormProps) => {
   )
 }
 
-export default observer(TableForm)
+export default observer(FieldForm)

@@ -27,6 +27,10 @@ const StyledFormLabel = styled(FormLabel)`
 const StyledRadio = styled(Radio)`
   height: 2px !important;
 `
+const NoDataMessage = styled.div`
+  font-size: small;
+  color: grey;
+`
 
 const RadioButtonGroup = ({
   value: valuePassed,
@@ -35,6 +39,7 @@ const RadioButtonGroup = ({
   error,
   helperText = '',
   dataSource = [],
+  noDataMessage = undefined,
   onBlur,
 }) => {
   const [stateValue, setStateValue] = useState(valuePassed)
@@ -110,15 +115,19 @@ const RadioButtonGroup = ({
         value={valueSelected}
         onChange={onChangeGroup}
       >
-        {dataSource.map((e, index) => (
-          <FormControlLabel
-            key={index}
-            value={toStringIfPossible(e.value)}
-            control={<StyledRadio color="primary" />}
-            label={e.label}
-            onClick={onClickButton}
-          />
-        ))}
+        {dataSource.length ? (
+          dataSource.map((e, index) => (
+            <FormControlLabel
+              key={index}
+              value={toStringIfPossible(e.value)}
+              control={<StyledRadio color="primary" />}
+              label={e.label}
+              onClick={onClickButton}
+            />
+          ))
+        ) : (
+          <NoDataMessage>{noDataMessage}</NoDataMessage>
+        )}
       </RadioGroup>
       {!!error && (
         <FormHelperText id={`${label}ErrorText`}>{error}</FormHelperText>
