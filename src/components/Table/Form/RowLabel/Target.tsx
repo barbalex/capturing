@@ -4,7 +4,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
 
 import { dexie, Field } from '../../../../dexieClient'
-import BetweenCharacters from './BetweenCharacters'
+import BetweenCharactersElement from './BetweenCharacters'
 
 const Container = styled.div`
   margin: 0;
@@ -48,7 +48,7 @@ const TargetContainer = styled.div`
     props.isDraggingOver ? 'rgba(74,20,140,0.1)' : 'white'};
   transition: background-color 0.2s ease;
 `
-const ElementContainer = styled.div`
+const FieldElement = styled.div`
   padding: 8.5px 14px;
   border: 1px solid lightgrey;
   margin-right: 4px;
@@ -57,6 +57,18 @@ const ElementContainer = styled.div`
   font-size: small;
   line-height: 16.6px;
   user-select: none;
+`
+const Handle = styled.div`
+  width: 20px;
+  height: 20px;
+  color: green;
+  position: relative;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+`
+const ElementContainer = styled.div`
+  display: flex;
 `
 
 /**
@@ -118,28 +130,29 @@ const RowLabelTarget = ({ rowLabel, rowState }) => {
                   index={index}
                 >
                   {(provided) => (
-                    <div
+                    <ElementContainer
                       key={el.field?.id ?? el.text ?? index}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                       ref={provided.innerRef}
                     >
+                      <Handle />
                       {el.type === 'field' ? (
-                        <ElementContainer>
+                        <FieldElement>
                           {`${
                             el.field?.name ??
                             el.text ??
                             'neither fieldName nor text'
                           }`}
-                        </ElementContainer>
+                        </FieldElement>
                       ) : (
-                        <BetweenCharacters
+                        <BetweenCharactersElement
                           el={el}
                           rowState={rowState}
                           index={index}
                         />
                       )}
-                    </div>
+                    </ElementContainer>
                   )}
                 </Draggable>
               ))}
