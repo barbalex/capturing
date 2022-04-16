@@ -28,6 +28,7 @@ const TitleContainer = styled.div`
   flex-direction: column;
   flex-grow: 0;
   margin-bottom: 6px;
+  user-select: none;
 `
 const Title = styled.h4`
 margin 0;
@@ -50,6 +51,7 @@ const ElementContainer = styled.div`
   border-radius: 4px;
   font-size: small;
   line-height: 16.6px;
+  user-select: none;
 `
 
 /**

@@ -8,27 +8,28 @@ const Container = styled.div`
   margin: 0;
   border: 1px solid lightgrey;
   border-radius: 4px;
-  flex-basis: 240px;
 `
-const Title = styled.h4`
+const Title = styled.h5`
   margin 0;
   padding: 8px;
   padding-bottom: 0;
+  user-select: none;
 `
 const FieldList = styled.div`
   padding: 4px;
   /*min-width: 240px;*/
 `
 const FieldContainer = styled.div`
-  padding: 8.5px 14px;
+  padding: 4px 7px;
   border: 1px solid lightgrey;
   margin-bottom: 4px;
   border-radius: 4px;
-  font-size: small;
+  font-size: x-small;
   line-height: 16.6px;
+  user-select: none;
 `
 const DividerContainer = styled(FieldContainer)`
-  margin-top: 20px;
+  margin-top: 4px;
 `
 
 /**
@@ -75,6 +76,7 @@ const RowLabelFieldList = ({ project, fields }: Props) => {
                 )}
               </Draggable>
             ))}
+            <Title>Zwischen-Zeichen</Title>
             <Draggable
               key="textfield"
               draggableId="textfield"
@@ -86,7 +88,7 @@ const RowLabelFieldList = ({ project, fields }: Props) => {
                   {...provided.dragHandleProps}
                   ref={provided.innerRef}
                 >
-                  {'Zeichen vor/nach/zwischen Feldern'}
+                  {'Zeichen vor / nach / zwischen Feldern'}
                 </DividerContainer>
               )}
             </Draggable>

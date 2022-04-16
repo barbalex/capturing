@@ -102,7 +102,7 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
         dexie.ttables.put(newRow)
       }
       if (
-        destination?.droppableId === 'fieldList' &&
+        //destination?.droppableId === 'fieldList' &&
         source?.droppableId === 'target'
       ) {
         // want to remove this from the rowLabel at this index
