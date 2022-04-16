@@ -24,7 +24,7 @@ type DataProps = {
 
 const FieldComponent = ({ filter: showFilter }) => {
   const session = supabase.auth.session()
-  const { tableId, projectId, fieldId } = useParams()
+  const { projectId, fieldId } = useParams()
   const filter = 'TODO: was in store'
 
   const data: DataProps = useLiveQuery(async () => {
