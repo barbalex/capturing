@@ -139,8 +139,8 @@ export class Field implements IField {
 
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     this.deleted = 1
-    dexie.projects.put(this)
-    this.updateOnServer({ row: this, session })
+    dexie.fields.put(this)
+    return this.updateOnServer({ row: this, session })
   }
 }
 
@@ -515,7 +515,7 @@ export class Project implements IProject {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     this.deleted = 1
     dexie.projects.put(this)
-    this.updateOnServer({ row: this, session })
+    return this.updateOnServer({ row: this, session })
   }
 }
 
@@ -674,7 +674,7 @@ export class Row implements IRow {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     this.deleted = 1
     dexie.rows.put(this)
-    this.updateOnServer({ row: this, session })
+    return this.updateOnServer({ row: this, session })
   }
 }
 
@@ -760,8 +760,8 @@ export class Table implements ITable {
 
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     this.deleted = 1
-    dexie.projects.put(this)
-    this.updateOnServer({ row: this, session })
+    dexie.ttables.put(this)
+    return this.updateOnServer({ row: this, session })
   }
 }
 
