@@ -3,6 +3,7 @@ import { DragDropContext } from 'react-beautiful-dnd'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
+import { arrayMoveImmutable } from 'array-move'
 
 import { dexie, Field, Project, Table, ITable } from '../../../../dexieClient'
 import FieldList from './FieldList'
@@ -120,6 +121,22 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
         const newRow = {
           ...rowState.current,
           row_label: clonedRowLabel.length ? clonedRowLabel : null,
+        }
+        rowState.current = newRow
+        dexie.ttables.put(newRow)
+      }
+
+      if (
+        destination?.droppableId === 'fieldList' &&
+        source?.droppableId === 'droppableId'
+      ) {
+        const newRow = {
+          ...rowState.current,
+          row_label: arrayMoveImmutable(
+            row_label,
+            source.index,
+            destination.index,
+          ),
         }
         rowState.current = newRow
         dexie.ttables.put(newRow)

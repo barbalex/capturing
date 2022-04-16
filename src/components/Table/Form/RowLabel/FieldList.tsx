@@ -7,7 +7,7 @@ import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 const Container = styled.div`
   margin: 0;
   border: 1px solid lightgrey;
-  border-radius: 2px;
+  border-radius: 4px;
 `
 const Title = styled.h4`
   margin 0;
@@ -18,11 +18,12 @@ const FieldList = styled.div`
   min-width: 240px;
 `
 const FieldContainer = styled.div`
-  padding: 4px;
+  padding: 8.5px 14px;
   border: 1px solid lightgrey;
   margin-bottom: 4px;
-  border-radius: 2px;
+  border-radius: 4px;
   font-size: small;
+  line-height: 16.6px;
 `
 
 /**

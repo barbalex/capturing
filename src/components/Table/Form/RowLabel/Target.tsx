@@ -10,7 +10,7 @@ const Container = styled.div`
   margin: 0;
   margin-right: 8px;
   border: 1px solid lightgrey;
-  border-radius: 2px;
+  border-radius: 4px;
   flex-grow: 1;
 `
 const Title = styled.h4`
@@ -20,15 +20,19 @@ padding: 8px;
 const Target = styled.div`
   padding: 8px;
   display: flex;
+  align-items: flex-end;
 `
 const ElementContainer = styled.div`
-  padding: 4px;
+  padding: 8.5px 14px;
   border: 1px solid lightgrey;
   margin-right: 4px;
-  border-radius: 2px;
+  border-radius: 4px;
   font-size: small;
+  line-height: 16.6px;
 `
 const StyledTextField = styled(TextField)`
+  margin-right: 4px;
+  margin-bottom: 0;
   label {
     font-size: small !important;
   }
@@ -110,11 +114,10 @@ const RowLabel = ({ rowLabel }: Props) => {
                       </ElementContainer>
                     ) : (
                       <StyledTextField
-                        label="Zeichen vor/nach/zwischen Feldern"
+                        label="Zwischen-Zeichen"
                         variant="outlined"
                         margin="dense"
                         size="small"
-                        fullWidth
                         defaultValue={el.text ?? ''}
                         onBlur={() => console.log('TODO:')}
                       />

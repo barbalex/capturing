@@ -2385,6 +2385,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"array-move@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "array-move@npm:4.0.0"
+  checksum: 307e6716e83567918cf8dd0050cdb44ce500d9969cd734ecbf1f8ae547df151dbf10713255a9db6a8950ca917f4817a778f0116f6d13944c3f3cd1fd1845f13f
+  languageName: node
+  linkType: hard
+
 "array-union@npm:^2.1.0":
   version: 2.1.0
   resolution: "array-union@npm:2.1.0"
@@ -2650,6 +2657,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.19.0
     "@typescript-eslint/parser": 5.19.0
     "@vitejs/plugin-react": 1.3.1
+    array-move: ^4.0.0
     blueimp-md5: 2.19.0
     dayjs: 1.11.1
     dexie: 3.2.1
