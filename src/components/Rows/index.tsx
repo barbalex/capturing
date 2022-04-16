@@ -5,7 +5,7 @@ import { FaPlus, FaArrowUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link, resolvePath } from 'react-router-dom'
 import sortBy from 'lodash/sortBy'
 
 import storeContext from '../../storeContext'
@@ -115,7 +115,7 @@ const RowsComponent = () => {
             <IconButton
               title="Zur Tabelle"
               component={Link}
-              to={`/${activeNodeArray.slice(0, -1).join('/')}`}
+              to={resolvePath(`..`, window.location.pathname)}
               onClick={onClickUp}
               size="large"
             >

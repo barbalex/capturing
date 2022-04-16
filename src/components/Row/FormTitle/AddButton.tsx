@@ -1,22 +1,19 @@
-import React, { useContext, useCallback } from 'react'
-import { observer } from 'mobx-react-lite'
+import React, { useCallback } from 'react'
 import { FaPlus } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { useParams, useNavigate } from 'react-router-dom'
 
-import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import insertRow from '../../../utils/insertRow'
 
 const RowAddButton = () => {
   const { tableId } = useParams()
   const navigate = useNavigate()
-  const { activeNodeArray } = useContext(StoreContext)
 
   const onClick = useCallback(async () => {
     const newId = await insertRow({ tableId })
-    navigate(`/${[...activeNodeArray.slice(0, -1), newId].join('/')}`)
-  }, [activeNodeArray, navigate, tableId])
+    navigate(resolvePath(`../${newId}`, window.location.pathname))
+  }, [navigate, tableId])
 
   return (
     <ErrorBoundary>
@@ -32,4 +29,4 @@ const RowAddButton = () => {
   )
 }
 
-export default observer(RowAddButton)
+export default RowAddButton
