@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import { FaArrowUp, FaArrowRight } from 'react-icons/fa'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, resolvePath } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Session } from '@supabase/supabase-js'
 
@@ -37,7 +37,7 @@ const TableNavButtons = () => {
       <IconButton
         title="Zur Liste"
         component={Link}
-        to={`/${activeNodeArray.slice(0, -1).join('/')}`}
+        to={resolvePath(`..`, window.location.pathname)}
         onClick={onClickUp}
         size="large"
       >
