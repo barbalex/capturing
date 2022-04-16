@@ -18,7 +18,7 @@ const FieldNavButtons = () => {
     <IconButton
       title="Zur Liste"
       component={Link}
-      to={resolvePath('..', window.location.pathname)}
+      to={resolvePath(`..`, window.location.pathname)}
       onClick={onClickUp}
       size="large"
     >
