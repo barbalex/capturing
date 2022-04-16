@@ -63,6 +63,11 @@ const FieldsComponent = () => {
   const store = useContext(storeContext)
   const { activeNodeArray, removeOpenNode, formHeight } = store
 
+  // const fields: Field[] =
+  //   useLiveQuery(async () =>
+  //     dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
+  //   ) ?? []
+
   const data: DataProps = useLiveQuery(async () => {
     const [fields, filteredCount, totalCount, projectUser, project] =
       await Promise.all([
@@ -80,7 +85,7 @@ const FieldsComponent = () => {
   }, [tableId, projectId, session?.user?.email])
 
   const project = data?.project
-  const fields: Fields[] = sortByLabelName({
+  const fieldsSorted: Fields[] = sortByLabelName({
     objects: data?.fields ?? [],
     useLabels: project?.use_labels,
   })
@@ -139,9 +144,9 @@ const FieldsComponent = () => {
           <Virtuoso
             //initialTopMostItemIndex={initialTopMostIndex}
             height={formHeight}
-            totalCount={fields.length}
+            totalCount={fieldsSorted.length}
             itemContent={(index) => {
-              const row = fields[index]
+              const row = fieldsSorted[index]
 
               return <Row key={row.id} row={row} project={project} />
             }}
