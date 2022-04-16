@@ -12,26 +12,41 @@ const Container = styled.div`
   border: 1px solid lightgrey;
   border-radius: 4px;
   flex-grow: 1;
+  > div {
+    flex-grow: 1;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 `
 const Target = styled.div`
   padding: 8px;
+`
+const TitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+  margin-bottom: 6px;
 `
 const Title = styled.h4`
 margin 0;
 `
 const Explainer = styled.p`
-  font-size: small;
-  margin: 4px 0;
+  font-size: x-small;
+  margin: 0;
   color: grey;
 `
 const TargetContainer = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  flex-grow: 1;
 `
 const ElementContainer = styled.div`
   padding: 8.5px 14px;
   border: 1px solid lightgrey;
   margin-right: 4px;
+  margin-top: 8px;
   border-radius: 4px;
   font-size: small;
   line-height: 16.6px;
@@ -78,12 +93,14 @@ const RowLabelTarget = ({ rowLabel, rowState }) => {
       <Droppable droppableId="target">
         {(provided) => (
           <Target ref={provided.innerRef} {...provided.droppableProps}>
-            <Title>Datensatz-Beschriftung</Title>
-            <Explainer>Ziehen Sie Felder hierhin.</Explainer>
-            <Explainer>
-              Ziehen Sie das entsprechende Werkzeug, um Zeichen vor, nach oder
-              zwischen Feldern zu platzieren.
-            </Explainer>
+            <TitleContainer>
+              <Title>Datensatz-Beschriftung</Title>
+              <Explainer>Ziehen Sie Felder hierhin.</Explainer>
+              <Explainer>
+                Ziehen Sie das entsprechende Werkzeug, um Zeichen zwischen
+                Feldern zu platzieren.
+              </Explainer>
+            </TitleContainer>
             <TargetContainer>
               {targetElements.map((el, index) => (
                 <Draggable

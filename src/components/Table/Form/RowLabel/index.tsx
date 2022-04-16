@@ -50,7 +50,7 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
 
   const fieldsForFieldList = (fields ?? []).filter(
     (f) =>
-      !rowLabel
+      !(rowState.current.row_label ?? [])
         .filter((l) => l.type === 'field')
         .map((l) => l.field)
         .includes(f.id),

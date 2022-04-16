@@ -47,14 +47,7 @@ type Props = {
 }
 
 const RowLabelFieldList = ({ project, fields }: Props) => {
-  // const fieldsMap = new Map(
-  //   fields.map((f) => [
-  //     f.id,
-  //     labelFromLabeledTable({ object: f, useLabels: project.use_labels }),
-  //   ]),
-  // )
-
-  console.log('RowLabel, fields:', fields)
+  // console.log('RowLabel, fields:', fields)
 
   return (
     <Container>
