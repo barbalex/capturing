@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react'
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import { DragDropContext } from 'react-beautiful-dnd'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
 
 import { dexie, Field, Project, Table, ITable } from '../../../../dexieClient'
-import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import FieldList from './FieldList'
+import Target from './Target'
 
 const Container = styled.div`
   margin: 0;
@@ -14,11 +14,12 @@ const Container = styled.div`
   border-radius: 2px;
   padding: 8px;
 `
+const InnerContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+`
 const Title = styled.h4`
   margin 0;
-`
-const Target = styled.div`
-  padding: 8px;
 `
 
 /**
@@ -114,23 +115,13 @@ const RowLabel = ({ project, table, rowState }: Props) => {
 
   return (
     <Container>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Title>Datensatz-Beschriftung</Title>
-        <Droppable droppableId="target">
-          {(provided) => (
-            <Target ref={provided.innerRef} {...provided.droppableProps}>
-              <p>target</p>
-              {targetElements.map((el, index) => (
-                <div key={el.field?.id ?? el.text ?? index}>
-                  {el.field?.name ?? el.text ?? 'neither fieldName nor text'}
-                </div>
-              ))}
-              {provided.placeholder}
-            </Target>
-          )}
-        </Droppable>
-        <FieldList project={project} fields={fields} />
-      </DragDropContext>
+      <Title>Datensatz-Beschriftung</Title>
+      <InnerContainer>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Target rowLabel={rowLabel} />
+          <FieldList project={project} fields={fields} />
+        </DragDropContext>
+      </InnerContainer>
     </Container>
   )
 }
