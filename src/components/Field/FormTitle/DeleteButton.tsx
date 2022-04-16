@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { Session } from '@supabase/supabase-js'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, resolvePath } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
@@ -41,12 +41,12 @@ const FieldDeleteButton = ({ row, userMayEdit }) => {
     (event) => setAnchorEl(event.currentTarget),
     [],
   )
-  const remove = useCallback(() => {
+  const remove = useCallback(async () => {
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
     // need to remove openNode from openNodes
     removeOpenNodeWithChildren(activeNodeArray)
-    navigate(`/${activeNodeArray.slice(0, -1).join('/')}`)
+    navigate(resolvePath('..', window.location.pathname))
   }, [activeNodeArray, navigate, removeOpenNodeWithChildren, row, session])
 
   return (
