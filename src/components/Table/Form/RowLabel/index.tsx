@@ -9,16 +9,7 @@ import { dexie, Field, Project, Table, ITable } from '../../../../dexieClient'
 import FieldList from './FieldList'
 import Target from './Target'
 
-const Container = styled.div`
-  margin: 0;
-  border: 1px solid lightgrey;
-  border-radius: 2px;
-  padding: 8px;
-`
-const Title = styled.h4`
-  margin 0;
-  margin-bottom: 8px;
-`
+const Container = styled.div``
 const InnerContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -155,13 +146,12 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
         }
       }}
     >
-      <Title>Datensatz-Beschriftung</Title>
-      <InnerContainer>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Target rowLabel={rowLabel} />
+      <DragDropContext onDragEnd={onDragEnd}>
+        <InnerContainer>
+          <Target rowLabel={rowLabel} rowState={rowState} />
           <FieldList project={project} fields={fieldsForFieldList} />
-        </DragDropContext>
-      </InnerContainer>
+        </InnerContainer>
+      </DragDropContext>
     </Container>
   )
 }

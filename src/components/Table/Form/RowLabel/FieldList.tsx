@@ -8,14 +8,16 @@ const Container = styled.div`
   margin: 0;
   border: 1px solid lightgrey;
   border-radius: 4px;
+  flex-basis: 240px;
 `
 const Title = styled.h4`
   margin 0;
   padding: 8px;
+  padding-bottom: 0;
 `
 const FieldList = styled.div`
   padding: 4px;
-  min-width: 240px;
+  /*min-width: 240px;*/
 `
 const FieldContainer = styled.div`
   padding: 8.5px 14px;
@@ -24,6 +26,9 @@ const FieldContainer = styled.div`
   border-radius: 4px;
   font-size: small;
   line-height: 16.6px;
+`
+const DividerContainer = styled(FieldContainer)`
+  margin-top: 20px;
 `
 
 /**
@@ -41,7 +46,7 @@ type Props = {
   fields: Field[]
 }
 
-const RowLabel = ({ project, fields }: Props) => {
+const RowLabelFieldList = ({ project, fields }: Props) => {
   // const fieldsMap = new Map(
   //   fields.map((f) => [
   //     f.id,
@@ -83,13 +88,13 @@ const RowLabel = ({ project, fields }: Props) => {
               index={fields.length}
             >
               {(provided) => (
-                <FieldContainer
+                <DividerContainer
                   {...provided.draggableProps}
                   {...provided.dragHandleProps}
                   ref={provided.innerRef}
                 >
                   {'Zeichen vor/nach/zwischen Feldern'}
-                </FieldContainer>
+                </DividerContainer>
               )}
             </Draggable>
             {provided.placeholder}
@@ -100,4 +105,4 @@ const RowLabel = ({ project, fields }: Props) => {
   )
 }
 
-export default RowLabel
+export default RowLabelFieldList

@@ -1,10 +1,10 @@
 import { Droppable, Draggable } from 'react-beautiful-dnd'
-import TextField from '@mui/material/TextField'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
 
-import { dexie, Field, ITable } from '../../../../dexieClient'
+import { dexie, Field } from '../../../../dexieClient'
+import BetweenCharacters from './BetweenCharacters'
 
 const Container = styled.div`
   margin: 0;
@@ -13,12 +13,18 @@ const Container = styled.div`
   border-radius: 4px;
   flex-grow: 1;
 `
-const Title = styled.h4`
-margin 0;
-padding: 8px;
-`
 const Target = styled.div`
   padding: 8px;
+`
+const Title = styled.h4`
+margin 0;
+`
+const Explainer = styled.p`
+  font-size: small;
+  margin: 4px 0;
+  color: grey;
+`
+const TargetContainer = styled.div`
   display: flex;
   align-items: flex-end;
 `
@@ -29,16 +35,6 @@ const ElementContainer = styled.div`
   border-radius: 4px;
   font-size: small;
   line-height: 16.6px;
-`
-const StyledTextField = styled(TextField)`
-  margin-right: 4px;
-  margin-bottom: 0;
-  label {
-    font-size: small !important;
-  }
-  input {
-    font-size: small !important;
-  }
 `
 
 /**
@@ -55,11 +51,8 @@ const StyledTextField = styled(TextField)`
  * 2. presentation: only the drop area
  * 3. remind user to first define the fields
  */
-type Props = {
-  rowState: ITable
-}
 
-const RowLabel = ({ rowLabel }: Props) => {
+const RowLabelTarget = ({ rowLabel, rowState }) => {
   const { tableId } = useParams()
 
   // rowLabel: array of {field: id, type: 'field'},{text, type: 'text'}
@@ -73,11 +66,6 @@ const RowLabel = ({ rowLabel }: Props) => {
       [tableId, rowLabel],
     ) ?? []
 
-  console.log('Target', {
-    rowLabel,
-    targetFieldIds,
-    targetFields,
-  })
   const targetElements = rowLabel.map((el) => ({
     type: el.type,
     field: el.field ? targetFields.find((f) => f.id === el.field) : undefined,
@@ -87,48 +75,52 @@ const RowLabel = ({ rowLabel }: Props) => {
 
   return (
     <Container>
-      <Title>Target</Title>
       <Droppable droppableId="target">
         {(provided) => (
           <Target ref={provided.innerRef} {...provided.droppableProps}>
-            {targetElements.map((el, index) => (
-              <Draggable
-                key={el.field?.id ?? el.text ?? index}
-                draggableId={`${
-                  el.field?.id ?? el.text ?? index
-                }draggableTarget`}
-                index={index}
-              >
-                {(provided) => (
-                  <div
-                    key={el.field?.id ?? el.text ?? index}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    ref={provided.innerRef}
-                  >
-                    {el.type === 'field' ? (
-                      <ElementContainer>
-                        {`${
-                          el.field?.name ??
-                          el.text ??
-                          'neither fieldName nor text'
-                        }`}
-                      </ElementContainer>
-                    ) : (
-                      <StyledTextField
-                        label="Zwischen-Zeichen"
-                        variant="outlined"
-                        margin="dense"
-                        size="small"
-                        defaultValue={el.text ?? ''}
-                        onBlur={() => console.log('TODO:')}
-                      />
-                    )}
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
+            <Title>Datensatz-Beschriftung</Title>
+            <Explainer>Ziehen Sie Felder hierhin.</Explainer>
+            <Explainer>
+              Ziehen Sie das entsprechende Werkzeug, um Zeichen vor, nach oder
+              zwischen Feldern zu platzieren.
+            </Explainer>
+            <TargetContainer>
+              {targetElements.map((el, index) => (
+                <Draggable
+                  key={el.field?.id ?? el.text ?? index}
+                  draggableId={`${
+                    el.field?.id ?? el.text ?? index
+                  }draggableTarget`}
+                  index={index}
+                >
+                  {(provided) => (
+                    <div
+                      key={el.field?.id ?? el.text ?? index}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                    >
+                      {el.type === 'field' ? (
+                        <ElementContainer>
+                          {`${
+                            el.field?.name ??
+                            el.text ??
+                            'neither fieldName nor text'
+                          }`}
+                        </ElementContainer>
+                      ) : (
+                        <BetweenCharacters
+                          el={el}
+                          rowState={rowState}
+                          index={index}
+                        />
+                      )}
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </TargetContainer>
           </Target>
         )}
       </Droppable>
@@ -136,4 +128,4 @@ const RowLabel = ({ rowLabel }: Props) => {
   )
 }
 
-export default RowLabel
+export default RowLabelTarget

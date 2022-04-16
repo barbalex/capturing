@@ -12,6 +12,7 @@ const StyledListItem = styled(ListItem)`
   border-collapse: collapse;
   margin: -1px 0;
   padding: 10px;
+  white-space: pre-wrap; /* needed to implement multiple whitespaces */
   &:hover {
     background-color: rgba(74, 20, 140, 0.03);
   }
