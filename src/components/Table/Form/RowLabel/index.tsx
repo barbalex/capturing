@@ -40,9 +40,10 @@ type Props = {
   project: Project
   table: Table
   rowState: ITable
+  updateOnServer: () => void
 }
 
-const RowLabel = ({ project, table, rowState }: Props) => {
+const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
   const { tableId } = useParams()
 
   const fields: Field[] = useLiveQuery(
@@ -95,7 +96,6 @@ const RowLabel = ({ project, table, rowState }: Props) => {
           ],
         }
         rowState.current = newRow
-        console.log('onDragEnd, newRow:', newRow)
         dexie.ttables.put(newRow)
       }
       if (
@@ -111,7 +111,6 @@ const RowLabel = ({ project, table, rowState }: Props) => {
           row_label: clonedRowLabel.length ? clonedRowLabel : null,
         }
         rowState.current = newRow
-        console.log('onDragEnd, newRow:', newRow)
         dexie.ttables.put(newRow)
       }
     },
@@ -119,7 +118,15 @@ const RowLabel = ({ project, table, rowState }: Props) => {
   )
 
   return (
-    <Container>
+    <Container
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          // focus left the container
+          // https://github.com/facebook/react/issues/6410#issuecomment-671915381
+          updateOnServer()
+        }
+      }}
+    >
       <Title>Datensatz-Beschriftung</Title>
       <InnerContainer>
         <DragDropContext onDragEnd={onDragEnd}>

@@ -76,7 +76,7 @@ const RowLabel = ({ rowLabel }: Props) => {
           <Target ref={provided.innerRef} {...provided.droppableProps}>
             {targetElements.map((el, index) => (
               <Draggable
-                key={el.id}
+                key={el.field?.id ?? el.text ?? index}
                 draggableId={`${el.id}draggableTarget`}
                 index={index}
               >

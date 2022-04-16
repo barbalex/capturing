@@ -312,7 +312,12 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           type="number"
         />
         {row.type === 'standard' ? (
-          <RowLabel project={project} table={row} rowState={rowState} />
+          <RowLabel
+            project={project}
+            table={row}
+            rowState={rowState}
+            updateOnServer={updateOnServer}
+          />
         ) : (
           <p>
             Werte-Listen werden automatisch mit den Werten selbst beschriftet
