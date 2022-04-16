@@ -46,6 +46,7 @@ const TargetContainer = styled.div`
   padding: 8px;
   background-color: ${(props) =>
     props.isDraggingOver ? 'rgba(74,20,140,0.1)' : 'white'};
+  transition: background-color 0.2s ease;
 `
 const ElementContainer = styled.div`
   padding: 8.5px 14px;

@@ -31,7 +31,9 @@ const FieldContainer = styled.div`
   user-select: none;
   background-color: ${(props) =>
     props.isDragging ? 'rgb(74, 20, 140)' : 'white'};
+  transition: background-color 0.2s ease;
   color: ${(props) => (props.isDragging ? 'white' : 'black')};
+  transition: color 0.2s ease;
 `
 const DividerContainer = styled(FieldContainer)`
   margin-top: 4px;
