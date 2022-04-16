@@ -29,6 +29,9 @@ const FieldContainer = styled.div`
   font-size: x-small;
   line-height: 16.6px;
   user-select: none;
+  background-color: ${(props) =>
+    props.isDragging ? 'rgb(74, 20, 140)' : 'white'};
+  color: ${(props) => (props.isDragging ? 'white' : 'black')};
 `
 const DividerContainer = styled(FieldContainer)`
   margin-top: 4px;
@@ -64,11 +67,12 @@ const RowLabelFieldList = ({ project, fields }: Props) => {
                 draggableId={`${f.id}draggableField`}
                 index={index}
               >
-                {(provided) => (
+                {(provided, snapshot) => (
                   <FieldContainer
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     ref={provided.innerRef}
+                    isDragging={snapshot.isDragging}
                   >
                     {labelFromLabeledTable({
                       object: f,
