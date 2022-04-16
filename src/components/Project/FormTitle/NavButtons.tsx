@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import { FaArrowUp, FaArrowRight } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { Link, resolvePath } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
 
@@ -20,7 +20,7 @@ const ProjectNavButtons = () => {
       <IconButton
         title="Zur Liste"
         component={Link}
-        to={`/${activeNodeArray.slice(0, -1).join('/')}`}
+        to={resolvePath(`..`, window.location.pathname)}
         onClick={onClickUp}
         size="large"
       >
