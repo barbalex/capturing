@@ -311,12 +311,13 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
           disabled={!userMayEdit}
           type="number"
         />
-        <p>
-          {
-            'TODO: add row_label once fields exist. Use: https://github.com/atlassian/react-beautiful-dnd, https://react-beautiful-dnd.netlify.app/?path=/story/board--simple '
-          }
-        </p>
-        <RowLabel project={project} table={row} rowState={rowState} />
+        {row.type === 'standard' ? (
+          <RowLabel project={project} table={row} rowState={rowState} />
+        ) : (
+          <p>
+            Werte-Listen werden automatisch mit den Werten selbst beschriftet
+          </p>
+        )}
       </FieldsContainer>
     </ErrorBoundary>
   )

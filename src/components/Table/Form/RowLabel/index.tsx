@@ -53,31 +53,19 @@ const RowLabel = ({ project, table, rowState }: Props) => {
 
   // array of {field: id, type: 'field'},{text, type: 'text'}
   const rowLabel = useMemo(() => table.row_label ?? [], [table.row_label])
-  const targetFieldIds: string[] = rowLabel
-    .filter((el) => el.type === 'field')
-    .map((el) => el.field)
-  const targetFields: Field[] =
-    useLiveQuery(
-      async () =>
-        await dexie.fields.where('id').anyOf(targetFieldIds).toArray(),
-      [tableId, table.row_label],
-    ) ?? []
+
+  const fieldsForFieldList = (fields ?? []).filter(
+    (f) =>
+      !rowLabel
+        .filter((l) => l.type === 'field')
+        .map((l) => l.field)
+        .includes(f.id),
+  )
 
   console.log('RowLabel', {
     project,
     table,
     rowLabel,
-    targetFieldIds,
-    targetFields,
-  })
-  const targetElements = rowLabel.map((el) => ({
-    type: el.type,
-    field: el.field ? targetFields.find((f) => f.id === el.field) : undefined,
-    text: el?.text,
-  }))
-
-  console.log('RowLabel', {
-    targetElements,
   })
 
   // TODO: on with https://egghead.io/lessons/react-persist-list-reordering-with-react-beautiful-dnd-using-the-ondragend-callback
@@ -119,7 +107,7 @@ const RowLabel = ({ project, table, rowState }: Props) => {
       <InnerContainer>
         <DragDropContext onDragEnd={onDragEnd}>
           <Target rowLabel={rowLabel} />
-          <FieldList project={project} fields={fields} />
+          <FieldList project={project} fields={fieldsForFieldList} />
         </DragDropContext>
       </InnerContainer>
     </Container>

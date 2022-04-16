@@ -57,7 +57,7 @@ const RowLabel = ({ rowLabel }: Props) => {
       [tableId, rowLabel],
     ) ?? []
 
-  console.log('RowLabel', {
+  console.log('Target', {
     rowLabel,
     targetFieldIds,
     targetFields,
