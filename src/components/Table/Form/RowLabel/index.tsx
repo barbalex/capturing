@@ -127,13 +127,13 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
       }
 
       if (
-        destination?.droppableId === 'fieldList' &&
-        source?.droppableId === 'droppableId'
+        destination?.droppableId === 'target' &&
+        source?.droppableId === 'target'
       ) {
         const newRow = {
           ...rowState.current,
           row_label: arrayMoveImmutable(
-            row_label,
+            rowLabel,
             source.index,
             destination.index,
           ),

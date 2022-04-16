@@ -94,7 +94,9 @@ const RowLabel = ({ rowLabel }: Props) => {
             {targetElements.map((el, index) => (
               <Draggable
                 key={el.field?.id ?? el.text ?? index}
-                draggableId={`${el.id}draggableTarget`}
+                draggableId={`${
+                  el.field?.id ?? el.text ?? index
+                }draggableTarget`}
                 index={index}
               >
                 {(provided) => (
