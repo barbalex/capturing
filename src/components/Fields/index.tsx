@@ -143,7 +143,7 @@ const FieldsComponent = () => {
             itemContent={(index) => {
               const row = fields[index]
 
-              return <Row key={row.id} row={row} />
+              return <Row key={row.id} row={row} project={project} />
             }}
           />
         </RowsContainer>

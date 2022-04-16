@@ -1,15 +1,9 @@
-import React, { useContext } from 'react'
-import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
-import { useParams } from 'react-router-dom'
-import { useLiveQuery } from 'dexie-react-hooks'
 import ListItem from '@mui/material/ListItem'
 import { Link } from 'react-router-dom'
 
-import StoreContext from '../../storeContext'
 import constants from '../../utils/constants'
 import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
-import { dexie, Field } from '../../dexieClient'
 
 const StyledListItem = styled(ListItem)`
   min-height: ${constants.singleRowHeight};
@@ -24,29 +18,17 @@ const StyledListItem = styled(ListItem)`
   }
 `
 
-const FieldRow = ({ row }) => {
-  const store = useContext(StoreContext)
-  const { activeNodeArray } = store
-  const { projectId } = useParams()
-
-  const project: Field = useLiveQuery(
-    async () => await dexie.projects.get(projectId),
-    [projectId],
-  )
-
+const FieldRow = ({ row, project }) => {
   const label = labelFromLabeledTable({
     object: row,
     useLabels: project?.use_labels,
   })
 
   return (
-    <StyledListItem
-      component={Link}
-      to={`/${[...activeNodeArray, row.id].join('/')}`}
-    >
+    <StyledListItem component={Link} to={row.id}>
       {label}
     </StyledListItem>
   )
 }
 
-export default observer(FieldRow)
+export default FieldRow
