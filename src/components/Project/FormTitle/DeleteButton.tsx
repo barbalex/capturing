@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { Session } from '@supabase/supabase-js'
+import { resolvePath, useNavigate } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
@@ -25,9 +26,9 @@ const Title = styled.div`
 `
 
 const ProjectDeleteButton = ({ row }) => {
+  const navigate = useNavigate()
   const store = useContext(StoreContext)
-  const { activeNodeArray, setActiveNodeArray, removeOpenNodeWithChildren } =
-    store
+  const { activeNodeArray, removeOpenNodeWithChildren } = store
   // const filter = { todo: 'TODO: was in store' }
   const session: Session = supabase.auth.session()
 
@@ -45,14 +46,8 @@ const ProjectDeleteButton = ({ row }) => {
     setAnchorEl(null)
     // need to remove openNode from openNodes
     removeOpenNodeWithChildren(activeNodeArray)
-    setActiveNodeArray(activeNodeArray.slice(0, -1))
-  }, [
-    activeNodeArray,
-    removeOpenNodeWithChildren,
-    row,
-    session,
-    setActiveNodeArray,
-  ])
+    navigate(resolvePath(`..`, window.location.pathname))
+  }, [activeNodeArray, navigate, removeOpenNodeWithChildren, row, session])
 
   return (
     <ErrorBoundary>

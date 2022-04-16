@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { dexie, Project } from '../../dexieClient'
@@ -25,8 +24,6 @@ const ProjectComponent = ({ filter: showFilter }) => {
     [projectId],
   )
 
-  // console.log('Project rendering, activeNodeArray:', activeNodeArray.slice())
-
   if (!row) return <Spinner />
   if (!showFilter && filter.show) return null
 
@@ -40,4 +37,4 @@ const ProjectComponent = ({ filter: showFilter }) => {
   )
 }
 
-export default observer(ProjectComponent)
+export default ProjectComponent
