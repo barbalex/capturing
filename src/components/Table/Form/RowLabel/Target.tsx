@@ -16,13 +16,15 @@ padding: 8px;
 `
 const Target = styled.div`
   padding: 8px;
+  display: flex;
 `
 
 const ElementContainer = styled.div`
-  padding: 8px;
+  padding: 4px;
   border: 1px solid lightgrey;
-  margin-bottom: 4px;
+  margin-right: 4px;
   border-radius: 2px;
+  font-size: small;
 `
 
 /**

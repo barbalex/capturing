@@ -76,12 +76,11 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
       console.log('onDragEnd, result:', result)
       const { destination, source } = result
       if (
-        destination.droppableId === 'target' &&
-        source.droppableId === 'fieldList'
+        destination?.droppableId === 'target' &&
+        source?.droppableId === 'fieldList'
       ) {
         // want to add this to rowLabel at this index
         const field: Field = fields[source.index]
-        console.log('onDragEnd, field:', { field, rowState: rowState.current })
 
         const newRow = {
           ...rowState.current,
@@ -99,8 +98,8 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
         dexie.ttables.put(newRow)
       }
       if (
-        destination.droppableId === 'fieldList' &&
-        source.droppableId === 'target'
+        destination?.droppableId === 'fieldList' &&
+        source?.droppableId === 'target'
       ) {
         // want to remove this from the rowLabel at this index
         const clonedRowLabel = [...rowLabel]

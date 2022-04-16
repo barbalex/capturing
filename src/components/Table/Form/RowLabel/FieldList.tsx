@@ -19,10 +19,11 @@ const FieldList = styled.div`
   padding: 4px;
 `
 const FieldContainer = styled.div`
-  padding: 8px;
+  padding: 4px;
   border: 1px solid lightgrey;
   margin-bottom: 4px;
   border-radius: 2px;
+  font-size: small;
 `
 
 /**
