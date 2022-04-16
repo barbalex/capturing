@@ -144,7 +144,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
     // only update if is changed
     if (!isEqual(originalRow.current, rowState.current)) {
       row.updateOnServer({ row: rowState.current, session })
-      // TODO: if typ changed
+      // TODO: if type changed
       // 1. remove all fields. But first ask user if is o.k.
       // 2. create new if value_list or id_value_list
     }
