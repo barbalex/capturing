@@ -1,21 +1,20 @@
-import React, { useContext, useCallback } from 'react'
-import { observer } from 'mobx-react-lite'
+import React, { useCallback } from 'react'
 import { FaPlus } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
+import { resolvePath, useNavigate } from 'react-router-dom'
 
-import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import insertProject from '../../../utils/insertProject'
 import { dexie, IAccount } from '../../../dexieClient'
 
 const ProjectAddButton = () => {
-  const { activeNodeArray, setActiveNodeArray } = useContext(StoreContext)
+  const navigate = useNavigate()
 
   const onClick = useCallback(async () => {
     const account: IAccount = await dexie.accounts.toCollection().first()
     const newProjectId = await insertProject({ account })
-    setActiveNodeArray([...activeNodeArray.slice(0, -1), newProjectId])
-  }, [activeNodeArray, setActiveNodeArray])
+    navigate(resolvePath(`../${newProjectId}`, window.location.pathname))
+  }, [navigate])
 
   return (
     <ErrorBoundary>
@@ -31,4 +30,4 @@ const ProjectAddButton = () => {
   )
 }
 
-export default observer(ProjectAddButton)
+export default ProjectAddButton

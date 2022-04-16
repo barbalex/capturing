@@ -5,7 +5,7 @@ import { FaPlus, FaArrowUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, resolvePath } from 'react-router-dom'
 
 import storeContext from '../../storeContext'
 import Row from './Row'
@@ -89,7 +89,7 @@ const Projects = () => {
             <IconButton
               title={upTitle}
               component={Link}
-              to={`/${activeNodeArray.slice(0, -1).join('/')}`}
+              to={resolvePath(`..`, window.location.pathname)}
               onClick={onClickUp}
               size="large"
             >
