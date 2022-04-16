@@ -89,6 +89,7 @@ const RowLabel = ({ project, table, rowState }: Props) => {
             {
               field: field.id,
               type: 'field',
+              index: destination.index,
             },
             ...rowLabel.slice(destination.index),
           ],

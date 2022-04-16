@@ -634,12 +634,15 @@ export class Row implements IRow {
       if (isOptionsTable) {
         return this.data?.value ?? '(kein Wert)'
       }
-      const project: Project = await dexie.projects.get(table.project_id)
-      const labelArray = table.row_label
-      if (!labelArray)
+      console.log('dexie Row, label:', { table, row: this })
+      if (!table.row_label) {
         return `${this.id} (labels are not configured for '${table.name}')`
+      }
+
+      const project: Project = await dexie.projects.get(table.project_id)
       let label = ''
-      const lASorted = sortBy(labelArray, 'index')
+      const lASorted = sortBy(table.row_label, 'index')
+      console.log('dexie Row, label, lASorted:', lASorted)
       // array elements are: {field: field_id, text: 'field', index: 1}
       for (const el of lASorted) {
         // TODO:
