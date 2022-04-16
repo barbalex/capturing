@@ -22,10 +22,9 @@ const Container = styled.div`
     flex-direction: column;
   }
 `
-const Target = styled.div`
-  padding: 8px;
-`
+const Target = styled.div``
 const TitleContainer = styled.div`
+  padding: 8px;
   display: flex;
   flex-direction: column;
   flex-grow: 0;
@@ -44,6 +43,9 @@ const TargetContainer = styled.div`
   display: flex;
   align-items: center;
   flex-grow: 1;
+  padding: 8px;
+  background-color: ${(props) =>
+    props.isDraggingOver ? 'rgba(74,20,140,0.1)' : 'white'};
 `
 const ElementContainer = styled.div`
   padding: 8.5px 14px;
@@ -95,7 +97,7 @@ const RowLabelTarget = ({ rowLabel, rowState }) => {
   return (
     <Container>
       <Droppable droppableId="target">
-        {(provided) => (
+        {(provided, snapshot) => (
           <Target ref={provided.innerRef} {...provided.droppableProps}>
             <TitleContainer>
               <Title>Datensatz-Beschriftung</Title>
@@ -105,7 +107,7 @@ const RowLabelTarget = ({ rowLabel, rowState }) => {
                 Feldern zu platzieren.
               </Explainer>
             </TitleContainer>
-            <TargetContainer>
+            <TargetContainer isDraggingOver={snapshot.isDraggingOver}>
               {targetElements.map((el, index) => (
                 <Draggable
                   key={el.field?.id ?? el.text ?? index}
