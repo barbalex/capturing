@@ -645,7 +645,7 @@ export class Row implements IRow {
         // TODO:
         if (el.field) {
           const field: Field = await dexie.fields.get(el.field)
-          label += this.data[field.name]
+          label += this.data?.[field.name] ?? `('${field.name}' ist leer)`
         } else {
           label += el.text ?? ''
         }
