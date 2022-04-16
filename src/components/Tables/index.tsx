@@ -142,7 +142,7 @@ const TablesComponent = () => {
             itemContent={(index) => {
               const row = tables[index]
 
-              return <Row key={row.id} row={row} />
+              return <Row key={row.id} row={row} project={project} />
             }}
           />
         </RowsContainer>
