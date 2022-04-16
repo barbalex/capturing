@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from 'react'
+import React, { useContext, useCallback, useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { FaPlus, FaArrowUp } from 'react-icons/fa'
@@ -6,14 +6,14 @@ import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import sortBy from 'lodash/sortBy'
 
 import storeContext from '../../storeContext'
 import RowComponent from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import { dexie, Row, IProjectUser, Project } from '../../dexieClient'
+import { dexie, Row, IProjectUser } from '../../dexieClient'
 import insertRow from '../../utils/insertRow'
-import sortByLabelName from '../../utils/sortByLabelName'
 import FilterNumbers from '../shared/FilterNumbers'
 import { supabase } from '../../supabaseClient'
 
@@ -53,7 +53,6 @@ type DataProps = {
   filteredCount: integer
   totalCount: integer
   projectUser: IProjectUser
-  project: Project
 }
 
 const RowsComponent = () => {
@@ -64,36 +63,39 @@ const RowsComponent = () => {
   const { activeNodeArray, removeOpenNode, formHeight } = store
 
   const data: DataProps = useLiveQuery(async () => {
-    const [rows, filteredCount, totalCount, projectUser, project] =
-      await Promise.all([
-        dexie.rows.where({ deleted: 0, table_id: tableId }).toArray(),
-        dexie.rows.where({ deleted: 0, table_id: tableId }).count(), // TODO: pass in filter
-        dexie.rows.where({ deleted: 0, table_id: tableId }).count(),
-        dexie.project_users.get({
-          project_id: projectId,
-          user_email: session?.user?.email,
-        }),
-        dexie.projects.get(projectId),
-      ])
+    const [rows, filteredCount, totalCount, projectUser] = await Promise.all([
+      dexie.rows.where({ deleted: 0, table_id: tableId }).toArray(),
+      dexie.rows.where({ deleted: 0, table_id: tableId }).count(), // TODO: pass in filter
+      dexie.rows.where({ deleted: 0, table_id: tableId }).count(),
+      dexie.project_users.get({
+        project_id: projectId,
+        user_email: session?.user?.email,
+      }),
+    ])
 
-    return { rows, filteredCount, totalCount, projectUser, project }
+    return { rows, filteredCount, totalCount, projectUser }
   }, [tableId, projectId, session?.user?.email])
 
-  const project = data?.project
-  const rows: Rows[] = sortByLabelName({
-    objects: data?.rows ?? [],
-    useLabels: project?.use_labels,
-  })
+  const rows: Rows[] = data?.rows ?? []
+  const [rowsWithLabel, setRowsWithLabel] = useState([])
+  useEffect(() => {
+    if (!data?.rows?.length) return
+    const promises = data.rows.map((r) =>
+      r.label.then((label) => ({ ...r, label })),
+    )
+    Promise.all(promises).then((rowsWithLabel) =>
+      setRowsWithLabel(sortBy(rowsWithLabel, (r) => r.label)),
+    )
+  }, [data?.rows])
+
   const filteredCount = data?.filteredCount
   const totalCount = data?.totalCount
   const userRole = data?.projectUser?.role
   const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
-  // console.log('Rows', {
-  //   userMayEdit,
-  //   projectUser: data?.projectUser,
-  //   userRole,
-  //   projectId,
-  // })
+  console.log('Rows', {
+    rows,
+    rowsWithLabel,
+  })
 
   const add = useCallback(async () => {
     const newId = await insertRow({ tableId })
@@ -139,9 +141,9 @@ const RowsComponent = () => {
           <Virtuoso
             //initialTopMostItemIndex={initialTopMostIndex}
             height={formHeight}
-            totalCount={rows.length}
+            totalCount={rowsWithLabel.length}
             itemContent={(index) => {
-              const row = rows[index]
+              const row = rowsWithLabel[index]
 
               return <RowComponent key={row.id} row={row} />
             }}

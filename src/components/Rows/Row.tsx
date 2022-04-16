@@ -1,10 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import ListItem from '@mui/material/ListItem'
 import { Link } from 'react-router-dom'
 
-import StoreContext from '../../storeContext'
 import constants from '../../utils/constants'
 
 const StyledListItem = styled(ListItem)`
@@ -20,24 +17,10 @@ const StyledListItem = styled(ListItem)`
   }
 `
 
-const RowRow = ({ row }) => {
-  const store = useContext(StoreContext)
-  const { activeNodeArray } = store
+const RowRow = ({ row }) => (
+  <StyledListItem component={Link} to={row.id}>
+    {row.label}
+  </StyledListItem>
+)
 
-  const [label, setLabel] = useState('')
-
-  useEffect(() => {
-    row.label.then((v) => setLabel(v))
-  }, [row])
-
-  return (
-    <StyledListItem
-      component={Link}
-      to={`/${[...activeNodeArray, row.id].join('/')}`}
-    >
-      {label}
-    </StyledListItem>
-  )
-}
-
-export default observer(RowRow)
+export default RowRow
