@@ -9,7 +9,12 @@ import { dexie, Field, Project, Table, ITable } from '../../../../dexieClient'
 import FieldList from './FieldList'
 import Target from './Target'
 
-const Container = styled.div``
+const Container = styled.div`
+  outline: 1px solid lightgrey;
+  border-radius: 4px;
+  border-collapse: collapse;
+  box-sizing: border-box;
+`
 const InnerContainer = styled.div`
   display: flex;
   justify-content: space-between;

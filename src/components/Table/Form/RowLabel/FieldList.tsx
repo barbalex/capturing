@@ -6,8 +6,10 @@ import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 
 const Container = styled.div`
   margin: 0;
-  border: 1px solid lightgrey;
+  outline: 1px dotted lightgrey;
   border-radius: 4px;
+  border-collapse: collapse;
+  box-sizing: border-box;
 `
 const Title = styled.h5`
   margin 0;

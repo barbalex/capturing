@@ -9,8 +9,10 @@ import BetweenCharacters from './BetweenCharacters'
 const Container = styled.div`
   margin: 0;
   margin-right: 8px;
-  border: 1px solid lightgrey;
+  outline: 1px dotted lightgrey;
   border-radius: 4px;
+  border-collapse: collapse;
+  box-sizing: border-box;
   flex-grow: 1;
   > div {
     flex-grow: 1;
