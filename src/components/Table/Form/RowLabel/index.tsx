@@ -61,22 +61,27 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
         .includes(f.id),
   )
 
-  console.log('RowLabel', {
-    project,
-    table,
-    rowLabel,
-  })
-
   // TODO: on with https://egghead.io/lessons/react-persist-list-reordering-with-react-beautiful-dnd-using-the-ondragend-callback
   const onDragEnd = useCallback(
     (result) => {
       // TODO:
       console.log('onDragEnd, result:', result)
       const { destination, source, draggableId } = result
+      if (!destination) {
+        return
+      }
+      if (
+        destination.droppableId === source.droppableId &&
+        destination.index === source.index
+      ) {
+        // user moved something inside same droppable without changing index
+        return
+      }
       if (
         destination?.droppableId === 'target' &&
         source?.droppableId === 'fieldList'
       ) {
+        // user pulled from field list into target
         const newRow = { ...rowState.current }
         if (draggableId === 'textfield') {
           newRow.row_label = [
@@ -107,9 +112,10 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
         dexie.ttables.put(newRow)
       }
       if (
-        //destination?.droppableId === 'fieldList' &&
+        // not checking destination - user can simply pull out of target
         source?.droppableId === 'target'
       ) {
+        // user pulled from target anywhere outside
         // want to remove this from the rowLabel at this index
         const clonedRowLabel = [...rowLabel]
         clonedRowLabel.splice(source.index, 1)
@@ -124,8 +130,10 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
 
       if (
         destination?.droppableId === 'target' &&
-        source?.droppableId === 'target'
+        source?.droppableId === 'target' &&
+        destination.index !== source.index
       ) {
+        // user moved inside target, to different index
         const newRow = {
           ...rowState.current,
           row_label: arrayMoveImmutable(
