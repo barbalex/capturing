@@ -1858,16 +1858,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supabase/functions-js@npm:^1.3.2":
-  version: 1.3.2
-  resolution: "@supabase/functions-js@npm:1.3.2"
+"@supabase/functions-js@npm:^1.3.3":
+  version: 1.3.3
+  resolution: "@supabase/functions-js@npm:1.3.3"
   dependencies:
     cross-fetch: ^3.1.5
-  checksum: 52086145ab03cbc34105b362f76f75779d42e23600e155a27f20aee6ca2796a5ecc6f3f20cfa5a8ba2c1e3aabb19a09df8e4196f3568d8264f48bcebca9ec223
+  checksum: dd46a70e434ebac345ea41cd7ba86f1cdde02b80212c46913e93880dfe60a9ce52bcc35758d7c3c93685f535f5ca6a8be446f7d800232402e2056630ebff37fc
   languageName: node
   linkType: hard
 
-"@supabase/gotrue-js@npm:^1.22.10":
+"@supabase/gotrue-js@npm:^1.22.12":
   version: 1.22.12
   resolution: "@supabase/gotrue-js@npm:1.22.12"
   dependencies:
@@ -1885,17 +1885,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supabase/realtime-js@npm:^1.6.2":
-  version: 1.6.2
-  resolution: "@supabase/realtime-js@npm:1.6.2"
+"@supabase/realtime-js@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "@supabase/realtime-js@npm:1.7.0"
   dependencies:
     "@types/phoenix": ^1.5.4
     websocket: ^1.0.34
-  checksum: 7b48b1dbefdae80b47011213acfc3bd97a0c8c38fc7822141a892a5978a31e1aff956af071409f464c0707e3303d7114e9ddacb8eecd797c506577bce64cf950
+  checksum: d01892bccd7f0408072ad07e5961b4f2bba6ecf0a3115a65d59908a5db04e5ed1b5bbfe18e6d33e129f643a1d742be8596a6638c0ca93ed1d4332c41653429d0
   languageName: node
   linkType: hard
 
-"@supabase/storage-js@npm:^1.6.5":
+"@supabase/storage-js@npm:^1.7.0":
   version: 1.7.0
   resolution: "@supabase/storage-js@npm:1.7.0"
   dependencies:
@@ -1904,16 +1904,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supabase/supabase-js@npm:1.33.3":
-  version: 1.33.3
-  resolution: "@supabase/supabase-js@npm:1.33.3"
+"@supabase/supabase-js@npm:1.34.0":
+  version: 1.34.0
+  resolution: "@supabase/supabase-js@npm:1.34.0"
   dependencies:
-    "@supabase/functions-js": ^1.3.2
-    "@supabase/gotrue-js": ^1.22.10
+    "@supabase/functions-js": ^1.3.3
+    "@supabase/gotrue-js": ^1.22.12
     "@supabase/postgrest-js": ^0.37.2
-    "@supabase/realtime-js": ^1.6.2
-    "@supabase/storage-js": ^1.6.5
-  checksum: 6fa8768c5bc09f23e32087921240659682e4ec1175b2cc2648cbf852b434d5e644ac7b4ea7ebf8b1c746bd8d10a256a7db14b49b17de8dfd530b175614341378
+    "@supabase/realtime-js": ^1.7.0
+    "@supabase/storage-js": ^1.7.0
+  checksum: 07c3bc5d278ff925aab903b5a87daf4e9239fd3a5e60fece6cde451509fa245c5c5671523a77b8d2a1a4ea3affd6b383f11ab1a201a4d2ad56193013b84749ef
   languageName: node
   linkType: hard
 
@@ -2643,7 +2643,7 @@ __metadata:
     "@mui/material": 5.6.1
     "@mui/styled-engine": 5.6.1
     "@mui/styled-engine-sc": 5.6.1
-    "@supabase/supabase-js": 1.33.3
+    "@supabase/supabase-js": 1.34.0
     "@types/node": 17.0.24
     "@types/react": 18.0.5
     "@types/react-dom": 18.0.1
@@ -2651,7 +2651,7 @@ __metadata:
     "@typescript-eslint/parser": 5.19.0
     "@vitejs/plugin-react": 1.3.1
     blueimp-md5: 2.19.0
-    dayjs: 1.11.0
+    dayjs: 1.11.1
     dexie: 3.2.1
     dexie-react-hooks: 1.1.1
     dexie-relationships: ^1.2.11
@@ -2679,7 +2679,7 @@ __metadata:
     react-select: 5.3.0
     react-split-pane: 0.1.92
     react-stylable-diff: 2.0.0
-    react-virtuoso: 2.9.1
+    react-virtuoso: 2.9.2
     redaxios: 0.4.1
     styled-components: 5.3.5
     typescript: 4.6.3
@@ -2917,10 +2917,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:1.11.0":
-  version: 1.11.0
-  resolution: "dayjs@npm:1.11.0"
-  checksum: 2d36f6d71345114cdcd89147adf9e05b4f8fe81684e08c8bf1f86b140aa0b86ecc3cae661a9348d96feb7fbefd03e1bc3697303688e95209670abcb36b4ece15
+"dayjs@npm:1.11.1":
+  version: 1.11.1
+  resolution: "dayjs@npm:1.11.1"
+  checksum: d5fefd79935f64a3c262e67af7ebeca180bc402b3e99be4e12d20b6d438af3f86d507ba1cbaff95dc0b4e67f1067cea3eaf37b6b74f5494fdd4a6a2909514cd1
   languageName: node
   linkType: hard
 
@@ -5518,15 +5518,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:2.9.1":
-  version: 2.9.1
-  resolution: "react-virtuoso@npm:2.9.1"
+"react-virtuoso@npm:2.9.2":
+  version: 2.9.2
+  resolution: "react-virtuoso@npm:2.9.2"
   dependencies:
     "@virtuoso.dev/react-urx": ^0.2.12
     "@virtuoso.dev/urx": ^0.2.12
   peerDependencies:
     react: ">=16"
-  checksum: 5581278dac6d20ed99923ad23412cf7b0a6d95e9bfe1e02fb08c4fbb92bde3d84fabb2a48e4e4e5560af967180adb70e75ea4a91576904ec9573238f66daa7e1
+  checksum: 05ed9864590af0591eeba6642e755d260f9908385ccc696fb74bbdba5c2e84710b14015f79f1308e0dde6772e3d3491e22c207af87e2e9f5aaa98c699edadaa9
   languageName: node
   linkType: hard
 
