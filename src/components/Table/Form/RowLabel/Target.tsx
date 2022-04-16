@@ -1,4 +1,4 @@
-import { Droppable } from 'react-beautiful-dnd'
+import { Droppable, Draggable } from 'react-beautiful-dnd'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
@@ -75,9 +75,22 @@ const RowLabel = ({ rowLabel }: Props) => {
         {(provided) => (
           <Target ref={provided.innerRef} {...provided.droppableProps}>
             {targetElements.map((el, index) => (
-              <ElementContainer key={el.field?.id ?? el.text ?? index}>
-                {el.field?.name ?? el.text ?? 'neither fieldName nor text'}
-              </ElementContainer>
+              <Draggable
+                key={el.id}
+                draggableId={`${el.id}draggableTarget`}
+                index={index}
+              >
+                {(provided) => (
+                  <ElementContainer
+                    key={el.field?.id ?? el.text ?? index}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    ref={provided.innerRef}
+                  >
+                    {el.field?.name ?? el.text ?? 'neither fieldName nor text'}
+                  </ElementContainer>
+                )}
+              </Draggable>
             ))}
             {provided.placeholder}
           </Target>

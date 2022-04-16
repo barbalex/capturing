@@ -59,7 +59,7 @@ const RowLabel = ({ project, fields }: Props) => {
             {(fields ?? []).map((f, index) => (
               <Draggable
                 key={f.id}
-                draggableId={`${f.id}draggable`}
+                draggableId={`${f.id}draggableField`}
                 index={index}
               >
                 {(provided) => (
