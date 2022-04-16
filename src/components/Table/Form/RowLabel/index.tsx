@@ -14,12 +14,13 @@ const Container = styled.div`
   border-radius: 2px;
   padding: 8px;
 `
-const InnerContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-`
 const Title = styled.h4`
   margin 0;
+  margin-bottom: 8px;
+`
+const InnerContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
 `
 
 /**
@@ -74,17 +75,26 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
     (result) => {
       // TODO:
       console.log('onDragEnd, result:', result)
-      const { destination, source } = result
+      const { destination, source, draggableId } = result
       if (
         destination?.droppableId === 'target' &&
         source?.droppableId === 'fieldList'
       ) {
-        // want to add this to rowLabel at this index
-        const field: Field = fields[source.index]
-
-        const newRow = {
-          ...rowState.current,
-          row_label: [
+        const newRow = { ...rowState.current }
+        if (draggableId === 'textfield') {
+          newRow.row_label = [
+            ...rowLabel.slice(0, destination.index),
+            {
+              text: '',
+              type: 'text',
+              index: destination.index,
+            },
+            ...rowLabel.slice(destination.index),
+          ]
+        } else {
+          // want to add this to rowLabel at this index
+          const field: Field = fields[source.index]
+          newRow.row_label = [
             ...rowLabel.slice(0, destination.index),
             {
               field: field.id,
@@ -92,8 +102,10 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
               index: destination.index,
             },
             ...rowLabel.slice(destination.index),
-          ],
+          ]
         }
+        console.log('RowLabel, newRow:', newRow)
+
         rowState.current = newRow
         dexie.ttables.put(newRow)
       }

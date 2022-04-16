@@ -1,9 +1,7 @@
 import { Draggable, Droppable } from 'react-beautiful-dnd'
-import { useParams } from 'react-router-dom'
-import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
 
-import { dexie, Field, Project } from '../../../../dexieClient'
+import { Field, Project } from '../../../../dexieClient'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 
 const Container = styled.div`
@@ -17,6 +15,7 @@ const Title = styled.h4`
 `
 const FieldList = styled.div`
   padding: 4px;
+  min-width: 240px;
 `
 const FieldContainer = styled.div`
   padding: 4px;
@@ -77,6 +76,21 @@ const RowLabel = ({ project, fields }: Props) => {
                 )}
               </Draggable>
             ))}
+            <Draggable
+              key="textfield"
+              draggableId="textfield"
+              index={fields.length}
+            >
+              {(provided) => (
+                <FieldContainer
+                  {...provided.draggableProps}
+                  {...provided.dragHandleProps}
+                  ref={provided.innerRef}
+                >
+                  {'Zeichen vor/nach/zwischen Feldern'}
+                </FieldContainer>
+              )}
+            </Draggable>
             {provided.placeholder}
           </FieldList>
         )}

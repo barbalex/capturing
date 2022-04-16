@@ -1,4 +1,5 @@
 import { Droppable, Draggable } from 'react-beautiful-dnd'
+import TextField from '@mui/material/TextField'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
@@ -7,8 +8,10 @@ import { dexie, Field, ITable } from '../../../../dexieClient'
 
 const Container = styled.div`
   margin: 0;
+  margin-right: 8px;
   border: 1px solid lightgrey;
   border-radius: 2px;
+  flex-grow: 1;
 `
 const Title = styled.h4`
 margin 0;
@@ -18,13 +21,20 @@ const Target = styled.div`
   padding: 8px;
   display: flex;
 `
-
 const ElementContainer = styled.div`
   padding: 4px;
   border: 1px solid lightgrey;
   margin-right: 4px;
   border-radius: 2px;
   font-size: small;
+`
+const StyledTextField = styled(TextField)`
+  label {
+    font-size: small !important;
+  }
+  input {
+    font-size: small !important;
+  }
 `
 
 /**
@@ -67,7 +77,8 @@ const RowLabel = ({ rowLabel }: Props) => {
   const targetElements = rowLabel.map((el) => ({
     type: el.type,
     field: el.field ? targetFields.find((f) => f.id === el.field) : undefined,
-    text: el?.text,
+    text: el.text,
+    index: el.index,
   }))
 
   return (
@@ -83,14 +94,32 @@ const RowLabel = ({ rowLabel }: Props) => {
                 index={index}
               >
                 {(provided) => (
-                  <ElementContainer
+                  <div
                     key={el.field?.id ?? el.text ?? index}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     ref={provided.innerRef}
                   >
-                    {el.field?.name ?? el.text ?? 'neither fieldName nor text'}
-                  </ElementContainer>
+                    {el.type === 'field' ? (
+                      <ElementContainer>
+                        {`${
+                          el.field?.name ??
+                          el.text ??
+                          'neither fieldName nor text'
+                        }`}
+                      </ElementContainer>
+                    ) : (
+                      <StyledTextField
+                        label="Zeichen vor/nach/zwischen Feldern"
+                        variant="outlined"
+                        margin="dense"
+                        size="small"
+                        fullWidth
+                        defaultValue={el.text ?? ''}
+                        onBlur={() => console.log('TODO:')}
+                      />
+                    )}
+                  </div>
                 )}
               </Draggable>
             ))}
