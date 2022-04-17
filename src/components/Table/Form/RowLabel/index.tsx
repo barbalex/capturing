@@ -35,13 +35,13 @@ const InnerContainer = styled.div`
  * 3. remind user to first define the fields
  */
 type Props = {
-  project: Project
+  useLabels: boolean
   table: Table
   rowState: ITable
   updateOnServer: () => void
 }
 
-const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
+const RowLabel = ({ useLabels, table, rowState, updateOnServer }: Props) => {
   const { tableId } = useParams()
 
   const fields: Field[] = useLiveQuery(
@@ -162,7 +162,7 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
       <DragDropContext onDragEnd={onDragEnd}>
         <InnerContainer>
           <Target rowLabel={rowLabel} rowState={rowState} />
-          <FieldList project={project} fields={fieldsForFieldList} />
+          <FieldList useLabels={useLabels} fields={fieldsForFieldList} />
         </InnerContainer>
       </DragDropContext>
     </Container>

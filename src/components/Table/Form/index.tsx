@@ -92,10 +92,12 @@ const TableForm = ({ showFilter }: TableFormProps) => {
     const userRole = projectUser?.role
     const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
 
-    return { project, projects, tables, row, userMayEdit }
+    const useLabels = project.use_labels
+
+    return { useLabels, projects, tables, row, userMayEdit }
   }, [projectId, tableId, session?.user?.email])
 
-  const project = data?.project
+  const useLabels: boolean = data?.useLabels
   const projects = sortProjectsByLabelName(data?.projects ?? [])
   const row = data?.row
   const tables: Table[] = sortByLabelName({
@@ -128,7 +130,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
       value: t.id,
       label: labelFromLabeledTable({
         object: t,
-        useLabels: project?.use_labels,
+        useLabels,
       }),
     }))
 
@@ -324,7 +326,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
         />
         {row.type === 'standard' ? (
           <RowLabel
-            project={project}
+            useLabels={useLabels}
             table={row}
             rowState={rowState}
             updateOnServer={updateOnServer}

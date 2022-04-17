@@ -2,7 +2,7 @@ import { Draggable, Droppable } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import { BsArrowsMove } from 'react-icons/bs'
 
-import { Field, Project } from '../../../../dexieClient'
+import { Field } from '../../../../dexieClient'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 
 const Container = styled.div`
@@ -53,11 +53,11 @@ const DividerContainer = styled(FieldContainer)`
 `
 
 type Props = {
-  project: Project
+  useLabels: boolean
   fields: Field[]
 }
 
-const RowLabelFieldList = ({ project, fields }: Props) => (
+const RowLabelFieldList = ({ useLabels, fields }: Props) => (
   <Container>
     <Title>Felder</Title>
     <Droppable droppableId="fieldList">
@@ -78,7 +78,7 @@ const RowLabelFieldList = ({ project, fields }: Props) => (
                 >
                   {labelFromLabeledTable({
                     object: f,
-                    useLabels: project?.use_labels,
+                    useLabels,
                   })}
                   <FieldHandle />
                 </FieldContainer>
