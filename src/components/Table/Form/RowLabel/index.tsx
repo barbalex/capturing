@@ -4,8 +4,10 @@ import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
 import { arrayMoveImmutable } from 'array-move'
+import { Session } from '@supabase/supabase-js'
 
-import { dexie, Field, Project, Table, ITable } from '../../../../dexieClient'
+import { dexie, Field, Table, ITable } from '../../../../dexieClient'
+import { supabase } from '../../../../supabaseClient'
 import FieldList from './FieldList'
 import Target from './Target'
 
@@ -41,21 +43,26 @@ type Props = {
   updateOnServer: () => void
 }
 
-const RowLabel = ({ useLabels, table, rowState, updateOnServer }: Props) => {
+const RowLabel = ({ useLabels, rowState, updateOnServer }: Props) => {
   const { tableId } = useParams()
+
+  const session: Session = supabase.auth.session()
 
   const fields: Field[] = useLiveQuery(
     async () =>
       await dexie.fields.where({ table_id: tableId, deleted: 0 }).toArray(),
     [tableId],
   )
-
   // array of {field: id, type: 'field'},{text, type: 'text'}
-  const rowLabel = useMemo(() => table.row_label ?? [], [table.row_label])
+  const _rowLabel = useLiveQuery(async () => {
+    const table: Table = await dexie.ttables.get(tableId)
+    return table.row_label
+  }, [tableId])
+  const rowLabel = useMemo(() => _rowLabel ?? [], [_rowLabel])
 
   const fieldsForFieldList = (fields ?? []).filter(
     (f) =>
-      !(rowState.current.row_label ?? [])
+      !rowLabel
         .filter((l) => l.type === 'field')
         .map((l) => l.field)
         .includes(f.id),
@@ -82,9 +89,9 @@ const RowLabel = ({ useLabels, table, rowState, updateOnServer }: Props) => {
         source?.droppableId === 'fieldList'
       ) {
         // user pulled from field list into target
-        const newRow = { ...rowState.current }
+        let newRowLabel
         if (draggableId === 'textfield') {
-          newRow.row_label = [
+          newRowLabel = [
             ...rowLabel.slice(0, destination.index),
             {
               type: 'text',
@@ -96,7 +103,7 @@ const RowLabel = ({ useLabels, table, rowState, updateOnServer }: Props) => {
         } else {
           // want to add this to rowLabel at this index
           const field: Field = fieldsForFieldList[source.index]
-          newRow.row_label = [
+          newRowLabel = [
             ...rowLabel.slice(0, destination.index),
             {
               type: 'field',
@@ -106,10 +113,11 @@ const RowLabel = ({ useLabels, table, rowState, updateOnServer }: Props) => {
             ...rowLabel.slice(destination.index),
           ]
         }
-        console.log('RowLabel, newRow:', newRow)
-
-        rowState.current = newRow
-        dexie.ttables.put(newRow)
+        rowState.current = {
+          ...rowState.current,
+          ...{ row_label: newRowLabel },
+        }
+        dexie.ttables.update(tableId, { row_label: newRowLabel })
       }
       if (
         // not checking destination - user can simply pull out of target
@@ -119,13 +127,13 @@ const RowLabel = ({ useLabels, table, rowState, updateOnServer }: Props) => {
         // want to remove this from the rowLabel at this index
         const clonedRowLabel = [...rowLabel]
         clonedRowLabel.splice(source.index, 1)
+        const newRowLabel = clonedRowLabel.length ? clonedRowLabel : null
 
-        const newRow = {
+        rowState.current = {
           ...rowState.current,
-          row_label: clonedRowLabel.length ? clonedRowLabel : null,
+          ...{ row_label: newRowLabel },
         }
-        rowState.current = newRow
-        dexie.ttables.put(newRow)
+        dexie.ttables.update(tableId, { row_label: newRowLabel })
       }
 
       if (
@@ -134,29 +142,29 @@ const RowLabel = ({ useLabels, table, rowState, updateOnServer }: Props) => {
         destination.index !== source.index
       ) {
         // user moved inside target, to different index
-        const newRow = {
+        const newRowLabel = arrayMoveImmutable(
+          rowLabel,
+          source.index,
+          destination.index,
+        )
+        rowState.current = {
           ...rowState.current,
-          row_label: arrayMoveImmutable(
-            rowLabel,
-            source.index,
-            destination.index,
-          ),
+          ...{ row_label: newRowLabel },
         }
-        rowState.current = newRow
-        dexie.ttables.put(newRow)
+        dexie.ttables.update(tableId, { row_label: newRowLabel })
       }
     },
-    [fieldsForFieldList, rowLabel, rowState],
+    [fieldsForFieldList, rowLabel, rowState, tableId],
   )
 
   return (
     <Container
       onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) {
-          // focus left the container
-          // https://github.com/facebook/react/issues/6410#issuecomment-671915381
-          updateOnServer()
-        }
+        // if (!e.currentTarget.contains(e.relatedTarget)) {
+        //   // focus left the container
+        //   // https://github.com/facebook/react/issues/6410#issuecomment-671915381
+        //   updateOnServer()
+        // }
       }}
     >
       <DragDropContext onDragEnd={onDragEnd}>

@@ -137,17 +137,19 @@ const TableForm = ({ showFilter }: TableFormProps) => {
   // console.log('ProjectForm rendering row:', row)
 
   const originalRow = useRef<ITable>()
-  // update originalRow only initially
-  useEffect(() => {
-    originalRow.current = row
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
+  // need to update rowState on blur because of
+  // when user directly closes app after last update in field
+  // seems that waiting for dexie update goes too long
   const rowState = useRef<ITable>()
-  // update originalRow only initially
   useEffect(() => {
     rowState.current = row
+    // update originalRow only initially, once row has arrived
+    if (!originalRow.current && row) {
+      console.log('TableRow, setting originalRow to:', row)
+      originalRow.current = row
+    }
   }, [row])
+  console.log('TableRow, rowState:', rowState.current)
 
   useEffect(() => {
     unsetError('table')
@@ -155,20 +157,28 @@ const TableForm = ({ showFilter }: TableFormProps) => {
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
-    if (!isEqual(originalRow.current, rowState.current)) {
-      row.updateOnServer({ row: rowState.current, session })
-      // TODO: if type changed
-      // 1. remove all fields. But first ask user if is o.k.
-      // 2. create new if value_list or id_value_list
-    }
-    return
+    if (isEqual(originalRow.current, rowState.current)) return
+
+    row.updateOnServer({
+      was: originalRow.current,
+      is: rowState.current,
+      session,
+    })
+    // ensure originalRow is reset too
+    originalRow.current = rowState.current
+    // TODO: if type changed
+    // 1. remove all fields. But first ask user if is o.k.
+    // 2. create new if value_list or id_value_list
   }, [row, session])
 
   useEffect(() => {
-    window.onbeforeunload = async () => {
+    window.onbeforeunload = () => {
       // save any data changed before closing tab or browser
-      await updateOnServer()
-      return
+      // only works if updateOnServer can run without waiting for an async process
+      // https://stackoverflow.com/questions/36379155/wait-for-promises-in-onbeforeunload
+      // which is why rowState.current is needed (instead of getting up to date row)
+      updateOnServer()
+      // do not return - otherwise user is dialoged, and that does not help the saving
     }
   }, [updateOnServer])
 
@@ -178,7 +188,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
       let newValue = type === 'number' ? valueAsNumber : value
       if ([undefined, '', NaN].includes(newValue)) newValue = null
 
-      // only update if value has changed
+      // return if value has not changed
       const previousValue = rowState.current[field]
       if (newValue === previousValue) return
 
@@ -190,9 +200,10 @@ const TableForm = ({ showFilter }: TableFormProps) => {
         })
       }
 
-      const newRow = { ...row, [field]: newValue }
-      rowState.current = newRow
-      dexie.ttables.put(newRow)
+      // update rowState
+      rowState.current = { ...row, ...{ [field]: newValue } }
+      // update dexie
+      dexie.ttables.update(row.id, { [field]: newValue })
     },
     [filter, row, showFilter],
   )
@@ -327,9 +338,8 @@ const TableForm = ({ showFilter }: TableFormProps) => {
         {row.type === 'standard' ? (
           <RowLabel
             useLabels={useLabels}
-            table={row}
-            rowState={rowState}
             updateOnServer={updateOnServer}
+            rowState={rowState}
           />
         ) : (
           <p>

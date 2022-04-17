@@ -741,9 +741,9 @@ export class Table implements ITable {
     this.deleted = deleted ?? 0
   }
 
-  async updateOnServer({ row, session }: TableUpdateProps) {
+  async updateOnServer({ was, is, session }: TableUpdateProps) {
     const rowReved = {
-      ...row,
+      ...is,
       client_rev_at: new window.Date().toISOString(),
       client_rev_by: session.user?.email ?? session.user?.id,
     }
@@ -752,10 +752,10 @@ export class Table implements ITable {
       undefined,
       'tables',
       JSON.stringify(rowReved),
-      row?.id,
-      JSON.stringify(this),
+      this.id,
+      JSON.stringify(was),
     )
-    return dexie.queued_updates.add(update)
+    return await dexie.queued_updates.add(update)
   }
 
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
