@@ -67,12 +67,12 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
       // TODO:
       console.log('onDragEnd, result:', result)
       const { destination, source, draggableId } = result
-      if (!destination) {
-        return
-      }
+      // if (!destination) {
+      //   return
+      // }
       if (
-        destination.droppableId === source.droppableId &&
-        destination.index === source.index
+        destination?.droppableId === source?.droppableId &&
+        destination?.index === source?.index
       ) {
         // user moved something inside same droppable without changing index
         return
@@ -87,21 +87,21 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
           newRow.row_label = [
             ...rowLabel.slice(0, destination.index),
             {
-              text: '',
               type: 'text',
               index: destination.index,
+              text: '',
             },
             ...rowLabel.slice(destination.index),
           ]
         } else {
           // want to add this to rowLabel at this index
-          const field: Field = fields[source.index]
+          const field: Field = fieldsForFieldList[source.index]
           newRow.row_label = [
             ...rowLabel.slice(0, destination.index),
             {
-              field: field.id,
               type: 'field',
               index: destination.index,
+              field: field.id,
             },
             ...rowLabel.slice(destination.index),
           ]
@@ -146,7 +146,7 @@ const RowLabel = ({ project, table, rowState, updateOnServer }: Props) => {
         dexie.ttables.put(newRow)
       }
     },
-    [fields, rowLabel, rowState],
+    [fieldsForFieldList, rowLabel, rowState],
   )
 
   return (

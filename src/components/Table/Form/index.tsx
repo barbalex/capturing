@@ -187,7 +187,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
   // const showDeleted = filter?.table?.deleted !== false || row?.deleted
   const showDeleted = false
 
-  console.log('TableForm, row:', row)
+  console.log('TableForm, row_label:', row?.row_label)
 
   return (
     <ErrorBoundary>

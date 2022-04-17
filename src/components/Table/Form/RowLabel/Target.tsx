@@ -2,6 +2,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
+import { FaGripHorizontal } from 'react-icons/fa'
 
 import { dexie, Field } from '../../../../dexieClient'
 import BetweenCharactersElement from './BetweenCharacters'
@@ -11,6 +12,8 @@ const Container = styled.div`
   margin-right: 8px;
   outline: 1px dotted lightgrey;
   border-radius: 4px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
   border-collapse: collapse;
   box-sizing: border-box;
   flex-grow: 1;
@@ -28,7 +31,6 @@ const TitleContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 0;
-  margin-bottom: 6px;
   user-select: none;
 `
 const Title = styled.h4`
@@ -51,21 +53,18 @@ const TargetContainer = styled.div`
 const FieldElement = styled.div`
   padding: 8.5px 14px;
   border: 1px solid lightgrey;
-  margin-right: 4px;
+  margin-right: 6px;
   margin-top: 8px;
   border-radius: 4px;
   font-size: small;
   line-height: 16.6px;
   user-select: none;
 `
-const Handle = styled.div`
-  width: 20px;
-  height: 20px;
-  color: green;
+const Handle = styled(FaGripHorizontal)`
+  color: grey;
   position: relative;
-  top: 10px;
-  left: 10px;
-  z-index: 10;
+  top: -1px;
+  left: -118px;
 `
 const ElementContainer = styled.div`
   display: flex;
@@ -136,7 +135,7 @@ const RowLabelTarget = ({ rowLabel, rowState }) => {
                       {...provided.dragHandleProps}
                       ref={provided.innerRef}
                     >
-                      <Handle />
+                      {/* <Handle /> */}
                       {el.type === 'field' ? (
                         <FieldElement>
                           {`${
@@ -150,7 +149,9 @@ const RowLabelTarget = ({ rowLabel, rowState }) => {
                           el={el}
                           rowState={rowState}
                           index={index}
-                        />
+                        >
+                          <Handle />
+                        </BetweenCharactersElement>
                       )}
                     </ElementContainer>
                   )}

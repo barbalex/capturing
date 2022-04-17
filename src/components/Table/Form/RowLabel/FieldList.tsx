@@ -8,6 +8,8 @@ const Container = styled.div`
   margin: 0;
   outline: 1px dotted lightgrey;
   border-radius: 4px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
   border-collapse: collapse;
   box-sizing: border-box;
 `

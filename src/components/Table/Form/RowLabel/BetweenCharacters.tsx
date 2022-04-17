@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { dexie } from '../../../../dexieClient'
 
 const StyledTextField = styled(TextField)`
-  margin-right: 4px;
+  margin-right: 6px;
   margin-bottom: 0;
   width: 110px;
   label {
@@ -16,7 +16,7 @@ const StyledTextField = styled(TextField)`
   }
 `
 
-const BetweenCharacters = ({ el, rowState, index }) => {
+const BetweenCharacters = ({ el, rowState, index, children }) => {
   const onBlur = useCallback(
     (event) => {
       // TODO:
@@ -33,14 +33,17 @@ const BetweenCharacters = ({ el, rowState, index }) => {
     [index, rowState],
   )
   return (
-    <StyledTextField
-      label="Zwischen-Zeichen"
-      variant="outlined"
-      margin="dense"
-      size="small"
-      defaultValue={el.text ?? ''}
-      onBlur={onBlur}
-    />
+    <div>
+      <StyledTextField
+        label="Zwischen-Zeichen"
+        variant="outlined"
+        margin="dense"
+        size="small"
+        defaultValue={el.text ?? ''}
+        onBlur={onBlur}
+      />
+      {children}
+    </div>
   )
 }
 

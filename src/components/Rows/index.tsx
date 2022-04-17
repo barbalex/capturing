@@ -1,4 +1,10 @@
-import React, { useContext, useCallback, useEffect, useState } from 'react'
+import React, {
+  useContext,
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+} from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { FaPlus, FaArrowUp } from 'react-icons/fa'
@@ -76,26 +82,23 @@ const RowsComponent = () => {
     return { rows, filteredCount, totalCount, projectUser }
   }, [tableId, projectId, session?.user?.email])
 
-  const rows: Rows[] = data?.rows ?? []
+  const rows: Rows[] = useMemo(() => data?.rows ?? [], [data?.rows])
   const [rowsWithLabel, setRowsWithLabel] = useState([])
   useEffect(() => {
-    if (!data?.rows?.length) return
-    const promises = data.rows.map((r) =>
-      r.label.then((label) => ({ ...r, label })),
-    )
+    const promises = rows.map((r) => r.label.then((label) => ({ ...r, label })))
     Promise.all(promises).then((rowsWithLabel) =>
       setRowsWithLabel(sortBy(rowsWithLabel, (r) => r.label)),
     )
-  }, [data?.rows])
+  }, [rows])
 
   const filteredCount = data?.filteredCount
   const totalCount = data?.totalCount
   const userRole = data?.projectUser?.role
   const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
-  console.log('Rows', {
-    rows,
-    rowsWithLabel,
-  })
+  // console.log('Rows', {
+  //   rows,
+  //   rowsWithLabel,
+  // })
 
   const add = useCallback(async () => {
     const newId = await insertRow({ tableId })
