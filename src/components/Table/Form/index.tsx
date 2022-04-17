@@ -89,7 +89,10 @@ const TableForm = ({ showFilter }: TableFormProps) => {
       }),
     ])
 
-    return { project, projects, tables, row, projectUser }
+    const userRole = projectUser?.role
+    const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
+
+    return { project, projects, tables, row, userMayEdit }
   }, [projectId, tableId, session?.user?.email])
 
   const project = data?.project
@@ -99,8 +102,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
     objects: data?.tables ?? [],
     useLabels: row?.use_labels,
   })
-  const userRole = data?.projectUser?.role
-  const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
+  const userMayEdit = data?.userMayEdit
 
   const relTable: Table = useLiveQuery(
     async () =>
