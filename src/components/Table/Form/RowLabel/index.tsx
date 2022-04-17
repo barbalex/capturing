@@ -4,10 +4,8 @@ import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
 import { arrayMoveImmutable } from 'array-move'
-import { Session } from '@supabase/supabase-js'
 
 import { dexie, Field, Table, ITable } from '../../../../dexieClient'
-import { supabase } from '../../../../supabaseClient'
 import FieldList from './FieldList'
 import Target from './Target'
 
@@ -45,8 +43,6 @@ type Props = {
 
 const RowLabel = ({ useLabels, rowState, updateOnServer }: Props) => {
   const { tableId } = useParams()
-
-  const session: Session = supabase.auth.session()
 
   const fields: Field[] = useLiveQuery(
     async () =>
@@ -160,11 +156,10 @@ const RowLabel = ({ useLabels, rowState, updateOnServer }: Props) => {
   return (
     <Container
       onBlur={(e) => {
-        // if (!e.currentTarget.contains(e.relatedTarget)) {
-        //   // focus left the container
-        //   // https://github.com/facebook/react/issues/6410#issuecomment-671915381
-        //   updateOnServer()
-        // }
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          // focus left the container
+          updateOnServer()
+        }
       }}
     >
       <DragDropContext onDragEnd={onDragEnd}>
