@@ -2,7 +2,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
-import { FaGripHorizontal } from 'react-icons/fa'
+import { MdDragIndicator } from 'react-icons/md'
 
 import { dexie, Field } from '../../../../dexieClient'
 import BetweenCharactersElement from './BetweenCharacters'
@@ -59,12 +59,25 @@ const FieldElement = styled.div`
   font-size: small;
   line-height: 16.6px;
   user-select: none;
-`
-const Handle = styled(FaGripHorizontal)`
-  color: grey;
   position: relative;
-  top: -1px;
-  left: -118px;
+`
+const FieldHandle = styled(MdDragIndicator)`
+  color: #9e9e9e;
+  position: absolute;
+  top: -13px;
+  left: -4.5px;
+  transform: rotate(90deg);
+  height: 1.5em;
+  width: 1.5em;
+`
+const BetweenCharactersHandle = styled(MdDragIndicator)`
+  color: #9e9e9e;
+  position: absolute;
+  top: -3.5px;
+  left: -3px;
+  transform: rotate(90deg);
+  height: 1.2em;
+  width: 1.2em;
 `
 const ElementContainer = styled.div`
   display: flex;
@@ -143,6 +156,7 @@ const RowLabelTarget = ({ rowLabel, rowState }) => {
                             el.text ??
                             'neither fieldName nor text'
                           }`}
+                          <FieldHandle />
                         </FieldElement>
                       ) : (
                         <BetweenCharactersElement
@@ -150,7 +164,7 @@ const RowLabelTarget = ({ rowLabel, rowState }) => {
                           rowState={rowState}
                           index={index}
                         >
-                          <Handle />
+                          <BetweenCharactersHandle />
                         </BetweenCharactersElement>
                       )}
                     </ElementContainer>
