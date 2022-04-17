@@ -45,6 +45,7 @@ const TargetContainer = styled.div`
   display: flex;
   align-items: center;
   flex-grow: 1;
+  min-height: 42px;
   padding: 8px;
   background-color: ${(props) =>
     props.isDraggingOver ? 'rgba(74,20,140,0.1)' : 'white'};
@@ -120,14 +121,21 @@ const RowLabelTarget = ({ rowLabel, rowState }) => {
 
   return (
     <Container>
-      <Droppable droppableId="target">
+      <Droppable droppableId="target" direction="horizontal">
         {(provided, snapshot) => (
           <Target ref={provided.innerRef} {...provided.droppableProps}>
             <TitleContainer>
               <Title>Datensatz-Beschriftung</Title>
-              <Explainer>Ziehen Sie Felder hierhin.</Explainer>
               <Explainer>
-                Mit dem Zeichen-Werkzeug können Sie (Trenn-)Zeichen platzieren.
+                Hier bestimmen Sie, wie Datensätze beschriftet werden.
+              </Explainer>
+              <Explainer>
+                Ziehen Sie Felder hierhin. Der jeweilige Wert des Felds wird
+                dann für die Beschriftung verwendet.
+              </Explainer>
+              <Explainer>
+                Sie können mehrere Felder kombinieren. Und mit dem
+                Zeichen-Werkzeug (Trenn-)Zeichen platzieren.
               </Explainer>
             </TitleContainer>
             <TargetContainer isDraggingOver={snapshot.isDraggingOver}>
