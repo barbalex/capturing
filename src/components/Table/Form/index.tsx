@@ -22,6 +22,7 @@ import {
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Select from '../../shared/Select'
+import Spinner from '../../shared/Spinner'
 import RadioButtonGroupWithInfo from '../../shared/RadioButtonGroupWithInfo'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
@@ -42,8 +43,6 @@ const relTypeDataSource = Object.values(TableRelTypeEnum).map((v) => ({
 }))
 
 type TableFormProps = {
-  id: string
-  row: Table
   showFilter: (boolean) => void
 }
 type DataProps = {
@@ -62,44 +61,54 @@ const typeValueLabels = {
 }
 
 // = '99999999-9999-9999-9999-999999999999'
-const TableForm = ({ id, row, showFilter }: TableFormProps) => {
-  const { projectId } = useParams()
+const TableForm = ({ showFilter }: TableFormProps) => {
+  const { projectId, tableId } = useParams()
+
   const store = useContext(StoreContext)
   const { filter, errors } = store
+
   const session: Session = supabase.auth.session()
+
   const unsetError = useCallback(
     () => () => {
       console.log('TODO: unsetError')
     },
     [],
   ) // TODO: add errors, unsetError in store
+
   // const data = {}
   const data: DataProps = useLiveQuery(async () => {
-    const [project, projects, tables, relTable, projectUser] =
-      await Promise.all([
-        dexie.projects.get(projectId),
-        dexie.projects.where({ deleted: 0 }).toArray(),
-        dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
-        dexie.ttables.get({
-          id: row?.parent_id ?? '99999999-9999-9999-9999-999999999999',
-        }),
-        dexie.project_users.get({
-          project_id: projectId,
-          user_email: session?.user?.email,
-        }),
-      ])
+    const [project, projects, tables, row, projectUser] = await Promise.all([
+      dexie.projects.get(projectId),
+      dexie.projects.where({ deleted: 0 }).toArray(),
+      dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
+      dexie.ttables.get(tableId),
+      dexie.project_users.get({
+        project_id: projectId,
+        user_email: session?.user?.email,
+      }),
+    ])
 
-    return { project, projects, tables, relTable, projectUser }
-  }, [projectId, row?.parent_id, session?.user?.email])
+    return { project, projects, tables, row, projectUser }
+  }, [projectId, tableId, session?.user?.email])
+
   const project = data?.project
   const projects = sortProjectsByLabelName(data?.projects ?? [])
+  const row = data?.row
   const tables: Table[] = sortByLabelName({
     objects: data?.tables ?? [],
-    useLabels: row.use_labels,
+    useLabels: row?.use_labels,
   })
-  const relTable = data?.relTable
   const userRole = data?.projectUser?.role
   const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
+
+  const relTable: Table = useLiveQuery(
+    async () =>
+      await dexie.ttables.get({
+        id: row?.parent_id ?? '99999999-9999-9999-9999-999999999999',
+      }),
+    [row?.parent_id],
+  )
 
   const projectSelectValues = projects.map((p) => ({
     value: p.id,
@@ -112,7 +121,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
 
   const tablesSelectValues = tables
     // do not list own table
-    .filter((t) => t.id !== id)
+    .filter((t) => t.id !== tableId)
     .map((t) => ({
       value: t.id,
       label: labelFromLabeledTable({
@@ -138,7 +147,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
 
   useEffect(() => {
     unsetError('table')
-  }, [id, unsetError])
+  }, [tableId, unsetError])
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
@@ -187,7 +196,7 @@ const TableForm = ({ id, row, showFilter }: TableFormProps) => {
   // const showDeleted = filter?.table?.deleted !== false || row?.deleted
   const showDeleted = false
 
-  console.log('TableForm, row_label:', row?.row_label)
+  if (!row) return <Spinner />
 
   return (
     <ErrorBoundary>

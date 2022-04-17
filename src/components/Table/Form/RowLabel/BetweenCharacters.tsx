@@ -23,8 +23,6 @@ const StyledTextField = styled(TextField)`
 const BetweenCharacters = ({ el, rowState, index, children }) => {
   const onBlur = useCallback(
     (event) => {
-      // TODO:
-
       const clonedRowLabel = [...rowState.current.row_label]
       clonedRowLabel[index].text = event.target.value
       const newRow = {

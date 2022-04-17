@@ -6,11 +6,13 @@ import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { Session } from '@supabase/supabase-js'
-import { useNavigate, resolvePath } from 'react-router-dom'
+import { useNavigate, resolvePath, useParams } from 'react-router-dom'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import { supabase } from '../../../supabaseClient'
+import { dexie, Table, IProjectUser } from '../../../dexieClient'
 
 const TitleRow = styled.div`
   display: flex;
@@ -25,12 +27,19 @@ const Title = styled.div`
   user-select: none;
 `
 
-const TableDeleteButton = ({ row, userMayEdit }) => {
+const TableDeleteButton = ({ userMayEdit }) => {
   const navigate = useNavigate()
+  const { tableId } = useParams()
   const store = useContext(StoreContext)
   const { activeNodeArray, removeOpenNodeWithChildren } = store
   // const filter = { todo: 'TODO: was in store' }
   const session: Session = supabase.auth.session()
+
+  const deleted: boolean = useLiveQuery(async () => {
+    const row: Row = await dexie.ttables.get(tableId)
+    // only return needed values to minimize re-renders
+    return row.deleted
+  }, [tableId])
 
   const [anchorEl, setAnchorEl] = useState(null)
   const closeMenu = useCallback(() => {
@@ -41,13 +50,14 @@ const TableDeleteButton = ({ row, userMayEdit }) => {
     (event) => setAnchorEl(event.currentTarget),
     [],
   )
-  const remove = useCallback(() => {
+  const remove = useCallback(async () => {
+    const row: Row = await dexie.ttables.get(tableId)
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
     // need to remove openNode from openNodes
     removeOpenNodeWithChildren(activeNodeArray)
     navigate(resolvePath(`..`, window.location.pathname))
-  }, [activeNodeArray, navigate, removeOpenNodeWithChildren, row, session])
+  }, [activeNodeArray, navigate, removeOpenNodeWithChildren, session, tableId])
 
   return (
     <ErrorBoundary>
@@ -57,7 +67,7 @@ const TableDeleteButton = ({ row, userMayEdit }) => {
         aria-label="Tabelle löschen"
         title="Tabelle löschen"
         onClick={onClickButton}
-        disabled={row.deleted === 1 || !userMayEdit}
+        disabled={deleted === 1 || !userMayEdit}
         size="large"
       >
         <FaMinus />

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { FaPlus } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, resolvePath } from 'react-router-dom'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import insertTable from '../../../utils/insertTable'

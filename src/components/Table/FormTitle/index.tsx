@@ -7,7 +7,7 @@ import FilterTitle from '../../shared/FilterTitle'
 import FormTitle from './FormTitle'
 import { dexie } from '../../../dexieClient'
 
-const TableFormTitleChooser = ({ row, userMayEdit }) => {
+const TableFormTitleChooser = () => {
   const { projectId } = useParams()
   // const store = useContext(StoreContext)
   const showFilter = false // TODO:
@@ -34,14 +34,7 @@ const TableFormTitleChooser = ({ row, userMayEdit }) => {
     )
   }
 
-  return (
-    <FormTitle
-      row={row}
-      totalCount={totalCount}
-      filteredCount={filteredCount}
-      userMayEdit={userMayEdit}
-    />
-  )
+  return <FormTitle totalCount={totalCount} filteredCount={filteredCount} />
 }
 
 export default observer(TableFormTitleChooser)
