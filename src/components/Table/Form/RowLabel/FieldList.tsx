@@ -22,7 +22,6 @@ const Title = styled.h5`
 `
 const FieldList = styled.div`
   padding: 4px;
-  /*min-width: 240px;*/
 `
 const FieldContainer = styled.div`
   position: relative;
@@ -53,75 +52,61 @@ const DividerContainer = styled(FieldContainer)`
   position: relative;
 `
 
-/**
- * Have two versions:
- * 1. editing
- *    - (horizontal?) list of draggable fields
- *    - text field element to drag between field elements and input some text
- *    - drop area, horizontally sortable
- *      edit creates array of: {field: id, type: 'field'},{text, type: 'text'}
- * 2. presentation: only the drop area
- * 3. remind user to first define the fields
- */
 type Props = {
   project: Project
   fields: Field[]
 }
 
-const RowLabelFieldList = ({ project, fields }: Props) => {
-  // console.log('RowLabel, fields:', fields)
-
-  return (
-    <Container>
-      <Title>Felder</Title>
-      <Droppable droppableId="fieldList">
-        {(provided) => (
-          <FieldList ref={provided.innerRef} {...provided.droppableProps}>
-            {(fields ?? []).map((f, index) => (
-              <Draggable
-                key={f.id}
-                draggableId={`${f.id}draggableField`}
-                index={index}
-              >
-                {(provided, snapshot) => (
-                  <FieldContainer
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    ref={provided.innerRef}
-                    isDragging={snapshot.isDragging}
-                  >
-                    {labelFromLabeledTable({
-                      object: f,
-                      useLabels: project?.use_labels,
-                    })}
-                    <FieldHandle />
-                  </FieldContainer>
-                )}
-              </Draggable>
-            ))}
-            <Title>Zeichen</Title>
+const RowLabelFieldList = ({ project, fields }: Props) => (
+  <Container>
+    <Title>Felder</Title>
+    <Droppable droppableId="fieldList">
+      {(provided) => (
+        <FieldList ref={provided.innerRef} {...provided.droppableProps}>
+          {(fields ?? []).map((f, index) => (
             <Draggable
-              key="textfield"
-              draggableId="textfield"
-              index={fields.length}
+              key={f.id}
+              draggableId={`${f.id}draggableField`}
+              index={index}
             >
-              {(provided) => (
-                <DividerContainer
+              {(provided, snapshot) => (
+                <FieldContainer
                   {...provided.draggableProps}
                   {...provided.dragHandleProps}
                   ref={provided.innerRef}
+                  isDragging={snapshot.isDragging}
                 >
-                  {'Zeichen vor / nach / zwischen Feldern'}
+                  {labelFromLabeledTable({
+                    object: f,
+                    useLabels: project?.use_labels,
+                  })}
                   <FieldHandle />
-                </DividerContainer>
+                </FieldContainer>
               )}
             </Draggable>
-            {provided.placeholder}
-          </FieldList>
-        )}
-      </Droppable>
-    </Container>
-  )
-}
+          ))}
+          <Title>Zeichen</Title>
+          <Draggable
+            key="textfield"
+            draggableId="textfield"
+            index={fields.length}
+          >
+            {(provided) => (
+              <DividerContainer
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                ref={provided.innerRef}
+              >
+                {'Zeichen vor / nach / zwischen Feldern'}
+                <FieldHandle />
+              </DividerContainer>
+            )}
+          </Draggable>
+          {provided.placeholder}
+        </FieldList>
+      )}
+    </Droppable>
+  </Container>
+)
 
 export default RowLabelFieldList
