@@ -1,5 +1,6 @@
 import { Draggable, Droppable } from 'react-beautiful-dnd'
 import styled from 'styled-components'
+import { BsArrowsMove } from 'react-icons/bs'
 
 import { Field, Project } from '../../../../dexieClient'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
@@ -24,9 +25,10 @@ const FieldList = styled.div`
   /*min-width: 240px;*/
 `
 const FieldContainer = styled.div`
+  position: relative;
   padding: 4px 7px;
   border: 1px solid lightgrey;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   border-radius: 4px;
   font-size: x-small;
   line-height: 16.6px;
@@ -37,8 +39,18 @@ const FieldContainer = styled.div`
   color: ${(props) => (props.isDragging ? 'white' : 'black')};
   transition: color 0.2s ease;
 `
+const FieldHandle = styled(BsArrowsMove)`
+  color: #989898;
+  position: absolute;
+  top: -6.8px;
+  left: -2px;
+  transform: rotate(90deg);
+  height: 1.2em;
+  width: 1.2em;
+`
 const DividerContainer = styled(FieldContainer)`
   margin-top: 4px;
+  position: relative;
 `
 
 /**
@@ -82,11 +94,12 @@ const RowLabelFieldList = ({ project, fields }: Props) => {
                       object: f,
                       useLabels: project?.use_labels,
                     })}
+                    <FieldHandle />
                   </FieldContainer>
                 )}
               </Draggable>
             ))}
-            <Title>Zwischen-Zeichen</Title>
+            <Title>Zeichen</Title>
             <Draggable
               key="textfield"
               draggableId="textfield"
@@ -99,6 +112,7 @@ const RowLabelFieldList = ({ project, fields }: Props) => {
                   ref={provided.innerRef}
                 >
                   {'Zeichen vor / nach / zwischen Feldern'}
+                  <FieldHandle />
                 </DividerContainer>
               )}
             </Draggable>

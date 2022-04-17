@@ -10,9 +10,10 @@ const Container = styled.div`
 const StyledTextField = styled(TextField)`
   margin-right: 6px;
   margin-bottom: 0;
-  width: 110px;
+  width: 100px;
   label {
     font-size: small !important;
+    padding-left: 6px;
   }
   input {
     font-size: small !important;
@@ -38,7 +39,7 @@ const BetweenCharacters = ({ el, rowState, index, children }) => {
   return (
     <Container>
       <StyledTextField
-        label="Zwischen-Zeichen"
+        label="Zeichen"
         variant="outlined"
         margin="dense"
         size="small"

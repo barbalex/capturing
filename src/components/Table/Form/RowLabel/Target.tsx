@@ -2,7 +2,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
-import { MdDragIndicator } from 'react-icons/md'
+import { BsArrowsMove } from 'react-icons/bs'
 
 import { dexie, Field } from '../../../../dexieClient'
 import BetweenCharactersElement from './BetweenCharacters'
@@ -61,23 +61,22 @@ const FieldElement = styled.div`
   user-select: none;
   position: relative;
 `
-const FieldHandle = styled(MdDragIndicator)`
-  color: #9e9e9e;
+const FieldHandle = styled(BsArrowsMove)`
+  color: #989898;
   position: absolute;
-  top: -13px;
-  left: -4.5px;
-  transform: rotate(90deg);
-  height: 1.5em;
-  width: 1.5em;
-`
-const BetweenCharactersHandle = styled(MdDragIndicator)`
-  color: #9e9e9e;
-  position: absolute;
-  top: -3.5px;
-  left: -3px;
-  transform: rotate(90deg);
+  top: -8.5px;
+  left: -2px;
   height: 1.2em;
   width: 1.2em;
+  font-weight: bold;
+`
+const BetweenCharactersHandle = styled(BsArrowsMove)`
+  color: #989898;
+  position: absolute;
+  top: 0.7px;
+  left: -1.5px;
+  height: 0.95em;
+  width: 0.95em;
 `
 const ElementContainer = styled.div`
   display: flex;
@@ -128,8 +127,7 @@ const RowLabelTarget = ({ rowLabel, rowState }) => {
               <Title>Datensatz-Beschriftung</Title>
               <Explainer>Ziehen Sie Felder hierhin.</Explainer>
               <Explainer>
-                Ziehen Sie das entsprechende Werkzeug, um Zeichen zwischen
-                Feldern zu platzieren.
+                Mit dem Zeichen-Werkzeug können Sie (Trenn-)Zeichen platzieren.
               </Explainer>
             </TitleContainer>
             <TargetContainer isDraggingOver={snapshot.isDraggingOver}>
