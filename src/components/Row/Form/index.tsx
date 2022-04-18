@@ -62,7 +62,7 @@ type RowFormProps = {
 
 type DataProps = {
   fields: Field[]
-  projectUser: IProjectUser
+  userMayEdit: boolean
 }
 
 const RowForm = ({
@@ -94,11 +94,9 @@ const RowForm = ({
   }, [])
 
   const rowDataState = useRef<IRow>()
-  const [label, setLabel] = useState<string>()
   // update originalRow only initially
   useEffect(() => {
     rowDataState.current = row.data
-    row.label.then((v) => setLabel(v))
   }, [row])
 
   //console.log('RowForm rendering', { row, rowDataState: rowDataState.current })
@@ -111,16 +109,18 @@ const RowForm = ({
         user_email: session?.user?.email,
       }),
     ])
+    const userMayEdit = ['project_manager', 'project_editor'].includes(
+      projectUser.role,
+    )
 
     return {
       fields,
-      projectUser,
+      userMayEdit,
     }
   }, [projectId, tableId, session?.user?.email])
 
   const fields: Field[] = data?.fields ?? []
-  const userRole = data?.projectUser?.role
-  const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
+  const userMayEdit = data?.userMayEdit
 
   console.log('RowForm', { row, data: row?.data, fields })
 
