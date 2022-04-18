@@ -63,18 +63,8 @@ export const MobxStore = types
       setNavigate(val) {
         return (self.navigate = val)
       },
-      setActiveNodeArray(val, nonavigate) {
+      setActiveNodeArray(val) {
         self.activeNodeArray = val
-        if (!nonavigate) {
-          if (self?.navigate) {
-            self.navigate(`/${val.join('/')}`)
-            return self.addOpenNode(val)
-          }
-          console.log(
-            'store, self.navigate is undefined, wanted to navigate to:',
-            val,
-          )
-        }
       },
       setOpenNodes(val) {
         // need set to ensure contained arrays are unique

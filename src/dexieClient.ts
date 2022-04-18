@@ -457,7 +457,7 @@ export interface IProject {
   use_labels: number
 }
 
-type ProjectUpdateProps = { row: IProject; session: Session }
+type ProjectUpdateProps = { was: IProject; is: IProject; session: Session }
 type DeleteOnServerAndClientProps = { session: Session }
 export class Project implements IProject {
   id: string
@@ -495,9 +495,9 @@ export class Project implements IProject {
     this.use_labels = use_labels ?? 0
   }
 
-  async updateOnServer({ row, session }: ProjectUpdateProps) {
-    const rowReved = {
-      ...row,
+  async updateOnServer({ was, is, session }: ProjectUpdateProps) {
+    const isReved = {
+      ...is,
       client_rev_at: new window.Date().toISOString(),
       client_rev_by: session.user?.email ?? session.user?.id,
     }
@@ -505,17 +505,18 @@ export class Project implements IProject {
       undefined,
       undefined,
       'projects',
-      JSON.stringify(rowReved),
-      row?.id,
-      JSON.stringify(this),
+      JSON.stringify(isReved),
+      this.id,
+      JSON.stringify(was),
     )
     return dexie.queued_updates.add(update)
   }
 
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    const was = { ...this }
     this.deleted = 1
-    dexie.projects.put(this)
-    return this.updateOnServer({ row: this, session })
+    //dexie.projects.put(this)
+    return this.updateOnServer({ was, is: this, session })
   }
 }
 
@@ -759,9 +760,10 @@ export class Table implements ITable {
   }
 
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    const was = { ...this }
     this.deleted = 1
     dexie.ttables.put(this)
-    return this.updateOnServer({ row: this, session })
+    return this.updateOnServer({ was, is: this, session })
   }
 }
 

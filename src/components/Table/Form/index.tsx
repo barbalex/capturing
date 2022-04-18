@@ -75,6 +75,9 @@ const TableForm = ({ showFilter }: TableFormProps) => {
     },
     [],
   ) // TODO: add errors, unsetError in store
+  useEffect(() => {
+    unsetError('table')
+  }, [tableId, unsetError])
 
   // const data = {}
   const data: DataProps = useLiveQuery(async () => {
@@ -151,10 +154,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
     }
   }, [row])
   console.log('TableRow, rowState:', rowState.current)
-
-  useEffect(() => {
-    unsetError('table')
-  }, [tableId, unsetError])
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed

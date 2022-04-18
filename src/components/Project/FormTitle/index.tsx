@@ -6,7 +6,7 @@ import FilterTitle from '../../shared/FilterTitle'
 import FormTitle from './FormTitle'
 import { dexie } from '../../../dexieClient'
 
-const ProjectFormTitleChooser = ({ row }) => {
+const ProjectFormTitleChooser = () => {
   // const store = useContext(StoreContext)
   const showFilter = false // TODO:
 
@@ -32,13 +32,7 @@ const ProjectFormTitleChooser = ({ row }) => {
     )
   }
 
-  return (
-    <FormTitle
-      row={row}
-      totalCount={totalCount}
-      filteredCount={filteredCount}
-    />
-  )
+  return <FormTitle totalCount={totalCount} filteredCount={filteredCount} />
 }
 
 export default observer(ProjectFormTitleChooser)

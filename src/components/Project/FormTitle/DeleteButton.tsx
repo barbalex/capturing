@@ -6,11 +6,13 @@ import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { Session } from '@supabase/supabase-js'
-import { resolvePath, useNavigate } from 'react-router-dom'
+import { resolvePath, useNavigate, useParams } from 'react-router-dom'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import { supabase } from '../../../supabaseClient'
+import { dexie, Project } from '../../../dexieClient'
 
 const TitleRow = styled.div`
   display: flex;
@@ -25,12 +27,19 @@ const Title = styled.div`
   user-select: none;
 `
 
-const ProjectDeleteButton = ({ row }) => {
+const ProjectDeleteButton = () => {
+  const { projectId } = useParams()
   const navigate = useNavigate()
+
   const store = useContext(StoreContext)
   const { activeNodeArray, removeOpenNodeWithChildren } = store
   // const filter = { todo: 'TODO: was in store' }
   const session: Session = supabase.auth.session()
+
+  const deleted: boolean = useLiveQuery(async () => {
+    const row: Project = await dexie.projects.get(projectId)
+    return row.deleted
+  }, [projectId])
 
   const [anchorEl, setAnchorEl] = useState(null)
   const closeMenu = useCallback(() => {
@@ -41,13 +50,20 @@ const ProjectDeleteButton = ({ row }) => {
     (event) => setAnchorEl(event.currentTarget),
     [],
   )
-  const remove = useCallback(() => {
+  const remove = useCallback(async () => {
+    const row: Project = await dexie.projects.get(projectId)
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
     // need to remove openNode from openNodes
     removeOpenNodeWithChildren(activeNodeArray)
     navigate(resolvePath(`..`, window.location.pathname))
-  }, [activeNodeArray, navigate, removeOpenNodeWithChildren, row, session])
+  }, [
+    activeNodeArray,
+    navigate,
+    projectId,
+    removeOpenNodeWithChildren,
+    session,
+  ])
 
   return (
     <ErrorBoundary>
@@ -57,7 +73,7 @@ const ProjectDeleteButton = ({ row }) => {
         aria-label="Projekt löschen"
         title="Projekt löschen"
         onClick={onClickButton}
-        disabled={row.deleted === 1}
+        disabled={deleted === 1}
         size="large"
       >
         <FaMinus />

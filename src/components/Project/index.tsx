@@ -1,10 +1,6 @@
 import styled from 'styled-components'
-import { useParams } from 'react-router-dom'
-import { dexie, Project } from '../../dexieClient'
-import { useLiveQuery } from 'dexie-react-hooks'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
-import Spinner from '../shared/Spinner'
 import FormTitle from './FormTitle'
 import Form from './Form'
 
@@ -16,22 +12,15 @@ const Container = styled.div`
 `
 
 const ProjectComponent = ({ filter: showFilter }) => {
-  const { projectId } = useParams()
   const filter = 'TODO: was in store'
 
-  const row: Project = useLiveQuery(
-    async () => await dexie.projects.get(projectId),
-    [projectId],
-  )
-
-  if (!row) return <Spinner />
   if (!showFilter && filter.show) return null
 
   return (
     <ErrorBoundary>
       <Container showfilter={showFilter}>
-        <FormTitle row={row} showFilter={showFilter} />
-        <Form showFilter={showFilter} id={projectId} row={row} />
+        <FormTitle showFilter={showFilter} />
+        <Form showFilter={showFilter} />
       </Container>
     </ErrorBoundary>
   )

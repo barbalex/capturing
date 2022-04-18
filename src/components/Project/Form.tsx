@@ -3,11 +3,14 @@ import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
 import { Session } from '@supabase/supabase-js'
+import { useParams } from 'react-router-dom'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../storeContext'
 import Checkbox2States from '../shared/Checkbox2States'
 import JesNo from '../shared/JesNo'
 import ErrorBoundary from '../shared/ErrorBoundary'
+import Spinner from '../shared/Spinner'
 import { dexie, IProject, Project } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
@@ -19,54 +22,59 @@ const FieldsContainer = styled.div`
 `
 
 type ProjectFormProps = {
-  id: string
-  row: Project
   showFilter: (boolean) => void
 }
 
-const ProjectForm = ({ id, row, showFilter }: ProjectFormProps) => {
+const ProjectForm = ({ showFilter }: ProjectFormProps) => {
+  const { projectId } = useParams()
   const store = useContext(StoreContext)
   const { filter, errors } = store
   const session: Session = supabase.auth.session()
+
   const unsetError = useCallback(
     () => () => {
       console.log('TODO: unsetError')
     },
     [],
   ) // TODO: add errors, unsetError in store
+  useEffect(() => {
+    unsetError('project')
+  }, [projectId, unsetError])
+
+  const row: Project = useLiveQuery(
+    async () => await dexie.projects.get(projectId),
+    [projectId],
+  )
 
   // console.log('ProjectForm rendering row:', row)
 
   const originalRow = useRef<IProject>()
-  // update originalRow only initially
-  useEffect(() => {
-    originalRow.current = row
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   const rowState = useRef<IProject>()
-  // update originalRow only initially
   useEffect(() => {
     rowState.current = row
+    if (!originalRow.current && row) {
+      console.log('TableRow, setting originalRow to:', row)
+      originalRow.current = row
+    }
   }, [row])
-
-  useEffect(() => {
-    unsetError('project')
-  }, [id, unsetError])
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
-    if (!isEqual(originalRow.current, rowState.current)) {
-      row.updateOnServer({ row: rowState.current, session })
-    }
-    return
+    if (isEqual(originalRow.current, rowState.current)) return
+
+    row.updateOnServer({
+      was: originalRow.current,
+      is: rowState.current,
+      session,
+    })
+    // ensure originalRow is reset too
+    originalRow.current = rowState.current
   }, [row, session])
 
   useEffect(() => {
     window.onbeforeunload = async () => {
       // save any data changed before closing tab or browser
-      await updateOnServer()
-      return
+      updateOnServer()
     }
   }, [updateOnServer])
 
@@ -88,15 +96,18 @@ const ProjectForm = ({ id, row, showFilter }: ProjectFormProps) => {
         })
       }
 
-      const newRow = { ...row, [field]: newValue }
-      rowState.current = newRow
-      dexie.projects.put(newRow)
+      // update rowState
+      rowState.current = { ...row, ...{ [field]: newValue } }
+      // update dexie
+      dexie.projects.update(row.id, { [field]: newValue })
     },
     [filter, row, showFilter],
   )
 
   // const showDeleted = filter?.project?.deleted !== false || row?.deleted
   const showDeleted = false
+
+  if (!row) return <Spinner />
 
   return (
     <ErrorBoundary>

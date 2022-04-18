@@ -40,7 +40,7 @@ const TitleSymbols = styled.div`
   flex-wrap: wrap;
 `
 
-const ProjectFormTitle = ({ row, totalCount, filteredCount, width }) => {
+const ProjectFormTitle = ({ totalCount, filteredCount, width }) => {
   if (width < 520) {
     return (
       <TitleContainer>
@@ -48,7 +48,7 @@ const ProjectFormTitle = ({ row, totalCount, filteredCount, width }) => {
         <TitleSymbols>
           <NavButtons />
           <AddButton />
-          <DeleteButton row={row} />
+          <DeleteButton />
           <Menu white={false}>
             <FilterNumbers
               filteredCount={filteredCount}
@@ -67,7 +67,7 @@ const ProjectFormTitle = ({ row, totalCount, filteredCount, width }) => {
       <TitleSymbols>
         <NavButtons />
         <AddButton />
-        <DeleteButton row={row} />
+        <DeleteButton />
         <FilterNumbers filteredCount={filteredCount} totalCount={totalCount} />
       </TitleSymbols>
     </TitleContainer>
