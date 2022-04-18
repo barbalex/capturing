@@ -20,7 +20,6 @@
     "dayjs": "1.11.1",
     "dexie": "3.2.1",
     "dexie-react-hooks": "1.1.1",
-    "dexie-relationships": "^1.2.11",
     "localforage": "1.10.0",
     "lodash": "4.17.21",
     "mobx": "6.5.0",

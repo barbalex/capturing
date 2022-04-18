@@ -1,12 +1,9 @@
 import { IQueuedUpdate } from './dexieClient'
 import { ProjectUser } from './initiateDb'
 import Dexie, { DexieTable } from 'dexie'
-import relationships from 'dexie-relationships'
 import { v1 as uuidv1 } from 'uuid'
 import { Session } from '@supabase/supabase-js'
 import sortBy from 'lodash/sortBy'
-
-import labelFromLabeledTable from './utils/labelFromLabeledTable'
 
 export interface IAccount {
   id: string
@@ -1012,7 +1009,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(1).stores({
+    this.version(7).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
@@ -1056,6 +1053,4 @@ export class MySubClassedDexie extends Dexie {
   }
 }
 
-export const dexie = new MySubClassedDexie('capturing', {
-  addons: [relationships],
-})
+export const dexie = new MySubClassedDexie()

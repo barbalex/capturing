@@ -2662,7 +2662,6 @@ __metadata:
     dayjs: 1.11.1
     dexie: 3.2.1
     dexie-react-hooks: 1.1.1
-    dexie-relationships: ^1.2.11
     eslint: 8.13.0
     eslint-config-prettier: 8.5.0
     eslint-plugin-import: 2.26.0
@@ -3007,15 +3006,6 @@ __metadata:
     dexie: ">=3.1.0-alpha.1 <5.0.0"
     react: ">=16"
   checksum: 09e1b1d4ebc248d103eb13c8f77733f4c140478350d2b8f3989af2fedb45e0d4ae7a07df9281ade162a3264ff621db35899b47d6edf5bf532ba22d571f6f1496
-  languageName: node
-  linkType: hard
-
-"dexie-relationships@npm:^1.2.11":
-  version: 1.2.11
-  resolution: "dexie-relationships@npm:1.2.11"
-  peerDependencies:
-    dexie: ^2.0.0-beta.10
-  checksum: 3f03a1237b6f0cfaddfe828a0dc4429bb26824c203f82fab91a4845d59b844592f399a1a0f10d350fd1a212da99a6361eef64a3635ca32cf6e83a9794f654a3d
   languageName: node
   linkType: hard
 
