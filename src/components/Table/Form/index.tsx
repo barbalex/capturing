@@ -99,10 +99,10 @@ const TableForm = ({ showFilter }: TableFormProps) => {
 
   const useLabels: boolean = data?.useLabels
   const projects = sortProjectsByLabelName(data?.projects ?? [])
-  const row = data?.row
+  const row: Table = data?.row
   const tables: Table[] = sortByLabelName({
     objects: data?.tables ?? [],
-    useLabels: row?.use_labels,
+    useLabels,
   })
   const userMayEdit = data?.userMayEdit
 
@@ -136,6 +136,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
 
   // console.log('ProjectForm rendering row:', row)
 
+  // need original row to be able to roll back optimistic ui updates
   const originalRow = useRef<ITable>()
   // need to update rowState on blur because of
   // when user directly closes app after last update in field
@@ -258,16 +259,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           error={errors?.table?.name}
           disabled={!userMayEdit}
         />
-        <Checkbox2States
-          key={`${row.id}use_labels`}
-          label="Zusätzlich zu Namen Beschriftungen verwenden"
-          name="use_labels"
-          value={row.use_labels}
-          onBlur={onBlur}
-          error={errors?.table?.use_labels}
-          disabled={!userMayEdit}
-        />
-        {row.use_labels === 1 && (
+        {useLabels === 1 && (
           <TextField
             key={`${row.id}label`}
             name="label"
@@ -320,7 +312,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
               <RelTypePopover
                 ownTable={row}
                 parentTable={relTable}
-                useLabels={row.use_labels}
+                useLabels={useLabels}
               />
             }
           />
