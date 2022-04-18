@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useCallback,
-  useRef,
-  useState,
-} from 'react'
+import React, { useContext, useEffect, useCallback, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
@@ -15,23 +9,13 @@ import { useParams } from 'react-router-dom'
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import ConflictList from '../../shared/ConflictList'
-import {
-  dexie,
-  Row,
-  IRow,
-  Project,
-  Field,
-  IFieldType,
-  IWidgetType,
-  IProjectUser,
-} from '../../../dexieClient'
+import { dexie, Row, IRow, Field } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
-import Select from '../../shared/Select'
 import Checkbox2States from '../../shared/Checkbox2States'
 import JesNo from '../../shared/JesNo'
-import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import OptionsMany from './OptionsMany'
+import OptionsFew from './OptionsFew'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -165,6 +149,7 @@ const RowForm = ({
           : { ...oldData, [field]: newValue }
       const newRow = { ...row, data: newData }
       rowState.current = newRow
+      console.log('RowForm, onBlur', { newRow, newData })
       dexie.rows.update(row.id, { data: newData })
     },
     [filter, row, showFilter],
@@ -265,10 +250,14 @@ const RowForm = ({
               break
             case 'options-few':
               return (
-                <FieldContainer key={f.id}>
-                  <div>options-few</div>
-                  <div>{JSON.stringify(f)}</div>
-                </FieldContainer>
+                <OptionsFew
+                  key={`${row.id}/${f.id}/options-few`}
+                  field={f}
+                  rowState={rowState.current}
+                  onBlur={onBlur}
+                  error={errors?.row?.[f.name]}
+                  disabled={!userMayEdit}
+                />
               )
               break
             case 'options-many':
@@ -276,7 +265,7 @@ const RowForm = ({
                 <OptionsMany
                   key={`${row.id}/${f.id}/options-many`}
                   field={f}
-                  rowDataState={rowState.current.data}
+                  rowState={rowState.current}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                   disabled={!userMayEdit}

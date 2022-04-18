@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import sortBy from 'lodash/sortBy'
 
-import Select from '../../shared/Select'
+import RadioButtonGroup from '../../shared/RadioButtonGroup'
 
 import { dexie, Row, Field, Table } from '../../../dexieClient'
 
@@ -17,7 +17,7 @@ type DataType = {
   optionTable: Table
 }
 
-const OptionsMany = ({ field, rowState, onBlur, error, disabled }: Props) => {
+const OptionsFew = ({ field, rowState, onBlur, error, disabled }: Props) => {
   const data: DataType = useLiveQuery(async () => {
     const [optionRows, optionTable] = await Promise.all(
       dexie.rows
@@ -27,7 +27,8 @@ const OptionsMany = ({ field, rowState, onBlur, error, disabled }: Props) => {
     )
     return { optionRows, optionTable }
   })
-  const optionRowsData = data?.optionRows.map((r) => r.data) ?? []
+  console.log({ data })
+  const optionRowsData = data?.optionRows?.map((r) => r.data) ?? []
   const optionTable: Table = data?.optionTable
   const isIdValueList = optionTable?.type === 'id_value_list'
   const optionValues = optionRowsData.map((d) => ({
@@ -37,18 +38,18 @@ const OptionsMany = ({ field, rowState, onBlur, error, disabled }: Props) => {
   const optionValuesSorted = sortBy(optionValues, 'label')
 
   return (
-    <Select
+    <RadioButtonGroup
       key={field.id}
       name={field.name}
       value={rowState?.data?.[field.name] ?? ''}
       field={field.name}
       label={field.label ?? field.name}
-      options={optionValuesSorted}
-      saveToDb={onBlur}
+      dataSource={optionValuesSorted}
+      onBlur={onBlur}
       error={error}
       disabled={disabled}
     />
   )
 }
 
-export default OptionsMany
+export default OptionsFew
