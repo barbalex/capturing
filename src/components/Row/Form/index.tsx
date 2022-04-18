@@ -14,6 +14,7 @@ import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Checkbox2States from '../../shared/Checkbox2States'
 import JesNo from '../../shared/JesNo'
+import JesNoNull from '../../shared/JesNoNull'
 import OptionsMany from './OptionsMany'
 import OptionsFew from './OptionsFew'
 
@@ -242,10 +243,14 @@ const RowForm = ({
               break
             case 'options-3':
               return (
-                <FieldContainer key={f.id}>
-                  <div>options-3</div>
-                  <div>{JSON.stringify(f)}</div>
-                </FieldContainer>
+                <JesNoNull
+                  key={`${row.id}/${f.id}/jesnonull`}
+                  label={f.label ?? f.name}
+                  name={f.name}
+                  value={rowState.current.data?.[f.name] ?? ''}
+                  onBlur={onBlur}
+                  error={errors?.row?.[f.name]}
+                />
               )
               break
             case 'options-few':

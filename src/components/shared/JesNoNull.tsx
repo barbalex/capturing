@@ -38,11 +38,15 @@ const dataSource = [
     value: 0,
     label: 'Nein',
   },
+  {
+    value: '',
+    label: 'Unbestimmt',
+  },
 ]
 
 // TODO: test because of change true/false to 1/0
 
-const RadioButtonGroup = ({
+const JesNoNull = ({
   value: valuePassed,
   label,
   name,
@@ -55,35 +59,25 @@ const RadioButtonGroup = ({
     setStateValue(valuePassed)
   }, [valuePassed])
 
-  const onClickButton = useCallback(
-    (event) => {
-      /**
-       * if clicked element is active value: set null
-       * Problem: does not work on change event on RadioGroup
-       * because that only fires on changes
-       * Solution: do this in click event of button
-       */
-      const targetValue = event.target.value
-
-      if (targetValue == stateValue) {
-        // an already active option was clicked
-        // set value null
-        setStateValue(null)
-        const fakeEvent = {
-          target: {
-            value: null,
-            name,
-          },
-        }
-        return onBlur(fakeEvent)
-      }
-    },
-    [stateValue, name, onBlur],
-  )
   const onChangeGroup = useCallback(
     (event) => {
       // group only changes if value changes
-      const targetValue = event.target.value === '1' ? 1 : 0
+      let targetValue
+      switch (event.target.value) {
+        case '1':
+          targetValue = 1
+          break
+        case '0':
+          targetValue = 0
+          break
+        case '':
+          targetValue = null
+          break
+        default:
+          targetValue = null
+          break
+      }
+      console.log('JesNoNull', { eventValue: event.target.value, targetValue })
       setStateValue(targetValue)
       const fakeEvent = {
         target: {
@@ -121,7 +115,7 @@ const RadioButtonGroup = ({
               value={e.value}
               control={<StyledRadio color="primary" />}
               label={e.label}
-              onClick={onClickButton}
+              //onClick={onClickButton}
             />
           ))}
         </RadioGroup>
@@ -138,4 +132,4 @@ const RadioButtonGroup = ({
   )
 }
 
-export default RadioButtonGroup
+export default JesNoNull

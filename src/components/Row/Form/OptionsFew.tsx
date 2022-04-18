@@ -27,7 +27,6 @@ const OptionsFew = ({ field, rowState, onBlur, error, disabled }: Props) => {
     )
     return { optionRows, optionTable }
   })
-  console.log({ data })
   const optionRowsData = data?.optionRows?.map((r) => r.data) ?? []
   const optionTable: Table = data?.optionTable
   const isIdValueList = optionTable?.type === 'id_value_list'
