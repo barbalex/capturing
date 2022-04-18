@@ -130,21 +130,19 @@ const RowForm = ({
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
-    if (!isEqual(originalData.current, rowDataState.current)) {
-      const newRow = {
-        ...originalRow.current,
-        data: rowDataState.current,
-      }
-      row.updateOnServer({ row: newRow, session })
+    if (isEqual(originalData.current, rowDataState.current)) return
+
+    const newRow = {
+      ...originalRow.current,
+      data: rowDataState.current,
     }
-    return
+    row.updateOnServer({ row: newRow, session })
   }, [row, session])
 
   useEffect(() => {
     window.onbeforeunload = async () => {
       // save any data changed before closing tab or browser
-      await updateOnServer()
-      return
+      updateOnServer()
     }
   }, [updateOnServer])
 
