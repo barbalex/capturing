@@ -71,7 +71,7 @@ export interface IField {
   deleted: number
 }
 
-type FieldUpdateProps = { row: IField; session: Session }
+type FieldUpdateProps = { was: IField; is: IField; session: Session }
 export class Field implements IField {
   id: string
   table_id?: string
@@ -120,9 +120,9 @@ export class Field implements IField {
     this.deleted = deleted ?? 0
   }
 
-  async updateOnServer({ row, session }: FieldUpdateProps) {
-    const rowReved = {
-      ...row,
+  async updateOnServer({ was, is, session }: FieldUpdateProps) {
+    const isReved = {
+      ...is,
       client_rev_at: new window.Date().toISOString(),
       client_rev_by: session.user?.email ?? session.user?.id,
     }
@@ -130,17 +130,17 @@ export class Field implements IField {
       undefined,
       undefined,
       'fields',
-      JSON.stringify(rowReved),
-      row?.id,
-      JSON.stringify(this),
+      JSON.stringify(isReved),
+      this.id,
+      JSON.stringify(was),
     )
     return dexie.queued_updates.add(update)
   }
 
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    const was = { ...this }
     this.deleted = 1
-    dexie.fields.put(this)
-    return this.updateOnServer({ row: this, session })
+    return this.updateOnServer({ was, is: this, session })
   }
 }
 
@@ -743,7 +743,7 @@ export class Table implements ITable {
   }
 
   async updateOnServer({ was, is, session }: TableUpdateProps) {
-    const rowReved = {
+    const isReved = {
       ...is,
       client_rev_at: new window.Date().toISOString(),
       client_rev_by: session.user?.email ?? session.user?.id,
@@ -752,7 +752,7 @@ export class Table implements ITable {
       undefined,
       undefined,
       'tables',
-      JSON.stringify(rowReved),
+      JSON.stringify(isReved),
       this.id,
       JSON.stringify(was),
     )
@@ -762,7 +762,6 @@ export class Table implements ITable {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     const was = { ...this }
     this.deleted = 1
-    dexie.ttables.put(this)
     return this.updateOnServer({ was, is: this, session })
   }
 }

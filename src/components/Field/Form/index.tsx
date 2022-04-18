@@ -163,31 +163,35 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
   // })
 
   const originalRow = useRef<IField>()
-  // update originalRow only initially
-  useEffect(() => {
-    originalRow.current = row
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   const rowState = useRef<IField>()
-  // update originalRow only initially
   useEffect(() => {
     rowState.current = row
+    // update originalRow only initially, once row has arrived
+    if (!originalRow.current && row) {
+      console.log('TableRow, setting originalRow to:', row)
+      originalRow.current = row
+    }
   }, [row])
+
+  console.log('FieldForm, row:', row)
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
-    if (!isEqual(originalRow.current, rowState.current)) {
-      row.updateOnServer({ row: rowState.current, session })
-    }
-    return
+    if (isEqual(originalRow.current, rowState.current)) return
+
+    row.updateOnServer({
+      was: originalRow.current,
+      is: rowState.current,
+      session,
+    })
+    // ensure originalRow is reset too
+    originalRow.current = rowState.current
   }, [row, session])
 
   useEffect(() => {
     window.onbeforeunload = async () => {
       // save any data changed before closing tab or browser
-      await updateOnServer()
-      return
+      updateOnServer()
     }
   }, [updateOnServer])
 

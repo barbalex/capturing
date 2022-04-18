@@ -64,8 +64,9 @@ const RadioButtonGroup = ({
        * because that only fires on changes
        * Solution: do this in click event of button
        */
-      const targetValue = event.target.value === '1'
-      if (targetValue === stateValue) {
+      const targetValue = event.target.value
+
+      if (targetValue == stateValue) {
         // an already active option was clicked
         // set value null
         setStateValue(null)
@@ -83,13 +84,11 @@ const RadioButtonGroup = ({
   const onChangeGroup = useCallback(
     (event) => {
       // group only changes if value changes
-      const targetValue = event.target.value
-      // values are passed as strings > need to convert
-      const newValue = targetValue === '0'
-      setStateValue(newValue)
+      const targetValue = event.target.value === '1' ? 1 : 0
+      setStateValue(targetValue)
       const fakeEvent = {
         target: {
-          value: newValue,
+          value: targetValue,
           name,
         },
       }
@@ -120,7 +119,7 @@ const RadioButtonGroup = ({
           {dataSource.map((e, index) => (
             <FormControlLabel
               key={index}
-              value={toStringIfPossible(e.value)}
+              value={e.value}
               control={<StyledRadio color="primary" />}
               label={e.label}
               onClick={onClickButton}

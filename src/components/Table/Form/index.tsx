@@ -178,7 +178,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
       // https://stackoverflow.com/questions/36379155/wait-for-promises-in-onbeforeunload
       // which is why rowState.current is needed (instead of getting up to date row)
       updateOnServer()
-      // do not return - otherwise user is dialoged, and that does not help the saving
+      // do not return - otherwise user is dialogued, and that does not help the saving
     }
   }, [updateOnServer])
 
