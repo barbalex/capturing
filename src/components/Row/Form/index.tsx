@@ -77,12 +77,16 @@ const RowForm = ({
   const store = useContext(StoreContext)
   const { filter, online, errors } = store
   const session: Session = supabase.auth.session()
+
   const unsetError = useCallback(
     () => () => {
       console.log('TODO: unsetError')
     },
     [],
   ) // TODO: add errors, unsetError in store
+  useEffect(() => {
+    unsetError('row')
+  }, [id, unsetError])
 
   const originalRow = useRef<IRow>()
   const originalData = useRef()
@@ -123,10 +127,6 @@ const RowForm = ({
   const userMayEdit = data?.userMayEdit
 
   console.log('RowForm', { row, data: row?.data, fields })
-
-  useEffect(() => {
-    unsetError('row')
-  }, [id, unsetError])
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
