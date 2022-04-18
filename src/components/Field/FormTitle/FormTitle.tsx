@@ -2,12 +2,17 @@ import React from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { withResizeDetector } from 'react-resize-detector'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { useParams } from 'react-router-dom'
+import { Session } from '@supabase/supabase-js'
 
 import DeleteButton from './DeleteButton'
 import AddButton from './AddButton'
 import NavButtons from './NavButtons'
 import FilterNumbers from '../../shared/FilterNumbers'
 import Menu from '../../shared/Menu'
+import { dexie, IProjectUser } from '../../../dexieClient'
+import { supabase } from '../../../supabaseClient'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
@@ -40,13 +45,21 @@ const TitleSymbols = styled.div`
   flex-wrap: wrap;
 `
 
-const FieldFormTitle = ({
-  row,
-  totalCount,
-  filteredCount,
-  width,
-  userMayEdit,
-}) => {
+const FieldFormTitle = ({ totalCount, filteredCount, width }) => {
+  const { projectId } = useParams()
+  const session: Session = supabase.auth.session()
+
+  const userMayEdit: boolean = useLiveQuery(async () => {
+    const projectUser: IProjectUser = await dexie.project_users.get({
+      project_id: projectId,
+      user_email: session?.user?.email,
+    })
+    const userRole = projectUser.role
+    const userMayEdit = userRole === 'project_manager'
+
+    return userMayEdit
+  }, [projectId, session?.user?.email])
+
   if (width < 520) {
     return (
       <TitleContainer>
@@ -54,7 +67,7 @@ const FieldFormTitle = ({
         <TitleSymbols>
           <NavButtons />
           <AddButton userMayEdit={userMayEdit} />
-          <DeleteButton row={row} userMayEdit={userMayEdit} />
+          <DeleteButton userMayEdit={userMayEdit} />
           <Menu white={false}>
             <FilterNumbers
               filteredCount={filteredCount}
@@ -73,7 +86,7 @@ const FieldFormTitle = ({
       <TitleSymbols>
         <NavButtons />
         <AddButton userMayEdit={userMayEdit} />
-        <DeleteButton row={row} userMayEdit={userMayEdit} />
+        <DeleteButton userMayEdit={userMayEdit} />
         <FilterNumbers filteredCount={filteredCount} totalCount={totalCount} />
       </TitleSymbols>
     </TitleContainer>

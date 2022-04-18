@@ -24,6 +24,7 @@ import {
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Select from '../../shared/Select'
+import Spinner from '../../shared/Spinner'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
@@ -35,12 +36,10 @@ const FieldsContainer = styled.div`
 `
 
 type FieldFormProps = {
-  id: string
-  row: Field
   showFilter: (boolean) => void
 }
 type DataProps = {
-  project: Project
+  useLabels: boolean
   projects: Project[]
   fields: Field[]
   optionsTable: Table
@@ -48,21 +47,25 @@ type DataProps = {
 }
 
 // = '99999999-9999-9999-9999-999999999999'
-const FieldForm = ({ id, row, showFilter }: FieldFormProps) => {
-  const { projectId, tableId } = useParams()
+const FieldForm = ({ showFilter }: FieldFormProps) => {
+  const { projectId, tableId, fieldId } = useParams()
   const store = useContext(StoreContext)
   const { filter, errors } = store
   const session: Session = supabase.auth.session()
+
   const unsetError = useCallback(
     () => () => {
       console.log('TODO: unsetError')
     },
     [],
   ) // TODO: add errors, unsetError in store
+  useEffect(() => {
+    unsetError('table')
+  }, [fieldId, unsetError])
 
   // const data = {}
   const data: DataProps = useLiveQuery(async () => {
-    const [project, optionsTables, fields, fieldTypes, projectUser] =
+    const [project, optionsTables, row, fields, fieldTypes, projectUser] =
       await Promise.all([
         dexie.projects.get(projectId),
         dexie.ttables
@@ -73,6 +76,7 @@ const FieldForm = ({ id, row, showFilter }: FieldFormProps) => {
               ['value_list', 'id_value_list'].includes(t.type),
           )
           .toArray(),
+        dexie.fields.get(fieldId),
         dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
         dexie.field_types.where({ deleted: 0 }).sortBy('sort'),
         dexie.project_users.get({
@@ -81,18 +85,22 @@ const FieldForm = ({ id, row, showFilter }: FieldFormProps) => {
         }),
       ])
 
+    const useLabels = project.use_labels
+
     return {
-      project,
+      useLabels,
       optionsTables,
+      row,
       fields,
       fieldTypes,
       projectUser,
     }
-  }, [projectId, row?.parent_id, session?.user?.email])
-  const project = data?.project
+  }, [projectId, fieldId, session?.user?.email])
+  const useLabels = data?.useLabels
+  const row = data?.row
   const optionsTables = sortByLabelName({
     objects: data?.optionsTables ?? [],
-    useLabels: row.use_labels,
+    useLabels,
   })
   const fieldTypes: IFieldType = data?.fieldTypes ?? []
   //const widgetTypes: IWidgetType = data?.widgetTypes ?? []
@@ -104,9 +112,9 @@ const FieldForm = ({ id, row, showFilter }: FieldFormProps) => {
     useLiveQuery(
       async () =>
         await dexie.widgets_for_fields
-          .where({ deleted: 0, field_value: row.field_type ?? '' })
+          .where({ deleted: 0, field_value: row?.field_type ?? '' })
           .sortBy('sort'),
-      [row.field_type],
+      [row?.field_type],
     ) ?? []
   const widgetValues = widgetsForFields.map((w) => w.widget_value)
 
@@ -121,7 +129,7 @@ const FieldForm = ({ id, row, showFilter }: FieldFormProps) => {
 
   const optionsTableSelectValues = optionsTables.map((t) => ({
     value: t.id,
-    label: labelFromLabeledTable({ object: t, useLabels: project.use_labels }),
+    label: labelFromLabeledTable({ object: t, useLabels }),
   }))
   const fieldTypeValues = fieldTypes
     .map((t) => ({
@@ -167,10 +175,6 @@ const FieldForm = ({ id, row, showFilter }: FieldFormProps) => {
     rowState.current = row
   }, [row])
 
-  useEffect(() => {
-    unsetError('table')
-  }, [id, unsetError])
-
   const updateOnServer = useCallback(async () => {
     // only update if is changed
     if (!isEqual(originalRow.current, rowState.current)) {
@@ -214,6 +218,8 @@ const FieldForm = ({ id, row, showFilter }: FieldFormProps) => {
 
   // const showDeleted = filter?.table?.deleted !== false || row?.deleted
   const showDeleted = false
+
+  if (!row) return <Spinner />
 
   return (
     <ErrorBoundary>
@@ -260,16 +266,7 @@ const FieldForm = ({ id, row, showFilter }: FieldFormProps) => {
           error={errors?.field?.name}
           disabled={!userMayEdit}
         />
-        <Checkbox2States
-          key={`${row.id}use_labels`}
-          label="Zusätzlich zu Namen Beschriftungen verwenden"
-          name="use_labels"
-          value={row.use_labels}
-          onBlur={onBlur}
-          error={errors?.field?.use_labels}
-          disabled={!userMayEdit}
-        />
-        {row.use_labels === 1 && (
+        {useLabels === 1 && (
           <TextField
             key={`${row.id}label`}
             name="label"

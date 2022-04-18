@@ -12,7 +12,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import { supabase } from '../../../supabaseClient'
-import { dexie, Table, IProjectUser } from '../../../dexieClient'
+import { dexie, Table } from '../../../dexieClient'
 
 const TitleRow = styled.div`
   display: flex;
@@ -51,7 +51,7 @@ const TableDeleteButton = ({ userMayEdit }) => {
     [],
   )
   const remove = useCallback(async () => {
-    const row: Row = await dexie.ttables.get(tableId)
+    const row: Table = await dexie.ttables.get(tableId)
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
     // need to remove openNode from openNodes
