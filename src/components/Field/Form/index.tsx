@@ -213,9 +213,8 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
         })
       }
 
-      const newRow = { ...row, [field]: newValue }
-      rowState.current = newRow
-      dexie.fields.put(newRow)
+      rowState.current = { ...row, ...{ [field]: newValue } }
+      dexie.fields.update(row.id, { [field]: newValue })
     },
     [filter, row, showFilter],
   )
