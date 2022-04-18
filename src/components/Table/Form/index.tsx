@@ -149,7 +149,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
     rowState.current = row
     // update originalRow only initially, once row has arrived
     if (!originalRow.current && row) {
-      console.log('TableRow, setting originalRow to:', row)
       originalRow.current = row
     }
   }, [row])

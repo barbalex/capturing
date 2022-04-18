@@ -655,9 +655,9 @@ export class Row implements IRow {
     })()
   }
 
-  async updateOnServer({ row, session }: RowUpdateProps) {
-    const rowReved = {
-      ...row,
+  async updateOnServer({ was, is, session }: RowUpdateProps) {
+    const isReved = {
+      ...is,
       client_rev_at: new window.Date().toISOString(),
       client_rev_by: session.user?.email ?? session.user?.id,
     }
@@ -665,17 +665,17 @@ export class Row implements IRow {
       undefined,
       undefined,
       'rows', // processQueuedUpdate writes this into row_revs
-      JSON.stringify(rowReved),
-      row?.id,
-      JSON.stringify(this),
+      JSON.stringify(isReved),
+      this.id,
+      JSON.stringify(was),
     )
     return dexie.queued_updates.add(update)
   }
 
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    const was = { ...this }
     this.deleted = 1
-    dexie.rows.put(this)
-    return this.updateOnServer({ row: this, session })
+    return this.updateOnServer({ was, is: this, session })
   }
 }
 

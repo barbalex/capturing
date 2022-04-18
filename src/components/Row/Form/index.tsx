@@ -90,17 +90,13 @@ const RowForm = ({
 
   const originalRow = useRef<IRow>()
   const originalData = useRef()
-  // update originalRow only initially
-  useEffect(() => {
-    originalRow.current = row
-    originalData.current = row.data
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   const rowDataState = useRef<IRow>()
-  // update originalRow only initially
   useEffect(() => {
     rowDataState.current = row.data
+    if (!originalRow.current && row) {
+      originalRow.current = row
+      originalData.current = row.data
+    }
   }, [row])
 
   //console.log('RowForm rendering', { row, rowDataState: rowDataState.current })
@@ -136,7 +132,9 @@ const RowForm = ({
       ...originalRow.current,
       data: rowDataState.current,
     }
-    row.updateOnServer({ row: newRow, session })
+    row.updateOnServer({ was: originalRow.current, is: newRow, session })
+    originalRow.current = newRow
+    originalData.current = rowDataState.current
   }, [row, session])
 
   useEffect(() => {
@@ -173,6 +171,7 @@ const RowForm = ({
       const newRow = { ...row, data: newData }
       rowDataState.current = newData
       dexie.rows.put(newRow)
+      //dexie.rows.update(row.id, { data: newData }) // does not work??!!
     },
     [filter, row, showFilter],
   )
