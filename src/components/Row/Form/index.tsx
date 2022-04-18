@@ -165,8 +165,7 @@ const RowForm = ({
           : { ...oldData, [field]: newValue }
       const newRow = { ...row, data: newData }
       rowState.current = newRow
-      dexie.rows.put(newRow)
-      //dexie.rows.update(row.id, { data: newData }) // does not work??!!
+      dexie.rows.update(row.id, { data: newData })
     },
     [filter, row, showFilter],
   )
