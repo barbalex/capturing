@@ -12,7 +12,7 @@ const FieldAddButton = ({ userMayEdit }) => {
 
   const onClick = useCallback(async () => {
     const newId = await insertField({ tableId })
-    navigate(resolvePath`../${newId}`, window.location.pathname)
+    navigate(resolvePath(`../${newId}`, window.location.pathname))
   }, [navigate, tableId])
 
   return (
