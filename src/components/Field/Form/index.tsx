@@ -94,6 +94,10 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
 
     const useLabels = project.use_labels
     const userMayEdit = projectUser.role === 'project_manager'
+    const widgetsForFields: IWidgetForField[] = await dexie.widgets_for_fields
+      .where({ deleted: 0, field_value: row?.field_type ?? '' })
+      .sortBy('sort')
+    const widgetValues = widgetsForFields.map((w) => w.widget_value)
 
     return {
       useLabels,
@@ -102,6 +106,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
       fields,
       fieldTypes,
       userMayEdit,
+      widgetValues,
     }
   }, [projectId, fieldId, session?.user?.email])
   const useLabels = data?.useLabels
@@ -113,20 +118,14 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
   const fieldTypes: IFieldType = data?.fieldTypes
   const userMayEdit = data?.userMayEdit
 
-  const widgetsForFields: IWidgetForField[] =
-    useLiveQuery(
-      async () =>
-        await dexie.widgets_for_fields
-          .where({ deleted: 0, field_value: row?.field_type ?? '' })
-          .sortBy('sort'),
-      [row?.field_type],
-    ) ?? []
-  const widgetValues = widgetsForFields.map((w) => w.widget_value)
+  const widgetValues = data?.widgetValues
 
   const widgetTypes: IWidgetType = useLiveQuery(
     async () =>
       dexie.widget_types
-        .filter((wt) => wt.deleted === 0 && widgetValues.includes(wt.value))
+        .filter(
+          (wt) => wt.deleted === 0 && (widgetValues ?? []).includes(wt.value),
+        )
         .sortBy('sort'),
     [row?.field_type, widgetValues],
   )
