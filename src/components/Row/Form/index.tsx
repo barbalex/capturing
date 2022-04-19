@@ -237,10 +237,14 @@ const RowForm = ({
               break
             case 'options-2':
               return (
-                <FieldContainer key={f.id}>
-                  <div>options-2</div>
-                  <div>{JSON.stringify(f)}</div>
-                </FieldContainer>
+                <Checkbox2States
+                  key={`${row.id}/${f.id}/options2`}
+                  label={f.label ?? f.name}
+                  name={f.name}
+                  value={rowState.current.data?.[f.name] ?? ''}
+                  onBlur={onBlur}
+                  error={errors?.row?.[f.name]}
+                />
               )
               break
             case 'jes-no':
