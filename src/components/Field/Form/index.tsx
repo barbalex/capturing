@@ -299,17 +299,6 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           error={errors?.field?.is_internal_id}
           disabled={!userMayEdit}
         />
-        <Select
-          key={`${row.id}options_table`}
-          name="options_table"
-          value={row.options_table}
-          field="options_table"
-          label="Werte-Liste"
-          options={optionsTableSelectValues}
-          saveToDb={onBlur}
-          error={errors?.field?.options_table}
-          disabled={!userMayEdit}
-        />
         <RadioButtonGroup
           key={`${row.id}field_type`}
           name="field_type"
@@ -331,6 +320,17 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           noDataMessage="(verfügbar, wenn ein Feld-Typ gewählt wurde)"
           onBlur={onBlur}
           error={errors?.field?.widget_type}
+          disabled={!userMayEdit}
+        />
+        <Select
+          key={`${row.id}options_table`}
+          name="options_table"
+          value={row.options_table}
+          field="options_table"
+          label="Werte-Liste"
+          options={optionsTableSelectValues}
+          saveToDb={onBlur}
+          error={errors?.field?.options_table}
           disabled={!userMayEdit}
         />
         <TextField
