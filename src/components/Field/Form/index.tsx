@@ -107,7 +107,13 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
 
     return {
       useLabels,
-      optionsTables,
+      optionsTableSelectValues: sortByLabelName({
+        objects: optionsTables ?? [],
+        useLabels,
+      }).map((t) => ({
+        value: t.id,
+        label: labelFromLabeledTable({ object: t, useLabels }),
+      })),
       row,
       fields,
       fieldTypes,
@@ -118,19 +124,12 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
   }, [projectId, fieldId, session?.user?.email])
   const useLabels = data?.useLabels
   const row: Field = data?.row
-  const optionsTables = sortByLabelName({
-    objects: data?.optionsTables ?? [],
-    useLabels,
-  })
+  const optionsTableSelectValues = data?.optionsTableSelectValues
   const fieldTypes: IFieldType = data?.fieldTypes
   const userMayEdit = data?.userMayEdit
   const widgetTypes = data?.widgetTypes
   const needsOptionsList: boolean = data?.needsOptionsList
 
-  const optionsTableSelectValues = optionsTables.map((t) => ({
-    value: t.id,
-    label: labelFromLabeledTable({ object: t, useLabels }),
-  }))
   const fieldTypeValues = useMemo(
     () =>
       (fieldTypes ?? [])
