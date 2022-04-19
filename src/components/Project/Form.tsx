@@ -31,6 +31,8 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
   const { filter, errors } = store
   const session: Session = supabase.auth.session()
 
+  // console.log('ProjectForm rendering')
+
   const unsetError = useCallback(
     () => () => {
       console.log('TODO: unsetError')
