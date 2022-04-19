@@ -61,7 +61,7 @@ const RowComponent = ({ filter: showFilter }) => {
     [rowId],
   )
 
-  // console.log('Project rendering row:', { row, projectId })
+  // console.log('RowForm rendering')
 
   const [activeConflict, setActiveConflict] = useState(null)
   const conflictDisposalCallback = useCallback(
@@ -75,7 +75,10 @@ const RowComponent = ({ filter: showFilter }) => {
   // ensure that activeConflict is reset
   // when changing dataset
   useEffect(() => {
-    setActiveConflict(null)
+    if (activeConflict) {
+      setActiveConflict(null)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowId])
 
   const [showHistory, setShowHistory] = useState(null)

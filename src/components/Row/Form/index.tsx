@@ -82,7 +82,7 @@ const RowForm = ({
     }
   }, [row])
 
-  console.log('RowForm rendering', { row, rowState: rowState.current })
+  // console.log('RowForm rendering', { row, rowState: rowState.current })
   // TODO: build right queries
   const data: DataProps = useLiveQuery(async () => {
     const [fields, projectUser] = await Promise.all([
