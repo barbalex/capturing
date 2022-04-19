@@ -663,7 +663,7 @@ export class Row implements IRow {
       undefined,
       'rows', // processQueuedUpdate writes this into row_revs
       JSON.stringify(isReved),
-      this.id,
+      was.id,
       JSON.stringify(was),
     )
     return dexie.queued_updates.add(update)
