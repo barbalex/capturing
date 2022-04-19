@@ -66,6 +66,22 @@ const dateFormat = [
   'd',
   'dd',
 ]
+const timeFormat = [
+  'dd.MM.yyyy HH:mm',
+  'd.MM.yyyy HH:mm',
+  'd.M.yyyy HH:mm',
+  'dd.M.yyyy HH:mm',
+  'dd.MM.yy HH:mm',
+  'd.MM.yy HH:mm',
+  'd.M.yy HH:mm',
+  'dd.M.yy HH:mm',
+  'd.M HH:mm',
+  'd.MM HH:mm',
+  'dd.M HH:mm',
+  'dd.MM HH:mm',
+  'd HH:mm',
+  'dd HH:mm',
+]
 
 const DateField = ({
   value: valuePassed,
@@ -83,7 +99,12 @@ const DateField = ({
 
   const onChangeDatePicker = useCallback(
     (date) => {
-      const newValue = date === null ? null : dayjs(date).format('YYYY-MM-DD')
+      const newValue =
+        date === null
+          ? null
+          : dayjs(date).format(
+              showTimeSelect ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD',
+            )
       setStateValue(newValue)
       saveToDb({
         target: {
@@ -92,7 +113,7 @@ const DateField = ({
         },
       })
     },
-    [name, saveToDb],
+    [name, saveToDb, showTimeSelect],
   )
 
   const isValid = dayjs(stateValue).isValid()
@@ -104,10 +125,11 @@ const DateField = ({
       <Label htmlFor={name}>{label}</Label>
       <StyledDatePicker
         id={name}
-        showTimeSelect={showTimeSelect}
         selected={selected}
         onChange={onChangeDatePicker}
-        dateFormat={dateFormat}
+        dateFormat={showTimeSelect ? timeFormat : dateFormat}
+        showTimeSelect={showTimeSelect}
+        timeCaption="Zeit"
         popperPlacement={popperPlacement}
       />
       {!!error && <FormHelperText>{error}</FormHelperText>}
