@@ -54,21 +54,19 @@ const RowsContainer = styled.div`
   height: 100%;
 `
 
-type DataProps = {
-  rows: Row[]
-  filteredCount: integer
-  totalCount: integer
-  projectUser: IProjectUser
-}
+type RowsWithLabel = Row & { label: string }
 
 const RowsComponent = () => {
   const session = supabase.auth.session()
   const { projectId, tableId } = useParams()
   const navigate = useNavigate()
+
   const store = useContext(storeContext)
   const { activeNodeArray, removeOpenNode, formHeight } = store
 
-  const data: DataProps = useLiveQuery(async () => {
+  // console.log('RowsList rendering')
+
+  const data = useLiveQuery(async () => {
     const [rows, filteredCount, totalCount, projectUser] = await Promise.all([
       dexie.rows.where({ deleted: 0, table_id: tableId }).toArray(),
       dexie.rows.where({ deleted: 0, table_id: tableId }).count(), // TODO: pass in filter
@@ -79,26 +77,27 @@ const RowsComponent = () => {
       }),
     ])
 
-    return { rows, filteredCount, totalCount, projectUser }
+    const rowsPromises = rows.map((r) =>
+      r.label.then((label) => ({ ...r, label })),
+    )
+    const rowsWithLabel = await Promise.all(rowsPromises).then(
+      (rowsWithLabel) => sortBy(rowsWithLabel, (r) => r.label),
+    )
+
+    return {
+      rowsWithLabel,
+      filteredCount,
+      totalCount,
+      userMayEdit: ['project_manager', 'project_editor'].includes(
+        projectUser.role,
+      ),
+    }
   }, [tableId, projectId, session?.user?.email])
 
-  const rows: Rows[] = useMemo(() => data?.rows ?? [], [data?.rows])
-  const [rowsWithLabel, setRowsWithLabel] = useState([])
-  useEffect(() => {
-    const promises = rows.map((r) => r.label.then((label) => ({ ...r, label })))
-    Promise.all(promises).then((rowsWithLabel) =>
-      setRowsWithLabel(sortBy(rowsWithLabel, (r) => r.label)),
-    )
-  }, [rows])
-
-  const filteredCount = data?.filteredCount
-  const totalCount = data?.totalCount
-  const userRole = data?.projectUser?.role
-  const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
-  // console.log('Rows', {
-  //   rows,
-  //   rowsWithLabel,
-  // })
+  const rowsWithLabel: RowsWithLabel[] = data?.rowsWithLabel ?? []
+  const filteredCount: integer = data?.filteredCount
+  const totalCount: integer = data?.totalCount
+  const userMayEdit: boolean = data?.userMayEdit
 
   const add = useCallback(async () => {
     const newId = await insertRow({ tableId })
@@ -142,7 +141,6 @@ const RowsComponent = () => {
         </TitleContainer>
         <RowsContainer>
           <Virtuoso
-            //initialTopMostItemIndex={initialTopMostIndex}
             height={formHeight}
             totalCount={rowsWithLabel.length}
             itemContent={(index) => {
