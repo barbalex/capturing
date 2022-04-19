@@ -1,4 +1,11 @@
-import React, { useContext, useEffect, useCallback, useRef } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useCallback,
+  useRef,
+  useState,
+  useMemo,
+} from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
@@ -43,7 +50,7 @@ type DataProps = {
   projects: Project[]
   fields: Field[]
   optionsTable: Table
-  projectUser: IProjectUser
+  userMayEdit: boolean
 }
 
 // = '99999999-9999-9999-9999-999999999999'
@@ -86,6 +93,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
       ])
 
     const useLabels = project.use_labels
+    const userMayEdit = projectUser.role === 'project_manager'
 
     return {
       useLabels,
@@ -93,20 +101,17 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
       row,
       fields,
       fieldTypes,
-      projectUser,
+      userMayEdit,
     }
   }, [projectId, fieldId, session?.user?.email])
   const useLabels = data?.useLabels
-  const row = data?.row
+  const row: Field = data?.row
   const optionsTables = sortByLabelName({
     objects: data?.optionsTables ?? [],
     useLabels,
   })
-  const fieldTypes: IFieldType = data?.fieldTypes ?? []
-  //const widgetTypes: IWidgetType = data?.widgetTypes ?? []
-  // const widgetsForFields: IWidgetForField = data?.widgetsForFields ?? []
-  const userRole = data?.projectUser?.role
-  const userMayEdit = userRole === 'project_manager'
+  const fieldTypes: IFieldType = data?.fieldTypes
+  const userMayEdit = data?.userMayEdit
 
   const widgetsForFields: IWidgetForField[] =
     useLiveQuery(
@@ -118,49 +123,73 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
     ) ?? []
   const widgetValues = widgetsForFields.map((w) => w.widget_value)
 
-  const widgetTypes: IWidgetType =
-    useLiveQuery(
-      async () =>
-        dexie.widget_types
-          .filter((wt) => wt.deleted === 0 && widgetValues.includes(wt.value))
-          .sortBy('sort'),
-      [row?.field_type, widgetsForFields],
-    ) ?? []
+  const widgetTypes: IWidgetType = useLiveQuery(
+    async () =>
+      dexie.widget_types
+        .filter((wt) => wt.deleted === 0 && widgetValues.includes(wt.value))
+        .sortBy('sort'),
+    [row?.field_type, widgetValues],
+  )
+
+  const needsOptionsList: boolean = useLiveQuery(async () => {
+    const widgetType: IWidgetType = await dexie.widget_types.get({
+      value: row?.widget_type ?? 'none',
+    })
+    return widgetType?.needs_list === 1 ?? false
+  }, [row?.widget_type])
 
   const optionsTableSelectValues = optionsTables.map((t) => ({
     value: t.id,
     label: labelFromLabeledTable({ object: t, useLabels }),
   }))
-  const fieldTypeValues = fieldTypes
-    .map((t) => ({
-      value: t.value,
-      label: t.value,
-    }))
-    .sort((a, b) => {
-      const aVal = a.sort ?? a.value
-      const bVal = b.sort ?? b.value
+  const fieldTypeValues = useMemo(
+    () =>
+      (fieldTypes ?? [])
+        .map((t) => ({
+          value: t.value,
+          label: t.value,
+        }))
+        .sort((a, b) => {
+          const aVal = a.sort ?? a.value
+          const bVal = b.sort ?? b.value
 
-      if (aVal < bVal) return -1
-      if (aVal === bVal) return 0
-      return 1
-    })
-  const widgetTypeValues = widgetTypes
-    .map((t) => ({
-      value: t.value,
-      label: t.value,
-    }))
-    .sort((a, b) => {
-      const aVal = a.sort ?? a.value
-      const bVal = b.sort ?? b.value
+          if (aVal < bVal) return -1
+          if (aVal === bVal) return 0
+          return 1
+        }),
+    [fieldTypes],
+  )
+  const widgetTypeValues = useMemo(
+    () =>
+      (widgetTypes ?? [])
+        .map((t) => ({
+          value: t.value,
+          label: t.value,
+        }))
+        .sort((a, b) => {
+          const aVal = a.sort ?? a.value
+          const bVal = b.sort ?? b.value
 
-      if (aVal < bVal) return -1
-      if (aVal === bVal) return 0
-      return 1
-    })
+          if (aVal < bVal) return -1
+          if (aVal === bVal) return 0
+          return 1
+        }),
+    [widgetTypes],
+  )
 
-  // console.log('FieldForm', {
-  //   row,
-  // })
+  console.log('FieldForm rendering')
+
+  const [localErrors, setLocalErrors] = useState({})
+  const validate = useCallback(() => {
+    const errors = {}
+    if (!!row?.field_type && !row?.widget_type) {
+      errors.widget_type = 'Benötigt'
+    }
+    if (!!row?.widget_type && !row?.options_table) {
+      errors.options_table = 'Benötigt'
+    }
+    setLocalErrors(errors)
+  }, [row?.field_type, row?.options_table, row?.widget_type])
 
   const originalRow = useRef<IField>()
   const rowState = useRef<IField>()
@@ -168,12 +197,10 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
     rowState.current = row
     // update originalRow only initially, once row has arrived
     if (!originalRow.current && row) {
-      console.log('TableRow, setting originalRow to:', row)
       originalRow.current = row
     }
-  }, [row])
-
-  console.log('FieldForm, row:', row)
+    validate()
+  }, [row, validate])
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
@@ -319,20 +346,22 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           dataSource={widgetTypeValues}
           noDataMessage="(verfügbar, wenn ein Feld-Typ gewählt wurde)"
           onBlur={onBlur}
-          error={errors?.field?.widget_type}
+          error={localErrors.widget_type}
           disabled={!userMayEdit}
         />
-        <Select
-          key={`${row.id}options_table`}
-          name="options_table"
-          value={row.options_table}
-          field="options_table"
-          label="Werte-Liste"
-          options={optionsTableSelectValues}
-          saveToDb={onBlur}
-          error={errors?.field?.options_table}
-          disabled={!userMayEdit}
-        />
+        {needsOptionsList && (
+          <Select
+            key={`${row.id}options_table`}
+            name="options_table"
+            value={row.options_table}
+            field="options_table"
+            label="Werte-Liste"
+            options={optionsTableSelectValues}
+            saveToDb={onBlur}
+            error={localErrors.options_table}
+            disabled={!userMayEdit}
+          />
+        )}
         <TextField
           key={`${row?.id ?? ''}standard_value`}
           name="standard_value"
