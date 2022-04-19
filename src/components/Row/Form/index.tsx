@@ -107,7 +107,12 @@ const RowForm = ({
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
-    if (isEqual(originalRow.current, rowState.current)) return
+    if (isEqual(originalRow.current.data, rowState.current.data)) return
+
+    console.log('RowForm, updateOnServer', {
+      originalRow: originalRow.current,
+      rowState: rowState.current,
+    })
 
     row.updateOnServer({
       was: originalRow.current,
