@@ -445,11 +445,11 @@ COMMENT ON COLUMN widget_types.sort IS 'enables sorting at will';
 
 COMMENT ON COLUMN widget_types.server_rev_at IS 'time of last edit on server';
 
-INSERT INTO widget_types (value, sort, comment)
-  VALUES ('text', 1, 'Short field accepting text'), ('textarea', 2, 'Field accepting text, lines can break'), ('markdown', 3, 'Field accepting text, expressing markdown'), ('options-2', 4, 'single boolean field showing one option for true (active) and false (not active)'), ('options-3', 5, 'single boolean field showing true, false and null'), ('options-few', 7, 'short list, showing every entry'), ('options-many', 8, 'long dropdown-list'), ('datepicker', 9, 'enables choosing a date'), ('filepicker', 10, 'enables choosing a file'), ('jes-no', 6, 'boolean field presenting one option for true and false each')
+INSERT INTO widget_types (value, needs_list, sort, comment)
+  VALUES ('text', 0, 1, 'Short field accepting text'), ('textarea', 0, 2, 'Field accepting text, lines can break'), ('markdown', 0, 3, 'Field accepting text, expressing markdown'), ('options-2', 0, 4, 'single boolean field showing one option for true (active) and false (not active)'), ('options-3', 0, 5, 'single boolean field showing true, false and null'), ('options-few', 1, 7, 'short list, showing every entry'), ('options-many', 1, 8, 'long dropdown-list'), ('datepicker', 0, 9, 'enables choosing a date'), ('filepicker', 0, 10, 'enables choosing a file'), ('jes-no', 0, 6, 'boolean field presenting one option for true and false each')
 ON CONFLICT ON CONSTRAINT widget_types_value_key
   DO UPDATE SET
-    comment = excluded.comment, sort = excluded.sort;
+    comment = excluded.comment, sort = excluded.sort, needs_list = excluded.needs_list;
 
 ALTER TABLE widget_types ENABLE ROW LEVEL SECURITY;
 
