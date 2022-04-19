@@ -1,11 +1,11 @@
 import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
-import { FaPlus, FaArrowUp } from 'react-icons/fa'
+import { FaPlus } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { Link, useNavigate, resolvePath } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import storeContext from '../../storeContext'
 import Row from './Row'
@@ -50,7 +50,7 @@ const FieldsContainer = styled.div`
 const Projects = () => {
   const navigate = useNavigate()
   const store = useContext(storeContext)
-  const { activeNodeArray, removeOpenNode, formHeight } = store
+  const { formHeight } = store
 
   const data = useLiveQuery(async () => {
     const [projects, account, filteredCount, totalCount] = await Promise.all([
@@ -60,25 +60,24 @@ const Projects = () => {
       dexie.projects.where({ deleted: 0 }).count(),
     ])
 
-    return { projects, account, filteredCount, totalCount }
+    return {
+      projects: sortProjectsByLabelName(projects),
+      account,
+      filteredCount,
+      totalCount,
+    }
   })
-  const projects = sortProjectsByLabelName(data?.projects ?? [])
+  const projects = data?.projects ?? []
   const account = data?.account
   const filteredCount = data?.filteredCount
   const totalCount = data?.totalCount
 
   const add = useCallback(async () => {
-    const newProjectId = await insertProject({ account })
-    navigate(`/${[...activeNodeArray, newProjectId].join('/')}`)
-  }, [account, activeNodeArray, navigate])
+    const newId = await insertProject({ account })
+    navigate(newId)
+  }, [account, navigate])
 
-  const onClickUp = useCallback(() => {
-    removeOpenNode(activeNodeArray)
-  }, [activeNodeArray, removeOpenNode])
-  let upTitle = 'Eine Ebene höher'
-  if (activeNodeArray[0] === 'projects') {
-    upTitle = 'Zu allen Listen'
-  }
+  // console.log('ProjectsList rendering')
 
   return (
     <ErrorBoundary>
@@ -86,15 +85,6 @@ const Projects = () => {
         <TitleContainer>
           <Title>Projekte</Title>
           <TitleSymbols>
-            <IconButton
-              title={upTitle}
-              component={Link}
-              to={resolvePath(`..`, window.location.pathname)}
-              onClick={onClickUp}
-              size="large"
-            >
-              <FaArrowUp />
-            </IconButton>
             <IconButton
               aria-label="neues Projekt"
               title="neues Projekt"
@@ -112,7 +102,6 @@ const Projects = () => {
         </TitleContainer>
         <FieldsContainer>
           <Virtuoso
-            //initialTopMostItemIndex={initialTopMostIndex}
             height={formHeight}
             totalCount={projects.length}
             itemContent={(index) => {
