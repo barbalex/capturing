@@ -45,11 +45,6 @@ type RowFormProps = {
   showHistory: (boolean) => void
 }
 
-type DataProps = {
-  fields: Field[]
-  userMayEdit: boolean
-}
-
 const RowForm = ({
   activeConflict,
   id,
@@ -82,9 +77,9 @@ const RowForm = ({
     }
   }, [row])
 
-  // console.log('RowForm rendering', { row, rowState: rowState.current })
+  // console.log('RowForm rendering')
   // TODO: build right queries
-  const data: DataProps = useLiveQuery(async () => {
+  const data = useLiveQuery(async () => {
     const [fields, projectUser] = await Promise.all([
       dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
       dexie.project_users.get({
@@ -103,7 +98,7 @@ const RowForm = ({
   }, [projectId, tableId, session?.user?.email])
 
   const fields: Field[] = data?.fields ?? []
-  const userMayEdit = data?.userMayEdit
+  const userMayEdit: boolean = data?.userMayEdit
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
@@ -157,7 +152,7 @@ const RowForm = ({
 
       const newRow = { ...row, data: newData }
       rowState.current = newRow
-      console.log('RowForm, onBlur', { newRow, newData })
+      // console.log('RowForm, onBlur', { newRow, newData })
       dexie.rows.update(row.id, { data: newData })
     },
     [filter, row, showFilter],
