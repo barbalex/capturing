@@ -16,7 +16,7 @@ const Container = styled.div`
 `
 const Title = styled.h5`
   margin 0;
-  padding: 8px;
+  padding: 4px;
   padding-bottom: 0;
   user-select: none;
 `
@@ -51,6 +51,12 @@ const DividerContainer = styled(FieldContainer)`
   margin-top: 4px;
   position: relative;
 `
+const Explainer = styled.p`
+  font-size: x-small;
+  margin: 0;
+  padding: 0 4px;
+  color: grey;
+`
 
 type Props = {
   useLabels: boolean
@@ -59,10 +65,10 @@ type Props = {
 
 const RowLabelFieldList = ({ useLabels, fields }: Props) => (
   <Container>
-    <Title>Felder</Title>
     <Droppable droppableId="fieldList">
       {(provided) => (
         <FieldList ref={provided.innerRef} {...provided.droppableProps}>
+          <Title>Felder</Title>
           {(fields ?? []).map((f, index) => (
             <Draggable
               key={f.id}
@@ -85,6 +91,12 @@ const RowLabelFieldList = ({ useLabels, fields }: Props) => (
               )}
             </Draggable>
           ))}
+          {(fields ?? []).length === 0 && (
+            <Explainer>
+              Sie müssen Felder erzeugen, um die Datensatz-Beschriftung zu
+              bestimmen.
+            </Explainer>
+          )}
           <Title>Zeichen</Title>
           <Draggable
             key="textfield"
