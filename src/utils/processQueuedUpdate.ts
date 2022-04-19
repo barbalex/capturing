@@ -42,7 +42,7 @@ const processQueuedUpdate = async ({
       client_rev_at: new window.Date().toISOString(),
       client_rev_by: session.user?.email ?? session.user?.id,
       depth,
-      parent_rev: queuedUpdate.revert_value?.rev ?? null,
+      parent_rev: newObject?.revisions?.[0] ?? null,
     }
     const rev = `${depth}-${md5(JSON.stringify(newRevObject))}`
     newRevObject.rev = rev
@@ -50,13 +50,13 @@ const processQueuedUpdate = async ({
     newRevObject.revisions = isInsert
       ? [rev]
       : [rev, ...(newObject.revisions ?? [])]
-    console.log('processQueuedUpdate', {
-      newRevObject,
-      newObject: JSON.parse(queuedUpdate.value),
-      isInsert,
-      depth,
-      queuedUpdate,
-    })
+    // console.log('processQueuedUpdate', {
+    //   newRevObject,
+    //   newObject: JSON.parse(queuedUpdate.value),
+    //   isInsert,
+    //   depth,
+    //   queuedUpdate,
+    // })
     // 2. send revision to server
     const { error } = await supabase.from(revTableName).insert(newRevObject)
     if (error) {

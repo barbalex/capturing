@@ -109,10 +109,10 @@ const RowForm = ({
     // only update if is changed
     if (isEqual(originalRow.current.data, rowState.current.data)) return
 
-    console.log('RowForm, updateOnServer', {
-      originalRow: originalRow.current,
-      rowState: rowState.current,
-    })
+    // console.log('RowForm, updateOnServer', {
+    //   originalRow: originalRow.current.data,
+    //   rowState: rowState.current.data,
+    // })
 
     row.updateOnServer({
       was: originalRow.current,
@@ -148,11 +148,18 @@ const RowForm = ({
       }
 
       // build new data
+      let newData
       const oldData = row.data
-      const newData =
-        newValue === null && oldData === undefined
-          ? null
-          : { ...oldData, [field]: newValue }
+      if (oldData === null) {
+        if (newValue === null) {
+          newData = null
+        } else {
+          newData = { [field]: newValue }
+        }
+      } else {
+        newData = { ...oldData, [field]: newValue }
+      }
+
       const newRow = { ...row, data: newData }
       rowState.current = newRow
       console.log('RowForm, onBlur', { newRow, newData })
