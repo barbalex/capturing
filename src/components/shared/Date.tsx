@@ -74,6 +74,7 @@ const DateField = ({
   saveToDb,
   error,
   popperPlacement = 'auto',
+  showTimeSelect = false,
 }) => {
   const [stateValue, setStateValue] = useState(valuePassed)
   useEffect(() => {
@@ -103,6 +104,7 @@ const DateField = ({
       <Label htmlFor={name}>{label}</Label>
       <StyledDatePicker
         id={name}
+        showTimeSelect={showTimeSelect}
         selected={selected}
         onChange={onChangeDatePicker}
         dateFormat={dateFormat}

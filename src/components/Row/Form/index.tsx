@@ -224,6 +224,19 @@ const RowForm = ({
                 />
               )
               break
+            case 'datetimepicker':
+              return (
+                <Date
+                  key={`${row.id}/${f.id}/datetimepicker`}
+                  value={rowState.current.data?.[f.name] ?? ''}
+                  label={f.label ?? f.name}
+                  name={f.name}
+                  saveToDb={onBlur}
+                  error={errors?.row?.[f.name]}
+                  showTimeSelect={true}
+                />
+              )
+              break
             case 'filepicker':
               return (
                 <FieldContainer key={f.id}>
