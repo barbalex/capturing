@@ -99,10 +99,11 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
       .sortBy('sort')
     const widgetValues = widgetsForFields.map((w) => w.widget_value)
     const widgetTypes: IWidgetType[] = await dexie.widget_types
-      .filter(
-        (wt) => wt.deleted === 0 && (widgetValues ?? []).includes(wt.value),
-      )
+      .filter((wt) => wt.deleted === 0 && widgetValues.includes(wt.value))
       .sortBy('sort')
+    const widgetType: IWidgetType = await dexie.widget_types.get({
+      value: row?.widget_type ?? 'none',
+    })
 
     return {
       useLabels,
@@ -112,6 +113,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
       fieldTypes,
       userMayEdit,
       widgetTypes,
+      needsOptionsList: widgetType?.needs_list === 1 ?? false,
     }
   }, [projectId, fieldId, session?.user?.email])
   const useLabels = data?.useLabels
@@ -122,15 +124,8 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
   })
   const fieldTypes: IFieldType = data?.fieldTypes
   const userMayEdit = data?.userMayEdit
-
   const widgetTypes = data?.widgetTypes
-
-  const needsOptionsList: boolean = useLiveQuery(async () => {
-    const widgetType: IWidgetType = await dexie.widget_types.get({
-      value: row?.widget_type ?? 'none',
-    })
-    return widgetType?.needs_list === 1 ?? false
-  }, [row?.widget_type])
+  const needsOptionsList: boolean = data?.needsOptionsList
 
   const optionsTableSelectValues = optionsTables.map((t) => ({
     value: t.id,
