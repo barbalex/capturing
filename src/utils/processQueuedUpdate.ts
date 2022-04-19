@@ -26,7 +26,7 @@ const processQueuedUpdate = async ({
   // TODO: ttables problem?
   const isRevTable = revTables.includes(queuedUpdate.table)
   const singularTableName = queuedUpdate.table.slice(0, -1)
-  const isInsert = !!queuedUpdate.revert_id
+  const isInsert = !queuedUpdate.revert_id
   // insert _rev or upsert regular table
   if (isRevTable) {
     const revTableName = queuedUpdate.table.replace(/.$/, '_revs') // https://stackoverflow.com/a/36630251/712005
@@ -52,9 +52,10 @@ const processQueuedUpdate = async ({
       : [rev, ...(newObject.revisions ?? [])]
     console.log('processQueuedUpdate', {
       newRevObject,
+      newObject: JSON.parse(queuedUpdate.value),
       isInsert,
       depth,
-      queuedValue: JSON.parse(queuedUpdate.value),
+      queuedUpdate,
     })
     // 2. send revision to server
     const { error } = await supabase.from(revTableName).insert(newRevObject)
