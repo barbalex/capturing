@@ -45,12 +45,9 @@ const FieldsContainer = styled.div`
 type FieldFormProps = {
   showFilter: (boolean) => void
 }
-type DataProps = {
-  useLabels: boolean
-  projects: Project[]
-  fields: Field[]
-  optionsTable: Table
-  userMayEdit: boolean
+type valueType = {
+  value: string
+  label: string
 }
 
 // = '99999999-9999-9999-9999-999999999999'
@@ -71,7 +68,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
   }, [fieldId, unsetError])
 
   // const data = {}
-  const data: DataProps = useLiveQuery(async () => {
+  const data = useLiveQuery(async () => {
     const [project, optionsTables, row, fields, fieldTypes, projectUser] =
       await Promise.all([
         dexie.projects.get(projectId),
@@ -92,8 +89,8 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
         }),
       ])
 
-    const useLabels = project.use_labels
-    const userMayEdit = projectUser.role === 'project_manager'
+    const useLabels: boolean = project.use_labels
+    const userMayEdit: boolean = projectUser.role === 'project_manager'
     const widgetsForFields: IWidgetForField[] = await dexie.widgets_for_fields
       .where({ deleted: 0, field_value: row?.field_type ?? '' })
       .sortBy('sort')
@@ -116,54 +113,43 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
       })),
       row,
       fields,
-      fieldTypes,
+      fieldTypeValues: fieldTypes
+        .map((t) => ({
+          value: t.value,
+          label: t.value,
+        }))
+        .sort((a, b) => {
+          const aVal = a.sort ?? a.value
+          const bVal = b.sort ?? b.value
+
+          if (aVal < bVal) return -1
+          if (aVal === bVal) return 0
+          return 1
+        }),
       userMayEdit,
-      widgetTypes,
+      widgetTypeValues: widgetTypes
+        .map((t) => ({
+          value: t.value,
+          label: t.value,
+        }))
+        .sort((a, b) => {
+          const aVal = a.sort ?? a.value
+          const bVal = b.sort ?? b.value
+
+          if (aVal < bVal) return -1
+          if (aVal === bVal) return 0
+          return 1
+        }),
       needsOptionsList: widgetType?.needs_list === 1 ?? false,
     }
   }, [projectId, fieldId, session?.user?.email])
-  const useLabels = data?.useLabels
+  const useLabels: boolean = data?.useLabels
   const row: Field = data?.row
-  const optionsTableSelectValues = data?.optionsTableSelectValues
-  const fieldTypes: IFieldType = data?.fieldTypes
-  const userMayEdit = data?.userMayEdit
-  const widgetTypes = data?.widgetTypes
+  const optionsTableValues: valueType[] = data?.optionsTableSelectValues
+  const fieldTypeValues: valueType[] = data?.fieldTypeValues
+  const userMayEdit: boolean = data?.userMayEdit
+  const widgetTypeValues: valueType[] = data?.widgetTypeValues
   const needsOptionsList: boolean = data?.needsOptionsList
-
-  const fieldTypeValues = useMemo(
-    () =>
-      (fieldTypes ?? [])
-        .map((t) => ({
-          value: t.value,
-          label: t.value,
-        }))
-        .sort((a, b) => {
-          const aVal = a.sort ?? a.value
-          const bVal = b.sort ?? b.value
-
-          if (aVal < bVal) return -1
-          if (aVal === bVal) return 0
-          return 1
-        }),
-    [fieldTypes],
-  )
-  const widgetTypeValues = useMemo(
-    () =>
-      (widgetTypes ?? [])
-        .map((t) => ({
-          value: t.value,
-          label: t.value,
-        }))
-        .sort((a, b) => {
-          const aVal = a.sort ?? a.value
-          const bVal = b.sort ?? b.value
-
-          if (aVal < bVal) return -1
-          if (aVal === bVal) return 0
-          return 1
-        }),
-    [widgetTypes],
-  )
 
   console.log('FieldForm rendering')
 
@@ -176,8 +162,10 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
     if (!!row?.widget_type && !row?.options_table) {
       errors.options_table = 'Benötigt'
     }
+    // only set if necessary to reduce rendering
+    if (isEqual(errors, localErrors)) return
     setLocalErrors(errors)
-  }, [row?.field_type, row?.options_table, row?.widget_type])
+  }, [localErrors, row?.field_type, row?.options_table, row?.widget_type])
 
   const originalRow = useRef<IField>()
   const rowState = useRef<IField>()
@@ -344,7 +332,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
             value={row.options_table}
             field="options_table"
             label="Werte-Liste"
-            options={optionsTableSelectValues}
+            options={optionsTableValues}
             saveToDb={onBlur}
             error={localErrors.options_table}
             disabled={!userMayEdit}
