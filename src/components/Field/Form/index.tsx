@@ -151,7 +151,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
   const widgetTypeValues: valueType[] = data?.widgetTypeValues
   const needsOptionsList: boolean = data?.needsOptionsList
 
-  console.log('FieldForm rendering')
+  // console.log('FieldForm rendering')
 
   const [localErrors, setLocalErrors] = useState({})
   const validate = useCallback(() => {

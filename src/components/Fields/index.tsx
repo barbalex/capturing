@@ -55,7 +55,7 @@ const FieldsComponent = () => {
   const store = useContext(storeContext)
   const { activeNodeArray, removeOpenNode, formHeight } = store
 
-  console.log('FieldsList rendering')
+  // console.log('FieldsList rendering')
 
   const data = useLiveQuery(async () => {
     const [fields, filteredCount, totalCount, projectUser, project] =
