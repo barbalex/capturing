@@ -48,14 +48,6 @@ const RowsContainer = styled.div`
   height: 100%;
 `
 
-type DataProps = {
-  fields: Field[]
-  filteredCount: integer
-  totalCount: integer
-  projectUser: IProjectUser
-  project: Project
-}
-
 const FieldsComponent = () => {
   const session = supabase.auth.session()
   const { projectId, tableId } = useParams()
@@ -63,12 +55,9 @@ const FieldsComponent = () => {
   const store = useContext(storeContext)
   const { activeNodeArray, removeOpenNode, formHeight } = store
 
-  // const fields: Field[] =
-  //   useLiveQuery(async () =>
-  //     dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
-  //   ) ?? []
+  console.log('FieldsList rendering')
 
-  const data: DataProps = useLiveQuery(async () => {
+  const data = useLiveQuery(async () => {
     const [fields, filteredCount, totalCount, projectUser, project] =
       await Promise.all([
         dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
@@ -81,24 +70,23 @@ const FieldsComponent = () => {
         dexie.projects.get(projectId),
       ])
 
-    return { fields, filteredCount, totalCount, projectUser, project }
+    return {
+      fields: sortByLabelName({
+        objects: fields ?? [],
+        useLabels: project.use_labels,
+      }),
+      filteredCount,
+      totalCount,
+      userMayEdit: projectUser.role === 'project_manager',
+      project,
+    }
   }, [tableId, projectId, session?.user?.email])
 
-  const project = data?.project
-  const fieldsSorted: Fields[] = sortByLabelName({
-    objects: data?.fields ?? [],
-    useLabels: project?.use_labels,
-  })
-  const filteredCount = data?.filteredCount
-  const totalCount = data?.totalCount
-  const userRole = data?.projectUser?.role
-  const userMayEdit = userRole === 'project_manager'
-  // console.log('Fields', {
-  //   userMayEdit,
-  //   projectUser: data?.projectUser,
-  //   userRole,
-  //   projectId,
-  // })
+  const project: Project = data?.project
+  const fields: Fields[] = data?.fields ?? []
+  const filteredCount: integer = data?.filteredCount
+  const totalCount: integer = data?.totalCount
+  const userMayEdit: boolean = data?.userMayEdit
 
   const add = useCallback(async () => {
     const newId = await insertField({ tableId })
@@ -144,9 +132,9 @@ const FieldsComponent = () => {
           <Virtuoso
             //initialTopMostItemIndex={initialTopMostIndex}
             height={formHeight}
-            totalCount={fieldsSorted.length}
+            totalCount={fields.length}
             itemContent={(index) => {
-              const row = fieldsSorted[index]
+              const row = fields[index]
 
               return <Row key={row.id} row={row} project={project} />
             }}
