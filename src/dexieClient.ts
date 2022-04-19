@@ -285,15 +285,6 @@ export enum TableTypeEnum {
   value_list = 'value_list',
   id_value_list = 'id_value_list',
 }
-export interface ITableType {
-  id: string
-  name: TableTypeEnum
-  save_id?: number
-  sort?: number
-  comment?: string
-  server_rev_at?: Date
-  deleted: number
-}
 
 export interface IProjectEditor {
   id: string
@@ -515,15 +506,6 @@ export class Project implements IProject {
     //dexie.projects.put(this)
     return this.updateOnServer({ was, is: this, session })
   }
-}
-
-export interface IRelType {
-  id: string
-  value: string
-  sort?: number
-  comment?: string
-  server_rev_at?: Date
-  deleted: number
 }
 
 export interface IRoleType {
@@ -991,11 +973,9 @@ export class MySubClassedDexie extends Dexie {
   files!: DexieTable<File, string>
   news!: DexieTable<New, string>
   news_delivery!: DexieTable<NewsDelivery, string>
-  table_types!: DexieTable<ITableType, string>
   project_tile_layers!: DexieTable<ProjectTileLayer, string>
   project_users!: DexieTable<ProjectUser, string>
   projects!: DexieTable<Project, string>
-  rel_types!: DexieTable<IRelType, string>
   role_types!: DexieTable<IRoleType, string>
   rows!: DexieTable<Row, string>
   ttables!: DexieTable<Table, string>
@@ -1017,13 +997,11 @@ export class MySubClassedDexie extends Dexie {
       files: 'id, filename, server_rev_at, deleted',
       news: 'id, time, server_rev_at, deleted',
       news_delivery: 'id, server_rev_at, deleted',
-      table_types: 'id, &name, sort, server_rev_at, deleted',
       project_tile_layers: 'id, label, sort, active, server_rev_at, deleted',
       project_users:
         'id, user_email, [project_id+user_email], project_id, server_rev_at, deleted',
       projects:
         'id, label, name, server_rev_at, deleted, use_labels, [deleted+id]',
-      rel_types: 'id, &value, sort, server_rev_at, deleted',
       role_types: 'id, &value, sort, server_rev_at, deleted',
       rows: 'id, server_rev_at, deleted, [deleted+table_id]',
       // name tables causes error because used internally, see: https://github.com/dexie/Dexie.js/issues/1537
