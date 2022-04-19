@@ -12,6 +12,7 @@ import ConflictList from '../../shared/ConflictList'
 import { dexie, Row, IRow, Field } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
+import Date from '../../shared/Date'
 import Checkbox2States from '../../shared/Checkbox2States'
 import JesNo from '../../shared/JesNo'
 import JesNoNull from '../../shared/JesNoNull'
@@ -213,10 +214,14 @@ const RowForm = ({
           switch (f.widget_type) {
             case 'datepicker':
               return (
-                <FieldContainer key={f.id}>
-                  <div>datepicker</div>
-                  <div>{JSON.stringify(f)}</div>
-                </FieldContainer>
+                <Date
+                  key={`${row.id}/${f.id}/datepicker`}
+                  value={rowState.current.data?.[f.name] ?? ''}
+                  label={f.label ?? f.name}
+                  name={f.name}
+                  saveToDb={onBlur}
+                  error={errors?.row?.[f.name]}
+                />
               )
               break
             case 'filepicker':
