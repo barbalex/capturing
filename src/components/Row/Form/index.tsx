@@ -109,11 +109,6 @@ const RowForm = ({
     // only update if is changed
     if (isEqual(originalRow.current.data, rowState.current.data)) return
 
-    // console.log('RowForm, updateOnServer', {
-    //   originalRow: originalRow.current.data,
-    //   rowState: rowState.current.data,
-    // })
-
     row.updateOnServer({
       was: originalRow.current,
       is: rowState.current,

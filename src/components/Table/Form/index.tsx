@@ -45,12 +45,9 @@ const relTypeDataSource = Object.values(TableRelTypeEnum).map((v) => ({
 type TableFormProps = {
   showFilter: (boolean) => void
 }
-type DataProps = {
-  project: Project
-  projects: Project[]
-  tables: Table[]
-  relTable: Table
-  projectUser: IProjectUser
+type valueType = {
+  value: string
+  label: string
 }
 
 const typeValueLabels = {
@@ -80,7 +77,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
   }, [tableId, unsetError])
 
   // const data = {}
-  const data: DataProps = useLiveQuery(async () => {
+  const data = useLiveQuery(async () => {
     const [project, projects, tables, row, projectUser] = await Promise.all([
       dexie.projects.get(projectId),
       dexie.projects.where({ deleted: 0 }).toArray(),
@@ -97,47 +94,46 @@ const TableForm = ({ showFilter }: TableFormProps) => {
 
     const useLabels = project.use_labels
 
-    return { useLabels, projects, tables, row, userMayEdit }
+    const relTable: Table = await dexie.ttables.get({
+      id: row.parent_id ?? '99999999-9999-9999-9999-999999999999',
+    })
+
+    return {
+      useLabels,
+      projectsValues: sortProjectsByLabelName(projects).map((p) => ({
+        value: p.id,
+        label: labelFromLabeledTable({ object: p, useLabels: p.use_labels }),
+      })),
+      tablesValues: sortByLabelName({
+        objects: tables,
+        useLabels,
+      })
+        // do not list own table
+        .filter((t) => t.id !== tableId)
+        .map((t) => ({
+          value: t.id,
+          label: labelFromLabeledTable({
+            object: t,
+            useLabels,
+          }),
+        })),
+      row,
+      userMayEdit,
+      relTable,
+    }
   }, [projectId, tableId, session?.user?.email])
 
   const useLabels: boolean = data?.useLabels
-  const projects = sortProjectsByLabelName(data?.projects ?? [])
+  const projectsValues: valueType[] = data?.projectsValues ?? []
   const row: Table = data?.row
-  const tables: Table[] = sortByLabelName({
-    objects: data?.tables ?? [],
-    useLabels,
-  })
-  const userMayEdit = data?.userMayEdit
+  const tablesValues: valueType[] = data?.tablesValues ?? []
+  const userMayEdit: boolean = data?.userMayEdit
+  const relTable: Table = data?.relTable
 
-  const relTable: Table = useLiveQuery(
-    async () =>
-      await dexie.ttables.get({
-        id: row?.parent_id ?? '99999999-9999-9999-9999-999999999999',
-      }),
-    [row?.parent_id],
-  )
-
-  const projectSelectValues = projects.map((p) => ({
-    value: p.id,
-    label: labelFromLabeledTable({ object: p, useLabels: p.use_labels }),
-  }))
   const tableTypeValues = Object.values(TableTypeEnum).map((v) => ({
     value: v,
     label: typeValueLabels[v],
   }))
-
-  const tablesSelectValues = tables
-    // do not list own table
-    .filter((t) => t.id !== tableId)
-    .map((t) => ({
-      value: t.id,
-      label: labelFromLabeledTable({
-        object: t,
-        useLabels,
-      }),
-    }))
-
-  // console.log('ProjectForm rendering row:', row)
 
   // need original row to be able to roll back optimistic ui updates
   const originalRow = useRef<ITable>()
@@ -152,7 +148,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
       originalRow.current = row
     }
   }, [row])
-  console.log('TableRow, rowState:', rowState.current)
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
@@ -274,7 +269,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           value={row.project_id}
           field="project_id"
           label="Gehört zum Projekt"
-          options={projectSelectValues}
+          options={projectsValues}
           saveToDb={onBlur}
           error={errors?.table?.project_id}
           disabled={!userMayEdit}
@@ -293,7 +288,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           value={row.parent_id}
           field="parent_id"
           label="Verknüpfte Tabelle (Mutter: 1:n, Geschwister: 1:1)"
-          options={tablesSelectValues}
+          options={tablesValues}
           saveToDb={onBlur}
           error={errors?.table?.parent_id}
           disabled={!userMayEdit}
