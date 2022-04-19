@@ -243,6 +243,18 @@ const RowForm = ({
                 </FieldContainer>
               )
               break
+            case 'jes-no':
+              return (
+                <JesNo
+                  key={`${row.id}/${f.id}/jesno`}
+                  label={f.label ?? f.name}
+                  name={f.name}
+                  value={rowState.current.data?.[f.name] ?? ''}
+                  onBlur={onBlur}
+                  error={errors?.row?.[f.name]}
+                />
+              )
+              break
             case 'options-3':
               return (
                 <JesNoNull
