@@ -11,7 +11,7 @@ import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import { dexie, Table, IProjectUser, Project } from '../../dexieClient'
+import { dexie, Table } from '../../dexieClient'
 import insertTable from '../../utils/insertTable'
 import sortByLabelName from '../../utils/sortByLabelName'
 import FilterNumbers from '../shared/FilterNumbers'
@@ -48,22 +48,15 @@ const RowsContainer = styled.div`
   height: 100%;
 `
 
-type DataProps = {
-  tables: Table[]
-  filteredCount: integer
-  totalCount: integer
-  projectUser: IProjectUser
-  project: Project
-}
-
 const TablesComponent = () => {
   const session = supabase.auth.session()
   const { projectId } = useParams()
   const navigate = useNavigate()
+
   const store = useContext(storeContext)
   const { activeNodeArray, removeOpenNode, formHeight } = store
 
-  const data: DataProps = useLiveQuery(async () => {
+  const data = useLiveQuery(async () => {
     const [tables, filteredCount, totalCount, projectUser, project] =
       await Promise.all([
         dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
@@ -76,23 +69,24 @@ const TablesComponent = () => {
         dexie.projects.get(projectId),
       ])
 
-    return { tables, filteredCount, totalCount, projectUser, project }
+    return {
+      tables: sortByLabelName({
+        objects: tables,
+        useLabels,
+      }),
+      filteredCount,
+      totalCount,
+      useLabels: project.use_labels,
+      userMayEdit: ['project_manager', 'project_editor'].includes(
+        projectUser.role,
+      ),
+    }
   }, [projectId, session?.user?.email])
-  const project = data?.project
-  const tables: Tables[] = sortByLabelName({
-    objects: data?.tables ?? [],
-    useLabels: project?.use_labels,
-  })
-  const filteredCount = data?.filteredCount
-  const totalCount = data?.totalCount
-  const userRole = data?.projectUser?.role
-  const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
-  // console.log('Tables', {
-  //   userMayEdit,
-  //   projectUser: data?.projectUser,
-  //   userRole,
-  //   projectId,
-  // })
+  const useLabels: boolean = data?.useLabels
+  const tables: Table[] = data?.tables ?? []
+  const filteredCount: integer = data?.filteredCount
+  const totalCount: integer = data?.totalCount
+  const userMayEdit: boolean = data?.userMayEdit
 
   const add = useCallback(async () => {
     const newTableId = await insertTable({ projectId })
@@ -142,7 +136,7 @@ const TablesComponent = () => {
             itemContent={(index) => {
               const row = tables[index]
 
-              return <Row key={row.id} row={row} project={project} />
+              return <Row key={row.id} row={row} useLabels={useLabels} />
             }}
           />
         </RowsContainer>

@@ -18,10 +18,10 @@ const StyledListItem = styled(ListItem)`
   }
 `
 
-const TableRow = ({ row, project }) => {
+const TableRow = ({ row, useLabels }) => {
   const label = labelFromLabeledTable({
     object: row,
-    useLabels: project?.use_labels,
+    useLabels,
   })
 
   return (
