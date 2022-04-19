@@ -237,19 +237,17 @@ const RowForm = ({
                 />
               )
               break
-            case 'filepicker':
+            case 'filepicker': // TODO:
               return (
                 <FieldContainer key={f.id}>
-                  <div>filepicker</div>
-                  <div>{JSON.stringify(f)}</div>
+                  <div>Sorry, filepicker is not yet implemented</div>
                 </FieldContainer>
               )
               break
-            case 'markdown':
+            case 'markdown': // TODO:
               return (
                 <FieldContainer key={f.id}>
-                  <div>markdown</div>
-                  <div>{JSON.stringify(f)}</div>
+                  <div>Sorry, markdown field is not yet implemented</div>
                 </FieldContainer>
               )
               break
