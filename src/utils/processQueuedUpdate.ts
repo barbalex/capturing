@@ -24,7 +24,6 @@ const processQueuedUpdate = async ({
   const { online, setOnline } = store
   // console.log('processQueuedUpdate', queuedUpdate)
 
-  // TODO: ttables problem?
   const isRevTable = revTables.includes(queuedUpdate.table)
   const singularTableName = queuedUpdate.table.slice(0, -1)
   const isInsert = !queuedUpdate.revert_id
