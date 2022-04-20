@@ -83,7 +83,7 @@ const RowForm = ({
   // TODO: build right queries
   const data = useLiveQuery(async () => {
     const [fields, projectUser] = await Promise.all([
-      dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
+      dexie.fields.where({ deleted: 0, table_id: tableId }).sortBy('sort'),
       dexie.project_users.get({
         project_id: projectId,
         user_email: session?.user?.email,
@@ -211,6 +211,9 @@ const RowForm = ({
           error={errors?.row?.id}
           disabled={true}
         />
+        {!fields?.length && (
+          <p>Für diese Tabelle wurden noch keine Felder definiert.</p>
+        )}
         {fields.map((f) => {
           switch (f.widget_type) {
             case 'datepicker':
