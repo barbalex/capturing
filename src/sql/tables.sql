@@ -507,8 +507,8 @@ CREATE TABLE fields (
   label text DEFAULT NULL,
   sort smallint DEFAULT 0,
   is_internal_id integer DEFAULT 0,
-  field_type text DEFAULT 'text' REFERENCES field_types (value) ON DELETE NO action ON UPDATE CASCADE,
-  widget_type text DEFAULT 'text' REFERENCES widget_types (value) ON DELETE NO action ON UPDATE CASCADE,
+  field_type text DEFAULT NULL REFERENCES field_types (value) ON DELETE NO action ON UPDATE CASCADE,
+  widget_type text DEFAULT NULL REFERENCES widget_types (value) ON DELETE NO action ON UPDATE CASCADE,
   options_table uuid REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
   standard_value text DEFAULT NULL,
   client_rev_at timestamp with time zone DEFAULT now(),
@@ -516,6 +516,12 @@ CREATE TABLE fields (
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
 );
+
+ALTER TABLE fields
+  ALTER COLUMN field_type SET DEFAULT NULL;
+
+ALTER TABLE fields
+  ALTER COLUMN widget_type SET DEFAULT NULL;
 
 CREATE UNIQUE INDEX fields_table_name_idx ON fields (table_id, name)
 WHERE
