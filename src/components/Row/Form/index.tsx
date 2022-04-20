@@ -16,6 +16,7 @@ import Date from '../../shared/Date'
 import Checkbox2States from '../../shared/Checkbox2States'
 import JesNo from '../../shared/JesNo'
 import JesNoNull from '../../shared/JesNoNull'
+import RichText from '../../shared/RichText'
 import OptionsMany from './OptionsMany'
 import OptionsFew from './OptionsFew'
 
@@ -337,6 +338,19 @@ const RowForm = ({
                   error={errors?.row?.[f.name]}
                   disabled={!userMayEdit}
                   type={f.field_type == 'text' ? 'text' : 'number'}
+                />
+              )
+              break
+            case 'rich-text':
+              return (
+                <RichText
+                  key={`${row.id}/${f.id}/rich-text`}
+                  name={f.name}
+                  label={f.label ?? f.name}
+                  value={rowState.current.data?.[f.name] ?? ''}
+                  onBlur={onBlur}
+                  error={errors?.row?.[f.name]}
+                  disabled={!userMayEdit}
                 />
               )
               break
