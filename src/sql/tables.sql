@@ -446,7 +446,7 @@ COMMENT ON COLUMN widget_types.sort IS 'enables sorting at will';
 COMMENT ON COLUMN widget_types.server_rev_at IS 'time of last edit on server';
 
 INSERT INTO widget_types (value, needs_list, sort, comment)
-  VALUES ('text', 0, 1, 'Short field accepting text'), ('textarea', 0, 2, 'Field accepting text, lines can break'), ('markdown', 0, 3, 'Field accepting text, expressing markdown'), ('options-2', 0, 4, 'single boolean field showing one option for true (active) and false (not active)'), ('options-3', 0, 5, 'single boolean field showing true, false and null'), ('options-few', 1, 7, 'short list, showing every entry'), ('options-many', 1, 8, 'long dropdown-list'), ('datepicker', 0, 9, 'enables choosing a date'), ('filepicker', 0, 10, 'enables choosing a file'), ('jes-no', 0, 6, 'boolean field presenting one option for true and false each'), ('datetimepicker', 0, 10, 'enables choosing a date-time')
+  VALUES ('text', 0, 1, 'Short field accepting text'), ('textarea', 0, 2, 'Field accepting text, lines can break'), ('markdown', 0, 3, 'Field accepting text, expressing markdown'), ('options-2', 0, 4, 'single boolean field showing one option for true (active) and false (not active)'), ('options-3', 0, 5, 'single boolean field showing true, false and null'), ('options-few', 1, 7, 'short list, showing every entry'), ('options-many', 1, 8, 'long dropdown-list'), ('datepicker', 0, 9, 'enables choosing a date'), ('filepicker', 0, 10, 'enables choosing a file'), ('jes-no', 0, 6, 'boolean field presenting one option for true and false each'), ('datetimepicker', 0, 10, 'enables choosing a date-time'), ('rich-text', 0, 11, 'enables rich formatting of text')
 ON CONFLICT ON CONSTRAINT widget_types_value_key
   DO UPDATE SET
     comment = excluded.comment, sort = excluded.sort, needs_list = excluded.needs_list;
@@ -492,7 +492,7 @@ ALTER publication supabase_realtime
   ADD TABLE widgets_for_fields;
 
 INSERT INTO widgets_for_fields (field_value, widget_value)
-  VALUES ('text', 'text'), ('text', 'markdown'), ('boolean', 'options-2'), ('boolean', 'options-3'), ('integer', 'text'), ('decimal', 'text'), ('decimal', 'options-few'), ('decimal', 'options-many'), ('text', 'options-many'), ('integer', 'options-many'), ('text', 'options-few'), ('integer', 'options-few'), ('date', 'datepicker'), ('text', 'textarea'), ('file-reference', 'filepicker'), ('boolean', 'jes-no'), ('date-time', 'datetimepicker')
+  VALUES ('text', 'text'), ('text', 'markdown'), ('boolean', 'options-2'), ('boolean', 'options-3'), ('integer', 'text'), ('decimal', 'text'), ('decimal', 'options-few'), ('decimal', 'options-many'), ('text', 'options-many'), ('integer', 'options-many'), ('text', 'options-few'), ('integer', 'options-few'), ('date', 'datepicker'), ('text', 'textarea'), ('file-reference', 'filepicker'), ('boolean', 'jes-no'), ('date-time', 'datetimepicker'), ('text', 'rich-text')
 ON CONFLICT ON CONSTRAINT widgets_for_fields_field_value_widget_value_key
   DO NOTHING;
 
