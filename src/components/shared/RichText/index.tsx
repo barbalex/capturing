@@ -135,11 +135,6 @@ const RichText = ({
           <div className="editor-inner">
             <RichTextPlugin
               contentEditable={<ContentEditable className="editor-input" />}
-              // placeholder={
-              //   <div className="editor-placeholder">
-              //     Enter some rich text...
-              //   </div>
-              // }
             />
             <HistoryPlugin />
             <AutoFocusPlugin />
