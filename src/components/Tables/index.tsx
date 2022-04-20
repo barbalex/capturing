@@ -78,7 +78,7 @@ const TablesComponent = () => {
       totalCount,
       useLabels: project.use_labels,
       userMayEdit: ['project_manager', 'project_editor'].includes(
-        projectUser.role,
+        projectUser?.role,
       ),
     }
   }, [projectId, session?.user?.email])
