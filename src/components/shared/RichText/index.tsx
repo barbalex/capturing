@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react'
+import React, { useRef, useCallback, useEffect } from 'react'
 import FormHelperText from '@mui/material/FormHelperText'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
@@ -10,6 +10,7 @@ import RichTextPlugin from '@lexical/react/LexicalRichTextPlugin'
 import ContentEditable from '@lexical/react/LexicalContentEditable'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import AutoFocusPlugin from '@lexical/react/LexicalAutoFocusPlugin'
+import { $getRoot, $getSelection } from 'lexical'
 
 import { HeadingNode, QuoteNode } from '@lexical/rich-text'
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
@@ -84,18 +85,17 @@ const RichText = ({
   }
 
   const state = useRef()
-  const onChange = useCallback(() => {
-    console.log('RichText, onChange, state:', state.current)
+  const onBlurContainer = useCallback(() => {
     const fakeEvent = {
       target: {
-        value: state.current,
+        value: state.current?.toJSON() ?? null,
         name,
       },
     }
     onBlur(fakeEvent)
   }, [name, onBlur, state])
 
-  console.log('RichText, state:', state.current)
+  // console.log('RichText rendering', { state: state.current, value })
 
   // once schrink is set, need to manually control ist
   // schrink if value exists or schrinkLabel was passed
@@ -116,13 +116,14 @@ const RichText = ({
       >
         {label}
       </StyledInputLabel>
-      <Container onBlur={() => onChange()}>
+      <Container onBlur={onBlurContainer}>
         <LexicalComposer initialConfig={editorConfig}>
           <div className="editor-container">
             <ToolbarPlugin />
             <div className="editor-inner">
               <RichTextPlugin
                 contentEditable={<ContentEditable className="editor-input" />}
+                initialEditorState={value ? JSON.stringify(value) : undefined}
               />
               <HistoryPlugin />
               <AutoFocusPlugin />
@@ -133,13 +134,7 @@ const RichText = ({
               <CodeHighlightPlugin />
               <MarkdownShortcutPlugin />
               <OnChangePlugin
-                onChange={(state) => {
-                  state.current = state
-                  console.log('RichText just set state to:', {
-                    state,
-                    current: state.current,
-                  })
-                }}
+                onChange={(newState) => (state.current = newState)}
                 ignoreSelectionChange={true}
                 ignoreInitialChange={true}
               />
