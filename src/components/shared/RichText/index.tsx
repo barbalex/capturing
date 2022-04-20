@@ -1,10 +1,9 @@
-import React, { useRef, useCallback, useEffect } from 'react'
+import React, { useRef, useCallback, useState } from 'react'
 import FormHelperText from '@mui/material/FormHelperText'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import styled from 'styled-components'
 import { observer } from 'mobx-react-lite'
-import isEqual from 'lodash/isEqual'
 
 import LexicalComposer from '@lexical/react/LexicalComposer'
 import RichTextPlugin from '@lexical/react/LexicalRichTextPlugin'
@@ -20,8 +19,8 @@ import { AutoLinkNode, LinkNode } from '@lexical/link'
 import LinkPlugin from '@lexical/react/LexicalLinkPlugin'
 import ListPlugin from '@lexical/react/LexicalListPlugin'
 import TablePlugin from '@lexical/react/LexicalTablePlugin'
-import LexicalMarkdownShortcutPlugin from '@lexical/react/LexicalMarkdownShortcutPlugin'
-import LexicalOnChangePlugin from '@lexical/react/LexicalOnChangePlugin'
+import MarkdownShortcutPlugin from '@lexical/react/LexicalMarkdownShortcutPlugin'
+import OnChangePlugin from '@lexical/react/LexicalOnChangePlugin'
 
 import ToolbarPlugin from './ToolbarPlugin'
 import AutoLinkPlugin from './AutoLinkPlugin'
@@ -84,28 +83,19 @@ const RichText = ({
     ],
   }
 
-  const editorState = useRef()
+  const state = useRef()
   const onChange = useCallback(() => {
-    console.log('RichtText, onChange, editorState:', editorState.current)
+    console.log('RichText, onChange, state:', state.current)
     const fakeEvent = {
       target: {
-        value: editorState.current,
+        value: state.current,
         name,
       },
     }
     onBlur(fakeEvent)
-  }, [name, onBlur])
+  }, [name, onBlur, state])
 
-  useEffect(() => {
-    console.log('RichtText, useEffect', {
-      value,
-      editorState: editorState.current,
-    })
-    if (isEqual(value, editorState.current)) return
-
-    console.log('RichtText, setting value to:', value)
-    editorState.current = value
-  }, [value])
+  console.log('RichText, state:', state.current)
 
   // once schrink is set, need to manually control ist
   // schrink if value exists or schrinkLabel was passed
@@ -141,10 +131,16 @@ const RichText = ({
               <LinkPlugin />
               <AutoLinkPlugin />
               <CodeHighlightPlugin />
-              <LexicalMarkdownShortcutPlugin />
-              <LexicalOnChangePlugin
-                onChange={(editorState) => (editorState.current = editorState)}
-                ignoreSelectionChange={false}
+              <MarkdownShortcutPlugin />
+              <OnChangePlugin
+                onChange={(state) => {
+                  state.current = state
+                  console.log('RichText just set state to:', {
+                    state,
+                    current: state.current,
+                  })
+                }}
+                ignoreSelectionChange={true}
                 ignoreInitialChange={true}
               />
             </div>
