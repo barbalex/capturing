@@ -1,10 +1,10 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useRef, useCallback, useEffect } from 'react'
 import FormHelperText from '@mui/material/FormHelperText'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import styled from 'styled-components'
 import { observer } from 'mobx-react-lite'
-import { $getRoot, $getSelection } from 'lexical'
+import isEqual from 'lodash/isEqual'
 
 import LexicalComposer from '@lexical/react/LexicalComposer'
 import RichTextPlugin from '@lexical/react/LexicalRichTextPlugin'
@@ -38,6 +38,7 @@ const StyledFormControl = styled(FormControl)`
 const StyledInputLabel = styled(InputLabel)`
   font-weight: ${(props) => props['data-weight']} !important;
 `
+const Container = styled.div``
 
 type TextFieldProps = {
   value: string
@@ -83,29 +84,28 @@ const RichText = ({
     ],
   }
 
-  const onChange = useCallback(
-    (editorState) => {
-      editorState.read(() => {
-        // Read the contents of the EditorState here.
-        const root = $getRoot()
-        const selection = $getSelection()
-        console.log('RichtText, onChange', { root, selection })
-
-        const fakeEvent = {
-          target: {
-            value: root,
-            name,
-          },
-        }
-        onBlur(fakeEvent)
-      })
-    },
-    [name, onBlur],
-  )
+  const editorState = useRef()
+  const onChange = useCallback(() => {
+    console.log('RichtText, onChange, editorState:', editorState.current)
+    const fakeEvent = {
+      target: {
+        value: editorState.current,
+        name,
+      },
+    }
+    onBlur(fakeEvent)
+  }, [name, onBlur])
 
   useEffect(() => {
-    // TODO: load initial value
-  }, [])
+    console.log('RichtText, useEffect', {
+      value,
+      editorState: editorState.current,
+    })
+    if (isEqual(value, editorState.current)) return
+
+    console.log('RichtText, setting value to:', value)
+    editorState.current = value
+  }, [value])
 
   // once schrink is set, need to manually control ist
   // schrink if value exists or schrinkLabel was passed
@@ -126,31 +126,31 @@ const RichText = ({
       >
         {label}
       </StyledInputLabel>
-      <LexicalComposer
-        initialConfig={editorConfig}
-        onBlur={console.log('lexical was blured')}
-      >
-        <div className="editor-container">
-          <ToolbarPlugin />
-          <div className="editor-inner">
-            <RichTextPlugin
-              contentEditable={<ContentEditable className="editor-input" />}
-            />
-            <HistoryPlugin />
-            <AutoFocusPlugin />
-            <ListPlugin />
-            <TablePlugin />
-            <LinkPlugin />
-            <AutoLinkPlugin />
-            <CodeHighlightPlugin />
-            <LexicalMarkdownShortcutPlugin />
-            <LexicalOnChangePlugin
-              onChange={onChange}
-              ignoreSelectionChange={false}
-            />
+      <Container onBlur={() => onChange()}>
+        <LexicalComposer initialConfig={editorConfig}>
+          <div className="editor-container">
+            <ToolbarPlugin />
+            <div className="editor-inner">
+              <RichTextPlugin
+                contentEditable={<ContentEditable className="editor-input" />}
+              />
+              <HistoryPlugin />
+              <AutoFocusPlugin />
+              <ListPlugin />
+              <TablePlugin />
+              <LinkPlugin />
+              <AutoLinkPlugin />
+              <CodeHighlightPlugin />
+              <LexicalMarkdownShortcutPlugin />
+              <LexicalOnChangePlugin
+                onChange={(editorState) => (editorState.current = editorState)}
+                ignoreSelectionChange={false}
+                ignoreInitialChange={true}
+              />
+            </div>
           </div>
-        </div>
-      </LexicalComposer>
+        </LexicalComposer>
+      </Container>
       {!!error && (
         <FormHelperText id={`${label}ErrorText`}>{error}</FormHelperText>
       )}

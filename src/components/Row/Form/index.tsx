@@ -154,7 +154,7 @@ const RowForm = ({
 
       const newRow = { ...row, data: newData }
       rowState.current = newRow
-      // console.log('RowForm, onBlur', { newRow, newData })
+      console.log('RowForm, onBlur, newData:', newData)
       dexie.rows.update(row.id, { data: newData })
     },
     [filter, row, showFilter],
