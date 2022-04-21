@@ -19,6 +19,7 @@ import JesNoNull from '../../shared/JesNoNull'
 import RichText from '../../shared/RichText'
 import OptionsMany from './OptionsMany'
 import OptionsFew from './OptionsFew'
+import File from './File'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -242,11 +243,7 @@ const RowForm = ({
               )
               break
             case 'filepicker': // TODO:
-              return (
-                <FieldContainer key={f.id}>
-                  <div>Sorry, filepicker is not yet implemented</div>
-                </FieldContainer>
-              )
+              return <File key={f.id} />
               break
             case 'markdown': // TODO:
               return (
