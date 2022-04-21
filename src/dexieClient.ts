@@ -146,7 +146,10 @@ export interface IFile {
   row_id?: string
   field_id?: string
   name?: string
-  version?: number
+  type?: string
+  description?: string
+  file?: blob
+  hash?: string
   deleted: number
   client_rev_at?: Date
   client_rev_by?: string
@@ -162,7 +165,10 @@ export class File implements IFile {
   row_id?: string
   field_id?: string
   name?: string
-  version?: number
+  type?: string
+  description?: string
+  file?: blob
+  hash?: string
   deleted: number
   client_rev_at?: Date
   client_rev_by?: string
@@ -178,7 +184,10 @@ export class File implements IFile {
     row_id?: string,
     field_id?: string,
     name?: string,
-    version?: number,
+    type?: string,
+    description?: string,
+    file?: blob,
+    hash?: string,
     deleted: number,
     client_rev_at?: Date,
     client_rev_by?: string,
@@ -193,7 +202,10 @@ export class File implements IFile {
     if (row_id) this.row_id = row_id
     if (field_id) this.field_id = field_id
     if (name) this.name = name
-    if (version !== undefined) this.version = version
+    if (type) this.type = type
+    if (description) this.description = description
+    if (file) this.file = file
+    if (hash) this.hash = hash
     this.deleted = deleted ?? 0
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by

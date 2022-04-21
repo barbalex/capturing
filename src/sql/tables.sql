@@ -709,7 +709,10 @@ CREATE TABLE files (
   row_id uuid NOT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
   field_id uuid DEFAULT NULL REFERENCES fields (id) ON DELETE NO action ON UPDATE CASCADE,
   name text DEFAULT NULL,
-  version integer DEFAULT 1,
+  type text DEFAULT NULL,
+  description text DEFAULT NULL,
+  file bytea DEFAULT NULL,
+  hash text DEFAULT NULL,
   deleted integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
@@ -720,6 +723,14 @@ CREATE TABLE files (
   depth integer DEFAULT 0,
   conflicts text[] DEFAULT NULL
 );
+
+ALTER TABLE files
+  ADD COLUMN hash text DEFAULT NULL;
+
+ALTER TABLE file_revs
+  ADD COLUMN hash text DEFAULT NULL;
+
+COMMENT ON COLUMN files.hash IS 'a hash of the file''s content. Used to detect content changes';
 
 CREATE UNIQUE INDEX files_row_field_filename_idx ON files (row_id, field_id, name)
 WHERE
@@ -733,6 +744,9 @@ CREATE INDEX ON files USING btree (field_id);
 
 CREATE INDEX ON files USING btree (name);
 
+CREATE INDEX ON files USING btree (type);
+
+-- enables listing images
 CREATE INDEX ON ROWS USING btree (deleted);
 
 COMMENT ON TABLE files IS 'Goal: Collect data. Versioned in db. Files managed following db data';
@@ -745,7 +759,13 @@ COMMENT ON COLUMN files.field_id IS 'associated field';
 
 COMMENT ON COLUMN files.name IS 'filename is set to this when exporting files';
 
-COMMENT ON COLUMN files.version IS 'is incremented on every edit of a pre-existing file. Enables clients to re-sync';
+COMMENT ON COLUMN files.type IS '(media) type of the file. See: https://en.wikipedia.org/wiki/Media_type';
+
+COMMENT ON COLUMN files.description IS 'searchable/filterable description of file content';
+
+COMMENT ON COLUMN files.file IS 'the file''s content';
+
+COMMENT ON COLUMN files.hash IS 'a hash of the file''s content. Used to detect content changes. This the revision is based on: row_id, field_id name, type, description, deleted and hash';
 
 COMMENT ON COLUMN files.deleted IS 'marks if the file is deleted';
 
@@ -769,7 +789,10 @@ CREATE TABLE file_revs (
   file_id uuid DEFAULT NULL,
   field_id uuid DEFAULT NULL,
   name text DEFAULT NULL,
-  version integer DEFAULT NULL,
+  type text DEFAULT NULL,
+  description text DEFAULT NULL,
+  file bytea DEFAULT NULL,
+  hash text DEFAULT NULL,
   deleted integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT NULL,
   client_rev_by text DEFAULT NULL,
