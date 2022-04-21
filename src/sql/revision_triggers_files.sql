@@ -6,7 +6,7 @@
 --   AS $$
 -- DECLARE
 --   new_depth int := NEW.depth + 1;
---   new_rev text := concat(new_depth, '-', md5(concat('{', 'file_id:', NEW.file_id, 'row_id:', NEW.row_id, 'field_id:', NEW.field_id, 'filename:', NEW.filename, 'hash:', NEW.hash, 'version:', NEW.version, 'deleted:', NEW.deleted, 'parent_rev:', NEW.rev, '}')));
+--   new_rev text := concat(new_depth, '-', md5(concat('{', 'file_id:', NEW.file_id, 'row_id:', NEW.row_id, 'field_id:', NEW.field_id, 'name:', NEW.name, 'hash:', NEW.hash, 'version:', NEW.version, 'deleted:', NEW.deleted, 'parent_rev:', NEW.rev, '}')));
 -- BEGIN
 --   NEW.parent_rev := NEW.rev;
 --   NEW.depth := new_depth;
@@ -126,12 +126,12 @@ BEGIN
   -- 1. if a winning undeleted leaf exists, use this
   --    (else pick a winner from the deleted leaves)
   THEN
-  INSERT INTO files (id, row_id, field_id, filename, url, version, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
+  INSERT INTO files (id, row_id, field_id, name, url, version, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
   SELECT
     winner.file_id,
     row_id,
     winner.field_id,
-    winner.filename,
+    winner.name,
     winner.url,
     winner.version,
     winner.deleted,
@@ -149,7 +149,7 @@ ON CONFLICT (id)
   DO UPDATE SET
     -- do not update the idrow_id,
     field_id = excluded.field_id,
-    filename = excluded.filename,
+    name = excluded.name,
     url = excluded.url,
     version = excluded.version,
     deleted = excluded.deleted,
@@ -166,12 +166,12 @@ ELSE
   --    choose winner from deleted leaves
   --    is necessary to set the winner deleted
   --    so the client can pick this up
-  INSERT INTO files (id, row_id, field_id, filename, url, version, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
+  INSERT INTO files (id, row_id, field_id, name, url, version, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
   SELECT
     winner.file_id,
     row_id,
     winner.field_id,
-    winner.filename,
+    winner.name,
     winner.url,
     winner.version,
     winner.deleted,
@@ -189,7 +189,7 @@ ON CONFLICT (id)
   DO UPDATE SET
     -- do not update the idrow_id,
     field_id = excluded.field_id,
-    filename = excluded.filename,
+    name = excluded.name,
     url = excluded.url,
     version = excluded.version,
     deleted = excluded.deleted,

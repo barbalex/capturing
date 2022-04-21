@@ -88,7 +88,7 @@ Table "files" {
   "id" uuid [pk, default: `uuid_generate_v1mc()`]
   "row_id" uuid [default: null]
   "field_id" uuid [default: null]
-  "filename" text [default: null]
+  "name" text [default: null]
   "url" text [default: null]
   "version" integer [default: 1]
   "client_rev_at" timestamp [default: `now()`]

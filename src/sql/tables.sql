@@ -708,7 +708,7 @@ CREATE TABLE files (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   row_id uuid NOT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
   field_id uuid DEFAULT NULL REFERENCES fields (id) ON DELETE NO action ON UPDATE CASCADE,
-  filename text DEFAULT NULL,
+  name text DEFAULT NULL,
   url text DEFAULT NULL,
   version integer DEFAULT 1,
   deleted integer DEFAULT 0,
@@ -722,7 +722,7 @@ CREATE TABLE files (
   conflicts text[] DEFAULT NULL
 );
 
-CREATE UNIQUE INDEX files_row_field_filename_idx ON files (row_id, field_id, filename)
+CREATE UNIQUE INDEX files_row_field_filename_idx ON files (row_id, field_id, name)
 WHERE
   deleted = 0;
 
@@ -732,19 +732,19 @@ CREATE INDEX ON files USING btree (row_id);
 
 CREATE INDEX ON files USING btree (field_id);
 
-CREATE INDEX ON files USING btree (filename);
+CREATE INDEX ON files USING btree (name);
 
 CREATE INDEX ON ROWS USING btree (deleted);
 
 COMMENT ON TABLE files IS 'Goal: Collect data. Versioned in db. Files managed following db data';
 
-COMMENT ON COLUMN files.id IS 'primary key. used as filename in internal and cloud storage';
+COMMENT ON COLUMN files.id IS 'primary key';
 
 COMMENT ON COLUMN files.row_id IS 'associated row';
 
 COMMENT ON COLUMN files.field_id IS 'associated field';
 
-COMMENT ON COLUMN files.filename IS 'filename is set to this when exporting files';
+COMMENT ON COLUMN files.name IS 'filename is set to this when exporting files';
 
 COMMENT ON COLUMN files.url IS 'url to download the file at';
 
@@ -771,7 +771,7 @@ CREATE TABLE file_revs (
   row_id uuid DEFAULT NULL,
   file_id uuid DEFAULT NULL,
   field_id uuid DEFAULT NULL,
-  filename text DEFAULT NULL,
+  name text DEFAULT NULL,
   url text DEFAULT NULL,
   version integer DEFAULT NULL,
   deleted integer DEFAULT 0,
@@ -806,7 +806,7 @@ COMMENT ON COLUMN file_revs.id IS 'primary key';
 
 COMMENT ON COLUMN file_revs.file_id IS 'key of table files';
 
-COMMENT ON COLUMN file_revs.rev IS 'hashed value the fields: file_id, field_id, filename, hash, version, deleted';
+COMMENT ON COLUMN file_revs.rev IS 'hashed value the fields: file_id, field_id, name, hash, version, deleted';
 
 COMMENT ON COLUMN file_revs.parent_rev IS 'hash of the previous revision';
 

@@ -145,7 +145,7 @@ export interface IFile {
   id: string
   row_id?: string
   field_id?: string
-  filename?: string
+  name?: string
   url?: string
   version?: number
   deleted: number
@@ -162,7 +162,7 @@ export class File implements IFile {
   id: string
   row_id?: string
   field_id?: string
-  filename?: string
+  name?: string
   url?: string
   version?: number
   deleted: number
@@ -179,7 +179,7 @@ export class File implements IFile {
     id?: string,
     row_id?: string,
     field_id?: string,
-    filename?: string,
+    name?: string,
     url?: string,
     version?: number,
     deleted: number,
@@ -195,7 +195,7 @@ export class File implements IFile {
     this.id = id ?? uuidv1()
     if (row_id) this.row_id = row_id
     if (field_id) this.field_id = field_id
-    if (filename) this.filename = filename
+    if (name) this.name = name
     if (url) this.url = url
     if (version !== undefined) this.version = version
     this.deleted = deleted ?? 0
@@ -994,7 +994,7 @@ export class MySubClassedDexie extends Dexie {
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
         'id, table_id, label, name, field_type, widget_type, options_table, sort, server_rev_at, deleted, [deleted+table_id]',
-      files: 'id, filename, server_rev_at, deleted',
+      files: 'id, name, server_rev_at, deleted',
       news: 'id, time, server_rev_at, deleted',
       news_delivery: 'id, server_rev_at, deleted',
       project_tile_layers: 'id, label, sort, active, server_rev_at, deleted',
