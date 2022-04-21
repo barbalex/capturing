@@ -709,7 +709,7 @@ CREATE TABLE files (
   row_id uuid NOT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
   field_id uuid DEFAULT NULL REFERENCES fields (id) ON DELETE NO action ON UPDATE CASCADE,
   name text DEFAULT NULL,
-  type text DEFAULT NULL,
+  type text DEFAULT NULL, -- https://en.wikipedia.org/wiki/Media_type
   description text DEFAULT NULL,
   file bytea DEFAULT NULL,
   hash text DEFAULT NULL,
@@ -723,14 +723,6 @@ CREATE TABLE files (
   depth integer DEFAULT 0,
   conflicts text[] DEFAULT NULL
 );
-
-ALTER TABLE files
-  ADD COLUMN hash text DEFAULT NULL;
-
-ALTER TABLE file_revs
-  ADD COLUMN hash text DEFAULT NULL;
-
-COMMENT ON COLUMN files.hash IS 'a hash of the file''s content. Used to detect content changes';
 
 CREATE UNIQUE INDEX files_row_field_filename_idx ON files (row_id, field_id, name)
 WHERE
