@@ -16,12 +16,10 @@
 -- END;
 -- $$
 -- LANGUAGE plpgsql;
-
 -- CREATE TRIGGER trigger_file_revs_set_revision_fields
 --   BEFORE INSERT ON file_revs
 --   FOR EACH ROW
 --   EXECUTE PROCEDURE trigger_file_revs_set_revision_fields ();
-
 -- 2. now that the revision fields are set (either by client or before insert trigger),
 --    choose winner and upsert file
 CREATE OR REPLACE FUNCTION file_revs_children (file_id uuid, parent_rev text)
@@ -126,23 +124,22 @@ BEGIN
   -- 1. if a winning undeleted leaf exists, use this
   --    (else pick a winner from the deleted leaves)
   THEN
-  INSERT INTO files (id, row_id, field_id, name, url, version, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
+  INSERT INTO files (id, row_id, field_id, name, version, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
   SELECT
     winner.file_id,
     row_id,
     winner.field_id,
     winner.name,
-    winner.url,
     winner.version,
     winner.deleted,
     winner.client_rev_at,
     winner.client_rev_by,
-    now() as server_rev_at,
-    winner.rev,
-    winner.revisions,
-    winner.parent_rev,
-    winner.depth,
-    file_conflicts_of_winner (NEW.file_id) AS conflicts
+    now() AS server_rev_at,
+  winner.rev,
+  winner.revisions,
+  winner.parent_rev,
+  winner.depth,
+  file_conflicts_of_winner (NEW.file_id) AS conflicts
 FROM
   file_revs_winner (NEW.file_id) AS winner
 ON CONFLICT (id)
@@ -150,7 +147,6 @@ ON CONFLICT (id)
     -- do not update the idrow_id,
     field_id = excluded.field_id,
     name = excluded.name,
-    url = excluded.url,
     version = excluded.version,
     deleted = excluded.deleted,
     client_rev_at = excluded.client_rev_at,
@@ -166,18 +162,17 @@ ELSE
   --    choose winner from deleted leaves
   --    is necessary to set the winner deleted
   --    so the client can pick this up
-  INSERT INTO files (id, row_id, field_id, name, url, version, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
+  INSERT INTO files (id, row_id, field_id, name, version, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
   SELECT
     winner.file_id,
     row_id,
     winner.field_id,
     winner.name,
-    winner.url,
     winner.version,
     winner.deleted,
     winner.client_rev_at,
     winner.client_rev_by,
-    now() as server_rev_at,
+    now() AS server_rev_at,
     winner.rev,
     winner.revisions,
     winner.parent_rev,
@@ -190,7 +185,6 @@ ON CONFLICT (id)
     -- do not update the idrow_id,
     field_id = excluded.field_id,
     name = excluded.name,
-    url = excluded.url,
     version = excluded.version,
     deleted = excluded.deleted,
     client_rev_at = excluded.client_rev_at,

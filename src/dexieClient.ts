@@ -146,7 +146,6 @@ export interface IFile {
   row_id?: string
   field_id?: string
   name?: string
-  url?: string
   version?: number
   deleted: number
   client_rev_at?: Date
@@ -163,7 +162,6 @@ export class File implements IFile {
   row_id?: string
   field_id?: string
   name?: string
-  url?: string
   version?: number
   deleted: number
   client_rev_at?: Date
@@ -180,7 +178,6 @@ export class File implements IFile {
     row_id?: string,
     field_id?: string,
     name?: string,
-    url?: string,
     version?: number,
     deleted: number,
     client_rev_at?: Date,
@@ -196,7 +193,6 @@ export class File implements IFile {
     if (row_id) this.row_id = row_id
     if (field_id) this.field_id = field_id
     if (name) this.name = name
-    if (url) this.url = url
     if (version !== undefined) this.version = version
     this.deleted = deleted ?? 0
     this.client_rev_at = new window.Date().toISOString()

@@ -709,7 +709,6 @@ CREATE TABLE files (
   row_id uuid NOT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
   field_id uuid DEFAULT NULL REFERENCES fields (id) ON DELETE NO action ON UPDATE CASCADE,
   name text DEFAULT NULL,
-  url text DEFAULT NULL,
   version integer DEFAULT 1,
   deleted integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT now(),
@@ -746,8 +745,6 @@ COMMENT ON COLUMN files.field_id IS 'associated field';
 
 COMMENT ON COLUMN files.name IS 'filename is set to this when exporting files';
 
-COMMENT ON COLUMN files.url IS 'url to download the file at';
-
 COMMENT ON COLUMN files.version IS 'is incremented on every edit of a pre-existing file. Enables clients to re-sync';
 
 COMMENT ON COLUMN files.deleted IS 'marks if the file is deleted';
@@ -772,7 +769,6 @@ CREATE TABLE file_revs (
   file_id uuid DEFAULT NULL,
   field_id uuid DEFAULT NULL,
   name text DEFAULT NULL,
-  url text DEFAULT NULL,
   version integer DEFAULT NULL,
   deleted integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT NULL,
