@@ -160,6 +160,8 @@ export interface IFile {
   depth?: number
   conflicts?: string[]
 }
+
+type FileUpdateProps = { was: IFile; is: IFile; session: Session }
 export class File implements IFile {
   id: string
   row_id?: string
@@ -215,6 +217,29 @@ export class File implements IFile {
     this.revisions = revisions ?? []
     this.depth = depth ?? 0
     if (conflicts) this.conflicts = conflicts
+  }
+
+  async updateOnServer({ was, is, session }: FileUpdateProps) {
+    const isReved = {
+      ...is,
+      client_rev_at: new window.Date().toISOString(),
+      client_rev_by: session.user?.email ?? session.user?.id,
+    }
+    const update = new QueuedUpdate(
+      undefined,
+      undefined,
+      'files', // processQueuedUpdate writes this into row_revs
+      JSON.stringify(isReved),
+      was?.id,
+      was ? JSON.stringify(was) : null,
+    )
+    return dexie.queued_updates.add(update)
+  }
+
+  async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    const was = { ...this }
+    this.deleted = 1
+    return this.updateOnServer({ was, is: this, session })
   }
 }
 

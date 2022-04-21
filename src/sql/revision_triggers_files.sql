@@ -97,7 +97,7 @@ BEGIN
     SELECT
       1
     FROM
-      file_revs_winner (NEW.file_id, FALSE))
+      file_revs_winner (NEW.file_id, 0))
   -- 1. if a winning undeleted leaf exists, use this
   --    (else pick a winner from the deleted leaves)
   THEN
@@ -163,9 +163,9 @@ ELSE
     winner.revisions,
     winner.parent_rev,
     winner.depth,
-    file_conflicts_of_winner (NEW.file_id, TRUE) AS conflicts
+    file_conflicts_of_winner (NEW.file_id, 1) AS conflicts
   FROM
-    file_revs_winner (NEW.file_id, TRUE) AS winner
+    file_revs_winner (NEW.file_id, 1) AS winner
 ON CONFLICT (id)
   DO UPDATE SET
     -- do not update the idrow_id,

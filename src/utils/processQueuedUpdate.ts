@@ -2,7 +2,7 @@ import { supabase } from '../supabaseClient'
 import { Session } from '@supabase/supabase-js'
 import { dexie, QueuedUpdate } from '../dexieClient'
 import { v1 as uuidv1 } from 'uuid'
-import md5 from 'blueimp-md5'
+import SparkMD5 from 'spark-md5'
 // import { Instance } from 'mobx-state-tree'
 
 // import { MobxStore } from '../store'
@@ -44,7 +44,7 @@ const processQueuedUpdate = async ({
       depth,
       parent_rev: newObject?.revisions?.[0] ?? null,
     }
-    const rev = `${depth}-${md5(JSON.stringify(newRevObject))}`
+    const rev = `${depth}-${SparkMD5.hash(JSON.stringify(newRevObject))}`
     newRevObject.rev = rev
     newRevObject.id = uuidv1()
     newRevObject.revisions = isInsert
