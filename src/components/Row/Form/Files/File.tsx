@@ -1,7 +1,6 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FaRegTimesCircle } from 'react-icons/fa'
 import { MdFileDownload } from 'react-icons/md'
-import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { Session } from '@supabase/supabase-js'
 import IconButton from '@mui/material/IconButton'
@@ -69,9 +68,27 @@ const Files = ({ file }: Props) => {
     [file.file, file.name],
   )
 
+  const isImage = (file.type?.includes('image') && !!file.file) ?? false
+  const [preview, setPreview] = useState()
+  useEffect(() => {
+    if (isImage) {
+      console.log('File, effect', { file, fileFile: file.file, isImage })
+      let objectUrl
+      try {
+        objectUrl = URL.createObjectURL(new Blob([file.file]))
+      } catch (error) {
+        return console.log('Error creating object url:', error)
+      }
+      setPreview(objectUrl)
+    }
+
+    return () => URL.revokeObjectURL(file.file)
+  }, [file, file.file, isImage])
+
   return (
     <ErrorBoundary>
       <StyledListItem divider onClick={onClickItem}>
+        {!!preview && <img src={preview} />}
         <StyledListItemText primary={file.name} secondary={file.type} />
         <IconContainer>
           <IconButton
@@ -94,4 +111,4 @@ const Files = ({ file }: Props) => {
   )
 }
 
-export default observer(Files)
+export default Files

@@ -36,6 +36,7 @@ const processQueuedUpdate = async ({
     const depth = isInsert ? 1 : newObject.depth + 1
     delete newObject.id
     delete newObject.conflicts
+    delete newObject.file
     const newRevObject = {
       [`${singularTableName}_id`]: id,
       ...newObject,
@@ -50,13 +51,17 @@ const processQueuedUpdate = async ({
     newRevObject.revisions = isInsert
       ? [rev]
       : [rev, ...(newObject.revisions ?? [])]
-    // console.log('processQueuedUpdate', {
-    //   newRevObject,
-    //   newObject: JSON.parse(queuedUpdate.value),
-    //   isInsert,
-    //   depth,
-    //   queuedUpdate,
-    // })
+    //if (queuedUpdate.file) newRevObject.file = queuedUpdate.file
+    if (queuedUpdate.file) {
+      // need to convert to hex format for postgresql
+      newRevObject.file = [...new Uint8Array(queuedUpdate.file)]
+        .map((x) => x.toString(16).padStart(2, '0'))
+        .join('')
+    }
+    console.log('processQueuedUpdate, newRevObject:', {
+      newRevObject,
+      newObject: JSON.parse(queuedUpdate.value),
+    })
     // 2. send revision to server
     const { error } = await supabase.from(revTableName).insert(newRevObject)
     if (error) {

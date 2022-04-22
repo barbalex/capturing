@@ -128,6 +128,7 @@ export class Field implements IField {
       undefined,
       'fields',
       JSON.stringify(isReved),
+      undefined,
       this.id,
       JSON.stringify(was),
     )
@@ -230,6 +231,7 @@ export class File implements IFile {
       undefined,
       'files', // processQueuedUpdate writes this into row_revs
       JSON.stringify(isReved),
+      this.file,
       was?.id,
       was ? JSON.stringify(was) : null,
     )
@@ -527,6 +529,7 @@ export class Project implements IProject {
       undefined,
       'projects',
       JSON.stringify(isReved),
+      undefined,
       this.id,
       JSON.stringify(was),
     )
@@ -678,6 +681,7 @@ export class Row implements IRow {
       undefined,
       'rows', // processQueuedUpdate writes this into row_revs
       JSON.stringify(isReved),
+      undefined,
       was.id,
       JSON.stringify(was),
     )
@@ -765,6 +769,7 @@ export class Table implements ITable {
       undefined,
       'tables',
       JSON.stringify(isReved),
+      undefined,
       this.id,
       JSON.stringify(was),
     )
@@ -979,6 +984,7 @@ export class QueuedUpdate implements IQueuedUpdate {
   time?: Date
   table: string
   value: string
+  file: Blob
   revert_id?: string
   revert_value?: string
 
@@ -987,6 +993,7 @@ export class QueuedUpdate implements IQueuedUpdate {
     time: Date,
     table: string,
     value: string,
+    file: Blob,
     revert_id?: string,
     revert_value?: string,
   ) {
@@ -994,6 +1001,7 @@ export class QueuedUpdate implements IQueuedUpdate {
     this.time = new Date().toISOString()
     this.table = table
     this.value = value
+    this.file = file
     if (revert_id) this.revert_id = revert_id
     if (revert_value) this.revert_value = revert_value
   }
@@ -1022,7 +1030,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(11).stores({
+    this.version(12).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:

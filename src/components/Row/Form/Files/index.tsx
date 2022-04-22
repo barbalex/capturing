@@ -8,6 +8,7 @@ import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import List from '@mui/material/List'
 import FormHelperText from '@mui/material/FormHelperText'
+import FormLabel from '@mui/material/FormLabel'
 
 import ErrorBoundary from '../../../shared/ErrorBoundary'
 import { dexie, File, Field } from '../../../../dexieClient'
@@ -15,19 +16,17 @@ import { supabase } from '../../../../supabaseClient'
 import FileComponent from './File'
 
 const Container = styled.div`
+  padding: 0 8px;
+`
+const FilesContainer = styled.div`
   grid-area: areaLinks;
   display: grid;
   grid-template-columns: 1fr 220px;
   grid-template-areas: 'title dropzone' 'links dropzone';
-  grid-column-gap: 8px;
-  grid-row-gap: 8px;
+  column-gap: 4px;
+  row-gap: 4px;
   border-bottom: none;
   border-collapse: collapse;
-`
-const Title = styled.div`
-  font-weight: 900;
-  font-size: 16px;
-  grid-area: title;
 `
 const FileList = styled(List)`
   grid-area: links;
@@ -44,16 +43,26 @@ const StyledDropzone = styled(Dropzone)`
 const DropzoneInnerDiv = styled.div`
   height: 100%;
   border-width: 2px;
-  border-color: #4a148c;
+  border-color: rgba(74, 20, 140, 0.4);
   border-style: dashed;
   border-radius: 5px;
   padding: 5px;
   font-size: small;
   color: rgb(0, 0, 0, 0.54);
 `
+const StyledFormLabel = styled(FormLabel)`
+  padding-top: 1px !important;
+  font-size: 12px !important;
+  cursor: text;
+  user-select: none;
+  pointer-events: none;
+  padding-bottom: 8px !important;
+`
+
 type Props = {
   field: Field
 }
+
 const Files = ({ field }: Props) => {
   const session: Session = supabase.auth.session()
   const { rowId } = useParams()
@@ -141,45 +150,52 @@ const Files = ({ field }: Props) => {
 
   return (
     <ErrorBoundary>
+      <StyledFormLabel>{field.name}</StyledFormLabel>
       <Container>
-        <Title>Dateien</Title>
-        <FileList dense>
-          {(files ?? []).map((file) => (
-            <FileComponent key={file.id} file={file} />
-          ))}
-        </FileList>
-        <DropzoneContainer>
-          <StyledDropzone onDrop={onDrop}>
-            {({ getRootProps, getInputProps, isDragActive, isDragReject }) => {
-              if (isDragActive) {
+        <FilesContainer>
+          <FileList dense>
+            {(files ?? []).map((file) => (
+              <FileComponent key={file.id} file={file} />
+            ))}
+          </FileList>
+          <DropzoneContainer>
+            <StyledDropzone onDrop={onDrop}>
+              {({
+                getRootProps,
+                getInputProps,
+                isDragActive,
+                isDragReject,
+              }) => {
+                if (isDragActive) {
+                  return (
+                    <DropzoneInnerDiv {...getRootProps()}>
+                      <div>jetzt fallen lassen...</div>
+                    </DropzoneInnerDiv>
+                  )
+                }
+                if (isDragReject) {
+                  return (
+                    <DropzoneInnerDiv {...getRootProps()}>
+                      <div>Hm. Da ging etwas schief :-(</div>
+                    </DropzoneInnerDiv>
+                  )
+                }
                 return (
                   <DropzoneInnerDiv {...getRootProps()}>
-                    <div>jetzt fallen lassen...</div>
+                    <input {...getInputProps()} />
+                    <div>Neue Datei</div>
+                    <div>(hier klicken oder fallen lassen)</div>
                   </DropzoneInnerDiv>
                 )
-              }
-              if (isDragReject) {
-                return (
-                  <DropzoneInnerDiv {...getRootProps()}>
-                    <div>Hm. Da ging etwas schief :-(</div>
-                  </DropzoneInnerDiv>
-                )
-              }
-              return (
-                <DropzoneInnerDiv {...getRootProps()}>
-                  <input {...getInputProps()} />
-                  <div>Neue Datei</div>
-                  <div>(hier klicken oder fallen lassen)</div>
-                </DropzoneInnerDiv>
-              )
-            }}
-          </StyledDropzone>
-        </DropzoneContainer>
-        {!!error && (
-          <FormHelperText id="filesErrorText" error>
-            {error}
-          </FormHelperText>
-        )}
+              }}
+            </StyledDropzone>
+          </DropzoneContainer>
+          {!!error && (
+            <FormHelperText id="filesErrorText" error>
+              {error}
+            </FormHelperText>
+          )}
+        </FilesContainer>
       </Container>
     </ErrorBoundary>
   )
