@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import SparkMD5 from 'spark-md5'
 import { Session } from '@supabase/supabase-js'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import { dexie, File, Field } from '../../../dexieClient'
@@ -86,7 +87,12 @@ type Props = {
 const Files = ({ field }: Props) => {
   const session: Session = supabase.auth.session()
   const { rowId } = useParams()
-  const files = [] // TODO: fetch files from db
+  const files = useLiveQuery(
+    async () =>
+      await dexie.files
+        .where({ row_id: rowId, field_id: field.id })
+        .sortBy('name'),
+  )
 
   const onDrop = useCallback(
     (files) => {
@@ -146,18 +152,17 @@ const Files = ({ field }: Props) => {
       <Container>
         <Title>Dateien</Title>
         <FileList>
-          {files.map((file) => (
-            <FileContainer key={`${file.idGeschaeft}${file.url}`}>
+          {(files ?? []).map((file) => (
+            <FileContainer key={file.id}>
               <UrlDiv>
-                <a
-                  href={file.url}
+                <p
                   onClick={(event) => {
                     event.preventDefault()
                     // shell.open(link.url)  // TODO: adapt to browser
                   }}
                 >
-                  {file.url}
-                </a>
+                  {file.name}
+                </p>
               </UrlDiv>
               <RemoveIconContainer>
                 <RemoveIcon

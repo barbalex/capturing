@@ -26,9 +26,9 @@ const ServerConnected = () => {
   // serverConnected not so helpful
   const { online } = store
 
-  const queuedUpdatesCount: integer = useLiveQuery(async () => {
-    return await dexie.queued_updates.count()
-  })
+  const queuedUpdatesCount: integer = useLiveQuery(
+    async () => await dexie.queued_updates.count(),
+  )
   if (queuedUpdatesCount >= 0) {
     console.log('ServerConnected, queuedUpdatesCount:', queuedUpdatesCount)
   }

@@ -9,9 +9,9 @@ import processQueuedUpdate from '../utils/processQueuedUpdate'
 const QueuedUpdatesWriter = () => {
   const store = useContext(storeContext)
   const { online } = store
-  const queuedUpdates: QueuedUpdate[] = useLiveQuery(async () => {
-    return await dexie.queued_updates.orderBy('id').toArray()
-  })
+  const queuedUpdates: QueuedUpdate[] = useLiveQuery(
+    async () => await dexie.queued_updates.orderBy('id').toArray(),
+  )
   useEffect(() => {
     const queuedUpdate: QueuedUpdate = (queuedUpdates ?? [])[0]
     // console.log('QueuedUpdatesWriter, queuedUpdate:', queuedUpdate)
