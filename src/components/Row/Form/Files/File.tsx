@@ -10,7 +10,7 @@ import ListItemText from '@mui/material/ListItemText'
 import fileSaver from 'file-saver'
 
 import ErrorBoundary from '../../../shared/ErrorBoundary'
-import { dexie, File } from '../../../../dexieClient'
+import { File } from '../../../../dexieClient'
 import { supabase } from '../../../../supabaseClient'
 
 const StyledListItem = styled(ListItem)`
@@ -27,9 +27,21 @@ const RemoveIcon = styled(FaRegTimesCircle)`
   color: red;
   font-size: 18px;
 `
+const StyledListItemText = styled(ListItemText)`
+  p {
+    font-size: x-small;
+  }
+`
+const IconContainer = styled.div`
+  display: flex;
+  flex-basis: 100px;
+  justify-content: flex-end;
+`
+
 type Props = {
   file: File
 }
+
 const Files = ({ file }: Props) => {
   const session: Session = supabase.auth.session()
 
@@ -47,17 +59,21 @@ const Files = ({ file }: Props) => {
   const onClickDownload = useCallback(
     (e) => {
       e.stopPropagation()
-      console.log('TODO:')
-      fileSaver.saveAs(new Blob([file.file], { type: file.type }), file.name)
+      // seems that passing the file type creates problems
+      // fileSaver.saveAs(
+      //   new Blob([file.file], file.type ? { type: file.type } : undefined),
+      //   file.name,
+      // )
+      fileSaver.saveAs(new Blob([file.file]), file.name)
     },
-    [file.file, file.name, file.type],
+    [file.file, file.name],
   )
 
   return (
     <ErrorBoundary>
       <StyledListItem divider onClick={onClickItem}>
-        <ListItemText primary={file.name} secondary={file.type} />
-        <div>
+        <StyledListItemText primary={file.name} secondary={file.type} />
+        <IconContainer>
           <IconButton
             title={`${file.name ?? 'Datei'} herunterladen`}
             onClick={onClickDownload}
@@ -72,7 +88,7 @@ const Files = ({ file }: Props) => {
           >
             <RemoveIcon />
           </IconButton>
-        </div>
+        </IconContainer>
       </StyledListItem>
     </ErrorBoundary>
   )
