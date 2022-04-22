@@ -51,9 +51,9 @@ const processQueuedUpdate = async ({
     newRevObject.revisions = isInsert
       ? [rev]
       : [rev, ...(newObject.revisions ?? [])]
-    //if (queuedUpdate.file) newRevObject.file = queuedUpdate.file
     if (queuedUpdate.file) {
       // need to convert to hex format for postgresql
+      // https://stackoverflow.com/a/40031979/712005
       newRevObject.file = [...new Uint8Array(queuedUpdate.file)]
         .map((x) => x.toString(16).padStart(2, '0'))
         .join('')
