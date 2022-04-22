@@ -1,14 +1,13 @@
 import { useCallback } from 'react'
 import { FaRegTimesCircle } from 'react-icons/fa'
+import { MdFileDownload } from 'react-icons/md'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
-import { useParams } from 'react-router-dom'
-import SparkMD5 from 'spark-md5'
 import { Session } from '@supabase/supabase-js'
-import { useLiveQuery } from 'dexie-react-hooks'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
+import fileSaver from 'file-saver'
 
 import ErrorBoundary from '../../../shared/ErrorBoundary'
 import { dexie, File } from '../../../../dexieClient'
@@ -45,13 +44,27 @@ const Files = ({ file }: Props) => {
     },
     [file, session],
   )
+  const onClickDownload = useCallback(
+    (e) => {
+      e.stopPropagation()
+      console.log('TODO:')
+      fileSaver.saveAs(new Blob([file.file], { type: file.type }), file.name)
+    },
+    [file.file, file.name, file.type],
+  )
 
   return (
     <ErrorBoundary>
-      <StyledListItem
-        divider
-        onClick={onClickItem}
-        secondaryAction={
+      <StyledListItem divider onClick={onClickItem}>
+        <ListItemText primary={file.name} secondary={file.type} />
+        <div>
+          <IconButton
+            title={`${file.name ?? 'Datei'} herunterladen`}
+            onClick={onClickDownload}
+            size="medium"
+          >
+            <MdFileDownload />
+          </IconButton>
           <IconButton
             title={`${file.name ?? 'Datei'} entfernen`}
             onClick={onClickRemove}
@@ -59,9 +72,7 @@ const Files = ({ file }: Props) => {
           >
             <RemoveIcon />
           </IconButton>
-        }
-      >
-        <ListItemText primary={file.name} secondary={file.type} />
+        </div>
       </StyledListItem>
     </ErrorBoundary>
   )
