@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Dropzone from 'react-dropzone'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
@@ -7,6 +7,7 @@ import SparkMD5 from 'spark-md5'
 import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import List from '@mui/material/List'
+import FormHelperText from '@mui/material/FormHelperText'
 
 import ErrorBoundary from '../../../shared/ErrorBoundary'
 import { dexie, File, Field } from '../../../../dexieClient'
@@ -64,6 +65,11 @@ const Files = ({ field }: Props) => {
     [field, rowId],
   )
 
+  const [error, setError] = useState()
+  useEffect(() => {
+    setError(undefined)
+  }, [rowId])
+
   const onDrop = useCallback(
     (files) => {
       // TODO:
@@ -75,6 +81,19 @@ const Files = ({ field }: Props) => {
         reader.onabort = () => console.log('file reading was aborted')
         reader.onerror = () => console.log('file reading has failed')
         reader.onload = async () => {
+          // TODO: check that name is unique
+          const nameCount = await dexie.files
+            .where({
+              row_id: rowId,
+              field_id: field.id,
+              deleted: 0,
+              // eslint-disable-next-line no-useless-escape
+              name: file.name.replace(/^.*[\\\/]/, ''),
+            })
+            .count()
+          if (nameCount > 0) {
+            return setError('Dieser Dateiname existiert bereits')
+          }
           // Do whatever you want with the file contents
           const binaryStr = reader.result // seems to be ArrayBuffer
           console.log('file content:', {
@@ -110,6 +129,7 @@ const Files = ({ field }: Props) => {
             is: newFile,
             session,
           })
+          setError(undefined)
         }
         reader.readAsArrayBuffer(file)
       }
@@ -153,6 +173,9 @@ const Files = ({ field }: Props) => {
             }}
           </StyledDropzone>
         </DropzoneContainer>
+        {!!error && (
+          <FormHelperText id={`filesErrorText`}>{error}</FormHelperText>
+        )}
       </Container>
     </ErrorBoundary>
   )
