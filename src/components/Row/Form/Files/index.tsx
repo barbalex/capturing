@@ -92,7 +92,9 @@ const Files = ({ field }: Props) => {
             })
             .count()
           if (nameCount > 0) {
-            return setError('Dieser Dateiname existiert bereits')
+            return setError(
+              'Dieser Dateiname existiert bereits. Ein Dateiname kann pro Datensatz und Feld nur ein mal vorkommen.',
+            )
           }
           // Do whatever you want with the file contents
           const binaryStr = reader.result // seems to be ArrayBuffer
@@ -174,7 +176,9 @@ const Files = ({ field }: Props) => {
           </StyledDropzone>
         </DropzoneContainer>
         {!!error && (
-          <FormHelperText id={`filesErrorText`}>{error}</FormHelperText>
+          <FormHelperText id="filesErrorText" error>
+            {error}
+          </FormHelperText>
         )}
       </Container>
     </ErrorBoundary>
