@@ -1,25 +1,25 @@
 import { useCallback } from 'react'
 import Dropzone from 'react-dropzone'
-import { FaRegTimesCircle } from 'react-icons/fa'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import SparkMD5 from 'spark-md5'
 import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
+import List from '@mui/material/List'
 
-import ErrorBoundary from '../../shared/ErrorBoundary'
-import { dexie, File, Field } from '../../../dexieClient'
-import { supabase } from '../../../supabaseClient'
+import ErrorBoundary from '../../../shared/ErrorBoundary'
+import { dexie, File, Field } from '../../../../dexieClient'
+import { supabase } from '../../../../supabaseClient'
+import FileComponent from './File'
 
 const Container = styled.div`
   grid-area: areaLinks;
   display: grid;
-  grid-template-columns: calc(100% - 308px) 300px;
+  grid-template-columns: 1fr 220px;
   grid-template-areas: 'title dropzone' 'links dropzone';
   grid-column-gap: 8px;
   grid-row-gap: 8px;
-  padding: 8px;
   border-bottom: none;
   border-collapse: collapse;
 `
@@ -28,58 +28,27 @@ const Title = styled.div`
   font-size: 16px;
   grid-area: title;
 `
-const FileList = styled.div`
+const FileList = styled(List)`
   grid-area: links;
   display: block;
   grid-template-columns: none;
 `
-const FileContainer = styled.div`
-  grid-column: 1;
-  display: grid;
-  grid-template-columns: calc(100% - 20px) 20px;
-  grid-gap: 0;
-  border-bottom: thin solid #cecbcb;
-  padding: 3px;
-  align-items: center;
-  min-height: 35px;
-  &:first-of-type {
-    border-top: thin solid #cecbcb;
-  }
-  &:hover {
-    background-color: #ceffe5;
-  }
-`
-const UrlDiv = styled.div`
-  grid-column: 1 / span 1;
-  grid-column: 1;
-`
-const RemoveIconContainer = styled.div`
-  grid-column: 2 / span 1;
-  margin-top: -2px;
-`
-const RemoveIcon = styled(FaRegTimesCircle)`
-  color: red;
-  font-size: 18px;
-  cursor: pointer;
-`
 const DropzoneContainer = styled.div`
   grid-area: dropzone;
-  width: 100%;
-  height: 100%;
+  cursor: pointer;
 `
 const StyledDropzone = styled(Dropzone)`
-  width: 100%;
-  height: 100%;
   border-color: transparent;
 `
 const DropzoneInnerDiv = styled.div`
-  width: 100%;
   height: 100%;
   border-width: 2px;
-  border-color: #666;
+  border-color: #4a148c;
   border-style: dashed;
   border-radius: 5px;
   padding: 5px;
+  font-size: small;
+  color: rgb(0, 0, 0, 0.54);
 `
 type Props = {
   field: Field
@@ -90,8 +59,9 @@ const Files = ({ field }: Props) => {
   const files = useLiveQuery(
     async () =>
       await dexie.files
-        .where({ row_id: rowId, field_id: field.id })
+        .where({ row_id: rowId, field_id: field.id, deleted: 0 })
         .sortBy('name'),
+    [field, rowId],
   )
 
   const onDrop = useCallback(
@@ -151,29 +121,9 @@ const Files = ({ field }: Props) => {
     <ErrorBoundary>
       <Container>
         <Title>Dateien</Title>
-        <FileList>
+        <FileList dense>
           {(files ?? []).map((file) => (
-            <FileContainer key={file.id}>
-              <UrlDiv>
-                <p
-                  onClick={(event) => {
-                    event.preventDefault()
-                    // shell.open(link.url)  // TODO: adapt to browser
-                  }}
-                >
-                  {file.name}
-                </p>
-              </UrlDiv>
-              <RemoveIconContainer>
-                <RemoveIcon
-                  onClick={() => {
-                    // TODO:
-                    // remove file from db
-                  }}
-                  title="Link entfernen"
-                />
-              </RemoveIconContainer>
-            </FileContainer>
+            <FileComponent key={file.id} file={file} />
           ))}
         </FileList>
         <DropzoneContainer>
@@ -196,8 +146,8 @@ const Files = ({ field }: Props) => {
               return (
                 <DropzoneInnerDiv {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <div>Datei hierhin ziehen...</div>
-                  <div>...oder klicken, um sie zu wählen.</div>
+                  <div>Neue Datei</div>
+                  <div>(hier klicken oder fallen lassen)</div>
                 </DropzoneInnerDiv>
               )
             }}
