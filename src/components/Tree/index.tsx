@@ -2,13 +2,21 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Tree } from 'react-arborist'
 import styled from 'styled-components'
+import {
+  MdChevronRight as ChevronRightIcon,
+  MdExpandMore as ExpandMoreIcon,
+  MdMoreHoriz as MoreHorizIcon, // loading
+} from 'react-icons/md'
 
 import buildTree from './build'
 
 function Node({ innerRef, data, styles, handlers, state, tree }) {
   return (
-    <div ref={innerRef} style={styles.row}>
-      <div style={styles.indent}>{data.name}</div>
+    <div ref={innerRef} style={styles.row} onClick={handlers.select}>
+      <div style={styles.indent}>
+        {}
+        <span>{data.name}</span>
+      </div>
     </div>
   )
 }
@@ -20,6 +28,7 @@ const Container = styled.div`
 
 const TreeComponent = React.forwardRef((props, ref) => {
   const { projectId, tableId, rowId, fieldId } = useParams()
+  console.log('TreeComponent', { projectId, tableId, rowId, fieldId })
 
   const [data, setData] = useState({
     id: 'root',
