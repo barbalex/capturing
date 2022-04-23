@@ -82,7 +82,7 @@ const ProjectsPage = () => {
   // hide resizer when tree is hidden
   const resizerStyle = treeWidth === 0 ? { width: 0 } : {}
 
-  // TODO: FormContainer with scrolling
+  // TODO: in editing mode, render tree with fields
   return (
     <ErrorBoundary>
       <Container ref={containerEl}>
