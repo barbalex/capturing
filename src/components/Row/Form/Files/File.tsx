@@ -51,9 +51,9 @@ type Props = {
 const Files = ({ file }: Props) => {
   const session: Session = supabase.auth.session()
 
-  if (file.name === '2007-06-17_15.JPG') {
-    console.log('File, file:', file.file)
-  }
+  // if (file.name === '2007-06-17_15.JPG') {
+  console.log('File, file:', file)
+  // }
 
   const onClickItem = useCallback(() => {
     console.log('item clicked')
@@ -101,12 +101,12 @@ const Files = ({ file }: Props) => {
       } catch (error) {
         return console.log('Error creating object url:', error)
       }
-      console.log('File, setting preview', {
-        file: file.file,
-        blob,
-        isImage,
-        objectUrl,
-      })
+      // console.log('File, setting preview', {
+      //   file: file.file,
+      //   blob,
+      //   isImage,
+      //   objectUrl,
+      // })
       setPreview(objectUrl)
     }
     return () => URL.revokeObjectURL(blob)
