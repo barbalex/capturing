@@ -55,7 +55,6 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
   useEffect(() => {
     rowState.current = row
     if (!originalRow.current && row) {
-      console.log('TableRow, setting originalRow to:', row)
       originalRow.current = row
     }
   }, [row])
