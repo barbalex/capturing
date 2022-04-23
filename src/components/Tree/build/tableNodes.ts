@@ -1,14 +1,20 @@
 import { dexie, Table } from '../../../dexieClient'
 import sortByLabelName from '../../../utils/sortByLabelName'
 
-const tableNodes = async ({ useLabels, project, tableId, fieldId, rowId }) => {
+const tableNodes = async ({ project, tableId, fieldId, rowId }) => {
   const tables = await dexie.ttables
     .where({
       deleted: 0,
       project_id: project.id,
     })
     .toArray()
-  const tablesSorted = sortByLabelName({ objects: tables, useLabels })
+  console.log('tableNodes', { project, tableId, tables })
+  const tablesSorted = sortByLabelName({
+    objects: tables,
+    useLabels: project.use_labels,
+  })
+
+  console.log('tableNodes, tablesSorted', tablesSorted)
 
   const tableNodes = []
   for (const table: Table of tablesSorted) {
@@ -33,6 +39,8 @@ const tableNodes = async ({ useLabels, project, tableId, fieldId, rowId }) => {
     }
     tableNodes.push(node)
   }
+
+  return tableNodes
 }
 
 export default tableNodes

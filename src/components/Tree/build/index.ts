@@ -1,6 +1,6 @@
 import { dexie, Project } from '../../../dexieClient'
 import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
-import tableNodes from './tables'
+import tableNodes from './tableNodes'
 
 const buildTree = async ({ projectId, tableId, rowId, fieldId }) => {
   const projects: Project[] = await dexie.projects
@@ -16,7 +16,6 @@ const buildTree = async ({ projectId, tableId, rowId, fieldId }) => {
       .count()
     const children = isOpen
       ? await tableNodes({
-          useLabels: project.use_labels,
           project,
           tableId,
           fieldId,

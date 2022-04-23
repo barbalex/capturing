@@ -28,7 +28,6 @@ const Container = styled.div`
 
 const TreeComponent = React.forwardRef((props, ref) => {
   const { projectId, tableId, rowId, fieldId } = useParams()
-  console.log('TreeComponent', { projectId, tableId, rowId, fieldId })
 
   const [data, setData] = useState({
     id: 'root',
