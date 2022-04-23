@@ -63,41 +63,44 @@ const Files = ({ file }: Props) => {
 
   const [blob, setBlob] = useState()
   useEffect(() => {
-    const blob = new Blob([new Uint8Array(file.file)], {
+    if (!file.file) return
+    // const blob = new Blob([new Uint8Array(file.file)], {
+    //   type: file.type,
+    // })
+    const blob = new Blob([file.file], {
       type: file.type,
     })
     setBlob(blob)
   }, [file.file, file.type])
+
   const onClickDownload = useCallback(
     async (e) => {
       e.stopPropagation()
-      // seems that passing the file type creates problems
-      // fileSaver.saveAs(
-      //   new Blob([file.file], file.type ? { type: file.type } : undefined),
-      //   file.name,
-      // )
-      // fileSaver.saveAs(new Blob([file.file]), file.name)
 
-      if (file.name === '2007-06-17_15.JPG') {
-        console.log('File, onClickDownload', { blob, file: file.file })
-      }
-
+      // if (file.name === '2007-06-17_15.JPG') {
+      //   console.log('File, onClickDownload', { blob, file: file.file })
+      // }
       fileSaver.saveAs(blob, file.name)
     },
-    [blob, file.file, file.name],
+    [blob, file.name],
   )
 
   const isImage = (file.type?.includes('image') && !!file.file) ?? false
   const [preview, setPreview] = useState()
   useEffect(() => {
     if (isImage && !!blob) {
-      console.log('File, effect', { file, blob, isImage })
       let objectUrl
       try {
         objectUrl = URL.createObjectURL(blob)
       } catch (error) {
         return console.log('Error creating object url:', error)
       }
+      console.log('File, setting preview', {
+        file: file.file,
+        blob,
+        isImage,
+        objectUrl,
+      })
       setPreview(objectUrl)
     }
     return () => URL.revokeObjectURL(blob)

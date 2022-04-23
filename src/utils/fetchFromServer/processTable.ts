@@ -17,11 +17,15 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
   // console.log(`ServerSubscriber, last ${tableName} in dexie:`, last)
   const lastUpdatedAt = last?.server_rev_at ?? fallbackRevAt
   // 1.2. subscribe for changes and update dexie with changes from subscription
+  // TODO: catch errors
+  // TODO: Error 413: Payload Too Large. See: https://github.com/supabase/realtime/issues/252
   supabase
     .from(tableName)
+    // TODO: only subscribe to id for files, then fetch row with separate query?
     .on('*', (payload) => {
       console.log(`${tableName} subscription, payload:`, payload)
-      dexie.table(tableNameForDexie).put(payload.new)
+      const payloadErrors = payload.errors
+      if (!payloadErrors) dexie.table(tableNameForDexie).put(payload.new)
     })
     .subscribe((status) => {
       if (tableName === 'projects') {
