@@ -45,6 +45,10 @@ type Props = {
 const Files = ({ file }: Props) => {
   const session: Session = supabase.auth.session()
 
+  if (file.name === '2007-06-17_15.JPG') {
+    console.log('File, file:', file.file)
+  }
+
   const onClickItem = useCallback(() => {
     console.log('item clicked')
   }, [])
@@ -56,8 +60,16 @@ const Files = ({ file }: Props) => {
     },
     [file, session],
   )
+
+  const [blob, setBlob] = useState()
+  useEffect(() => {
+    const blob = new Blob([new Uint8Array(file.file)], {
+      type: file.type,
+    })
+    setBlob(blob)
+  }, [file.file, file.type])
   const onClickDownload = useCallback(
-    (e) => {
+    async (e) => {
       e.stopPropagation()
       // seems that passing the file type creates problems
       // fileSaver.saveAs(
@@ -65,29 +77,31 @@ const Files = ({ file }: Props) => {
       //   file.name,
       // )
       // fileSaver.saveAs(new Blob([file.file]), file.name)
-      fileSaver.saveAs(new Blob([new Uint8Array(file.file)]), file.name)
-      // fileSaver.saveAs(new Blob([hex2buf(file.file)]), file.name)
+
+      if (file.name === '2007-06-17_15.JPG') {
+        console.log('File, onClickDownload', { blob, file: file.file })
+      }
+
+      fileSaver.saveAs(blob, file.name)
     },
-    [file.file, file.name],
+    [blob, file.file, file.name],
   )
 
   const isImage = (file.type?.includes('image') && !!file.file) ?? false
   const [preview, setPreview] = useState()
   useEffect(() => {
-    if (isImage) {
-      console.log('File, effect', { file, fileFile: file.file, isImage })
+    if (isImage && !!blob) {
+      console.log('File, effect', { file, blob, isImage })
       let objectUrl
       try {
-        objectUrl = URL.createObjectURL(new Blob([file.file]))
-        // objectUrl = URL.createObjectURL(file.file)
+        objectUrl = URL.createObjectURL(blob)
       } catch (error) {
         return console.log('Error creating object url:', error)
       }
       setPreview(objectUrl)
     }
-
-    return () => URL.revokeObjectURL(file.file)
-  }, [file, file.file, isImage])
+    return () => URL.revokeObjectURL(blob)
+  }, [blob, file, file.file, isImage])
 
   return (
     <ErrorBoundary>
