@@ -11,6 +11,7 @@ import fileSaver from 'file-saver'
 import ErrorBoundary from '../../../shared/ErrorBoundary'
 import { File } from '../../../../dexieClient'
 import { supabase } from '../../../../supabaseClient'
+import hex2buf from '../../../../utils/hex2buf'
 
 const StyledListItem = styled(ListItem)`
   &:first-of-type {
@@ -63,7 +64,9 @@ const Files = ({ file }: Props) => {
       //   new Blob([file.file], file.type ? { type: file.type } : undefined),
       //   file.name,
       // )
-      fileSaver.saveAs(new Blob([file.file]), file.name)
+      // fileSaver.saveAs(new Blob([file.file]), file.name)
+      fileSaver.saveAs(new Blob([new Uint8Array(file.file)]), file.name)
+      // fileSaver.saveAs(new Blob([hex2buf(file.file)]), file.name)
     },
     [file.file, file.name],
   )
@@ -76,6 +79,7 @@ const Files = ({ file }: Props) => {
       let objectUrl
       try {
         objectUrl = URL.createObjectURL(new Blob([file.file]))
+        // objectUrl = URL.createObjectURL(file.file)
       } catch (error) {
         return console.log('Error creating object url:', error)
       }
@@ -88,7 +92,7 @@ const Files = ({ file }: Props) => {
   return (
     <ErrorBoundary>
       <StyledListItem divider onClick={onClickItem}>
-        {!!preview && <img src={preview} />}
+        {!!preview && <img width={80} src={preview} />}
         <StyledListItemText primary={file.name} secondary={file.type} />
         <IconContainer>
           <IconButton

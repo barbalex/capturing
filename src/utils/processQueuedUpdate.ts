@@ -3,11 +3,8 @@ import { Session } from '@supabase/supabase-js'
 import { dexie, QueuedUpdate } from '../dexieClient'
 import { v1 as uuidv1 } from 'uuid'
 import SparkMD5 from 'spark-md5'
-// import { Instance } from 'mobx-state-tree'
 
-// import { MobxStore } from '../store'
-
-// interface IStore extends Instance<typeof MobxStore> {}
+import buf2hex from './buf2hex'
 
 const revTables = ['rows', 'files']
 
@@ -54,9 +51,8 @@ const processQueuedUpdate = async ({
     if (queuedUpdate.file) {
       // need to convert to hex format for postgresql
       // https://stackoverflow.com/a/40031979/712005
-      newRevObject.file = [...new Uint8Array(queuedUpdate.file)]
-        .map((x) => x.toString(16).padStart(2, '0'))
-        .join('')
+      //newRevObject.file = buf2hex(queuedUpdate.file)
+      newRevObject.file = queuedUpdate.file
     }
     console.log('processQueuedUpdate, newRevObject:', {
       newRevObject,

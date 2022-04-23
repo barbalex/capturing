@@ -107,9 +107,16 @@ const Files = ({ field }: Props) => {
           }
           // Do whatever you want with the file contents
           const binaryStr = reader.result // seems to be ArrayBuffer
+          // const fileByteArray = [] // see: https://thewebdev.info/2021/08/01/how-to-convert-a-file-input-value-to-a-byte-array-with-javascript/
+          // const array = new Uint8Array(binaryStr)
+          // for (const a of array) {
+          //   fileByteArray.push(a) // why not map?
+          // }
+          const fileByteArray = new Uint8Array(binaryStr)
           console.log('file content:', {
             name: file.name,
             content: binaryStr,
+            fileByteArray,
             file,
             fileType: file.type,
           })
@@ -122,7 +129,7 @@ const Files = ({ field }: Props) => {
             file.name.replace(/^.*[\\\/]/, ''),
             file.type,
             undefined,
-            binaryStr,
+            fileByteArray,
             SparkMD5.ArrayBuffer.hash(binaryStr, true),
             undefined,
             undefined,

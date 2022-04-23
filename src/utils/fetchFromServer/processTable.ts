@@ -1,5 +1,6 @@
 import { supabase } from '../../supabaseClient'
 import { dexie } from '../../dexieClient'
+import hex2buf from '../hex2buf'
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 
@@ -38,12 +39,12 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
       }
     })
   // 1.3. fetch all with newer last_updated_at
-  const { data, error: error } = await supabase
+  let { data, error: error } = await supabase
     .from(tableName)
     .select('*')
     .gte('server_rev_at', lastUpdatedAt)
   if (error) {
-    console.log(
+    return console.log(
       `ServerSubscriber, error fetching ${tableName} from supabase:`,
       error,
     )
@@ -56,6 +57,10 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
   }
   // 1.4. update dexie with these changes
   if (data) {
+    // if files: need to convert files
+    if (tableName === 'files') {
+      data = data.map((d) => ({ ...d, file: d.file ? hex2buf(d.file) : null }))
+    }
     try {
       await dexie.table(tableNameForDexie).bulkPut(data)
     } catch (error) {
