@@ -52,7 +52,7 @@ const Files = ({ file }: Props) => {
   const session: Session = supabase.auth.session()
 
   // if (file.name === '2007-06-17_15.JPG') {
-  console.log('File, file:', file)
+  // console.log('File, file:', file)
   // }
 
   const onClickItem = useCallback(() => {
