@@ -1,5 +1,6 @@
 import { dexie, Row } from '../../../dexieClient'
 import sortByLabelName from '../../../utils/sortByLabelName'
+import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 
 const rowNodes = async ({ project, table, rowId }) => {
   const rows = await dexie.rows
@@ -31,8 +32,14 @@ const rowNodes = async ({ project, table, rowId }) => {
     //       rowId,
     //     })
     //   : []
+    const label = labelFromLabeledTable({
+      object: row,
+      useLabels: project.use_labels,
+    })
     const node = {
-      ...row,
+      id: row.id,
+      label,
+      object: row,
       isOpen,
       children: [],
       childrenCount,

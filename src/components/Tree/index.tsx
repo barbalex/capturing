@@ -15,7 +15,7 @@ function Node({ innerRef, data, styles, handlers, state, tree }) {
     <div ref={innerRef} style={styles.row} onClick={handlers.select}>
       <div style={styles.indent}>
         {}
-        <span>{data.name}</span>
+        <span>{data.label}</span>
       </div>
     </div>
   )
