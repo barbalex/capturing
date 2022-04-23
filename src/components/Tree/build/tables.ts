@@ -2,10 +2,12 @@ import { dexie, Table } from '../../../dexieClient'
 import sortByLabelName from '../../../utils/sortByLabelName'
 
 const tableNodes = async ({ useLabels, project, tableId, fieldId, rowId }) => {
-  const tables = await dexie.ttables.where({
-    deleted: 0,
-    project_id: project.id,
-  })
+  const tables = await dexie.ttables
+    .where({
+      deleted: 0,
+      project_id: project.id,
+    })
+    .toArray()
   const tablesSorted = sortByLabelName({ objects: tables, useLabels })
 
   const tableNodes = []

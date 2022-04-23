@@ -2,20 +2,12 @@ import { useEffect, useContext, useRef, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SplitPane from 'react-split-pane'
-import { Routes, Route } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 
 import StoreContext from '../storeContext'
 import Login from '../components/Login'
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 import constants from '../utils/constants'
-import ProjectsComponent from '../components/Projects'
-import ProjectComponent from '../components/Project'
-import TablesComponent from '../components/Tables'
-import TableComponent from '../components/Table'
-import FieldsComponent from '../components/Fields'
-import FieldComponent from '../components/Field'
-import RowsComponent from '../components/Rows'
-import RowComponent from '../components/Row'
 import Tree from '../components/Tree'
 import { supabase } from '../supabaseClient'
 
@@ -101,31 +93,7 @@ const ProjectsPage = () => {
           resizerStyle={resizerStyle}
         >
           <Tree ref={treeEl} />
-          <Routes>
-            <Route path="/" element={<ProjectsComponent />} />
-            <Route path=":projectId" element={<ProjectComponent />}></Route>
-            <Route path=":projectId/tables/*" element={<TablesComponent />} />
-            <Route
-              path=":projectId/tables/:tableId"
-              element={<TableComponent />}
-            />
-            <Route
-              path=":projectId/tables/:tableId/fields/*"
-              element={<FieldsComponent />}
-            />
-            <Route
-              path=":projectId/tables/:tableId/fields/:fieldId"
-              element={<FieldComponent />}
-            />
-            <Route
-              path=":projectId/tables/:tableId/rows/*"
-              element={<RowsComponent />}
-            />
-            <Route
-              path=":projectId/tables/:tableId/rows/:rowId"
-              element={<RowComponent />}
-            />
-          </Routes>
+          <Outlet />
         </StyledSplitPane>
       </Container>
     </ErrorBoundary>
