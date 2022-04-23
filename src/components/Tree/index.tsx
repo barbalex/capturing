@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { useLiveQuery } from 'dexie-react-hooks'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Tree } from 'react-arborist'
 import styled from 'styled-components'
 
 import buildTree from './build'
 
-function Node({ ref, styles, data }) {
+function Node({ innerRef, data, styles, handlers, state, tree }) {
   return (
-    <div ref={ref} style={styles.row}>
+    <div ref={innerRef} style={styles.row}>
       <div style={styles.indent}>{data.name}</div>
     </div>
   )
@@ -28,7 +27,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
   })
   useEffect(() => {
     console.log('TreeComponent effect, running')
-    buildTree().then((dataBuilt) => {
+    buildTree({ projectId, tableId, rowId, fieldId }).then((dataBuilt) => {
       console.log('TreeComponent effect, got data:', dataBuilt)
       setData(dataBuilt)
     })
@@ -36,10 +35,12 @@ const TreeComponent = React.forwardRef((props, ref) => {
 
   console.log('Tree, data:', data)
 
+  const onToggle = useCallback((val) => {
+    console.log('TreeComponent, onToggle, val:', val)
+  }, [])
+
   return (
-    <Container ref={ref}>
-      {data ? <Tree data={data}>{Node}</Tree> : null}
-    </Container>
+    <Container ref={ref}>{!!data && <Tree data={data}>{Node}</Tree>}</Container>
   )
 })
 
