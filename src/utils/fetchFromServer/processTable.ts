@@ -25,7 +25,9 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
     .on('*', (payload) => {
       console.log(`${tableName} subscription, payload:`, payload)
       const payloadErrors = payload.errors
-      if (!payloadErrors) dexie.table(tableNameForDexie).put(payload.new)
+      if (payloadErrors) return
+      if (payload.new?.file) payload.new.file = hex2buf(payload.new.file)
+      dexie.table(tableNameForDexie).put(payload.new)
     })
     .subscribe((status) => {
       if (tableName === 'projects') {

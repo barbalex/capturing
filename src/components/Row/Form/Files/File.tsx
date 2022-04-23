@@ -11,9 +11,10 @@ import fileSaver from 'file-saver'
 import ErrorBoundary from '../../../shared/ErrorBoundary'
 import { File } from '../../../../dexieClient'
 import { supabase } from '../../../../supabaseClient'
-import hex2buf from '../../../../utils/hex2buf'
 
 const StyledListItem = styled(ListItem)`
+  padding-left: 8px;
+  padding-right: 8px;
   &:first-of-type {
     border-top: 1px solid rgba(74, 20, 140, 0.1);
   }
@@ -24,8 +25,7 @@ const StyledListItem = styled(ListItem)`
   cursor: pointer;
 `
 const RemoveIcon = styled(FaRegTimesCircle)`
-  color: red;
-  font-size: 18px;
+  /*color: red;*/
 `
 const StyledListItemText = styled(ListItemText)`
   p {
@@ -36,6 +36,12 @@ const IconContainer = styled.div`
   display: flex;
   flex-basis: 100px;
   justify-content: flex-end;
+`
+const Image = styled.img`
+  padding-right: 8px;
+  vertical-align: center;
+  text-align: center;
+  width: 80px;
 `
 
 type Props = {
@@ -109,7 +115,7 @@ const Files = ({ file }: Props) => {
   return (
     <ErrorBoundary>
       <StyledListItem divider onClick={onClickItem}>
-        {!!preview && <img width={80} src={preview} />}
+        {!!preview && <Image height={55} src={preview} />}
         <StyledListItemText primary={file.name} secondary={file.type} />
         <IconContainer>
           <IconButton
