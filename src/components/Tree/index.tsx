@@ -48,7 +48,13 @@ const TreeComponent = React.forwardRef((props, ref) => {
   }, [])
 
   return (
-    <Container ref={ref}>{!!data && <Tree data={data}>{Node}</Tree>}</Container>
+    <Container ref={ref}>
+      {!!data && (
+        <Tree data={data} hideRoot>
+          {Node}
+        </Tree>
+      )}
+    </Container>
   )
 })
 
