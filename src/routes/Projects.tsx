@@ -16,6 +16,7 @@ import FieldsComponent from '../components/Fields'
 import FieldComponent from '../components/Field'
 import RowsComponent from '../components/Rows'
 import RowComponent from '../components/Row'
+import Tree from '../components/Tree'
 import { supabase } from '../supabaseClient'
 
 const StyledSplitPane = styled(SplitPane)`
@@ -99,7 +100,7 @@ const ProjectsPage = () => {
           maxSize={-10}
           resizerStyle={resizerStyle}
         >
-          <div ref={treeEl}>tree</div>
+          <Tree ref={treeEl} />
           <Routes>
             <Route path="/" element={<ProjectsComponent />} />
             <Route path=":projectId" element={<ProjectComponent />}></Route>
