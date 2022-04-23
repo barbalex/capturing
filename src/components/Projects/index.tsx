@@ -54,14 +54,14 @@ const Projects = () => {
 
   const data = useLiveQuery(async () => {
     const [projects, account, filteredCount, totalCount] = await Promise.all([
-      dexie.projects.where({ deleted: 0 }).toArray(),
+      dexie.projects.where({ deleted: 0 }).sortBy('', sortProjectsByLabelName),
       dexie.accounts.toCollection().first(),
       dexie.projects.where({ deleted: 0 }).count(), // TODO: pass in filter
       dexie.projects.where({ deleted: 0 }).count(),
     ])
 
     return {
-      projects: sortProjectsByLabelName(projects),
+      projects,
       account,
       filteredCount,
       totalCount,

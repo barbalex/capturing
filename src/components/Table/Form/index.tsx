@@ -80,7 +80,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
   const data = useLiveQuery(async () => {
     const [project, projects, tables, row, projectUser] = await Promise.all([
       dexie.projects.get(projectId),
-      dexie.projects.where({ deleted: 0 }).toArray(),
+      dexie.projects.where({ deleted: 0 }).sortBy('', sortProjectsByLabelName),
       dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
       dexie.ttables.get(tableId),
       dexie.project_users.get({
@@ -100,7 +100,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
 
     return {
       useLabels,
-      projectsValues: sortProjectsByLabelName(projects).map((p) => ({
+      projectsValues: projects.map((p) => ({
         value: p.id,
         label: labelFromLabeledTable({ object: p, useLabels: p.use_labels }),
       })),

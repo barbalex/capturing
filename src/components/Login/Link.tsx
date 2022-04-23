@@ -7,7 +7,6 @@ import FormHelperText from '@mui/material/FormHelperText'
 import Button from '@mui/material/Button'
 import styled from 'styled-components'
 
-import { dexie } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import storeContext from '../../storeContext'
 import logout from '../../utils/logout'
@@ -69,6 +68,7 @@ const Login = ({ emailErrorText, setEmailErrorText, email, setEmail }) => {
     (e) => {
       setEmailErrorText('')
       const email = e.target.value
+      if (!email) return
       fetchLogin({ email })
       setEmail(email)
     },
@@ -96,7 +96,7 @@ const Login = ({ emailErrorText, setEmailErrorText, email, setEmail }) => {
             className="user-email"
             defaultValue={email}
             onBlur={onBlurEmail}
-            //autoFocus
+            autoFocus
             onKeyPress={onKeyPressEmail}
             inputRef={emailInput}
           />
