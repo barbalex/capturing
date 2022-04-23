@@ -1,7 +1,8 @@
 import { dexie, Table } from '../../../dexieClient'
 import sortByLabelName from '../../../utils/sortByLabelName'
+import rowNodes from './rowNodes'
 
-const tableNodes = async ({ project, tableId, fieldId, rowId }) => {
+const tableNodes = async ({ project, tableId, rowId }) => {
   const tables = await dexie.ttables
     .where({
       deleted: 0,
@@ -22,19 +23,17 @@ const tableNodes = async ({ project, tableId, fieldId, rowId }) => {
     const childrenCount = await dexie.rows
       .where({ deleted: 0, table_id: table.id })
       .count()
-    // const children = isOpen
-    //   ? await tableNodes({
-    //       useLabels: project.use_labels,
-    //       project,
-    //       tableId,
-    //       fieldId,
-    //       rowId,
-    //     })
-    //   : []
+    const children = isOpen
+      ? await rowNodes({
+          project,
+          table,
+          rowId,
+        })
+      : []
     const node = {
       ...table,
       isOpen,
-      children: [],
+      children,
       childrenCount,
     }
     tableNodes.push(node)

@@ -8,7 +8,7 @@ import {
   MdMoreHoriz as MoreHorizIcon, // loading
 } from 'react-icons/md'
 
-import buildTree from './build'
+import buildTree from './nodes'
 
 function Node({ innerRef, data, styles, handlers, state, tree }) {
   return (
