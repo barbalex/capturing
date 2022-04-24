@@ -63,12 +63,10 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
           onClick={handlers.toggle}
           disabled={!data.childrenCount}
         >
-          {state.isOpen ? (
-            data.childrenCount ? (
-              <ExpandMoreIcon />
-            ) : (
-              <NoChildren>-</NoChildren>
-            )
+          {!data.childrenCount ? (
+            <NoChildren>-</NoChildren>
+          ) : state.isOpen ? (
+            <ExpandMoreIcon />
           ) : (
             <ChevronRightIcon />
           )}
