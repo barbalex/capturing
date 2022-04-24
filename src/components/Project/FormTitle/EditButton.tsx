@@ -2,7 +2,6 @@ import React, { useCallback, useContext } from 'react'
 import IconButton from '@mui/material/IconButton'
 import { useParams } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
-import styled from 'styled-components'
 import { orange } from '@mui/material/colors'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
