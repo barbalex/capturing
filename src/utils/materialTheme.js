@@ -45,7 +45,7 @@ const theme = createTheme({
   components: {
     MuiButton: {
       styleOverrides: {
-        root: { textTransform: 'none' },
+        root: { textTransform: 'none', color: 'rgba(0,0,0,0.54)' },
       },
     },
     MuiToggleButton: {
