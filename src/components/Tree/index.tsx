@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Tree } from 'react-arborist'
 import styled from 'styled-components'
+import AutoSizer from 'react-virtualized-auto-sizer'
 
 import buildTree from './nodes'
 import Node from './Node'
@@ -35,9 +36,24 @@ const TreeComponent = React.forwardRef((props, ref) => {
   return (
     <Container ref={ref}>
       {!!data && (
-        <Tree data={data} onToggle={onToggle} hideRoot>
-          {Node}
-        </Tree>
+        <AutoSizer
+          style={{
+            height: '100%',
+            width: '100%',
+          }}
+        >
+          {({ height, width }) => (
+            <Tree
+              data={data}
+              onToggle={onToggle}
+              height={height}
+              width={width}
+              hideRoot
+            >
+              {Node}
+            </Tree>
+          )}
+        </AutoSizer>
       )}
     </Container>
   )

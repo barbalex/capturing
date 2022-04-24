@@ -17,8 +17,14 @@ const Indent = styled.div`
   font-weight: ${(props) => (props.isInActiveNodeArray ? 'bold' : 'normal')};
   ${(props) => props.isActive && 'color: red;'}
 `
-const Label = styled.span`
-  font-size: 0.9em;
+const Label = styled.div`
+  font-size: 1em;
+  flex-grow: 1;
+  padding-left: 5px;
+  &:hover {
+    background-color: rgba(74, 20, 140, 0.05);
+    cursor: pointer;
+  }
 `
 
 const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
