@@ -2,24 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Tree } from 'react-arborist'
 import styled from 'styled-components'
-import {
-  MdChevronRight as ChevronRightIcon,
-  MdExpandMore as ExpandMoreIcon,
-  MdMoreHoriz as MoreHorizIcon, // loading
-} from 'react-icons/md'
 
 import buildTree from './nodes'
-
-function Node({ innerRef, data, styles, handlers, state, tree }) {
-  return (
-    <div ref={innerRef} style={styles.row} onClick={handlers.select}>
-      <div style={styles.indent}>
-        {state.isOpen ? <ExpandMoreIcon /> : <ChevronRightIcon />}
-        <span>{data.label}</span>
-      </div>
-    </div>
-  )
-}
+import Node from './Node'
 
 const Container = styled.div`
   width: 100%;
