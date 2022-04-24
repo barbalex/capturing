@@ -1,5 +1,3 @@
-import { green } from '@mui/material/colors'
-
 const Icon = (props) => (
   <svg
     style={{ height: 28, width: 28, fill: props?.fill ?? 'rgba(0,0,0,0.54)' }}
