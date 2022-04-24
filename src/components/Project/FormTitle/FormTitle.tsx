@@ -1,5 +1,8 @@
 import styled from 'styled-components'
 import { withResizeDetector } from 'react-resize-detector'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { Session } from '@supabase/supabase-js'
+import { useParams } from 'react-router-dom'
 
 import DeleteButton from './DeleteButton'
 import AddButton from './AddButton'
@@ -7,6 +10,8 @@ import NavButtons from './NavButtons'
 import FilterNumbers from '../../shared/FilterNumbers'
 import Menu from '../../shared/Menu'
 import EditButton from './EditButton'
+import { supabase } from '../../../supabaseClient'
+import { dexie } from '../../../dexieClient'
 
 const TitleContainer = styled.div` 
   background-color: rgba(74, 20, 140, 0.1);
@@ -40,15 +45,31 @@ const TitleSymbols = styled.div`
 `
 
 const ProjectFormTitle = ({ totalCount, filteredCount, width }) => {
+  const { projectId } = useParams()
+  const session: Session = supabase.auth.session()
+
+  const userMayEdit: boolean = useLiveQuery(async () => {
+    const projectUser = await dexie.project_users.get({
+      project_id: projectId,
+      user_email: session?.user?.email,
+    })
+
+    return projectUser.role === 'project_manager'
+  })
+
   if (width < 520) {
     return (
       <TitleContainer>
         <Title>Projekt</Title>
         <TitleSymbols>
-          <EditButton />
           <NavButtons />
-          <AddButton />
-          <DeleteButton />
+          {userMayEdit && (
+            <>
+              <EditButton />
+              <AddButton />
+              <DeleteButton />
+            </>
+          )}
           <Menu white={false}>
             <FilterNumbers
               filteredCount={filteredCount}
@@ -65,10 +86,14 @@ const ProjectFormTitle = ({ totalCount, filteredCount, width }) => {
     <TitleContainer>
       <Title>Projekt</Title>
       <TitleSymbols>
-        <EditButton />
         <NavButtons />
-        <AddButton />
-        <DeleteButton />
+        {userMayEdit && (
+          <>
+            <EditButton />
+            <AddButton />
+            <DeleteButton />
+          </>
+        )}
         <FilterNumbers filteredCount={filteredCount} totalCount={totalCount} />
       </TitleSymbols>
     </TitleContainer>

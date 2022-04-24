@@ -4,7 +4,6 @@ import React, {
   useCallback,
   useRef,
   useState,
-  useMemo,
 } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
@@ -21,12 +20,8 @@ import {
   dexie,
   IField,
   Field,
-  IFieldType,
   IWidgetType,
   IWidgetForField,
-  Project,
-  IProjectUser,
-  Table,
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'

@@ -11,7 +11,7 @@ import Checkbox2States from '../shared/Checkbox2States'
 import JesNo from '../shared/JesNo'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import Spinner from '../shared/Spinner'
-import { dexie, IProject, Project } from '../../dexieClient'
+import { dexie, IProject } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
 
@@ -26,10 +26,10 @@ type ProjectFormProps = {
 }
 
 const ProjectForm = ({ showFilter }: ProjectFormProps) => {
+  const session: Session = supabase.auth.session()
   const { projectId } = useParams()
   const store = useContext(StoreContext)
   const { filter, errors } = store
-  const session: Session = supabase.auth.session()
 
   // console.log('ProjectForm rendering')
 
@@ -43,7 +43,7 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
     unsetError('project')
   }, [projectId, unsetError])
 
-  const row: Project = useLiveQuery(
+  const row: Row = useLiveQuery(
     async () => await dexie.projects.get(projectId),
     [projectId],
   )

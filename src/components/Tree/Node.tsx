@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import isUuid from 'is-uuid'
 import last from 'lodash/last'
 import { useNavigate } from 'react-router-dom'
+import { observer } from 'mobx-react-lite'
 
 import storeContext from '../../storeContext'
 
@@ -35,15 +36,11 @@ const NoChildren = styled.div`
 const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   const navigate = useNavigate()
   const store = useContext(storeContext)
-  const { activeNodeArray, editingNodes } = store
+  const { activeNodeArray } = store
   const isInActiveNodeArray = activeNodeArray.includes(data.id)
   const isActive = data.id === last(activeNodeArray.filter((e) => isUuid.v1(e)))
-  console.log('Node', {
-    editingNodes,
-  })
 
   const onClickIndent = useCallback(() => {
-    // console.log('Tree Indent clicked, data:', data)
     navigate(`/${data.activeNodeArray.join('/')}`)
   }, [data, navigate])
 
@@ -76,4 +73,4 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   )
 }
 
-export default Node
+export default observer(Node)
