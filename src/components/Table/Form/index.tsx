@@ -81,7 +81,9 @@ const TableForm = ({ showFilter }: TableFormProps) => {
     const [project, projects, tables, row, projectUser] = await Promise.all([
       dexie.projects.get(projectId),
       dexie.projects.where({ deleted: 0 }).sortBy('', sortProjectsByLabelName),
-      dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
+      dexie.ttables
+        .where({ deleted: 0, project_id: projectId, type: 'standard' })
+        .toArray(),
       dexie.ttables.get(tableId),
       dexie.project_users.get({
         project_id: projectId,
