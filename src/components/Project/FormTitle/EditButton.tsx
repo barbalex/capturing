@@ -24,7 +24,7 @@ const ProjectEditButton = () => {
   )
 
   const label = editing
-    ? 'Nur Projekt-Daten bearbeiten'
+    ? 'Projekt-Struktur nicht bearbeiten'
     : 'Projekt-Struktur bearbeiten'
 
   return (
