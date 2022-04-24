@@ -29,13 +29,13 @@ const TreeComponent = React.forwardRef((props, ref) => {
   console.log('Tree, data:', data)
 
   const onToggle = useCallback((val) => {
-    console.log('TreeComponent, onToggle, val:', val)
+    console.log('TreeComponent, this id was toggled:', val)
   }, [])
 
   return (
     <Container ref={ref}>
       {!!data && (
-        <Tree data={data} hideRoot>
+        <Tree data={data} onToggle={onToggle} hideRoot>
           {Node}
         </Tree>
       )}
