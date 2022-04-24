@@ -47,12 +47,8 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
         isSelected={state.isSelected}
         isActive={isActive}
       >
-        <IconButton aria-label="toggle" size="small">
-          {state.isOpen ? (
-            <ExpandMoreIcon onClick={handlers.toggle} />
-          ) : (
-            <ChevronRightIcon onClick={handlers.toggle} />
-          )}
+        <IconButton aria-label="toggle" size="small" onClick={handlers.toggle}>
+          {state.isOpen ? <ExpandMoreIcon /> : <ChevronRightIcon />}
         </IconButton>
         <Label>{data.label}</Label>
       </Indent>
