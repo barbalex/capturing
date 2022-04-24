@@ -33,7 +33,16 @@ const rowNodes = async ({ table, rowId }) => {
     const node = {
       id: row.id,
       label: row.label,
+      type: 'row',
       object: row,
+      activeNodeArray: [
+        'projects',
+        table.project_id,
+        'tables',
+        table.id,
+        'rows',
+        row.id,
+      ],
       isOpen,
       children: [],
       childrenCount,

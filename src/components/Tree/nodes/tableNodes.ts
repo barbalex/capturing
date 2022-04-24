@@ -37,7 +37,9 @@ const tableNodes = async ({ project, tableId, rowId }) => {
     const node = {
       id: table.id,
       label,
+      type: 'table',
       object: table,
+      activeNodeArray: ['projects', table.project_id, 'tables', table.id],
       isOpen,
       children,
       childrenCount,

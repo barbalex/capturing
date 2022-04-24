@@ -29,7 +29,9 @@ const buildTree = async ({ projectId, tableId, rowId, fieldId }) => {
     const node = {
       id: project.id,
       label,
+      type: 'project',
       object: project,
+      activeNodeArray: ['projects', project.id],
       isOpen,
       children,
       childrenCount,

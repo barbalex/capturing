@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useCallback } from 'react'
 import {
   MdChevronRight as ChevronRightIcon,
   MdExpandMore as ExpandMoreIcon,
@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton'
 import styled from 'styled-components'
 import isUuid from 'is-uuid'
 import last from 'lodash/last'
+import { useNavigate } from 'react-router-dom'
 
 import storeContext from '../../storeContext'
 
@@ -28,6 +29,7 @@ const Label = styled.div`
 `
 
 const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
+  const navigate = useNavigate()
   const store = useContext(storeContext)
   const { activeNodeArray } = store
   const isInActiveNodeArray = activeNodeArray.includes(data.id)
@@ -39,13 +41,19 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   //   isSelected: state.isSelected,
   // })
 
+  const onClickIndent = useCallback(() => {
+    // console.log('Tree Indent clicked, data:', data)
+    navigate(`/${data.activeNodeArray.join('/')}`)
+  }, [data, navigate])
+
   return (
-    <Container ref={innerRef} style={styles.row} onClick={handlers.select}>
+    <Container ref={innerRef} style={styles.row}>
       <Indent
         style={styles.indent}
         isInActiveNodeArray={isInActiveNodeArray}
         isSelected={state.isSelected}
         isActive={isActive}
+        onClick={onClickIndent}
       >
         <IconButton aria-label="toggle" size="small" onClick={handlers.toggle}>
           {state.isOpen ? <ExpandMoreIcon /> : <ChevronRightIcon />}
