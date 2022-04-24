@@ -44,6 +44,11 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     navigate(`/${data.activeNodeArray.join('/')}`)
   }, [data, navigate])
 
+  /**
+   * TODO:
+   * if user is manager, show structure editing IconButton
+   */
+
   return (
     <Container ref={innerRef} style={styles.row}>
       <Indent
