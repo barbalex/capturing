@@ -61,7 +61,7 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
           aria-label="toggle"
           size="small"
           onClick={handlers.toggle}
-          disabled={state.isOpen && !data.childrenCount}
+          disabled={!data.childrenCount}
         >
           {state.isOpen ? (
             data.childrenCount ? (
