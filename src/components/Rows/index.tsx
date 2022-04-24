@@ -18,6 +18,7 @@ import storeContext from '../../storeContext'
 import RowComponent from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
+import rowsWithLabelFromRows from '../../utils/rowsWithLabelFromRows'
 import { dexie, Row, IProjectUser } from '../../dexieClient'
 import insertRow from '../../utils/insertRow'
 import FilterNumbers from '../shared/FilterNumbers'
@@ -77,12 +78,7 @@ const RowsComponent = () => {
       }),
     ])
 
-    const rowsPromises = rows.map((r) =>
-      r.label.then((label) => ({ ...r, label })),
-    )
-    const rowsWithLabel = await Promise.all(rowsPromises).then(
-      (rowsWithLabel) => sortBy(rowsWithLabel, (r) => r.label),
-    )
+    const rowsWithLabel = await rowsWithLabelFromRows(rows)
 
     return {
       rowsWithLabel,

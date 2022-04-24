@@ -1,24 +1,21 @@
 import { dexie, Row } from '../../../dexieClient'
-import sortByLabelName from '../../../utils/sortByLabelName'
-import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
+import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
 
-const rowNodes = async ({ project, table, rowId }) => {
+const rowNodes = async ({ table, rowId }) => {
   const rows = await dexie.rows
     .where({
       deleted: 0,
       table_id: table.id,
     })
     .toArray()
-  console.log('rowNodes', { table, rows })
-  const rowsSorted = sortByLabelName({
-    objects: rows,
-    useLabels: project.use_labels,
-  })
+  const rowsWithLabels = await rowsWithLabelFromRows(rows)
 
-  console.log('rowNodes, rowsSorted', rowsSorted)
+  console.log('rowNodes', { table, rows, rowsWithLabels })
+
+  console.log('rowNodes, rowsWithLabels', rowsWithLabels)
 
   const rowNodes = []
-  for (const row: Row of rowsSorted) {
+  for (const row: Row of rowsWithLabels) {
     const isOpen = rowId === row.id
     const childrenCount = await dexie.rows
       .where({ deleted: 0, parent_id: row.id })
@@ -32,13 +29,10 @@ const rowNodes = async ({ project, table, rowId }) => {
     //       rowId,
     //     })
     //   : []
-    const label = labelFromLabeledTable({
-      object: row,
-      useLabels: project.use_labels,
-    })
+
     const node = {
       id: row.id,
-      label,
+      label: row.label,
       object: row,
       isOpen,
       children: [],

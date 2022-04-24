@@ -26,7 +26,6 @@ const tableNodes = async ({ project, tableId, rowId }) => {
       .count()
     const children = isOpen
       ? await rowNodes({
-          project,
           table,
           rowId,
         })
