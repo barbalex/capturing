@@ -5,8 +5,14 @@ import isEqual from 'lodash/isEqual'
 
 import NotificationType from './Notification'
 
+const EditingProject = types.model('EditingProject', {
+  id: types.identifier,
+  editing: types.boolean,
+})
+
 export const MobxStore = types
   .model({
+    editingProjects: types.map(EditingProject),
     activeNodeArray: types.optional(
       types.array(types.union(types.string, types.number)),
       [],
@@ -36,6 +42,9 @@ export const MobxStore = types
     // )
 
     return {
+      setProjectEditing({ id, editing }) {
+        self.editingProjects.set(id, { id, editing })
+      },
       setOnline(val) {
         self.online = val
       },

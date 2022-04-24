@@ -4,7 +4,7 @@ import { Tree } from 'react-arborist'
 import styled from 'styled-components'
 import AutoSizer from 'react-virtualized-auto-sizer'
 
-import buildTree from './nodes'
+import buildNodes from './nodes'
 import Node from './Node'
 
 const Container = styled.div`
@@ -21,7 +21,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
   })
   useEffect(() => {
     console.log('TreeComponent effect, running')
-    buildTree({ projectId, tableId, rowId, fieldId }).then((dataBuilt) => {
+    buildNodes({ projectId, tableId, rowId, fieldId }).then((dataBuilt) => {
       console.log('TreeComponent effect, got data:', dataBuilt)
       setData(dataBuilt)
     })

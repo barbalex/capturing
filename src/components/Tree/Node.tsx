@@ -35,12 +35,11 @@ const NoChildren = styled.div`
 const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   const navigate = useNavigate()
   const store = useContext(storeContext)
-  const { activeNodeArray } = store
+  const { activeNodeArray, editingNodes } = store
   const isInActiveNodeArray = activeNodeArray.includes(data.id)
   const isActive = data.id === last(activeNodeArray.filter((e) => isUuid.v1(e)))
   console.log('Node', {
-    data,
-    state,
+    editingNodes,
   })
 
   const onClickIndent = useCallback(() => {

@@ -1,5 +1,3 @@
-import React from 'react'
-import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { withResizeDetector } from 'react-resize-detector'
 
@@ -8,6 +6,7 @@ import AddButton from './AddButton'
 import NavButtons from './NavButtons'
 import FilterNumbers from '../../shared/FilterNumbers'
 import Menu from '../../shared/Menu'
+import EditButton from './EditButton'
 
 const TitleContainer = styled.div` 
   background-color: rgba(74, 20, 140, 0.1);
@@ -46,6 +45,7 @@ const ProjectFormTitle = ({ totalCount, filteredCount, width }) => {
       <TitleContainer>
         <Title>Projekt</Title>
         <TitleSymbols>
+          <EditButton />
           <NavButtons />
           <AddButton />
           <DeleteButton />
@@ -65,6 +65,7 @@ const ProjectFormTitle = ({ totalCount, filteredCount, width }) => {
     <TitleContainer>
       <Title>Projekt</Title>
       <TitleSymbols>
+        <EditButton />
         <NavButtons />
         <AddButton />
         <DeleteButton />
@@ -74,4 +75,4 @@ const ProjectFormTitle = ({ totalCount, filteredCount, width }) => {
   )
 }
 
-export default withResizeDetector(observer(ProjectFormTitle))
+export default withResizeDetector(ProjectFormTitle)
