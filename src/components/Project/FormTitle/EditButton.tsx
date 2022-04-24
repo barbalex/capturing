@@ -23,8 +23,6 @@ const ProjectEditButton = () => {
     [editing, projectId, setProjectEditing],
   )
 
-  console.log('ProjectEditButton', { editing, editingProjects })
-
   const label = editing
     ? 'Nur Projekt-Daten bearbeiten'
     : 'Projekt-Struktur bearbeiten'
