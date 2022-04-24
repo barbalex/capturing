@@ -27,6 +27,10 @@ const Label = styled.div`
     cursor: pointer;
   }
 `
+const NoChildren = styled.div`
+  width: 18px;
+  color: rgba(0, 0, 0, 0.54) !important;
+`
 
 const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   const navigate = useNavigate()
@@ -34,12 +38,10 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   const { activeNodeArray } = store
   const isInActiveNodeArray = activeNodeArray.includes(data.id)
   const isActive = data.id === last(activeNodeArray.filter((e) => isUuid.v1(e)))
-  // console.log('Node', {
-  //   data,
-  //   isInActiveNodeArray,
-  //   activeNodeArray: activeNodeArray.slice(),
-  //   isSelected: state.isSelected,
-  // })
+  console.log('Node', {
+    data,
+    state,
+  })
 
   const onClickIndent = useCallback(() => {
     // console.log('Tree Indent clicked, data:', data)
@@ -55,8 +57,21 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
         isActive={isActive}
         onClick={onClickIndent}
       >
-        <IconButton aria-label="toggle" size="small" onClick={handlers.toggle}>
-          {state.isOpen ? <ExpandMoreIcon /> : <ChevronRightIcon />}
+        <IconButton
+          aria-label="toggle"
+          size="small"
+          onClick={handlers.toggle}
+          disabled={state.isOpen && !data.childrenCount}
+        >
+          {state.isOpen ? (
+            data.childrenCount ? (
+              <ExpandMoreIcon />
+            ) : (
+              <NoChildren>-</NoChildren>
+            )
+          ) : (
+            <ChevronRightIcon />
+          )}
         </IconButton>
         <Label>{data.label}</Label>
       </Indent>

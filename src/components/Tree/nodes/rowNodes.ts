@@ -17,8 +17,8 @@ const rowNodes = async ({ table, rowId }) => {
   const rowNodes = []
   for (const row: Row of rowsWithLabels) {
     const isOpen = rowId === row.id
-    const childrenCount = await dexie.rows
-      .where({ deleted: 0, parent_id: row.id })
+    const childrenCount = await dexie.ttables
+      .where({ deleted: 0, parent_id: table.id })
       .count()
     // const children = isOpen
     //   ? await tableNodes({
