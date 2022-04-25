@@ -1,7 +1,7 @@
 import { dexie, Table } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
-import rowNodes from './rowNodes'
+import buildFolders from './tableFolders'
 
 const tableNodesEditingProject = async ({
   project,
@@ -28,9 +28,12 @@ const tableNodesEditingProject = async ({
       .where({ deleted: 0, table_id: table.id })
       .count()
     const children = isOpen
-      ? await rowNodes({
+      ? await buildFolders({
+          project,
           table,
+          fieldId,
           rowId,
+          pathname,
         })
       : []
     const label = labelFromLabeledTable({
