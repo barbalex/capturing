@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton'
 import styled from 'styled-components'
 import isUuid from 'is-uuid'
 import last from 'lodash/last'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Session } from '@supabase/supabase-js'
@@ -29,6 +29,9 @@ const Label = styled.div`
   font-size: 1em;
   flex-grow: 1;
   padding-left: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   &:hover {
     background-color: rgba(74, 20, 140, 0.05);
     cursor: pointer;
@@ -47,23 +50,22 @@ const ProjectEditIconButton = styled(IconButton)`
 
 const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   const session: Session = supabase.auth.session()
-  const { projectId } = useParams()
   const navigate = useNavigate()
 
   const store = useContext(storeContext)
   const { activeNodeArray, editingProjects, setProjectEditing } = store
-  const editing = editingProjects.get(projectId)?.editing ?? false
+  const editing = editingProjects.get(data.id)?.editing ?? false
   const isInActiveNodeArray = activeNodeArray.includes(data.id)
   const isActive = data.id === last(activeNodeArray.filter((e) => isUuid.v1(e)))
 
   const userMayEditStructure: boolean = useLiveQuery(async () => {
     const projectUser = await dexie.project_users.get({
-      project_id: projectId,
+      project_id: data.id,
       user_email: session?.user?.email,
     })
 
-    return projectUser.role === 'project_manager'
-  }, [projectId, session?.user?.email])
+    return projectUser?.role === 'project_manager'
+  }, [session?.user?.email])
 
   const onClickIndent = useCallback(() => {
     navigate(`/${data.activeNodeArray.join('/')}`)
@@ -72,23 +74,18 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   const onClickProjectEdit = useCallback(
     async () =>
       setProjectEditing({
-        id: projectId,
+        id: data.id,
         editing: !editing,
       }),
-    [editing, projectId, setProjectEditing],
+    [data.id, editing, setProjectEditing],
   )
 
   const projectEditLabel = editing
     ? `Projekt-Struktur für "${data.label}" nicht bearbeiten`
     : `Projekt-Struktur für "${data.label}" bearbeiten`
 
-  /**
-   * TODO:
-   * if node is project and user is manager, show structure editing IconButton
-   */
+  // if node is project and user is manager, show structure editing IconButton
   const showProjectEditIcon = userMayEditStructure && data.type === 'project'
-
-  console.log({ data, showProjectEditIcon })
 
   return (
     <Container ref={innerRef} style={styles.row}>
