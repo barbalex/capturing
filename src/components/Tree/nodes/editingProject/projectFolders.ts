@@ -16,7 +16,7 @@ const projectFoldersEditingProject = async ({
   })
 
   const tileLayerNodes = []
-  // TODO: query tile layers
+  // TODO: query tile layers and build their nodes
 
   const folderNodes = [
     {
