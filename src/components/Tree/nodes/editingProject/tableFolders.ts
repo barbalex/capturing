@@ -1,4 +1,5 @@
 import buildRowNodes from './rowNodes'
+import buildFieldNodes from './fieldNodes'
 
 const tableFoldersEditingProject = async ({
   project,
