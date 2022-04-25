@@ -2,7 +2,7 @@ import { dexie, Project } from '../../../dexieClient'
 import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import tableNodesEditingData from './editingData/tableNodes'
-import tableNodesEditingProject from './editingProject/tableNodes'
+import projectFoldersEditingProject from './editingProject/projectFolders'
 
 const buildTree = async ({
   projectId,
@@ -25,7 +25,7 @@ const buildTree = async ({
     const editing = editingProjects[project.id]?.editing ?? false
     const children = isOpen
       ? editing
-        ? await tableNodesEditingProject({
+        ? await projectFoldersEditingProject({
             project,
             tableId,
             fieldId,

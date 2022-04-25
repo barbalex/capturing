@@ -10,9 +10,8 @@ const rowNodes = async ({ table, rowId }) => {
     .toArray()
   const rowsWithLabels = await rowsWithLabelFromRows(rows)
 
-  console.log('rowNodes', { table, rows, rowsWithLabels })
-
-  console.log('rowNodes, rowsWithLabels', rowsWithLabels)
+  // console.log('rowNodes', { table, rows, rowsWithLabels })
+  // console.log('rowNodes, rowsWithLabels', rowsWithLabels)
 
   const rowNodes = []
   for (const row: Row of rowsWithLabels) {

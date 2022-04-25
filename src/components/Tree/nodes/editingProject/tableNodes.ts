@@ -50,32 +50,7 @@ const tableNodesEditingProject = async ({
     tableNodes.push(node)
   }
 
-  const tileLayerNodes = []
-  // TODO: query tile layers
-
-  const folderNodes = [
-    {
-      id: `${project.id}/tablesFolder`,
-      label: 'Tabellen',
-      type: 'projectFolder',
-      object: project,
-      activeNodeArray: ['projects', project.id, 'tables'],
-      isOpen: pathname.includes(`/projects/${project.id}/tables`),
-      children: tableNodes,
-      childrenCount: tableNodes.length,
-    },
-    {
-      id: `${project.id}/tileLayersFolder`,
-      label: 'Hintergrund-Karten',
-      type: 'tileLayerFolder',
-      object: project,
-      activeNodeArray: ['projects', project.id, 'tile-layers'],
-      isOpen: pathname.includes(`/projects/${project.id}/tile-layers`),
-      children: tileLayerNodes,
-      childrenCount: tileLayerNodes.length,
-    },
-  ]
-  return folderNodes
+  return tableNodes
 }
 
 export default tableNodesEditingProject

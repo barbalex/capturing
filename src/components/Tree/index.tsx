@@ -38,7 +38,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
     }).then((dataBuilt) => setData(dataBuilt))
   }, [projectId, tableId, rowId, fieldId, editingProjects, pathname])
 
-  console.log('Tree', { data, pathname })
+  // console.log('Tree', { data, pathname })
 
   const onToggle = useCallback((val) => {
     console.log('TreeComponent, this id was toggled:', val)
