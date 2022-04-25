@@ -9,6 +9,7 @@ const tableNodesEditingProject = async ({
   fieldId,
   rowId,
   pathname,
+  openNodes,
 }) => {
   const tables = await dexie.ttables
     .where({
@@ -23,6 +24,16 @@ const tableNodesEditingProject = async ({
 
   const tableNodes = []
   for (const table: Table of tablesSorted) {
+    const ownActiveNodeArray = [
+      'projects',
+      table.project_id,
+      'tables',
+      table.id,
+    ]
+    const isInActiveNodes =
+      openNodes.filter((n) => isEqual(n, ownActiveNodeArray)).length > 0
+    if (!isInActiveNodes) return
+
     const isOpen = tableId === table.id
     const childrenCount = await dexie.rows
       .where({ deleted: 0, table_id: table.id })
@@ -45,7 +56,7 @@ const tableNodesEditingProject = async ({
       label,
       type: 'table',
       object: table,
-      activeNodeArray: ['projects', table.project_id, 'tables', table.id],
+      activeNodeArray: ownActiveNodeArray,
       isOpen,
       children,
       childrenCount,

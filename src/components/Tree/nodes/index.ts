@@ -11,6 +11,9 @@ const buildTree = async ({
   fieldId,
   editingProjects,
   pathname,
+  activeNodeArray,
+  openNodes,
+  addOpenNode,
 }) => {
   const projects: Project[] = await dexie.projects
     .where({ deleted: 0 })
@@ -31,11 +34,17 @@ const buildTree = async ({
             fieldId,
             rowId,
             pathname,
+            activeNodeArray,
+            openNodes,
+            addOpenNode,
           })
         : await tableNodesEditingData({
             project,
             tableId,
             rowId,
+            activeNodeArray,
+            openNodes,
+            addOpenNode,
           })
       : []
     const label = labelFromLabeledTable({

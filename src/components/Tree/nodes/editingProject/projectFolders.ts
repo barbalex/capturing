@@ -6,6 +6,7 @@ const projectFoldersEditingProject = async ({
   fieldId,
   rowId,
   pathname,
+  openNodes,
 }) => {
   const tableNodes = await buildTableNodes({
     project,
@@ -13,6 +14,7 @@ const projectFoldersEditingProject = async ({
     fieldId,
     rowId,
     pathname,
+    openNodes,
   })
 
   const tileLayerNodes = []

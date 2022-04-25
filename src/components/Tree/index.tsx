@@ -20,7 +20,12 @@ const TreeComponent = React.forwardRef((props, ref) => {
   const { pathname } = useLocation()
 
   const store = useContext(storeContext)
-  const { editingProjects: editingProjectsRaw } = store
+  const {
+    editingProjects: editingProjectsRaw,
+    activeNodeArray,
+    openNodes,
+    addOpenNode,
+  } = store
   const editingProjects = getSnapshot(editingProjectsRaw)
 
   const [data, setData] = useState({
@@ -35,8 +40,21 @@ const TreeComponent = React.forwardRef((props, ref) => {
       fieldId,
       editingProjects,
       pathname,
+      activeNodeArray,
+      openNodes,
+      addOpenNode,
     }).then((dataBuilt) => setData(dataBuilt))
-  }, [projectId, tableId, rowId, fieldId, editingProjects, pathname])
+  }, [
+    projectId,
+    tableId,
+    rowId,
+    fieldId,
+    editingProjects,
+    pathname,
+    activeNodeArray,
+    openNodes,
+    addOpenNode,
+  ])
 
   // console.log('Tree', { data, pathname })
 

@@ -1,9 +1,17 @@
+import isEqual from 'lodash/isEqual'
+
 import { dexie, Table } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import rowNodes from './rowNodes'
 
-const tableNodesEditingData = async ({ project, tableId, rowId }) => {
+const tableNodesEditingData = async ({
+  project,
+  tableId,
+  rowId,
+  openNodes,
+  addOpenNode,
+}) => {
   const tables = await dexie.ttables
     .where({
       deleted: 0,
@@ -18,7 +26,17 @@ const tableNodesEditingData = async ({ project, tableId, rowId }) => {
 
   const tableNodes = []
   for (const table: Table of tablesSorted) {
-    const isOpen = tableId === table.id
+    const parentActiveNodeArray = ['projects', table.project_id, 'tables']
+    const ownActiveNodeArray = [
+      'projects',
+      table.project_id,
+      'tables',
+      table.id,
+    ]
+    addOpenNode(ownActiveNodeArray)
+    const parentIsOpen =
+      openNodes.filter((n) => isEqual(n, parentActiveNodeArray)).length > 0
+    const isOpen = tableId === table.id ?? parentIsOpen
     const childrenCount = await dexie.rows
       .where({ deleted: 0, table_id: table.id })
       .count()
@@ -37,7 +55,7 @@ const tableNodesEditingData = async ({ project, tableId, rowId }) => {
       label,
       type: 'table',
       object: table,
-      activeNodeArray: ['projects', table.project_id, 'tables', table.id],
+      activeNodeArray: ownActiveNodeArray,
       isOpen,
       children,
       childrenCount,

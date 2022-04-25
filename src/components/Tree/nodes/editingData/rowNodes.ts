@@ -1,7 +1,7 @@
 import { dexie, Row } from '../../../../dexieClient'
 import rowsWithLabelFromRows from '../../../../utils/rowsWithLabelFromRows'
 
-const rowNodes = async ({ table, rowId }) => {
+const rowNodes = async ({ table, rowId, openNodes }) => {
   const rows = await dexie.rows
     .where({
       deleted: 0,

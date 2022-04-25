@@ -54,7 +54,8 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   const navigate = useNavigate()
 
   const store = useContext(storeContext)
-  const { activeNodeArray, editingProjects, setProjectEditing } = store
+  const { activeNodeArray, editingProjects, setProjectEditing, addOpenNode } =
+    store
   const editing = editingProjects.get(data.id)?.editing ?? false
   const isInActiveNodeArray = isEqual(
     activeNodeArray.slice(0, data.activeNodeArray.length),
@@ -72,8 +73,9 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   }, [session?.user?.email])
 
   const onClickIndent = useCallback(() => {
+    addOpenNode(data.activeNodeArray)
     navigate(`/${data.activeNodeArray.join('/')}`)
-  }, [data, navigate])
+  }, [addOpenNode, data.activeNodeArray, navigate])
 
   const onClickProjectEdit = useCallback(
     async () =>
