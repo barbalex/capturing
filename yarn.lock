@@ -2336,10 +2336,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:17.0.25":
-  version: 17.0.25
-  resolution: "@types/node@npm:17.0.25"
-  checksum: 6a820bd624e69ea772f52a6cdb326484eff5829443dc981939373929ade109f58c21698b9f0a831bd6ceea799e722a75dc49c5fa7a6bc32a81e1cbdfc6507b64
+"@types/node@npm:17.0.26":
+  version: 17.0.26
+  resolution: "@types/node@npm:17.0.26"
+  checksum: 59f92f46cc76703921ddf50d34b920afe3bbf916360e46321d54507b28c0ead4c3aed57cfdc64eee7c089ed12321dc4a728aa63a1205f7c1115105467f7a2b31
   languageName: node
   linkType: hard
 
@@ -3021,7 +3021,7 @@ __metadata:
     "@mui/styled-engine": 5.6.1
     "@mui/styled-engine-sc": 5.6.1
     "@supabase/supabase-js": 1.35.2
-    "@types/node": 17.0.25
+    "@types/node": 17.0.26
     "@types/react": 18.0.6
     "@types/react-dom": 18.0.2
     "@typescript-eslint/eslint-plugin": 5.20.0
@@ -3062,7 +3062,7 @@ __metadata:
     react-split-pane: 0.1.92
     react-stylable-diff: 2.0.0
     react-virtualized-auto-sizer: ^1.0.6
-    react-virtuoso: 2.9.2
+    react-virtuoso: 2.10.0
     redaxios: 0.4.1
     spark-md5: 3.0.2
     styled-components: 5.3.5
@@ -6048,15 +6048,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:2.9.2":
-  version: 2.9.2
-  resolution: "react-virtuoso@npm:2.9.2"
+"react-virtuoso@npm:2.10.0":
+  version: 2.10.0
+  resolution: "react-virtuoso@npm:2.10.0"
   dependencies:
     "@virtuoso.dev/react-urx": ^0.2.12
     "@virtuoso.dev/urx": ^0.2.12
   peerDependencies:
-    react: ">=16"
-  checksum: 05ed9864590af0591eeba6642e755d260f9908385ccc696fb74bbdba5c2e84710b14015f79f1308e0dde6772e3d3491e22c207af87e2e9f5aaa98c699edadaa9
+    react: ">=16 || >=17 || >= 18"
+    react-dom: ">=16 || >=17 || >= 18"
+  checksum: 45a6986004fe6cebc3e6f7fc7ece32706073063199613b3e2631fcc988bcf35dfe0c56f6358d8901d24afb6e957daad2c5eadc9c6698af5cb8feaa79cbac980c
   languageName: node
   linkType: hard
 

@@ -44,14 +44,14 @@
     "react-split-pane": "0.1.92",
     "react-stylable-diff": "2.0.0",
     "react-virtualized-auto-sizer": "^1.0.6",
-    "react-virtuoso": "2.9.2",
+    "react-virtuoso": "2.10.0",
     "redaxios": "0.4.1",
     "spark-md5": "3.0.2",
     "styled-components": "5.3.5",
     "uuid": "8.3.2"
   },
   "devDependencies": {
-    "@types/node": "17.0.25",
+    "@types/node": "17.0.26",
     "@types/react": "18.0.6",
     "@types/react-dom": "18.0.2",
     "@typescript-eslint/eslint-plugin": "5.20.0",
