@@ -33,12 +33,8 @@ const TreeComponent = React.forwardRef((props, ref) => {
     children: [],
   })
   useEffect(() => {
-    console.log('TreeComponent effect, running')
     buildNodes({ projectId, tableId, rowId, fieldId, editingProjects }).then(
-      (dataBuilt) => {
-        console.log('TreeComponent effect, got data:', dataBuilt)
-        setData(dataBuilt)
-      },
+      (dataBuilt) => setData(dataBuilt),
     )
   }, [projectId, tableId, rowId, fieldId, editingProjects])
 
