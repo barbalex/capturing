@@ -8,10 +8,11 @@ const tableFoldersEditingProject = async ({
   rowId,
   pathname,
 }) => {
-  const tableNodes = await buildRowNodes({
+  const rowNodes = await buildRowNodes({
     table,
     rowId,
   })
+  const fieldNodes = await buildFieldNodes({ project, table, fieldId })
   const tableFolderNodes = [
     {
       id: `${table.id}rowsFolder`,
@@ -20,8 +21,18 @@ const tableFoldersEditingProject = async ({
       object: table,
       activeNodeArray: ['projects', project.id, 'tables', table.id, 'rows'],
       isOpen: pathname.includes(`/projects/${project.id}/tables/${table.id}`),
-      children: tableNodes,
-      childrenCount: tableNodes.length,
+      children: rowNodes,
+      childrenCount: rowNodes.length,
+    },
+    {
+      id: `${table.id}fieldsFolder`,
+      label: 'Felder',
+      type: 'fieldsFolder',
+      object: table,
+      activeNodeArray: ['projects', project.id, 'tables', table.id, 'fields'],
+      isOpen: pathname.includes(`/projects/${project.id}/tables/${table.id}`),
+      children: fieldNodes,
+      childrenCount: fieldNodes.length,
     },
   ]
 

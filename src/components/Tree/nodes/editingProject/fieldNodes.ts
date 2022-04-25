@@ -2,24 +2,24 @@ import { dexie, Field } from '../../../../dexieClient'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 
 const fieldNodes = async ({ project, table, fieldId }) => {
-  const fields = await dexie.fields
+  const fields: Field[] = await dexie.fields
     .where({
       deleted: 0,
       table_id: table.id,
     })
     .toArray()
-  const fieldsWithLabels = await labelFromLabeledTable({
-    objects: fields,
-    useLabels: project.use_labels,
-  })
+  console.log('fieldNodes', { project, table, fieldId, fields })
 
   const fieldNodes = []
-  for (const field: Field of fieldsWithLabels) {
+  for (const field: Field of fields) {
     const isOpen = fieldId === field.id
 
     const node = {
       id: field.id,
-      label: field.label,
+      label: await labelFromLabeledTable({
+        object: field,
+        useLabels: project.use_labels,
+      }),
       type: 'field',
       object: field,
       activeNodeArray: [
