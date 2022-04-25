@@ -6,12 +6,13 @@ import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams, useNavigate, Link, resolvePath } from 'react-router-dom'
+import { Session } from '@supabase/supabase-js'
 
 import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import { dexie, Field, IProjectUser, Project } from '../../dexieClient'
+import { dexie, Project } from '../../dexieClient'
 import insertField from '../../utils/insertField'
 import sortByLabelName from '../../utils/sortByLabelName'
 import FilterNumbers from '../shared/FilterNumbers'
@@ -49,7 +50,7 @@ const RowsContainer = styled.div`
 `
 
 const FieldsComponent = () => {
-  const session = supabase.auth.session()
+  const session: Session = supabase.auth.session()
   const { projectId, tableId } = useParams()
   const navigate = useNavigate()
   const store = useContext(storeContext)
