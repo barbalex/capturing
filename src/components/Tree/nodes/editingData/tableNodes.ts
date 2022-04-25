@@ -1,6 +1,6 @@
-import { dexie, Table } from '../../../dexieClient'
-import sortByLabelName from '../../../utils/sortByLabelName'
-import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
+import { dexie, Table } from '../../../../dexieClient'
+import sortByLabelName from '../../../../utils/sortByLabelName'
+import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import rowNodes from './rowNodes'
 
 const tableNodes = async ({ project, tableId, rowId }) => {
@@ -8,15 +8,13 @@ const tableNodes = async ({ project, tableId, rowId }) => {
     .where({
       deleted: 0,
       project_id: project.id,
+      type: 'standard',
     })
     .toArray()
-  console.log('tableNodes', { project, tableId, tables })
   const tablesSorted = sortByLabelName({
     objects: tables,
     useLabels: project.use_labels,
   })
-
-  console.log('tableNodes, tablesSorted', tablesSorted)
 
   const tableNodes = []
   for (const table: Table of tablesSorted) {

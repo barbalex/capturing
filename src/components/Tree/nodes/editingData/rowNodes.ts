@@ -1,5 +1,5 @@
-import { dexie, Row } from '../../../dexieClient'
-import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
+import { dexie, Row } from '../../../../dexieClient'
+import rowsWithLabelFromRows from '../../../../utils/rowsWithLabelFromRows'
 
 const rowNodes = async ({ table, rowId }) => {
   const rows = await dexie.rows
