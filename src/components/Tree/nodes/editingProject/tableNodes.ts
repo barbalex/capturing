@@ -3,7 +3,13 @@ import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import rowNodes from './rowNodes'
 
-const tableNodes = async ({ project, tableId, fieldId, rowId }) => {
+const tableNodesEditingProject = async ({
+  project,
+  tableId,
+  fieldId,
+  rowId,
+  pathname,
+}) => {
   const tables = await dexie.ttables
     .where({
       deleted: 0,
@@ -44,7 +50,19 @@ const tableNodes = async ({ project, tableId, fieldId, rowId }) => {
     tableNodes.push(node)
   }
 
-  return tableNodes
+  const folderNodes = [
+    {
+      id: `${project.id}/tablesFolder`,
+      label: 'Tabellen',
+      type: 'project_folder',
+      object: project,
+      activeNodeArray: ['projects', project.id, 'tables'],
+      isOpen: pathname.includes(`/projects/${project.id}/tables`),
+      children: tableNodes,
+      childrenCount: tableNodes.length,
+    },
+  ]
+  return folderNodes
 }
 
-export default tableNodes
+export default tableNodesEditingProject

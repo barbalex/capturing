@@ -1,11 +1,5 @@
-import React, {
-  useCallback,
-  useEffect,
-  useState,
-  useContext,
-  useMemo,
-} from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useCallback, useEffect, useState, useContext } from 'react'
+import { useParams, useLocation } from 'react-router-dom'
 import { Tree } from 'react-arborist'
 import styled from 'styled-components'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -23,6 +17,7 @@ const Container = styled.div`
 
 const TreeComponent = React.forwardRef((props, ref) => {
   const { projectId, tableId, rowId, fieldId } = useParams()
+  const { pathname } = useLocation()
 
   const store = useContext(storeContext)
   const { editingProjects: editingProjectsRaw } = store
@@ -33,12 +28,17 @@ const TreeComponent = React.forwardRef((props, ref) => {
     children: [],
   })
   useEffect(() => {
-    buildNodes({ projectId, tableId, rowId, fieldId, editingProjects }).then(
-      (dataBuilt) => setData(dataBuilt),
-    )
-  }, [projectId, tableId, rowId, fieldId, editingProjects])
+    buildNodes({
+      projectId,
+      tableId,
+      rowId,
+      fieldId,
+      editingProjects,
+      pathname,
+    }).then((dataBuilt) => setData(dataBuilt))
+  }, [projectId, tableId, rowId, fieldId, editingProjects, pathname])
 
-  console.log('Tree, data:', data)
+  console.log('Tree', { data, pathname })
 
   const onToggle = useCallback((val) => {
     console.log('TreeComponent, this id was toggled:', val)
