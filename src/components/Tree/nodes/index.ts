@@ -21,14 +21,20 @@ const buildTree = async ({
     const childrenCount = await dexie.ttables
       .where({ deleted: 0, project_id: project.id })
       .count()
-    const editing = editingProjects.get(project.id)?.editing ?? false
+    const editing = editingProjects[project.id]?.editing ?? false
     const children = isOpen
-      ? await tableNodesEditingData({
-          project,
-          tableId,
-          fieldId,
-          rowId,
-        })
+      ? editing
+        ? await tableNodesEditingProject({
+            project,
+            tableId,
+            fieldId,
+            rowId,
+          })
+        : await tableNodesEditingData({
+            project,
+            tableId,
+            rowId,
+          })
       : []
     const label = labelFromLabeledTable({
       object: project,

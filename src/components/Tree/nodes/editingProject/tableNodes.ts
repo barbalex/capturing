@@ -3,7 +3,7 @@ import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import rowNodes from './rowNodes'
 
-const tableNodes = async ({ project, tableId, rowId }) => {
+const tableNodes = async ({ project, tableId, fieldId, rowId }) => {
   const tables = await dexie.ttables
     .where({
       deleted: 0,

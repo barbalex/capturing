@@ -1,9 +1,16 @@
-import React, { useCallback, useEffect, useState, useContext } from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useContext,
+  useMemo,
+} from 'react'
 import { useParams } from 'react-router-dom'
 import { Tree } from 'react-arborist'
 import styled from 'styled-components'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { observer } from 'mobx-react-lite'
+import { getSnapshot } from 'mobx-state-tree'
 
 import buildNodes from './nodes'
 import Node from './Node'
@@ -18,7 +25,8 @@ const TreeComponent = React.forwardRef((props, ref) => {
   const { projectId, tableId, rowId, fieldId } = useParams()
 
   const store = useContext(storeContext)
-  const { editingProjects } = store
+  const { editingProjects: editingProjectsRaw } = store
+  const editingProjects = getSnapshot(editingProjectsRaw)
 
   const [data, setData] = useState({
     id: 'root',
