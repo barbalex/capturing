@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton'
 import styled from 'styled-components'
 import isUuid from 'is-uuid'
 import last from 'lodash/last'
+import isEqual from 'lodash/isEqual'
 import { useNavigate } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -55,7 +56,10 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   const store = useContext(storeContext)
   const { activeNodeArray, editingProjects, setProjectEditing } = store
   const editing = editingProjects.get(data.id)?.editing ?? false
-  const isInActiveNodeArray = activeNodeArray.includes(data.id)
+  const isInActiveNodeArray = isEqual(
+    activeNodeArray.slice(0, data.activeNodeArray.length),
+    data.activeNodeArray.slice(),
+  )
   const isActive = data.id === last(activeNodeArray.filter((e) => isUuid.v1(e)))
 
   const userMayEditStructure: boolean = useLiveQuery(async () => {
