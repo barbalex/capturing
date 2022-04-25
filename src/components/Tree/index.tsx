@@ -1,11 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { Tree } from 'react-arborist'
 import styled from 'styled-components'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import { observer } from 'mobx-react-lite'
 
 import buildNodes from './nodes'
 import Node from './Node'
+import storeContext from '../../storeContext'
 
 const Container = styled.div`
   width: 100%;
@@ -15,17 +17,22 @@ const Container = styled.div`
 const TreeComponent = React.forwardRef((props, ref) => {
   const { projectId, tableId, rowId, fieldId } = useParams()
 
+  const store = useContext(storeContext)
+  const { editingProjects } = store
+
   const [data, setData] = useState({
     id: 'root',
     children: [],
   })
   useEffect(() => {
     console.log('TreeComponent effect, running')
-    buildNodes({ projectId, tableId, rowId, fieldId }).then((dataBuilt) => {
-      console.log('TreeComponent effect, got data:', dataBuilt)
-      setData(dataBuilt)
-    })
-  }, [projectId, tableId, rowId, fieldId])
+    buildNodes({ projectId, tableId, rowId, fieldId, editingProjects }).then(
+      (dataBuilt) => {
+        console.log('TreeComponent effect, got data:', dataBuilt)
+        setData(dataBuilt)
+      },
+    )
+  }, [projectId, tableId, rowId, fieldId, editingProjects])
 
   console.log('Tree, data:', data)
 
@@ -59,4 +66,4 @@ const TreeComponent = React.forwardRef((props, ref) => {
   )
 })
 
-export default TreeComponent
+export default observer(TreeComponent)
