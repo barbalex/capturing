@@ -40,8 +40,8 @@ const NoChildren = styled.div`
 `
 const ProjectEditIconButton = styled(IconButton)`
   svg {
-    height: 20px !important;
-    width: 20px !important;
+    height: 18px !important;
+    width: 18px !important;
   }
 `
 
@@ -79,8 +79,8 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   )
 
   const projectEditLabel = editing
-    ? 'Projekt-Struktur nicht bearbeiten'
-    : 'Projekt-Struktur bearbeiten'
+    ? `Projekt-Struktur für "${data.label}" nicht bearbeiten`
+    : `Projekt-Struktur für "${data.label}" bearbeiten`
 
   /**
    * TODO:
