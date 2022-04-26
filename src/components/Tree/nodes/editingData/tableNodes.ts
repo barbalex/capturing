@@ -3,6 +3,7 @@ import isEqual from 'lodash/isEqual'
 import { dexie, Table } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
+import isNodeOpen from '../../../../utils/isNodeOpen'
 import rowNodes from './rowNodes'
 
 const tableNodesEditingData = async ({
@@ -12,6 +13,9 @@ const tableNodesEditingData = async ({
   openNodes,
   addOpenNodes,
 }) => {
+  // return if parent is not open (in openNodes)
+  if (!isNodeOpen({ openNodes, url: ['projects', project.id] })) return
+
   const tables = await dexie.ttables
     .where({
       deleted: 0,

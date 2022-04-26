@@ -17,6 +17,7 @@ export const MobxStore = types
       types.array(types.union(types.string, types.number)),
       [],
     ),
+    // TODO: this is really visibleNodes i.e. nodes
     openNodes: types.optional(
       types.array(types.array(types.union(types.string, types.number))),
       [],
