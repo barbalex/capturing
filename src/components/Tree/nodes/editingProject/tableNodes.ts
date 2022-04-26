@@ -1,3 +1,5 @@
+import isEqual from 'lodash/isEqual'
+
 import { dexie, Table } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
@@ -30,9 +32,9 @@ const tableNodesEditingProject = async ({
       'tables',
       table.id,
     ]
-    const isInActiveNodes =
-      openNodes.filter((n) => isEqual(n, ownActiveNodeArray)).length > 0
-    if (!isInActiveNodes) return
+    // const isInActiveNodes =
+    //   openNodes.filter((n) => isEqual(n, ownActiveNodeArray)).length > 0
+    // if (!isInActiveNodes) return
 
     const isOpen = tableId === table.id
     const childrenCount = await dexie.rows

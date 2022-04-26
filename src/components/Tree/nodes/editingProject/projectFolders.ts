@@ -1,4 +1,5 @@
 import buildTableNodes from './tableNodes'
+import { dexie } from '../../../../dexieClient'
 
 const projectFoldersEditingProject = async ({
   project,
@@ -8,6 +9,12 @@ const projectFoldersEditingProject = async ({
   pathname,
   openNodes,
 }) => {
+  const tableNodesCount = await dexie.ttables
+    .where({
+      deleted: 0,
+      project_id: project.id,
+    })
+    .count()
   const tableNodes = await buildTableNodes({
     project,
     tableId,
@@ -29,7 +36,7 @@ const projectFoldersEditingProject = async ({
       activeNodeArray: ['projects', project.id, 'tables'],
       isOpen: pathname.includes(`/projects/${project.id}/tables`),
       children: tableNodes,
-      childrenCount: tableNodes.length,
+      childrenCount: tableNodesCount,
     },
     {
       id: `${project.id}/tileLayersFolder`,

@@ -54,8 +54,13 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   const navigate = useNavigate()
 
   const store = useContext(storeContext)
-  const { activeNodeArray, editingProjects, setProjectEditing, addOpenNode } =
-    store
+  const {
+    activeNodeArray,
+    editingProjects,
+    setProjectEditing,
+    addOpenNode,
+    removeOpenNodeWithChildren,
+  } = store
   const editing = editingProjects.get(data.id)?.editing ?? false
   const isInActiveNodeArray = isEqual(
     activeNodeArray.slice(0, data.activeNodeArray.length),
@@ -73,27 +78,36 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   }, [session?.user?.email])
 
   const onClickIndent = useCallback(() => {
+    console.log('Node, onClickIndent')
     addOpenNode(data.activeNodeArray)
     navigate(`/${data.activeNodeArray.join('/')}`)
   }, [addOpenNode, data.activeNodeArray, navigate])
 
   const onClickProjectEdit = useCallback(
-    async () =>
+    async (e) => {
+      console.log('Node, onClickProjectEdit')
+      e.stopPropagation()
       setProjectEditing({
         id: data.id,
         editing: !editing,
-      }),
+      })
+    },
     [data.id, editing, setProjectEditing],
   )
-  const onClickToggle = useCallback(() => {
-    // TODO: adjust openNodes
-    handlers.toggle()
-    if (state.isOpen) {
-      removeOpenNodeWithChildren(data.activeNodeArray)
-    } else {
-      addOpenNode(data.activeNodeArray)
-    }
-  }, [addOpenNode, data.activeNodeArray, handlers, state.isOpen])
+  const onClickToggle = useCallback(
+    (e) => {
+      e.stopPropagation()
+      // TODO: adjust openNodes
+      handlers.toggle(e)
+      console.log('Node, onClickToggle', { state, data })
+      if (state.isOpen) {
+        removeOpenNodeWithChildren(data.activeNodeArray)
+      } else {
+        addOpenNode(data.activeNodeArray)
+      }
+    },
+    [addOpenNode, data, state],
+  )
 
   const projectEditLabel = editing
     ? `Projekt-Struktur für "${data.label}" nicht bearbeiten`
