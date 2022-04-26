@@ -82,11 +82,12 @@ const ProjectsPage = () => {
   // DO NOT add activeNodeArray to useEffet's dependency array or
   // it will not be possible to open multiple branches in tree
   // as openNodes is overwritten every time activeNodeArray changes
+  // TODO: is this needed?
   useEffect(() => {
-    console.log('Project setting initial open nodes', {
-      activeNodeArray: activeNodeArray.slice(),
-      newOpenNodes: openNodesFromActiveNodeArray(activeNodeArray),
-    })
+    // console.log('Project setting initial open nodes', {
+    //   activeNodeArray: activeNodeArray.slice(),
+    //   newOpenNodes: openNodesFromActiveNodeArray(activeNodeArray),
+    // })
     setOpenNodes(openNodesFromActiveNodeArray(activeNodeArray))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
