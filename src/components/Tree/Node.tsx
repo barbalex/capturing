@@ -78,14 +78,14 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   }, [session?.user?.email])
 
   const onClickIndent = useCallback(() => {
-    console.log('Node, onClickIndent')
+    // console.log('Node, onClickIndent')
     addOpenNode(data.activeNodeArray)
     navigate(`/${data.activeNodeArray.join('/')}`)
   }, [addOpenNode, data.activeNodeArray, navigate])
 
   const onClickProjectEdit = useCallback(
     async (e) => {
-      console.log('Node, onClickProjectEdit')
+      // console.log('Node, onClickProjectEdit')
       e.stopPropagation()
       setProjectEditing({
         id: data.id,
@@ -97,16 +97,16 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   const onClickToggle = useCallback(
     (e) => {
       e.stopPropagation()
-      // TODO: adjust openNodes
+      // adjust openNodes
       handlers.toggle(e)
-      console.log('Node, onClickToggle', { state, data })
+      // console.log('Node, onClickToggle', { state, data })
       if (state.isOpen) {
         removeOpenNodeWithChildren(data.activeNodeArray)
       } else {
         addOpenNode(data.activeNodeArray)
       }
     },
-    [addOpenNode, data, state],
+    [addOpenNode, data, handlers, removeOpenNodeWithChildren, state],
   )
 
   const projectEditLabel = editing
