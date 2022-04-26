@@ -10,7 +10,7 @@ const tableNodesEditingData = async ({
   tableId,
   rowId,
   openNodes,
-  addOpenNode,
+  addOpenNodes,
 }) => {
   const tables = await dexie.ttables
     .where({
@@ -27,13 +27,6 @@ const tableNodesEditingData = async ({
   const tableNodes = []
   for (const table: Table of tablesSorted) {
     const parentActiveNodeArray = ['projects', table.project_id, 'tables']
-    const ownActiveNodeArray = [
-      'projects',
-      table.project_id,
-      'tables',
-      table.id,
-    ]
-    addOpenNode(ownActiveNodeArray)
     const parentIsOpen =
       openNodes.filter((n) => isEqual(n, parentActiveNodeArray)).length > 0
     const isOpen = tableId === table.id ?? parentIsOpen
@@ -44,6 +37,7 @@ const tableNodesEditingData = async ({
       ? await rowNodes({
           table,
           rowId,
+          addOpenNodes,
         })
       : []
     const label = labelFromLabeledTable({
@@ -55,14 +49,14 @@ const tableNodesEditingData = async ({
       label,
       type: 'table',
       object: table,
-      activeNodeArray: ownActiveNodeArray,
+      activeNodeArray: ['projects', table.project_id, 'tables', table.id],
       isOpen,
       children,
       childrenCount,
     }
     tableNodes.push(node)
   }
-
+  addOpenNodes(tableNodes.map((n) => n.activeNodeArray))
   return tableNodes
 }
 

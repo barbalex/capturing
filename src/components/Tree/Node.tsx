@@ -86,9 +86,14 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     [data.id, editing, setProjectEditing],
   )
   const onClickToggle = useCallback(() => {
-    // TODO:
+    // TODO: adjust openNodes
     handlers.toggle()
-  }, [])
+    if (state.isOpen) {
+      removeOpenNodeWithChildren(data.activeNodeArray)
+    } else {
+      addOpenNode(data.activeNodeArray)
+    }
+  }, [addOpenNode, data.activeNodeArray, handlers, state.isOpen])
 
   const projectEditLabel = editing
     ? `Projekt-Struktur für "${data.label}" nicht bearbeiten`

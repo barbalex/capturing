@@ -26,18 +26,9 @@ const TreeComponent = React.forwardRef((props, ref) => {
     activeNodeArray,
     openNodes,
     addOpenNode,
-    setOpenNodes,
+    addOpenNodes,
   } = store
   const editingProjects = getSnapshot(editingProjectsRaw)
-
-  // on first render set openNodes
-  // DO NOT add activeNodeArray to useEffet's dependency array or
-  // it will not be possible to open multiple branches in tree
-  // as openNodes is overwritten every time activeNodeArray changes
-  useEffect(() => {
-    setOpenNodes(openNodesFromActiveNodeArray(activeNodeArray))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const [data, setData] = useState({
     id: 'root',
@@ -54,6 +45,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
       activeNodeArray,
       openNodes,
       addOpenNode,
+      addOpenNodes,
     }).then((dataBuilt) => setData(dataBuilt))
   }, [
     projectId,
@@ -65,6 +57,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
     activeNodeArray,
     openNodes,
     addOpenNode,
+    addOpenNodes,
   ])
 
   console.log('Tree, openNodes:', getSnapshot(openNodes))

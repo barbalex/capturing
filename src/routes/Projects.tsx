@@ -8,6 +8,7 @@ import StoreContext from '../storeContext'
 import Login from '../components/Login'
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 import constants from '../utils/constants'
+import openNodesFromActiveNodeArray from '../utils/openNodesFromActiveNodeArray'
 import Tree from '../components/Tree'
 import { supabase } from '../supabaseClient'
 
@@ -53,6 +54,8 @@ const ProjectsPage = () => {
     setTreeWidth,
     setFormWidth,
     setFormHeight,
+    setOpenNodes,
+    activeNodeArray,
   } = store
 
   // console.log('Projects, subscriptionState:', store.subscriptionState)
@@ -73,6 +76,19 @@ const ProjectsPage = () => {
 
   useEffect(() => {
     document.title = 'Capturing: Projects'
+  }, [])
+
+  // on first render set openNodes
+  // DO NOT add activeNodeArray to useEffet's dependency array or
+  // it will not be possible to open multiple branches in tree
+  // as openNodes is overwritten every time activeNodeArray changes
+  useEffect(() => {
+    console.log('Project setting initial open nodes', {
+      activeNodeArray: activeNodeArray.slice(),
+      newOpenNodes: openNodesFromActiveNodeArray(activeNodeArray),
+    })
+    setOpenNodes(openNodesFromActiveNodeArray(activeNodeArray))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const treeWidth = singleColumnView ? 0 : `${treeWidthInPercentOfScreen}%`
