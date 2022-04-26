@@ -13,7 +13,7 @@ const buildTree = async ({
   pathname,
   activeNodeArray,
   nodes,
-  addOpenNodes,
+  addNodes,
 }) => {
   const projects: Project[] = await dexie.projects
     .where({ deleted: 0 })
@@ -43,7 +43,7 @@ const buildTree = async ({
             rowId,
             activeNodeArray,
             nodes,
-            addOpenNodes,
+            addNodes,
           })
       : []
     const label = labelFromLabeledTable({
@@ -63,7 +63,7 @@ const buildTree = async ({
     projectNodes.push(node)
   }
 
-  addOpenNodes(projectNodes.map((n) => n.activeNodeArray))
+  addNodes(projectNodes.map((n) => n.activeNodeArray))
 
   return { id: 'root', children: projectNodes }
 }

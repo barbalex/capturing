@@ -1,7 +1,7 @@
 import { dexie, Row } from '../../../../dexieClient'
 import rowsWithLabelFromRows from '../../../../utils/rowsWithLabelFromRows'
 
-const rowNodes = async ({ table, rowId, addOpenNodes }) => {
+const rowNodes = async ({ table, rowId, addNodes }) => {
   const rows = await dexie.rows
     .where({
       deleted: 0,
@@ -49,7 +49,7 @@ const rowNodes = async ({ table, rowId, addOpenNodes }) => {
     }
     rowNodes.push(node)
   }
-  addOpenNodes(rowNodes.map((n) => n.activeNodeArray))
+  addNodes(rowNodes.map((n) => n.activeNodeArray))
   return rowNodes
 }
 

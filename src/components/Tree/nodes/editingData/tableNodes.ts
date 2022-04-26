@@ -11,7 +11,7 @@ const tableNodesEditingData = async ({
   tableId,
   rowId,
   nodes,
-  addOpenNodes,
+  addNodes,
 }) => {
   // return if parent is not open (in nodes)
   if (!existsNode({ nodes, url: ['projects', project.id] })) return
@@ -41,7 +41,7 @@ const tableNodesEditingData = async ({
       ? await rowNodes({
           table,
           rowId,
-          addOpenNodes,
+          addNodes,
         })
       : []
     const label = labelFromLabeledTable({
@@ -60,7 +60,7 @@ const tableNodesEditingData = async ({
     }
     tableNodes.push(node)
   }
-  addOpenNodes(tableNodes.map((n) => n.activeNodeArray))
+  addNodes(tableNodes.map((n) => n.activeNodeArray))
   return tableNodes
 }
 

@@ -24,7 +24,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
     editingProjects: editingProjectsRaw,
     activeNodeArray,
     nodes,
-    addOpenNodes,
+    addNodes,
   } = store
   const editingProjects = getSnapshot(editingProjectsRaw)
 
@@ -42,7 +42,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
       pathname,
       activeNodeArray,
       nodes,
-      addOpenNodes,
+      addNodes,
     }).then((dataBuilt) => setData(dataBuilt))
   }, [
     projectId,
@@ -53,7 +53,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
     pathname,
     activeNodeArray,
     nodes,
-    addOpenNodes,
+    addNodes,
   ])
 
   console.log('Tree, nodes:', getSnapshot(nodes))

@@ -96,9 +96,9 @@ export const MobxStore = types
         for (let i = 1; i <= url.length; i++) {
           addedOpenNodes.push(url.slice(0, i))
         }
-        self.addOpenNodes(addedOpenNodes)
+        self.addNodes(addedOpenNodes)
       },
-      addOpenNodes(nodes) {
+      addNodes(nodes) {
         // need set to ensure contained arrays are unique
         const set = new Set([...self.nodes, ...nodes].map(JSON.stringify))
         const newOpenNodes = Array.from(set).map(JSON.parse)
