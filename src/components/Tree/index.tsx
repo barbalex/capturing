@@ -9,6 +9,7 @@ import { getSnapshot } from 'mobx-state-tree'
 import buildNodes from './nodes'
 import Node from './Node'
 import storeContext from '../../storeContext'
+import openNodesFromActiveNodeArray from '../../utils/openNodesFromActiveNodeArray'
 
 const Container = styled.div`
   width: 100%;
@@ -25,8 +26,18 @@ const TreeComponent = React.forwardRef((props, ref) => {
     activeNodeArray,
     openNodes,
     addOpenNode,
+    setOpenNodes,
   } = store
   const editingProjects = getSnapshot(editingProjectsRaw)
+
+  // on first render set openNodes
+  // DO NOT add activeNodeArray to useEffet's dependency array or
+  // it will not be possible to open multiple branches in tree
+  // as openNodes is overwritten every time activeNodeArray changes
+  useEffect(() => {
+    setOpenNodes(openNodesFromActiveNodeArray(activeNodeArray))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const [data, setData] = useState({
     id: 'root',
@@ -56,7 +67,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
     addOpenNode,
   ])
 
-  // console.log('Tree', { data, pathname })
+  console.log('Tree, openNodes:', getSnapshot(openNodes))
 
   const onToggle = useCallback((val) => {
     console.log('TreeComponent, this id was toggled:', val)

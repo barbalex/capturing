@@ -85,6 +85,10 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
       }),
     [data.id, editing, setProjectEditing],
   )
+  const onClickToggle = useCallback(() => {
+    // TODO:
+    handlers.toggle()
+  }, [])
 
   const projectEditLabel = editing
     ? `Projekt-Struktur für "${data.label}" nicht bearbeiten`
@@ -105,7 +109,7 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
         <IconButton
           aria-label="toggle"
           size="small"
-          onClick={handlers.toggle}
+          onClick={onClickToggle}
           disabled={!data.childrenCount}
         >
           {!data.childrenCount ? (
