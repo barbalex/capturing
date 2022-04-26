@@ -3,7 +3,7 @@ import isEqual from 'lodash/isEqual'
 import { dexie, Table } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
-import isNodeOpen from '../../../../utils/isNodeOpen'
+import existsNode from '../../../../utils/existsNode'
 import rowNodes from './rowNodes'
 
 const tableNodesEditingData = async ({
@@ -14,7 +14,7 @@ const tableNodesEditingData = async ({
   addOpenNodes,
 }) => {
   // return if parent is not open (in nodes)
-  if (!isNodeOpen({ nodes, url: ['projects', project.id] })) return
+  if (!existsNode({ nodes, url: ['projects', project.id] })) return
 
   const tables = await dexie.ttables
     .where({

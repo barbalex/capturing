@@ -1,5 +1,5 @@
 // TODO: add all project nodes
-const openNodesFromActiveNodeArray = (activeNodeArray) =>
+const nodesFromActiveNodeArray = (activeNodeArray) =>
   activeNodeArray.map((n, index) => activeNodeArray.slice(0, index + 1))
 
-export default openNodesFromActiveNodeArray
+export default nodesFromActiveNodeArray

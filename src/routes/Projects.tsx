@@ -8,7 +8,7 @@ import StoreContext from '../storeContext'
 import Login from '../components/Login'
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 import constants from '../utils/constants'
-import openNodesFromActiveNodeArray from '../utils/openNodesFromActiveNodeArray'
+import nodesFromActiveNodeArray from '../utils/nodesFromActiveNodeArray'
 import Tree from '../components/Tree'
 import { supabase } from '../supabaseClient'
 
@@ -86,9 +86,9 @@ const ProjectsPage = () => {
   useEffect(() => {
     // console.log('Project setting initial open nodes', {
     //   activeNodeArray: activeNodeArray.slice(),
-    //   newOpenNodes: openNodesFromActiveNodeArray(activeNodeArray),
+    //   newOpenNodes: nodesFromActiveNodeArray(activeNodeArray),
     // })
-    setOpenNodes(openNodesFromActiveNodeArray(activeNodeArray))
+    setOpenNodes(nodesFromActiveNodeArray(activeNodeArray))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
