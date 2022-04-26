@@ -9,7 +9,6 @@ import { getSnapshot } from 'mobx-state-tree'
 import buildNodes from './nodes'
 import Node from './Node'
 import storeContext from '../../storeContext'
-import openNodesFromActiveNodeArray from '../../utils/openNodesFromActiveNodeArray'
 
 const Container = styled.div`
   width: 100%;
@@ -25,7 +24,6 @@ const TreeComponent = React.forwardRef((props, ref) => {
     editingProjects: editingProjectsRaw,
     activeNodeArray,
     openNodes,
-    addOpenNode,
     addOpenNodes,
   } = store
   const editingProjects = getSnapshot(editingProjectsRaw)
@@ -44,7 +42,6 @@ const TreeComponent = React.forwardRef((props, ref) => {
       pathname,
       activeNodeArray,
       openNodes,
-      addOpenNode,
       addOpenNodes,
     }).then((dataBuilt) => setData(dataBuilt))
   }, [
@@ -56,7 +53,6 @@ const TreeComponent = React.forwardRef((props, ref) => {
     pathname,
     activeNodeArray,
     openNodes,
-    addOpenNode,
     addOpenNodes,
   ])
 
