@@ -23,7 +23,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
   const {
     editingProjects: editingProjectsRaw,
     activeNodeArray,
-    openNodes,
+    nodes,
     addOpenNodes,
   } = store
   const editingProjects = getSnapshot(editingProjectsRaw)
@@ -41,7 +41,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
       editingProjects,
       pathname,
       activeNodeArray,
-      openNodes,
+      nodes,
       addOpenNodes,
     }).then((dataBuilt) => setData(dataBuilt))
   }, [
@@ -52,11 +52,11 @@ const TreeComponent = React.forwardRef((props, ref) => {
     editingProjects,
     pathname,
     activeNodeArray,
-    openNodes,
+    nodes,
     addOpenNodes,
   ])
 
-  console.log('Tree, openNodes:', getSnapshot(openNodes))
+  console.log('Tree, nodes:', getSnapshot(nodes))
 
   const onToggle = useCallback((val) => {
     console.log('TreeComponent, this id was toggled:', val)

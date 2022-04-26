@@ -11,7 +11,7 @@ const tableNodesEditingProject = async ({
   fieldId,
   rowId,
   pathname,
-  openNodes,
+  nodes,
 }) => {
   const tables = await dexie.ttables
     .where({
@@ -33,7 +33,7 @@ const tableNodesEditingProject = async ({
       table.id,
     ]
     // const isInActiveNodes =
-    //   openNodes.filter((n) => isEqual(n, ownActiveNodeArray)).length > 0
+    //   nodes.filter((n) => isEqual(n, ownActiveNodeArray)).length > 0
     // if (!isInActiveNodes) return
 
     const isOpen = tableId === table.id

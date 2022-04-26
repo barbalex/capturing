@@ -54,7 +54,7 @@ const ProjectDeleteButton = () => {
     const row: Project = await dexie.projects.get(projectId)
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
-    // need to remove openNode from openNodes
+    // need to remove node from nodes
     removeOpenNodeWithChildren(activeNodeArray)
     navigate(resolvePath(`..`, window.location.pathname))
   }, [

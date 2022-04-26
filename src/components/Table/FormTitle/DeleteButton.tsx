@@ -54,7 +54,7 @@ const TableDeleteButton = ({ userMayEdit }) => {
     const row: Table = await dexie.ttables.get(tableId)
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
-    // need to remove openNode from openNodes
+    // need to remove node from nodes
     removeOpenNodeWithChildren(activeNodeArray)
     navigate(resolvePath(`..`, window.location.pathname))
   }, [activeNodeArray, navigate, removeOpenNodeWithChildren, session, tableId])

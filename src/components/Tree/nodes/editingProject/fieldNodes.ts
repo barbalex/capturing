@@ -1,7 +1,7 @@
 import { dexie, Field } from '../../../../dexieClient'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 
-const fieldNodes = async ({ project, table, fieldId, openNodes }) => {
+const fieldNodes = async ({ project, table, fieldId, nodes }) => {
   const fields: Field[] = await dexie.fields
     .where({
       deleted: 0,

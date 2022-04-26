@@ -18,7 +18,7 @@ export const MobxStore = types
       [],
     ),
     // TODO: this is really visibleNodes i.e. nodes
-    openNodes: types.optional(
+    nodes: types.optional(
       types.array(types.array(types.union(types.string, types.number))),
       [],
     ),
@@ -79,13 +79,13 @@ export const MobxStore = types
       setOpenNodes(val) {
         // need set to ensure contained arrays are unique
         const set = new Set(val.map(JSON.stringify))
-        self.openNodes = Array.from(set).map(JSON.parse)
+        self.nodes = Array.from(set).map(JSON.parse)
       },
       removeOpenNode(val) {
-        self.openNodes = self.openNodes.filter((n) => !isEqual(n, val))
+        self.nodes = self.nodes.filter((n) => !isEqual(n, val))
       },
       removeOpenNodeWithChildren(url) {
-        self.openNodes = self.openNodes.filter((n) => {
+        self.nodes = self.nodes.filter((n) => {
           const urlPartWithEqualLength = n.slice(0, url.length)
           return !isEqual(urlPartWithEqualLength, url)
         })
@@ -100,9 +100,9 @@ export const MobxStore = types
       },
       addOpenNodes(nodes) {
         // need set to ensure contained arrays are unique
-        const set = new Set([...self.openNodes, ...nodes].map(JSON.stringify))
+        const set = new Set([...self.nodes, ...nodes].map(JSON.stringify))
         const newOpenNodes = Array.from(set).map(JSON.parse)
-        self.openNodes = newOpenNodes
+        self.nodes = newOpenNodes
       },
       addNotification(valPassed) {
         const val = {

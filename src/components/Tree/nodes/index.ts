@@ -12,7 +12,7 @@ const buildTree = async ({
   editingProjects,
   pathname,
   activeNodeArray,
-  openNodes,
+  nodes,
   addOpenNodes,
 }) => {
   const projects: Project[] = await dexie.projects
@@ -35,14 +35,14 @@ const buildTree = async ({
             rowId,
             pathname,
             activeNodeArray,
-            openNodes,
+            nodes,
           })
         : await tableNodesEditingData({
             project,
             tableId,
             rowId,
             activeNodeArray,
-            openNodes,
+            nodes,
             addOpenNodes,
           })
       : []

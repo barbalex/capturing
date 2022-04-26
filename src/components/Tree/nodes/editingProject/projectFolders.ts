@@ -7,7 +7,7 @@ const projectFoldersEditingProject = async ({
   fieldId,
   rowId,
   pathname,
-  openNodes,
+  nodes,
 }) => {
   const tableNodesCount = await dexie.ttables
     .where({
@@ -21,7 +21,7 @@ const projectFoldersEditingProject = async ({
     fieldId,
     rowId,
     pathname,
-    openNodes,
+    nodes,
   })
 
   const tileLayerNodes = []

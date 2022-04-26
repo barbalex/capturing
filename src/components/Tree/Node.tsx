@@ -97,7 +97,7 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   const onClickToggle = useCallback(
     (e) => {
       e.stopPropagation()
-      // adjust openNodes
+      // adjust nodes
       handlers.toggle(e)
       // console.log('Node, onClickToggle', { state, data })
       if (state.isOpen) {

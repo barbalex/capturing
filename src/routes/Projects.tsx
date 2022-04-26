@@ -78,10 +78,10 @@ const ProjectsPage = () => {
     document.title = 'Capturing: Projects'
   }, [])
 
-  // on first render set openNodes
+  // on first render set nodes
   // DO NOT add activeNodeArray to useEffet's dependency array or
   // it will not be possible to open multiple branches in tree
-  // as openNodes is overwritten every time activeNodeArray changes
+  // as nodes is overwritten every time activeNodeArray changes
   // TODO: is this needed?
   useEffect(() => {
     // console.log('Project setting initial open nodes', {

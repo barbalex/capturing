@@ -44,7 +44,7 @@ const RowDeleteButton = ({ row }) => {
   const remove = useCallback(() => {
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
-    // need to remove openNode from openNodes
+    // need to remove node from nodes
     removeOpenNodeWithChildren(activeNodeArray)
     navigate(resolvePath(`..`, window.location.pathname))
   }, [activeNodeArray, navigate, removeOpenNodeWithChildren, row, session])

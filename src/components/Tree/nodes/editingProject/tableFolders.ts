@@ -7,7 +7,7 @@ const tableFoldersEditingProject = async ({
   fieldId,
   rowId,
   pathname,
-  openNodes,
+  nodes,
 }) => {
   const rowNodes = await buildRowNodes({
     table,
