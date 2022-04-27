@@ -54,7 +54,7 @@ function App() {
       }
       // persist store on every snapshot
       onSnapshot(st, (ss) => {
-        // console.log('App, snapshot:', ss)
+        console.log('App, snapshot:', ss)
         dexie.stores.put({ id: 'store', ...ss })
       })
     })
