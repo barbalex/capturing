@@ -13,6 +13,7 @@ const tableNodesEditingData = async ({
   nodes,
   addNodes,
 }) => {
+  console.log('tableNodesEditingData', { nodes: nodes.slice() })
   // return if parent is not open (in nodes)
   if (!existsNode({ nodes, url: ['projects', project.id] })) return
 
