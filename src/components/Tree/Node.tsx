@@ -99,7 +99,7 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
       e.stopPropagation()
       // adjust nodes
       handlers.toggle(e)
-      // console.log('Node, onClickToggle', { state, data })
+      console.log('Node, onClickToggle', { state, data })
       if (state.isOpen) {
         removeOpenNode(data.activeNodeArray)
       } else {
