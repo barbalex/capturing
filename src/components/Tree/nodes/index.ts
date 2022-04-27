@@ -61,13 +61,6 @@ const buildNodes = async ({
     projectNodes.push(node)
   }
 
-  const _projectNodes = projectNodes.map((n) => n.activeNodeArray)
-  // add tableFolders only if project is in activeNodeArray
-  const _tableFolderNodes = projectNodes
-    .filter((n) => activeNodeArray.includes(n.id))
-    .map((n) => [...n.activeNodeArray, 'tables'])
-  addNodes([..._projectNodes, ..._tableFolderNodes])
-
   return { id: 'root', children: projectNodes }
 }
 
