@@ -60,7 +60,7 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     setProjectEditing,
     addNode,
     removeNode,
-    removeNodeWithChildren,
+    removeNodesChildren,
   } = store
   const editing = editingProjects.get(data.id)?.editing ?? false
   const isInActiveNodeArray = isEqual(
@@ -102,14 +102,14 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
       handlers.toggle(e)
       console.log('Node, onClickToggle', { state, data })
       if (state.isOpen) {
-        console.log('Node, removing node with children:', data.activeNodeArray)
-        removeNodeWithChildren(data.activeNodeArray)
+        console.log('Node, removing this nodes children:', data.activeNodeArray)
+        removeNodesChildren(data.activeNodeArray)
       } else {
         console.log('Node, adding node:', data.activeNodeArray)
         addNode(data.activeNodeArray)
       }
     },
-    [addNode, data, handlers, removeNodeWithChildren, state],
+    [addNode, data, handlers, removeNodesChildren, state],
   )
 
   const projectEditLabel = editing

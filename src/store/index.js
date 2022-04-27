@@ -96,6 +96,12 @@ export const MobxStore = types
           return !isEqual(urlPartWithEqualLength, url)
         })
       },
+      removeNodesChildren(url) {
+        self.nodes = self.nodes.filter((n) => {
+          const urlPartWithEqualLength = n.slice(0, url.length + 1)
+          return !isEqual(urlPartWithEqualLength, url)
+        })
+      },
       addNode(url) {
         // add all parent nodes
         const addedOpenNodes = []
