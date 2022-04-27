@@ -31,10 +31,10 @@ const tableNodesEditingData = async ({
 
   const tableNodes = []
   for (const table: Table of tablesSorted) {
-    const parentActiveNodeArray = ['projects', table.project_id, 'tables']
-    const parentIsOpen =
-      nodes.filter((n) => isEqual(n, parentActiveNodeArray)).length > 0
-    const isOpen = tableId === table.id ?? parentIsOpen
+    const isOpen = existsNode({
+      nodes,
+      url: ['projects', table.project_id, 'tables', table.id],
+    })
 
     const node = {
       id: table.id,
@@ -45,7 +45,7 @@ const tableNodesEditingData = async ({
       type: 'table',
       object: table,
       activeNodeArray: ['projects', table.project_id, 'tables', table.id],
-      isOpen: true, // TODO: what for?
+      isOpen,
       children: await rowNodes({ project, table, rowId, addNodes, nodes }),
       childrenCount: await dexie.rows
         .where({ deleted: 0, table_id: table.id })
