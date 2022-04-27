@@ -1,7 +1,13 @@
 import { dexie, Row } from '../../../../dexieClient'
 import rowsWithLabelFromRows from '../../../../utils/rowsWithLabelFromRows'
+import existsNode from '../../../../utils/existsNode'
+import rowNodes from './rowNodes'
 
-const rowNodes = async ({ table, rowId, addNodes }) => {
+const rowNodes = async ({ project, table, rowId, addNodes, nodes }) => {
+  // return if parent is not open (in nodes)
+  if (!existsNode({ nodes, url: ['projects', project.id, 'tables', table.id] }))
+    return []
+
   const rows = await dexie.rows
     .where({
       deleted: 0,

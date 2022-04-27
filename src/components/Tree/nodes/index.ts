@@ -4,7 +4,7 @@ import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import tableNodesEditingData from './editingData/tableNodes'
 import projectFoldersEditingProject from './editingProject/projectFolders'
 
-const buildTree = async ({
+const buildNodes = async ({
   projectId,
   tableId,
   rowId,
@@ -26,26 +26,24 @@ const buildTree = async ({
       .where({ deleted: 0, project_id: project.id })
       .count()
     const editing = editingProjects[project.id]?.editing ?? false
-    const children = isOpen
-      ? editing
-        ? await projectFoldersEditingProject({
-            project,
-            tableId,
-            fieldId,
-            rowId,
-            pathname,
-            activeNodeArray,
-            nodes,
-          })
-        : await tableNodesEditingData({
-            project,
-            tableId,
-            rowId,
-            activeNodeArray,
-            nodes,
-            addNodes,
-          })
-      : []
+    const children = editing
+      ? await projectFoldersEditingProject({
+          project,
+          tableId,
+          fieldId,
+          rowId,
+          pathname,
+          activeNodeArray,
+          nodes,
+        })
+      : await tableNodesEditingData({
+          project,
+          tableId,
+          rowId,
+          activeNodeArray,
+          nodes,
+          addNodes,
+        })
     const label = labelFromLabeledTable({
       object: project,
       useLabels: project.use_labels,
@@ -56,7 +54,7 @@ const buildTree = async ({
       type: 'project',
       object: project,
       activeNodeArray: ['projects', project.id],
-      isOpen,
+      isOpen: true, // TODO: what for?
       children,
       childrenCount,
     }
@@ -68,4 +66,4 @@ const buildTree = async ({
   return { id: 'root', children: projectNodes }
 }
 
-export default buildTree
+export default buildNodes

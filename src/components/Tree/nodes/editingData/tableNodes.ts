@@ -35,29 +35,21 @@ const tableNodesEditingData = async ({
     const parentIsOpen =
       nodes.filter((n) => isEqual(n, parentActiveNodeArray)).length > 0
     const isOpen = tableId === table.id ?? parentIsOpen
-    const childrenCount = await dexie.rows
-      .where({ deleted: 0, table_id: table.id })
-      .count()
-    const children = isOpen
-      ? await rowNodes({
-          table,
-          rowId,
-          addNodes,
-        })
-      : []
-    const label = labelFromLabeledTable({
-      object: table,
-      useLabels: project.use_labels,
-    })
+
     const node = {
       id: table.id,
-      label,
+      label: labelFromLabeledTable({
+        object: table,
+        useLabels: project.use_labels,
+      }),
       type: 'table',
       object: table,
       activeNodeArray: ['projects', table.project_id, 'tables', table.id],
-      isOpen,
-      children,
-      childrenCount,
+      isOpen: true, // TODO: what for?
+      children: await rowNodes({ project, table, rowId, addNodes, nodes }),
+      childrenCount: await dexie.rows
+        .where({ deleted: 0, table_id: table.id })
+        .count(),
     }
     tableNodes.push(node)
   }
