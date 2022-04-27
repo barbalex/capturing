@@ -37,7 +37,8 @@ function App() {
   useEffect(() => {
     // on first render regenerate store (if exists)
     dexie.stores.get('store').then((dbStore) => {
-      const st = MobxStore.create(dbStore)
+      // console.log('App, Effect, store from db:', dbStore)
+      const st = MobxStore.create(dbStore.store)
       setStore(st)
       fetchFromServer(st)
       // navigate to previous activeNodeArray - if exists
@@ -54,8 +55,8 @@ function App() {
       }
       // persist store on every snapshot
       onSnapshot(st, (ss) => {
-        console.log('App, snapshot:', ss)
-        dexie.stores.put({ id: 'store', ...ss })
+        // console.log('App, Effect, snapshot:', ss)
+        dexie.stores.put({ id: 'store', store: ss })
       })
     })
 

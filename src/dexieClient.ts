@@ -968,9 +968,7 @@ export class WidgetForField implements IWidgetForField {
 // TODO: update on every change of store
 export interface IStore {
   id: string // always: 'store'
-  active_node_array: (string | number)[]
-  open_nodes: (string | number)[][]
-  single_column_view: number
+  store: Record<string, unknown>
 }
 
 export interface IQueuedUpdate {
