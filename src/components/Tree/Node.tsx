@@ -106,6 +106,7 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
         removeNodesChildren(data.activeNodeArray)
       } else {
         console.log('Node, adding node:', data.activeNodeArray)
+        // TODO: add this nodes folders?
         addNode(data.activeNodeArray)
       }
     },

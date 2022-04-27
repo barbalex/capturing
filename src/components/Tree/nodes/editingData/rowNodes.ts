@@ -5,8 +5,11 @@ import rowNodes from './rowNodes'
 
 const rowNodes = async ({ project, table, rowId, addNodes, nodes }) => {
   // return if parent is not open (in nodes)
-  if (!existsNode({ nodes, url: ['projects', project.id, 'tables', table.id] }))
+  if (
+    !existsNode({ nodes, url: ['projects', project.id, 'tables', table.id] })
+  ) {
     return []
+  }
 
   const rows = await dexie.rows
     .where({
@@ -16,9 +19,9 @@ const rowNodes = async ({ project, table, rowId, addNodes, nodes }) => {
     .toArray()
   const rowsWithLabels = await rowsWithLabelFromRows(rows)
 
-  console.log('rowNodes', { table, rows, rowsWithLabels })
+  // console.log('rowNodes', { table, rows, rowsWithLabels })
 
-  console.log('rowNodes, rowsWithLabels', rowsWithLabels)
+  // console.log('rowNodes, rowsWithLabels', rowsWithLabels)
 
   const rowNodes = []
   for (const row: Row of rowsWithLabels) {
@@ -55,7 +58,7 @@ const rowNodes = async ({ project, table, rowId, addNodes, nodes }) => {
     }
     rowNodes.push(node)
   }
-  addNodes(rowNodes.map((n) => n.activeNodeArray))
+
   return rowNodes
 }
 

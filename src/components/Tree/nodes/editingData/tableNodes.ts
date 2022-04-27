@@ -16,7 +16,7 @@ const tableNodesEditingData = async ({
 }) => {
   // console.log('tableNodesEditingData', { nodes: nodes.slice() })
   // return if parent does not exist (in nodes)
-  if (!existsNode({ nodes, url: ['projects', project.id, 'tables'] })) return
+  if (!existsNode({ nodes, url: ['projects', project.id] })) return
 
   const tables = await dexie.ttables
     .where({
@@ -54,12 +54,7 @@ const tableNodesEditingData = async ({
     }
     tableNodes.push(node)
   }
-  const _tableNodes = tableNodes.map((n) => n.activeNodeArray)
-  // add rowFolder only if project is in activeNodeArray
-  const _rowFolderNodes = tableNodes
-    .filter((n) => activeNodeArray.includes(n.id))
-    .map((n) => [...n.activeNodeArray, 'rows'])
-  addNodes([..._tableNodes, ..._rowFolderNodes])
+
   return tableNodes
 }
 
