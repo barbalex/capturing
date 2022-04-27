@@ -56,6 +56,7 @@ function App() {
       // persist store on every snapshot
       onSnapshot(st, (ss) => {
         // console.log('App, Effect, snapshot:', ss)
+        // TODO: remove from snapshot what should not be persisted (if that exists)
         dexie.stores.put({ id: 'store', store: ss })
       })
     })

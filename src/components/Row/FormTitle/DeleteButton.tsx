@@ -28,7 +28,7 @@ const Title = styled.div`
 const RowDeleteButton = ({ row }) => {
   const navigate = useNavigate()
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeOpenNodeWithChildren } = store
+  const { activeNodeArray, removeNodeWithChildren } = store
   // const filter = { todo: 'TODO: was in store' }
   const session: Session = supabase.auth.session()
 
@@ -45,9 +45,9 @@ const RowDeleteButton = ({ row }) => {
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
     // need to remove node from nodes
-    removeOpenNodeWithChildren(activeNodeArray)
+    removeNodeWithChildren(activeNodeArray)
     navigate(resolvePath(`..`, window.location.pathname))
-  }, [activeNodeArray, navigate, removeOpenNodeWithChildren, row, session])
+  }, [activeNodeArray, navigate, removeNodeWithChildren, row, session])
 
   return (
     <ErrorBoundary>

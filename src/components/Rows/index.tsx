@@ -63,7 +63,7 @@ const RowsComponent = () => {
   const navigate = useNavigate()
 
   const store = useContext(storeContext)
-  const { activeNodeArray, removeOpenNode, formHeight } = store
+  const { activeNodeArray, removeNode, formHeight } = store
 
   // console.log('RowsList rendering')
 
@@ -101,8 +101,8 @@ const RowsComponent = () => {
   }, [navigate, tableId])
 
   const onClickUp = useCallback(() => {
-    removeOpenNode(activeNodeArray)
-  }, [activeNodeArray, removeOpenNode])
+    removeNode(activeNodeArray)
+  }, [activeNodeArray, removeNode])
 
   return (
     <ErrorBoundary>

@@ -54,7 +54,7 @@ const ProjectsPage = () => {
     setTreeWidth,
     setFormWidth,
     setFormHeight,
-    setOpenNodes,
+    setNodes,
     activeNodeArray,
   } = store
 
@@ -88,7 +88,7 @@ const ProjectsPage = () => {
     //   activeNodeArray: activeNodeArray.slice(),
     //   newOpenNodes: nodesFromActiveNodeArray(activeNodeArray),
     // })
-    setOpenNodes(nodesFromActiveNodeArray(activeNodeArray))
+    setNodes(nodesFromActiveNodeArray(activeNodeArray))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

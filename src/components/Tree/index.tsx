@@ -53,6 +53,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
     pathname,
     activeNodeArray,
     nodes,
+    nodes.length,
     addNodes,
   ])
 

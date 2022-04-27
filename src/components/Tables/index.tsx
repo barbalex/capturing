@@ -54,7 +54,7 @@ const TablesComponent = () => {
   const navigate = useNavigate()
 
   const store = useContext(storeContext)
-  const { activeNodeArray, removeOpenNode, formHeight } = store
+  const { activeNodeArray, removeNode, formHeight } = store
 
   const data = useLiveQuery(async () => {
     const [tables, filteredCount, totalCount, projectUser, project] =
@@ -94,8 +94,8 @@ const TablesComponent = () => {
   }, [navigate, projectId])
 
   const onClickUp = useCallback(() => {
-    removeOpenNode(activeNodeArray)
-  }, [activeNodeArray, removeOpenNode])
+    removeNode(activeNodeArray)
+  }, [activeNodeArray, removeNode])
 
   return (
     <ErrorBoundary>

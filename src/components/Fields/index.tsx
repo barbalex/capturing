@@ -54,7 +54,7 @@ const FieldsComponent = () => {
   const { projectId, tableId } = useParams()
   const navigate = useNavigate()
   const store = useContext(storeContext)
-  const { activeNodeArray, removeOpenNode, formHeight } = store
+  const { activeNodeArray, removeNode, formHeight } = store
 
   // console.log('FieldsList rendering')
 
@@ -95,8 +95,8 @@ const FieldsComponent = () => {
   }, [navigate, tableId])
 
   const onClickUp = useCallback(() => {
-    removeOpenNode(activeNodeArray)
-  }, [activeNodeArray, removeOpenNode])
+    removeNode(activeNodeArray)
+  }, [activeNodeArray, removeNode])
 
   return (
     <ErrorBoundary>

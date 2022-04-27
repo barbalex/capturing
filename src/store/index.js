@@ -10,6 +10,12 @@ const EditingProject = types.model('EditingProject', {
   editing: types.boolean,
 })
 
+// Idea: build tree with object / Nodes type containing only id/folderName?
+// const Nodes = types.model({
+//   id: types.string,
+//   children: types.array(Nodes),
+// })
+
 export const MobxStore = types
   .model({
     editingProjects: types.map(EditingProject),
@@ -76,21 +82,21 @@ export const MobxStore = types
       setActiveNodeArray(val) {
         self.activeNodeArray = val
       },
-      setOpenNodes(val) {
+      setNodes(val) {
         // need set to ensure contained arrays are unique
         const set = new Set(val.map(JSON.stringify))
         self.nodes = Array.from(set).map(JSON.parse)
       },
-      removeOpenNode(val) {
+      removeNode(val) {
         self.nodes = self.nodes.filter((n) => !isEqual(n, val))
       },
-      removeOpenNodeWithChildren(url) {
+      removeNodeWithChildren(url) {
         self.nodes = self.nodes.filter((n) => {
           const urlPartWithEqualLength = n.slice(0, url.length)
           return !isEqual(urlPartWithEqualLength, url)
         })
       },
-      addOpenNode(url) {
+      addNode(url) {
         // add all parent nodes
         const addedOpenNodes = []
         for (let i = 1; i <= url.length; i++) {

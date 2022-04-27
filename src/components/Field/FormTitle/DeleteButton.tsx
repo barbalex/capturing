@@ -31,7 +31,7 @@ const FieldDeleteButton = ({ userMayEdit }) => {
   const navigate = useNavigate()
   const { fieldId } = useParams()
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeOpenNodeWithChildren } = store
+  const { activeNodeArray, removeNodeWithChildren } = store
   // const filter = { todo: 'TODO: was in store' }
   const session: Session = supabase.auth.session()
 
@@ -55,9 +55,9 @@ const FieldDeleteButton = ({ userMayEdit }) => {
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
     // need to remove node from nodes
-    removeOpenNodeWithChildren(activeNodeArray)
+    removeNodeWithChildren(activeNodeArray)
     navigate(resolvePath('..', window.location.pathname))
-  }, [activeNodeArray, fieldId, navigate, removeOpenNodeWithChildren, session])
+  }, [activeNodeArray, fieldId, navigate, removeNodeWithChildren, session])
 
   return (
     <ErrorBoundary>

@@ -8,11 +8,11 @@ import StoreContext from '../../../storeContext'
 
 const RowNavButtons = () => {
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeOpenNode } = store
+  const { activeNodeArray, removeNode } = store
 
   const onClickUp = useCallback(() => {
-    removeOpenNode(activeNodeArray)
-  }, [activeNodeArray, removeOpenNode])
+    removeNode(activeNodeArray)
+  }, [activeNodeArray, removeNode])
 
   return (
     <>

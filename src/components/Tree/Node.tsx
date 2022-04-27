@@ -58,8 +58,9 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     activeNodeArray,
     editingProjects,
     setProjectEditing,
-    addOpenNode,
-    removeOpenNode,
+    addNode,
+    removeNode,
+    removeNodeWithChildren,
   } = store
   const editing = editingProjects.get(data.id)?.editing ?? false
   const isInActiveNodeArray = isEqual(
@@ -79,9 +80,9 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
 
   const onClickIndent = useCallback(() => {
     // console.log('Node, onClickIndent')
-    addOpenNode(data.activeNodeArray)
+    addNode(data.activeNodeArray)
     navigate(`/${data.activeNodeArray.join('/')}`)
-  }, [addOpenNode, data.activeNodeArray, navigate])
+  }, [addNode, data.activeNodeArray, navigate])
 
   const onClickProjectEdit = useCallback(
     async (e) => {
@@ -101,12 +102,14 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
       handlers.toggle(e)
       console.log('Node, onClickToggle', { state, data })
       if (state.isOpen) {
-        removeOpenNode(data.activeNodeArray)
+        console.log('Node, removing node with children:', data.activeNodeArray)
+        removeNodeWithChildren(data.activeNodeArray)
       } else {
-        addOpenNode(data.activeNodeArray)
+        console.log('Node, adding node:', data.activeNodeArray)
+        addNode(data.activeNodeArray)
       }
     },
-    [addOpenNode, data, handlers, removeOpenNode, state],
+    [addNode, data, handlers, removeNodeWithChildren, state],
   )
 
   const projectEditLabel = editing

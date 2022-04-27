@@ -10,12 +10,12 @@ import StoreContext from '../../../storeContext'
 const TableNavButtons = () => {
   const { projectId } = useParams()
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeOpenNode, editingProjects } = store
+  const { activeNodeArray, removeNode, editingProjects } = store
   const editing = editingProjects.get(projectId)?.editing ?? false
 
   const onClickUp = useCallback(() => {
-    removeOpenNode(activeNodeArray)
-  }, [activeNodeArray, removeOpenNode])
+    removeNode(activeNodeArray)
+  }, [activeNodeArray, removeNode])
 
   return (
     <>
