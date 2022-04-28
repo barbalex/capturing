@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { useLiveQuery } from 'dexie-react-hooks'
 
@@ -15,16 +15,16 @@ const Container = styled.div`
 const roleTypes = [
   {
     value: 'project_reader',
-    label: "project_reader:                              read a project's data",
+    label: "project_reader: read a project's data",
   },
   {
     value: 'project_editor',
-    label: 'project_editor:        additionally: edit rows and files',
+    label: 'project_editor: additionally: edit rows and files',
   },
   {
     value: 'project_manager',
     label:
-      'project_manager:   additionally: edit projects and their structure (tables, fields, layers)',
+      'project_manager: additionally: edit projects and their structure (tables, fields, layers)',
   },
   {
     value: 'account_manager',
@@ -33,11 +33,19 @@ const roleTypes = [
   },
 ]
 
-const AddProjectUser = () => {
+const AddProjectUser = ({ setAddNew }) => {
   console.log('AddProjectUser, RoleTypeEnum', RoleTypeEnum)
-  const onBlur = useCallback(() => {
-    console.log('TODO:')
-  }, [])
+
+  const [state, setState] = useState({ user_email: '', role: undefined })
+  const onBlur = useCallback(
+    (e) => {
+      setState({ ...state, [e.target.name]: e.target.value })
+      if (state.user_email && state.role) {
+        // TODO: insert project_user
+      }
+    },
+    [state],
+  )
 
   return (
     <Container>

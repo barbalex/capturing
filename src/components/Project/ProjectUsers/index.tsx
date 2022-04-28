@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { motion, useAnimation } from 'framer-motion'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
+import Button from '@mui/material/Button'
 import List from '@mui/material/List'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Session } from '@supabase/supabase-js'
@@ -39,10 +40,15 @@ const Title = styled.div`
 const ProjectUsersContainer = styled(List)`
   padding: 0 0 8px 0;
 `
+const AddButton = styled(Button)`
+  margin-left: 8px;
+`
 
 const ProjectUsersIndex = () => {
   const session: Session = supabase.auth.session()
   const { projectId } = useParams()
+
+  const [addNew, setAddNew] = useState(false)
 
   const [open, setOpen] = useState(false)
   const anim = useAnimation()
@@ -64,6 +70,10 @@ const ProjectUsersIndex = () => {
     },
     [anim, open],
   )
+
+  const onClickAddUser = useCallback(() => {
+    setAddNew(true)
+  }, [])
 
   const data = useLiveQuery(async () => {
     // TODO:
@@ -107,7 +117,16 @@ const ProjectUsersIndex = () => {
             <ProjectUsersContainer>
               <ProjectUsersComponent />
             </ProjectUsersContainer>
-            {userMayEdit && <AddProjectUser />}
+            {userMayEdit && !addNew && (
+              <AddButton
+                title="Neue mitarbeitende Person hinzufügen"
+                variant="outlined"
+                onClick={onClickAddUser}
+              >
+                Hinzufügen
+              </AddButton>
+            )}
+            {userMayEdit && addNew && <AddProjectUser setAddNew={setAddNew} />}
           </>
         )}
       </motion.div>
