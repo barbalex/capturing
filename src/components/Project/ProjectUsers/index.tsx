@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { motion, useAnimation } from 'framer-motion'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
+import List from '@mui/material/List'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Session } from '@supabase/supabase-js'
 import { useParams } from 'react-router-dom'
@@ -20,9 +21,6 @@ const TitleRow = styled.div`
   display: flex;
   height: ${constants.titleRowHeight}px;
   justify-content: space-between;
-  margin-left: -10px;
-  margin-right: -10px;
-  margin-bottom: 10px;
   padding: 0 10px;
   cursor: pointer;
   user-select: none;
@@ -38,8 +36,8 @@ const Title = styled.div`
   margin-top: auto;
   margin-bottom: auto;
 `
-const ProjectUsersContainer = styled.div`
-  padding-bottom: 8px;
+const ProjectUsersContainer = styled(List)`
+  padding: 0 0 8px 0;
 `
 
 const ProjectUsersIndex = () => {

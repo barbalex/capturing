@@ -497,6 +497,13 @@ export class ProjectUser implements IProjectUser {
     if (server_rev_at) this.server_rev_at = server_rev_at
     this.deleted = deleted ?? 0
   }
+
+  async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    const was = { ...this }
+    this.deleted = 1
+    dexie.project_users.put(this)
+    return this.updateOnServer({ was, is: this, session })
+  }
 }
 
 export interface IProject {

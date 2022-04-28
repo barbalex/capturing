@@ -24,9 +24,7 @@ const StyledListItem = styled(ListItem)`
   border-color: rgba(74, 20, 140, 0.1);
   cursor: pointer;
 `
-const RemoveIcon = styled(FaRegTimesCircle)`
-  /*color: red;*/
-`
+const RemoveIcon = styled(FaRegTimesCircle)``
 const StyledListItemText = styled(ListItemText)`
   p {
     font-size: x-small;

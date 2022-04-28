@@ -16,10 +16,12 @@ import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
 import ProjectUsers from './ProjectUsers'
 
-const FieldsContainer = styled.div`
-  padding: 10px;
+const FormContainer = styled.div`
   height: 100%;
   overflow-y: auto;
+`
+const FieldsContainer = styled.div`
+  padding: 10px;
 `
 
 type ProjectFormProps = {
@@ -113,83 +115,85 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
 
   return (
     <ErrorBoundary>
-      <FieldsContainer
-        onBlur={(e) => {
-          if (!e.currentTarget.contains(e.relatedTarget)) {
-            // focus left the container
-            // https://github.com/facebook/react/issues/6410#issuecomment-671915381
-            updateOnServer()
-          }
-        }}
-      >
-        {showDeleted && (
-          <>
-            {showFilter ? (
-              <JesNo
-                key={`${row.id}deleted`}
-                label="gelöscht"
-                name="deleted"
-                value={row.deleted}
-                onBlur={onBlur}
-                error={errors?.project?.deleted}
-              />
-            ) : (
-              <Checkbox2States
-                key={`${row.id}deleted`}
-                label="gelöscht"
-                name="deleted"
-                value={row.deleted}
-                onBlur={onBlur}
-                error={errors?.project?.deleted}
-              />
-            )}
-          </>
-        )}
-        <TextField
-          key={`${row.id}name`}
-          name="name"
-          label="Name"
-          value={row.name}
-          onBlur={onBlur}
-          error={errors?.project?.name}
-        />
-        <Checkbox2States
-          key={`${row.id}use_labels`}
-          label="Zusätzlich zu Namen Beschriftungen verwenden"
-          name="use_labels"
-          value={row.use_labels}
-          onBlur={onBlur}
-          error={errors?.project?.use_labels}
-        />
-        {row.use_labels === 1 && (
+      <FormContainer>
+        <FieldsContainer
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget)) {
+              // focus left the container
+              // https://github.com/facebook/react/issues/6410#issuecomment-671915381
+              updateOnServer()
+            }
+          }}
+        >
+          {showDeleted && (
+            <>
+              {showFilter ? (
+                <JesNo
+                  key={`${row.id}deleted`}
+                  label="gelöscht"
+                  name="deleted"
+                  value={row.deleted}
+                  onBlur={onBlur}
+                  error={errors?.project?.deleted}
+                />
+              ) : (
+                <Checkbox2States
+                  key={`${row.id}deleted`}
+                  label="gelöscht"
+                  name="deleted"
+                  value={row.deleted}
+                  onBlur={onBlur}
+                  error={errors?.project?.deleted}
+                />
+              )}
+            </>
+          )}
           <TextField
-            key={`${row.id}label`}
-            name="label"
-            label="Beschriftung"
-            value={row.label}
+            key={`${row.id}name`}
+            name="name"
+            label="Name"
+            value={row.name}
             onBlur={onBlur}
-            error={errors?.project?.label}
+            error={errors?.project?.name}
           />
-        )}
-        <TextField
-          key={`${row.id}crs`}
-          name="crs"
-          label="CRS (Koordinaten-Referenz-System)"
-          value={row.crs}
-          type="number"
-          onBlur={onBlur}
-          error={errors?.project?.crs}
-        />
-        <TextField
-          key={`${row.id}account_id`}
-          name="account_id"
-          label="Konto"
-          value={row.account_id}
-          onBlur={onBlur}
-          error={errors?.project?.account_id}
-        />
+          <Checkbox2States
+            key={`${row.id}use_labels`}
+            label="Zusätzlich zu Namen Beschriftungen verwenden"
+            name="use_labels"
+            value={row.use_labels}
+            onBlur={onBlur}
+            error={errors?.project?.use_labels}
+          />
+          {row.use_labels === 1 && (
+            <TextField
+              key={`${row.id}label`}
+              name="label"
+              label="Beschriftung"
+              value={row.label}
+              onBlur={onBlur}
+              error={errors?.project?.label}
+            />
+          )}
+          <TextField
+            key={`${row.id}crs`}
+            name="crs"
+            label="CRS (Koordinaten-Referenz-System)"
+            value={row.crs}
+            type="number"
+            onBlur={onBlur}
+            error={errors?.project?.crs}
+          />
+          <TextField
+            key={`${row.id}account_id`}
+            name="account_id"
+            label="Konto"
+            value={row.account_id}
+            onBlur={onBlur}
+            error={errors?.project?.account_id}
+          />
+        </FieldsContainer>
         <ProjectUsers />
-      </FieldsContainer>
+      </FormContainer>
     </ErrorBoundary>
   )
 }
