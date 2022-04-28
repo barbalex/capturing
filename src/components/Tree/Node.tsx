@@ -59,8 +59,6 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     editingProjects,
     setProjectEditing,
     addNode,
-    removeNode,
-    removeNodesChildren,
     removeNodeWithChildren,
   } = store
   const editing = editingProjects.get(data.id)?.editing ?? false
@@ -68,7 +66,8 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     activeNodeArray.slice(0, data.activeNodeArray.length),
     data.activeNodeArray.slice(),
   )
-  const isActive = data.id === last(activeNodeArray.filter((e) => isUuid.v1(e)))
+  // const isActive = data.id === last(activeNodeArray.filter((e) => isUuid.v1(e)))
+  const isActive = isEqual(data.activeNodeArray, activeNodeArray)
 
   const userMayEditStructure: boolean = useLiveQuery(async () => {
     const projectUser = await dexie.project_users.get({
@@ -101,12 +100,10 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
       e.stopPropagation()
       // adjust nodes
       handlers.toggle(e)
-      console.log('Node, onClickToggle', { state, data })
+      // console.log('Node, onClickToggle', { state, data })
       if (state.isOpen) {
-        console.log('Node, removing this nodes children:', data.activeNodeArray)
         removeNodeWithChildren(data.activeNodeArray)
       } else {
-        console.log('Node, adding node:', data.activeNodeArray)
         // TODO: add this nodes folders?
         addNode(data.activeNodeArray)
       }
