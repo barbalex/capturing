@@ -7,7 +7,6 @@ const projectFoldersEditingProject = async ({
   tableId,
   fieldId,
   rowId,
-  pathname,
   nodes,
 }) => {
   // return if parent does not exist (in nodes)
@@ -24,7 +23,6 @@ const projectFoldersEditingProject = async ({
     tableId,
     fieldId,
     rowId,
-    pathname,
     nodes,
   })
 

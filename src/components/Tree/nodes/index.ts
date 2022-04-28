@@ -11,7 +11,6 @@ const buildNodes = async ({
   rowId,
   fieldId,
   editingProjects,
-  pathname,
   activeNodeArray,
   nodes,
 }) => {
@@ -32,7 +31,6 @@ const buildNodes = async ({
           tableId,
           fieldId,
           rowId,
-          pathname,
           activeNodeArray,
           nodes,
         })

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react'
-import { useParams, useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Tree } from 'react-arborist'
 import styled from 'styled-components'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -17,15 +17,9 @@ const Container = styled.div`
 
 const TreeComponent = React.forwardRef((props, ref) => {
   const { projectId, tableId, rowId, fieldId } = useParams()
-  const { pathname } = useLocation()
 
   const store = useContext(storeContext)
-  const {
-    editingProjects: editingProjectsRaw,
-    activeNodeArray,
-    nodes,
-    addNodes,
-  } = store
+  const { editingProjects: editingProjectsRaw, activeNodeArray, nodes } = store
   const editingProjects = getSnapshot(editingProjectsRaw)
 
   const [data, setData] = useState({
@@ -39,7 +33,6 @@ const TreeComponent = React.forwardRef((props, ref) => {
       rowId,
       fieldId,
       editingProjects,
-      pathname,
       activeNodeArray,
       nodes,
     }).then((dataBuilt) => setData(dataBuilt))
@@ -49,10 +42,9 @@ const TreeComponent = React.forwardRef((props, ref) => {
     rowId,
     fieldId,
     editingProjects,
-    pathname,
     activeNodeArray,
-    // nodes,
-    nodes.length,
+    nodes.length, // need length because array of array os not observed
+    nodes,
   ])
 
   console.log('Tree, nodes:', getSnapshot(nodes))

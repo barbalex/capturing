@@ -2,7 +2,7 @@ import { dexie, Row } from '../../../../dexieClient'
 import rowsWithLabelFromRows from '../../../../utils/rowsWithLabelFromRows'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 
-const rowNodes = async ({ table, rowId, nodes }) => {
+const rowNodes = async ({ project, table, rowId, nodes }) => {
   // return if parent does not exist (in nodes)
   if (
     !isNodeOpen({

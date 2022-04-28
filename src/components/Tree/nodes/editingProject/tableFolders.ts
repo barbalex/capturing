@@ -1,3 +1,4 @@
+import { dexie } from '../../../../dexieClient'
 import buildRowNodes from './rowNodes'
 import buildFieldNodes from './fieldNodes'
 import isNodeOpen from '../../../../utils/isNodeOpen'
@@ -7,7 +8,6 @@ const tableFoldersEditingProject = async ({
   table,
   fieldId,
   rowId,
-  pathname,
   nodes,
 }) => {
   // return if parent does not exist (in nodes)
@@ -17,12 +17,20 @@ const tableFoldersEditingProject = async ({
     return
   }
 
-  const rowNodes = await buildRowNodes({
-    table,
-    rowId,
-    nodes,
-  })
+  const rowNodes = await buildRowNodes({ project, table, rowId, nodes })
+  const rowNodesLength = await dexie.rows
+    .where({
+      deleted: 0,
+      table_id: table.id,
+    })
+    .count()
   const fieldNodes = await buildFieldNodes({ project, table, fieldId, nodes })
+  const fieldNodesLength = await dexie.fields
+    .where({
+      deleted: 0,
+      table_id: table.id,
+    })
+    .count()
   const tableFolderNodes = [
     {
       id: `${table.id}rowsFolder`,
@@ -35,7 +43,7 @@ const tableFoldersEditingProject = async ({
         url: ['projects', project.id, 'tables', table.id, 'rows'],
       }),
       children: rowNodes,
-      childrenCount: rowNodes.length,
+      childrenCount: rowNodesLength,
     },
     {
       id: `${table.id}fieldsFolder`,
@@ -48,7 +56,7 @@ const tableFoldersEditingProject = async ({
         url: ['projects', project.id, 'tables', table.id, 'fields'],
       }),
       children: fieldNodes,
-      childrenCount: fieldNodes.length,
+      childrenCount: fieldNodesLength,
     },
   ]
 

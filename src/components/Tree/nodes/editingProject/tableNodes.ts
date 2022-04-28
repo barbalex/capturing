@@ -9,7 +9,6 @@ const tableNodesEditingProject = async ({
   tableId,
   fieldId,
   rowId,
-  pathname,
   nodes,
 }) => {
   // return if parent does not exist (in nodes)
@@ -28,15 +27,7 @@ const tableNodesEditingProject = async ({
 
   const tableNodes = []
   for (const table: Table of tablesSorted) {
-    const ownActiveNodeArray = [
-      'projects',
-      table.project_id,
-      'tables',
-      table.id,
-    ]
-    // const isInActiveNodes =
-    //   nodes.filter((n) => isEqual(n, ownActiveNodeArray)).length > 0
-    // if (!isInActiveNodes) return
+    const ownActiveNodeArray = ['projects', project.id, 'tables', table.id]
 
     const isOpen = tableId === table.id
     const childrenCount = await dexie.rows
@@ -48,7 +39,6 @@ const tableNodesEditingProject = async ({
           table,
           fieldId,
           rowId,
-          pathname,
           nodes,
         })
       : []
@@ -64,7 +54,7 @@ const tableNodesEditingProject = async ({
       activeNodeArray: ownActiveNodeArray,
       isOpen: isNodeOpen({
         nodes,
-        url: ['projects', project.id, 'tables', table.id],
+        url: ownActiveNodeArray,
       }),
       children,
       childrenCount,
