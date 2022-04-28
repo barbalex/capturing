@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton'
 import { FaRegTimesCircle } from 'react-icons/fa'
 import { Session } from '@supabase/supabase-js'
 
-import { dexie, ProjectUser } from '../../../dexieClient'
+import { ProjectUser } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 
 const StyledListItem = styled(ListItem)`
