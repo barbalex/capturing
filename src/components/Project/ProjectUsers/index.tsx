@@ -10,7 +10,8 @@ import { useParams } from 'react-router-dom'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import constants from '../../../utils/constants'
 import ProjectUser from './ProjectUser'
-import { dexie, IProjectUser } from '../../../dexieClient'
+import AddProjectUser from './AddProjectUser'
+import { dexie } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 
 const TitleRow = styled.div`
@@ -101,9 +102,12 @@ const ProjectUsers = () => {
       </TitleRow>
       <motion.div animate={anim} transition={{ type: 'just', duration: 0.2 }}>
         {open && (
-          <ProjectUsersContainer>
-            <ProjectUser />
-          </ProjectUsersContainer>
+          <>
+            <ProjectUsersContainer>
+              <ProjectUser />
+            </ProjectUsersContainer>
+            <AddProjectUser />
+          </>
         )}
       </motion.div>
     </ErrorBoundary>
