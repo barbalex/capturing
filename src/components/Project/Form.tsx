@@ -14,6 +14,7 @@ import Spinner from '../shared/Spinner'
 import { dexie, IProject } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
+import ProjectUsers from './ProjectUsers'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -187,7 +188,7 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
           onBlur={onBlur}
           error={errors?.project?.account_id}
         />
-        <p>{'TODO: add project_users'}</p>
+        <ProjectUsers />
       </FieldsContainer>
     </ErrorBoundary>
   )
