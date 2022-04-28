@@ -475,6 +475,11 @@ export interface IProjectUser {
   deleted: number
 }
 
+type ProjectUserUpdateProps = {
+  was: IProjectUser
+  is: IProjectUser
+  session: Session
+}
 export class ProjectUser implements IProjectUser {
   id: string
   project_id: string
@@ -503,6 +508,23 @@ export class ProjectUser implements IProjectUser {
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     this.deleted = deleted ?? 0
+  }
+  async updateOnServer({ was, is, session }: ProjectUserUpdateProps) {
+    const isReved = {
+      ...is,
+      client_rev_at: new window.Date().toISOString(),
+      client_rev_by: session.user?.email ?? session.user?.id,
+    }
+    const update = new QueuedUpdate(
+      undefined,
+      undefined,
+      'projects',
+      JSON.stringify(isReved),
+      undefined,
+      this.id,
+      JSON.stringify(was),
+    )
+    return dexie.queued_updates.add(update)
   }
 
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
