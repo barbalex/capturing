@@ -12,20 +12,6 @@ const projectFoldersEditingProject = async ({
   // return if parent does not exist (in nodes)
   if (!isNodeOpen({ nodes, url: ['projects', project.id] })) return
 
-  const tableNodesCount = await dexie.ttables
-    .where({
-      deleted: 0,
-      project_id: project.id,
-    })
-    .count()
-  const tableNodes = await buildTableNodes({
-    project,
-    tableId,
-    fieldId,
-    rowId,
-    nodes,
-  })
-
   const tileLayerNodes = []
   // TODO: query tile layers and build their nodes
 
@@ -37,8 +23,19 @@ const projectFoldersEditingProject = async ({
       object: project,
       activeNodeArray: ['projects', project.id, 'tables'],
       isOpen: isNodeOpen({ nodes, url: ['projects', project.id, 'tables'] }),
-      children: tableNodes,
-      childrenCount: tableNodesCount,
+      children: await buildTableNodes({
+        project,
+        tableId,
+        fieldId,
+        rowId,
+        nodes,
+      }),
+      childrenCount: await dexie.ttables
+        .where({
+          deleted: 0,
+          project_id: project.id,
+        })
+        .count(),
     },
     {
       id: `${project.id}/tileLayersFolder`,
@@ -54,6 +51,7 @@ const projectFoldersEditingProject = async ({
       childrenCount: tileLayerNodes.length,
     },
   ]
+
   return folderNodes
 }
 

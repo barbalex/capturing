@@ -11,26 +11,12 @@ const tableFoldersEditingProject = async ({
   nodes,
 }) => {
   // return if parent does not exist (in nodes)
+
   if (
     !isNodeOpen({ nodes, url: ['projects', project.id, 'tables', table.id] })
   ) {
     return
   }
-
-  const rowNodes = await buildRowNodes({ project, table, rowId, nodes })
-  const rowNodesLength = await dexie.rows
-    .where({
-      deleted: 0,
-      table_id: table.id,
-    })
-    .count()
-  const fieldNodes = await buildFieldNodes({ project, table, fieldId, nodes })
-  const fieldNodesLength = await dexie.fields
-    .where({
-      deleted: 0,
-      table_id: table.id,
-    })
-    .count()
 
   const tableFolderNodes = [
     {
@@ -43,8 +29,13 @@ const tableFoldersEditingProject = async ({
         nodes,
         url: ['projects', project.id, 'tables', table.id, 'rows'],
       }),
-      children: rowNodes,
-      childrenCount: rowNodesLength,
+      children: await buildRowNodes({ project, table, rowId, nodes }),
+      childrenCount: await dexie.rows
+        .where({
+          deleted: 0,
+          table_id: table.id,
+        })
+        .count(),
     },
     {
       id: `${table.id}fieldsFolder`,
@@ -56,8 +47,13 @@ const tableFoldersEditingProject = async ({
         nodes,
         url: ['projects', project.id, 'tables', table.id, 'fields'],
       }),
-      children: fieldNodes,
-      childrenCount: fieldNodesLength,
+      children: await buildFieldNodes({ project, table, fieldId, nodes }),
+      childrenCount: await dexie.fields
+        .where({
+          deleted: 0,
+          table_id: table.id,
+        })
+        .count(),
     },
   ]
 

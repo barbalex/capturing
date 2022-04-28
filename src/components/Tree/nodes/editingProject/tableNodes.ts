@@ -29,26 +29,12 @@ const tableNodesEditingProject = async ({
   for (const table: Table of tablesSorted) {
     const ownActiveNodeArray = ['projects', project.id, 'tables', table.id]
 
-    const isOpen = tableId === table.id
-    const childrenCount = await dexie.rows
-      .where({ deleted: 0, table_id: table.id })
-      .count()
-    const children = isOpen
-      ? await buildFolders({
-          project,
-          table,
-          fieldId,
-          rowId,
-          nodes,
-        })
-      : []
-    const label = labelFromLabeledTable({
-      object: table,
-      useLabels: project.use_labels,
-    })
     const node = {
       id: table.id,
-      label,
+      label: labelFromLabeledTable({
+        object: table,
+        useLabels: project.use_labels,
+      }),
       type: 'table',
       object: table,
       activeNodeArray: ownActiveNodeArray,
@@ -56,8 +42,16 @@ const tableNodesEditingProject = async ({
         nodes,
         url: ownActiveNodeArray,
       }),
-      children,
-      childrenCount,
+      children: await buildFolders({
+        project,
+        table,
+        fieldId,
+        rowId,
+        nodes,
+      }),
+      childrenCount: await dexie.rows
+        .where({ deleted: 0, table_id: table.id })
+        .count(),
     }
     tableNodes.push(node)
   }

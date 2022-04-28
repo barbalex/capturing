@@ -23,16 +23,6 @@ const rowNodes = async ({ project, table, rowId, nodes }) => {
 
   const rowNodes = []
   for (const row: Row of rowsWithLabels) {
-    // const children = isOpen
-    //   ? await tableNodes({
-    //       useLabels: project.use_labels,
-    //       project,
-    //       tableId,
-    //       fieldId,
-    //       rowId,
-    //     })
-    //   : []
-
     const node = {
       id: row.id,
       label: row.label,
