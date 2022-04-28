@@ -1,8 +1,7 @@
-import isEqual from 'lodash/isEqual'
-
 import { dexie, Table } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
+import isNodeOpen from '../../../../utils/isNodeOpen'
 import buildFolders from './tableFolders'
 
 const tableNodesEditingProject = async ({
@@ -13,6 +12,9 @@ const tableNodesEditingProject = async ({
   pathname,
   nodes,
 }) => {
+  // return if parent does not exist (in nodes)
+  if (!isNodeOpen({ nodes, url: ['projects', project.id, 'tables'] })) return
+
   const tables = await dexie.ttables
     .where({
       deleted: 0,
@@ -47,6 +49,7 @@ const tableNodesEditingProject = async ({
           fieldId,
           rowId,
           pathname,
+          nodes,
         })
       : []
     const label = labelFromLabeledTable({
@@ -59,7 +62,10 @@ const tableNodesEditingProject = async ({
       type: 'table',
       object: table,
       activeNodeArray: ownActiveNodeArray,
-      isOpen,
+      isOpen: isNodeOpen({
+        nodes,
+        url: ['projects', project.id, 'tables', table.id],
+      }),
       children,
       childrenCount,
     }

@@ -1,9 +1,9 @@
 import isEqual from 'lodash/isEqual'
 
-const existsNode = ({ nodes, url }) => {
+const isNodeOpen = ({ nodes, url }) => {
   if (!url) return false
 
   return nodes.some((n) => isEqual(n, url))
 }
 
-export default existsNode
+export default isNodeOpen

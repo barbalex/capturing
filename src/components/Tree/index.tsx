@@ -42,7 +42,6 @@ const TreeComponent = React.forwardRef((props, ref) => {
       pathname,
       activeNodeArray,
       nodes,
-      addNodes,
     }).then((dataBuilt) => setData(dataBuilt))
   }, [
     projectId,
@@ -52,9 +51,8 @@ const TreeComponent = React.forwardRef((props, ref) => {
     editingProjects,
     pathname,
     activeNodeArray,
-    nodes,
-    // nodes.length,
-    addNodes,
+    // nodes,
+    nodes.length,
   ])
 
   console.log('Tree, nodes:', getSnapshot(nodes))

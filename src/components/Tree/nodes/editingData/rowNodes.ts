@@ -1,12 +1,12 @@
 import { dexie, Row } from '../../../../dexieClient'
 import rowsWithLabelFromRows from '../../../../utils/rowsWithLabelFromRows'
-import existsNode from '../../../../utils/existsNode'
+import isNodeOpen from '../../../../utils/isNodeOpen'
 import rowNodes from './rowNodes'
 
-const rowNodes = async ({ project, table, rowId, addNodes, nodes }) => {
+const rowNodes = async ({ project, table, rowId, nodes }) => {
   // return if parent is not open (in nodes)
   if (
-    !existsNode({ nodes, url: ['projects', project.id, 'tables', table.id] })
+    !isNodeOpen({ nodes, url: ['projects', project.id, 'tables', table.id] })
   ) {
     return []
   }

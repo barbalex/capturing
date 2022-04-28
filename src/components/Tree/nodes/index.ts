@@ -1,6 +1,7 @@
 import { dexie, Project } from '../../../dexieClient'
 import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
+import isNodeOpen from '../../../utils/isNodeOpen'
 import tableNodesEditingData from './editingData/tableNodes'
 import projectFoldersEditingProject from './editingProject/projectFolders'
 
@@ -13,7 +14,6 @@ const buildNodes = async ({
   pathname,
   activeNodeArray,
   nodes,
-  addNodes,
 }) => {
   const projects: Project[] = await dexie.projects
     .where({ deleted: 0 })
@@ -21,7 +21,7 @@ const buildNodes = async ({
 
   const projectNodes = []
   for (const project of projects) {
-    const isOpen = projectId === project.id
+    const isOpen = isNodeOpen({ nodes, url: ['projects', project.id] })
     const childrenCount = await dexie.ttables
       .where({ deleted: 0, project_id: project.id })
       .count()
@@ -42,7 +42,6 @@ const buildNodes = async ({
           rowId,
           activeNodeArray,
           nodes,
-          addNodes,
         })
     const label = labelFromLabeledTable({
       object: project,
@@ -54,7 +53,7 @@ const buildNodes = async ({
       type: 'project',
       object: project,
       activeNodeArray: ['projects', project.id],
-      isOpen: true, // TODO: what for?
+      isOpen, // TODO: what for?
       children,
       childrenCount,
     }

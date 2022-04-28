@@ -1,5 +1,6 @@
 import buildRowNodes from './rowNodes'
 import buildFieldNodes from './fieldNodes'
+import isNodeOpen from '../../../../utils/isNodeOpen'
 
 const tableFoldersEditingProject = async ({
   project,
@@ -9,6 +10,13 @@ const tableFoldersEditingProject = async ({
   pathname,
   nodes,
 }) => {
+  // return if parent does not exist (in nodes)
+  if (
+    !isNodeOpen({ nodes, url: ['projects', project.id, 'tables', table.id] })
+  ) {
+    return
+  }
+
   const rowNodes = await buildRowNodes({
     table,
     rowId,
@@ -21,7 +29,10 @@ const tableFoldersEditingProject = async ({
       type: 'rowsFolder',
       object: table,
       activeNodeArray: ['projects', project.id, 'tables', table.id, 'rows'],
-      isOpen: pathname.includes(`/projects/${project.id}/tables/${table.id}`),
+      isOpen: isNodeOpen({
+        nodes,
+        url: ['projects', project.id, 'tables', table.id, 'rows'],
+      }),
       children: rowNodes,
       childrenCount: rowNodes.length,
     },
@@ -31,7 +42,10 @@ const tableFoldersEditingProject = async ({
       type: 'fieldsFolder',
       object: table,
       activeNodeArray: ['projects', project.id, 'tables', table.id, 'fields'],
-      isOpen: pathname.includes(`/projects/${project.id}/tables/${table.id}`),
+      isOpen: isNodeOpen({
+        nodes,
+        url: ['projects', project.id, 'tables', table.id, 'fields'],
+      }),
       children: fieldNodes,
       childrenCount: fieldNodes.length,
     },

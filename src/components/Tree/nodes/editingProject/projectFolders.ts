@@ -1,5 +1,6 @@
 import buildTableNodes from './tableNodes'
 import { dexie } from '../../../../dexieClient'
+import isNodeOpen from '../../../../utils/isNodeOpen'
 
 const projectFoldersEditingProject = async ({
   project,
@@ -9,6 +10,9 @@ const projectFoldersEditingProject = async ({
   pathname,
   nodes,
 }) => {
+  // return if parent does not exist (in nodes)
+  if (!isNodeOpen({ nodes, url: ['projects', project.id] })) return
+
   const tableNodesCount = await dexie.ttables
     .where({
       deleted: 0,
@@ -34,7 +38,7 @@ const projectFoldersEditingProject = async ({
       type: 'projectFolder',
       object: project,
       activeNodeArray: ['projects', project.id, 'tables'],
-      isOpen: pathname.includes(`/projects/${project.id}/tables`),
+      isOpen: isNodeOpen({ nodes, url: ['projects', project.id, 'tables'] }),
       children: tableNodes,
       childrenCount: tableNodesCount,
     },
@@ -44,7 +48,10 @@ const projectFoldersEditingProject = async ({
       type: 'tileLayerFolder',
       object: project,
       activeNodeArray: ['projects', project.id, 'tile-layers'],
-      isOpen: pathname.includes(`/projects/${project.id}/tile-layers`),
+      isOpen: isNodeOpen({
+        nodes,
+        url: ['projects', project.id, 'tile-layers'],
+      }),
       children: tileLayerNodes,
       childrenCount: tileLayerNodes.length,
     },
