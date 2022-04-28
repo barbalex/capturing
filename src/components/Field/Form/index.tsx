@@ -62,7 +62,6 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
     unsetError('table')
   }, [fieldId, unsetError])
 
-  // const data = {}
   const data = useLiveQuery(async () => {
     const [project, optionsTables, row, fields, fieldTypes, projectUser] =
       await Promise.all([
