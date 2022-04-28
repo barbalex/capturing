@@ -38,7 +38,7 @@ function App() {
     // on first render regenerate store (if exists)
     dexie.stores.get('store').then((dbStore) => {
       // console.log('App, Effect, store from db:', dbStore)
-      const st = MobxStore.create(dbStore.store)
+      const st = MobxStore.create(dbStore?.store)
       setStore(st)
       fetchFromServer(st)
       // navigate to previous activeNodeArray - if exists
