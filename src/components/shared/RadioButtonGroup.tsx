@@ -31,10 +31,18 @@ const NoDataMessage = styled.div`
   font-size: small;
   color: grey;
 `
+const StyledControlLabel = styled(FormControlLabel)`
+  min-height: 24px;
+  .MuiFormControlLabel-label {
+    font-size: ${(props) => props.labelsize * 1}rem !important;
+    white-space: pre-wrap;
+  }
+`
 
 const RadioButtonGroup = ({
   value: valuePassed,
   label,
+  labelSize = 1,
   name,
   error,
   helperText = '',
@@ -109,7 +117,9 @@ const RadioButtonGroup = ({
       aria-describedby={`${label}ErrorText`}
       variant="standard"
     >
-      <StyledFormLabel component="legend">{label}</StyledFormLabel>
+      <StyledFormLabel component="legend" labelsize={labelSize}>
+        {label}
+      </StyledFormLabel>
       <RadioGroup
         aria-label={label}
         value={valueSelected}
@@ -117,11 +127,12 @@ const RadioButtonGroup = ({
       >
         {dataSource.length ? (
           dataSource.map((e, index) => (
-            <FormControlLabel
+            <StyledControlLabel
               key={index}
               value={toStringIfPossible(e.value)}
               control={<StyledRadio color="primary" />}
               label={e.label}
+              labelsize={labelSize}
               onClick={onClickButton}
             />
           ))
