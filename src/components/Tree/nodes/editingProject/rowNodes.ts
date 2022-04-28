@@ -1,7 +1,18 @@
 import { dexie, Row } from '../../../../dexieClient'
 import rowsWithLabelFromRows from '../../../../utils/rowsWithLabelFromRows'
+import isNodeOpen from '../../../../utils/isNodeOpen'
 
 const rowNodes = async ({ table, rowId, nodes }) => {
+  // return if parent does not exist (in nodes)
+  if (
+    !isNodeOpen({
+      nodes,
+      url: ['projects', project.id, 'tables', table.id, 'rows'],
+    })
+  ) {
+    return
+  }
+
   const rows = await dexie.rows
     .where({
       deleted: 0,
@@ -12,10 +23,6 @@ const rowNodes = async ({ table, rowId, nodes }) => {
 
   const rowNodes = []
   for (const row: Row of rowsWithLabels) {
-    const isOpen = rowId === row.id
-    const childrenCount = await dexie.ttables
-      .where({ deleted: 0, parent_id: table.id })
-      .count()
     // const children = isOpen
     //   ? await tableNodes({
     //       useLabels: project.use_labels,
@@ -39,9 +46,14 @@ const rowNodes = async ({ table, rowId, nodes }) => {
         'rows',
         row.id,
       ],
-      isOpen,
+      isOpen: isNodeOpen({
+        nodes,
+        url: ['projects', project.id, 'tables', table.id, 'rows', row.id],
+      }),
       children: [],
-      childrenCount,
+      childrenCount: await dexie.ttables
+        .where({ deleted: 0, parent_id: table.id })
+        .count(),
     }
     rowNodes.push(node)
   }

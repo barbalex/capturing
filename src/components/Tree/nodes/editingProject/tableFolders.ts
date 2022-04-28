@@ -20,8 +20,9 @@ const tableFoldersEditingProject = async ({
   const rowNodes = await buildRowNodes({
     table,
     rowId,
+    nodes,
   })
-  const fieldNodes = await buildFieldNodes({ project, table, fieldId })
+  const fieldNodes = await buildFieldNodes({ project, table, fieldId, nodes })
   const tableFolderNodes = [
     {
       id: `${table.id}rowsFolder`,

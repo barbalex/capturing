@@ -1,7 +1,18 @@
 import { dexie, Field } from '../../../../dexieClient'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
+import isNodeOpen from '../../../../utils/isNodeOpen'
 
 const fieldNodes = async ({ project, table, fieldId, nodes }) => {
+  // return if parent does not exist (in nodes)
+  if (
+    !isNodeOpen({
+      nodes,
+      url: ['projects', project.id, 'tables', table.id, 'fields'],
+    })
+  ) {
+    return
+  }
+
   const fields: Field[] = await dexie.fields
     .where({
       deleted: 0,
@@ -11,8 +22,6 @@ const fieldNodes = async ({ project, table, fieldId, nodes }) => {
 
   const fieldNodes = []
   for (const field: Field of fields) {
-    const isOpen = fieldId === field.id
-
     const node = {
       id: field.id,
       label: await labelFromLabeledTable({
@@ -29,7 +38,7 @@ const fieldNodes = async ({ project, table, fieldId, nodes }) => {
         'fields',
         field.id,
       ],
-      isOpen,
+      isOpen: false,
       children: [],
       childrenCount: 0,
     }
