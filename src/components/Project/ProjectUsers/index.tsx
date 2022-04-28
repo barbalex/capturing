@@ -106,7 +106,7 @@ const ProjectUsers = () => {
             <ProjectUsersContainer>
               <ProjectUser />
             </ProjectUsersContainer>
-            <AddProjectUser />
+            {userMayEdit && <AddProjectUser />}
           </>
         )}
       </motion.div>
