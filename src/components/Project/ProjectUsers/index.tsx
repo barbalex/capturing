@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import constants from '../../../utils/constants'
+import ProjectUser from './ProjectUser'
 
 const TitleRow = styled.div`
   background-color: rgba(248, 243, 254, 1);
@@ -30,6 +31,9 @@ const Title = styled.div`
   font-weight: bold;
   margin-top: auto;
   margin-bottom: auto;
+`
+const ProjectUsersContainer = styled.div`
+  padding-bottom: 8px;
 `
 
 const ProjectUsers = () => {
@@ -72,7 +76,11 @@ const ProjectUsers = () => {
         </div>
       </TitleRow>
       <motion.div animate={anim} transition={{ type: 'just', duration: 0.2 }}>
-        {open && <>Project-Users</>}
+        {open && (
+          <ProjectUsersContainer>
+            <ProjectUser />
+          </ProjectUsersContainer>
+        )}
       </motion.div>
     </ErrorBoundary>
   )
