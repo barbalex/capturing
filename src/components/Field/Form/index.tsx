@@ -84,7 +84,10 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
       ])
 
     const useLabels: boolean = project.use_labels
-    const userMayEdit: boolean = projectUser.role === 'project_manager'
+    const userMayEdit: boolean = [
+      'account_manager',
+      'project_manager',
+    ].includes(projectUser.role)
     const widgetsForFields: IWidgetForField[] = await dexie.widgets_for_fields
       .where({ deleted: 0, field_value: row?.field_type ?? '' })
       .sortBy('sort')

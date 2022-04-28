@@ -92,7 +92,11 @@ const TableForm = ({ showFilter }: TableFormProps) => {
     ])
 
     const userRole = projectUser?.role
-    const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
+    const userMayEdit = [
+      'account_manager',
+      'project_manager',
+      'project_editor',
+    ].includes(userRole)
 
     const useLabels = project.use_labels
 

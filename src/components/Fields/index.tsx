@@ -78,7 +78,9 @@ const FieldsComponent = () => {
       }),
       filteredCount,
       totalCount,
-      userMayEdit: projectUser.role === 'project_manager',
+      userMayEdit: ['account_manager', 'project_manager'].includes(
+        projectUser.role,
+      ),
       project,
     }
   }, [tableId, projectId, session?.user?.email])

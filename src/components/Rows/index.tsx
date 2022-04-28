@@ -84,9 +84,11 @@ const RowsComponent = () => {
       rowsWithLabel,
       filteredCount,
       totalCount,
-      userMayEdit: ['project_manager', 'project_editor'].includes(
-        projectUser.role,
-      ),
+      userMayEdit: [
+        'account_manager',
+        'project_manager',
+        'project_editor',
+      ].includes(projectUser.role),
     }
   }, [tableId, projectId, session?.user?.email])
 

@@ -203,46 +203,15 @@ CREATE TYPE table_rel_types_enum AS enum (
   'n'
 );
 
---
-DROP TABLE IF EXISTS role_types CASCADE;
-
-CREATE TABLE role_types (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  value text UNIQUE,
-  sort smallint DEFAULT 1,
-  comment text,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+CREATE TYPE role_types_enum AS enum (
+  'project_reader',
+  'project_editor',
+  'project_manager',
+  'account_manager'
 );
 
-CREATE INDEX ON role_types USING btree (value);
-
-CREATE INDEX ON role_types USING btree (sort);
-
-CREATE INDEX ON role_types USING btree (server_rev_at);
-
-CREATE INDEX ON role_types USING btree (deleted);
-
-COMMENT ON TABLE role_types IS 'Goal: list of roles';
-
-COMMENT ON COLUMN role_types.value IS 'the role';
-
-COMMENT ON COLUMN role_types.comment IS 'explains the role';
-
-COMMENT ON COLUMN role_types.sort IS 'enables sorting at will';
-
-COMMENT ON COLUMN role_types.server_rev_at IS 'time of last edit on server';
-
-INSERT INTO role_types (value, sort, comment)
-  VALUES ('account_manager', 1, 'Only role to: create project_users, give them roles, create projects'), ('project_manager', 2, 'Can edit projects and their structure'), ('project_editor', 3, 'Can edit rows and files'), ('project_reader', 4, 'Can read data')
-ON CONFLICT ON CONSTRAINT role_types_pkey
-  DO UPDATE SET
-    comment = excluded.comment;
-
-ALTER TABLE role_types ENABLE ROW LEVEL SECURITY;
-
-ALTER publication supabase_realtime
-  ADD TABLE role_types;
+--
+DROP TABLE IF EXISTS role_types CASCADE;
 
 --
 DROP TABLE IF EXISTS project_users CASCADE;
@@ -253,7 +222,7 @@ CREATE TABLE project_users (
   --user_id uuid default null references users (id) on delete no action on update cascade,
   user_email text NOT NULL,
   -- NO reference so project_user can be created before registering,
-  role text DEFAULT 'project_reader' REFERENCES role_types (value) ON DELETE NO action ON UPDATE CASCADE,
+  ROLE role_types_enum DEFAULT 'project_reader',
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -1204,7 +1173,7 @@ CREATE OR REPLACE FUNCTION is_project_editor_or_manager_by_project (_auth_user_i
         INNER JOIN project_users ON users.email = project_users.user_email
       WHERE
         project_users.project_id = _project_id
-        AND project_users.role IN ('project_manager', 'project_editor')
+        AND project_users.role IN ('account_manager', 'project_manager', 'project_editor')
         AND users.id = _auth_user_id);
 
 $$
@@ -1229,7 +1198,7 @@ CREATE OR REPLACE FUNCTION is_project_editor_or_manager_by_table (_auth_user_id 
         INNER JOIN tables ON tables.project_id = projects.id
       WHERE
         tables.id = _table_id
-        AND project_users.role IN ('project_manager', 'project_editor')
+        AND project_users.role IN ('account_manager', 'project_manager', 'project_editor')
         AND users.id = _auth_user_id);
 
 $$
@@ -1255,7 +1224,7 @@ CREATE OR REPLACE FUNCTION is_project_editor_or_manager_by_row (_auth_user_id uu
         INNER JOIN ROWS ON rows.table_id = tables.id
       WHERE
         rows.id = _row_id
-        AND project_users.role IN ('project_manager', 'project_editor')
+        AND project_users.role IN ('account_manager', 'project_manager', 'project_editor')
         AND users.id = _auth_user_id);
 
 $$
@@ -1276,7 +1245,7 @@ CREATE OR REPLACE FUNCTION is_project_manager (_auth_user_id uuid)
         auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
       WHERE
-        project_users.role = 'project_manager'
+        project_users.role IN ('account_manager', 'project_manager')
         AND users.id = _auth_user_id);
 
 $$
@@ -1299,7 +1268,7 @@ CREATE OR REPLACE FUNCTION is_project_manager_by_project (_auth_user_id uuid, _p
         INNER JOIN project_users ON users.email = project_users.user_email
       WHERE
         project_users.project_id = _project_id
-        AND project_users.role = 'project_manager'
+        AND project_users.role IN ('account_manager', 'project_manager')
         AND users.id = _auth_user_id);
 
 $$
@@ -1323,7 +1292,7 @@ CREATE OR REPLACE FUNCTION is_project_manager_by_project_by_table (_auth_user_id
         INNER JOIN projects ON projects.id = project_users.project_id
         INNER JOIN tables ON tables.project_id = projects.id
       WHERE
-        project_users.role = 'project_manager'
+        project_users.role IN ('account_manager', 'project_manager')
         AND users.id = _auth_user_id
         AND tables.id = _table_id);
 
@@ -1475,12 +1444,6 @@ DROP POLICY IF EXISTS "Users cant delete accounts" ON accounts;
 CREATE POLICY "Users cant delete accounts" ON accounts
   FOR DELETE
     USING (FALSE);
-
-DROP POLICY IF EXISTS "Users can view role types" ON role_types;
-
-CREATE POLICY "Users can view role types" ON role_types
-  FOR SELECT
-    USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "Users can view field types" ON field_types;
 
@@ -1743,7 +1706,7 @@ INSERT INTO project_users (project_id, user_email, ROLE)
       FROM
         projects
       WHERE
-        name = 'test-project'), 'alex.barbalex@gmail.com', 'project_manager');
+        name = 'test-project'), 'alex.barbalex@gmail.com', 'account_manager');
 
 --- test project policies
 SELECT

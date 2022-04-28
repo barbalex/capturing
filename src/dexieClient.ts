@@ -322,6 +322,13 @@ export enum TableTypeEnum {
   id_value_list = 'id_value_list',
 }
 
+export enum RoleTypeEnum {
+  project_reader = 'project_reader',
+  project_editor = 'project_editor',
+  project_manager = 'project_manager',
+  account_manager = 'account_manager',
+}
+
 export interface IProjectEditor {
   id: string
   project_id?: string
@@ -472,7 +479,7 @@ export class ProjectUser implements IProjectUser {
   id: string
   project_id: string
   user_email: string
-  role?: string
+  role?: RoleTypeEnum
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -491,7 +498,7 @@ export class ProjectUser implements IProjectUser {
     this.id = id ?? uuidv1()
     this.project_id = project_id
     this.user_email = user_email
-    this.role = role ?? 'project_reader'
+    this.role = role ?? RoleTypeEnum.project_reader
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at

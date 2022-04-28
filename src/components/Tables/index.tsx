@@ -77,9 +77,11 @@ const TablesComponent = () => {
       filteredCount,
       totalCount,
       useLabels: project.use_labels,
-      userMayEdit: ['project_manager', 'project_editor'].includes(
-        projectUser?.role,
-      ),
+      userMayEdit: [
+        'account_manager',
+        'project_manager',
+        'project_editor',
+      ].includes(projectUser?.role),
     }
   }, [projectId, session?.user?.email])
   const useLabels: boolean = data?.useLabels

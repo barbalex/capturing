@@ -55,7 +55,11 @@ const TableFormTitle = ({ totalCount, filteredCount, width }) => {
       user_email: session?.user?.email,
     })
     const userRole = projectUser.role
-    const userMayEdit = ['project_manager', 'project_editor'].includes(userRole)
+    const userMayEdit = [
+      'account_manager',
+      'project_manager',
+      'project_editor',
+    ].includes(userRole)
 
     return userMayEdit
   }, [projectId, session?.user?.email])

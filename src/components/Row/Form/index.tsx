@@ -90,9 +90,11 @@ const RowForm = ({
         user_email: session?.user?.email,
       }),
     ])
-    const userMayEdit = ['project_manager', 'project_editor'].includes(
-      projectUser.role,
-    )
+    const userMayEdit = [
+      'account_manager',
+      'project_manager',
+      'project_editor',
+    ].includes(projectUser.role)
 
     return {
       fields,

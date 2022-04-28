@@ -55,7 +55,9 @@ const FieldFormTitle = ({ totalCount, filteredCount, width }) => {
       user_email: session?.user?.email,
     })
     const userRole = projectUser.role
-    const userMayEdit = userRole === 'project_manager'
+    const userMayEdit = ['account_manager', 'project_manager'].includes(
+      userRole,
+    )
 
     return userMayEdit
   }, [projectId, session?.user?.email])

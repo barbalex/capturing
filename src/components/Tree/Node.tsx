@@ -75,7 +75,7 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
       user_email: session?.user?.email,
     })
 
-    return projectUser?.role === 'project_manager'
+    return ['account_manager', 'project_manager'].includes(projectUser?.role)
   }, [session?.user?.email])
 
   const onClickIndent = useCallback(() => {

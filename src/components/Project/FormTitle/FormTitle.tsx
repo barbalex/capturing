@@ -54,7 +54,7 @@ const ProjectFormTitle = ({ totalCount, filteredCount, width }) => {
       user_email: session?.user?.email,
     })
 
-    return projectUser?.role === 'project_manager'
+    return ['account_manager', 'project_manager'].includes(projectUser?.role)
   })
 
   if (width < 520) {
