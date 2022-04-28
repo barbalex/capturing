@@ -470,8 +470,8 @@ export interface IProjectUser {
 
 export class ProjectUser implements IProjectUser {
   id: string
-  project_id?: string
-  user_email?: string
+  project_id: string
+  user_email: string
   role?: string
   client_rev_at?: Date
   client_rev_by?: string

@@ -1,5 +1,11 @@
-const ProjectUser = () => {
-  return <div>Project-User</div>
+import { ProjectUser } from '../../../dexieClient'
+
+type Props = {
+  projectUser: ProjectUser
 }
 
-export default ProjectUser
+const ProjectUserComponent = ({ projectUser }: Props) => {
+  return <div>{`${projectUser.user_email} (${projectUser.role})`}</div>
+}
+
+export default ProjectUserComponent

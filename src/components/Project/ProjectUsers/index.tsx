@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import constants from '../../../utils/constants'
-import ProjectUser from './ProjectUser'
+import ProjectUsersComponent from './ProjectUsers'
 import AddProjectUser from './AddProjectUser'
 import { dexie } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
@@ -42,7 +42,7 @@ const ProjectUsersContainer = styled.div`
   padding-bottom: 8px;
 `
 
-const ProjectUsers = () => {
+const ProjectUsersIndex = () => {
   const session: Session = supabase.auth.session()
   const { projectId } = useParams()
 
@@ -104,7 +104,7 @@ const ProjectUsers = () => {
         {open && (
           <>
             <ProjectUsersContainer>
-              <ProjectUser />
+              <ProjectUsersComponent />
             </ProjectUsersContainer>
             {userMayEdit && <AddProjectUser />}
           </>
@@ -114,4 +114,4 @@ const ProjectUsers = () => {
   )
 }
 
-export default ProjectUsers
+export default ProjectUsersIndex
