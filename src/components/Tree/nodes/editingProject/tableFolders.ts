@@ -31,6 +31,7 @@ const tableFoldersEditingProject = async ({
       table_id: table.id,
     })
     .count()
+
   const tableFolderNodes = [
     {
       id: `${table.id}rowsFolder`,
