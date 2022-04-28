@@ -40,9 +40,11 @@ const Title = styled.div`
 const ProjectUsersContainer = styled(List)`
   padding: 0 0 8px 0;
 `
-const AddButton = styled(Button)`
-  margin-left: 8px;
+const AddButtonRow = styled.div`
+  display: flex;
+  margin: 0 8px;
 `
+const AddButton = styled(Button)``
 
 const ProjectUsersIndex = () => {
   const session: Session = supabase.auth.session()
@@ -118,13 +120,15 @@ const ProjectUsersIndex = () => {
               <ProjectUsersComponent />
             </ProjectUsersContainer>
             {userMayEdit && !addNew && (
-              <AddButton
-                title="Neue mitarbeitende Person hinzufügen"
-                variant="outlined"
-                onClick={onClickAddUser}
-              >
-                Hinzufügen
-              </AddButton>
+              <AddButtonRow>
+                <AddButton
+                  title="Neue mitarbeitende Person hinzufügen"
+                  variant="outlined"
+                  onClick={onClickAddUser}
+                >
+                  Hinzufügen
+                </AddButton>
+              </AddButtonRow>
             )}
             {userMayEdit && addNew && <AddProjectUser setAddNew={setAddNew} />}
           </>

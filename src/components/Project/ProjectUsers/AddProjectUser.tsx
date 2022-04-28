@@ -1,11 +1,10 @@
 import { useCallback, useState } from 'react'
 import styled from 'styled-components'
-import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
+import Button from '@mui/material/Button'
 
 import TextField from '../../shared/TextField'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
-import { dexie, ProjectUser, RoleTypeEnum } from '../../../dexieClient'
 import insertProjectUser from '../../../utils/insertProjectUser'
 
 const Container = styled.div`
@@ -17,6 +16,14 @@ const Container = styled.div`
 const Title = styled.div`
   font-weight: bold;
   margin-bottom: 8px;
+`
+const ButtonRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 10px;
+`
+const StyledButton = styled(Button)`
+  margin-right: 10px;
 `
 
 const roleTypes = [
@@ -59,26 +66,45 @@ const AddProjectUser = ({ setAddNew }) => {
     },
     [projectId, setAddNew, state],
   )
+  const onClickStop = useCallback(() => setAddNew(false), [setAddNew])
+  const onClickSave = useCallback(() => {
+    insertProjectUser({
+      projectId,
+      email: state.user_email,
+      role: state.role,
+    })
+    setAddNew(false)
+  }, [projectId, setAddNew, state.role, state.user_email])
 
   return (
-    <Container>
-      <Title>Neue mitarbeitende Person</Title>
-      <TextField
-        value=""
-        label="Email-Adresse"
-        type="email"
-        name="user_email"
-        onBlur={onBlur}
-      />
-      <RadioButtonGroup
-        value=""
-        label="Rolle"
-        labelSize={0.8}
-        name="role"
-        dataSource={roleTypes}
-        onBlur={onBlur}
-      />
-    </Container>
+    <>
+      <Container>
+        <Title>Neue mitarbeitende Person</Title>
+        <TextField
+          value=""
+          label="Email-Adresse"
+          type="email"
+          name="user_email"
+          onBlur={onBlur}
+        />
+        <RadioButtonGroup
+          value=""
+          label="Rolle"
+          labelSize={0.8}
+          name="role"
+          dataSource={roleTypes}
+          onBlur={onBlur}
+        />
+      </Container>
+      <ButtonRow>
+        <StyledButton variant="outlined" onClick={onClickSave}>
+          Speichern
+        </StyledButton>
+        <Button variant="outlined" onClick={onClickStop}>
+          Abbrechen
+        </Button>
+      </ButtonRow>
+    </>
   )
 }
 
