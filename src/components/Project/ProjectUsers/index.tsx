@@ -3,10 +3,15 @@ import styled from 'styled-components'
 import { motion, useAnimation } from 'framer-motion'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { Session } from '@supabase/supabase-js'
+import { useParams } from 'react-router-dom'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import constants from '../../../utils/constants'
 import ProjectUser from './ProjectUser'
+import { dexie, IProjectUser } from '../../../dexieClient'
+import { supabase } from '../../../supabaseClient'
 
 const TitleRow = styled.div`
   background-color: rgba(248, 243, 254, 1);
@@ -37,6 +42,9 @@ const ProjectUsersContainer = styled.div`
 `
 
 const ProjectUsers = () => {
+  const session: Session = supabase.auth.session()
+  const { projectId } = useParams()
+
   const [open, setOpen] = useState(false)
   const anim = useAnimation()
   const onClickToggle = useCallback(
@@ -58,12 +66,28 @@ const ProjectUsers = () => {
     [anim, open],
   )
 
-  const projectUsersSorted = []
+  const data = useLiveQuery(async () => {
+    // TODO:
+    const [projectUsersCount, projectUser] = await Promise.all([
+      dexie.project_users.where({ deleted: 0, project_id: projectId }).count(),
+      dexie.project_users.get({
+        project_id: projectId,
+        user_email: session?.user?.email,
+      }),
+    ])
+
+    const userMayEdit: boolean = projectUser.role === 'project_manager'
+
+    return { projectUsersCount, userMayEdit }
+  })
+
+  const projectUsersCount = data?.projectUsersCount ?? 0
+  const userMayEdit = data?.userMayEdit ?? false
 
   return (
     <ErrorBoundary>
       <TitleRow onClick={onClickToggle} title={open ? 'schliessen' : 'öffnen'}>
-        <Title>{`Mitarbeitende Personen (${projectUsersSorted.length})`}</Title>
+        <Title>{`Mitarbeitende Personen (${projectUsersCount})`}</Title>
         <div>
           <IconButton
             aria-label={open ? 'schliessen' : 'öffnen'}

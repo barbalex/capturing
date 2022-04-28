@@ -1,5 +1,4 @@
 import { IQueuedUpdate } from './dexieClient'
-import { ProjectUser } from './initiateDb'
 import Dexie, { DexieTable } from 'dexie'
 import { v1 as uuidv1 } from 'uuid'
 import { Session } from '@supabase/supabase-js'
@@ -467,6 +466,37 @@ export interface IProjectUser {
   client_rev_by?: string
   server_rev_at?: Date
   deleted: number
+}
+
+export class ProjectUser implements IProjectUser {
+  id: string
+  project_id?: string
+  user_email?: string
+  role?: string
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted: number
+
+  constructor(
+    id: string,
+    project_id?: string,
+    user_email?: string,
+    role?: string,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    deleted: number,
+  ) {
+    this.id = id ?? uuidv1()
+    this.project_id = project_id
+    this.user_email = user_email
+    this.role = role ?? 'project_reader'
+    this.client_rev_at = new window.Date().toISOString()
+    if (client_rev_by) this.client_rev_by = client_rev_by
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    this.deleted = deleted ?? 0
+  }
 }
 
 export interface IProject {
@@ -1032,7 +1062,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(16).stores({
+    this.version(17).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
@@ -1067,6 +1097,7 @@ export class MySubClassedDexie extends Dexie {
     this.news_delivery.mapToClass(NewsDelivery)
     this.project_tile_layers.mapToClass(ProjectTileLayer)
     this.projects.mapToClass(Project)
+    this.project_users.mapToClass(ProjectUser)
     this.rows.mapToClass(Row)
     this.ttables.mapToClass(Table)
     this.tile_layers.mapToClass(TileLayer)
