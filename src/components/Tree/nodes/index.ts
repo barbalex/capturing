@@ -6,7 +6,6 @@ import tableNodesEditingData from './editingData/tableNodes'
 import projectFoldersEditingProject from './editingProject/projectFolders'
 
 const buildNodes = async ({
-  projectId,
   tableId,
   rowId,
   fieldId,

@@ -28,7 +28,6 @@ const TreeComponent = React.forwardRef((props, ref) => {
   })
   useEffect(() => {
     buildNodes({
-      projectId,
       tableId,
       rowId,
       fieldId,
