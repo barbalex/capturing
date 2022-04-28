@@ -1,7 +1,7 @@
 // TODO: most of these constants are not used yet
 const constants = {
   appBarHeight: 64,
-  titleRowHeight: 48,
+  titleRowHeight: 52,
   singleRowHeight: 48,
   getHealthUri: () => {
     if (typeof window === 'undefined') return

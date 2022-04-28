@@ -34,7 +34,7 @@ const Title = styled.div`
 
 const ProjectUsers = () => {
   const [open, setOpen] = useState(false)
-  let anim = useAnimation()
+  const anim = useAnimation()
   const onClickToggle = useCallback(
     async (e) => {
       e.stopPropagation()
@@ -54,7 +54,28 @@ const ProjectUsers = () => {
     [anim, open],
   )
 
-  return <div>Project-Users</div>
+  const projectUsersSorted = []
+
+  return (
+    <ErrorBoundary>
+      <TitleRow onClick={onClickToggle} title={open ? 'schliessen' : 'öffnen'}>
+        <Title>{`Mitarbeitende Personen (${projectUsersSorted.length})`}</Title>
+        <div>
+          <IconButton
+            aria-label={open ? 'schliessen' : 'öffnen'}
+            title={open ? 'schliessen' : 'öffnen'}
+            onClick={onClickToggle}
+            size="large"
+          >
+            {open ? <FaChevronUp /> : <FaChevronDown />}
+          </IconButton>
+        </div>
+      </TitleRow>
+      <motion.div animate={anim} transition={{ type: 'just', duration: 0.2 }}>
+        {open && <>Project-Users</>}
+      </motion.div>
+    </ErrorBoundary>
+  )
 }
 
 export default ProjectUsers
