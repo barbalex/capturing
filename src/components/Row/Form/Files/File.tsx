@@ -48,14 +48,6 @@ type Props = {
 const Files = ({ fileMeta }: Props) => {
   const session: Session = supabase.auth.session()
 
-  // if (file.name === '2007-06-17_15.JPG') {
-  // console.log('File, file:', file)
-  // }
-
-  const onClickItem = useCallback(() => {
-    console.log('item clicked')
-  }, [])
-
   const onClickRemove = useCallback(
     (e) => {
       e.stopPropagation()
@@ -84,7 +76,7 @@ const Files = ({ fileMeta }: Props) => {
     [blob, fileMeta.name],
   )
 
-  const isImage = (fileMeta.type?.includes('image') && !!fileMeta.file) ?? false
+  const isImage = fileMeta.type?.includes('image') ?? false
   const [preview, setPreview] = useState()
   useEffect(() => {
     if (isImage && !!blob) {
@@ -101,7 +93,7 @@ const Files = ({ fileMeta }: Props) => {
 
   return (
     <ErrorBoundary>
-      <StyledListItem divider onClick={onClickItem}>
+      <StyledListItem divider>
         {!!preview && <Image height={55} src={preview} />}
         <StyledListItemText primary={fileMeta.name} secondary={fileMeta.type} />
         <IconContainer>
