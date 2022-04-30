@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useContext } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Button from '@mui/material/Button'
@@ -7,9 +7,11 @@ import { FaHome } from 'react-icons/fa'
 import styled from 'styled-components'
 import { useResizeDetector } from 'react-resize-detector'
 import { Link, useLocation } from 'react-router-dom'
+import { observer } from 'mobx-react-lite'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import constants from '../../../utils/constants'
+import storeContext from '../../../storeContext'
 import Account from './Account'
 import ServerConnected from './ServerConnected'
 
@@ -45,13 +47,17 @@ const SubNavButton = styled(Button)`
   border-color: rgba(255, 255, 255, 0.5) !important;
   border-width: 0 !important;
   border-width: ${(props) =>
-    props.active ? '1px !important' : '0 !important'};
+    props.active === 'true' ? '1px !important' : '0 !important'};
   &:hover {
     border-width: 1px !important;
   }
 `
 
 const HeaderAuthenticated = () => {
+  const store = useContext(storeContext)
+  const { showTree, showForm, showMap, setShowTree, setShowForm, setShowMap } =
+    store
+
   const { pathname } = useLocation()
   const { width, ref: resizeRef } = useResizeDetector()
   const mobile = width && width < constants?.tree?.minimalWindowWidth
@@ -59,14 +65,14 @@ const HeaderAuthenticated = () => {
   const isProject = pathname.includes('/projects')
 
   const onClickTree = useCallback(() => {
-    console.log('TODO:')
-  }, [])
+    setShowTree(!showTree)
+  }, [setShowTree, showTree])
   const onClickForm = useCallback(() => {
-    console.log('TODO:')
-  }, [])
+    setShowForm(!showForm)
+  }, [setShowForm, showForm])
   const onClickMap = useCallback(() => {
-    console.log('TODO:')
-  }, [])
+    setShowMap(!showMap)
+  }, [setShowMap, showMap])
 
   console.log({ pathname })
 
@@ -103,15 +109,27 @@ const HeaderAuthenticated = () => {
           <Spacer />
           {isProject ? (
             <>
-              <NavButton variant="outlined" onClick={onClickTree}>
+              <SubNavButton
+                variant="outlined"
+                onClick={onClickTree}
+                active={showTree.toString()}
+              >
                 Strukturbaum
-              </NavButton>
-              <NavButton variant="outlined" onClick={onClickForm}>
+              </SubNavButton>
+              <SubNavButton
+                variant="outlined"
+                onClick={onClickForm}
+                active={showForm.toString()}
+              >
                 Formular
-              </NavButton>
-              <NavButton variant="outlined" onClick={onClickMap}>
+              </SubNavButton>
+              <SubNavButton
+                variant="outlined"
+                onClick={onClickMap}
+                active={showMap.toString()}
+              >
                 Karte
-              </NavButton>
+              </SubNavButton>
             </>
           ) : (
             <NavButton
@@ -140,4 +158,4 @@ const HeaderAuthenticated = () => {
   )
 }
 
-export default HeaderAuthenticated
+export default observer(HeaderAuthenticated)
