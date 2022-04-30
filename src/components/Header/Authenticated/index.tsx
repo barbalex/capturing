@@ -44,12 +44,17 @@ const NavButton = styled(Button)`
 `
 const SubNavButton = styled(Button)`
   color: white !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
-  border-width: 0 !important;
-  border-width: ${(props) =>
-    props.active === 'true' ? '1px !important' : '0 !important'};
+  ${(props) =>
+    props.active === 'true' &&
+    'border: 1px solid rgba(255, 255, 255, 0.5) !important;'}
+  ${(props) =>
+    props.prevactive === 'true' &&
+    'border-bottom-left-radius: 0 !important; border-top-left-radius: 0 !important;'}
+  ${(props) =>
+    props.nextactive === 'true' &&
+    'border-bottom-right-radius: 0 !important; border-top-right-radius: 0 !important; border-right-color: #4a148c !important;'}
   &:hover {
-    border-width: 1px !important;
+    outline: 1px solid rgba(255, 255, 255, 0.5) !important;
   }
 `
 
@@ -74,7 +79,7 @@ const HeaderAuthenticated = () => {
     setShowMap(!showMap)
   }, [setShowMap, showMap])
 
-  console.log({ pathname })
+  console.log({ pathname, showTree, showForm, showMap })
 
   return (
     <ErrorBoundary>
@@ -113,6 +118,7 @@ const HeaderAuthenticated = () => {
                 variant="outlined"
                 onClick={onClickTree}
                 active={showTree.toString()}
+                nextactive={showForm.toString()}
               >
                 Strukturbaum
               </SubNavButton>
@@ -120,6 +126,8 @@ const HeaderAuthenticated = () => {
                 variant="outlined"
                 onClick={onClickForm}
                 active={showForm.toString()}
+                prevactive={showTree.toString()}
+                nextactive={showMap.toString()}
               >
                 Formular
               </SubNavButton>
@@ -127,6 +135,7 @@ const HeaderAuthenticated = () => {
                 variant="outlined"
                 onClick={onClickMap}
                 active={showMap.toString()}
+                prevactive={showForm.toString()}
               >
                 Karte
               </SubNavButton>
