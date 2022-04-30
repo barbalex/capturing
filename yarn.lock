@@ -3076,6 +3076,7 @@ __metadata:
     "@mui/material": 5.6.3
     "@mui/styled-engine": 5.6.1
     "@mui/styled-engine-sc": 5.6.1
+    "@react-leaflet/core": ^2.0.0
     "@supabase/supabase-js": 1.35.2
     "@types/leaflet": ^1.7.9
     "@types/node": 17.0.30
@@ -3098,7 +3099,7 @@ __metadata:
     file-saver: 2.0.5
     framer-motion: 6.3.3
     is-uuid: 1.0.2
-    leaflet: ^1.8.0
+    leaflet: 1.8.0
     lexical: 0.2.5
     localforage: 1.10.0
     lodash: 4.17.21
@@ -3106,6 +3107,8 @@ __metadata:
     mobx-react-lite: 3.3.0
     mobx-state-tree: 5.1.3
     prettier: 2.6.2
+    proj4: ^2.8.0
+    proj4leaflet: ^1.0.2
     react: 18.1.0
     react-arborist: 1.0.3
     react-beautiful-dnd: 13.1.0
@@ -5053,7 +5056,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"leaflet@npm:^1.8.0":
+"leaflet@npm:1.8.0":
   version: 1.8.0
   resolution: "leaflet@npm:1.8.0"
   checksum: 4a27895d4253844f2f13f94cbc52a2030b10833cdf553085d931b834745236a8d2a38844a01eb968cc109eb43268bfadb97aad85b51deffb17b6ccd106542e00
@@ -5232,6 +5235,13 @@ __metadata:
   version: 1.4.1
   resolution: "merge2@npm:1.4.1"
   checksum: 7268db63ed5169466540b6fb947aec313200bcf6d40c5ab722c22e242f651994619bcd85601602972d3c85bd2cc45a358a4c61937e9f11a061919a1da569b0c2
+  languageName: node
+  linkType: hard
+
+"mgrs@npm:1.0.0":
+  version: 1.0.0
+  resolution: "mgrs@npm:1.0.0"
+  checksum: 98b9fa3caff9986868344567996f8dcc833f939c2e140507a00e2ce9a96ef7eaeb81933a749222a2b7bcbc1a4bb6ada6120dda3a5b6af6d72ae332d8990956b9
   languageName: node
   linkType: hard
 
@@ -5773,6 +5783,25 @@ __metadata:
   version: 1.28.0
   resolution: "prismjs@npm:1.28.0"
   checksum: bde93fb2beb45b7243219fc53855f59ee54b3fa179f315e8f9d66244d756ef984462e10561bbdc6713d3d7e051852472d7c284f5794a8791eeaefea2fb910b16
+  languageName: node
+  linkType: hard
+
+"proj4@npm:^2.3.14, proj4@npm:^2.8.0":
+  version: 2.8.0
+  resolution: "proj4@npm:2.8.0"
+  dependencies:
+    mgrs: 1.0.0
+    wkt-parser: ^1.3.1
+  checksum: 05c46387ac866bba699d50291507f9cfd2eece4806e375e7bc536c28c03af4d4ae8c386ab53a0c4a26a4b1718d5d0b30a6cf972614f4fb997e89bd262348c6b1
+  languageName: node
+  linkType: hard
+
+"proj4leaflet@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "proj4leaflet@npm:1.0.2"
+  dependencies:
+    proj4: ^2.3.14
+  checksum: 4ca5eb7e75a29fef5ab3dfd7385085b0554b31bea017dff5e6486109bc4f6b3e1f7b3e3a17063805238517dc0bc260ae78e526e52caeac5f3758d3a7ff03c43f
   languageName: node
   linkType: hard
 
@@ -7348,6 +7377,13 @@ __metadata:
   dependencies:
     string-width: ^1.0.2 || 2 || 3 || 4
   checksum: d5fc37cd561f9daee3c80e03b92ed3e84d80dde3365a8767263d03dacfc8fa06b065ffe1df00d8c2a09f731482fcacae745abfbb478d4af36d0a891fad4834d3
+  languageName: node
+  linkType: hard
+
+"wkt-parser@npm:^1.3.1":
+  version: 1.3.2
+  resolution: "wkt-parser@npm:1.3.2"
+  checksum: 35318a7fb3ef848b9bc9b29fa58d9b9371f8e47354f2a1325cfc9968b1b390334804a963751a5daeaf7d421b735fd85d3fe34d73a44ba2432e1ee5932c87d269
   languageName: node
   linkType: hard
 

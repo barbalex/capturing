@@ -41,6 +41,7 @@ export const MobxStore = types
     formHeight: types.optional(types.number, 500),
     filterWidth: types.optional(types.number, 500),
     online: types.optional(types.boolean, true),
+    activeBaseLayer: types.optional(types.maybeNull(types.string), 'OsmColor'),
   })
   .volatile(() => ({ navigate: undefined }))
   .actions((self) => {
@@ -52,6 +53,9 @@ export const MobxStore = types
     // )
 
     return {
+      setActiveBaseLayer(val) {
+        self.activeBaseLayer = val
+      },
       setShowTree(val) {
         self.showTree = val
       },

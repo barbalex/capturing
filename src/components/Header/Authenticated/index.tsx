@@ -79,7 +79,7 @@ const HeaderAuthenticated = () => {
     setShowMap(!showMap)
   }, [setShowMap, showMap])
 
-  console.log({ pathname, showTree, showForm, showMap })
+  // console.log({ pathname, showTree, showForm, showMap })
 
   return (
     <ErrorBoundary>
