@@ -181,7 +181,7 @@ const ProjectsPage = () => {
             split="vertical"
             size="50%"
             maxSize={-10}
-            //onDragFinished={onDragSplitter}
+            //onDragFinished={onDragSplitter} // maybe set widths of parts in store, see apflora
           >
             {showForm && <Outlet />}
             {showMap && <MapComponent />}
