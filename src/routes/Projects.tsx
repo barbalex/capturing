@@ -10,6 +10,7 @@ import constants from '../utils/constants'
 import nodesFromActiveNodeArray from '../utils/nodesFromActiveNodeArray'
 import Tree from '../components/Tree'
 import { supabase } from '../supabaseClient'
+import MapComponent from '../components/Map'
 
 const StyledSplitPane = styled(SplitPane)`
   .Resizer {
@@ -106,20 +107,89 @@ const ProjectsPage = () => {
   // hide resizer when tree is hidden
   const resizerStyle = treeWidth === 0 ? { width: 0 } : {}
 
-  // TODO: in editing mode, render tree with fields
-  return (
-    <Container ref={containerEl}>
-      <StyledSplitPane
-        split="vertical"
-        size={treeWidth}
-        maxSize={-10}
-        resizerStyle={resizerStyle}
-      >
-        <Tree ref={treeEl} />
-        <Outlet />
-      </StyledSplitPane>
-    </Container>
-  )
+  if (tabsLength === 0) {
+    // return WITH split pane
+    // otherwise height is wrong
+    // and opening / closing tabs is slow
+    // add empty div to prevent split-pane from
+    // missing a second div
+    return (
+      <Container ref={containerEl}>
+        <StyledSplitPane
+          split="vertical"
+          size="100%"
+          maxSize={-10}
+          resizerStyle={resizerStyle}
+        >
+          <></>
+          <></>
+        </StyledSplitPane>
+      </Container>
+    )
+  }
+  if (tabsLength === 1) {
+    // return WITH split pane
+    // otherwise height is wrong
+    // and opening / closing tabs is slow
+    // add empty div to prevent split-pane from
+    // missing a second div
+    return (
+      <Container ref={containerEl}>
+        <StyledSplitPane
+          split="vertical"
+          size="100%"
+          maxSize={-10}
+          resizerStyle={resizerStyle}
+        >
+          {showTree && <Tree ref={treeEl} />}
+          {showForm && <Outlet />}
+          {showMap && <MapComponent />}
+          <></>
+        </StyledSplitPane>
+      </Container>
+    )
+  }
+
+  if (tabsLength === 2) {
+    return (
+      <Container ref={containerEl}>
+        <StyledSplitPane
+          split="vertical"
+          size={treeWidth}
+          maxSize={-10}
+          resizerStyle={resizerStyle}
+        >
+          {showTree && <Tree ref={treeEl} />}
+          {showForm && <Outlet />}
+          {showMap && <MapComponent />}
+        </StyledSplitPane>
+      </Container>
+    )
+  }
+
+  if (tabsLength === 3) {
+    return (
+      <Container ref={containerEl}>
+        <StyledSplitPane
+          split="vertical"
+          size="33%"
+          maxSize={-10}
+          resizerStyle={resizerStyle}
+        >
+          {showTree && <Tree ref={treeEl} />}
+          <StyledSplitPane
+            split="vertical"
+            size="50%"
+            maxSize={-10}
+            //onDragFinished={onDragSplitter}
+          >
+            {showForm && <Outlet />}
+            {showMap && <MapComponent />}
+          </StyledSplitPane>
+        </StyledSplitPane>
+      </Container>
+    )
+  }
 }
 
 export default observer(ProjectsPage)
