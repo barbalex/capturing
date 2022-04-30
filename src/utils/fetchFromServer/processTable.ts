@@ -75,7 +75,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
           // fetch to Files
           const { data, error } = await supabase.storage
             .from('files')
-            .download(`files/${d.name}`)
+            .download(`files/${d.id}`)
           if (error) return console.log(error)
           const newFile = new File(d.id, data)
           dexie.files.put(newFile)

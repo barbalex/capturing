@@ -20,11 +20,12 @@ const processQueuedUpdate = async ({
   // console.log('processQueuedUpdate', queuedUpdate)
 
   const isRevTable = revTables.includes(queuedUpdate.table)
-  const singularTableName = queuedUpdate.table.slice(0, -1)
   const isInsert = !queuedUpdate.revert_id
   // insert _rev or upsert regular table
   if (isRevTable) {
-    const revTableName = queuedUpdate.table.replace(/.$/, '_revs') // https://stackoverflow.com/a/36630251/712005
+    const revTableName =
+      queuedUpdate.table === 'rows' ? 'row_revs' : 'files_meta_revs'
+    // queuedUpdate.table.replace(/.$/, '_revs') // https://stackoverflow.com/a/36630251/712005
     // 1 create revision
     const newObject = JSON.parse(queuedUpdate.value)
     const id = newObject.id
@@ -33,13 +34,13 @@ const processQueuedUpdate = async ({
     delete newObject.conflicts
     delete newObject.file
     const newRevObject = {
-      [`${singularTableName}_id`]: id,
       ...newObject,
       client_rev_at: new window.Date().toISOString(),
       client_rev_by: session.user?.email ?? session.user?.id,
       depth,
       parent_rev: newObject?.revisions?.[0] ?? null,
     }
+    if (queuedUpdate.table === 'rows') newRevObject[`row_id`] = id
     const rev = `${depth}-${SparkMD5.hash(JSON.stringify(newRevObject))}`
     newRevObject.rev = rev
     newRevObject.id = uuidv1()
@@ -72,9 +73,10 @@ const processQueuedUpdate = async ({
     }
   } else if (queuedUpdate.table === 'files') {
     // send to supabase storage
+    console.log('processQueuedUpdate, should process file', { queuedUpdate })
     const { error } = await supabase.storage
       .from('files')
-      .upload(`files/${queuedUpdate.value.id}`, queuedUpdate.value.file)
+      .upload(`files/${JSON.parse(queuedUpdate.value).id}`, queuedUpdate.file)
     if (error) return console.log(error)
   } else {
     // TODO: upsert regular table

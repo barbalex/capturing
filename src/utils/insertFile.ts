@@ -11,6 +11,7 @@ const insertFile = async ({ file }: Props) => {
     undefined,
     'files',
     JSON.stringify(newRow),
+    file,
     undefined,
     undefined,
   )

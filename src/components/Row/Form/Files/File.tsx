@@ -22,7 +22,6 @@ const StyledListItem = styled(ListItem)`
     background-color: rgba(74, 20, 140, 0.1);
   }
   border-color: rgba(74, 20, 140, 0.1);
-  cursor: pointer;
 `
 const RemoveIcon = styled(FaRegTimesCircle)``
 const StyledListItemText = styled(ListItemText)`
@@ -80,9 +79,6 @@ const Files = ({ fileMeta }: Props) => {
     async (e) => {
       e.stopPropagation()
 
-      // if (file.name === '2007-06-17_15.JPG') {
-      //   console.log('File, onClickDownload', { blob, file: file.file })
-      // }
       fileSaver.saveAs(blob, fileMeta.name)
     },
     [blob, fileMeta.name],
@@ -98,12 +94,6 @@ const Files = ({ fileMeta }: Props) => {
       } catch (error) {
         return console.log('Error creating object url:', error)
       }
-      // console.log('File, setting preview', {
-      //   file: file.file,
-      //   blob,
-      //   isImage,
-      //   objectUrl,
-      // })
       setPreview(objectUrl)
     }
     return () => URL.revokeObjectURL(blob)
