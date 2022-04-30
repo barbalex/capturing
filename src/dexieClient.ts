@@ -163,6 +163,29 @@ export interface IFile {
 }
 
 type FileUpdateProps = { was: IFile; is: IFile; session: Session }
+/**
+ * TODO:
+ * Goals:
+ * 1. Client: Save Files only once because only one index on id
+ * 2. Server: Minimize File Storage for Revisions
+ *    (keep only a month's worth of Files NOT referenced in winning FileMetas)
+ * create two file tables:
+ * 1. FileMetas
+ *    This table minus: file
+ * 2. Files
+ *    id, file and server_rev_at
+ *    No Revisions!
+ * Syncing works by:
+ * 1. Sync FileMeta
+ * 2. Fetch linked Files and remove no more referenced ones
+ *
+ * FileMetas can be inserted, updated (excluding the file reference) and deleted
+ * Files can only be inserted and deleted
+ *
+ * TO DECIDE:
+ * Instead of Files, use file storage with files named by id?
+ * In Supabase access would be ruled by policy depending on link to FileMeta
+ */
 export class File implements IFile {
   id: string
   row_id?: string
