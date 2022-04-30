@@ -155,7 +155,8 @@ const ProjectsPage = () => {
       <Container ref={containerEl}>
         <StyledSplitPane
           split="vertical"
-          size={treeWidth}
+          // size={treeWidth}
+          size="100%"
           maxSize={-10}
           resizerStyle={resizerStyle}
         >
@@ -167,12 +168,20 @@ const ProjectsPage = () => {
     )
   }
 
+  /**
+   * Idea for preventing map from being re-created on tab changes
+   * 1. Always use 3-tab structure
+   * 2. if showTree is false: set size of outer pane to 0% and resizerStyle to { width: 0 }
+   * 3. if showForm is false: set size of inner pane to 0% and resizerStyle to { width: 0 }
+   * 2. if showMap is false: set size of inner pane to 100%?
+   */
   if (tabsLength === 3) {
     return (
       <Container ref={containerEl}>
         <StyledSplitPane
           split="vertical"
           size="33%"
+          minSize={0}
           maxSize={-10}
           resizerStyle={resizerStyle}
         >
@@ -180,6 +189,7 @@ const ProjectsPage = () => {
           <StyledSplitPane
             split="vertical"
             size="50%"
+            minSize={0}
             maxSize={-10}
             //onDragFinished={onDragSplitter} // maybe set widths of parts in store, see apflora
           >
