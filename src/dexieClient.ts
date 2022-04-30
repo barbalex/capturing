@@ -142,15 +142,12 @@ export class Field implements IField {
   }
 }
 
-export interface IFile {
+export interface IFileMeta {
   id: string
   row_id?: string
   field_id?: string
   name?: string
   type?: string
-  description?: string
-  file?: blob
-  hash?: string
   deleted: number
   client_rev_at?: Date
   client_rev_by?: string
@@ -162,7 +159,7 @@ export interface IFile {
   conflicts?: string[]
 }
 
-type FileUpdateProps = { was: IFile; is: IFile; session: Session }
+type FilesMetaUpdateProps = { was: IFileMeta; is: IFileMeta; session: Session }
 /**
  * TODO:
  * Goals:
@@ -178,13 +175,13 @@ type FileUpdateProps = { was: IFile; is: IFile; session: Session }
  * 1. FileMetas
  *    This table minus: file, hash?, description
  * 2. Files
- *    id, file, server_rev_at?
+ *    id, file
  *    No Revisions!
  *
  * Syncing works by:
  * 1. Sync FileMeta
- * 2. Fetch new linked Files
- * 3. Remove no more referenced files
+ * 2. Fetch new linked Files from storage to dexie
+ * 3. Remove no more referenced files from dexie
  *
  * FileMetas can be inserted, updated (excluding the file reference) and deleted
  * Files can only be inserted and deleted
@@ -200,15 +197,12 @@ type FileUpdateProps = { was: IFile; is: IFile; session: Session }
  *
  * Idea: test this with tile_layers tiles?
  */
-export class File implements IFile {
+export class FileMeta implements IFileMeta {
   id: string
   row_id?: string
   field_id?: string
   name?: string
   type?: string
-  description?: string
-  file?: blob
-  hash?: string
   deleted: number
   client_rev_at?: Date
   client_rev_by?: string
@@ -225,9 +219,6 @@ export class File implements IFile {
     field_id?: string,
     name?: string,
     type?: string,
-    description?: string,
-    file?: blob,
-    hash?: string,
     deleted: number,
     client_rev_at?: Date,
     client_rev_by?: string,
@@ -243,9 +234,6 @@ export class File implements IFile {
     if (field_id) this.field_id = field_id
     if (name) this.name = name
     if (type) this.type = type
-    if (description) this.description = description
-    if (file) this.file = file
-    if (hash) this.hash = hash
     this.deleted = deleted ?? 0
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
@@ -257,7 +245,7 @@ export class File implements IFile {
     if (conflicts) this.conflicts = conflicts
   }
 
-  async updateOnServer({ was, is, session }: FileUpdateProps) {
+  async updateOnServer({ was, is, session }: FilesMetaUpdateProps) {
     const isReved = {
       ...is,
       client_rev_at: new window.Date().toISOString(),
@@ -266,9 +254,9 @@ export class File implements IFile {
     const update = new QueuedUpdate(
       undefined,
       undefined,
-      'files', // processQueuedUpdate writes this into row_revs
+      'files_meta', // processQueuedUpdate writes this into row_revs
       JSON.stringify(isReved),
-      this.file,
+      this.file, // TODO: add file not from this
       was?.id,
       was ? JSON.stringify(was) : null,
     )
@@ -278,8 +266,22 @@ export class File implements IFile {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     const was = { ...this }
     this.deleted = 1
-    dexie.files.put(this)
+    dexie.files_meta.put(this)
     return this.updateOnServer({ was, is: this, session })
+  }
+}
+
+export interface IFile {
+  id: string
+  file?: blob
+}
+export class File implements IFile {
+  id: string
+  file: blob
+
+  constructor(id?: string, file: blob) {
+    this.id = id ?? uuidv1()
+    this.file = file
   }
 }
 
@@ -1116,7 +1118,7 @@ export class MySubClassedDexie extends Dexie {
   accounts!: DexieTable<Account, string>
   field_types!: DexieTable<IFieldType, string>
   fields!: DexieTable<Field, string>
-  files!: DexieTable<File, string>
+  files_meta!: DexieTable<FileMeta, string>
   news!: DexieTable<New, string>
   news_delivery!: DexieTable<NewsDelivery, string>
   project_tile_layers!: DexieTable<ProjectTileLayer, string>
@@ -1142,7 +1144,8 @@ export class MySubClassedDexie extends Dexie {
         'id, table_id, label, name, field_type, widget_type, options_table, sort, server_rev_at, deleted, [deleted+table_id]',
       // files:
       //   'id, field_id, row_id, [row_id+field_id+deleted+name], [row_id+field_id+deleted], name, server_rev_at, deleted',
-      files: 'id, [row_id+field_id+deleted], server_rev_at',
+      files_meta: 'id, [row_id+field_id+deleted], server_rev_at',
+      files: 'id',
       news: 'id, time, server_rev_at, deleted',
       news_delivery: 'id, server_rev_at, deleted',
       project_tile_layers: 'id, label, sort, active, server_rev_at, deleted',
@@ -1166,6 +1169,7 @@ export class MySubClassedDexie extends Dexie {
     })
     this.accounts.mapToClass(Account)
     this.fields.mapToClass(Field)
+    this.files_meta.mapToClass(FileMeta)
     this.files.mapToClass(File)
     this.news.mapToClass(New)
     this.news_delivery.mapToClass(NewsDelivery)

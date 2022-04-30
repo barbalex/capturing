@@ -1,25 +1,25 @@
 -- 2. choose winner and upsert file
-CREATE OR REPLACE FUNCTION file_revs_children (file_id uuid, parent_rev text)
-  RETURNS SETOF file_revs
+CREATE OR REPLACE FUNCTION files_meta_revs_children (file_id uuid, parent_rev text)
+  RETURNS SETOF files_meta_revs
   AS $$
   SELECT
     *
   FROM
-    file_revs
+    files_meta_revs
   WHERE
-    file_revs.file_id = $1
+    files_meta_revs.file_id = $1
     -- its parent is the file_rev, thus this is its child
-    AND file_revs.parent_rev = $2
+    AND files_meta_revs.parent_rev = $2
 $$
 LANGUAGE sql;
 
-CREATE OR REPLACE FUNCTION file_revs_leaves (file_id uuid, deleted integer DEFAULT 0)
-  RETURNS SETOF file_revs
+CREATE OR REPLACE FUNCTION files_meta_revs_leaves (file_id uuid, deleted integer DEFAULT 0)
+  RETURNS SETOF files_meta_revs
   AS $$
   SELECT
     *
   FROM
-    file_revs
+    files_meta_revs
   WHERE
     -- of this record
     file_id = $1
@@ -30,46 +30,46 @@ CREATE OR REPLACE FUNCTION file_revs_leaves (file_id uuid, deleted integer DEFAU
       SELECT
         1
       FROM
-        file_revs_children ($1, file_revs.rev));
+        files_meta_revs_children ($1, files_meta_revs.rev));
 
 $$
 LANGUAGE sql;
 
-CREATE OR REPLACE FUNCTION file_revs_max_depth (file_id uuid, deleted integer DEFAULT 0)
+CREATE OR REPLACE FUNCTION files_meta_revs_max_depth (file_id uuid, deleted integer DEFAULT 0)
   RETURNS int
   AS $$
   SELECT
     max(depth)
   FROM
-    file_revs_leaves ($1, $2);
+    files_meta_revs_leaves ($1, $2);
 
 $$
 LANGUAGE sql;
 
-CREATE OR REPLACE FUNCTION file_revs_winner_rev_value (file_id uuid, deleted integer DEFAULT 0)
+CREATE OR REPLACE FUNCTION files_meta_revs_winner_rev_value (file_id uuid, deleted integer DEFAULT 0)
   RETURNS text
   AS $$
   SELECT
     -- here we choose the winning revision
     max(leaves.rev) AS rev
   FROM
-    file_revs_leaves ($1, $2) AS leaves
+    files_meta_revs_leaves ($1, $2) AS leaves
 WHERE
-  file_revs_max_depth ($1, $2) = leaves.depth
+  files_meta_revs_max_depth ($1, $2) = leaves.depth
 $$
 LANGUAGE sql;
 
-CREATE OR REPLACE FUNCTION file_revs_winner (file_id uuid, deleted integer DEFAULT 0)
-  RETURNS SETOF file_revs
+CREATE OR REPLACE FUNCTION files_meta_revs_winner (file_id uuid, deleted integer DEFAULT 0)
+  RETURNS SETOF files_meta_revs
   AS $$
   SELECT
     *
   FROM
-    file_revs_leaves ($1, $2) AS leaves
+    files_meta_revs_leaves ($1, $2) AS leaves
 WHERE
-  leaves.rev = file_revs_winner_rev_value ($1, $2)
+  leaves.rev = files_meta_revs_winner_rev_value ($1, $2)
   OR (leaves.rev IS NULL
-    AND file_revs_winner_rev_value ($1, $2) IS NULL)
+    AND files_meta_revs_winner_rev_value ($1, $2) IS NULL)
 $$
 LANGUAGE sql;
 
@@ -81,15 +81,15 @@ CREATE OR REPLACE FUNCTION file_conflicts_of_winner (file_id uuid, deleted integ
       SELECT
         rev
       FROM
-        file_revs_leaves ($1, $2)
+        files_meta_revs_leaves ($1, $2)
       WHERE
-        rev <> file_revs.rev)
+        rev <> files_meta_revs.rev)
   FROM
-    file_revs_winner ($1, $2) AS file_revs
+    files_meta_revs_winner ($1, $2) AS files_meta_revs
 $$
 LANGUAGE sql;
 
-CREATE OR REPLACE FUNCTION file_revs_set_winning_revision ()
+CREATE OR REPLACE FUNCTION files_meta_revs_set_winning_revision ()
   RETURNS TRIGGER
   AS $$
 BEGIN
@@ -97,20 +97,17 @@ BEGIN
     SELECT
       1
     FROM
-      file_revs_winner (NEW.file_id, 0))
+      files_meta_revs_winner (NEW.file_id, 0))
   -- 1. if a winning undeleted leaf exists, use this
   --    (else pick a winner from the deleted leaves)
   THEN
-  INSERT INTO files (id, row_id, field_id, name, type, description, file, hash, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
+  INSERT INTO files_meta (id, row_id, field_id, name, type, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
   SELECT
     winner.file_id,
     row_id,
     winner.field_id,
     winner.name,
     winner.type,
-    winner.description,
-    winner.file,
-    winner.hash,
     winner.deleted,
     winner.client_rev_at,
     winner.client_rev_by,
@@ -121,16 +118,13 @@ BEGIN
   winner.depth,
   file_conflicts_of_winner (NEW.file_id) AS conflicts
 FROM
-  file_revs_winner (NEW.file_id) AS winner
+  files_meta_revs_winner (NEW.file_id) AS winner
 ON CONFLICT (id)
   DO UPDATE SET
     -- do not update the idrow_id,
     field_id = excluded.field_id,
     name = excluded.name,
     type = excluded.type,
-    description = excluded.description,
-    file = excluded.file,
-    hash = excluded.hash,
     deleted = excluded.deleted,
     client_rev_at = excluded.client_rev_at,
     client_rev_by = excluded.client_rev_by,
@@ -145,16 +139,13 @@ ELSE
   --    choose winner from deleted leaves
   --    is necessary to set the winner deleted
   --    so the client can pick this up
-  INSERT INTO files (id, row_id, field_id, name, type, description, file, hash, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
+  INSERT INTO files_meta (id, row_id, field_id, name, type, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
   SELECT
     winner.file_id,
     row_id,
     winner.field_id,
     winner.name,
     winner.type,
-    winner.description,
-    winner.file,
-    winner.hash,
     winner.deleted,
     winner.client_rev_at,
     winner.client_rev_by,
@@ -165,16 +156,13 @@ ELSE
     winner.depth,
     file_conflicts_of_winner (NEW.file_id, 1) AS conflicts
   FROM
-    file_revs_winner (NEW.file_id, 1) AS winner
+    files_meta_revs_winner (NEW.file_id, 1) AS winner
 ON CONFLICT (id)
   DO UPDATE SET
-    -- do not update the idrow_id,
+    -- do not update the row_id,
     field_id = excluded.field_id,
     name = excluded.name,
     type = excluded.type,
-    description = excluded.description,
-    file = excluded.file,
-    hash = excluded.hash,
     deleted = excluded.deleted,
     client_rev_at = excluded.client_rev_at,
     client_rev_by = excluded.client_rev_by,
@@ -190,8 +178,8 @@ END;
 $$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_file_revs_set_winning_revision
-  AFTER INSERT ON file_revs
+CREATE TRIGGER trigger_files_meta_revs_set_winning_revision
+  AFTER INSERT ON files_meta_revs
   FOR EACH ROW
-  EXECUTE PROCEDURE file_revs_set_winning_revision ();
+  EXECUTE PROCEDURE files_meta_revs_set_winning_revision ();
 

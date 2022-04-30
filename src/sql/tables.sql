@@ -671,17 +671,14 @@ COMMENT ON COLUMN row_revs.depth IS 'depth of the revision tree';
 ALTER TABLE row_revs ENABLE ROW LEVEL SECURITY;
 
 --
-DROP TABLE IF EXISTS files CASCADE;
+DROP TABLE IF EXISTS files_meta CASCADE;
 
-CREATE TABLE files (
+CREATE TABLE files_meta (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   row_id uuid NOT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
   field_id uuid DEFAULT NULL REFERENCES fields (id) ON DELETE NO action ON UPDATE CASCADE,
   name text DEFAULT NULL,
   type text DEFAULT NULL, -- https://en.wikipedia.org/wiki/Media_type
-  description text DEFAULT NULL,
-  file bytea DEFAULT NULL,
-  hash text DEFAULT NULL,
   deleted integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
@@ -693,67 +690,67 @@ CREATE TABLE files (
   conflicts text[] DEFAULT NULL
 );
 
-CREATE UNIQUE INDEX files_row_field_filename_idx ON files (row_id, field_id, name)
+CREATE UNIQUE INDEX files_row_field_filename_idx ON files_meta (row_id, field_id, name)
 WHERE
   deleted = 0;
 
-CREATE INDEX ON files USING btree (id);
+CREATE INDEX ON files_meta USING btree (id);
 
-CREATE INDEX ON files USING btree (row_id);
+CREATE INDEX ON files_meta USING btree (row_id);
 
-CREATE INDEX ON files USING btree (field_id);
+CREATE INDEX ON files_meta USING btree (field_id);
 
-CREATE INDEX ON files USING btree (name);
+CREATE INDEX ON files_meta USING btree (name);
 
-CREATE INDEX ON files USING btree (type);
+CREATE INDEX ON files_meta USING btree (type);
 
 -- enables listing images
 CREATE INDEX ON ROWS USING btree (deleted);
 
-COMMENT ON TABLE files IS 'Goal: Collect data. Versioned in db. Files managed following db data';
+COMMENT ON TABLE files_meta IS 'Goal: Collect data. Versioned in db. Files managed following db data';
 
-COMMENT ON COLUMN files.id IS 'primary key';
+COMMENT ON COLUMN files_meta.id IS 'primary key';
 
-COMMENT ON COLUMN files.row_id IS 'associated row';
+COMMENT ON COLUMN files_meta.row_id IS 'associated row';
 
-COMMENT ON COLUMN files.field_id IS 'associated field';
+COMMENT ON COLUMN files_meta.field_id IS 'associated field';
 
-COMMENT ON COLUMN files.name IS 'filename is set to this when exporting files';
+COMMENT ON COLUMN files_meta.name IS 'filename is set to this when exporting files';
 
-COMMENT ON COLUMN files.type IS '(media) type of the file. See: https://en.wikipedia.org/wiki/Media_type';
+COMMENT ON COLUMN files_meta.type IS '(media) type of the file. See: https://en.wikipedia.org/wiki/Media_type';
 
-COMMENT ON COLUMN files.description IS 'searchable/filterable description of file content';
+COMMENT ON COLUMN files_meta.deleted IS 'marks if the file is deleted';
 
-COMMENT ON COLUMN files.file IS 'the file''s content';
+COMMENT ON COLUMN files_meta.client_rev_at IS 'time of last edit on client';
 
-COMMENT ON COLUMN files.hash IS 'a hash of the file''s content. Used to detect content changes. This the revision is based on: row_id, field_id name, type, description, deleted and hash';
+COMMENT ON COLUMN files_meta.client_rev_by IS 'user editing last on client';
 
-COMMENT ON COLUMN files.deleted IS 'marks if the file is deleted';
+COMMENT ON COLUMN files_meta.server_rev_at IS 'time of last edit on server';
 
-COMMENT ON COLUMN files.client_rev_at IS 'time of last edit on client';
-
-COMMENT ON COLUMN files.client_rev_by IS 'user editing last on client';
-
-COMMENT ON COLUMN files.server_rev_at IS 'time of last edit on server';
-
-ALTER TABLE files ENABLE ROW LEVEL SECURITY;
+ALTER TABLE files_meta ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE files;
+  ADD TABLE files_meta;
 
 --
-DROP TABLE IF EXISTS file_revs CASCADE;
+INSERT INTO storage.buckets (id, name)
+  VALUES ('files', 'files');
 
-CREATE TABLE file_revs (
+CREATE POLICY "Restricted Access" ON storage.objects
+  FOR SELECT
+    USING (bucket_id = 'files'
+      AND auth.role () = 'authenticated');
+
+--
+DROP TABLE IF EXISTS files_meta_revs CASCADE;
+
+CREATE TABLE files_meta_revs (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   row_id uuid DEFAULT NULL,
   file_id uuid DEFAULT NULL,
   field_id uuid DEFAULT NULL,
   name text DEFAULT NULL,
   type text DEFAULT NULL,
-  description text DEFAULT NULL,
-  file bytea DEFAULT NULL,
-  hash text DEFAULT NULL,
   deleted integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT NULL,
   client_rev_by text DEFAULT NULL,
@@ -764,37 +761,37 @@ CREATE TABLE file_revs (
   depth integer DEFAULT 0
 );
 
-CREATE INDEX ON file_revs USING btree (id);
+CREATE INDEX ON files_meta_revs USING btree (id);
 
-CREATE INDEX ON file_revs USING btree (row_id);
+CREATE INDEX ON files_meta_revs USING btree (row_id);
 
-CREATE INDEX ON file_revs USING btree (file_id);
+CREATE INDEX ON files_meta_revs USING btree (file_id);
 
-CREATE INDEX ON file_revs USING btree (server_rev_at);
+CREATE INDEX ON files_meta_revs USING btree (server_rev_at);
 
-CREATE INDEX ON file_revs USING btree (rev);
+CREATE INDEX ON files_meta_revs USING btree (rev);
 
-CREATE INDEX ON file_revs USING btree (parent_rev);
+CREATE INDEX ON files_meta_revs USING btree (parent_rev);
 
-CREATE INDEX ON file_revs USING btree (depth);
+CREATE INDEX ON files_meta_revs USING btree (depth);
 
-CREATE INDEX ON file_revs USING btree (deleted);
+CREATE INDEX ON files_meta_revs USING btree (deleted);
 
-COMMENT ON TABLE file_revs IS 'Goal: Sync files and handle conflicts';
+COMMENT ON TABLE files_meta_revs IS 'Goal: Sync files and handle conflicts';
 
-COMMENT ON COLUMN file_revs.id IS 'primary key';
+COMMENT ON COLUMN files_meta_revs.id IS 'primary key';
 
-COMMENT ON COLUMN file_revs.file_id IS 'key of table files';
+COMMENT ON COLUMN files_meta_revs.file_id IS 'key of table files_meta';
 
-COMMENT ON COLUMN file_revs.rev IS 'hashed value the fields: file_id, field_id, name, hash, version, deleted';
+COMMENT ON COLUMN files_meta_revs.rev IS 'hashed value the fields: file_id, field_id, name, hash, version, deleted';
 
-COMMENT ON COLUMN file_revs.parent_rev IS 'hash of the previous revision';
+COMMENT ON COLUMN files_meta_revs.parent_rev IS 'hash of the previous revision';
 
-COMMENT ON COLUMN file_revs.revisions IS 'array of hashes of all previous revisions';
+COMMENT ON COLUMN files_meta_revs.revisions IS 'array of hashes of all previous revisions';
 
-COMMENT ON COLUMN file_revs.depth IS 'depth of the revision tree';
+COMMENT ON COLUMN files_meta_revs.depth IS 'depth of the revision tree';
 
-ALTER TABLE file_revs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE files_meta_revs ENABLE ROW LEVEL SECURITY;
 
 --
 DROP TABLE IF EXISTS version_types CASCADE;
@@ -1180,6 +1177,51 @@ $$
 LANGUAGE sql
 SECURITY DEFINER;
 
+CREATE OR REPLACE FUNCTION is_project_user_by_file_meta (_auth_user_id uuid, _file_meta_id uuid)
+  RETURNS bool
+  AS $$
+  SELECT
+    EXISTS (
+      SELECT
+        1
+      FROM
+        auth.users users
+        INNER JOIN project_users ON users.email = project_users.user_email
+        INNER JOIN projects ON projects.id = project_users.project_id
+        INNER JOIN tables ON tables.project_id = projects.id
+        INNER JOIN ROWS ON rows.table_id = tables.id
+        INNER JOIN files_meta ON files_meta.row_id = rows.id
+      WHERE
+        files_meta.id = _file_meta_id
+        AND users.id = _auth_user_id);
+
+$$
+LANGUAGE sql
+SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION is_project_editor_or_manager_by_file_meta (_auth_user_id uuid, _file_meta_id uuid)
+  RETURNS bool
+  AS $$
+  SELECT
+    EXISTS (
+      SELECT
+        1
+      FROM
+        auth.users users
+        INNER JOIN project_users ON users.email = project_users.user_email
+        INNER JOIN projects ON projects.id = project_users.project_id
+        INNER JOIN tables ON tables.project_id = projects.id
+        INNER JOIN ROWS ON rows.table_id = tables.id
+        INNER JOIN files_meta ON files_meta.row_id = rows.id
+      WHERE
+        files_meta.id = _file_meta_id
+        AND project_users.role IN ('account_manager', 'project_manager', 'project_editor')
+        AND users.id = _auth_user_id);
+
+$$
+LANGUAGE sql
+SECURITY DEFINER;
+
 -- Function is owned by postgres which bypasses RLS
 --
 --
@@ -1543,58 +1585,58 @@ CREATE POLICY "row_revs can not be deleted" ON row_revs
   FOR DELETE
     USING (FALSE);
 
-DROP POLICY IF EXISTS "project readers, editors and managers can view files" ON files;
+DROP POLICY IF EXISTS "project readers, editors and managers can view files" ON files_meta;
 
-CREATE POLICY "project readers, editors and managers can view files" ON files
+CREATE POLICY "project readers, editors and managers can view files" ON files_meta
   FOR SELECT
     USING (is_project_user_by_row (auth.uid (), row_id));
 
-DROP POLICY IF EXISTS "project managers and editors can insert files" ON files;
+DROP POLICY IF EXISTS "project managers and editors can insert files" ON files_meta;
 
-CREATE POLICY "project managers and editors can insert files" ON files
+CREATE POLICY "project managers and editors can insert files" ON files_meta
   FOR INSERT
     WITH CHECK (is_project_editor_or_manager_by_row (auth.uid (), row_id));
 
-DROP POLICY IF EXISTS "project managers and editors can update files" ON files;
+DROP POLICY IF EXISTS "project managers and editors can update files" ON files_meta;
 
-CREATE POLICY "project managers and editors can update files" ON files
+CREATE POLICY "project managers and editors can update files" ON files_meta
   FOR UPDATE
     USING (is_project_user_by_row (auth.uid (), row_id))
     WITH CHECK (is_project_editor_or_manager_by_row (auth.uid (), row_id));
 
-DROP POLICY IF EXISTS "project managers and editors can delete files" ON files;
+DROP POLICY IF EXISTS "project managers and editors can delete files" ON files_meta;
 
-CREATE POLICY "project managers and editors can delete files" ON files
+CREATE POLICY "project managers and editors can delete files" ON files_meta
   FOR DELETE
     USING (is_project_editor_or_manager_by_row (auth.uid (), row_id));
 
-DROP POLICY IF EXISTS "authenticated users can view file_revs" ON file_revs;
+DROP POLICY IF EXISTS "authenticated users can view files_meta_revs" ON files_meta_revs;
 
 -- this is problematic
 -- but there is no way to ensure references inside revs
 -- so project and user's roles can not be found
 -- TODO: find better solution
 -- maybe: allow only users who are editor or manager in any project to read? Fetch this via auth.email()
-CREATE POLICY "authenticated users can view file_revs" ON file_revs
+CREATE POLICY "authenticated users can view files_meta_revs" ON files_meta_revs
   FOR SELECT
     USING (auth.role () = 'authenticated');
 
-DROP POLICY IF EXISTS "authenticated users can insert file_revs" ON file_revs;
+DROP POLICY IF EXISTS "authenticated users can insert files_meta_revs" ON files_meta_revs;
 
 -- inserting possible BUT: revision trigger will fail depending on rls on files table
-CREATE POLICY "authenticated users can insert file_revs" ON file_revs
+CREATE POLICY "authenticated users can insert files_meta_revs" ON files_meta_revs
   FOR INSERT
     WITH CHECK (auth.role () = 'authenticated');
 
-DROP POLICY IF EXISTS "file_revs can not be updated" ON file_revs;
+DROP POLICY IF EXISTS "files_meta_revs can not be updated" ON files_meta_revs;
 
-CREATE POLICY "file_revs can not be updated" ON file_revs
+CREATE POLICY "files_meta_revs can not be updated" ON files_meta_revs
   FOR UPDATE
     WITH CHECK (FALSE);
 
-DROP POLICY IF EXISTS "file_revs can not be deleted" ON file_revs;
+DROP POLICY IF EXISTS "files_meta_revs can not be deleted" ON files_meta_revs;
 
-CREATE POLICY "file_revs can not be deleted" ON file_revs
+CREATE POLICY "files_meta_revs can not be deleted" ON files_meta_revs
   FOR DELETE
     USING (FALSE);
 

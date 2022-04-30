@@ -11,7 +11,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 import FormLabel from '@mui/material/FormLabel'
 
 import ErrorBoundary from '../../../shared/ErrorBoundary'
-import { dexie, File, Field } from '../../../../dexieClient'
+import { dexie, FileMeta, Field } from '../../../../dexieClient'
 import { supabase } from '../../../../supabaseClient'
 import FileComponent from './File'
 
@@ -121,16 +121,13 @@ const Files = ({ field }: Props) => {
             fileType: file.type,
           })
 
-          const newFile = new File(
+          const newFile = new FileMeta(
             undefined,
             rowId,
             field.id,
             // eslint-disable-next-line no-useless-escape
             file.name.replace(/^.*[\\\/]/, ''),
             file.type,
-            undefined,
-            fileByteArray,
-            SparkMD5.ArrayBuffer.hash(binaryStr, true),
             undefined,
             undefined,
             undefined,

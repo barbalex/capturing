@@ -48,12 +48,7 @@ const processQueuedUpdate = async ({
     newRevObject.revisions = isInsert
       ? [rev]
       : [rev, ...(newObject.revisions ?? [])]
-    if (queuedUpdate.file) {
-      // need to convert to hex format for postgresql
-      // https://stackoverflow.com/a/40031979/712005
-      //newRevObject.file = buf2hex(queuedUpdate.file)
-      newRevObject.file = queuedUpdate.file
-    }
+
     console.log('processQueuedUpdate, newRevObject:', {
       newRevObject,
       newObject: JSON.parse(queuedUpdate.value),
@@ -77,6 +72,9 @@ const processQueuedUpdate = async ({
       // TODO: restore previous value
       return
     }
+  } else if (queuedUpdate.table === 'files') {
+    // TODO: send to supabase storage
+    return
   } else {
     // TODO: upsert regular table
     // 1. create new Object

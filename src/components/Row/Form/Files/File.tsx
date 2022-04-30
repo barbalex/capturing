@@ -9,7 +9,7 @@ import ListItemText from '@mui/material/ListItemText'
 import fileSaver from 'file-saver'
 
 import ErrorBoundary from '../../../shared/ErrorBoundary'
-import { File } from '../../../../dexieClient'
+import { FileMeta } from '../../../../dexieClient'
 import { supabase } from '../../../../supabaseClient'
 
 const StyledListItem = styled(ListItem)`
@@ -43,7 +43,7 @@ const Image = styled.img`
 `
 
 type Props = {
-  file: File
+  file: FileMeta
 }
 
 const Files = ({ file }: Props) => {
