@@ -9,7 +9,7 @@ import ListItemText from '@mui/material/ListItemText'
 import fileSaver from 'file-saver'
 
 import ErrorBoundary from '../../../shared/ErrorBoundary'
-import { FileMeta } from '../../../../dexieClient'
+import { dexie, FileMeta, File } from '../../../../dexieClient'
 import { supabase } from '../../../../supabaseClient'
 
 const StyledListItem = styled(ListItem)`
@@ -43,10 +43,10 @@ const Image = styled.img`
 `
 
 type Props = {
-  file: FileMeta
+  fileMeta: FileMeta
 }
 
-const Files = ({ file }: Props) => {
+const Files = ({ fileMeta }: Props) => {
   const session: Session = supabase.auth.session()
 
   // if (file.name === '2007-06-17_15.JPG') {
@@ -60,22 +60,21 @@ const Files = ({ file }: Props) => {
   const onClickRemove = useCallback(
     (e) => {
       e.stopPropagation()
-      file.deleteOnServerAndClient({ session })
+      fileMeta.deleteOnServerAndClient({ session })
     },
-    [file, session],
+    [fileMeta, session],
   )
 
   const [blob, setBlob] = useState()
   useEffect(() => {
-    if (!file.file) return
-    // const blob = new Blob([new Uint8Array(file.file)], {
-    //   type: file.type,
-    // })
-    const blob = new Blob([file.file], {
-      type: file.type,
+    dexie.files.get(fileMeta.id).then((file: File) => {
+      if (!file) return
+      const blob = new Blob([file.file], {
+        type: fileMeta.type,
+      })
+      setBlob(blob)
     })
-    setBlob(blob)
-  }, [file.file, file.type])
+  }, [fileMeta.file, fileMeta.id, fileMeta.type])
 
   const onClickDownload = useCallback(
     async (e) => {
@@ -84,12 +83,12 @@ const Files = ({ file }: Props) => {
       // if (file.name === '2007-06-17_15.JPG') {
       //   console.log('File, onClickDownload', { blob, file: file.file })
       // }
-      fileSaver.saveAs(blob, file.name)
+      fileSaver.saveAs(blob, fileMeta.name)
     },
-    [blob, file.name],
+    [blob, fileMeta.name],
   )
 
-  const isImage = (file.type?.includes('image') && !!file.file) ?? false
+  const isImage = (fileMeta.type?.includes('image') && !!fileMeta.file) ?? false
   const [preview, setPreview] = useState()
   useEffect(() => {
     if (isImage && !!blob) {
@@ -108,23 +107,23 @@ const Files = ({ file }: Props) => {
       setPreview(objectUrl)
     }
     return () => URL.revokeObjectURL(blob)
-  }, [blob, file, file.file, isImage])
+  }, [blob, fileMeta, fileMeta.file, isImage])
 
   return (
     <ErrorBoundary>
       <StyledListItem divider onClick={onClickItem}>
         {!!preview && <Image height={55} src={preview} />}
-        <StyledListItemText primary={file.name} secondary={file.type} />
+        <StyledListItemText primary={fileMeta.name} secondary={fileMeta.type} />
         <IconContainer>
           <IconButton
-            title={`${file.name ?? 'Datei'} herunterladen`}
+            title={`${fileMeta.name ?? 'Datei'} herunterladen`}
             onClick={onClickDownload}
             size="medium"
           >
             <MdFileDownload />
           </IconButton>
           <IconButton
-            title={`${file.name ?? 'Datei'} entfernen`}
+            title={`${fileMeta.name ?? 'Datei'} entfernen`}
             onClick={onClickRemove}
             size="medium"
           >

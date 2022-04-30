@@ -49,10 +49,10 @@ const processQueuedUpdate = async ({
       ? [rev]
       : [rev, ...(newObject.revisions ?? [])]
 
-    console.log('processQueuedUpdate, newRevObject:', {
-      newRevObject,
-      newObject: JSON.parse(queuedUpdate.value),
-    })
+    // console.log('processQueuedUpdate, newRevObject:', {
+    //   newRevObject,
+    //   newObject: JSON.parse(queuedUpdate.value),
+    // })
     // 2. send revision to server
     const { error } = await supabase.from(revTableName).insert(newRevObject)
     if (error) {
@@ -73,8 +73,11 @@ const processQueuedUpdate = async ({
       return
     }
   } else if (queuedUpdate.table === 'files') {
-    // TODO: send to supabase storage
-    return
+    // send to supabase storage
+    const { error } = await supabase.storage
+      .from('files')
+      .upload(queuedUpdate.value.id, queuedUpdate.value.file)
+    if (error) return console.log(error)
   } else {
     // TODO: upsert regular table
     // 1. create new Object
@@ -90,7 +93,7 @@ const processQueuedUpdate = async ({
       console.log('processQueuedUpdate, regular table, error upserting:', error)
     }
   }
-  // 4. It worke. Clean up
+  // 4. It worked. Clean up
   // Set online true if was false
   if (!online) setOnline(true)
   // remove queuedUpdate

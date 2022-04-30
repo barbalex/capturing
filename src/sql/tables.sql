@@ -690,10 +690,6 @@ CREATE TABLE files_meta (
   conflicts text[] DEFAULT NULL
 );
 
-CREATE UNIQUE INDEX files_row_field_filename_idx ON files_meta (row_id, field_id, name)
-WHERE
-  deleted = 0;
-
 CREATE INDEX ON files_meta USING btree (id);
 
 CREATE INDEX ON files_meta USING btree (row_id);
@@ -709,7 +705,7 @@ CREATE INDEX ON ROWS USING btree (deleted);
 
 COMMENT ON TABLE files_meta IS 'Goal: Collect data. Versioned in db. Files managed following db data';
 
-COMMENT ON COLUMN files_meta.id IS 'primary key';
+COMMENT ON COLUMN files_meta.id IS 'primary key. This is used to name the file in storage';
 
 COMMENT ON COLUMN files_meta.row_id IS 'associated row';
 

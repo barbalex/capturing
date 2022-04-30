@@ -14,6 +14,7 @@ import ErrorBoundary from '../../../shared/ErrorBoundary'
 import { dexie, FileMeta, Field } from '../../../../dexieClient'
 import { supabase } from '../../../../supabaseClient'
 import FileComponent from './File'
+import insertFile from '../../../../utils/insertFile'
 
 const Container = styled.div`
   padding: 0 8px;
@@ -66,9 +67,9 @@ type Props = {
 const Files = ({ field }: Props) => {
   const session: Session = supabase.auth.session()
   const { rowId } = useParams()
-  const files = useLiveQuery(
+  const filesMeta = useLiveQuery(
     async () =>
-      await dexie.files
+      await dexie.files_meta
         .where({ row_id: rowId, field_id: field.id, deleted: 0 })
         .sortBy('name'),
     [field, rowId],
@@ -90,21 +91,6 @@ const Files = ({ field }: Props) => {
         reader.onabort = () => console.log('file reading was aborted')
         reader.onerror = () => console.log('file reading has failed')
         reader.onload = async () => {
-          // TODO: check that name is unique
-          const nameCount = await dexie.files
-            .where({
-              row_id: rowId,
-              field_id: field.id,
-              deleted: 0,
-              // eslint-disable-next-line no-useless-escape
-              name: file.name.replace(/^.*[\\\/]/, ''),
-            })
-            .count()
-          if (nameCount > 0) {
-            return setError(
-              'Dieser Dateiname existiert bereits. Ein Dateiname kann pro Datensatz und Feld nur ein mal vorkommen.',
-            )
-          }
           // Do whatever you want with the file contents
           const binaryStr = reader.result // seems to be ArrayBuffer
           // const fileByteArray = [] // see: https://thewebdev.info/2021/08/01/how-to-convert-a-file-input-value-to-a-byte-array-with-javascript/
@@ -121,27 +107,20 @@ const Files = ({ field }: Props) => {
             fileType: file.type,
           })
 
-          const newFile = new FileMeta(
-            undefined,
+          const id = insertFile({ file: binaryStr })
+
+          const newFileMeta = new FileMeta(
+            id,
             rowId,
             field.id,
-            // eslint-disable-next-line no-useless-escape
-            file.name.replace(/^.*[\\\/]/, ''),
+            file.name,
             file.type,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
           )
-          console.log('Files, onDrop, newFile:', newFile)
-          dexie.files.put(newFile)
-          // TODO:
-          newFile.updateOnServer({
+          console.log('Files, onDrop, newFileMeta:', newFileMeta)
+          dexie.files_meta.put(newFileMeta)
+          newFileMeta.updateOnServer({
             was: null,
-            is: newFile,
+            is: newFileMeta,
             session,
           })
           setError(undefined)
@@ -158,8 +137,8 @@ const Files = ({ field }: Props) => {
       <Container>
         <FilesContainer>
           <FileList dense>
-            {(files ?? []).map((file) => (
-              <FileComponent key={file.id} file={file} />
+            {(filesMeta ?? []).map((fileMeta) => (
+              <FileComponent key={fileMeta.id} fileMeta={fileMeta} />
             ))}
           </FileList>
           <DropzoneContainer>

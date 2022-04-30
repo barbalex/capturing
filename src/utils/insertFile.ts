@@ -9,7 +9,7 @@ const insertFile = async ({ file }: Props) => {
   const update = new QueuedUpdate(
     undefined,
     undefined,
-    'file',
+    'files',
     JSON.stringify(newRow),
     undefined,
     undefined,

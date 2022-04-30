@@ -1119,6 +1119,7 @@ export class MySubClassedDexie extends Dexie {
   field_types!: DexieTable<IFieldType, string>
   fields!: DexieTable<Field, string>
   files_meta!: DexieTable<FileMeta, string>
+  files!: DexieTable<File, string>
   news!: DexieTable<New, string>
   news_delivery!: DexieTable<NewsDelivery, string>
   project_tile_layers!: DexieTable<ProjectTileLayer, string>
@@ -1137,7 +1138,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(20).stores({
+    this.version(21).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
