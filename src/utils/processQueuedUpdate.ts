@@ -76,7 +76,7 @@ const processQueuedUpdate = async ({
     // send to supabase storage
     const { error } = await supabase.storage
       .from('files')
-      .upload(queuedUpdate.value.id, queuedUpdate.value.file)
+      .upload(`files/${queuedUpdate.value.id}`, queuedUpdate.value.file)
     if (error) return console.log(error)
   } else {
     // TODO: upsert regular table

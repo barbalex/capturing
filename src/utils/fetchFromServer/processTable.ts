@@ -1,5 +1,5 @@
 import { supabase } from '../../supabaseClient'
-import { dexie } from '../../dexieClient'
+import { dexie, File } from '../../dexieClient'
 import hex2buf from '../hex2buf'
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
@@ -63,14 +63,27 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
   }
   // 1.4. update dexie with these changes
   if (data) {
-    // if files: need to convert files
-    if (tableName === 'files') {
-      data = data.map((d) => ({ ...d, file: d.file ? hex2buf(d.file) : null }))
-    }
     try {
       await dexie.table(tableNameForDexie).bulkPut(data)
     } catch (error) {
       console.log(`error putting ${tableName}:`, error)
+    }
+    // if files_meta: need to sync files
+    if (tableName === 'files_meta') {
+      for (const d of data) {
+        if (d.deleted === 0) {
+          // fetch to Files
+          const { data, error } = await supabase.storage
+            .from('files')
+            .download(`files/${d.name}`)
+          if (error) return console.log(error)
+          const newFile = new File(d.id, data)
+          dexie.files.put(newFile)
+        } else {
+          // remove from Files
+          dexie.files.delete(d.id)
+        }
+      }
     }
   }
 }
