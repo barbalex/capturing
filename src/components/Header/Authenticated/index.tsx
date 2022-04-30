@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Button from '@mui/material/Button'
@@ -40,12 +40,35 @@ const NavButton = styled(Button)`
     border-width: 1px !important;
   }
 `
+const SubNavButton = styled(Button)`
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  border-width: 0 !important;
+  border-width: ${(props) =>
+    props.active ? '1px !important' : '0 !important'};
+  &:hover {
+    border-width: 1px !important;
+  }
+`
 
 const HeaderAuthenticated = () => {
   const { pathname } = useLocation()
   const { width, ref: resizeRef } = useResizeDetector()
   const mobile = width && width < constants?.tree?.minimalWindowWidth
   const isHome = pathname === '/'
+  const isProject = pathname.includes('/projects')
+
+  const onClickTree = useCallback(() => {
+    console.log('TODO:')
+  }, [])
+  const onClickForm = useCallback(() => {
+    console.log('TODO:')
+  }, [])
+  const onClickMap = useCallback(() => {
+    console.log('TODO:')
+  }, [])
+
+  console.log({ pathname })
 
   return (
     <ErrorBoundary>
@@ -78,21 +101,36 @@ const HeaderAuthenticated = () => {
             </SiteTitle>
           )}
           <Spacer />
-          <NavButton
-            variant="outlined"
-            component={Link}
-            to="/projects"
-            disabled={pathname === '/projects'}
-          >
-            Projects
-          </NavButton>
+          {isProject ? (
+            <>
+              <NavButton variant="outlined" onClick={onClickTree}>
+                Strukturbaum
+              </NavButton>
+              <NavButton variant="outlined" onClick={onClickForm}>
+                Formular
+              </NavButton>
+              <NavButton variant="outlined" onClick={onClickMap}>
+                Karte
+              </NavButton>
+            </>
+          ) : (
+            <NavButton
+              variant="outlined"
+              component={Link}
+              to="/projects"
+              disabled={isProject}
+            >
+              Projects
+            </NavButton>
+          )}
           <NavButton
             variant="outlined"
             component={Link}
             to="/docs"
-            disabled={pathname === '/docs'}
+            disabled={pathname.includes('/docs')}
+            title="Dokumentation"
           >
-            Docs
+            Doku
           </NavButton>
           <ServerConnected />
           <Account />

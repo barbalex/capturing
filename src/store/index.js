@@ -29,6 +29,9 @@ export const MobxStore = types
       [],
     ),
     notifications: types.map(NotificationType),
+    showTree: types.optional(types.boolean, true),
+    showForm: types.optional(types.boolean, true),
+    showMap: types.optional(types.boolean, false),
     singleColumnView: types.optional(types.boolean, false),
     showTreeInSingleColumnView: types.optional(types.boolean, false),
     treeWidthInPercentOfScreen: types.optional(types.number, 33),
@@ -49,6 +52,15 @@ export const MobxStore = types
     // )
 
     return {
+      setShowTree(val) {
+        self.showTree = val
+      },
+      setShowForm(val) {
+        self.showForm = val
+      },
+      setShowMap(val) {
+        self.showMap = val
+      },
       setProjectEditing({ id, editing }) {
         self.editingProjects.set(id, { id, editing })
       },
