@@ -10,6 +10,7 @@ import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import OsmColor from './layers/OsmColor'
 import OsmBw from './layers/OsmBw'
+import LocationMarker from './LocationMarker'
 
 const StyledMapContainer = styled(MapContainer)`
   height: calc(100%);
@@ -63,6 +64,7 @@ const MapComponent = () => {
         zoom={13}
       >
         {activeBaseLayer && <BaseLayerComponent />}
+        <LocationMarker />
       </StyledMapContainer>
     </ErrorBoundary>
   )
