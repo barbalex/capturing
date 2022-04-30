@@ -6,7 +6,6 @@ import { Outlet } from 'react-router-dom'
 
 import StoreContext from '../storeContext'
 import Login from '../components/Login'
-import ErrorBoundary from '../components/shared/ErrorBoundary'
 import constants from '../utils/constants'
 import nodesFromActiveNodeArray from '../utils/nodesFromActiveNodeArray'
 import Tree from '../components/Tree'
@@ -56,6 +55,9 @@ const ProjectsPage = () => {
     setFormHeight,
     setNodes,
     activeNodeArray,
+    showTree,
+    showForm,
+    showMap,
   } = store
 
   // console.log('Projects, subscriptionState:', store.subscriptionState)
@@ -92,28 +94,31 @@ const ProjectsPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  if (!session) return <Login />
+
   const treeWidth = singleColumnView ? 0 : `${treeWidthInPercentOfScreen}%`
 
-  if (!session) return <Login />
+  let tabsLength = 0
+  if (showTree) tabsLength++
+  if (showForm) tabsLength++
+  if (showMap) tabsLength++
 
   // hide resizer when tree is hidden
   const resizerStyle = treeWidth === 0 ? { width: 0 } : {}
 
   // TODO: in editing mode, render tree with fields
   return (
-    <ErrorBoundary>
-      <Container ref={containerEl}>
-        <StyledSplitPane
-          split="vertical"
-          size={treeWidth}
-          maxSize={-10}
-          resizerStyle={resizerStyle}
-        >
-          <Tree ref={treeEl} />
-          <Outlet />
-        </StyledSplitPane>
-      </Container>
-    </ErrorBoundary>
+    <Container ref={containerEl}>
+      <StyledSplitPane
+        split="vertical"
+        size={treeWidth}
+        maxSize={-10}
+        resizerStyle={resizerStyle}
+      >
+        <Tree ref={treeEl} />
+        <Outlet />
+      </StyledSplitPane>
+    </Container>
   )
 }
 
