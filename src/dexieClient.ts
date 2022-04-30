@@ -185,6 +185,12 @@ type FileUpdateProps = { was: IFile; is: IFile; session: Session }
  * TO DECIDE:
  * Instead of Files, use file storage with files named by id?
  * In Supabase access would be ruled by policy depending on link to FileMeta
+ *
+ * Plus side: no files in db
+ * Down side: removing no more needed files may be harder:
+ * loop all files and remove where not referenced from FileMeta
+ * or:
+ * loop all loosing FileMeta older than a month > remove file and FileMeta (or create new rev of FileMeta without file?)
  */
 export class File implements IFile {
   id: string
