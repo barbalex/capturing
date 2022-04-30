@@ -42,6 +42,12 @@ export const MobxStore = types
     filterWidth: types.optional(types.number, 500),
     online: types.optional(types.boolean, true),
     activeBaseLayer: types.optional(types.maybeNull(types.string), 'OsmColor'),
+    // setting bounds works imperatively with map.fitBounds since v3
+    // but keeping bounds in store as last used bounds will be re-applied on next map opening
+    bounds: types.optional(types.array(types.array(types.number)), [
+      [47.159, 8.354],
+      [47.696, 8.984],
+    ]),
   })
   .volatile(() => ({ navigate: undefined }))
   .actions((self) => {
@@ -53,6 +59,9 @@ export const MobxStore = types
     // )
 
     return {
+      setBounds(val) {
+        self.bounds = val
+      },
       setActiveBaseLayer(val) {
         self.activeBaseLayer = val
       },

@@ -2,9 +2,10 @@ import { useMemo, useContext } from 'react'
 import 'leaflet'
 import 'proj4'
 import 'proj4leaflet'
-import { MapContainer, useMap } from 'react-leaflet'
+import { MapContainer } from 'react-leaflet'
 import styled from 'styled-components'
 import 'leaflet/dist/leaflet.css'
+import { getSnapshot } from 'mobx-state-tree'
 
 import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
@@ -30,7 +31,8 @@ const StyledMapContainer = styled(MapContainer)`
 
 const MapComponent = () => {
   const store = useContext(storeContext)
-  const { activeBaseLayer } = store
+  const { activeBaseLayer, bounds: boundsRaw } = store
+  const bounds = getSnapshot(boundsRaw)
   const BaseLayerComponents = useMemo(
     () => ({
       OsmColor: () => <OsmColor />,
@@ -55,14 +57,14 @@ const MapComponent = () => {
   const BaseLayerComponent = BaseLayerComponents[activeBaseLayer]
   console.log('Map', { activeBaseLayer, BaseLayerComponent })
 
+  /**
+   * TODO:
+   * on move/zoom/whatever setBounds
+   */
+
   return (
     <ErrorBoundary>
-      <StyledMapContainer
-        maxZoom={22}
-        minZoom={0}
-        center={[51.505, -0.09]}
-        zoom={13}
-      >
+      <StyledMapContainer maxZoom={22} minZoom={0} bounds={bounds}>
         {activeBaseLayer && <BaseLayerComponent />}
         <LocationMarker />
       </StyledMapContainer>
