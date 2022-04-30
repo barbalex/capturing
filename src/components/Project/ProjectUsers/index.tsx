@@ -90,7 +90,7 @@ const ProjectUsersIndex = () => {
     const userMayEdit: boolean = [
       'account_manager',
       'project_manager',
-    ].includes(projectUser.role)
+    ].includes(projectUser?.role)
 
     return { projectUsersCount, userMayEdit }
   })

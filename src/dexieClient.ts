@@ -1125,7 +1125,6 @@ export class MySubClassedDexie extends Dexie {
   project_tile_layers!: DexieTable<ProjectTileLayer, string>
   project_users!: DexieTable<ProjectUser, string>
   projects!: DexieTable<Project, string>
-  role_types!: DexieTable<IRoleType, string>
   rows!: DexieTable<Row, string>
   ttables!: DexieTable<Table, string>
   tile_layers!: DexieTable<TileLayer, string>
@@ -1138,7 +1137,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(21).stores({
+    this.version(22).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
@@ -1154,7 +1153,6 @@ export class MySubClassedDexie extends Dexie {
         'id, user_email, [project_id+user_email], project_id, server_rev_at, deleted',
       projects:
         'id, label, name, server_rev_at, deleted, use_labels, [deleted+id]',
-      role_types: 'id, &value, sort, server_rev_at, deleted',
       rows: 'id, server_rev_at, deleted, [deleted+table_id], [deleted+parent_id]',
       // name tables causes error because used internally, see: https://github.com/dexie/Dexie.js/issues/1537
       ttables:

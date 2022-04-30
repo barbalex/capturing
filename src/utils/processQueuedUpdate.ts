@@ -4,9 +4,7 @@ import { dexie, QueuedUpdate } from '../dexieClient'
 import { v1 as uuidv1 } from 'uuid'
 import SparkMD5 from 'spark-md5'
 
-import buf2hex from './buf2hex'
-
-const revTables = ['rows', 'files']
+const revTables = ['rows', 'files_meta']
 
 type ProcessQueuedUpdateProps = { queuedUpdate: QueuedUpdate; store: any }
 

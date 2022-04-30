@@ -211,9 +211,6 @@ CREATE TYPE role_types_enum AS enum (
 );
 
 --
-DROP TABLE IF EXISTS role_types CASCADE;
-
---
 DROP TABLE IF EXISTS project_users CASCADE;
 
 CREATE TABLE project_users (
@@ -727,15 +724,6 @@ ALTER TABLE files_meta ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
   ADD TABLE files_meta;
-
---
-INSERT INTO storage.buckets (id, name)
-  VALUES ('files', 'files');
-
-CREATE POLICY "Restricted Access" ON storage.objects
-  FOR SELECT
-    USING (bucket_id = 'files'
-      AND auth.role () = 'authenticated');
 
 --
 DROP TABLE IF EXISTS files_meta_revs CASCADE;
@@ -1343,6 +1331,23 @@ SECURITY DEFINER;
 --
 -- IMPORTANT: create policies the end
 -- to ensure they never reference a structur not yet created
+--
+--
+INSERT INTO storage.buckets (id, name)
+  VALUES ('files', 'files');
+
+ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Restricted Access" ON storage.objects
+  FOR SELECT
+  -- USING (is_project_user_by_file_meta (auth.uid (), id));
+    USING (auth.role () = 'authenticated');
+
+CREATE POLICY "Restricted insert" ON storage.objects
+  FOR INSERT
+  -- WITH CHECK (is_project_editor_or_manager_by_file_meta (auth.uid (), id));
+    WITH CHECK (auth.role () = 'authenticated');
+
 --
 DROP POLICY IF EXISTS "project owners and same user can view project_users" ON project_users;
 
