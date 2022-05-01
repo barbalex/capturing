@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
-import { GeoJSON } from 'react-leaflet'
 
 import { dexie, Table } from '../../../dexieClient'
 import sortByLabelName from '../../../utils/sortByLabelName'
+import TableLayer from './TableLayer'
 
 const TableLayers = () => {
   const { projectId } = useParams()
@@ -30,7 +29,7 @@ const TableLayers = () => {
 
       if (data.length)
         layers.push(
-          <GeoJSON key={table.id} data={data.map((e) => e.geometry)} />,
+          <TableLayer data={data.map((e) => e.geometry)} table={table} />,
         )
     }
 

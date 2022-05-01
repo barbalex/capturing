@@ -1,11 +1,4 @@
-import {
-  useMemo,
-  useContext,
-  useEffect,
-  useRef,
-  useCallback,
-  useState,
-} from 'react'
+import { useMemo, useContext, useEffect, useRef, useCallback } from 'react'
 import 'leaflet'
 import 'proj4'
 import 'proj4leaflet'
@@ -53,16 +46,6 @@ const MapComponent = () => {
   const store = useContext(storeContext)
   const { activeBaseLayer, bounds: boundsRaw, showMap } = store
   const bounds = getSnapshot(boundsRaw)
-
-  const [mapRender, setMapRender] = useState(0)
-  const forceRender = useCallback(() => {
-    setMapRender(mapRender + 1)
-  }, [mapRender])
-
-  const [tablesRender, setTablesRender] = useState(0)
-  const forceTablesRender = useCallback(() => {
-    setTablesRender(tablesRender + 1)
-  }, [tablesRender])
 
   const mapRef = useRef()
   const onResize = useCallback(() => {
@@ -120,7 +103,6 @@ const MapComponent = () => {
     <ErrorBoundary>
       <Container ref={ref}>
         <StyledMapContainer
-          key={mapRender}
           maxZoom={22}
           minZoom={0}
           bounds={bounds}
@@ -128,8 +110,8 @@ const MapComponent = () => {
         >
           {activeBaseLayer && <BaseLayerComponent />}
           <LocationMarker />
-          <DrawControl forceRender={forceTablesRender} />
-          <TableLayers key={tablesRender} />
+          <DrawControl />
+          <TableLayers />
         </StyledMapContainer>
       </Container>
     </ErrorBoundary>

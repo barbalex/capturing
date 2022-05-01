@@ -9,7 +9,7 @@ import getBbox from '@turf/bbox'
 import { dexie, Row } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 
-const DrawControl = ({ forceRender }) => {
+const DrawControl = () => {
   const map = useMap()
 
   const session: Session = supabase.auth.session()
@@ -28,16 +28,14 @@ const DrawControl = ({ forceRender }) => {
       const row: Row = await dexie.rows.get(rowId)
       const was = { ...row }
       const is = { ...row, geometry, bbox }
-      await dexie.rows.update(rowId, { geometry, bbox })
-      await row.updateOnServer({
+      dexie.rows.update(rowId, { geometry, bbox })
+      row.updateOnServer({
         was,
         is,
         session,
       })
-      forceRender()
-      // TODO: empty used layer
     },
-    [forceRender, rowId, session],
+    [rowId, session],
   )
 
   useEffect(() => {
