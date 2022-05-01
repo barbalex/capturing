@@ -37,23 +37,23 @@ const StyledMapContainer = styled(MapContainer)`
 
 const MapComponent = () => {
   const store = useContext(storeContext)
-  const { activeBaseLayer, bounds: boundsRaw } = store
+  const { activeBaseLayer, bounds: boundsRaw, showMap } = store
   const bounds = getSnapshot(boundsRaw)
 
   const mapRef = useRef()
   const onResize = useCallback(() => {
-    console.log('resize detected')
+    if (!showMap) return
+    // console.log('resize detected')
     mapRef.current?.leafletElement?.invalidateSize()
-  }, [])
-  const onResizeDebounced = useDebouncedCallback(onResize, 100)
+  }, [showMap])
   const { ref } = useResizeDetector({
-    onResize: onResizeDebounced,
+    onResize,
     refreshMode: 'debounce',
     refreshRate: 300,
     refreshOptions: { trailing: true },
   })
 
-  console.log('map rendering')
+  // console.log('map rendering')
 
   useEffect(() => {
     console.log('Map initiated')
