@@ -14,12 +14,12 @@ const TableLayers = () => {
       dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
       dexie.projects.get(projectId),
     ])
-    const tablesSorted = sortByLabelName({
+    const tablesSorted: Table[] = sortByLabelName({
       objects: tables,
       useLabels: project.use_labels,
     })
-    const layers = []
 
+    const layers = []
     for (const table of tablesSorted) {
       const data = await dexie.rows
         .filter(
