@@ -15,6 +15,7 @@ import OsmColor from './layers/OsmColor'
 import OsmBw from './layers/OsmBw'
 import LocationMarker from './LocationMarker'
 import DrawControl from './DrawControl'
+import TableLayers from './TableLayers'
 
 const Container = styled.div`
   height: 100%;
@@ -111,6 +112,7 @@ const MapComponent = () => {
           {activeBaseLayer && <BaseLayerComponent />}
           <LocationMarker />
           <DrawControl />
+          <TableLayers />
         </StyledMapContainer>
       </Container>
     </ErrorBoundary>
