@@ -97,109 +97,63 @@ const ProjectsPage = () => {
 
   if (!session) return <Login />
 
-  const treeWidth = singleColumnView ? 0 : `${treeWidthInPercentOfScreen}%`
-
-  let tabsLength = 0
-  if (showTree) tabsLength++
-  if (showForm) tabsLength++
-  if (showMap) tabsLength++
-
-  // hide resizer when tree is hidden
-  const resizerStyle = treeWidth === 0 ? { width: 0 } : {}
-
-  if (tabsLength === 0) {
-    // return WITH split pane
-    // otherwise height is wrong
-    // and opening / closing tabs is slow
-    // add empty div to prevent split-pane from
-    // missing a second div
-    return (
-      <Container ref={containerEl}>
-        <StyledSplitPane
-          split="vertical"
-          size="100%"
-          maxSize={-10}
-          resizerStyle={resizerStyle}
-        >
-          <></>
-          <></>
-        </StyledSplitPane>
-      </Container>
-    )
-  }
-  if (tabsLength === 1) {
-    // return WITH split pane
-    // otherwise height is wrong
-    // and opening / closing tabs is slow
-    // add empty div to prevent split-pane from
-    // missing a second div
-    return (
-      <Container ref={containerEl}>
-        <StyledSplitPane
-          split="vertical"
-          size="100%"
-          maxSize={-10}
-          resizerStyle={resizerStyle}
-        >
-          {showTree && <Tree ref={treeEl} />}
-          {showForm && <Outlet />}
-          {showMap && <MapComponent />}
-          <></>
-        </StyledSplitPane>
-      </Container>
-    )
-  }
-
-  if (tabsLength === 2) {
-    return (
-      <Container ref={containerEl}>
-        <StyledSplitPane
-          split="vertical"
-          // size={treeWidth}
-          size="100%"
-          maxSize={-10}
-          resizerStyle={resizerStyle}
-        >
-          {showTree && <Tree ref={treeEl} />}
-          {showForm && <Outlet />}
-          {showMap && <MapComponent />}
-        </StyledSplitPane>
-      </Container>
-    )
-  }
-
   /**
-   * Idea for preventing map from being re-created on tab changes
+   * Idea for preventing map from being re-initialized on tab changes
    * 1. Always use 3-tab structure
    * 2. if showTree is false: set size of outer pane to 0% and resizerStyle to { width: 0 }
    * 3. if showForm is false: set size of inner pane to 0% and resizerStyle to { width: 0 }
-   * 2. if showMap is false: set size of inner pane to 100%?
+   * 4. if showForm is true and showMap is false: set size of inner pane to 100%
+   * 5. when user changes widths: save lastWidth for each tab in store and use that when show is true?
    */
-  if (tabsLength === 3) {
-    return (
-      <Container ref={containerEl}>
+  let treePaneSize = '33%'
+  let treeResizerWidth = 7
+  if (!showTree) {
+    treePaneSize = 0
+    treeResizerWidth = 0
+  } else if (!showForm && !showMap) {
+    treePaneSize = '100%'
+  }
+
+  let formPaneSize = '50%'
+  let formResizerWidth = 7
+  if (!showForm) {
+    formPaneSize = 0
+    formResizerWidth = 0
+  } else if (showForm && !showMap) {
+    formPaneSize = '100%'
+    formResizerWidth = 0
+  }
+
+  // console.log('Projects', {
+  //   showTree,
+  //   showMap,
+  //   showForm,
+  //   treePaneSize,
+  //   formPaneSize,
+  // })
+
+  return (
+    <Container ref={containerEl}>
+      <StyledSplitPane
+        split="vertical"
+        size={treePaneSize}
+        maxSize={-10}
+        resizerStyle={{ width: treeResizerWidth }}
+      >
+        {showTree ? <Tree ref={treeEl} /> : <></>}
         <StyledSplitPane
           split="vertical"
-          size="33%"
-          minSize={0}
+          size={formPaneSize}
           maxSize={-10}
-          resizerStyle={resizerStyle}
+          resizerStyle={{ width: formResizerWidth }}
+          //onDragFinished={onDragSplitter} // maybe set widths of parts in store, see apflora
         >
-          {showTree && <Tree ref={treeEl} />}
-          <StyledSplitPane
-            split="vertical"
-            size="50%"
-            minSize={0}
-            maxSize={-10}
-            //onDragFinished={onDragSplitter} // maybe set widths of parts in store, see apflora
-          >
-            {showForm && <Outlet />}
-            {showMap && <MapComponent />}
-          </StyledSplitPane>
+          {showForm ? <Outlet /> : <></>}
+          <MapComponent />
         </StyledSplitPane>
-      </Container>
-    )
-  }
+      </StyledSplitPane>
+    </Container>
+  )
 }
 
 export default observer(ProjectsPage)
