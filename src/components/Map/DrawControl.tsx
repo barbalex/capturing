@@ -18,16 +18,11 @@ const DrawControl = () => {
   const { rowId } = useParams()
   const onEdit = useCallback(
     async (featureCollection) => {
-      console.log('DrawControl, onEdit, featureCollection:', featureCollection)
       if (!rowId) return console.log('no row edited due to missing rowId')
       const geometryCollection = {
         type: 'GeometryCollection',
         geometries: featureCollection.features.map((f) => f.geometry),
       }
-      console.log(
-        'DrawControl, onEdit, geometryCollection:',
-        geometryCollection,
-      )
       const row: Row = await dexie.rows.get(rowId)
       const was = { ...row }
       const is = { ...row, geometry: geometryCollection }
@@ -37,6 +32,7 @@ const DrawControl = () => {
         is,
         session,
       })
+      // TODO: empty used layer
     },
     [rowId, session],
   )
@@ -81,8 +77,10 @@ const DrawControl = () => {
 
     // solution to allow only one geometry to be drawn
     // see: https://github.com/Leaflet/Leaflet.draw/issues/315#issuecomment-500246272
-    const mapFilter = new window.L.FeatureGroup()
-    map.addLayer(mapFilter)
+    const drawLayer = new window.L.FeatureGroup()
+    map.addLayer(drawLayer)
+    // TODO: if row has geometry, add it
+    // like this?: drawLayer.addLayer(e.layer)
     const drawControlFull = new window.L.Control.Draw({
       draw: {
         marker: false,
@@ -91,46 +89,43 @@ const DrawControl = () => {
         circlemarker: false,
       },
       edit: {
-        featureGroup: mapFilter,
+        featureGroup: drawLayer,
       },
     })
     const drawControlEditOnly = new window.L.Control.Draw({
       draw: false,
       edit: {
-        featureGroup: mapFilter,
+        featureGroup: drawLayer,
       },
     })
 
     map.addControl(drawControlFull)
     map.on('draw:created', (e) => {
-      mapFilter.addLayer(e.layer)
+      drawLayer.addLayer(e.layer)
       drawControlFull.remove(map)
       drawControlEditOnly.addTo(map)
-      onEdit(mapFilter.toGeoJSON())
-      console.log('DrawControl, created:', mapFilter.toGeoJSON()?.features)
+      onEdit(drawLayer.toGeoJSON())
     })
     map.on('draw:edited', () => {
-      onEdit(mapFilter.toGeoJSON())
-      console.log('DrawControl, edited:', mapFilter.toGeoJSON()?.features)
+      onEdit(drawLayer.toGeoJSON())
     })
     map.on('draw:deleted', () => {
-      onEdit(mapFilter.toGeoJSON())
-      console.log('DrawControl, deleted:', mapFilter.toGeoJSON()?.features)
-      if (mapFilter.getLayers().length === 0) {
+      onEdit(drawLayer.toGeoJSON())
+      if (drawLayer.getLayers().length === 0) {
         drawControlEditOnly.remove(map)
         drawControlFull.addTo(map)
       }
     })
 
     return () => {
-      map.removeLayer(mapFilter)
+      map.removeLayer(drawLayer)
       map.removeControl(drawControlFull)
+      map.removeControl(drawControlEditOnly)
       map.off('draw:created')
       map.off('draw:edited')
       map.off('draw:deleted')
-      // setMapFilter([])
     }
-  }, [map])
+  }, [map, onEdit, rowId])
 
   return <div style={{ display: 'none' }} />
 }
