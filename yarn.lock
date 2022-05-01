@@ -2296,7 +2296,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@svgr/core@npm:^6.2.0":
+"@svgr/core@npm:^6.2.1":
   version: 6.2.1
   resolution: "@svgr/core@npm:6.2.1"
   dependencies:
@@ -3134,7 +3134,7 @@ __metadata:
     uuid: 8.3.2
     vite: 2.9.6
     vite-plugin-pwa: 0.12.0
-    vite-plugin-svgr: 1.1.0
+    vite-plugin-svgr: 2.0.0
   languageName: unknown
   linkType: soft
 
@@ -7259,14 +7259,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-svgr@npm:1.1.0":
-  version: 1.1.0
-  resolution: "vite-plugin-svgr@npm:1.1.0"
+"vite-plugin-svgr@npm:2.0.0":
+  version: 2.0.0
+  resolution: "vite-plugin-svgr@npm:2.0.0"
   dependencies:
-    "@svgr/core": ^6.2.0
+    "@svgr/core": ^6.2.1
   peerDependencies:
     vite: ^2.6.0
-  checksum: b79042cf75b096464402f36b492503af65d0d63f5a33441f0ec173aa9b32ce98b1f1005d75e2b0cfd7d8574cf5f9b86d837ef6b64807c21e31d1a5648122141b
+  checksum: ab5e76b6431da7d6c04a967303da0dcbf07ed1df7ac22426046a08e284ff4d15f22ab66bfa136c873ec7fc37093471c608bb7aff093474a65e3a13d6ef445e80
   languageName: node
   linkType: hard
 
