@@ -48,10 +48,10 @@ const processQueuedUpdate = async ({
       ? [rev]
       : [rev, ...(newObject.revisions ?? [])]
 
-    console.log('processQueuedUpdate, newRevObject:', {
-      newRevObject,
-      newObject: JSON.parse(queuedUpdate.value),
-    })
+    // console.log('processQueuedUpdate, newRevObject:', {
+    //   newRevObject,
+    //   newObject: JSON.parse(queuedUpdate.value),
+    // })
     // 2. send revision to server
     const { error } = await supabase.from(revTableName).insert(newRevObject)
     if (error) {

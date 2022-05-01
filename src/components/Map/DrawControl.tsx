@@ -4,6 +4,7 @@ import 'leaflet-draw'
 import { useMap } from 'react-leaflet'
 import { useParams } from 'react-router-dom'
 import { Session } from '@supabase/supabase-js'
+import getBbox from '@turf/bbox'
 
 import { dexie, Row } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
@@ -19,14 +20,15 @@ const DrawControl = () => {
   const onEdit = useCallback(
     async (featureCollection) => {
       if (!rowId) return console.log('no row edited due to missing rowId')
-      const geometryCollection = {
+      const geometry = {
         type: 'GeometryCollection',
         geometries: featureCollection.features.map((f) => f.geometry),
       }
+      const bbox = getBbox(geometry)
       const row: Row = await dexie.rows.get(rowId)
       const was = { ...row }
-      const is = { ...row, geometry: geometryCollection }
-      dexie.rows.update(rowId, { geometry: geometryCollection })
+      const is = { ...row, geometry, bbox }
+      dexie.rows.update(rowId, { geometry, bbox })
       row.updateOnServer({
         was,
         is,

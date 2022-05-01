@@ -548,10 +548,7 @@ CREATE TABLE ROWS (
   table_id uuid NOT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
   parent_id uuid DEFAULT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
   geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
-  geometry_n real DEFAULT NULL,
-  geometry_e real DEFAULT NULL,
-  geometry_s real DEFAULT NULL,
-  geometry_w real DEFAULT NULL,
+  bbox jsonb DEFAULT NULL,
   data jsonb,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
@@ -586,13 +583,7 @@ COMMENT ON COLUMN rows.parent_id IS 'associated row in the parent table (which m
 
 COMMENT ON COLUMN rows.geometry IS 'row geometry (GeometryCollection)';
 
-COMMENT ON COLUMN rows.geometry_n IS 'Northernmost point of the geometry. Set client-side on every change of geometry. Used to filter geometries for viewport client-side';
-
-COMMENT ON COLUMN rows.geometry_e IS 'Easternmost point of the geometry. Set client-side on every change of geometry. Used to filter geometries for viewport client-side';
-
-COMMENT ON COLUMN rows.geometry_s IS 'Southernmost point of the geometry. Set client-side on every change of geometry. Used to filter geometries for viewport client-side';
-
-COMMENT ON COLUMN rows.geometry_w IS 'Westernmost point of the geometry. Set client-side on every change of geometry. Used to filter geometries for viewport client-side';
+COMMENT ON COLUMN rows.bbox IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries for viewport client-side';
 
 COMMENT ON COLUMN rows.data IS 'fields (keys) and data (values) according to the related fields table';
 
@@ -618,10 +609,7 @@ CREATE TABLE row_revs (
   table_id uuid DEFAULT NULL,
   parent_id uuid DEFAULT NULL,
   geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
-  geometry_n real DEFAULT NULL,
-  geometry_e real DEFAULT NULL,
-  geometry_s real DEFAULT NULL,
-  geometry_w real DEFAULT NULL,
+  bbox jsonb DEFAULT NULL,
   data jsonb,
   deleted integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT NULL,

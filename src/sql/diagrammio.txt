@@ -67,10 +67,7 @@ Table "rows" {
   "table_id" uuid [default: null]
   "parent_id" uuid [default: null]
   "geometry" "geometry(GeometryCollection, 4326)" [default: null]
-  "geometry_n" real [default: null]
-  "geometry_e" real [default: null]
-  "geometry_s" real [default: null]
-  "geometry_w" real [default: null]
+  "bbox" jsonb [default: null]
   "crs" integer [default: 4326]
   "data" jsonb
   "client_rev_at" timestamp [default: `now()`]

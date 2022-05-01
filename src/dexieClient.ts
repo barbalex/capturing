@@ -3,6 +3,7 @@ import Dexie, { DexieTable } from 'dexie'
 import { v1 as uuidv1 } from 'uuid'
 import { Session } from '@supabase/supabase-js'
 import sortBy from 'lodash/sortBy'
+import getBbox from '@turf/bbox'
 
 export interface IAccount {
   id: string
@@ -665,10 +666,7 @@ export interface IRow {
   table_id?: string
   parent_id?: string
   geometry?: string
-  geometry_n?: number
-  geometry_e?: number
-  geometry_s?: number
-  geometry_w?: number
+  bbox?: string
   data?: string
   client_rev_at?: Date
   client_rev_by?: string
@@ -687,10 +685,7 @@ export class Row implements IRow {
   table_id?: string
   parent_id?: string
   geometry?: string
-  geometry_n?: number
-  geometry_e?: number
-  geometry_s?: number
-  geometry_w?: number
+  bbox?: string
   data?: string
   client_rev_at?: Date
   client_rev_by?: string
@@ -707,10 +702,7 @@ export class Row implements IRow {
     table_id: string,
     parent_id?: string,
     geometry?: string,
-    geometry_n?: number,
-    geometry_e?: number,
-    geometry_s?: number,
-    geometry_w?: number,
+    bbox?: string,
     data?: string,
     client_rev_at?: Date,
     client_rev_by?: string,
@@ -726,10 +718,7 @@ export class Row implements IRow {
     this.table_id = table_id
     if (parent_id) this.parent_id = parent_id
     if (geometry) this.geometry = geometry
-    if (geometry_n) this.geometry_n = geometry_n
-    if (geometry_e) this.geometry_e = geometry_e
-    if (geometry_s) this.geometry_s = geometry_s
-    if (geometry_w) this.geometry_w = geometry_w
+    if (geometry) this.bbox = getBbox(geometry)
     if (data) this.data = data
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by

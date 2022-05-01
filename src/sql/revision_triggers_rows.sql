@@ -123,16 +123,13 @@ BEGIN
   -- 1. if a winning undeleted leaf exists, use this
   --    (else pick a winner from the deleted leaves)
   THEN
-  INSERT INTO ROWS (id, table_id, parent_id, geometry, geometry_n, geometry_e, geometry_s, geometry_w, data, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
+  INSERT INTO ROWS (id, table_id, parent_id, geometry, bbox, data, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
   SELECT
     winner.row_id,
     winner.table_id,
     winner.parent_id,
     winner.geometry,
-    winner.geometry_n,
-    winner.geometry_e,
-    winner.geometry_s,
-    winner.geometry_w,
+    winner.bbox,
     winner.data,
     winner.deleted,
     winner.client_rev_at,
@@ -151,10 +148,7 @@ ON CONFLICT (id)
     table_id = excluded.table_id,
     parent_id = excluded.parent_id,
     geometry = excluded.geometry,
-    geometry_n = excluded.geometry_n,
-    geometry_e = excluded.geometry_e,
-    geometry_s = excluded.geometry_s,
-    geometry_w = excluded.geometry_w,
+    bbox = excluded.bbox,
     data = excluded.data,
     deleted = excluded.deleted,
     client_rev_at = excluded.client_rev_at,
@@ -170,16 +164,13 @@ ELSE
   --    choose winner from deleted leaves
   --    is necessary to set the winner deleted
   --    so the client can pick this up
-  INSERT INTO ROWS (id, table_id, parent_id, geometry, geometry_n, geometry_e, geometry_s, geometry_w, data, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
+  INSERT INTO ROWS (id, table_id, parent_id, geometry, bbox, data, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
   SELECT
     winner.row_id,
     winner.table_id,
     winner.parent_id,
     winner.geometry,
-    winner.geometry_n,
-    winner.geometry_e,
-    winner.geometry_s,
-    winner.geometry_w,
+    winner.bbox,
     winner.data,
     winner.deleted,
     winner.client_rev_at,
@@ -198,10 +189,7 @@ ON CONFLICT (id)
     table_id = excluded.table_id,
     parent_id = excluded.parent_id,
     geometry = excluded.geometry,
-    geometry_n = excluded.geometry_n,
-    geometry_e = excluded.geometry_e,
-    geometry_s = excluded.geometry_s,
-    geometry_w = excluded.geometry_w,
+    bbox = excluded.bbox,
     data = excluded.data,
     deleted = excluded.deleted,
     client_rev_at = excluded.client_rev_at,
