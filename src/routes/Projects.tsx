@@ -100,13 +100,27 @@ const ProjectsPage = () => {
   /**
    * Idea for preventing map from being re-initialized on tab changes
    * 1. Always use 3-tab structure
-   * 2. if showTree is false: set size of outer pane to 0% and resizerStyle to { width: 0 }
-   * 3. if showForm is false: set size of inner pane to 0% and resizerStyle to { width: 0 }
+   * 2. if showTree is false: set size of outer pane to 0 and resizerStyle to { width: 0 }
+   *    unload tree to reduce rendering work
+   * 3. if showForm is false: set size of inner pane to 0 and resizerStyle to { width: 0 }
+   *    unload form to reduce rendering work
    * 4. if showForm is true and showMap is false: set size of inner pane to 100%
-   * 5. when user changes widths: save lastWidth for each tab in store and use that when show is true?
+   * 5. tree is NEVER unloaded to prevent it from being re-initialized
+   * 6. when user changes widths: save lastWidth for each tab in store and use that when show is true?
    */
-  let treePaneSize = '33%'
-  let treeResizerWidth = 7
+  let tabsLength = 0
+  if (showTree) tabsLength++
+  if (showForm) tabsLength++
+  if (showMap) tabsLength++
+
+  const width =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth
+  const resizerWidth = 5
+  // let treePaneSize = '33%'
+  let treePaneSize = (width - (tabsLength - 1) * resizerWidth) / 3
+  let treeResizerWidth = resizerWidth
   if (!showTree) {
     treePaneSize = 0
     treeResizerWidth = 0
@@ -114,8 +128,18 @@ const ProjectsPage = () => {
     treePaneSize = '100%'
   }
 
-  let formPaneSize = '50%'
-  let formResizerWidth = 7
+  let formTabsLength = 0
+  if (showForm) formTabsLength++
+  if (showMap) formTabsLength++
+  let formPaneSize =
+    (width -
+      treePaneSize -
+      treeResizerWidth -
+      (formTabsLength - 1) * resizerWidth) /
+    2
+
+  // let formPaneSize = '50%'
+  let formResizerWidth = resizerWidth
   if (!showForm) {
     formPaneSize = 0
     formResizerWidth = 0
