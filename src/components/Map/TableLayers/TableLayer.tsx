@@ -13,7 +13,7 @@ const TableLayer = ({ data, table }) => {
     }
   }, [data])
 
-  return <GeoJSON key={table.id} data={data} ref={ref} />
+  return <GeoJSON data={data} ref={ref} />
 }
 
 export default TableLayer

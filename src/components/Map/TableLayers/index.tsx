@@ -29,7 +29,11 @@ const TableLayers = () => {
 
       if (data.length)
         layers.push(
-          <TableLayer data={data.map((e) => e.geometry)} table={table} />,
+          <TableLayer
+            key={table.id}
+            data={data.map((e) => e.geometry)}
+            table={table}
+          />,
         )
     }
 
