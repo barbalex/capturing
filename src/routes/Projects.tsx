@@ -100,13 +100,15 @@ const ProjectsPage = () => {
   /**
    * Idea for preventing map from being re-initialized on tab changes
    * 1. Always use 3-tab structure
-   * 2. if showTree is false: set size of outer pane to 0 and resizerStyle to { width: 0 }
+   * 2. If showTree is false: set size of outer pane to 0 and resizerStyle to { width: 0 }
    *    unload tree to reduce rendering work
-   * 3. if showForm is false: set size of inner pane to 0 and resizerStyle to { width: 0 }
+   *    (but render empty braces to make react-split-pane happy)
+   * 3. If showForm is false: set size of inner pane to 0 and resizerStyle to { width: 0 }
    *    unload form to reduce rendering work
-   * 4. if showForm is true and showMap is false: set size of inner pane to 100%
-   * 5. tree is NEVER unloaded to prevent it from being re-initialized
-   * 6. when user changes widths: save lastWidth for each tab in store and use that when show is true?
+   *    (but render empty braces to make react-split-pane happy)
+   * 4. If showForm is true and showMap is false: set size of inner pane to 100%
+   * 5. Tree is NEVER unloaded to prevent it from being re-initialized
+   * 6. When user changes widths: save lastWidth for each tab in store and use that when show is true?
    */
   let tabsLength = 0
   if (showTree) tabsLength++
