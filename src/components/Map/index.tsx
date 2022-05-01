@@ -1,4 +1,11 @@
-import { useMemo, useContext, useEffect, useRef, useCallback } from 'react'
+import {
+  useMemo,
+  useContext,
+  useEffect,
+  useRef,
+  useCallback,
+  useState,
+} from 'react'
 import 'leaflet'
 import 'proj4'
 import 'proj4leaflet'
@@ -39,14 +46,18 @@ const StyledMapContainer = styled(MapContainer)`
 
 /**
  * TODO:
- * create GeoJSON Layers from table rows
- * https://react-leaflet.js.org/docs/api-components/#geojson
+ * enforce re-render when any geometry of any row of any table changes
  */
 
 const MapComponent = () => {
   const store = useContext(storeContext)
   const { activeBaseLayer, bounds: boundsRaw, showMap } = store
   const bounds = getSnapshot(boundsRaw)
+
+  const [render, setRender] = useState(0)
+  const forceRender = useCallback(() => {
+    setRender(render + 1)
+  }, [render])
 
   const mapRef = useRef()
   const onResize = useCallback(() => {
@@ -89,7 +100,7 @@ const MapComponent = () => {
     [],
   )
   const BaseLayerComponent = BaseLayerComponents[activeBaseLayer]
-  // console.log('Map', { activeBaseLayer, BaseLayerComponent })
+  console.log('Map rendering')
 
   /**
    * TODO:
@@ -104,6 +115,7 @@ const MapComponent = () => {
     <ErrorBoundary>
       <Container ref={ref}>
         <StyledMapContainer
+          key={render}
           maxZoom={22}
           minZoom={0}
           bounds={bounds}
@@ -111,7 +123,7 @@ const MapComponent = () => {
         >
           {activeBaseLayer && <BaseLayerComponent />}
           <LocationMarker />
-          <DrawControl />
+          <DrawControl forceRender={forceRender} />
           <TableLayers />
         </StyledMapContainer>
       </Container>
