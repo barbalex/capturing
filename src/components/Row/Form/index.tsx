@@ -217,6 +217,16 @@ const RowForm = ({
         {!fields?.length && (
           <p>Für diese Tabelle wurden noch keine Felder definiert.</p>
         )}
+        <TextField
+          key={`${row.id}geometry`}
+          name="geometry"
+          label="geometry"
+          value={JSON.stringify(row.geometry)}
+          onBlur={() => console.log('TODO:')}
+          error={errors?.row?.geometry}
+          disabled={true}
+          multiLine
+        />
         {fields.map((f) => {
           switch (f.widget_type) {
             case 'datepicker':

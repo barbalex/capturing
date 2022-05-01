@@ -5,15 +5,16 @@ import 'proj4leaflet'
 import { MapContainer } from 'react-leaflet'
 import styled from 'styled-components'
 import 'leaflet/dist/leaflet.css'
+import 'leaflet-draw/dist/leaflet.draw.css'
 import { getSnapshot } from 'mobx-state-tree'
 import { useResizeDetector } from 'react-resize-detector'
-import { useDebouncedCallback } from 'use-debounce'
 
 import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import OsmColor from './layers/OsmColor'
 import OsmBw from './layers/OsmBw'
 import LocationMarker from './LocationMarker'
+import DrawControl from './DrawControl'
 
 const Container = styled.div`
   height: 100%;
@@ -34,6 +35,12 @@ const StyledMapContainer = styled(MapContainer)`
     }
   }
 `
+
+/**
+ * TODO:
+ * create GeoJSON Layers from table rows
+ * https://react-leaflet.js.org/docs/api-components/#geojson
+ */
 
 const MapComponent = () => {
   const store = useContext(storeContext)
@@ -99,6 +106,7 @@ const MapComponent = () => {
         >
           {activeBaseLayer && <BaseLayerComponent />}
           <LocationMarker />
+          <DrawControl />
         </StyledMapContainer>
       </Container>
     </ErrorBoundary>
