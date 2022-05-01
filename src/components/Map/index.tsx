@@ -54,10 +54,15 @@ const MapComponent = () => {
   const { activeBaseLayer, bounds: boundsRaw, showMap } = store
   const bounds = getSnapshot(boundsRaw)
 
-  const [render, setRender] = useState(0)
+  const [mapRender, setMapRender] = useState(0)
   const forceRender = useCallback(() => {
-    setRender(render + 1)
-  }, [render])
+    setMapRender(mapRender + 1)
+  }, [mapRender])
+
+  const [tablesRender, setTablesRender] = useState(0)
+  const forceTablesRender = useCallback(() => {
+    setTablesRender(tablesRender + 1)
+  }, [tablesRender])
 
   const mapRef = useRef()
   const onResize = useCallback(() => {
@@ -115,7 +120,7 @@ const MapComponent = () => {
     <ErrorBoundary>
       <Container ref={ref}>
         <StyledMapContainer
-          key={render}
+          key={mapRender}
           maxZoom={22}
           minZoom={0}
           bounds={bounds}
@@ -123,8 +128,8 @@ const MapComponent = () => {
         >
           {activeBaseLayer && <BaseLayerComponent />}
           <LocationMarker />
-          <DrawControl forceRender={forceRender} />
-          <TableLayers />
+          <DrawControl forceRender={forceTablesRender} />
+          <TableLayers key={tablesRender} />
         </StyledMapContainer>
       </Container>
     </ErrorBoundary>

@@ -34,8 +34,6 @@ const DrawControl = ({ forceRender }) => {
         is,
         session,
       })
-      // TODO: rerender map
-      console.log('DrawControl will forceRender:', forceRender)
       forceRender()
       // TODO: empty used layer
     },

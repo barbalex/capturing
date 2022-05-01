@@ -37,7 +37,7 @@ const TableLayers = () => {
     return layers
   }, [projectId])
 
-  console.log('TableLayers rendering')
+  // console.log('TableLayers rendering')
 
   return layers
 }
