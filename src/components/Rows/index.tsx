@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useCallback,
-  useEffect,
-  useState,
-  useMemo,
-} from 'react'
+import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { FaPlus, FaArrowUp } from 'react-icons/fa'
@@ -12,14 +6,13 @@ import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams, useNavigate, Link, resolvePath } from 'react-router-dom'
-import sortBy from 'lodash/sortBy'
 
 import storeContext from '../../storeContext'
 import RowComponent from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
 import rowsWithLabelFromRows from '../../utils/rowsWithLabelFromRows'
-import { dexie, Row, IProjectUser } from '../../dexieClient'
+import { dexie, Row } from '../../dexieClient'
 import insertRow from '../../utils/insertRow'
 import FilterNumbers from '../shared/FilterNumbers'
 import { supabase } from '../../supabaseClient'
