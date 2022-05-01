@@ -84,17 +84,11 @@ const DrawControl = () => {
     // like this?: drawLayer.addLayer(e.layer)
     const drawControlFull = new window.L.Control.Draw({
       draw: {
-        marker: false,
-        polyline: false,
-        circle: false,
+        marker: true,
+        polyline: true,
+        circle: true,
         circlemarker: false,
       },
-      edit: {
-        featureGroup: drawLayer,
-      },
-    })
-    const drawControlEditOnly = new window.L.Control.Draw({
-      draw: false,
       edit: {
         featureGroup: drawLayer,
       },
@@ -103,8 +97,6 @@ const DrawControl = () => {
     map.addControl(drawControlFull)
     map.on('draw:created', (e) => {
       drawLayer.addLayer(e.layer)
-      drawControlFull.remove(map)
-      drawControlEditOnly.addTo(map)
       onEdit(drawLayer.toGeoJSON())
     })
     map.on('draw:edited', () => {
@@ -112,16 +104,12 @@ const DrawControl = () => {
     })
     map.on('draw:deleted', () => {
       onEdit(drawLayer.toGeoJSON())
-      if (drawLayer.getLayers().length === 0) {
-        drawControlEditOnly.remove(map)
-        drawControlFull.addTo(map)
-      }
     })
 
     return () => {
       map.removeLayer(drawLayer)
       map.removeControl(drawControlFull)
-      map.removeControl(drawControlEditOnly)
+      // map.removeControl(drawControlEditOnly)
       map.off('draw:created')
       map.off('draw:edited')
       map.off('draw:deleted')
