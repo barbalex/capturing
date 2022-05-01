@@ -94,6 +94,10 @@ const MapComponent = () => {
    * TODO:
    * on move/zoom/whatever setBounds
    */
+  /**
+   * TODO:
+   * map all tables and add GeoJSON layers
+   */
 
   return (
     <ErrorBoundary>
