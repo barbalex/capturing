@@ -61,7 +61,7 @@ const RowComponent = ({ filter: showFilter }) => {
     [rowId],
   )
 
-  console.log('RowForm rendering, row:', row)
+  // console.log('RowForm rendering, row:', row)
 
   const [activeConflict, setActiveConflict] = useState(null)
   const conflictDisposalCallback = useCallback(
