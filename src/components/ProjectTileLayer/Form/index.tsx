@@ -12,24 +12,17 @@ import JesNo from '../../shared/JesNo'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import {
   dexie,
-  ITable,
-  Table,
-  Project,
-  IProjectUser,
-  TableTypeEnum,
-  TableRelTypeEnum,
+  WmsVersionEnum,
+  IProjectTileLayer,
+  ProjectTileLayer,
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Select from '../../shared/Select'
 import Spinner from '../../shared/Spinner'
-import RadioButtonGroupWithInfo from '../../shared/RadioButtonGroupWithInfo'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
-import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
-import RelTypePopover from './RelTypePopover'
-import RowLabel from './RowLabel'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -37,24 +30,12 @@ const FieldsContainer = styled.div`
   overflow-y: auto;
 `
 
-const relTypeDataSource = Object.values(TableRelTypeEnum).map((v) => ({
-  value: v?.toString(),
-  label: v?.toString(),
-}))
-
 type Props = {
   showFilter: (boolean) => void
 }
 type valueType = {
   value: string
   label: string
-}
-
-const typeValueLabels = {
-  id_value_list:
-    'Werte-Liste, enthält für jeden Wert eine ID und speichert jeweils die ID',
-  standard: 'normale Tabelle, Sie definieren die Felder',
-  value_list: 'Werte-Liste, enthält nur die Werte',
 }
 
 // = '99999999-9999-9999-9999-999999999999'
@@ -78,12 +59,9 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
 
   // const data = {}
   const data = useLiveQuery(async () => {
-    const [project, projects, tables, row, projectUser] = await Promise.all([
-      dexie.projects.get(projectId),
+    const [projects, row, projectUser] = await Promise.all([
       dexie.projects.where({ deleted: 0 }).sortBy('', sortProjectsByLabelName),
-      dexie.ttables
-        .where({ deleted: 0, project_id: projectId, type: 'standard' })
-        .toArray(),
+
       dexie.ttables.get(projectTileLayerId),
       dexie.project_users.get({
         project_id: projectId,
@@ -92,61 +70,35 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     ])
 
     const userRole = projectUser?.role
-    const userMayEdit = [
-      'account_manager',
-      'project_manager',
-      'project_editor',
-    ].includes(userRole)
-
-    const useLabels = project.use_labels
-
-    const relTable: Table = await dexie.ttables.get({
-      id: row.parent_id ?? '99999999-9999-9999-9999-999999999999',
-    })
+    const userMayEdit = ['account_manager', 'project_manager'].includes(
+      userRole,
+    )
 
     return {
-      useLabels,
       projectsValues: projects.map((p) => ({
         value: p.id,
         label: labelFromLabeledTable({ object: p, useLabels: p.use_labels }),
       })),
-      tablesValues: sortByLabelName({
-        objects: tables,
-        useLabels,
-      })
-        // do not list own project_tile_layer
-        .filter((t) => t.id !== projectTileLayerId)
-        .map((t) => ({
-          value: t.id,
-          label: labelFromLabeledTable({
-            object: t,
-            useLabels,
-          }),
-        })),
       row,
       userMayEdit,
-      relTable,
     }
   }, [projectId, projectTileLayerId, session?.user?.email])
 
-  const useLabels: boolean = data?.useLabels
   const projectsValues: valueType[] = data?.projectsValues ?? []
-  const row: Table = data?.row
-  const tablesValues: valueType[] = data?.tablesValues ?? []
+  const row: ProjectTileLayer = data?.row
   const userMayEdit: boolean = data?.userMayEdit
-  const relTable: Table = data?.relTable
 
-  const tableTypeValues = Object.values(TableTypeEnum).map((v) => ({
+  const wmsVersionValues = Object.values(WmsVersionEnum).map((v) => ({
     value: v,
-    label: typeValueLabels[v],
+    label: v,
   }))
 
   // need original row to be able to roll back optimistic ui updates
-  const originalRow = useRef<ITable>()
+  const originalRow = useRef<IProjectTileLayer>()
   // need to update rowState on blur because of
   // when user directly closes app after last update in field
   // seems that waiting for dexie update goes too long
-  const rowState = useRef<ITable>()
+  const rowState = useRef<IProjectTileLayer>()
   useEffect(() => {
     rowState.current = row
     // update originalRow only initially, once row has arrived
@@ -203,7 +155,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
       // update rowState
       rowState.current = { ...row, ...{ [field]: newValue } }
       // update dexie
-      dexie.ttables.update(row.id, { [field]: newValue })
+      dexie.project_tile_layers.update(row.id, { [field]: newValue })
     },
     [filter, row, showFilter],
   )
@@ -250,25 +202,14 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           </>
         )}
         <TextField
-          key={`${row.id}name`}
-          name="name"
-          label="Name"
-          value={row.name}
+          key={`${row.id}label`}
+          name="label"
+          label="Beschriftung"
+          value={row.label}
           onBlur={onBlur}
-          error={errors?.project_tile_layer?.name}
+          error={errors?.project_tile_layer?.label}
           disabled={!userMayEdit}
         />
-        {useLabels === 1 && (
-          <TextField
-            key={`${row.id}label`}
-            name="label"
-            label="Beschriftung"
-            value={row.label}
-            onBlur={onBlur}
-            error={errors?.project_tile_layer?.label}
-            disabled={!userMayEdit}
-          />
-        )}
         <Select
           key={`${row.id}${row?.project_id ?? ''}project_id`}
           name="project_id"
@@ -280,42 +221,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           error={errors?.project_tile_layer?.project_id}
           disabled={!userMayEdit}
         />
-        <RadioButtonGroup
-          value={row.type}
-          name="type"
-          dataSource={tableTypeValues}
-          onBlur={onBlur}
-          label="Tabellen-Typ"
-          error={errors?.project_tile_layer?.type}
-        />
-        <Select
-          key={`${row.id}${row?.parent_id ?? ''}parent_id`}
-          name="parent_id"
-          value={row.parent_id}
-          field="parent_id"
-          label="Verknüpfte Tabelle (Mutter: 1:n, Geschwister: 1:1)"
-          options={tablesValues}
-          saveToDb={onBlur}
-          error={errors?.project_tile_layer?.parent_id}
-          disabled={!userMayEdit}
-        />
-        {!!row.parent_id && (
-          <RadioButtonGroupWithInfo
-            value={row.rel_type}
-            name="rel_type"
-            dataSource={relTypeDataSource}
-            onBlur={onBlur}
-            label="Beziehung zur verknüpften Tabelle"
-            error={errors?.project_tile_layer?.rel_type}
-            popover={
-              <RelTypePopover
-                ownTable={row}
-                parentTable={relTable}
-                useLabels={useLabels}
-              />
-            }
-          />
-        )}
         <TextField
           key={`${row?.id ?? ''}sort`}
           name="sort"
@@ -326,17 +231,14 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           disabled={!userMayEdit}
           type="number"
         />
-        {row.type === 'standard' ? (
-          <RowLabel
-            useLabels={useLabels}
-            updateOnServer={updateOnServer}
-            rowState={rowState}
-          />
-        ) : (
-          <p>
-            Werte-Listen werden automatisch mit den Werten selbst beschriftet
-          </p>
-        )}
+        <RadioButtonGroup
+          value={row.wms_version}
+          name="wms_version"
+          dataSource={wmsVersionValues}
+          onBlur={onBlur}
+          label="WMS-Version"
+          error={errors?.project_tile_layer?.wms_version}
+        />
       </FieldsContainer>
     </ErrorBoundary>
   )
