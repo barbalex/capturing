@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
@@ -39,7 +38,7 @@ const TableLayers = () => {
     }
 
     return _layers
-  }, [projectId])
+  }, [projectId, rowId])
 
   // console.log('TableLayers rendering')
 
