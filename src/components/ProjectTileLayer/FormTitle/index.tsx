@@ -7,15 +7,19 @@ import FilterTitle from '../../shared/FilterTitle'
 import FormTitle from './FormTitle'
 import { dexie } from '../../../dexieClient'
 
-const TableFormTitleChooser = () => {
+const ProjectTileLayerFormTitleChooser = () => {
   const { projectId } = useParams()
   // const store = useContext(StoreContext)
   const showFilter = false // TODO:
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount] = await Promise.all([
-      dexie.ttables.where({ deleted: 0, project_id: projectId }).count(), // TODO: pass in filter
-      dexie.ttables.where({ deleted: 0, project_id: projectId }).count(),
+      dexie.project_tile_layers
+        .where({ deleted: 0, project_id: projectId })
+        .count(), // TODO: pass in filter
+      dexie.project_tile_layers
+        .where({ deleted: 0, project_id: projectId })
+        .count(),
     ])
 
     return { filteredCount, totalCount }
@@ -26,8 +30,8 @@ const TableFormTitleChooser = () => {
   if (showFilter) {
     return (
       <FilterTitle
-        title="Tabelle"
-        table="tables"
+        title="Pixel-Karte"
+        table="project_tile_layers"
         totalCount={totalCount}
         filteredCount={filteredCount}
       />
@@ -37,4 +41,4 @@ const TableFormTitleChooser = () => {
   return <FormTitle totalCount={totalCount} filteredCount={filteredCount} />
 }
 
-export default observer(TableFormTitleChooser)
+export default observer(ProjectTileLayerFormTitleChooser)

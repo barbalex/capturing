@@ -4,22 +4,24 @@ import IconButton from '@mui/material/IconButton'
 import { useParams, useNavigate, resolvePath } from 'react-router-dom'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
-import insertTable from '../../../utils/insertTable'
+import insertProjectTileLayer from '../../../utils/insertProjectTileLayer'
 
-const TableAddButton = ({ userMayEdit }) => {
+const ProjectTileLayerAddButton = ({ userMayEdit }) => {
   const { projectId } = useParams()
   const navigate = useNavigate()
 
   const onClick = useCallback(async () => {
-    const newProjectId = await insertTable({ projectId })
-    navigate(resolvePath(`../${newProjectId}`, window.location.pathname))
+    const newId = await insertProjectTileLayer({
+      projectId,
+    })
+    navigate(resolvePath(`../${newId}`, window.location.pathname))
   }, [navigate, projectId])
 
   return (
     <ErrorBoundary>
       <IconButton
-        aria-label="neue Tabelle"
-        title="neue Tabelle"
+        aria-label="neue Pixel-Karte"
+        title="neue Pixel-Karte"
         onClick={onClick}
         size="large"
         disabled={!userMayEdit}
@@ -30,4 +32,4 @@ const TableAddButton = ({ userMayEdit }) => {
   )
 }
 
-export default TableAddButton
+export default ProjectTileLayerAddButton

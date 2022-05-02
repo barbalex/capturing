@@ -102,7 +102,7 @@ const ProjectTileLayersComponent = () => {
     <ErrorBoundary>
       <Container showfilter={false}>
         <TitleContainer>
-          <Title>Hintergrund-Karten</Title>
+          <Title>Pixel-Karten</Title>
           <TitleSymbols>
             <IconButton
               title="Zum Projekt"
@@ -114,8 +114,8 @@ const ProjectTileLayersComponent = () => {
               <FaArrowUp />
             </IconButton>
             <IconButton
-              aria-label="neue Hintergrund-Karte"
-              title="neue Hintergrund-Karte"
+              aria-label="neue Pixel-Karte"
+              title="neue Pixel-Karte"
               onClick={add}
               size="large"
               disabled={!userMayEdit}

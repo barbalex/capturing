@@ -430,6 +430,8 @@ export enum WmsVersionEnum {
   '1.1.1' = '1.1.1',
   '1.3.0' = '1.3.0',
 }
+
+type ProjectTileLayerUpdateProps = { row: IProjectTileLayer; session: Session }
 export class ProjectTileLayer implements IProjectTileLayer {
   id: string
   label?: string
@@ -497,6 +499,31 @@ export class ProjectTileLayer implements IProjectTileLayer {
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
     this.deleted = deleted ?? 0
+  }
+
+  async updateOnServer({ was, is, session }: ProjectTileLayerUpdateProps) {
+    const isReved = {
+      ...is,
+      client_rev_at: new window.Date().toISOString(),
+      client_rev_by: session.user?.email ?? session.user?.id,
+    }
+    const update = new QueuedUpdate(
+      undefined,
+      undefined,
+      'project_tile_layers',
+      JSON.stringify(isReved),
+      undefined,
+      this.id,
+      JSON.stringify(was),
+    )
+    return await dexie.queued_updates.add(update)
+  }
+
+  async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    const was = { ...this }
+    this.deleted = 1
+    dexie.project_tile_layers.put(this)
+    return this.updateOnServer({ was, is: this, session })
   }
 }
 

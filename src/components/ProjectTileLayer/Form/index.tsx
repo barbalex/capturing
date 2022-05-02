@@ -42,7 +42,7 @@ const relTypeDataSource = Object.values(TableRelTypeEnum).map((v) => ({
   label: v?.toString(),
 }))
 
-type TableFormProps = {
+type Props = {
   showFilter: (boolean) => void
 }
 type valueType = {
@@ -58,8 +58,8 @@ const typeValueLabels = {
 }
 
 // = '99999999-9999-9999-9999-999999999999'
-const TableForm = ({ showFilter }: TableFormProps) => {
-  const { projectId, tableId } = useParams()
+const ProjectTileLayerForm = ({ showFilter }: Props) => {
+  const { projectId, tableId: projectTileLayerId } = useParams()
 
   const store = useContext(StoreContext)
   const { filter, errors } = store
@@ -73,8 +73,8 @@ const TableForm = ({ showFilter }: TableFormProps) => {
     [],
   ) // TODO: add errors, unsetError in store
   useEffect(() => {
-    unsetError('table')
-  }, [tableId, unsetError])
+    unsetError('project_tile_layer')
+  }, [projectTileLayerId, unsetError])
 
   // const data = {}
   const data = useLiveQuery(async () => {
@@ -84,7 +84,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
       dexie.ttables
         .where({ deleted: 0, project_id: projectId, type: 'standard' })
         .toArray(),
-      dexie.ttables.get(tableId),
+      dexie.ttables.get(projectTileLayerId),
       dexie.project_users.get({
         project_id: projectId,
         user_email: session?.user?.email,
@@ -114,8 +114,8 @@ const TableForm = ({ showFilter }: TableFormProps) => {
         objects: tables,
         useLabels,
       })
-        // do not list own table
-        .filter((t) => t.id !== tableId)
+        // do not list own project_tile_layer
+        .filter((t) => t.id !== projectTileLayerId)
         .map((t) => ({
           value: t.id,
           label: labelFromLabeledTable({
@@ -127,7 +127,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
       userMayEdit,
       relTable,
     }
-  }, [projectId, tableId, session?.user?.email])
+  }, [projectId, projectTileLayerId, session?.user?.email])
 
   const useLabels: boolean = data?.useLabels
   const projectsValues: valueType[] = data?.projectsValues ?? []
@@ -194,7 +194,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
 
       if (showFilter) {
         return filter.setValue({
-          table: 'table',
+          table: 'project_tile_layer',
           key: field,
           value: newValue,
         })
@@ -208,7 +208,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
     [filter, row, showFilter],
   )
 
-  // const showDeleted = filter?.table?.deleted !== false || row?.deleted
+  // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
   if (!row) return <Spinner />
@@ -233,7 +233,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
                 name="deleted"
                 value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.table?.deleted}
+                error={errors?.project_tile_layer?.deleted}
                 disabled={!userMayEdit}
               />
             ) : (
@@ -243,7 +243,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
                 name="deleted"
                 value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.table?.deleted}
+                error={errors?.project_tile_layer?.deleted}
                 disabled={!userMayEdit}
               />
             )}
@@ -255,7 +255,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           label="Name"
           value={row.name}
           onBlur={onBlur}
-          error={errors?.table?.name}
+          error={errors?.project_tile_layer?.name}
           disabled={!userMayEdit}
         />
         {useLabels === 1 && (
@@ -265,7 +265,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
             label="Beschriftung"
             value={row.label}
             onBlur={onBlur}
-            error={errors?.table?.label}
+            error={errors?.project_tile_layer?.label}
             disabled={!userMayEdit}
           />
         )}
@@ -277,7 +277,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           label="Gehört zum Projekt"
           options={projectsValues}
           saveToDb={onBlur}
-          error={errors?.table?.project_id}
+          error={errors?.project_tile_layer?.project_id}
           disabled={!userMayEdit}
         />
         <RadioButtonGroup
@@ -286,7 +286,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           dataSource={tableTypeValues}
           onBlur={onBlur}
           label="Tabellen-Typ"
-          error={errors?.table?.type}
+          error={errors?.project_tile_layer?.type}
         />
         <Select
           key={`${row.id}${row?.parent_id ?? ''}parent_id`}
@@ -296,7 +296,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           label="Verknüpfte Tabelle (Mutter: 1:n, Geschwister: 1:1)"
           options={tablesValues}
           saveToDb={onBlur}
-          error={errors?.table?.parent_id}
+          error={errors?.project_tile_layer?.parent_id}
           disabled={!userMayEdit}
         />
         {!!row.parent_id && (
@@ -306,7 +306,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
             dataSource={relTypeDataSource}
             onBlur={onBlur}
             label="Beziehung zur verknüpften Tabelle"
-            error={errors?.table?.rel_type}
+            error={errors?.project_tile_layer?.rel_type}
             popover={
               <RelTypePopover
                 ownTable={row}
@@ -322,7 +322,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           label="Sortierung"
           value={row.sort}
           onBlur={onBlur}
-          error={errors?.table?.sort}
+          error={errors?.project_tile_layer?.sort}
           disabled={!userMayEdit}
           type="number"
         />
@@ -342,4 +342,4 @@ const TableForm = ({ showFilter }: TableFormProps) => {
   )
 }
 
-export default observer(TableForm)
+export default observer(ProjectTileLayerForm)
