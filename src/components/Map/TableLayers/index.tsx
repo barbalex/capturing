@@ -31,7 +31,6 @@ const TableLayers = () => {
         properties: e.id === rowId ? { color: 'red' } : { color: 'green' },
       }))
       const data = { type: 'FeatureCollection', features }
-      console.log('TableLayers', { table, data })
 
       if (rows.length)
         _layers.push(<TableLayer key={table.id} data={data} style={getStyle} />)
