@@ -40,7 +40,7 @@ type valueType = {
 
 // = '99999999-9999-9999-9999-999999999999'
 const ProjectTileLayerForm = ({ showFilter }: Props) => {
-  const { projectId, tableId: projectTileLayerId } = useParams()
+  const { projectId, projectTileLayerId } = useParams()
 
   const store = useContext(StoreContext)
   const { filter, errors } = store
@@ -228,6 +228,36 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           value={row.sort}
           onBlur={onBlur}
           error={errors?.project_tile_layer?.sort}
+          disabled={!userMayEdit}
+          type="number"
+        />
+        <TextField
+          key={`${row?.id ?? ''}url_template`}
+          name="url_template"
+          label="URL-Vorlage"
+          value={row.url_template}
+          onBlur={onBlur}
+          error={errors?.project_tile_layer?.url_template}
+          disabled={!userMayEdit}
+          type="text"
+        />
+        <TextField
+          key={`${row?.id ?? ''}max_zoom`}
+          name="max_zoom"
+          label="Maximale Zoom-Stufe"
+          value={row.max_zoom}
+          onBlur={onBlur}
+          error={errors?.project_tile_layer?.max_zoom}
+          disabled={!userMayEdit}
+          type="number"
+        />
+        <TextField
+          key={`${row?.id ?? ''}min_zoom`}
+          name="min_zoom"
+          label="Minimale Zoom-Stufe"
+          value={row.min_zoom}
+          onBlur={onBlur}
+          error={errors?.project_tile_layer?.min_zoom}
           disabled={!userMayEdit}
           type="number"
         />

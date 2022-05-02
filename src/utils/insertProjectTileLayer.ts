@@ -22,7 +22,7 @@ const insertProjectTileLayer = async ({ projectId }: Props) => {
     undefined,
     undefined,
     0,
-    '1.1.1',
+    undefined,
     undefined,
     undefined,
     0,
