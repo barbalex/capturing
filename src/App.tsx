@@ -27,6 +27,8 @@ import ProjectsComponent from './components/Projects'
 import ProjectComponent from './components/Project'
 import TablesComponent from './components/Tables'
 import TableComponent from './components/Table'
+import ProjectTileLayersComponent from './components/ProjectTileLayers'
+import ProjectTileLayerComponent from './components/ProjectTileLayer'
 import FieldsComponent from './components/Fields'
 import FieldComponent from './components/Field'
 import RowsComponent from './components/Rows'
@@ -99,6 +101,14 @@ function App() {
                   <Route
                     path=":projectId/tables/:tableId"
                     element={<TableComponent />}
+                  />
+                  <Route
+                    path=":projectId/tile-layers/*"
+                    element={<ProjectTileLayersComponent />}
+                  />
+                  <Route
+                    path=":projectId/tile-layers/:projectTileLayerId"
+                    element={<ProjectTileLayerComponent />}
                   />
                   <Route
                     path=":projectId/tables/:tableId/fields/*"

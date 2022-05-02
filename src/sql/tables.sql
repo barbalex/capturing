@@ -899,7 +899,7 @@ CREATE TABLE tile_layers (
   min_zoom decimal DEFAULT 0,
   opacity decimal DEFAULT 1,
   wms_base_url text DEFAULT NULL, -- url of WMS service. Ex.: 'http://ows.mundialis.de/services/service?'
-  wms_format text DEFAULT NULL, -- WMS image format ('image/jpeg'. Use 'image/png' for layers with transparency)
+  wms_format text DEFAULT NULL, -- WMS image format ('image/jpeg'. Use 'image/png' for layers with transparency). The list of output formats supported by a GeoServer instance can be found by a WMS GetCapabilities request
   wms_layers text[] DEFAULT NULL, -- list of WMS layers to show
   wms_parameters jsonb DEFAULT NULL, -- other request parameters
   wms_styles text[] DEFAULT NULL, -- wouldn't that be sld i.e. xml? https://leafletjs.com/reference.html#tilelayer-wms-styles
