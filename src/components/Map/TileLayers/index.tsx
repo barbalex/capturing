@@ -17,13 +17,14 @@ const TileLayers = () => {
     [projectId],
   )
 
-  // console.log('TableLayers rendering')
-
   if (!tileLayers) return []
+  // is no tile layer was yet defined, use osm
   if (!tileLayers.length) return [<OsmColor key="osm" />]
 
-  console.log('TableLayers tileLayers:', tileLayers)
-  return tileLayers.map((layer) => <TileLayer key={layer.id} layer={layer} />)
+  return tileLayers.map((layer) => (
+    // use greyscale in key to redraw when user toggles it
+    <TileLayer key={`${layer.id}/${layer.greyscale}`} layer={layer} />
+  ))
 }
 
 export default TileLayers

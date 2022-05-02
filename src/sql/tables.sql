@@ -887,6 +887,11 @@ CREATE TYPE wms_version_enum AS enum (
   '1.3.0'
 );
 
+CREATE TYPE tile_layer_type_enum AS enum (
+  'url_template',
+  'wms'
+);
+
 --
 DROP TABLE IF EXISTS tile_layers CASCADE;
 
@@ -931,6 +936,7 @@ CREATE TABLE project_tile_layers (
   sort smallint DEFAULT 0,
   active integer DEFAULT 0,
   project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  type tile_layer_type_enum DEFAULT 'url_template',
   url_template text DEFAULT NULL,
   subdomains text[] DEFAULT NULL,
   max_zoom decimal DEFAULT 19,

@@ -13,6 +13,7 @@ import ErrorBoundary from '../../shared/ErrorBoundary'
 import {
   dexie,
   WmsVersionEnum,
+  TileLayerTypeEnum,
   IProjectTileLayer,
   ProjectTileLayer,
 } from '../../../dexieClient'
@@ -87,9 +88,11 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
   const row: ProjectTileLayer = data?.row
   const userMayEdit: boolean = data?.userMayEdit
 
-  console.log('ProjectTileLayerForm', { row })
-
   const wmsVersionValues = Object.values(WmsVersionEnum).map((v) => ({
+    value: v,
+    label: v,
+  }))
+  const tileLayerTypeValues = Object.values(TileLayerTypeEnum).map((v) => ({
     value: v,
     label: v,
   }))
@@ -241,16 +244,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           type="number"
         />
         <TextField
-          key={`${row?.id ?? ''}url_template`}
-          name="url_template"
-          label="URL-Vorlage"
-          value={row.url_template}
-          onBlur={onBlur}
-          error={errors?.project_tile_layer?.url_template}
-          disabled={!userMayEdit}
-          type="text"
-        />
-        <TextField
           key={`${row?.id ?? ''}max_zoom`}
           name="max_zoom"
           label="Maximale Zoom-Stufe"
@@ -271,13 +264,35 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           type="number"
         />
         <RadioButtonGroup
-          value={row.wms_version}
-          name="wms_version"
-          dataSource={wmsVersionValues}
+          value={row.type}
+          name="type"
+          dataSource={tileLayerTypeValues}
           onBlur={onBlur}
-          label="WMS-Version"
-          error={errors?.project_tile_layer?.wms_version}
+          label="Typ"
+          error={errors?.project_tile_layer?.type}
         />
+        {row?.type === 'url_template' && (
+          <TextField
+            key={`${row?.id ?? ''}url_template`}
+            name="url_template"
+            label="URL-Vorlage"
+            value={row.url_template}
+            onBlur={onBlur}
+            error={errors?.project_tile_layer?.url_template}
+            disabled={!userMayEdit}
+            type="text"
+          />
+        )}
+        {row?.type === 'wms' && (
+          <RadioButtonGroup
+            value={row.wms_version}
+            name="wms_version"
+            dataSource={wmsVersionValues}
+            onBlur={onBlur}
+            label="WMS-Version"
+            error={errors?.project_tile_layer?.wms_version}
+          />
+        )}
         <Checkbox2States
           label="Grautöne statt Farben"
           name="greyscale"

@@ -356,6 +356,11 @@ export enum TableRelTypeEnum {
   n = 'n',
 }
 
+export enum TileLayerTypeEnum {
+  url_template = 'url_template',
+  wms = 'wms',
+}
+
 export enum TableTypeEnum {
   none = 'standard',
   value_list = 'value_list',
@@ -439,6 +444,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
   sort?: number
   active?: number
   project_id?: string
+  type?: TileLayerTypeEnum
   url_template?: string
   subdomains?: string[]
   max_zoom?: number
@@ -463,6 +469,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
     sort?: number,
     active?: number,
     project_id?: string,
+    type?: TileLayerTypeEnum,
     url_template?: string,
     subdomains?: string[],
     max_zoom?: number,
@@ -486,6 +493,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
     if (sort !== undefined) this.sort = sort
     if (active !== undefined) this.active = active
     if (project_id) this.project_id = project_id
+    this.type = type ?? 'url_template'
     if (url_template) this.url_template = url_template
     if (subdomains) this.subdomains = subdomains
     if (max_zoom !== undefined) this.max_zoom = max_zoom
