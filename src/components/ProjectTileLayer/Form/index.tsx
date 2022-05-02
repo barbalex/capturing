@@ -221,6 +221,14 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           error={errors?.project_tile_layer?.project_id}
           disabled={!userMayEdit}
         />
+        <Checkbox2States
+          label="aktiv"
+          name="active"
+          value={row.active}
+          onBlur={onBlur}
+          error={errors?.field?.active}
+          disabled={!userMayEdit}
+        />
         <TextField
           key={`${row?.id ?? ''}sort`}
           name="sort"
