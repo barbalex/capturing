@@ -420,6 +420,7 @@ export interface IProjectTileLayer {
   wms_styles?: string[]
   wms_transparent?: number
   wms_version?: WmsVersionEnum
+  greyscale?: number
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -450,6 +451,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
   wms_styles?: string[]
   wms_transparent?: number
   wms_version?: WmsVersionEnum
+  greyscale?: number
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -473,6 +475,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
     wms_styles?: string[],
     wms_transparent?: number,
     wms_version?: WmsVersionEnum,
+    greyscale?: number,
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
@@ -495,6 +498,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
     if (wms_styles) this.wms_styles = wms_styles
     if (wms_transparent !== undefined) this.wms_transparent = wms_transparent
     if (wms_version) this.wms_version = wms_version
+    this.greyscale = greyscale ?? 0
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
@@ -1141,7 +1145,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(26).stores({
+    this.version(27).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:

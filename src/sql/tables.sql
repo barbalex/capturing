@@ -943,6 +943,7 @@ CREATE TABLE project_tile_layers (
   wms_styles text[] DEFAULT NULL,
   wms_transparent integer DEFAULT 0,
   wms_version wms_version_enum DEFAULT NULL,
+  greyscale integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),

@@ -45,7 +45,7 @@ const StyledMapContainer = styled(MapContainer)`
 
 const MapComponent = () => {
   const store = useContext(storeContext)
-  const { activeBaseLayer, bounds: boundsRaw, showMap } = store
+  const { bounds: boundsRaw, showMap } = store
   const bounds = getSnapshot(boundsRaw)
 
   const mapRef = useRef()
@@ -67,28 +67,6 @@ const MapComponent = () => {
     console.log('Map initiated')
   }, [])
 
-  const BaseLayerComponents = useMemo(
-    () => ({
-      OsmColor: () => <OsmColor />,
-      OsmBw: () => <OsmBw />,
-      // SwissTopoPixelFarbe: () => <SwissTopoPixelFarbe />,
-      // SwissTopoPixelGrau: () => <SwissTopoPixelGrau />,
-      // SwisstopoSiegfried: () => <SwisstopoSiegfried />,
-      // SwisstopoDufour: () => <SwisstopoDufour />,
-      // ZhUep: () => <ZhUep />,
-      // BingAerial: () => <BingAerial />,
-      // ZhOrthoAktuellRgb: () => <ZhOrthoAktuellRgb />,
-      // ZhOrthoAktuellIr: () => <ZhOrthoAktuellIr />,
-      // ZhOrtho2018Rgb: () => <ZhOrtho2018Rgb />,
-      // ZhOrtho2018Ir: () => <ZhOrtho2018Ir />,
-      // ZhOrtho2015Rgb: () => <ZhOrtho2015Rgb />,
-      // ZhOrtho2015Ir: () => <ZhOrtho2015Ir />,
-      // ZhOrtho2014Rgb: () => <ZhOrtho2014Rgb />,
-      // ZhOrtho2014Ir: () => <ZhOrtho2014Ir />,
-    }),
-    [],
-  )
-  const BaseLayerComponent = BaseLayerComponents[activeBaseLayer]
   console.log('Map rendering')
 
   /**
@@ -110,7 +88,6 @@ const MapComponent = () => {
           ref={mapRef}
           attributionControl={false}
         >
-          {/* {activeBaseLayer && <BaseLayerComponent />} */}
           <LocationMarker />
           <DrawControl />
           <TableLayers />

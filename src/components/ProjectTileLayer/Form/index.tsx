@@ -278,6 +278,14 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           label="WMS-Version"
           error={errors?.project_tile_layer?.wms_version}
         />
+        <Checkbox2States
+          label="Grautöne statt Farben"
+          name="greyscale"
+          value={row.greyscale}
+          onBlur={onBlur}
+          error={errors?.field?.greyscale}
+          disabled={!userMayEdit}
+        />
       </FieldsContainer>
     </ErrorBoundary>
   )

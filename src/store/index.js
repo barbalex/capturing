@@ -41,7 +41,6 @@ export const MobxStore = types
     formHeight: types.optional(types.number, 500),
     filterWidth: types.optional(types.number, 500),
     online: types.optional(types.boolean, true),
-    activeBaseLayer: types.optional(types.maybeNull(types.string), 'OsmColor'),
     // setting bounds works imperatively with map.fitBounds since v3
     // but keeping bounds in store as last used bounds will be re-applied on next map opening
     bounds: types.optional(types.array(types.array(types.number)), [
@@ -61,9 +60,6 @@ export const MobxStore = types
     return {
       setBounds(val) {
         self.bounds = val
-      },
-      setActiveBaseLayer(val) {
-        self.activeBaseLayer = val
       },
       setShowTree(val) {
         self.showTree = val
