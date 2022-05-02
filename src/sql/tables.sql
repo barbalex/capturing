@@ -894,15 +894,15 @@ CREATE TABLE tile_layers (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   label text DEFAULT NULL,
   url_template text DEFAULT NULL,
-  subdomains text[] DEFAULT NULL,
+  subdomains text[] DEFAULT NULL, -- https://leafletjs.com/reference.html#tilelayer-wms-subdomains
   max_zoom decimal DEFAULT 19,
   min_zoom decimal DEFAULT 0,
   opacity decimal DEFAULT 1,
-  wms_base_url text DEFAULT NULL,
-  wms_format text DEFAULT NULL,
-  wms_layers text[] DEFAULT NULL,
-  wms_parameters jsonb DEFAULT NULL,
-  wms_styles text[] DEFAULT NULL,
+  wms_base_url text DEFAULT NULL, -- url of WMS service. Ex.: 'http://ows.mundialis.de/services/service?'
+  wms_format text DEFAULT NULL, -- WMS image format ('image/jpeg'. Use 'image/png' for layers with transparency)
+  wms_layers text[] DEFAULT NULL, -- list of WMS layers to show
+  wms_parameters jsonb DEFAULT NULL, -- other request parameters
+  wms_styles text[] DEFAULT NULL, -- wouldn't that be sld i.e. xml? https://leafletjs.com/reference.html#tilelayer-wms-styles
   wms_transparent integer DEFAULT 0,
   wms_version wms_version_enum DEFAULT NULL,
   client_rev_at timestamp with time zone DEFAULT now(),
@@ -955,7 +955,7 @@ CREATE INDEX ON project_tile_layers USING btree (sort);
 
 CREATE INDEX ON project_tile_layers USING btree (deleted);
 
-COMMENT ON TABLE project_users IS 'Goal: Bring your own tile layers. Not versioned (not recorded and only added by manager). Field definitions, see: https://pub.dev/documentation/flutter_map/latest/flutter_map/flutter_map-library.html';
+COMMENT ON TABLE project_users IS 'Goal: Bring your own tile layers. Not versioned (not recorded and only added by manager).';
 
 ALTER TABLE project_tile_layers ENABLE ROW LEVEL SECURITY;
 
