@@ -529,6 +529,10 @@ export class ProjectTileLayer implements IProjectTileLayer {
       JSON.stringify(was),
     )
     return await dexie.queued_updates.add(update)
+    console.log('dexieClient, ProjectTileLayer, updateOnServer', {
+      update,
+      isReved,
+    })
   }
 
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {

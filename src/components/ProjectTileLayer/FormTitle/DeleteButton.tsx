@@ -38,7 +38,7 @@ const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
   const deleted: boolean = useLiveQuery(async () => {
     const row: Row = await dexie.project_tile_layers.get(projectTileLayerId)
     // only return needed values to minimize re-renders
-    return row.deleted
+    return row?.deleted
   }, [projectTileLayerId])
 
   const [anchorEl, setAnchorEl] = useState(null)

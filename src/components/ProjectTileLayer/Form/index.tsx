@@ -184,7 +184,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           <>
             {showFilter ? (
               <JesNo
-                key={`${row.id}filterDeleted`}
                 label="gelöscht"
                 name="deleted"
                 value={row.deleted}
@@ -194,7 +193,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               />
             ) : (
               <Checkbox2States
-                key={`${row.id}deleted`}
                 label="gelöscht"
                 name="deleted"
                 value={row.deleted}
@@ -206,7 +204,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           </>
         )}
         <TextField
-          key={`${row.id}label`}
           name="label"
           label="Beschriftung"
           value={row.label}
@@ -215,7 +212,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           disabled={!userMayEdit}
         />
         <Select
-          key={`${row.id}${row?.project_id ?? ''}project_id`}
           name="project_id"
           value={row.project_id}
           field="project_id"
@@ -234,7 +230,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           disabled={!userMayEdit}
         />
         <TextField
-          key={`${row?.id ?? ''}sort`}
           name="sort"
           label="Sortierung"
           value={row.sort}
@@ -244,7 +239,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           type="number"
         />
         <TextField
-          key={`${row?.id ?? ''}max_zoom`}
           name="max_zoom"
           label="Maximale Zoom-Stufe"
           value={row.max_zoom}
@@ -254,7 +248,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           type="number"
         />
         <TextField
-          key={`${row?.id ?? ''}min_zoom`}
           name="min_zoom"
           label="Minimale Zoom-Stufe"
           value={row.min_zoom}
@@ -262,6 +255,14 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           error={errors?.project_tile_layer?.min_zoom}
           disabled={!userMayEdit}
           type="number"
+        />
+        <Checkbox2States
+          label="Grautöne statt Farben"
+          name="greyscale"
+          value={row.greyscale}
+          onBlur={onBlur}
+          error={errors?.field?.greyscale}
+          disabled={!userMayEdit}
         />
         <RadioButtonGroup
           value={row.type}
@@ -273,7 +274,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         />
         {row?.type === 'url_template' && (
           <TextField
-            key={`${row?.id ?? ''}url_template`}
             name="url_template"
             label="URL-Vorlage"
             value={row.url_template}
@@ -284,23 +284,65 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           />
         )}
         {row?.type === 'wms' && (
-          <RadioButtonGroup
-            value={row.wms_version}
-            name="wms_version"
-            dataSource={wmsVersionValues}
-            onBlur={onBlur}
-            label="WMS-Version"
-            error={errors?.project_tile_layer?.wms_version}
-          />
+          <>
+            <TextField
+              name="wms_base_url"
+              label="Basis-URL"
+              value={row.wms_base_url}
+              onBlur={onBlur}
+              error={errors?.project_tile_layer?.wms_base_url}
+              disabled={!userMayEdit}
+              type="text"
+            />
+            <TextField
+              name="wms_format"
+              label="(Bild-)Format"
+              value={row.wms_format}
+              onBlur={onBlur}
+              error={errors?.project_tile_layer?.wms_format}
+              disabled={!userMayEdit}
+              type="text"
+            />
+            <TextField
+              name="wms_layers"
+              label="Layer (wenn mehrere: Komma-getrennt)"
+              value={row.wms_layers}
+              onBlur={(e) => {
+                // TODO: is array field really needed?
+                const { name, type } = event.target
+                const fakeEvent = {
+                  target: {
+                    name,
+                    value: e.target.value ? [e.target.value] : null,
+                    type,
+                  },
+                }
+
+                return onBlur(fakeEvent)
+              }}
+              error={errors?.project_tile_layer?.wms_layers}
+              disabled={!userMayEdit}
+              type="text"
+            />
+            <TextField
+              name="wms_parameters"
+              label="Zusätzliche Parameter (Schreibweise für URL-Query)"
+              value={row.wms_parameters}
+              onBlur={onBlur}
+              error={errors?.project_tile_layer?.wms_parameters}
+              disabled={!userMayEdit}
+              type="text"
+            />
+            <RadioButtonGroup
+              value={row.wms_version}
+              name="wms_version"
+              dataSource={wmsVersionValues}
+              onBlur={onBlur}
+              label="WMS-Version"
+              error={errors?.project_tile_layer?.wms_version}
+            />
+          </>
         )}
-        <Checkbox2States
-          label="Grautöne statt Farben"
-          name="greyscale"
-          value={row.greyscale}
-          onBlur={onBlur}
-          error={errors?.field?.greyscale}
-          disabled={!userMayEdit}
-        />
       </FieldsContainer>
     </ErrorBoundary>
   )

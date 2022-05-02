@@ -23,7 +23,7 @@ const TileLayers = () => {
 
   return tileLayers.map((layer) => (
     // use greyscale in key to redraw when user toggles it
-    <TileLayer key={`${layer.id}/${layer.greyscale}`} layer={layer} />
+    <TileLayer key={JSON.stringify(layer)} layer={layer} />
   ))
 }
 
