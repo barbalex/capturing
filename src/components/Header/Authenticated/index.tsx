@@ -108,7 +108,7 @@ const HeaderAuthenticated = () => {
               title="Home"
               disabled={pathname === '/'}
             >
-              Capturing
+              Erfassen
             </SiteTitle>
           )}
           <Spacer />

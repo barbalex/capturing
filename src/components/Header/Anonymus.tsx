@@ -72,7 +72,7 @@ const HeaderAnonymus = () => {
               title="Home"
               disabled={pathname === '/'}
             >
-              Capturing
+              Erfassen
             </SiteTitle>
           )}
           <Spacer />

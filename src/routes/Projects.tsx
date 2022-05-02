@@ -78,7 +78,7 @@ const ProjectsPage = () => {
   }, [setDimensions, containerEl?.current])
 
   useEffect(() => {
-    document.title = 'Capturing: Projekte'
+    document.title = 'Erfassen: Projekte'
   }, [])
 
   // on first render set nodes

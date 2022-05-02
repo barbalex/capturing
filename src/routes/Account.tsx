@@ -9,7 +9,7 @@ const Account = ({ session }) => {
   const [avatar_url, setAvatarUrl] = useState(null)
 
   useEffect(() => {
-    document.title = 'Capturing: Konto'
+    document.title = 'Erfassen: Konto'
   }, [])
 
   useEffect(() => {

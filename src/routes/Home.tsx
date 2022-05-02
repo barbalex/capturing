@@ -104,7 +104,7 @@ const BottomSpacer = styled.div`
 
 const Home = () => {
   useEffect(() => {
-    document.title = 'Capturing: Home'
+    document.title = 'Erfassen: Home'
   }, [])
 
   return (

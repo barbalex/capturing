@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 
 const Docs = () => {
   useEffect(() => {
-    document.title = 'Capturing: Doku'
+    document.title = 'Erfassen: Doku'
   }, [])
 
   return (
