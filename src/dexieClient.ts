@@ -417,8 +417,6 @@ export interface IProjectTileLayer {
   wms_format?: string
   wms_layers?: string[]
   wms_parameters?: string
-  wms_request?: string
-  wms_service?: string
   wms_styles?: string[]
   wms_transparent?: number
   wms_version?: string
@@ -443,8 +441,6 @@ export class ProjectTileLayer implements IProjectTileLayer {
   wms_format?: string
   wms_layers?: string[]
   wms_parameters?: string
-  wms_request?: string
-  wms_service?: string
   wms_styles?: string[]
   wms_transparent?: number
   wms_version?: string
@@ -468,8 +464,6 @@ export class ProjectTileLayer implements IProjectTileLayer {
     wms_format?: string,
     wms_layers?: string[],
     wms_parameters?: string,
-    wms_request?: string,
-    wms_service?: string,
     wms_styles?: string[],
     wms_transparent?: number,
     wms_version?: string,
@@ -492,8 +486,6 @@ export class ProjectTileLayer implements IProjectTileLayer {
     if (wms_format) this.wms_format = wms_format
     if (wms_layers) this.wms_layers = wms_layers
     if (wms_parameters) this.wms_parameters = wms_parameters
-    if (wms_request) this.wms_request = wms_request
-    if (wms_service) this.wms_service = wms_service
     if (wms_styles) this.wms_styles = wms_styles
     if (wms_transparent !== undefined) this.wms_transparent = wms_transparent
     if (wms_version) this.wms_version = wms_version
@@ -893,8 +885,6 @@ export interface ITileLayer {
   wms_format?: string
   wms_layers?: string[]
   wms_parameters?: string
-  wms_request?: string
-  wms_service?: string
   wms_styles?: string[]
   wms_transparent?: number
   wms_version?: string
@@ -916,8 +906,6 @@ export class TileLayer implements ITileLayer {
   wms_format?: string
   wms_layers?: string[]
   wms_parameters?: string
-  wms_request?: string
-  wms_service?: string
   wms_styles?: string[]
   wms_transparent?: number
   wms_version?: string
@@ -938,8 +926,6 @@ export class TileLayer implements ITileLayer {
     wms_format?: string,
     wms_layers?: string[],
     wms_parameters?: string,
-    wms_request?: string,
-    wms_service?: string,
     wms_styles?: string[],
     wms_transparent?: number,
     wms_version?: string,
@@ -959,8 +945,6 @@ export class TileLayer implements ITileLayer {
     if (wms_format) this.wms_format = wms_format
     if (wms_layers) this.wms_layers = wms_layers
     if (wms_parameters) this.wms_parameters = wms_parameters
-    if (wms_request) this.wms_request = wms_request
-    if (wms_service) this.wms_service = wms_service
     if (wms_styles) this.wms_styles = wms_styles
     if (wms_transparent !== undefined) this.wms_transparent = wms_transparent
     if (wms_version) this.wms_version = wms_version
@@ -1126,7 +1110,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(24).stores({
+    this.version(25).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
