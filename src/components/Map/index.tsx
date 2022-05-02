@@ -108,6 +108,7 @@ const MapComponent = () => {
           minZoom={0}
           bounds={bounds}
           ref={mapRef}
+          attributionControl={false}
         >
           {/* {activeBaseLayer && <BaseLayerComponent />} */}
           <LocationMarker />

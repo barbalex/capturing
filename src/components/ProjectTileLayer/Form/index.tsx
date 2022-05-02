@@ -61,8 +61,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
   const data = useLiveQuery(async () => {
     const [projects, row, projectUser] = await Promise.all([
       dexie.projects.where({ deleted: 0 }).sortBy('', sortProjectsByLabelName),
-
-      dexie.ttables.get(projectTileLayerId),
+      dexie.project_tile_layers.get(projectTileLayerId),
       dexie.project_users.get({
         project_id: projectId,
         user_email: session?.user?.email,
@@ -87,6 +86,8 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
   const projectsValues: valueType[] = data?.projectsValues ?? []
   const row: ProjectTileLayer = data?.row
   const userMayEdit: boolean = data?.userMayEdit
+
+  console.log('ProjectTileLayerForm', { row })
 
   const wmsVersionValues = Object.values(WmsVersionEnum).map((v) => ({
     value: v,
