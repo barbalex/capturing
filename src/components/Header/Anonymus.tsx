@@ -82,15 +82,16 @@ const HeaderAnonymus = () => {
             to="/projects"
             disabled={pathname === '/projects'}
           >
-            Projects
+            Projekte
           </NavButton>
           <NavButton
             variant="outlined"
             component={Link}
             to="/docs"
             disabled={pathname === '/docs'}
+            title="Dokumentation"
           >
-            Docs
+            Doku
           </NavButton>
         </Toolbar>
       </AppBar>
