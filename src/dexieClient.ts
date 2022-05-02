@@ -419,13 +419,17 @@ export interface IProjectTileLayer {
   wms_parameters?: string
   wms_styles?: string[]
   wms_transparent?: number
-  wms_version?: string
+  wms_version?: WmsVersionEnum
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
   deleted: number
 }
 
+export enum WmsVersionEnum {
+  '1.1.1' = '1.1.1',
+  '1.3.0' = '1.3.0',
+}
 export class ProjectTileLayer implements IProjectTileLayer {
   id: string
   label?: string
@@ -443,7 +447,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
   wms_parameters?: string
   wms_styles?: string[]
   wms_transparent?: number
-  wms_version?: string
+  wms_version?: WmsVersionEnum
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -466,7 +470,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
     wms_parameters?: string,
     wms_styles?: string[],
     wms_transparent?: number,
-    wms_version?: string,
+    wms_version?: WmsVersionEnum,
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
@@ -887,7 +891,7 @@ export interface ITileLayer {
   wms_parameters?: string
   wms_styles?: string[]
   wms_transparent?: number
-  wms_version?: string
+  wms_version?: WmsVersionEnum
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -908,7 +912,7 @@ export class TileLayer implements ITileLayer {
   wms_parameters?: string
   wms_styles?: string[]
   wms_transparent?: number
-  wms_version?: string
+  wms_version?: WmsVersionEnum
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -928,7 +932,7 @@ export class TileLayer implements ITileLayer {
     wms_parameters?: string,
     wms_styles?: string[],
     wms_transparent?: number,
-    wms_version?: string,
+    wms_version?: WmsVersionEnum,
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
@@ -1110,7 +1114,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(25).stores({
+    this.version(26).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:

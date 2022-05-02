@@ -881,9 +881,12 @@ ALTER publication supabase_realtime
   ADD TABLE news_delivery;
 
 -- TODO: vector_layers
---comment on table vector_layers IS 'Goal: Bring your own vector layers. File and/or wms. Not versioned (not recorded and only added by manager)';
--- TODO: tile_layers
---comment on table tile_layers IS 'Goal: Bring your own raster layers. File and/or wms. Not versioned (not recorded and only added by manager)';
+--
+CREATE TYPE wms_version_enum AS enum (
+  '1.1.1',
+  '1.3.0'
+);
+
 --
 DROP TABLE IF EXISTS tile_layers CASCADE;
 
@@ -901,7 +904,7 @@ CREATE TABLE tile_layers (
   wms_parameters jsonb DEFAULT NULL,
   wms_styles text[] DEFAULT NULL,
   wms_transparent integer DEFAULT 0,
-  wms_version text DEFAULT NULL,
+  wms_version wms_version_enum DEFAULT NULL,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -912,7 +915,7 @@ CREATE INDEX ON tile_layers USING btree (id);
 
 CREATE INDEX ON tile_layers USING btree (deleted);
 
-COMMENT ON TABLE project_users IS 'Goal: Bring your own tile layers. Not versioned (not recorded and only added by manager). Field definitions, see: https://pub.dev/documentation/flutter_map/latest/flutter_map/flutter_map-library.html';
+COMMENT ON TABLE tile_layers IS 'Goal: Layers that can be added to new projects. Not versioned (not recorded and only added by manager).';
 
 ALTER TABLE tile_layers ENABLE ROW LEVEL SECURITY;
 
@@ -939,7 +942,7 @@ CREATE TABLE project_tile_layers (
   wms_parameters jsonb DEFAULT NULL,
   wms_styles text[] DEFAULT NULL,
   wms_transparent integer DEFAULT 0,
-  wms_version text DEFAULT NULL,
+  wms_version wms_version_enum DEFAULT NULL,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
