@@ -3271,6 +3271,7 @@ __metadata:
     react: 18.1.0
     react-arborist: 1.0.3
     react-beautiful-dnd: 13.1.0
+    react-colorful: ^5.5.1
     react-datepicker: 4.7.0
     react-dom: 18.1.0
     react-dropzone: 14.1.2
@@ -6074,6 +6075,16 @@ __metadata:
     react: ^16.8.5 || ^17.0.0
     react-dom: ^16.8.5 || ^17.0.0
   checksum: 12b7e9fbe872783e0f899e03f2e80deee085aa1e2cec3d556c1d06bdbafbda7a3c9cf7a3a6b26544617eb2e50d0e3518001bd8300370704bf5a8c9c21f54ec90
+  languageName: node
+  linkType: hard
+
+"react-colorful@npm:^5.5.1":
+  version: 5.5.1
+  resolution: "react-colorful@npm:5.5.1"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: e60811781716e57f0990379eff20d6f22d4d35b9e858c47ecf857c1dc1c1a2274c924ded7248bad5f1e2fbf2aab06e59b12852910c8dee5e6850f8e4df293670
   languageName: node
   linkType: hard
 

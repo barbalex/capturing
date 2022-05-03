@@ -14,8 +14,6 @@ import {
   dexie,
   ITable,
   Table,
-  Project,
-  IProjectUser,
   TableTypeEnum,
   TableRelTypeEnum,
 } from '../../../dexieClient'

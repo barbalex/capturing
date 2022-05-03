@@ -8,15 +8,17 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { motion, useAnimation } from 'framer-motion'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
+import { HexColorPicker } from 'react-colorful'
 
 // TODO: check references
-import StoreContext from '../../storeContext'
-import Checkbox2States from '../shared/Checkbox2States'
-import ErrorBoundary from '../shared/ErrorBoundary'
-import Spinner from '../shared/Spinner'
-import { dexie, LayerStyle } from '../../dexieClient'
-import { supabase } from '../../supabaseClient'
-import TextField from '../shared/TextField'
+import StoreContext from '../storeContext'
+import Checkbox2States from './shared/Checkbox2States'
+import ErrorBoundary from './shared/ErrorBoundary'
+import Label from './shared/Label'
+import Spinner from './shared/Spinner'
+import { dexie, LayerStyle } from '../dexieClient'
+import { supabase } from '../supabaseClient'
+import TextField from './shared/TextField'
 
 const TitleRow = styled.div`
   background-color: rgba(248, 243, 254, 1);
@@ -210,37 +212,14 @@ const LayerStyleForm = () => {
               error={errors?.project?.stroke}
               type="number"
             />
-            <Checkbox2States
-              label="Zusätzlich zu Namen Beschriftungen verwenden"
-              name="use_labels"
-              value={row.use_labels}
-              onBlur={onBlur}
-              error={errors?.project?.use_labels}
-            />
-            {row.use_labels === 1 && (
-              <TextField
-                name="label"
-                label="Beschriftung"
-                value={row.label}
-                onBlur={onBlur}
-                error={errors?.project?.label}
-              />
-            )}
             <TextField
-              name="crs"
-              label="CRS (Koordinaten-Referenz-System)"
-              value={row.crs}
-              type="number"
+              name="color"
+              label="Linien-Farbe"
+              value={row.color}
               onBlur={onBlur}
-              error={errors?.project?.crs}
+              error={errors?.project?.color}
             />
-            <TextField
-              name="account_id"
-              label="Konto"
-              value={row.account_id}
-              onBlur={onBlur}
-              error={errors?.project?.account_id}
-            />
+            <Label label="Linien-Farbe" />
           </FieldsContainer>
         )}
       </motion.div>
