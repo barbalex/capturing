@@ -667,12 +667,12 @@ CREATE TYPE line_join_enum AS enum (
   'bevel',
   'miter',
   'miter-clip',
-  'round',
+  'round'
 );
 
 CREATE TYPE fill_rule_enum AS enum (
   'nonzero',
-  'evenodd',
+  'evenodd'
 );
 
 --
@@ -692,8 +692,8 @@ CREATE TABLE layer_styles (
   opacity numeric(1, 1) DEFAULT 1.0,
   line_cap line_cap_enum DEFAULT 'round',
   line_join line_join_enum DEFAULT 'round',
-  dash_array string DEFAULT NULL,
-  dash_offset string DEFAULT NULL,
+  dash_array text DEFAULT NULL,
+  dash_offset text DEFAULT NULL,
   fill integer DEFAULT 1,
   fill_color text DEFAULT NULL,
   fill_opacity numeric(1, 1) DEFAULT 0.2,
@@ -758,10 +758,10 @@ COMMENT ON COLUMN layer_styles.client_rev_by IS 'user editing last on client';
 
 COMMENT ON COLUMN layer_styles.server_rev_at IS 'time of last edit on server';
 
-ALTER TABLE layer_style ENABLE ROW LEVEL SECURITY;
+ALTER TABLE layer_styles ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE layer_style;
+  ADD TABLE layer_styles;
 
 --
 DROP TABLE IF EXISTS files_meta CASCADE;
@@ -1217,6 +1217,47 @@ SECURITY DEFINER;
 
 -- Function is owned by postgres which bypasses RLS
 --
+CREATE OR REPLACE FUNCTION is_project_user_by_project_tile_layer (_auth_user_id uuid, _project_tile_layer_id uuid)
+  RETURNS bool
+  AS $$
+  SELECT
+    EXISTS (
+      SELECT
+        1
+      FROM
+        auth.users users
+        INNER JOIN project_users ON users.email = project_users.user_email
+        INNER JOIN projects ON projects.id = project_users.project_id
+        INNER JOIN project_tile_layers ON project_tile_layers.project_id = projects.id
+      WHERE
+        project_tile_layers.id = _project_tile_layer_id
+        AND users.id = _auth_user_id);
+
+$$
+LANGUAGE sql
+SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION is_project_manager_by_project_tile_layer (_auth_user_id uuid, _project_tile_layer_id uuid)
+  RETURNS bool
+  AS $$
+  SELECT
+    EXISTS (
+      SELECT
+        1
+      FROM
+        auth.users users
+        INNER JOIN project_users ON users.email = project_users.user_email
+        INNER JOIN projects ON projects.id = project_users.project_id
+        INNER JOIN project_tile_layers ON project_tile_layers.project_id = projects.id
+      WHERE
+        project_tile_layers.id = _project_tile_layer_id
+        AND project_users.role IN ('account_manager', 'project_manager')
+        AND users.id = _auth_user_id);
+
+$$
+LANGUAGE sql
+SECURITY DEFINER;
+
 --
 -- is_project_user_by_row is in tables to guarantee correct series of events when creating policies
 -- Parameters need to be prefixed because the name clashes with column names
@@ -1589,6 +1630,22 @@ DROP POLICY IF EXISTS "Users cant delete accounts" ON accounts;
 CREATE POLICY "Users cant delete accounts" ON accounts
   FOR DELETE
     USING (FALSE);
+
+DROP POLICY IF EXISTS "Users can view layer styles" ON layer_styles;
+
+-- TODO: add OR is_project_user_by_project_vector_layer
+CREATE POLICY "Users can view layer styles" ON layer_styles
+  FOR SELECT
+    USING (is_project_user_by_table (auth.uid (), table_id)
+      OR is_project_user_by_project_tile_layer (auth.uid (), project_tile_layer_id));
+
+-- TODO: add OR is_project_user_by_project_vector_layer
+DROP POLICY IF EXISTS "Managers can insert layer styles" ON layer_styles;
+
+CREATE POLICY "Managers can insert layer styles" ON layer_styles
+  FOR INSERT
+    WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id)
+    OR is_project_manager_by_project_tile_layer (auth.uid (), project_tile_layer_id));
 
 DROP POLICY IF EXISTS "Users can view field types" ON field_types;
 
