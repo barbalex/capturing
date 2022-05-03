@@ -32,20 +32,17 @@ const TableLayers = () => {
       })
       // convert geometry collection into feature collection to add properties (color)
 
-      const features = rows.map((e) => {
-        const properties = layerstyleToProperties({
-          layerStyle,
-          ...(e.id === rowId && { color: 'red' }),
-        })
-        console.log({ e, layerStyle, properties })
-        return {
+      const data = {
+        type: 'FeatureCollection',
+        features: rows.map((e) => ({
           geometry: e.geometry,
           type: 'Feature',
-          // properties: { color: e.id === rowId ? 'red' : layerStyle.color },
-          properties,
-        }
-      })
-      const data = { type: 'FeatureCollection', features }
+          properties: layerstyleToProperties({
+            layerStyle,
+            extraProps: e.id === rowId ? { color: 'red' } : {},
+          }),
+        })),
+      }
 
       if (rows.length)
         _layers.push(<TableLayer key={table.id} data={data} style={getStyle} />)

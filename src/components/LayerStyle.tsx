@@ -315,7 +315,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
                 disabled={!userMayEdit}
               />
               <Checkbox2States
-                label="Linie bei Polygonen und Kreisen zeichnen"
+                label="Flächen füllen"
                 name="fill"
                 value={row.fill}
                 onBlur={onBlur}
@@ -323,7 +323,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
                 disabled={!userMayEdit}
               />
               <ColorPicker
-                label="Füll-Farbe"
+                label="Füllung: Farbe"
                 name="fill_color"
                 onBlur={onBlur}
                 color={row.fill_color}
@@ -331,7 +331,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
               />
               <TextField
                 name="fill_opacity"
-                label="Deckkraft / Opazität der Füllung"
+                label="Füllung: Deckkraft / Opazität"
                 value={row.fill_opacity}
                 onBlur={onBlur}
                 error={errors?.project?.fill_opacity}
@@ -343,7 +343,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
                   name="fill_rule"
                   value={row.fill_rule}
                   field="fill_rule"
-                  label="Regel, um den Inhalt einer Fläche zu bestimmen"
+                  label="Füllung: Regel, um den Inhalt von Flächen zu bestimmen"
                   dataSource={fillRuleValues}
                   onBlur={onBlur}
                   error={errors?.field?.fill_rule}
