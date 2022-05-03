@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom'
 import { dexie, Table, Row, LayerStyle } from '../../../dexieClient'
 import TableLayer from './TableLayer'
 
-const getStyle = ({ feature, layerStyle }) => ({
-  color: feature?.properties?.color ?? layerStyle.color,
+const getStyle = (feature) => ({
+  color: feature?.properties?.color,
 })
 
 const TableLayers = () => {
@@ -37,7 +37,8 @@ const TableLayers = () => {
       }))
       const data = { type: 'FeatureCollection', features }
 
-      if (rows.length) _layers.push(<TableLayer key={table.id} data={data} />)
+      if (rows.length)
+        _layers.push(<TableLayer key={table.id} data={data} style={getStyle} />)
     }
 
     return _layers
