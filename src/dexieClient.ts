@@ -648,7 +648,7 @@ export class LayerStyle implements ILayerStyle {
     if (icon_retina_url) this.icon_retina_url = icon_retina_url
     if (icon_size) this.icon_size = icon_size
     if (stroke) this.stroke = stroke
-    if (color) this.color = color
+    this.color = color ?? '#ff0000'
     if (weight) this.weight = weight
     if (opacity) this.opacity = opacity
     if (line_cap) this.line_cap = line_cap

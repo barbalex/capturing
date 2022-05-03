@@ -14,17 +14,17 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { motion, useAnimation } from 'framer-motion'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
-import { HexColorPicker } from 'react-colorful'
 
 // TODO: check references
 import StoreContext from '../storeContext'
 import Checkbox2States from './shared/Checkbox2States'
 import ErrorBoundary from './shared/ErrorBoundary'
-import Label from './shared/Label'
+import ColorPicker from './shared/ColorPicker'
 import { dexie, LayerStyle } from '../dexieClient'
 import { supabase } from '../supabaseClient'
 import TextField from './shared/TextField'
 import constants from '../utils/constants'
+import insertLayerStyle from '../utils/insertLayerStyle'
 
 const Container = styled.div`
   margin: 25px -10px 10px -10px;
@@ -78,11 +78,7 @@ const LayerStyleForm = () => {
     ? { project_tile_layer_id: projectTileLayerId }
     : 'none'
   const row: Row = useLiveQuery(
-    async () =>
-      await dexie.layer_styles.get({
-        table_id: tableId ?? null,
-        project_tile_layer_id: projectTileLayerId ?? null,
-      }),
+    async () => await dexie.layer_styles.get(criteria),
     [projectTileLayerId, tableId],
   )
 
@@ -140,6 +136,9 @@ const LayerStyleForm = () => {
   const onClickToggle = useCallback(
     async (e) => {
       e.stopPropagation()
+      if (!row) {
+        await insertLayerStyle({ tableId, projectTileLayerId })
+      }
       if (open) {
         const was = open
         await anim.start({ opacity: 0 })
@@ -153,7 +152,7 @@ const LayerStyleForm = () => {
         })
       }
     },
-    [anim, open],
+    [anim, open, projectTileLayerId, row, tableId],
   )
 
   const showDeleted = false
@@ -234,7 +233,7 @@ const LayerStyleForm = () => {
                 onBlur={onBlur}
                 error={errors?.project?.color}
               />
-              <Label label="Linien-Farbe" />
+              <ColorPicker label="Farbe" onBlur={onBlur} color={row.color} />
             </FieldsContainer>
           )}
         </motion.div>
