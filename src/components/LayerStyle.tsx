@@ -21,12 +21,14 @@ import StoreContext from '../storeContext'
 import Checkbox2States from './shared/Checkbox2States'
 import ErrorBoundary from './shared/ErrorBoundary'
 import Label from './shared/Label'
-import Spinner from './shared/Spinner'
 import { dexie, LayerStyle } from '../dexieClient'
 import { supabase } from '../supabaseClient'
 import TextField from './shared/TextField'
 import constants from '../utils/constants'
 
+const Container = styled.div`
+  margin: 25px -10px 10px -10px;
+`
 const TitleRow = styled.div`
   background-color: rgba(248, 243, 254, 1);
   flex-shrink: 0;
@@ -76,7 +78,11 @@ const LayerStyleForm = () => {
     ? { project_tile_layer_id: projectTileLayerId }
     : 'none'
   const row: Row = useLiveQuery(
-    async () => await dexie.layer_styles.get(criteria),
+    async () =>
+      await dexie.layer_styles.get({
+        table_id: tableId ?? null,
+        project_tile_layer_id: projectTileLayerId ?? null,
+      }),
     [projectTileLayerId, tableId],
   )
 
@@ -152,84 +158,87 @@ const LayerStyleForm = () => {
 
   const showDeleted = false
 
-  if (!row) return <Spinner />
-
   return (
     <ErrorBoundary>
-      <TitleRow onClick={onClickToggle} title={open ? 'schliessen' : 'öffnen'}>
-        <Title>{`Styling von Geometrien`}</Title>
-        <div>
-          <IconButton
-            aria-label={open ? 'schliessen' : 'öffnen'}
-            title={open ? 'schliessen' : 'öffnen'}
-            onClick={onClickToggle}
-            size="large"
-          >
-            {open ? <FaChevronUp /> : <FaChevronDown />}
-          </IconButton>
-        </div>
-      </TitleRow>
-      <motion.div animate={anim} transition={{ type: 'just', duration: 0.2 }}>
-        {open && (
-          <FieldsContainer
-            onBlur={(e) => {
-              if (!e.currentTarget.contains(e.relatedTarget)) {
-                // focus left the container
-                // https://github.com/facebook/react/issues/6410#issuecomment-671915381
-                updateOnServer()
-              }
-            }}
-          >
-            {showDeleted && (
-              <Checkbox2States
-                label="gelöscht"
-                name="deleted"
-                value={row.deleted}
+      <Container>
+        <TitleRow
+          onClick={onClickToggle}
+          title={open ? 'schliessen' : 'öffnen'}
+        >
+          <Title>{`Styling von Geometrien`}</Title>
+          <div>
+            <IconButton
+              aria-label={open ? 'schliessen' : 'öffnen'}
+              title={open ? 'schliessen' : 'öffnen'}
+              onClick={onClickToggle}
+              size="large"
+            >
+              {open ? <FaChevronUp /> : <FaChevronDown />}
+            </IconButton>
+          </div>
+        </TitleRow>
+        <motion.div animate={anim} transition={{ type: 'just', duration: 0.2 }}>
+          {open && !!row && (
+            <FieldsContainer
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget)) {
+                  // focus left the container
+                  // https://github.com/facebook/react/issues/6410#issuecomment-671915381
+                  updateOnServer()
+                }
+              }}
+            >
+              {showDeleted && (
+                <Checkbox2States
+                  label="gelöscht"
+                  name="deleted"
+                  value={row.deleted}
+                  onBlur={onBlur}
+                  error={errors?.project?.deleted}
+                />
+              )}
+              <TextField
+                name="icon_url"
+                label="URL für Punkt-Icon"
+                value={row.icon_url}
                 onBlur={onBlur}
-                error={errors?.project?.deleted}
+                error={errors?.project?.icon_url}
               />
-            )}
-            <TextField
-              name="icon_url"
-              label="URL für Punkt-Icon"
-              value={row.icon_url}
-              onBlur={onBlur}
-              error={errors?.project?.icon_url}
-            />
-            <TextField
-              name="icon_retina_url"
-              label="URL für Punkt-Icon, hochauflösend"
-              value={row.icon_retina_url}
-              onBlur={onBlur}
-              error={errors?.project?.icon_retina_url}
-            />
-            <TextField
-              name="icon_size"
-              label="Icon Grösse (in Bild-Punkten)"
-              value={row.icon_size}
-              onBlur={onBlur}
-              error={errors?.project?.icon_size}
-              type="number"
-            />
-            <TextField
-              name="stroke"
-              label="Linien-Breite (in Bild-Punkten)"
-              value={row.stroke}
-              onBlur={onBlur}
-              error={errors?.project?.stroke}
-              type="number"
-            />
-            <TextField
-              name="color"
-              label="Linien-Farbe"
-              value={row.color}
-              onBlur={onBlur}
-              error={errors?.project?.color}
-            />
-            <Label label="Linien-Farbe" />
-          </FieldsContainer>
-        )}
-      </motion.div>
+              <TextField
+                name="icon_retina_url"
+                label="URL für Punkt-Icon, hochauflösend"
+                value={row.icon_retina_url}
+                onBlur={onBlur}
+                error={errors?.project?.icon_retina_url}
+              />
+              <TextField
+                name="icon_size"
+                label="Icon Grösse (in Bild-Punkten)"
+                value={row.icon_size}
+                onBlur={onBlur}
+                error={errors?.project?.icon_size}
+                type="number"
+              />
+              <TextField
+                name="stroke"
+                label="Linien-Breite (in Bild-Punkten)"
+                value={row.stroke}
+                onBlur={onBlur}
+                error={errors?.project?.stroke}
+                type="number"
+              />
+              <TextField
+                name="color"
+                label="Linien-Farbe"
+                value={row.color}
+                onBlur={onBlur}
+                error={errors?.project?.color}
+              />
+              <Label label="Linien-Farbe" />
+            </FieldsContainer>
+          )}
+        </motion.div>
+      </Container>
     </ErrorBoundary>
   )
 }
