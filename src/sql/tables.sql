@@ -670,6 +670,11 @@ CREATE TYPE line_join_enum AS enum (
   'round',
 );
 
+CREATE TYPE fill_rule_enum AS enum (
+  'nonzero',
+  'evenodd',
+);
+
 --
 DROP TABLE IF EXISTS layer_styles CASCADE;
 
@@ -687,6 +692,12 @@ CREATE TABLE layer_styles (
   opacity numeric(1, 1) DEFAULT 1.0,
   line_cap line_cap_enum DEFAULT 'round',
   line_join line_join_enum DEFAULT 'round',
+  dash_array string DEFAULT NULL,
+  dash_offset string DEFAULT NULL,
+  fill integer DEFAULT 1,
+  fill_color text DEFAULT NULL,
+  fill_opacity numeric(1, 1) DEFAULT 0.2,
+  fill_rule fill_rule_enum DEFAULT 'evenodd',
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -726,6 +737,18 @@ COMMENT ON COLUMN layer_styles.opacity IS 'Stroke opacity. https://leafletjs.com
 COMMENT ON COLUMN layer_styles.line_cap IS 'A string that defines shape to be used at the end of the stroke. https://leafletjs.com/reference.html#path-linecap. https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap';
 
 COMMENT ON COLUMN layer_styles.line_join IS 'A string that defines shape to be used at the corners of the stroke. https://leafletjs.com/reference.html#path-linejoin, https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linejoin#usage_context';
+
+COMMENT ON COLUMN layer_styles.dash_array IS 'A string that defines the stroke dash pattern. Doesn''t work on Canvas-powered layers in some old browsers. https://leafletjs.com/reference.html#path-dasharray. https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray';
+
+COMMENT ON COLUMN layer_styles.dash_offset IS 'A string that defines the distance into the dash pattern to start the dash. Doesn''t work on Canvas-powered layers in some old browsers. https://leafletjs.com/reference.html#path-dashoffset. https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dashoffset';
+
+COMMENT ON COLUMN layer_styles.fill IS 'Whether to fill the path with color. Set it to false to disable filling on polygons or circles. https://leafletjs.com/reference.html#path-fill';
+
+COMMENT ON COLUMN layer_styles.fill_color IS 'Fill color. Defaults to the value of the color option. https://leafletjs.com/reference.html#path-fillcolor';
+
+COMMENT ON COLUMN layer_styles.fill_opacity IS 'Fill opacity. https://leafletjs.com/reference.html#path-fillopacity';
+
+COMMENT ON COLUMN layer_styles.fill_rule IS 'A string that defines how the inside of a shape is determined. https://leafletjs.com/reference.html#path-fillrule. https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill-rule';
 
 COMMENT ON COLUMN layer_styles.deleted IS 'marks if the row is deleted';
 

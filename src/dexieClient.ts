@@ -451,6 +451,11 @@ export enum LineJoinEnum {
   round = 'round',
 }
 
+export enum FillRuleEnum {
+  nonzero = 'nonzero',
+  evenodd = 'evenodd',
+}
+
 type ProjectTileLayerUpdateProps = { row: IProjectTileLayer; session: Session }
 export class ProjectTileLayer implements IProjectTileLayer {
   id: string
