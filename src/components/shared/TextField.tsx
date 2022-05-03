@@ -29,6 +29,7 @@ type TextFieldProps = {
   error?: string
   onBlur: (any) => void
   schrinkLabel?: boolean
+  hideLabel?: boolean
 }
 
 const MyTextField = ({
@@ -44,6 +45,7 @@ const MyTextField = ({
   error,
   onBlur,
   schrinkLabel = true,
+  hideLabel = false,
 }: TextFieldProps) => {
   const [stateValue, setStateValue] = useState(
     value || value === 0 ? value : '',
@@ -74,13 +76,15 @@ const MyTextField = ({
       aria-describedby={`${label}ErrorText`}
       variant="standard"
     >
-      <StyledInputLabel
-        htmlFor={label}
-        shrink={schrink}
-        data-weight={labelWeight}
-      >
-        {label}
-      </StyledInputLabel>
+      {!hideLabel && (
+        <StyledInputLabel
+          htmlFor={label}
+          shrink={schrink}
+          data-weight={labelWeight}
+        >
+          {label}
+        </StyledInputLabel>
+      )}
       <Input
         id={label}
         name={name}

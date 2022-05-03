@@ -1650,6 +1650,22 @@ CREATE POLICY "Managers can insert layer styles" ON layer_styles
     WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id)
     OR is_project_manager_by_project_tile_layer (auth.uid (), project_tile_layer_id));
 
+DROP POLICY IF EXISTS "Managers can update insert layer styles" ON layer_styles;
+
+CREATE POLICY "Managers can update insert layer styles" ON layer_styles
+  FOR UPDATE
+    USING (is_project_user_by_table (auth.uid (), table_id)
+      OR is_project_user_by_project_tile_layer (auth.uid (), project_tile_layer_id))
+      WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id)
+      OR is_project_manager_by_project_tile_layer (auth.uid (), project_tile_layer_id));
+
+DROP POLICY IF EXISTS "Managers can delete accounts" ON layer_styles;
+
+CREATE POLICY "Managers can delete accounts" ON layer_styles
+  FOR DELETE
+    USING (is_project_manager_by_project_by_table (auth.uid (), table_id)
+      OR is_project_manager_by_project_tile_layer (auth.uid (), project_tile_layer_id));
+
 DROP POLICY IF EXISTS "Users can view field types" ON field_types;
 
 CREATE POLICY "Users can view field types" ON field_types

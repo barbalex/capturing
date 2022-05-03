@@ -218,6 +218,13 @@ const LayerStyleForm = () => {
                 error={errors?.project?.icon_size}
                 type="number"
               />
+              <Checkbox2States
+                label="Umriss zeichnen (Polygone und Kreise)"
+                name="stroke"
+                value={row.stroke}
+                onBlur={onBlur}
+                error={errors?.project?.stroke}
+              />
               <TextField
                 name="stroke"
                 label="Linien-Breite (in Bild-Punkten)"
@@ -226,14 +233,28 @@ const LayerStyleForm = () => {
                 error={errors?.project?.stroke}
                 type="number"
               />
-              <TextField
-                name="color"
+              <ColorPicker
                 label="Linien-Farbe"
-                value={row.color}
                 onBlur={onBlur}
-                error={errors?.project?.color}
+                color={row.color}
+                name="color"
               />
-              <ColorPicker label="Farbe" onBlur={onBlur} color={row.color} />
+              <TextField
+                name="weight"
+                label="Linien-Breite (in Bild-Punkten)"
+                value={row.weight}
+                onBlur={onBlur}
+                error={errors?.project?.weight}
+                type="number"
+              />
+              <TextField
+                name="opacity"
+                label="Deckkraft / Opazität"
+                value={row.opacity}
+                onBlur={onBlur}
+                error={errors?.project?.opacity}
+                type="number"
+              />
             </FieldsContainer>
           )}
         </motion.div>
