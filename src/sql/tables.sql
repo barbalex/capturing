@@ -656,6 +656,70 @@ COMMENT ON COLUMN row_revs.depth IS 'depth of the revision tree';
 ALTER TABLE row_revs ENABLE ROW LEVEL SECURITY;
 
 --
+CREATE TYPE line_cap_enum AS enum (
+  'butt',
+  'round',
+  'square'
+);
+
+--
+DROP TABLE IF EXISTS layer_styles CASCADE;
+
+CREATE TABLE layer_styles (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+  table_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
+  project_tile_layer_id uuid DEFAULT NULL REFERENCES project_tile_layers (id) ON DELETE NO action ON UPDATE CASCADE,
+  -- TODO: add reference to project_vector_layer
+  icon_url text DEFAULT NULL, -- https://leafletjs.com/reference.html#point
+  icon_retina_url text DEFAULT NULL, -- https://leafletjs.com/reference.html#point
+  icon_size integer[] DEFAULT NULL, -- https://leafletjs.com/reference.html#point
+  stroke integer DEFAULT 1, -- https://leafletjs.com/reference.html#path-stroke
+  color text DEFAULT '#3388ff', -- https://leafletjs.com/reference.html#path-color
+  weight integer DEFAULT 3, -- https://leafletjs.com/reference.html#path-weight
+  opacity numeric(1, 1) DEFAULT 1.0, -- https://leafletjs.com/reference.html#path-opacity
+  line_cap text DEFAULT 'round', -- https://leafletjs.com/reference.html#path-linecap, https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap
+  client_rev_at timestamp with time zone DEFAULT now(),
+  client_rev_by text DEFAULT NULL,
+  server_rev_at timestamp with time zone DEFAULT now(),
+  deleted integer DEFAULT 0
+);
+
+CREATE INDEX ON ROWS USING btree (id);
+
+CREATE INDEX ON ROWS USING btree (table_id);
+
+CREATE INDEX ON ROWS USING btree (project_tile_layer_id);
+
+CREATE INDEX ON ROWS USING btree (deleted);
+
+COMMENT ON TABLE ROWS IS 'Goal: style table layers, project tile layers and project vector layers';
+
+COMMENT ON COLUMN rows.id IS 'primary key';
+
+COMMENT ON COLUMN rows.table_id IS 'associated table';
+
+COMMENT ON COLUMN rows.parent_id IS 'associated row in the parent table (which means: this row is part of a child table)';
+
+COMMENT ON COLUMN rows.geometry IS 'row geometry (GeometryCollection)';
+
+COMMENT ON COLUMN rows.bbox IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries for viewport client-side';
+
+COMMENT ON COLUMN rows.data IS 'fields (keys) and data (values) according to the related fields table';
+
+COMMENT ON COLUMN rows.deleted IS 'marks if the row is deleted';
+
+COMMENT ON COLUMN rows.client_rev_at IS 'time of last edit on client';
+
+COMMENT ON COLUMN rows.client_rev_by IS 'user editing last on client';
+
+COMMENT ON COLUMN rows.server_rev_at IS 'time of last edit on server';
+
+ALTER TABLE ROWS ENABLE ROW LEVEL SECURITY;
+
+ALTER publication supabase_realtime
+  ADD TABLE ROWS;
+
+--
 DROP TABLE IF EXISTS files_meta CASCADE;
 
 CREATE TABLE files_meta (
