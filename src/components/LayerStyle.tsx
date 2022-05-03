@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useCallback, useRef } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useCallback,
+  useRef,
+  useState,
+} from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
@@ -19,6 +25,7 @@ import Spinner from './shared/Spinner'
 import { dexie, LayerStyle } from '../dexieClient'
 import { supabase } from '../supabaseClient'
 import TextField from './shared/TextField'
+import constants from '../utils/constants'
 
 const TitleRow = styled.div`
   background-color: rgba(248, 243, 254, 1);
@@ -73,7 +80,7 @@ const LayerStyleForm = () => {
     [projectTileLayerId, tableId],
   )
 
-  // console.log('ProjectForm rendering row:', row)
+  console.log('LayerStyleForm', { row, criteria, tableId, projectTileLayerId })
 
   const originalRow = useRef<LayerStyle>()
   const rowState = useRef<LayerStyle>()

@@ -28,6 +28,7 @@ import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import RelTypePopover from './RelTypePopover'
 import RowLabel from './RowLabel'
+import LayerStyle from '../../LayerStyle'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -335,6 +336,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
             Werte-Listen werden automatisch mit den Werten selbst beschriftet
           </p>
         )}
+        <LayerStyle />
       </FieldsContainer>
     </ErrorBoundary>
   )
