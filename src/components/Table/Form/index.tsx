@@ -336,7 +336,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
             Werte-Listen werden automatisch mit den Werten selbst beschriftet
           </p>
         )}
-        <LayerStyle />
+        <LayerStyle userMayEdit={userMayEdit} />
       </FieldsContainer>
     </ErrorBoundary>
   )

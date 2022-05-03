@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 
 import { dexie, Table, Row, LayerStyle } from '../../../dexieClient'
 import TableLayer from './TableLayer'
+import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 
 const getStyle = (feature) => ({
   color: feature?.properties?.color,
@@ -30,11 +31,20 @@ const TableLayers = () => {
         table_id: table.id,
       })
       // convert geometry collection into feature collection to add properties (color)
-      const features = rows.map((e) => ({
-        geometry: e.geometry,
-        type: 'Feature',
-        properties: { color: e.id === rowId ? 'red' : layerStyle.color },
-      }))
+
+      const features = rows.map((e) => {
+        const properties = layerstyleToProperties({
+          layerStyle,
+          ...(e.id === rowId && { color: 'red' }),
+        })
+        console.log({ e, layerStyle, properties })
+        return {
+          geometry: e.geometry,
+          type: 'Feature',
+          // properties: { color: e.id === rowId ? 'red' : layerStyle.color },
+          properties,
+        }
+      })
       const data = { type: 'FeatureCollection', features }
 
       if (rows.length)

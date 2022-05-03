@@ -20,9 +20,17 @@ import StoreContext from '../storeContext'
 import Checkbox2States from './shared/Checkbox2States'
 import ErrorBoundary from './shared/ErrorBoundary'
 import ColorPicker from './shared/ColorPicker'
-import { dexie, LayerStyle } from '../dexieClient'
+import {
+  dexie,
+  LayerStyle,
+  LineCapEnum,
+  LineJoinEnum,
+  FillRuleEnum,
+} from '../dexieClient'
 import { supabase } from '../supabaseClient'
 import TextField from './shared/TextField'
+import RadioButtonGroup from './shared/RadioButtonGroup'
+
 import constants from '../utils/constants'
 import insertLayerStyle from '../utils/insertLayerStyle'
 
@@ -54,7 +62,7 @@ const FieldsContainer = styled.div`
   padding: 10px;
 `
 
-const LayerStyleForm = () => {
+const LayerStyleForm = ({ userMayEdit }) => {
   const session: Session = supabase.auth.session()
   const { projectTileLayerId, tableId } = useParams()
   const store = useContext(StoreContext)
@@ -157,6 +165,19 @@ const LayerStyleForm = () => {
 
   const showDeleted = false
 
+  const lineCapValues = Object.values(LineCapEnum).map((v) => ({
+    value: v,
+    label: v,
+  }))
+  const lineJoinValues = Object.values(LineJoinEnum).map((v) => ({
+    value: v,
+    label: v,
+  }))
+  const fillRuleValues = Object.values(FillRuleEnum).map((v) => ({
+    value: v,
+    label: v,
+  }))
+
   return (
     <ErrorBoundary>
       <Container>
@@ -194,6 +215,7 @@ const LayerStyleForm = () => {
                   value={row.deleted}
                   onBlur={onBlur}
                   error={errors?.project?.deleted}
+                  disabled={!userMayEdit}
                 />
               )}
               <TextField
@@ -202,6 +224,7 @@ const LayerStyleForm = () => {
                 value={row.icon_url}
                 onBlur={onBlur}
                 error={errors?.project?.icon_url}
+                disabled={!userMayEdit}
               />
               <TextField
                 name="icon_retina_url"
@@ -217,6 +240,7 @@ const LayerStyleForm = () => {
                 onBlur={onBlur}
                 error={errors?.project?.icon_size}
                 type="number"
+                disabled={!userMayEdit}
               />
               <Checkbox2States
                 label="Umriss zeichnen (Polygone und Kreise)"
@@ -225,19 +249,12 @@ const LayerStyleForm = () => {
                 onBlur={onBlur}
                 error={errors?.project?.stroke}
               />
-              <TextField
-                name="stroke"
-                label="Linien-Breite (in Bild-Punkten)"
-                value={row.stroke}
-                onBlur={onBlur}
-                error={errors?.project?.stroke}
-                type="number"
-              />
               <ColorPicker
                 label="Linien-Farbe"
                 onBlur={onBlur}
                 color={row.color}
                 name="color"
+                disabled={!userMayEdit}
               />
               <TextField
                 name="weight"
@@ -246,6 +263,7 @@ const LayerStyleForm = () => {
                 onBlur={onBlur}
                 error={errors?.project?.weight}
                 type="number"
+                disabled={!userMayEdit}
               />
               <TextField
                 name="opacity"
@@ -254,7 +272,84 @@ const LayerStyleForm = () => {
                 onBlur={onBlur}
                 error={errors?.project?.opacity}
                 type="number"
+                disabled={!userMayEdit}
               />
+              <div>
+                <RadioButtonGroup
+                  name="line_cap"
+                  value={row.line_cap}
+                  field="line_cap"
+                  label="Linien-Abschluss"
+                  dataSource={lineCapValues}
+                  onBlur={onBlur}
+                  error={errors?.field?.line_cap}
+                  disabled={!userMayEdit}
+                />
+              </div>
+              <div>
+                <RadioButtonGroup
+                  name="line_join"
+                  value={row.line_join}
+                  field="line_join"
+                  label="Ecken"
+                  dataSource={lineJoinValues}
+                  onBlur={onBlur}
+                  error={errors?.field?.line_join}
+                  disabled={!userMayEdit}
+                />
+              </div>
+              <TextField
+                name="dash_array"
+                label="Dash-Array"
+                value={row.dash_array}
+                onBlur={onBlur}
+                error={errors?.project?.dash_array}
+                disabled={!userMayEdit}
+              />
+              <TextField
+                name="dash_offset"
+                label="Dash-Offset"
+                value={row.dash_offset}
+                onBlur={onBlur}
+                error={errors?.project?.dash_offset}
+                disabled={!userMayEdit}
+              />
+              <Checkbox2States
+                label="Linie bei Polygonen und Kreisen zeichnen"
+                name="fill"
+                value={row.fill}
+                onBlur={onBlur}
+                error={errors?.project?.fill}
+                disabled={!userMayEdit}
+              />
+              <ColorPicker
+                label="Füll-Farbe"
+                name="fill_color"
+                onBlur={onBlur}
+                color={row.fill_color}
+                disabled={!userMayEdit}
+              />
+              <TextField
+                name="fill_opacity"
+                label="Deckkraft / Opazität der Füllung"
+                value={row.fill_opacity}
+                onBlur={onBlur}
+                error={errors?.project?.fill_opacity}
+                type="number"
+                disabled={!userMayEdit}
+              />
+              <div>
+                <RadioButtonGroup
+                  name="fill_rule"
+                  value={row.fill_rule}
+                  field="fill_rule"
+                  label="Regel, mit der der Inhalt einer Fläche bestimmt wird"
+                  dataSource={fillRuleValues}
+                  onBlur={onBlur}
+                  error={errors?.field?.fill_rule}
+                  disabled={!userMayEdit}
+                />
+              </div>
             </FieldsContainer>
           )}
         </motion.div>

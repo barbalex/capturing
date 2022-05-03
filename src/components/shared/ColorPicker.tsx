@@ -24,11 +24,11 @@ const StyledInput = styled(Input)`
   width: 70px;
 `
 
-const ColorPicker = ({ color = '#ff0000', onBlur, label, name }) => {
-  const [val, setVal] = useState()
+const ColorPicker = ({ color = '#ff0000', onBlur, label, name, disabled }) => {
+  const [val, setVal] = useState('')
 
   useEffect(() => {
-    setVal(color)
+    setVal(color ?? '')
   }, [color])
 
   const onBlurControl = useCallback(() => {
@@ -58,6 +58,7 @@ const ColorPicker = ({ color = '#ff0000', onBlur, label, name }) => {
           type="text"
           onChange={(e) => setVal(e.target.value)}
           onBlur={onBlurInput}
+          disabled={disabled}
         />
       </InputRow>
     </StyledFormControl>
