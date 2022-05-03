@@ -1,10 +1,12 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
-import { dexie, Table, Row } from '../../../dexieClient'
+import { dexie, Table, Row, LayerStyle } from '../../../dexieClient'
 import TableLayer from './TableLayer'
 
-const getStyle = (feature) => ({ color: feature.properties.color })
+const getStyle = ({ feature, layerStyle }) => ({
+  color: feature?.properties?.color ?? layerStyle.color,
+})
 
 const TableLayers = () => {
   const { projectId, rowId } = useParams()
@@ -24,16 +26,18 @@ const TableLayers = () => {
             row.deleted === 0 && row.table_id === table.id && !!row.geometry,
         )
         .toArray()
+      const layerStyle: LayerStyle = await dexie.layer_styles.get({
+        table_id: table.id,
+      })
       // convert geometry collection into feature collection to add properties (color)
       const features = rows.map((e) => ({
         geometry: e.geometry,
         type: 'Feature',
-        properties: e.id === rowId ? { color: 'red' } : { color: 'green' },
+        properties: { color: e.id === rowId ? 'red' : layerStyle.color },
       }))
       const data = { type: 'FeatureCollection', features }
 
-      if (rows.length)
-        _layers.push(<TableLayer key={table.id} data={data} style={getStyle} />)
+      if (rows.length) _layers.push(<TableLayer key={table.id} data={data} />)
     }
 
     return _layers

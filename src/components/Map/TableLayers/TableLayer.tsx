@@ -5,7 +5,7 @@ import { GeoJSON } from 'react-leaflet'
  * ref is to ensure layer is updated when data changes
  * https://github.com/PaulLeCam/react-leaflet/issues/332#issuecomment-731379795
  */
-const TableLayer = ({ data, style }) => {
+const TableLayer = ({ data }) => {
   const ref = useRef()
   useEffect(() => {
     if (ref.current) {
@@ -13,7 +13,7 @@ const TableLayer = ({ data, style }) => {
     }
   }, [data])
 
-  return <GeoJSON data={data} style={style} ref={ref} />
+  return <GeoJSON data={data} ref={ref} />
 }
 
 export default TableLayer
