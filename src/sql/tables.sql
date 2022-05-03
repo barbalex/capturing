@@ -680,8 +680,8 @@ DROP TABLE IF EXISTS layer_styles CASCADE;
 
 CREATE TABLE layer_styles (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  table_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
-  project_tile_layer_id uuid DEFAULT NULL REFERENCES project_tile_layers (id) ON DELETE NO action ON UPDATE CASCADE,
+  table_id UNIQUE uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
+  project_tile_layer_id UNIQUE uuid DEFAULT NULL REFERENCES project_tile_layers (id) ON DELETE NO action ON UPDATE CASCADE,
   -- TODO: add reference to project_vector_layer
   icon_url text DEFAULT NULL,
   icon_retina_url text DEFAULT NULL,
