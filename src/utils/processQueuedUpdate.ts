@@ -25,7 +25,6 @@ const processQueuedUpdate = async ({
   if (isRevTable) {
     const revTableName =
       queuedUpdate.table === 'rows' ? 'row_revs' : 'files_meta_revs'
-    // queuedUpdate.table.replace(/.$/, '_revs') // https://stackoverflow.com/a/36630251/712005
     // 1 create revision
     const newObject = JSON.parse(queuedUpdate.value)
     const id = newObject.id
