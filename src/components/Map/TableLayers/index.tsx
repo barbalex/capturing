@@ -6,7 +6,7 @@ import TableLayer from './TableLayer'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 
 const getStyle = (feature) => ({
-  color: feature?.properties?.color,
+  ...feature.properties,
 })
 
 const TableLayers = () => {

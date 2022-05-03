@@ -243,14 +243,14 @@ const LayerStyleForm = ({ userMayEdit }) => {
                 disabled={!userMayEdit}
               />
               <Checkbox2States
-                label="Umriss zeichnen (Polygone und Kreise)"
+                label="(Umriss-)Linien zeichnen (Polygone und Kreise)"
                 name="stroke"
                 value={row.stroke}
                 onBlur={onBlur}
                 error={errors?.project?.stroke}
               />
               <ColorPicker
-                label="Linien-Farbe"
+                label="Linien: Farbe"
                 onBlur={onBlur}
                 color={row.color}
                 name="color"
@@ -258,7 +258,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
               />
               <TextField
                 name="weight"
-                label="Linien-Breite (in Bild-Punkten)"
+                label="Linien: Breite (in Bild-Punkten)"
                 value={row.weight}
                 onBlur={onBlur}
                 error={errors?.project?.weight}
@@ -267,7 +267,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
               />
               <TextField
                 name="opacity"
-                label="Deckkraft / Opazität"
+                label="Linien: Deckkraft / Opazität"
                 value={row.opacity}
                 onBlur={onBlur}
                 error={errors?.project?.opacity}
@@ -279,7 +279,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
                   name="line_cap"
                   value={row.line_cap}
                   field="line_cap"
-                  label="Linien-Abschluss"
+                  label="Linien: Abschluss"
                   dataSource={lineCapValues}
                   onBlur={onBlur}
                   error={errors?.field?.line_cap}
@@ -291,7 +291,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
                   name="line_join"
                   value={row.line_join}
                   field="line_join"
-                  label="Ecken"
+                  label="Linien: Ecken"
                   dataSource={lineJoinValues}
                   onBlur={onBlur}
                   error={errors?.field?.line_join}
@@ -300,7 +300,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
               </div>
               <TextField
                 name="dash_array"
-                label="Dash-Array"
+                label="Linien: Dash-Array"
                 value={row.dash_array}
                 onBlur={onBlur}
                 error={errors?.project?.dash_array}
@@ -308,7 +308,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
               />
               <TextField
                 name="dash_offset"
-                label="Dash-Offset"
+                label="Linien: Dash-Offset"
                 value={row.dash_offset}
                 onBlur={onBlur}
                 error={errors?.project?.dash_offset}
@@ -343,7 +343,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
                   name="fill_rule"
                   value={row.fill_rule}
                   field="fill_rule"
-                  label="Regel, mit der der Inhalt einer Fläche bestimmt wird"
+                  label="Regel, um den Inhalt einer Fläche zu bestimmen"
                   dataSource={fillRuleValues}
                   onBlur={onBlur}
                   error={errors?.field?.fill_rule}
