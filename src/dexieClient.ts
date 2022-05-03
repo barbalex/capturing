@@ -437,6 +437,12 @@ export enum WmsVersionEnum {
   '1.3.0' = '1.3.0',
 }
 
+export enum LineCapEnum {
+  butt = 'butt',
+  round = 'round',
+  square = 'square',
+}
+
 type ProjectTileLayerUpdateProps = { row: IProjectTileLayer; session: Session }
 export class ProjectTileLayer implements IProjectTileLayer {
   id: string

@@ -670,54 +670,66 @@ CREATE TABLE layer_styles (
   table_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
   project_tile_layer_id uuid DEFAULT NULL REFERENCES project_tile_layers (id) ON DELETE NO action ON UPDATE CASCADE,
   -- TODO: add reference to project_vector_layer
-  icon_url text DEFAULT NULL, -- https://leafletjs.com/reference.html#point
+  icon_url text DEFAULT NULL, -- https://leafletjs.com/reference.html#icon-iconurl
   icon_retina_url text DEFAULT NULL, -- https://leafletjs.com/reference.html#point
   icon_size integer[] DEFAULT NULL, -- https://leafletjs.com/reference.html#point
   stroke integer DEFAULT 1, -- https://leafletjs.com/reference.html#path-stroke
   color text DEFAULT '#3388ff', -- https://leafletjs.com/reference.html#path-color
   weight integer DEFAULT 3, -- https://leafletjs.com/reference.html#path-weight
   opacity numeric(1, 1) DEFAULT 1.0, -- https://leafletjs.com/reference.html#path-opacity
-  line_cap text DEFAULT 'round', -- https://leafletjs.com/reference.html#path-linecap, https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap
+  -- https://leafletjs.com/reference.html#path-linecap
+  -- https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap
+  line_cap line_cap_enum DEFAULT 'round',
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
 );
 
-CREATE INDEX ON ROWS USING btree (id);
+CREATE INDEX ON layer_styles USING btree (id);
 
-CREATE INDEX ON ROWS USING btree (table_id);
+CREATE INDEX ON layer_styles USING btree (table_id);
 
-CREATE INDEX ON ROWS USING btree (project_tile_layer_id);
+CREATE INDEX ON layer_styles USING btree (project_tile_layer_id);
 
-CREATE INDEX ON ROWS USING btree (deleted);
+CREATE INDEX ON layer_styles USING btree (deleted);
 
-COMMENT ON TABLE ROWS IS 'Goal: style table layers, project tile layers and project vector layers';
+COMMENT ON TABLE layer_styles IS 'Goal: style table layers, project tile layers and project vector layers';
 
-COMMENT ON COLUMN rows.id IS 'primary key';
+COMMENT ON COLUMN layer_styles.id IS 'primary key';
 
-COMMENT ON COLUMN rows.table_id IS 'associated table';
+COMMENT ON COLUMN layer_styles.table_id IS 'associated table';
 
-COMMENT ON COLUMN rows.parent_id IS 'associated row in the parent table (which means: this row is part of a child table)';
+COMMENT ON COLUMN layer_styles.project_tile_layer_id IS 'associated project tile layer';
 
-COMMENT ON COLUMN rows.geometry IS 'row geometry (GeometryCollection)';
+COMMENT ON COLUMN layer_styles.icon_url IS '(required) The URL to the icon image (absolute or relative to your script path). https://leafletjs.com/reference.html#icon-iconurl';
 
-COMMENT ON COLUMN rows.bbox IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries for viewport client-side';
+COMMENT ON COLUMN layer_styles.icon_retina_url IS 'The URL to a retina sized version of the icon image (absolute or relative to your script path). Used for Retina screen devices. https://leafletjs.com/reference.html#icon-iconretinaurl';
 
-COMMENT ON COLUMN rows.data IS 'fields (keys) and data (values) according to the related fields table';
+COMMENT ON COLUMN layer_styles.icon_size IS 'Size of the icon image in pixels. https://leafletjs.com/reference.html#icon-iconsize';
 
-COMMENT ON COLUMN rows.deleted IS 'marks if the row is deleted';
+COMMENT ON COLUMN layer_styles.stroke IS 'Whether to draw stroke along the path. Set it to false to disable borders on polygons or circles. https://leafletjs.com/reference.html#path-stroke';
 
-COMMENT ON COLUMN rows.client_rev_at IS 'time of last edit on client';
+COMMENT ON COLUMN layer_styles.color IS 'Stroke color. https://leafletjs.com/reference.html#path-color';
 
-COMMENT ON COLUMN rows.client_rev_by IS 'user editing last on client';
+COMMENT ON COLUMN layer_styles.weight IS 'Stroke width in pixels. https://leafletjs.com/reference.html#path-weight';
 
-COMMENT ON COLUMN rows.server_rev_at IS 'time of last edit on server';
+COMMENT ON COLUMN layer_styles.opacity IS 'Stroke opacity. https://leafletjs.com/reference.html#path-opacity';
 
-ALTER TABLE ROWS ENABLE ROW LEVEL SECURITY;
+COMMENT ON COLUMN layer_styles.line_cap IS 'A string that defines shape to be used at the end of the stroke. https://leafletjs.com/reference.html#path-linecap. https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap';
+
+COMMENT ON COLUMN layer_styles.deleted IS 'marks if the row is deleted';
+
+COMMENT ON COLUMN layer_styles.client_rev_at IS 'time of last edit on client';
+
+COMMENT ON COLUMN layer_styles.client_rev_by IS 'user editing last on client';
+
+COMMENT ON COLUMN layer_styles.server_rev_at IS 'time of last edit on server';
+
+ALTER TABLE layer_style ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE ROWS;
+  ADD TABLE layer_style;
 
 --
 DROP TABLE IF EXISTS files_meta CASCADE;
