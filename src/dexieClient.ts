@@ -562,6 +562,134 @@ export class ProjectTileLayer implements IProjectTileLayer {
   }
 }
 
+export interface ILayerStyle {
+  id: string
+  table_id?: string
+  project_tile_layer_id?: string
+  icon_url?: string
+  icon_retina_url?: string
+  icon_size?: number
+  stroke?: number
+  color?: string
+  weight?: number
+  opacity?: number
+  line_cap?: LineCapEnum
+  line_join?: LineJoinEnum
+  dash_array?: string
+  dash_offset?: string
+  fill?: number
+  fill_color?: string
+  fill_opacity?: number
+  fill_rule?: FillRuleEnum
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted: number
+}
+
+type LayerStyleUpdateProps = {
+  was: ILayerStyle
+  is: ILayerStyle
+  session: Session
+}
+export class LayerStyle implements ILayerStyle {
+  id: string
+  table_id?: string
+  project_tile_layer_id?: string
+  icon_url?: string
+  icon_retina_url?: string
+  icon_size?: number
+  stroke?: number
+  color?: string
+  weight?: number
+  opacity?: number
+  line_cap?: LineCapEnum
+  line_join?: LineJoinEnum
+  dash_array?: string
+  dash_offset?: string
+  fill?: number
+  fill_color?: string
+  fill_opacity?: number
+  fill_rule?: FillRuleEnum
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted: number
+
+  constructor(
+    id: string,
+    table_id?: string,
+    project_tile_layer_id?: string,
+    icon_url?: string,
+    icon_retina_url?: string,
+    icon_size?: number,
+    stroke?: number,
+    color?: string,
+    weight?: number,
+    opacity?: number,
+    line_cap?: LineCapEnum,
+    line_join?: LineJoinEnum,
+    dash_array?: string,
+    dash_offset?: string,
+    fill?: number,
+    fill_color?: string,
+    fill_opacity?: number,
+    fill_rule?: FillRuleEnum,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    deleted: number,
+  ) {
+    this.id = id ?? uuidv1()
+    if (table_id) this.table_id = table_id
+    if (project_tile_layer_id)
+      this.project_tile_layer_id = project_tile_layer_id
+    if (icon_url) this.icon_url = icon_url
+    if (icon_retina_url) this.icon_retina_url = icon_retina_url
+    if (icon_size) this.icon_size = icon_size
+    if (stroke) this.stroke = stroke
+    if (color) this.color = color
+    if (weight) this.weight = weight
+    if (opacity) this.opacity = opacity
+    if (line_cap) this.line_cap = line_cap
+    if (line_join) this.line_join = line_join
+    if (dash_array) this.dash_array = dash_array
+    if (dash_offset) this.dash_offset = dash_offset
+    if (fill) this.fill = fill
+    if (fill_color) this.fill_color = fill_color
+    if (fill_opacity) this.fill_opacity = fill_opacity
+    if (fill_rule) this.fill_rule = fill_rule
+    this.client_rev_at = new window.Date().toISOString()
+    if (client_rev_by) this.client_rev_by = client_rev_by
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    this.deleted = deleted ?? 0
+  }
+  async updateOnServer({ was, is, session }: LayerStyleUpdateProps) {
+    const isReved = {
+      ...is,
+      client_rev_at: new window.Date().toISOString(),
+      client_rev_by: session.user?.email ?? session.user?.id,
+    }
+    const update = new QueuedUpdate(
+      undefined,
+      undefined,
+      'layer_styles',
+      JSON.stringify(isReved),
+      undefined,
+      this.id,
+      JSON.stringify(was),
+    )
+    return dexie.queued_updates.add(update)
+  }
+
+  async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    const was = { ...this }
+    this.deleted = 1
+    dexie.layer_styles.put(this)
+    return this.updateOnServer({ was, is: this, session })
+  }
+}
+
 export interface IProjectUser {
   id: string
   project_id?: string
@@ -1163,6 +1291,7 @@ export class MySubClassedDexie extends Dexie {
   news_delivery!: DexieTable<NewsDelivery, string>
   project_tile_layers!: DexieTable<ProjectTileLayer, string>
   project_users!: DexieTable<ProjectUser, string>
+  layer_styles!: DexieTable<LayerStyle, string>
   projects!: DexieTable<Project, string>
   rows!: DexieTable<Row, string>
   ttables!: DexieTable<Table, string>
@@ -1176,7 +1305,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(27).stores({
+    this.version(28).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
@@ -1190,6 +1319,8 @@ export class MySubClassedDexie extends Dexie {
       project_tile_layers: 'id, label, sort, active, server_rev_at, deleted',
       project_users:
         'id, user_email, [project_id+user_email], project_id, server_rev_at, deleted',
+      layer_styles:
+        'id, table_id, project_tile_layer_id, server_rev_at, deleted',
       projects:
         'id, label, name, server_rev_at, deleted, use_labels, [deleted+id]',
       rows: 'id, server_rev_at, deleted, [deleted+table_id], [deleted+parent_id]',
@@ -1214,6 +1345,7 @@ export class MySubClassedDexie extends Dexie {
     this.project_tile_layers.mapToClass(ProjectTileLayer)
     this.projects.mapToClass(Project)
     this.project_users.mapToClass(ProjectUser)
+    this.layer_styles.mapToClass(LayerStyle)
     this.rows.mapToClass(Row)
     this.ttables.mapToClass(Table)
     this.tile_layers.mapToClass(TileLayer)
