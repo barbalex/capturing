@@ -662,6 +662,14 @@ CREATE TYPE line_cap_enum AS enum (
   'square'
 );
 
+CREATE TYPE line_join_enum AS enum (
+  'arcs',
+  'bevel',
+  'miter',
+  'miter-clip',
+  'round',
+);
+
 --
 DROP TABLE IF EXISTS layer_styles CASCADE;
 
@@ -670,16 +678,15 @@ CREATE TABLE layer_styles (
   table_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
   project_tile_layer_id uuid DEFAULT NULL REFERENCES project_tile_layers (id) ON DELETE NO action ON UPDATE CASCADE,
   -- TODO: add reference to project_vector_layer
-  icon_url text DEFAULT NULL, -- https://leafletjs.com/reference.html#icon-iconurl
-  icon_retina_url text DEFAULT NULL, -- https://leafletjs.com/reference.html#point
-  icon_size integer[] DEFAULT NULL, -- https://leafletjs.com/reference.html#point
-  stroke integer DEFAULT 1, -- https://leafletjs.com/reference.html#path-stroke
-  color text DEFAULT '#3388ff', -- https://leafletjs.com/reference.html#path-color
-  weight integer DEFAULT 3, -- https://leafletjs.com/reference.html#path-weight
-  opacity numeric(1, 1) DEFAULT 1.0, -- https://leafletjs.com/reference.html#path-opacity
-  -- https://leafletjs.com/reference.html#path-linecap
-  -- https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap
+  icon_url text DEFAULT NULL,
+  icon_retina_url text DEFAULT NULL,
+  icon_size integer[] DEFAULT NULL,
+  stroke integer DEFAULT 1,
+  color text DEFAULT '#3388ff',
+  weight integer DEFAULT 3,
+  opacity numeric(1, 1) DEFAULT 1.0,
   line_cap line_cap_enum DEFAULT 'round',
+  line_join line_join_enum DEFAULT 'round',
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -717,6 +724,8 @@ COMMENT ON COLUMN layer_styles.weight IS 'Stroke width in pixels. https://leafle
 COMMENT ON COLUMN layer_styles.opacity IS 'Stroke opacity. https://leafletjs.com/reference.html#path-opacity';
 
 COMMENT ON COLUMN layer_styles.line_cap IS 'A string that defines shape to be used at the end of the stroke. https://leafletjs.com/reference.html#path-linecap. https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap';
+
+COMMENT ON COLUMN layer_styles.line_join IS 'A string that defines shape to be used at the corners of the stroke. https://leafletjs.com/reference.html#path-linejoin, https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linejoin#usage_context';
 
 COMMENT ON COLUMN layer_styles.deleted IS 'marks if the row is deleted';
 

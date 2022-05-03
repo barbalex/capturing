@@ -443,6 +443,14 @@ export enum LineCapEnum {
   square = 'square',
 }
 
+export enum LineJoinEnum {
+  arcs = 'arcs',
+  bevel = 'bevel',
+  miter = 'miter',
+  'miter-clip' = 'miter-clip',
+  round = 'round',
+}
+
 type ProjectTileLayerUpdateProps = { row: IProjectTileLayer; session: Session }
 export class ProjectTileLayer implements IProjectTileLayer {
   id: string
