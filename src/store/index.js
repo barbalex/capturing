@@ -49,7 +49,7 @@ export const MobxStore = types
     ]),
     tileLayerSorter: types.optional(types.string, ''),
   })
-  .volatile(() => ({ navigate: undefined }))
+  .volatile(() => ({ navigate: undefined, map: undefined }))
   .actions((self) => {
     // autorun(() =>
     //   console.log(
@@ -59,6 +59,9 @@ export const MobxStore = types
     // )
 
     return {
+      setMap(val) {
+        self.map = val
+      },
       setTileLayerSorter(val) {
         self.tileLayerSorter = val
       },

@@ -13,6 +13,7 @@ import { observer } from 'mobx-react-lite'
 import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import LocationMarker from './LocationMarker'
+import MapFetcher from './MapFetcher'
 import DrawControl from './DrawControl'
 import TableLayers from './TableLayers'
 import TileLayers from './TileLayers'
@@ -64,7 +65,7 @@ const MapComponent = () => {
     console.log('Map initiated')
   }, [])
 
-  console.log('Map rendering')
+  console.log('Map rendering, bounds:', bounds)
 
   /**
    * TODO:
@@ -86,6 +87,7 @@ const MapComponent = () => {
           attributionControl={false}
         >
           <LocationMarker />
+          <MapFetcher />
           <DrawControl />
           <TableLayers />
           <TileLayers key={tileLayerSorter} />
