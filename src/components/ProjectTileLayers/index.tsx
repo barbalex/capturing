@@ -6,7 +6,6 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 import { Session } from '@supabase/supabase-js'
-import isEqual from 'lodash/isEqual'
 
 import storeContext from '../../storeContext'
 import Item from './Item'
@@ -85,10 +84,7 @@ const ProjectTileLayersComponent = () => {
           const was = { ...projectTileLayer }
           const is = { ...projectTileLayer, sort }
           projectTileLayersToUpdate.push(is)
-          // await dexie.project_tile_layers.update(projectTileLayer.id, {
-          //   sort,
-          // })
-          await projectTileLayer.updateOnServer({
+          projectTileLayer.updateOnServer({
             was,
             is,
             session,
@@ -97,10 +93,8 @@ const ProjectTileLayersComponent = () => {
       }
       // push in bulk to reduce re-renders via liveQuery
       await dexie.project_tile_layers.bulkPut(projectTileLayersToUpdate)
-      setTimeout(() =>
-        setTileLayerSorter(
-          projectTileLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
-        ),
+      setTileLayerSorter(
+        projectTileLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
       )
 
       return result
