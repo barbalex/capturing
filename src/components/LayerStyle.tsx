@@ -90,8 +90,6 @@ const LayerStyleForm = ({ userMayEdit }) => {
     [projectTileLayerId, tableId],
   )
 
-  console.log('LayerStyleForm', { row, criteria, tableId, projectTileLayerId })
-
   const originalRow = useRef<LayerStyle>()
   const rowState = useRef<LayerStyle>()
   useEffect(() => {
