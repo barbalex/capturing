@@ -49,7 +49,6 @@ const MapComponent = () => {
   const mapRef = useRef()
   const onResize = useCallback(() => {
     if (!showMap) return
-    // console.log('resize detected')
     mapRef.current?.leafletElement?.invalidateSize()
   }, [showMap])
   const { ref } = useResizeDetector({
