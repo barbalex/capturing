@@ -8,6 +8,7 @@ import constants from '../../utils/constants'
 import { dexie, ProjectTileLayer } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 
+// TODO: alter css on isdragging
 const Container = styled.div`
   height: ${constants.singleRowHeight}px;
   border-top: thin solid rgba(74, 20, 140, 0.1);
@@ -19,6 +20,14 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
+  ${(props) =>
+    props.isdragging &&
+    `
+    /*background: rgba(230, 81, 0, 0.1);*/
+    background: rgba(74, 20, 140, 0.1);
+    border-color: #E65100;
+    box-shadow: 0px 0px 2px rgba(74, 20, 140, 1), 0px 0px 10px rgba(74, 20, 140, 1);
+  `}
   &:hover {
     background-color: rgba(74, 20, 140, 0.03);
   }
@@ -35,7 +44,7 @@ type Props = {
   row: ProjectTileLayer
 }
 
-const ProjectTilelayerComponent = ({ row }: Props) => {
+const ProjectTilelayerItem = ({ item, provided, isDragging }: Props) => {
   const navigate = useNavigate()
   const session: Session = supabase.auth.session()
 
@@ -43,33 +52,40 @@ const ProjectTilelayerComponent = ({ row }: Props) => {
     async (e) => {
       e.preventDefault()
       e.stopPropagation()
-      const was = { ...row }
-      const active = row.active === 1 ? 0 : 1
-      await dexie.project_tile_layers.update(row.id, {
+      const was = { ...item }
+      const active = item.active === 1 ? 0 : 1
+      await dexie.project_tile_layers.update(item.id, {
         active,
       })
 
-      row.updateOnServer({
+      item.updateOnServer({
         was,
         is: { ...was, active },
         session,
       })
     },
-    [row, session],
+    [item, session],
   )
 
-  const onClickRow = useCallback(() => navigate(row.id), [navigate, row.id])
+  const onClickRow = useCallback(() => navigate(item.id), [navigate, item.id])
 
   return (
-    <Container onClick={onClickRow}>
-      <RowLink>{row.label}</RowLink>
+    <Container
+      onClick={onClickRow}
+      {...provided.draggableProps}
+      {...provided.dragHandleProps}
+      ref={provided.innerRef}
+      style={provided.draggableProps.style}
+      isdragging={isDragging}
+    >
+      <RowLink>{item.label}</RowLink>
       <Checkbox
-        checked={row.active === 1}
+        checked={item.active === 1}
         onClick={onClickActive}
-        title={row.active ? 'ausblenden' : 'einblenden'}
+        title={item.active ? 'ausblenden' : 'einblenden'}
       />
     </Container>
   )
 }
 
-export default ProjectTilelayerComponent
+export default ProjectTilelayerItem
