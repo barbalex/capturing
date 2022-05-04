@@ -59,13 +59,11 @@ const MapComponent = () => {
     refreshOptions: { trailing: true },
   })
 
-  // console.log('map rendering')
+  // useEffect(() => {
+  //   console.log('Map initiated')
+  // }, [])
 
-  useEffect(() => {
-    console.log('Map initiated')
-  }, [])
-
-  console.log('Map rendering, bounds:', bounds)
+  // console.log('Map rendering')
 
   /**
    * TODO:
