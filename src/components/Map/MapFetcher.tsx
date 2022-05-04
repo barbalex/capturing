@@ -9,7 +9,7 @@ const MapFetcher = () => {
 
   useEffect(() => {
     setMap(map)
-  }, [map])
+  }, [map, setMap])
 
   return null
 }
