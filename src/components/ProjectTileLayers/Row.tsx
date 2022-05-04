@@ -63,7 +63,11 @@ const ProjectTilelayerComponent = ({ row }: Props) => {
   return (
     <Container onClick={onClickRow}>
       <RowLink>{row.label}</RowLink>
-      <Checkbox checked={row.active === 1} onClick={onClickActive} />
+      <Checkbox
+        checked={row.active === 1}
+        onClick={onClickActive}
+        title={row.active ? 'ausblenden' : 'einblenden'}
+      />
     </Container>
   )
 }
