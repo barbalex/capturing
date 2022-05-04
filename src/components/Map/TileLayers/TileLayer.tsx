@@ -30,6 +30,7 @@ const TileLayerComponent = ({ layer }: Props) => {
         minZoom={layer.min_zoom}
         maxZoom={layer.max_zoom}
         greyscale={layer.greyscale}
+        opacity={layer.opacity}
       />
     )
   } else {
@@ -42,6 +43,8 @@ const TileLayerComponent = ({ layer }: Props) => {
         minZoom={layer.min_zoom}
         maxZoom={layer.max_zoom}
         greyscale={layer.greyscale}
+        opacity={layer.opacity}
+        transparent={true}
       />
     )
   }

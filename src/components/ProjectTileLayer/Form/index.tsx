@@ -256,6 +256,15 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           disabled={!userMayEdit}
           type="number"
         />
+        <TextField
+          name="opacity"
+          label="Deckkraft / Opazität (0 - 1)"
+          value={row.opacity}
+          onBlur={onBlur}
+          error={errors?.project_tile_layer?.opacity}
+          disabled={!userMayEdit}
+          type="number"
+        />
         <Checkbox2States
           label="Grautöne statt Farben"
           name="greyscale"

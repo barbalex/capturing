@@ -18,6 +18,10 @@ const Container = styled.div`
   padding: 0 15px 0 0;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(74, 20, 140, 0.03);
+  }
 `
 const RowLink = styled.div`
   width: calc(100% - 50px);
@@ -26,10 +30,6 @@ const RowLink = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  cursor: pointer;
-  &:hover {
-    background-color: rgba(74, 20, 140, 0.03);
-  }
 `
 type Props = {
   row: ProjectTileLayer
@@ -61,8 +61,8 @@ const ProjectTilelayerComponent = ({ row }: Props) => {
   const onClickRow = useCallback(() => navigate(row.id), [navigate, row.id])
 
   return (
-    <Container>
-      <RowLink onClick={onClickRow}>{row.label}</RowLink>
+    <Container onClick={onClickRow}>
+      <RowLink>{row.label}</RowLink>
       <Checkbox checked={row.active === 1} onClick={onClickActive} />
     </Container>
   )
