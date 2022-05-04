@@ -14,7 +14,8 @@ const TileLayers = () => {
 
   const tileLayers: TileLayerType[] =
     useLiveQuery(
-      async () => await dexie.project_tile_layers.where(where).sortBy('sort'),
+      async () =>
+        await dexie.project_tile_layers.where(where).reverse().sortBy('sort'),
       [projectId],
     ) ?? []
   /**
@@ -35,6 +36,11 @@ const TileLayers = () => {
 
   // is no tile layer was yet defined, use osm
   if (!validTileLayers.length) return [<OsmColor key="osm" />]
+
+  console.log(
+    'Map, TileLayers, validTileLayers:',
+    validTileLayers.map((t) => t.label),
+  )
 
   return validTileLayers.map((layer) => (
     // use greyscale in key to redraw when user toggles it
