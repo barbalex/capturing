@@ -15,14 +15,15 @@ const RowAddButton = ({ row }: Props) => {
   const { rowId } = useParams()
 
   const store = useContext(storeContext)
-  const { showMap, setShowMap } = store
+  const { showMap, setShowMap, setBounds } = store
 
   const onClick = useCallback(async () => {
     // TODO:
     // if needed, open map
     if (!showMap) setShowMap(true)
     // set bounds
-  }, [setShowMap, showMap])
+    setBounds([row.bbox])
+  }, [row.bbox, setBounds, setShowMap, showMap])
 
   return (
     <ErrorBoundary>
