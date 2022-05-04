@@ -97,12 +97,10 @@ const ProjectTileLayersComponent = () => {
       }
       // push in bulk to reduce re-renders via liveQuery
       await dexie.project_tile_layers.bulkPut(projectTileLayersToUpdate)
-      setTimeout(
-        () =>
-          setTileLayerSorter(
-            projectTileLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
-          ),
-        500,
+      setTimeout(() =>
+        setTileLayerSorter(
+          projectTileLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
+        ),
       )
 
       return result
