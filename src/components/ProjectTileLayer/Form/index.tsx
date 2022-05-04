@@ -312,6 +312,14 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               disabled={!userMayEdit}
               type="text"
             />
+            <Checkbox2States
+              label="Transparent"
+              name="wms_transparent"
+              value={row.wms_transparent}
+              onBlur={onBlur}
+              error={errors?.field?.wms_transparent}
+              disabled={!userMayEdit}
+            />
             <TextField
               name="wms_layers"
               label="Layer (wenn mehrere: Komma-getrennt)"

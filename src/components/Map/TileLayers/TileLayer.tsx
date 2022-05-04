@@ -44,7 +44,7 @@ const TileLayerComponent = ({ layer }: Props) => {
         maxZoom={layer.max_zoom}
         greyscale={layer.greyscale}
         opacity={layer.opacity}
-        transparent={true}
+        transparent={layer.wms_transparent === 1}
       />
     )
   }
