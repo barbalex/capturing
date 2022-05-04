@@ -37,15 +37,29 @@ const TileLayers = () => {
   // is no tile layer was yet defined, use osm
   if (!validTileLayers.length) return [<OsmColor key="osm" />]
 
-  console.log(
-    'Map, TileLayers, validTileLayers:',
-    validTileLayers.map((t) => t.label),
-  )
+  // console.log(
+  //   'Map, TileLayers, validTileLayers:',
+  //   validTileLayers.map((t) => t.label),
+  // )
 
-  return validTileLayers.map((layer) => (
-    // use greyscale in key to redraw when user toggles it
-    <TileLayer key={JSON.stringify(layer)} layer={layer} />
-  ))
+  return validTileLayers.map((layer: TileLayerType) => {
+    const partsToRedrawOn = {
+      url_template: layer.url_template,
+      max_zoom: layer.max_zoom,
+      min_zoom: layer.min_zoom,
+      opacity: layer.opacity,
+      wms_base_url: layer.wms_base_url,
+      wms_format: layer.wms_format,
+      wms_layers: layer.wms_layers,
+      wms_parameters: layer.wms_parameters,
+      wms_styles: layer.wms_styles,
+      wms_transparent: layer.wms_transparent,
+      wms_version: layer.wms_version,
+      greyscale: layer.greyscale,
+    }
+
+    return <TileLayer key={JSON.stringify(partsToRedrawOn)} layer={layer} />
+  })
 }
 
 export default TileLayers

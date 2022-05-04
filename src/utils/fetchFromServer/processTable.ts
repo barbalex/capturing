@@ -23,7 +23,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
     .from(tableName)
     // TODO: only subscribe to id for files, then fetch row with separate query?
     .on('*', (payload) => {
-      console.log(`${tableName} subscription, payload:`, payload)
+      // console.log(`${tableName} subscription, payload:`, payload)
       const payloadErrors = payload.errors
       if (payloadErrors) return
       if (payload.new?.file) payload.new.file = hex2buf(payload.new.file)

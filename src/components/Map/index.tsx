@@ -8,6 +8,7 @@ import 'leaflet/dist/leaflet.css'
 import 'leaflet-draw/dist/leaflet.draw.css'
 import { getSnapshot } from 'mobx-state-tree'
 import { useResizeDetector } from 'react-resize-detector'
+import { observer } from 'mobx-react-lite'
 
 import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
@@ -21,7 +22,6 @@ const Container = styled.div`
 `
 const StyledMapContainer = styled(MapContainer)`
   height: calc(100%);
-  /* width: calc(100%); */
 
   @media print {
     height: 100%;
@@ -43,7 +43,7 @@ const StyledMapContainer = styled(MapContainer)`
 
 const MapComponent = () => {
   const store = useContext(storeContext)
-  const { bounds: boundsRaw, showMap } = store
+  const { bounds: boundsRaw, showMap, tileLayerSorter } = store
   const bounds = getSnapshot(boundsRaw)
 
   const mapRef = useRef()
@@ -89,11 +89,11 @@ const MapComponent = () => {
           <LocationMarker />
           <DrawControl />
           <TableLayers />
-          <TileLayers />
+          <TileLayers key={tileLayerSorter} />
         </StyledMapContainer>
       </Container>
     </ErrorBoundary>
   )
 }
 
-export default MapComponent
+export default observer(MapComponent)

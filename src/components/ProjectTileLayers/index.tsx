@@ -6,6 +6,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 import { Session } from '@supabase/supabase-js'
+import isEqual from 'lodash/isEqual'
 
 import storeContext from '../../storeContext'
 import Item from './Item'
@@ -47,15 +48,13 @@ const ProjectTileLayersComponent = () => {
   const { projectId } = useParams()
 
   const store = useContext(storeContext)
-  const { formHeight } = store
+  const { formHeight, setTileLayerSorter } = store
 
   const projectTileLayers: ProjectTileLayer[] = useLiveQuery(
     async () =>
       await dexie.project_tile_layers
         .where({ deleted: 0, project_id: projectId })
-        // .reverse()
         .sortBy('sort'),
-    // .reverse(),
     [projectId],
   )
 
@@ -66,22 +65,16 @@ const ProjectTileLayersComponent = () => {
   }, [projectTileLayers])
 
   const reorder = useCallback(
-    (list, startIndex, endIndex) => {
+    async (list, startIndex, endIndex) => {
       const result = Array.from(list)
       const [removed] = result.splice(startIndex, 1)
       result.splice(endIndex, 0, removed)
 
       /**
-       * TODO:
        * set sort value according to index in list
        * if it has changed
        */
-      console.log('ProjectTileLayers, reorder', {
-        list,
-        startIndex,
-        endIndex,
-        result,
-      })
+      const projectTileLayersToUpdate = []
       for (const [index, res] of result.entries()) {
         const sort = index + 1
         const projectTileLayer = projectTileLayers.find(
@@ -90,20 +83,31 @@ const ProjectTileLayersComponent = () => {
         if (projectTileLayer.sort !== sort) {
           // update sort value
           const was = { ...projectTileLayer }
-          dexie.project_tile_layers.update(projectTileLayer.id, {
-            sort,
-          })
-          projectTileLayer.updateOnServer({
+          const is = { ...projectTileLayer, sort }
+          projectTileLayersToUpdate.push(is)
+          // await dexie.project_tile_layers.update(projectTileLayer.id, {
+          //   sort,
+          // })
+          await projectTileLayer.updateOnServer({
             was,
-            is: { ...was, sort },
+            is,
             session,
           })
         }
       }
+      // push in bulk to reduce re-renders via liveQuery
+      // await dexie.project_tile_layers.bulkPut(projectTileLayersToUpdate)
+      setTimeout(
+        () =>
+          setTileLayerSorter(
+            projectTileLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
+          ),
+        500,
+      )
 
       return result
     },
-    [projectTileLayers, session],
+    [projectTileLayers, session, setTileLayerSorter],
   )
 
   const onDragEnd = useCallback(
@@ -115,7 +119,6 @@ const ProjectTileLayersComponent = () => {
         return
       }
 
-      // void setItems
       setItems((items) =>
         reorder(items, result.source.index, result.destination.index),
       )
