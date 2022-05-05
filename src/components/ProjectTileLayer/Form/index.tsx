@@ -329,7 +329,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
             />
             <TextField
               name="wms_layers"
-              label="Layer (wenn mehrere: Komma-getrennt)"
+              label="Layer (wenn mehrere: mit Komma trennen. Beispiel: 'layer1,layer2')"
               value={row.wms_layers}
               onBlur={onBlur}
               error={errors?.project_tile_layer?.wms_layers}
@@ -337,15 +337,15 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               multiLine
               type="text"
             />
-            <TextField
+            {/* <TextField
               name="wms_parameters"
-              label="Zusätzliche Parameter (Schreibweise für URL-Query)"
+              label="Zusätzliche Parameter (Schreibweise für URL-Query). Noch nicht implementiert"
               value={row.wms_parameters}
               onBlur={onBlur}
               error={errors?.project_tile_layer?.wms_parameters}
               disabled={!userMayEdit}
               type="text"
-            />
+            /> */}
             <RadioButtonGroup
               value={row.wms_version}
               name="wms_version"
