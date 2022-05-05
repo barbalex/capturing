@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useCallback,
-  useRef,
-  useState,
-} from 'react'
+import React, { useContext, useEffect, useCallback, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
@@ -25,11 +19,8 @@ import {
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
-import Select from '../../shared/Select'
 import Spinner from '../../shared/Spinner'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
-import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
-import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import Legends from './Legends'
 
 const FieldsContainer = styled.div`
@@ -40,10 +31,6 @@ const FieldsContainer = styled.div`
 
 type Props = {
   showFilter: (boolean) => void
-}
-type valueType = {
-  value: string
-  label: string
 }
 
 // = '99999999-9999-9999-9999-999999999999'
@@ -67,8 +54,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
 
   // const data = {}
   const data = useLiveQuery(async () => {
-    const [projects, row, projectUser] = await Promise.all([
-      dexie.projects.where({ deleted: 0 }).sortBy('', sortProjectsByLabelName),
+    const [row, projectUser] = await Promise.all([
       dexie.project_tile_layers.get(projectTileLayerId),
       dexie.project_users.get({
         project_id: projectId,
@@ -82,16 +68,11 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     )
 
     return {
-      projectsValues: projects.map((p) => ({
-        value: p.id,
-        label: labelFromLabeledTable({ object: p, useLabels: p.use_labels }),
-      })),
       row,
       userMayEdit,
     }
   }, [projectId, projectTileLayerId, session?.user?.email])
 
-  const projectsValues: valueType[] = data?.projectsValues ?? []
   const row: ProjectTileLayer = data?.row
   const userMayEdit: boolean = data?.userMayEdit
 
@@ -216,16 +197,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           value={row.label}
           onBlur={onBlur}
           error={errors?.project_tile_layer?.label}
-          disabled={!userMayEdit}
-        />
-        <Select
-          name="project_id"
-          value={row.project_id}
-          field="project_id"
-          label="Gehört zum Projekt"
-          options={projectsValues}
-          saveToDb={onBlur}
-          error={errors?.project_tile_layer?.project_id}
           disabled={!userMayEdit}
         />
         <Checkbox2States
