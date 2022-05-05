@@ -9,6 +9,7 @@ import { Session } from '@supabase/supabase-js'
 import DeleteButton from './DeleteButton'
 import AddButton from './AddButton'
 import NavButtons from './NavButtons'
+import ZoomToButton from './ZoomToButton'
 import FilterNumbers from '../../shared/FilterNumbers'
 import Menu from '../../shared/Menu'
 import { dexie, IProjectUser } from '../../../dexieClient'
@@ -64,7 +65,28 @@ const TableFormTitle = ({ totalCount, filteredCount, width }) => {
     return userMayEdit
   }, [projectId, session?.user?.email])
 
-  if (width < 520) {
+  if (width < 490) {
+    return (
+      <TitleContainer>
+        <Title>Tabelle</Title>
+        <TitleSymbols>
+          <NavButtons />
+          <Menu white={false}>
+            <AddButton userMayEdit={userMayEdit} />
+            <DeleteButton userMayEdit={userMayEdit} />
+            <ZoomToButton />
+            <FilterNumbers
+              filteredCount={filteredCount}
+              totalCount={totalCount}
+              asMenu
+            />
+          </Menu>
+        </TitleSymbols>
+      </TitleContainer>
+    )
+  }
+
+  if (width < 540) {
     return (
       <TitleContainer>
         <Title>Tabelle</Title>
@@ -73,6 +95,7 @@ const TableFormTitle = ({ totalCount, filteredCount, width }) => {
           <AddButton userMayEdit={userMayEdit} />
           <DeleteButton userMayEdit={userMayEdit} />
           <Menu white={false}>
+            <ZoomToButton />
             <FilterNumbers
               filteredCount={filteredCount}
               totalCount={totalCount}
@@ -91,6 +114,7 @@ const TableFormTitle = ({ totalCount, filteredCount, width }) => {
         <NavButtons />
         <AddButton userMayEdit={userMayEdit} />
         <DeleteButton userMayEdit={userMayEdit} />
+        <ZoomToButton />
         <FilterNumbers filteredCount={filteredCount} totalCount={totalCount} />
       </TitleSymbols>
     </TitleContainer>
