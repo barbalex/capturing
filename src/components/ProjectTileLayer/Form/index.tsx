@@ -157,10 +157,19 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
             return false
           }
           console.log('legend getting effect, got res:', res)
-          const objectUrl = URL.createObjectURL(
-            new Blob([res.data], { type: 'image/png' }),
-          )
-          legends.push([layer, objectUrl])
+          let objectUrl
+          try {
+            objectUrl = URL.createObjectURL(
+              new Blob([res.data] /*, { type: 'image/png' }*/),
+            )
+          } catch (error) {
+            return console.log(
+              `error creating objectUrl for legend for layer '${layer}'`,
+              error,
+            )
+          }
+
+          if (objectUrl) legends.push([layer, objectUrl])
         }
 
         console.log('legend getting effect, legends:', legends)
@@ -394,10 +403,12 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
             {(legends ?? []).map((l) => {
               const title = l[0]
               const blob = l[1]
+              console.log({ title, blob })
+
               return (
                 <div key={title}>
                   <div>{title}</div>
-                  <img src={blob} />
+                  {!!blob && <img height={50} src={blob} />}
                 </div>
               )
             })}
