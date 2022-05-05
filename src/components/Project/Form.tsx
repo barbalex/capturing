@@ -129,6 +129,7 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
             <>
               {showFilter ? (
                 <JesNo
+                  key={`${row.id}deleted`}
                   label="gelöscht"
                   name="deleted"
                   value={row.deleted}
@@ -137,6 +138,7 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
                 />
               ) : (
                 <Checkbox2States
+                  key={`${row.id}deleted`}
                   label="gelöscht"
                   name="deleted"
                   value={row.deleted}
@@ -147,6 +149,7 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
             </>
           )}
           <TextField
+            key={`${row.id}name`}
             name="name"
             label="Name"
             value={row.name}
@@ -154,6 +157,7 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
             error={errors?.project?.name}
           />
           <Checkbox2States
+            key={`${row.id}use_labels`}
             label="Zusätzlich zu Namen Beschriftungen verwenden"
             name="use_labels"
             value={row.use_labels}
@@ -162,6 +166,7 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
           />
           {row.use_labels === 1 && (
             <TextField
+              key={`${row.id}label`}
               name="label"
               label="Beschriftung"
               value={row.label}
@@ -170,6 +175,7 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
             />
           )}
           <TextField
+            key={`${row.id}crs`}
             name="crs"
             label="CRS (Koordinaten-Referenz-System)"
             value={row.crs}
@@ -178,6 +184,7 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
             error={errors?.project?.crs}
           />
           <TextField
+            key={`${row.id}account_id`}
             name="account_id"
             label="Konto"
             value={row.account_id}
