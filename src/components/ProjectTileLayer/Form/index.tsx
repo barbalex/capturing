@@ -339,6 +339,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               }}
               error={errors?.project_tile_layer?.wms_layers}
               disabled={!userMayEdit}
+              multiLine
               type="text"
             />
             <TextField
