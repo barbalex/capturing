@@ -134,7 +134,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     // 2. create new if value_list or id_value_list
   }, [row, session])
 
-  console.log('ProjectTileLayer, row:', row)
   const [legends, setLegends] = useState()
   useEffect(() => {
     if (row?.type === 'wms') {
@@ -146,21 +145,21 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
       const run = async () => {
         const legends = []
         for (const layer of layers) {
-          const url = `${row?.wms_base_url}?service=WMS&VERSION=${row?.wms_version}&request=GetLegendGraphic&Layer=${layer}&format=png&sld_version=1.1.0`
-          // console.log('legend getting effect, url:', url)
+          const url = `${row?.wms_base_url}?service=WMS&VERSION=${row?.wms_version}&request=GetLegendGraphic&Layer=${layer}&format=image/png&sld_version=1.1.0`
           let res
           try {
-            res = await axios.get(url)
+            res = await axios.get(url, {
+              responseType: 'blob',
+            })
           } catch (error) {
             // error can also be caused by timeout
             console.log(`error fetching legend for layer '${layer}':`, error)
             return false
           }
-          console.log('legend getting effect, got res:', res)
           let objectUrl
           try {
             objectUrl = URL.createObjectURL(
-              new Blob([res.data] /*, { type: 'image/png' }*/),
+              new Blob([res.data], { type: 'image/png' }),
             )
           } catch (error) {
             return console.log(
@@ -172,7 +171,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           if (objectUrl) legends.push([layer, objectUrl])
         }
 
-        console.log('legend getting effect, legends:', legends)
         setLegends(legends)
       }
       run()
@@ -403,12 +401,11 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
             {(legends ?? []).map((l) => {
               const title = l[0]
               const blob = l[1]
-              console.log({ title, blob })
 
               return (
                 <div key={title}>
                   <div>{title}</div>
-                  {!!blob && <img height={50} src={blob} />}
+                  {!!blob && <img src={blob} />}
                 </div>
               )
             })}
