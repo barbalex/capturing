@@ -5,12 +5,8 @@ import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 import styled from 'styled-components'
 
-// without slight padding radio is slightly cut off!
-const Container = styled.div`
-  display: block;
-`
 const StyledFormControl = styled(FormControl)`
-  padding-left: 1px !important;
+  margin-top: -15px;
   padding-bottom: 15px !important;
 `
 const StyledFormLabel = styled(FormLabel)`
@@ -53,25 +49,18 @@ const Checkbox2States = ({
   const checked = stateValue === 1
 
   return (
-    <Container>
-      <StyledFormControl
-        component="fieldset"
-        error={!!error}
-        aria-describedby={`${label}ErrorText`}
-        variant="standard"
-      >
-        <StyledFormLabel component="legend">{label}</StyledFormLabel>
-        <StyledCheckbox
-          data-id={name}
-          onClick={onClickButton}
-          color="primary"
-          checked={checked}
-        />
-        {!!error && (
-          <FormHelperText id={`${label}ErrorText`}>{error}</FormHelperText>
-        )}
-      </StyledFormControl>
-    </Container>
+    <StyledFormControl error={!!error} aria-describedby={`${label}ErrorText`}>
+      <StyledFormLabel component="legend">{label}</StyledFormLabel>
+      <StyledCheckbox
+        data-id={name}
+        onClick={onClickButton}
+        color="primary"
+        checked={checked}
+      />
+      {!!error && (
+        <FormHelperText id={`${label}ErrorText`}>{error}</FormHelperText>
+      )}
+    </StyledFormControl>
   )
 }
 
