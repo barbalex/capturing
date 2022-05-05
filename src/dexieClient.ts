@@ -471,7 +471,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
   opacity?: number
   wms_base_url?: string
   wms_format?: string
-  wms_layers?: string[]
+  wms_layers?: string
   wms_parameters?: string
   wms_styles?: string[]
   wms_transparent?: number
@@ -496,7 +496,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
     opacity?: number,
     wms_base_url?: string,
     wms_format?: string,
-    wms_layers?: string[],
+    wms_layers?: string,
     wms_parameters?: string,
     wms_styles?: string[],
     wms_transparent?: number,
@@ -548,10 +548,6 @@ export class ProjectTileLayer implements IProjectTileLayer {
       JSON.stringify(was),
     )
     return await dexie.queued_updates.add(update)
-    console.log('dexieClient, ProjectTileLayer, updateOnServer', {
-      update,
-      isReved,
-    })
   }
 
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
@@ -1077,7 +1073,7 @@ export interface ITileLayer {
   opacity?: number
   wms_base_url?: string
   wms_format?: string
-  wms_layers?: string[]
+  wms_layers?: string
   wms_parameters?: string
   wms_styles?: string[]
   wms_transparent?: number
@@ -1098,7 +1094,7 @@ export class TileLayer implements ITileLayer {
   opacity?: number
   wms_base_url?: string
   wms_format?: string
-  wms_layers?: string[]
+  wms_layers?: string
   wms_parameters?: string
   wms_styles?: string[]
   wms_transparent?: number
@@ -1118,7 +1114,7 @@ export class TileLayer implements ITileLayer {
     opacity?: number,
     wms_base_url?: string,
     wms_format?: string,
-    wms_layers?: string[],
+    wms_layers?: string,
     wms_parameters?: string,
     wms_styles?: string[],
     wms_transparent?: number,
@@ -1305,7 +1301,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(29).stores({
+    this.version(30).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
