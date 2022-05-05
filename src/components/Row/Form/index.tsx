@@ -186,7 +186,6 @@ const RowForm = ({
           <>
             {showFilter ? (
               <JesNo
-                key={`${row.id}deleted`}
                 label="gelöscht"
                 name="deleted"
                 value={rowState.current.data.deleted}
@@ -195,7 +194,6 @@ const RowForm = ({
               />
             ) : (
               <Checkbox2States
-                key={`${row.id}deleted`}
                 label="gelöscht"
                 name="deleted"
                 value={rowState.current.data.deleted}
@@ -206,7 +204,6 @@ const RowForm = ({
           </>
         )}
         <TextField
-          key={`${row.id}id`}
           name="id"
           label="id"
           value={row.id}
@@ -218,7 +215,6 @@ const RowForm = ({
           <p>Für diese Tabelle wurden noch keine Felder definiert.</p>
         )}
         <TextField
-          key={`${row.id}geometry`}
           name="geometry"
           label="geometry"
           value={JSON.stringify(row.geometry)}
@@ -254,7 +250,7 @@ const RowForm = ({
                 />
               )
               break
-            case 'filepicker': // TODO:
+            case 'filepicker':
               return <Files key={f.id} field={f} />
               break
             case 'markdown': // TODO:
