@@ -4,8 +4,15 @@ import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import { FaArrowUp, FaArrowRight } from 'react-icons/fa'
 import { Link, useParams, resolvePath } from 'react-router-dom'
+import styled from 'styled-components'
 
 import StoreContext from '../../../storeContext'
+
+export const MenuChildrenButton = styled(Button)`
+  .MuiButton-endIcon {
+    margin-left: 4px;
+  }
+`
 
 const TableNavButtons = () => {
   const { projectId } = useParams()
@@ -29,13 +36,17 @@ const TableNavButtons = () => {
         <FaArrowUp />
       </IconButton>
       {!!editing && (
-        <Button endIcon={<FaArrowRight />} component={Link} to="fields">
+        <MenuChildrenButton
+          endIcon={<FaArrowRight />}
+          component={Link}
+          to="fields"
+        >
           Felder
-        </Button>
+        </MenuChildrenButton>
       )}
-      <Button endIcon={<FaArrowRight />} component={Link} to="rows">
+      <MenuChildrenButton endIcon={<FaArrowRight />} component={Link} to="rows">
         Datensätze
-      </Button>
+      </MenuChildrenButton>
     </>
   )
 }
