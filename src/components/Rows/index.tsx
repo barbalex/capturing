@@ -44,7 +44,7 @@ const RowsComponent = () => {
   return (
     <ErrorBoundary>
       <Container showfilter={false}>
-        <RowsTitle />
+        <RowsTitle rowsWithLabel={rowsWithLabel}/>
         <RowsContainer>
           <Virtuoso
             height={formHeight}

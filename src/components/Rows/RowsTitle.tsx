@@ -1,13 +1,16 @@
-import React, { useContext, useCallback } from 'react'
+import React, { useContext, useCallback, useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { FaPlus, FaArrowUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams, useNavigate, Link, resolvePath } from 'react-router-dom'
+import getBbox from '@turf/bbox'
+import isEqual from 'lodash/isEqual'
 
 import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
+import ZoomToButton from '../shared/ZoomToButton'
 import constants from '../../utils/constants'
 import { dexie } from '../../dexieClient'
 import insertRow from '../../utils/insertRow'
@@ -36,7 +39,12 @@ const TitleSymbols = styled.div`
   margin-bottom: auto;
 `
 
-const RowsTitle = () => {
+type RowsWithLabel = Row & { label: string }
+type Props = {
+  rowsWithLabel: RowsWithLabel
+}
+
+const RowsTitle = ({ rowsWithLabel }: Props) => {
   const session = supabase.auth.session()
   const { projectId, tableId } = useParams()
   const navigate = useNavigate()
@@ -44,7 +52,25 @@ const RowsTitle = () => {
   const store = useContext(storeContext)
   const { activeNodeArray, removeNode } = store
 
-  // console.log('RowsList rendering')
+  const [bbox, bboxIsInfinite] = useMemo(() => {
+    const fc = {
+      type: 'FeatureCollection',
+      features: rowsWithLabel.map((e) => ({
+        geometry: e.geometry,
+        type: 'Feature',
+      })),
+    }
+    const bbox = getBbox(fc)
+    const bboxIsInfinite = isEqual(bbox, [
+      Infinity,
+      Infinity,
+      -Infinity,
+      -Infinity,
+    ])
+    return [bbox, bboxIsInfinite]
+  }, [rowsWithLabel])
+
+  // console.log('RowsTitle', { bbox, bboxIsInfinity: bboxIsInfinite })
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount, projectUser] = await Promise.all([
@@ -99,11 +125,11 @@ const RowsTitle = () => {
             title="neuer Datensatz"
             onClick={add}
             size="large"
-            // TODO: get users role for this project
             disabled={!userMayEdit}
           >
             <FaPlus />
           </IconButton>
+          <ZoomToButton bbox={bbox} geometryExists={!bboxIsInfinite} />
           <FilterNumbers
             filteredCount={filteredCount}
             totalCount={totalCount}
