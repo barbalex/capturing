@@ -239,6 +239,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           <>
             {showFilter ? (
               <JesNo
+                key={`${row.id}filterDeleted`}
                 label="gelöscht"
                 name="deleted"
                 value={row.deleted}
@@ -248,6 +249,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
               />
             ) : (
               <Checkbox2States
+                key={`${row.id}deleted`}
                 label="gelöscht"
                 name="deleted"
                 value={row.deleted}
@@ -259,6 +261,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           </>
         )}
         <TextField
+          key={`${row.id}name`}
           name="name"
           label="Name"
           value={row.name}
@@ -268,6 +271,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
         />
         {useLabels === 1 && (
           <TextField
+            key={`${row.id}label`}
             name="label"
             label="Beschriftung"
             value={row.label}
@@ -277,6 +281,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           />
         )}
         <TextField
+          key={`${row?.id ?? ''}sort`}
           name="sort"
           label="Sortierung"
           value={row.sort}
@@ -286,6 +291,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           type="number"
         />
         <JesNo
+          key={`${row.id}is_internal_id`}
           label="Dieses Feld wird von Ihnen als ID verwendet"
           name="is_internal_id"
           value={row.is_internal_id}
@@ -294,6 +300,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           disabled={!userMayEdit}
         />
         <RadioButtonGroup
+          key={`${row.id}field_type`}
           name="field_type"
           value={row.field_type}
           field="field_type"
@@ -304,6 +311,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           disabled={!userMayEdit}
         />
         <RadioButtonGroup
+          key={`${row.id}widget_type`}
           name="widget_type"
           value={row.widget_type}
           field="widget_type"
@@ -316,6 +324,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
         />
         {needsOptionsList && (
           <Select
+            key={`${row.id}options_table`}
             name="options_table"
             value={row.options_table}
             field="options_table"
@@ -327,6 +336,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           />
         )}
         <TextField
+          key={`${row?.id ?? ''}standard_value`}
           name="standard_value"
           label="Standard-Wert (wird in neue Datensätze eingesetzt)"
           value={row.standard_value}
