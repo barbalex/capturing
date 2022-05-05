@@ -76,7 +76,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
 
   // const data = {}
   const data = useLiveQuery(async () => {
-    const [project,  tables, row, projectUser] = await Promise.all([
+    const [project, tables, row, projectUser] = await Promise.all([
       dexie.projects.get(projectId),
       dexie.ttables
         .where({ deleted: 0, project_id: projectId, type: 'standard' })
@@ -220,7 +220,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           <>
             {showFilter ? (
               <JesNo
-                key={`${row.id}filterDeleted`}
                 label="gelöscht"
                 name="deleted"
                 value={row.deleted}
@@ -230,7 +229,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
               />
             ) : (
               <Checkbox2States
-                key={`${row.id}deleted`}
                 label="gelöscht"
                 name="deleted"
                 value={row.deleted}
@@ -242,7 +240,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           </>
         )}
         <TextField
-          key={`${row.id}name`}
           name="name"
           label="Name"
           value={row.name}
@@ -252,7 +249,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
         />
         {useLabels === 1 && (
           <TextField
-            key={`${row.id}label`}
             name="label"
             label="Beschriftung"
             value={row.label}
@@ -270,7 +266,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           error={errors?.table?.type}
         />
         <Select
-          key={`${row.id}${row?.parent_id ?? ''}parent_id`}
           name="parent_id"
           value={row.parent_id}
           field="parent_id"
@@ -298,7 +293,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           />
         )}
         <TextField
-          key={`${row?.id ?? ''}sort`}
           name="sort"
           label="Sortierung"
           value={row.sort}
