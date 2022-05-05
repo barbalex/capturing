@@ -1,10 +1,17 @@
-import React, { useContext, useEffect, useCallback, useRef } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useCallback,
+  useRef,
+  useState,
+} from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
 import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
+import axios from 'redaxios'
 
 import StoreContext from '../../../storeContext'
 import Checkbox2States from '../../shared/Checkbox2States'
@@ -126,6 +133,42 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     // 1. remove all fields. But first ask user if is o.k.
     // 2. create new if value_list or id_value_list
   }, [row, session])
+
+  console.log('ProjectTileLayer, row:', row)
+  const [legends, setLegends] = useState()
+  useEffect(() => {
+    if (row?.type === 'wms') {
+      // fetch legend for EACH layer
+      // example: https://wms.zh.ch/FnsSVOZHWMS?service=WMS&VERSION=1.3.0&request=GetLegendGraphic&Layer=zonen-schutzverordnungen&format=png&sld_version=1.1.0
+      const layers: string[] = row?.wms_layers.split(',') ?? []
+      // console.log('legend getting effect, layers:', layers)
+
+      const run = async () => {
+        const legends = []
+        for (const layer of layers) {
+          const url = `${row?.wms_base_url}?service=WMS&VERSION=${row?.wms_version}&request=GetLegendGraphic&Layer=${layer}&format=png&sld_version=1.1.0`
+          // console.log('legend getting effect, url:', url)
+          let res
+          try {
+            res = await axios.get(url)
+          } catch (error) {
+            // error can also be caused by timeout
+            console.log(`error fetching legend for layer '${layer}':`, error)
+            return false
+          }
+          console.log('legend getting effect, got res:', res)
+          const objectUrl = URL.createObjectURL(
+            new Blob([res.data], { type: 'image/png' }),
+          )
+          legends.push([layer, objectUrl])
+        }
+
+        console.log('legend getting effect, legends:', legends)
+        setLegends(legends)
+      }
+      run()
+    }
+  }, [row])
 
   useEffect(() => {
     window.onbeforeunload = () => {
@@ -324,19 +367,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               name="wms_layers"
               label="Layer (wenn mehrere: Komma-getrennt)"
               value={row.wms_layers}
-              onBlur={(e) => {
-                // TODO: is array field really needed?
-                const { name, type } = event.target
-                const fakeEvent = {
-                  target: {
-                    name,
-                    value: e.target.value ? [e.target.value] : null,
-                    type,
-                  },
-                }
-
-                return onBlur(fakeEvent)
-              }}
+              onBlur={onBlur}
               error={errors?.project_tile_layer?.wms_layers}
               disabled={!userMayEdit}
               multiLine
@@ -359,6 +390,17 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               label="WMS-Version"
               error={errors?.project_tile_layer?.wms_version}
             />
+            <div>Legenden</div>
+            {(legends ?? []).map((l) => {
+              const title = l[0]
+              const blob = l[1]
+              return (
+                <div key={title}>
+                  <div>{title}</div>
+                  <img src={blob} />
+                </div>
+              )
+            })}
           </>
         )}
       </FieldsContainer>
