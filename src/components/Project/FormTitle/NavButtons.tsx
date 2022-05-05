@@ -1,11 +1,11 @@
 import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import IconButton from '@mui/material/IconButton'
-import Button from '@mui/material/Button'
 import { FaArrowUp, FaArrowRight } from 'react-icons/fa'
 import { Link, resolvePath } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
+import { MenuChildrenButton } from '../../Table/FormTitle/NavButtons'
 
 const ProjectNavButtons = () => {
   const store = useContext(StoreContext)
@@ -26,9 +26,13 @@ const ProjectNavButtons = () => {
       >
         <FaArrowUp />
       </IconButton>
-      <Button endIcon={<FaArrowRight />} component={Link} to="tables">
+      <MenuChildrenButton
+        endIcon={<FaArrowRight />}
+        component={Link}
+        to="tables"
+      >
         Tabellen
-      </Button>
+      </MenuChildrenButton>
     </>
   )
 }
