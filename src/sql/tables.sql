@@ -1016,7 +1016,7 @@ CREATE TABLE tile_layers (
   opacity decimal DEFAULT 1,
   wms_base_url text DEFAULT NULL, -- url of WMS service. Ex.: 'http://ows.mundialis.de/services/service?'
   wms_format text DEFAULT NULL, -- WMS image format ('image/jpeg'. Use 'image/png' for layers with transparency). The list of output formats supported by a GeoServer instance can be found by a WMS GetCapabilities request
-  wms_layers text[] DEFAULT NULL, -- list of WMS layers to show
+  wms_layers text DEFAULT NULL, -- list of WMS layers to show
   wms_parameters jsonb DEFAULT NULL, -- other request parameters
   wms_styles text[] DEFAULT NULL, -- wouldn't that be sld i.e. xml? https://leafletjs.com/reference.html#tilelayer-wms-styles
   wms_transparent integer DEFAULT 0,
@@ -1026,6 +1026,7 @@ CREATE TABLE tile_layers (
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
 );
+alter table tile_layers alter column wms_layers type text;
 
 CREATE INDEX ON tile_layers USING btree (id);
 
@@ -1055,7 +1056,7 @@ CREATE TABLE project_tile_layers (
   opacity decimal DEFAULT 1,
   wms_base_url text DEFAULT NULL,
   wms_format text DEFAULT NULL,
-  wms_layers text[] DEFAULT NULL,
+  wms_layers text DEFAULT NULL,
   wms_parameters jsonb DEFAULT NULL,
   wms_styles text[] DEFAULT NULL,
   wms_transparent integer DEFAULT 0,
