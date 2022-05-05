@@ -23,7 +23,6 @@ import Select from '../../shared/Select'
 import Spinner from '../../shared/Spinner'
 import RadioButtonGroupWithInfo from '../../shared/RadioButtonGroupWithInfo'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
-import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
 import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import RelTypePopover from './RelTypePopover'
@@ -77,9 +76,8 @@ const TableForm = ({ showFilter }: TableFormProps) => {
 
   // const data = {}
   const data = useLiveQuery(async () => {
-    const [project, projects, tables, row, projectUser] = await Promise.all([
+    const [project,  tables, row, projectUser] = await Promise.all([
       dexie.projects.get(projectId),
-      dexie.projects.where({ deleted: 0 }).sortBy('', sortProjectsByLabelName),
       dexie.ttables
         .where({ deleted: 0, project_id: projectId, type: 'standard' })
         .toArray(),
@@ -105,10 +103,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
 
     return {
       useLabels,
-      projectsValues: projects.map((p) => ({
-        value: p.id,
-        label: labelFromLabeledTable({ object: p, useLabels: p.use_labels }),
-      })),
       tablesValues: sortByLabelName({
         objects: tables,
         useLabels,
@@ -129,7 +123,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
   }, [projectId, tableId, session?.user?.email])
 
   const useLabels: boolean = data?.useLabels
-  const projectsValues: valueType[] = data?.projectsValues ?? []
   const row: Table = data?.row
   const tablesValues: valueType[] = data?.tablesValues ?? []
   const userMayEdit: boolean = data?.userMayEdit
@@ -268,17 +261,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
             disabled={!userMayEdit}
           />
         )}
-        <Select
-          key={`${row.id}${row?.project_id ?? ''}project_id`}
-          name="project_id"
-          value={row.project_id}
-          field="project_id"
-          label="Gehört zum Projekt"
-          options={projectsValues}
-          saveToDb={onBlur}
-          error={errors?.table?.project_id}
-          disabled={!userMayEdit}
-        />
         <RadioButtonGroup
           value={row.type}
           name="type"
