@@ -1,4 +1,4 @@
-const boundsFromBbox = (bbox) => [
+const boundsFromBbox = (bbox: number[]) => [
   [bbox[1], bbox[0]],
   [bbox[3], bbox[2]],
 ]

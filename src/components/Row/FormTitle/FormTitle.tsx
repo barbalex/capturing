@@ -6,7 +6,7 @@ import { withResizeDetector } from 'react-resize-detector'
 import DeleteButton from './DeleteButton'
 import AddButton from './AddButton'
 import NavButtons from './NavButtons'
-import ZoomToButton from './ZoomToButton'
+import ZoomToButton from '../../shared/ZoomToButton'
 import FilterNumbers from '../../shared/FilterNumbers'
 import Menu from '../../shared/Menu'
 import HistoryButton from '../../shared/HistoryButton'
@@ -51,7 +51,7 @@ const RowFormTitle = ({
           <NavButtons />
           <AddButton />
           <DeleteButton row={row} />
-          <ZoomToButton row={row} />
+          <ZoomToButton bbox={row.bbox} geometryExists={!!row.geometry} />
           <Menu white={false}>
             <HistoryButton
               table="rows"
@@ -78,7 +78,7 @@ const RowFormTitle = ({
         <NavButtons />
         <AddButton />
         <DeleteButton row={row} />
-        <ZoomToButton row={row} />
+        <ZoomToButton bbox={row.bbox} geometryExists={!!row.geometry} />
         <HistoryButton
           table="rows"
           id={row.id}

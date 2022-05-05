@@ -3,23 +3,23 @@ import { MdCenterFocusWeak } from 'react-icons/md'
 import IconButton from '@mui/material/IconButton'
 import { observer } from 'mobx-react-lite'
 
-import ErrorBoundary from '../../shared/ErrorBoundary'
-import { Row } from '../../../dexieClient'
-import storeContext from '../../../storeContext'
-import boundsFromBbox from '../../../utils/boundsFromBbox'
+import ErrorBoundary from './ErrorBoundary'
+import storeContext from '../../storeContext'
+import boundsFromBbox from '../../utils/boundsFromBbox'
 
 type Props = {
-  row: Row
+  bbox: number[]
+  geometryExists: boolean
 }
 
-const RowAddButton = ({ row }: Props) => {
+const ZoomToButton = ({ bbox, geometryExists }: Props) => {
   const store = useContext(storeContext)
   const { showMap, setShowMap, map } = store
 
   const onClick = useCallback(async () => {
     if (!showMap) setShowMap(true)
-    map.flyToBounds(boundsFromBbox(row.bbox))
-  }, [map, row.bbox, setShowMap, showMap])
+    map.flyToBounds(boundsFromBbox(bbox))
+  }, [map, bbox, setShowMap, showMap])
 
   return (
     <ErrorBoundary>
@@ -28,7 +28,7 @@ const RowAddButton = ({ row }: Props) => {
         title="in Karte fokussieren"
         onClick={onClick}
         size="large"
-        disabled={!row.geometry}
+        disabled={!geometryExists}
       >
         <MdCenterFocusWeak />
       </IconButton>
@@ -36,4 +36,4 @@ const RowAddButton = ({ row }: Props) => {
   )
 }
 
-export default observer(RowAddButton)
+export default observer(ZoomToButton)
