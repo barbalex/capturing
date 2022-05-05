@@ -6,12 +6,13 @@ import IconButton from '@mui/material/IconButton'
 import { motion, useAnimation } from 'framer-motion'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
+import Label from '../../shared/Label'
 import { Row } from '../../../dexieClient'
 import Spinner from '../../shared/Spinner'
 import constants from '../../../utils/constants'
 
 const Container = styled.div`
-  margin: 25px -10px 10px -10px;
+  margin: 0 -10px 10px -10px;
 `
 const TitleRow = styled.div`
   background-color: rgba(248, 243, 254, 1);
@@ -23,7 +24,7 @@ const TitleRow = styled.div`
   cursor: pointer;
   user-select: none;
   position: sticky;
-  top: 0;
+  top: -10px;
   z-index: 1;
   &:first-of-type {
     margin-top: -10px;
@@ -33,6 +34,9 @@ const Title = styled.div`
   font-weight: bold;
   margin-top: auto;
   margin-bottom: auto;
+`
+const LegendsContainer = styled.div`
+  padding: 10px;
 `
 
 type Props = {
@@ -112,7 +116,7 @@ const ProjectTileLayerFormLegends = ({ row }: Props) => {
           onClick={onClickToggle}
           title={open ? 'schliessen' : 'öffnen'}
         >
-          <Title>{`Styling von Geometrien`}</Title>
+          <Title>Legenden</Title>
           <div>
             <IconButton
               aria-label={open ? 'schliessen' : 'öffnen'}
@@ -125,22 +129,19 @@ const ProjectTileLayerFormLegends = ({ row }: Props) => {
           </div>
         </TitleRow>
         <motion.div animate={anim} transition={{ type: 'just', duration: 0.2 }}>
-          {open && !!row && (
-            <>
-              <div>Legenden</div>
-              {(legends ?? []).map((l) => {
-                const title = l[0]
-                const blob = l[1]
+          <LegendsContainer>
+            {(legends ?? []).map((l) => {
+              const title = l[0]
+              const blob = l[1]
 
-                return (
-                  <div key={title}>
-                    <div>{title}</div>
-                    {!!blob && <img src={blob} />}
-                  </div>
-                )
-              })}
-            </>
-          )}
+              return (
+                <div key={title}>
+                  <Label label={title} />
+                  {!!blob && <img src={blob} />}
+                </div>
+              )
+            })}
+          </LegendsContainer>
         </motion.div>
       </Container>
     </ErrorBoundary>
