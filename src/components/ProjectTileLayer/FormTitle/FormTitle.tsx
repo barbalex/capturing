@@ -67,7 +67,7 @@ const ProjectTileLayerFormTitle = ({ totalCount, filteredCount, width }) => {
   if (width < 520) {
     return (
       <TitleContainer>
-        <Title>Pixel-Karte</Title>
+        <Title>Pixel/WMS-Karte</Title>
         <TitleSymbols>
           <NavButtons />
           <AddButton userMayEdit={userMayEdit} />
@@ -86,7 +86,7 @@ const ProjectTileLayerFormTitle = ({ totalCount, filteredCount, width }) => {
 
   return (
     <TitleContainer>
-      <Title>Pixel-Karte</Title>
+      <Title>Pixel/WMS-Karte</Title>
       <TitleSymbols>
         <NavButtons />
         <AddButton userMayEdit={userMayEdit} />

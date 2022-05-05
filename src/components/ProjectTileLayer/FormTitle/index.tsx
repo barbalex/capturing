@@ -30,7 +30,7 @@ const ProjectTileLayerFormTitleChooser = () => {
   if (showFilter) {
     return (
       <FilterTitle
-        title="Pixel-Karte"
+        title="Pixel/WMS-Karte"
         table="project_tile_layers"
         totalCount={totalCount}
         filteredCount={filteredCount}
