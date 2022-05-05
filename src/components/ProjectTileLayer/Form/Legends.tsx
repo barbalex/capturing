@@ -77,7 +77,6 @@ const ProjectTileLayerFormLegends = ({ row }: Props) => {
               error,
             )
           }
-          console.log({ objectUrl, data: res.data })
           if (objectUrl) legends.push([layer, objectUrl])
         }
 
