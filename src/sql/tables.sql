@@ -1040,6 +1040,7 @@ ALTER publication supabase_realtime
   ADD TABLE tile_layers;
 
 --
+
 DROP TABLE IF EXISTS project_tile_layers CASCADE;
 
 CREATE TABLE project_tile_layers (
@@ -1100,6 +1101,7 @@ CREATE TABLE project_vector_layers (
   type_name text DEFAULT NULL, -- type name
   type_ns_name text DEFAULT NULL, -- type namespace name
   namespace_uri text DEFAULT NULL, -- namespace URI
+  wfs_version wms_version_enum DEFAULT NULL,
   --
   opacity integer DEFAULT 1,
   greyscale integer DEFAULT 0,

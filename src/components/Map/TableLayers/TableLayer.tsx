@@ -13,6 +13,7 @@ const TableLayer = ({ data, style }) => {
     }
   }, [data])
 
+  if (!data) return []
   return <GeoJSON data={data} style={style} ref={ref} />
 }
 

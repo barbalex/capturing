@@ -17,6 +17,7 @@ import MapFetcher from './MapFetcher'
 import DrawControl from './DrawControl'
 import TableLayers from './TableLayers'
 import TileLayers from './TileLayers'
+import ZhUepWfs from './layers/zh_uep_wfs'
 
 const Container = styled.div`
   height: 100%;
@@ -87,6 +88,7 @@ const MapComponent = () => {
           <LocationMarker />
           <MapFetcher />
           <DrawControl />
+          <ZhUepWfs />
           <TableLayers />
           <TileLayers key={tileLayerSorter} />
         </StyledMapContainer>
