@@ -79,7 +79,7 @@ const ZhUepWfs = () => {
         fullWidth
         maxWidth="xl"
       >
-        <DialogTitle>Error fetching data</DialogTitle>
+        <DialogTitle>Error fetching data for vector layer</DialogTitle>
         <IconButton
           aria-label="schliessen"
           title="schliessen"
