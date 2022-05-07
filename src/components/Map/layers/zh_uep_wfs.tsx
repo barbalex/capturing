@@ -33,10 +33,9 @@ const ZhUepWfs = () => {
           url: 'http://maps.zh.ch/wfs/OGDZHWFS',
           params: {
             service: 'WFS',
-            // version: '2.0.0',
-            version: '2.0',
+            version: '2.0.0',
+            // version: '2.0', // use to provoke error
             request: 'GetFeature',
-            // typename: 'ms:ogd-0327_giszhpub_gs_gw_bezirksgrenze_f',
             typename: 'ms:ogd-0075_afv_gv_radwege_l',
             srsname: 'EPSG:4326',
             outputFormat: 'application/json; subtype=geojson',
