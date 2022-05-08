@@ -666,6 +666,93 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
   }
 }
 
+export interface IPVLGeom {
+  id: string
+  pvl_id?: string
+  geometry?: string
+  properties?: string
+  bbox_sw_lng?: number
+  bbox_sw_lat?: number
+  bbox_ne_lng?: number
+  bbox_ne_lat?: number
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted: number
+}
+
+type PVLGeomUpdateProps = {
+  row: IPVLGeom
+  session: Session
+}
+export class PVLGeom implements IPVLGeom {
+  id: string
+  pvl_id?: string
+  geometry?: string
+  properties?: string
+  bbox_sw_lng?: number
+  bbox_sw_lat?: number
+  bbox_ne_lng?: number
+  bbox_ne_lat?: number
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted: number
+
+  constructor(
+    id?: string,
+    pvl_id?: string,
+    geometry?: string,
+    properties?: string,
+    bbox_sw_lng?: number,
+    bbox_sw_lat?: number,
+    bbox_ne_lng?: number,
+    bbox_ne_lat?: number,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    deleted: number,
+  ) {
+    this.id = id ?? uuidv1()
+    if (pvl_id) this.pvl_id = pvl_id
+    if (geometry) this.geometry = geometry
+    if (properties) this.properties = properties
+    if (bbox_sw_lng !== undefined) this.bbox_sw_lng = bbox_sw_lng
+    if (bbox_sw_lat !== undefined) this.bbox_sw_lat = bbox_sw_lat
+    if (bbox_ne_lng !== undefined) this.bbox_ne_lng = bbox_ne_lng
+    if (bbox_ne_lat !== undefined) this.bbox_ne_lat = bbox_ne_lat
+    this.client_rev_at = new window.Date().toISOString()
+    if (client_rev_by) this.client_rev_by = client_rev_by
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    this.deleted = deleted ?? 0
+  }
+
+  async updateOnServer({ was, is, session }: PVLGeomUpdateProps) {
+    const isReved = {
+      ...is,
+      client_rev_at: new window.Date().toISOString(),
+      client_rev_by: session.user?.email ?? session.user?.id,
+    }
+    const update = new QueuedUpdate(
+      undefined,
+      undefined,
+      'pvl_geoms',
+      JSON.stringify(isReved),
+      undefined,
+      this.id,
+      JSON.stringify(was),
+    )
+    return await dexie.queued_updates.add(update)
+  }
+
+  async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    const was = { ...this }
+    this.deleted = 1
+    dexie.pvl_geoms.put(this)
+    return this.updateOnServer({ was, is: this, session })
+  }
+}
+
 export interface ILayerStyle {
   id: string
   table_id?: string
@@ -1400,6 +1487,7 @@ export class MySubClassedDexie extends Dexie {
   news_delivery!: DexieTable<NewsDelivery, string>
   project_tile_layers!: DexieTable<ProjectTileLayer, string>
   project_vector_layers!: DexieTable<ProjectVectorLayer, string>
+  pvl_geoms!: DexieTable<PVLGeom, string>
   project_users!: DexieTable<ProjectUser, string>
   layer_styles!: DexieTable<LayerStyle, string>
   projects!: DexieTable<Project, string>
@@ -1415,7 +1503,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(30).stores({
+    this.version(32).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
@@ -1428,6 +1516,8 @@ export class MySubClassedDexie extends Dexie {
       news_delivery: 'id, server_rev_at, deleted',
       project_tile_layers: 'id, label, sort, active, server_rev_at, deleted',
       project_vector_layers: 'id, label, sort, active, server_rev_at, deleted',
+      pvl_geoms:
+        'id, pvl_id, bbox_sw_lng, bbox_sw_lat, bbox_ne_lng, bbox_ne_lat, server_rev_at, deleted',
       project_users:
         'id, user_email, [project_id+user_email], project_id, server_rev_at, deleted',
       layer_styles:
@@ -1455,6 +1545,7 @@ export class MySubClassedDexie extends Dexie {
     this.news_delivery.mapToClass(NewsDelivery)
     this.project_tile_layers.mapToClass(ProjectTileLayer)
     this.project_tile_layers.mapToClass(ProjectVectorLayer)
+    this.project_tile_layers.mapToClass(PVLGeom)
     this.projects.mapToClass(Project)
     this.project_users.mapToClass(ProjectUser)
     this.layer_styles.mapToClass(LayerStyle)
