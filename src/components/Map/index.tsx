@@ -9,6 +9,7 @@ import 'leaflet-draw/dist/leaflet.draw.css'
 import { getSnapshot } from 'mobx-state-tree'
 import { useResizeDetector } from 'react-resize-detector'
 import { observer } from 'mobx-react-lite'
+import { useParams } from 'react-router-dom'
 
 import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
@@ -44,6 +45,7 @@ const StyledMapContainer = styled(MapContainer)`
  */
 
 const MapComponent = () => {
+  const { rowId } = useParams()
   const store = useContext(storeContext)
   const { bounds: boundsRaw, showMap, tileLayerSorter } = store
   const bounds = getSnapshot(boundsRaw)
@@ -87,7 +89,7 @@ const MapComponent = () => {
         >
           <LocationMarker />
           <MapFetcher />
-          <DrawControl />
+          {!!rowId && <DrawControl />}
           <ZhUepWfs />
           <TableLayers />
           <TileLayers key={tileLayerSorter} />
