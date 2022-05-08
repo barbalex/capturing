@@ -680,10 +680,9 @@ DROP TABLE IF EXISTS layer_styles CASCADE;
 
 CREATE TABLE layer_styles (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  table_id UNIQUE uuid DEFAULT NULL REFERENCES tables (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  project_tile_layer_id UNIQUE uuid DEFAULT NULL REFERENCES project_tile_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  -- TODO: add reference to project_vector_layer
-  project_vector_layer_id UNIQUE uuid DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  table_id uuid UNIQUE DEFAULT NULL REFERENCES tables (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  project_tile_layer_id uuid UNIQUE DEFAULT NULL REFERENCES project_tile_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  project_vector_layer_id uuid UNIQUE DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
   icon_url text DEFAULT NULL,
   icon_retina_url text DEFAULT NULL,
   icon_size integer[] DEFAULT NULL,
@@ -706,7 +705,7 @@ CREATE TABLE layer_styles (
 );
 
 ALTER TABLE layer_styles
-  ALTER COLUMN fill_opacity TYPE numeric(2, 1);
+  ADD COLUMN project_vector_layer_id UNIQUE uuid DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 CREATE INDEX ON layer_styles USING btree (id);
 
