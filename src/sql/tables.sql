@@ -704,9 +704,6 @@ CREATE TABLE layer_styles (
   deleted integer DEFAULT 0
 );
 
-ALTER TABLE layer_styles
-  ADD COLUMN project_vector_layer_id UNIQUE uuid DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE;
-
 CREATE INDEX ON layer_styles USING btree (id);
 
 CREATE INDEX ON layer_styles USING btree (table_id);
@@ -1158,6 +1155,11 @@ COMMENT ON COLUMN pvl_geom.bbox_sw_lat IS 'bbox of the geometry. Set client-side
 COMMENT ON COLUMN pvl_geom.bbox_ne_lng IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
 
 COMMENT ON COLUMN pvl_geom.bbox_ne_lat IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
+
+ALTER TABLE pvl_geom ENABLE ROW LEVEL SECURITY;
+
+ALTER publication supabase_realtime
+  ADD TABLE pvl_geom;
 
 -- not needed because only used client side:
 -- CREATE INDEX ON pvl_geom USING gist (geometry);
@@ -2020,30 +2022,30 @@ CREATE POLICY "project managers can delete project_tile_layers" ON project_tile_
   FOR DELETE
     USING (is_project_manager_by_project (auth.uid (), project_id));
 
-DROP POLICY IF EXISTS "project readers, editors and managers can view project_vector_layers" ON project_vector_layers;
+DROP POLICY IF EXISTS "project readers, editors and managers can view project_vector_layers geometries" ON pvl_geom;
 
-CREATE POLICY "project readers, editors and managers can view project_vector_layers" ON project_vector_layers
+CREATE POLICY "project readers, editors and managers can view project_vector_layers geometries" ON pvl_geom
   FOR SELECT
-    USING (is_project_user_by_project (auth.uid (), project_id));
+    USING (is_project_user_by_project_tile_layer (auth.uid (), pvl_id));
 
-DROP POLICY IF EXISTS "project managers can insert project_vector_layers" ON project_vector_layers;
+DROP POLICY IF EXISTS "project managers can insert project_vector_layers geometries" ON pvl_geom;
 
-CREATE POLICY "project managers can insert project_vector_layers" ON project_vector_layers
+CREATE POLICY "project managers can insert project_vector_layers geometries" ON pvl_geom
   FOR INSERT
-    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
+    WITH CHECK (is_project_manager_by_project_tile_layer (auth.uid (), pvl_id));
 
-DROP POLICY IF EXISTS "project managers can update project_vector_layers" ON project_vector_layers;
+DROP POLICY IF EXISTS "project managers can update project_vector_layers geometries" ON pvl_geom;
 
-CREATE POLICY "project managers can update project_vector_layers" ON project_vector_layers
+CREATE POLICY "project managers can update project_vector_layers geometries" ON pvl_geom
   FOR UPDATE
-    USING (is_project_user_by_project (auth.uid (), project_id))
-    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
+    USING (is_project_user_by_project_tile_layer (auth.uid (), pvl_id))
+    WITH CHECK (is_project_manager_by_project_tile_layer (auth.uid (), pvl_id));
 
-DROP POLICY IF EXISTS "project managers can delete project_vector_layers" ON project_vector_layers;
+DROP POLICY IF EXISTS "project managers can delete project_vector_layers geometries" ON pvl_geom;
 
-CREATE POLICY "project managers can delete project_vector_layers" ON project_vector_layers
+CREATE POLICY "project managers can delete project_vector_layers geometries" ON pvl_geom
   FOR DELETE
-    USING (is_project_manager_by_project (auth.uid (), project_id));
+    USING (is_project_manager_by_project_tile_layer (auth.uid (), pvl_id));
 
 COMMIT TRANSACTION;
 
