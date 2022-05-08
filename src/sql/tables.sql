@@ -1026,7 +1026,9 @@ CREATE TABLE tile_layers (
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
 );
-alter table tile_layers alter column wms_layers type text;
+
+ALTER TABLE tile_layers
+  ALTER COLUMN wms_layers TYPE text;
 
 CREATE INDEX ON tile_layers USING btree (id);
 
@@ -1040,7 +1042,6 @@ ALTER publication supabase_realtime
   ADD TABLE tile_layers;
 
 --
-
 DROP TABLE IF EXISTS project_tile_layers CASCADE;
 
 CREATE TABLE project_tile_layers (
@@ -1092,17 +1093,10 @@ CREATE TABLE project_vector_layers (
   sort smallint DEFAULT 0,
   active integer DEFAULT 0,
   project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
-  --
-  crs text DEFAULT 'EPSG:4326', -- spatial reference system for layer. Needed?
-  type text DEFAULT 'wfs', -- any other options? Import > local?
-  url text DEFAULT NULL, -- WFS url, for example http://demo.opengeo.org/geoserver/osm/ows
-  layers text default null, -- "workspace:layer1,workspace:layer2"
-  type_ns text DEFAULT NULL, -- type namespace
-  type_name text DEFAULT NULL, -- type name
-  type_ns_name text DEFAULT NULL, -- type namespace name
-  namespace_uri text DEFAULT NULL, -- namespace URI
-  wfs_version wms_version_enum DEFAULT NULL,
-  --
+  url text DEFAULT NULL, -- WFS url, for example https://maps.zh.ch/wfs/OGDZHWFS
+  type_name text DEFAULT NULL, -- type name, for example ms:ogd-0119_giszhpub_feuchtgebietinv_79_90_beob_p
+  wfs_version text DEFAULT NULL, -- often: 1.1.0 or 2.0.0
+  output_format text DEFAULT NULL, -- need some form of json. TODO: Convert others?
   opacity integer DEFAULT 1,
   greyscale integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT now(),
@@ -1125,6 +1119,30 @@ ALTER publication supabase_realtime
   ADD TABLE project_vector_layers;
 
 --
+-- seperate from project_vector_layers to reduce indexes and thus storage use client side
+DROP TABLE IF EXISTS pvl_geom CASCADE;
+
+CREATE TABLE pvl_geom (
+  pvl_id uuid PRIMARY KEY DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
+  properties jsonb DEFAULT NULL,
+  bbox jsonb DEFAULT NULL,
+  client_rev_at timestamp with time zone DEFAULT now(),
+  client_rev_by text DEFAULT NULL,
+  server_rev_at timestamp with time zone DEFAULT now(),
+  deleted integer DEFAULT 0
+);
+
+CREATE INDEX ON pvl_geom USING btree (pvl_id);
+
+COMMENT ON TABLE pvl_geom IS 'Goal: Save vector layers client side for 1. offline usage 2. better filtering. Data is downloaded when manager configures vector layer. Not versioned (not recorded and only added by manager).';
+
+COMMENT ON COLUMN pvl_geom.bbox IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
+
+-- not needed because only used client side:
+-- CREATE INDEX ON pvl_geom USING gist (geometry);
+-- CREATE INDEX ON pvl_geom USING gin (properties);
+--+--
 -- IMPORTANT: create functions at end but before policies
 -- to ensure they never reference a structur not yet created
 --
