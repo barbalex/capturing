@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { GeoJSON, useMap, useMapEvent } from 'react-leaflet'
+import { GeoJSON, useMapEvent } from 'react-leaflet'
 import axios from 'redaxios'
 import XMLViewer from 'react-xml-viewer'
 import Dialog from '@mui/material/Dialog'
