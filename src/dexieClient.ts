@@ -413,6 +413,7 @@ export interface IProjectTileLayer {
   sort?: number
   active?: number
   project_id?: string
+  type?: TileLayerTypeEnum
   url_template?: string
   subdomains?: string[]
   max_zoom?: number
@@ -554,6 +555,113 @@ export class ProjectTileLayer implements IProjectTileLayer {
     const was = { ...this }
     this.deleted = 1
     dexie.project_tile_layers.put(this)
+    return this.updateOnServer({ was, is: this, session })
+  }
+}
+
+export interface IProjectVectorLayer {
+  id: string
+  label?: string
+  sort?: number
+  active?: number
+  project_id?: string
+  url?: string
+  max_zoom?: number
+  min_zoom?: number
+  opacity?: number
+  type_name?: string
+  wfs_version?: string
+  output_format?: string
+  greyscale?: number
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted: number
+}
+
+type ProjectVectorLayerUpdateProps = {
+  row: IProjectVectorLayer
+  session: Session
+}
+export class ProjectVectorLayer implements IProjectVectorLayer {
+  id: string
+  label?: string
+  sort?: number
+  active?: number
+  project_id?: string
+  url?: string
+  max_zoom?: number
+  min_zoom?: number
+  opacity?: number
+  type_name?: string
+  wfs_version?: string
+  output_format?: stringum
+  greyscale?: number
+  client_rev_at?: Date
+  client_rev_by?: string
+  server_rev_at?: Date
+  deleted: number
+
+  constructor(
+    id?: string,
+    label?: string,
+    sort?: number,
+    active?: number,
+    project_id?: string,
+    url?: string,
+    max_zoom?: number,
+    min_zoom?: number,
+    opacity?: number,
+    type_name?: string,
+    wfs_version?: string,
+    output_format?: string,
+    greyscale?: number,
+    client_rev_at?: Date,
+    client_rev_by?: string,
+    server_rev_at?: Date,
+    deleted: number,
+  ) {
+    this.id = id ?? uuidv1()
+    if (label) this.label = label
+    if (sort !== undefined) this.sort = sort
+    if (active !== undefined) this.active = active
+    if (project_id) this.project_id = project_id
+    if (url) this.url = url
+    if (max_zoom !== undefined) this.max_zoom = max_zoom
+    if (min_zoom !== undefined) this.min_zoom = min_zoom
+    if (opacity !== undefined) this.opacity = opacity
+    if (type_name) this.type_name = type_name
+    if (wfs_version) this.wfs_version = wfs_version
+    if (output_format) this.output_format = output_format
+    this.greyscale = greyscale ?? 0
+    this.client_rev_at = new window.Date().toISOString()
+    if (client_rev_by) this.client_rev_by = client_rev_by
+    if (server_rev_at) this.server_rev_at = server_rev_at
+    this.deleted = deleted ?? 0
+  }
+
+  async updateOnServer({ was, is, session }: ProjectVectorLayerUpdateProps) {
+    const isReved = {
+      ...is,
+      client_rev_at: new window.Date().toISOString(),
+      client_rev_by: session.user?.email ?? session.user?.id,
+    }
+    const update = new QueuedUpdate(
+      undefined,
+      undefined,
+      'project_vector_layers',
+      JSON.stringify(isReved),
+      undefined,
+      this.id,
+      JSON.stringify(was),
+    )
+    return await dexie.queued_updates.add(update)
+  }
+
+  async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
+    const was = { ...this }
+    this.deleted = 1
+    dexie.project_vector_layers.put(this)
     return this.updateOnServer({ was, is: this, session })
   }
 }
@@ -1291,6 +1399,7 @@ export class MySubClassedDexie extends Dexie {
   news!: DexieTable<New, string>
   news_delivery!: DexieTable<NewsDelivery, string>
   project_tile_layers!: DexieTable<ProjectTileLayer, string>
+  project_vector_layers!: DexieTable<ProjectVectorLayer, string>
   project_users!: DexieTable<ProjectUser, string>
   layer_styles!: DexieTable<LayerStyle, string>
   projects!: DexieTable<Project, string>
@@ -1318,10 +1427,11 @@ export class MySubClassedDexie extends Dexie {
       news: 'id, time, server_rev_at, deleted',
       news_delivery: 'id, server_rev_at, deleted',
       project_tile_layers: 'id, label, sort, active, server_rev_at, deleted',
+      project_vector_layers: 'id, label, sort, active, server_rev_at, deleted',
       project_users:
         'id, user_email, [project_id+user_email], project_id, server_rev_at, deleted',
       layer_styles:
-        'id, &table_id, &project_tile_layer_id, server_rev_at, deleted',
+        'id, &table_id, &project_tile_layer_id, &project_vector_layer_id, server_rev_at, deleted',
       projects:
         'id, label, name, server_rev_at, deleted, use_labels, [deleted+id]',
       rows: 'id, server_rev_at, deleted, [deleted+table_id], [deleted+parent_id]',
@@ -1344,6 +1454,7 @@ export class MySubClassedDexie extends Dexie {
     this.news.mapToClass(New)
     this.news_delivery.mapToClass(NewsDelivery)
     this.project_tile_layers.mapToClass(ProjectTileLayer)
+    this.project_tile_layers.mapToClass(ProjectVectorLayer)
     this.projects.mapToClass(Project)
     this.project_users.mapToClass(ProjectUser)
     this.layer_styles.mapToClass(LayerStyle)
