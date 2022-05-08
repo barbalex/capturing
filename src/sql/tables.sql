@@ -1093,7 +1093,7 @@ CREATE TABLE project_vector_layers (
   active integer DEFAULT 0,
   project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
   --
-  crs text DEFAULT 'EPSG3857', -- spatial reference system for layer. Needed?
+  crs text DEFAULT 'EPSG:4326', -- spatial reference system for layer. Needed?
   type text DEFAULT 'wfs', -- any other options? Import > local?
   url text DEFAULT NULL, -- WFS url, for example http://demo.opengeo.org/geoserver/osm/ows
   layers text default null, -- "workspace:layer1,workspace:layer2"
