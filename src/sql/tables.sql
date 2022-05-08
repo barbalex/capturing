@@ -1119,25 +1119,44 @@ ALTER publication supabase_realtime
   ADD TABLE project_vector_layers;
 
 --
--- seperate from project_vector_layers to reduce indexes and thus storage use client side
+-- seperate from project_vector_layers because pvl : pvl_geom = 1 : n
+-- this way bbox can be used to load only what is in view
 DROP TABLE IF EXISTS pvl_geom CASCADE;
 
 CREATE TABLE pvl_geom (
-  pvl_id uuid PRIMARY KEY DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+  pvl_id uuid DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
   geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
   properties jsonb DEFAULT NULL,
-  bbox jsonb DEFAULT NULL,
+  bbox_sw_lng real DEFAULT NULL,
+  bbox_sw_lat real DEFAULT NULL,
+  bbox_ne_lng real DEFAULT NULL,
+  bbox_ne_lat real DEFAULT NULL,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
 );
 
+CREATE INDEX ON pvl_geom USING btree (id);
+
 CREATE INDEX ON pvl_geom USING btree (pvl_id);
 
-COMMENT ON TABLE pvl_geom IS 'Goal: Save vector layers client side for 1. offline usage 2. better filtering. Data is downloaded when manager configures vector layer. Not versioned (not recorded and only added by manager).';
+COMMENT ON TABLE pvl_geom IS 'Goal: Save vector layers client side for 1. offline usage 2. better filtering (to viewport). Data is downloaded when manager configures vector layer. Not versioned (not recorded and only added by manager).';
 
-COMMENT ON COLUMN pvl_geom.bbox IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
+COMMENT ON COLUMN pvl_geom.pvl_id IS 'related project_vector_layers row';
+
+COMMENT ON COLUMN pvl_geom.geometry IS 'geometry-collection of this row';
+
+COMMENT ON COLUMN pvl_geom.properties IS 'properties of this row';
+
+COMMENT ON COLUMN pvl_geom.bbox_sw_lng IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
+
+COMMENT ON COLUMN pvl_geom.bbox_sw_lat IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
+
+COMMENT ON COLUMN pvl_geom.bbox_ne_lng IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
+
+COMMENT ON COLUMN pvl_geom.bbox_ne_lat IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
 
 -- not needed because only used client side:
 -- CREATE INDEX ON pvl_geom USING gist (geometry);
