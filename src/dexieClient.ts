@@ -562,6 +562,7 @@ export interface ILayerStyle {
   id: string
   table_id?: string
   project_tile_layer_id?: string
+  project_vector_layer_id?: string
   icon_url?: string
   icon_retina_url?: string
   icon_size?: number
@@ -592,6 +593,7 @@ export class LayerStyle implements ILayerStyle {
   id: string
   table_id?: string
   project_tile_layer_id?: string
+  project_vector_layer_id?: string
   icon_url?: string
   icon_retina_url?: string
   icon_size?: number
@@ -616,6 +618,7 @@ export class LayerStyle implements ILayerStyle {
     id: string,
     table_id?: string,
     project_tile_layer_id?: string,
+    project_vector_layer_id?: string,
     icon_url?: string,
     icon_retina_url?: string,
     icon_size?: number,
@@ -640,6 +643,8 @@ export class LayerStyle implements ILayerStyle {
     if (table_id) this.table_id = table_id
     if (project_tile_layer_id)
       this.project_tile_layer_id = project_tile_layer_id
+    if (project_vector_layer_id)
+      this.project_vector_layer_id = project_vector_layer_id
     if (icon_url) this.icon_url = icon_url
     if (icon_retina_url) this.icon_retina_url = icon_retina_url
     if (icon_size) this.icon_size = icon_size
