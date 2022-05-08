@@ -25,6 +25,9 @@ const Container = styled.div`
 `
 const StyledMapContainer = styled(MapContainer)`
   height: calc(100%);
+  .leaflet-control-container {
+    user-select: none !important;
+  }
 
   @media print {
     height: 100%;
