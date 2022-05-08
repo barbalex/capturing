@@ -1111,7 +1111,7 @@ CREATE INDEX ON project_vector_layers USING btree (sort);
 
 CREATE INDEX ON project_vector_layers USING btree (deleted);
 
-COMMENT ON TABLE project_vector_layers IS 'Goal: Bring your own tile layers. Not versioned (not recorded and only added by manager).';
+COMMENT ON TABLE project_vector_layers IS 'Goal: Bring your own tile layers. Either from wfs or importing GeoJSON. Not versioned (not recorded and only added by manager).';
 
 ALTER TABLE project_vector_layers ENABLE ROW LEVEL SECURITY;
 

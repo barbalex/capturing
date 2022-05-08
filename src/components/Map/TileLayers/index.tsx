@@ -35,8 +35,8 @@ const TileLayers = () => {
   })
 
   // is no tile layer was yet defined, use osm
-  // TODO: if (!validTileLayers.length) return [<OsmColor key="osm" />]
-  if (!validTileLayers.length) return []
+  if (!validTileLayers.length) return [<OsmColor key="osm" />]
+  // if (!validTileLayers.length) return []
 
   // console.log(
   //   'Map, TileLayers, validTileLayers:',
