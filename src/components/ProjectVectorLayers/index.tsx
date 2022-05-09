@@ -42,16 +42,16 @@ window.addEventListener('error', (e) => {
   }
 })
 
-const ProjectTileLayersComponent = () => {
+const ProjectVectorLayersComponent = () => {
   const session: Session = supabase.auth.session()
   const { projectId } = useParams()
 
   const store = useContext(storeContext)
-  const { formHeight, setTileLayerSorter } = store
+  const { formHeight, setVectorLayerSorter } = store
 
-  const projectTileLayers: ProjectVectorLayer[] = useLiveQuery(
+  const projectVectorLayers: ProjectVectorLayer[] = useLiveQuery(
     async () =>
-      await dexie.project_tile_layers
+      await dexie.project_vector_layers
         .where({ deleted: 0, project_id: projectId })
         .sortBy('sort'),
     [projectId],
@@ -59,9 +59,9 @@ const ProjectTileLayersComponent = () => {
 
   const [items, setItems] = useState<ProjectVectorLayer[]>([])
   useEffect(() => {
-    if (!projectTileLayers) return
-    setItems(projectTileLayers)
-  }, [projectTileLayers])
+    if (!projectVectorLayers) return
+    setItems(projectVectorLayers)
+  }, [projectVectorLayers])
 
   const reorder = useCallback(
     async (list, startIndex, endIndex) => {
@@ -73,18 +73,18 @@ const ProjectTileLayersComponent = () => {
        * set sort value according to index in list
        * if it has changed
        */
-      const projectTileLayersToUpdate = []
+      const projectVectorLayersToUpdate = []
       for (const [index, res] of result.entries()) {
         const sort = index + 1
-        const projectTileLayer = projectTileLayers.find(
+        const projectVectorLayer = projectVectorLayers.find(
           (ptl) => ptl.id === res.id,
         )
-        if (projectTileLayer.sort !== sort) {
+        if (projectVectorLayer.sort !== sort) {
           // update sort value
-          const was = { ...projectTileLayer }
-          const is = { ...projectTileLayer, sort }
-          projectTileLayersToUpdate.push(is)
-          projectTileLayer.updateOnServer({
+          const was = { ...projectVectorLayer }
+          const is = { ...projectVectorLayer, sort }
+          projectVectorLayersToUpdate.push(is)
+          projectVectorLayer.updateOnServer({
             was,
             is,
             session,
@@ -92,14 +92,14 @@ const ProjectTileLayersComponent = () => {
         }
       }
       // push in bulk to reduce re-renders via liveQuery
-      await dexie.project_tile_layers.bulkPut(projectTileLayersToUpdate)
-      setTileLayerSorter(
-        projectTileLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
+      await dexie.project_vector_layers.bulkPut(projectVectorLayersToUpdate)
+      setVectorLayerSorter(
+        projectVectorLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
       )
 
       return result
     },
-    [projectTileLayers, session, setTileLayerSorter],
+    [projectVectorLayers, session, setVectorLayerSorter],
   )
 
   const onDragEnd = useCallback(
@@ -171,4 +171,4 @@ const ProjectTileLayersComponent = () => {
   )
 }
 
-export default observer(ProjectTileLayersComponent)
+export default observer(ProjectVectorLayersComponent)
