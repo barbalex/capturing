@@ -701,8 +701,8 @@ export class PVLGeom implements IPVLGeom {
 
   constructor(
     id?: string,
-    pvl_id?: string,
-    geometry?: string,
+    pvl_id: string,
+    geometry: string,
     properties?: string,
     bbox_sw_lng?: number,
     bbox_sw_lat?: number,
@@ -714,8 +714,8 @@ export class PVLGeom implements IPVLGeom {
     deleted: number,
   ) {
     this.id = id ?? uuidv1()
-    if (pvl_id) this.pvl_id = pvl_id
-    if (geometry) this.geometry = geometry
+    this.pvl_id = pvl_id
+    this.geometry = geometry
     if (properties) this.properties = properties
     if (bbox_sw_lng !== undefined) this.bbox_sw_lng = bbox_sw_lng
     if (bbox_sw_lat !== undefined) this.bbox_sw_lat = bbox_sw_lat

@@ -38,7 +38,7 @@ const insertProjectTileLayer = async ({ projectId }: Props) => {
     undefined,
   )
   await Promise.all([
-    dexie.ttables.put(newProjectTileLayer),
+    dexie.project_tile_layers.put(newProjectTileLayer),
     dexie.queued_updates.add(update),
   ])
   return newProjectTileLayer.id
