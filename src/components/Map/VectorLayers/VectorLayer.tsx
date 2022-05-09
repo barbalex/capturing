@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { GeoJSON } from 'react-leaflet'
+import { GeoJSON, useMapEvent } from 'react-leaflet'
 import styled from 'styled-components'
 import axios from 'redaxios'
 import XMLViewer from 'react-xml-viewer'
@@ -30,6 +30,12 @@ const VectorLayerComponent = ({ layer }: Props) => {
   const [error, setError] = useState()
   const [data, setData] = useState()
 
+  const map = useMapEvent('zoomend', () => {
+    // console.log('VectorLayerComponent zoomend, zoom:', map.getZoom())
+    setZoom(map.getZoom())
+  })
+  const [zoom, setZoom] = useState(map.getZoom())
+
   useEffect(() => {
     const run = async () => {
       let res
@@ -57,6 +63,10 @@ const VectorLayerComponent = ({ layer }: Props) => {
     }
     run()
   }, [layer])
+
+  // include only if zoom between min_zoom and max_zoom
+  if (layer.min_zoom !== undefined && zoom < layer.min_zoom) return null
+  if (layer.max_zoom !== undefined && zoom > layer.max_zoom) return null
 
   return (
     <>

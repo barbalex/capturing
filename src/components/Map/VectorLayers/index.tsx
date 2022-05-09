@@ -41,7 +41,6 @@ const VectorLayers = () => {
       type_name: layer.type_name,
       wfs_version: layer.wfs_version,
       output_format: layer.output_format,
-      greyscale: layer.greyscale,
     }
 
     return <VectorLayer key={JSON.stringify(partsToRedrawOn)} layer={layer} />
