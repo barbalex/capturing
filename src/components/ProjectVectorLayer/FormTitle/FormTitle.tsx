@@ -45,7 +45,7 @@ const TitleSymbols = styled.div`
   flex-wrap: wrap;
 `
 
-const ProjectTileLayerFormTitle = ({ totalCount, filteredCount, width }) => {
+const ProjectVectorLayerFormTitle = ({ totalCount, filteredCount, width }) => {
   const { projectId } = useParams()
   const session: Session = supabase.auth.session()
 
@@ -67,7 +67,7 @@ const ProjectTileLayerFormTitle = ({ totalCount, filteredCount, width }) => {
   if (width < 520) {
     return (
       <TitleContainer>
-        <Title>Bild-Karte</Title>
+        <Title>Vektor-Karte</Title>
         <TitleSymbols>
           <NavButtons />
           <AddButton userMayEdit={userMayEdit} />
@@ -86,7 +86,7 @@ const ProjectTileLayerFormTitle = ({ totalCount, filteredCount, width }) => {
 
   return (
     <TitleContainer>
-      <Title>Bild-Karte</Title>
+      <Title>Vektor-Karte</Title>
       <TitleSymbols>
         <NavButtons />
         <AddButton userMayEdit={userMayEdit} />
@@ -97,4 +97,4 @@ const ProjectTileLayerFormTitle = ({ totalCount, filteredCount, width }) => {
   )
 }
 
-export default withResizeDetector(observer(ProjectTileLayerFormTitle))
+export default withResizeDetector(observer(ProjectVectorLayerFormTitle))

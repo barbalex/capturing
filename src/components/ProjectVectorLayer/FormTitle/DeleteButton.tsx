@@ -12,7 +12,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import { supabase } from '../../../supabaseClient'
-import { dexie, Table } from '../../../dexieClient'
+import { dexie, ProjectVectorLayer } from '../../../dexieClient'
 
 const TitleRow = styled.div`
   display: flex;
@@ -51,7 +51,9 @@ const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
     [],
   )
   const remove = useCallback(async () => {
-    const row: Table = await dexie.project_tile_layers.get(projectTileLayerId)
+    const row: ProjectVectorLayer = await dexie.project_tile_layers.get(
+      projectTileLayerId,
+    )
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
     // need to remove node from nodes

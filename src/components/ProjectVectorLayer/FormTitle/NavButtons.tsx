@@ -6,7 +6,7 @@ import { Link, resolvePath } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
 
-const TableNavButtons = () => {
+const ProjectVectorLayerNavButtons = () => {
   const store = useContext(StoreContext)
   const { activeNodeArray, removeNode } = store
 
@@ -29,4 +29,4 @@ const TableNavButtons = () => {
   )
 }
 
-export default observer(TableNavButtons)
+export default observer(ProjectVectorLayerNavButtons)
