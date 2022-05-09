@@ -19,7 +19,7 @@ import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
 import LayerStyle from '../../LayerStyle'
-import Legends from './Legends'
+
 
 const FieldsContainer = styled.div`
   padding: 10px;
