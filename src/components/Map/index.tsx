@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useCallback } from 'react'
+import { useContext, useRef, useCallback } from 'react'
 import 'leaflet'
 import 'proj4'
 import 'proj4leaflet'
@@ -71,10 +71,6 @@ const MapComponent = () => {
     refreshOptions: { trailing: true },
   })
 
-  // useEffect(() => {
-  //   console.log('Map initiated')
-  // }, [])
-
   // console.log('Map rendering')
 
   /**
@@ -101,8 +97,8 @@ const MapComponent = () => {
           {!!rowId && <DrawControl />}
           {/* <ZhUepWfs /> */}
           <TableLayers />
-          <VectorLayers key={vectorLayerSorter} />
-          <TileLayers key={tileLayerSorter} />
+          <VectorLayers key={`${vectorLayerSorter}/vectorLayers`} />
+          <TileLayers key={`${tileLayerSorter}/tileLayers`} />
         </StyledMapContainer>
       </Container>
     </ErrorBoundary>
