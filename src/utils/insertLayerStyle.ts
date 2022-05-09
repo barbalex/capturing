@@ -3,10 +3,20 @@ import { dexie, LayerStyle, QueuedUpdate } from '../dexieClient'
 type Props = {
   tableId: string
   projectTileLayerId: string
+  projectVectorLayerId: string
 }
 
-const insertLayerStyle = async ({ tableId, projectTileLayerId }: Props) => {
-  const newLayerStyle = new LayerStyle(undefined, tableId, projectTileLayerId)
+const insertLayerStyle = async ({
+  tableId,
+  projectTileLayerId,
+  projectVectorLayerId,
+}: Props) => {
+  const newLayerStyle = new LayerStyle(
+    undefined,
+    tableId,
+    projectTileLayerId,
+    projectVectorLayerId,
+  )
   const update = new QueuedUpdate(
     undefined,
     undefined,

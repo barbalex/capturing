@@ -64,7 +64,7 @@ const FieldsContainer = styled.div`
 
 const LayerStyleForm = ({ userMayEdit }) => {
   const session: Session = supabase.auth.session()
-  const { projectTileLayerId, tableId } = useParams()
+  const { projectTileLayerId, projectVectorLayerId, tableId } = useParams()
   const store = useContext(StoreContext)
   const { errors } = store
 
@@ -78,16 +78,18 @@ const LayerStyleForm = ({ userMayEdit }) => {
   ) // TODO: add errors, unsetError in store
   useEffect(() => {
     unsetError('project')
-  }, [projectTileLayerId, tableId, unsetError])
+  }, [projectTileLayerId, projectVectorLayerId, tableId, unsetError])
 
   const criteria = tableId
     ? { table_id: tableId }
     : projectTileLayerId
     ? { project_tile_layer_id: projectTileLayerId }
+    : projectVectorLayerId
+    ? { project_vector_layer_id: projectVectorLayerId }
     : 'none'
   const row: Row = useLiveQuery(
     async () => await dexie.layer_styles.get(criteria),
-    [projectTileLayerId, tableId],
+    [projectTileLayerId, projectVectorLayerId, tableId],
   )
 
   const originalRow = useRef<LayerStyle>()
@@ -143,7 +145,11 @@ const LayerStyleForm = ({ userMayEdit }) => {
     async (e) => {
       e.stopPropagation()
       if (!row) {
-        await insertLayerStyle({ tableId, projectTileLayerId })
+        await insertLayerStyle({
+          tableId,
+          projectTileLayerId,
+          projectVectorLayerId,
+        })
       }
       if (open) {
         const was = open
@@ -158,7 +164,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
         })
       }
     },
-    [anim, open, projectTileLayerId, row, tableId],
+    [anim, open, projectTileLayerId, projectVectorLayerId, row, tableId],
   )
 
   const showDeleted = false
@@ -183,7 +189,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
           onClick={onClickToggle}
           title={open ? 'schliessen' : 'öffnen'}
         >
-          <Title>{`Styling von Geometrien`}</Title>
+          <Title>Styling von Geometrien</Title>
           <div>
             <IconButton
               aria-label={open ? 'schliessen' : 'öffnen'}

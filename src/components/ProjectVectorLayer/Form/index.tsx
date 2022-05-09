@@ -18,6 +18,7 @@ import {
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
+import LayerStyle from '../../LayerStyle'
 import Legends from './Legends'
 
 const FieldsContainer = styled.div`
@@ -267,7 +268,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           disabled={!userMayEdit}
           type="text"
         />
-        <Legends row={row} />
+        <LayerStyle userMayEdit={userMayEdit} />
       </FieldsContainer>
     </ErrorBoundary>
   )

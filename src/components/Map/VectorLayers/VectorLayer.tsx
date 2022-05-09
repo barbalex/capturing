@@ -8,8 +8,14 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import { MdClose } from 'react-icons/md'
+import { useLiveQuery } from 'dexie-react-hooks'
 
-import { VectorLayer as VectorLayerType } from '../../../dexieClient'
+import {
+  dexie,
+  LayerStyle,
+  VectorLayer as VectorLayerType,
+} from '../../../dexieClient'
+import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 
 const StyledXMLViewer = styled(XMLViewer)`
   font-size: small;
@@ -64,13 +70,25 @@ const VectorLayerComponent = ({ layer }: Props) => {
     run()
   }, [layer])
 
+  const layerStyle: LayerStyle = useLiveQuery(
+    async () =>
+      await dexie.layer_styles.get({
+        project_vector_layer_id: layer.id,
+      }),
+  )
+
   // include only if zoom between min_zoom and max_zoom
   if (layer.min_zoom !== undefined && zoom < layer.min_zoom) return null
   if (layer.max_zoom !== undefined && zoom > layer.max_zoom) return null
 
   return (
     <>
-      <GeoJSON key={data ? 1 : 0} data={data} opacity={layer.opacity} />
+      <GeoJSON
+        key={data ? 1 : 0}
+        data={data}
+        opacity={layer.opacity}
+        style={layerStyle ? layerstyleToProperties({ layerStyle }) : {}}
+      />
       <Dialog
         onClose={() => setError(null)}
         open={!!error}
