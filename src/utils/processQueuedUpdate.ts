@@ -78,6 +78,8 @@ const processQueuedUpdate = async ({
       .upload(`files/${JSON.parse(queuedUpdate.value).id}`, queuedUpdate.file)
     if (error) return console.log(error)
   } else {
+    // OPTION: with extra values property could upsert multiple values at once
+    // would be good for: pvl_geom
     // upsert regular table
     // 1. create new Object
     const newObject = {
