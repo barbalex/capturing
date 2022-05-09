@@ -27,7 +27,6 @@ const projectFoldersEditingProject = async ({
       isOpen: isNodeOpen({ nodes, url: ['projects', project.id, 'tables'] }),
       children: await buildTableNodes({
         project,
-        tableId,
         fieldId,
         rowId,
         nodes,
