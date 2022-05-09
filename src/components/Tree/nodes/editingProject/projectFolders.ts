@@ -14,6 +14,8 @@ const projectFoldersEditingProject = async ({
 
   const tileLayerNodes = []
   // TODO: query tile layers and build their nodes
+  const vectorLayerNodes = []
+  // TODO: query vector layers and build their nodes
 
   const folderNodes = [
     {
@@ -49,6 +51,19 @@ const projectFoldersEditingProject = async ({
       }),
       children: tileLayerNodes,
       childrenCount: tileLayerNodes.length,
+    },
+    {
+      id: `${project.id}/vectorLayersFolder`,
+      label: 'Vektor-Karten',
+      type: 'vectorLayerFolder',
+      object: project,
+      activeNodeArray: ['projects', project.id, 'vector-layers'],
+      isOpen: isNodeOpen({
+        nodes,
+        url: ['projects', project.id, 'vector-layers'],
+      }),
+      children: vectorLayerNodes,
+      childrenCount: vectorLayerNodes.length,
     },
   ]
 
