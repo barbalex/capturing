@@ -1,4 +1,4 @@
-import { dexie,  PVLGeom, QueuedUpdate } from '../dexieClient'
+import { dexie, PVLGeom, QueuedUpdate } from '../dexieClient'
 
 type Props = {
   pvlId: string
@@ -10,10 +10,10 @@ const insertPVLGeom = async ({ pvlId }: Props) => {
     pvlId,
     undefined,
     undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
+    undefined, // bbox set by PVLGeom class
+    undefined, // bbox set by PVLGeom class
+    undefined, // bbox set by PVLGeom class
+    undefined, // bbox set by PVLGeom class
     undefined,
     undefined,
     undefined,

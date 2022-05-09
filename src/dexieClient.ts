@@ -717,10 +717,11 @@ export class PVLGeom implements IPVLGeom {
     this.pvl_id = pvl_id
     this.geometry = geometry
     if (properties) this.properties = properties
-    if (bbox_sw_lng !== undefined) this.bbox_sw_lng = bbox_sw_lng
-    if (bbox_sw_lat !== undefined) this.bbox_sw_lat = bbox_sw_lat
-    if (bbox_ne_lng !== undefined) this.bbox_ne_lng = bbox_ne_lng
-    if (bbox_ne_lat !== undefined) this.bbox_ne_lat = bbox_ne_lat
+    const bbox = getBbox(geometry)
+    this.bbox_sw_lng = bbox[0]
+    this.bbox_sw_lat = bbox[1]
+    this.bbox_ne_lng = bbox[2]
+    this.bbox_ne_lat = bbox[3]
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
