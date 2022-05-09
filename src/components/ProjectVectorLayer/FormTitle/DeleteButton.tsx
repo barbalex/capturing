@@ -27,19 +27,19 @@ const Title = styled.div`
   user-select: none;
 `
 
-const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
+const ProjectVectorLayerDeleteButton = ({ userMayEdit }) => {
   const navigate = useNavigate()
-  const { projectTileLayerId } = useParams()
+  const { projectVectorLayerId } = useParams()
   const store = useContext(StoreContext)
   const { activeNodeArray, removeNodeWithChildren } = store
   // const filter = { todo: 'TODO: was in store' }
   const session: Session = supabase.auth.session()
 
   const deleted: boolean = useLiveQuery(async () => {
-    const row: Row = await dexie.project_tile_layers.get(projectTileLayerId)
+    const row: Row = await dexie.project_vector_layers.get(projectVectorLayerId)
     // only return needed values to minimize re-renders
     return row?.deleted
-  }, [projectTileLayerId])
+  }, [projectVectorLayerId])
 
   const [anchorEl, setAnchorEl] = useState(null)
   const closeMenu = useCallback(() => {
@@ -51,8 +51,8 @@ const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
     [],
   )
   const remove = useCallback(async () => {
-    const row: ProjectVectorLayer = await dexie.project_tile_layers.get(
-      projectTileLayerId,
+    const row: ProjectVectorLayer = await dexie.project_vector_layers.get(
+      projectVectorLayerId,
     )
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
@@ -64,7 +64,7 @@ const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
     navigate,
     removeNodeWithChildren,
     session,
-    projectTileLayerId,
+    projectVectorLayerId,
   ])
 
   return (
@@ -72,8 +72,8 @@ const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
       <IconButton
         aria-controls="menu"
         aria-haspopup="true"
-        aria-label="Bild-Karte löschen"
-        title="Bild-Karte löschen"
+        aria-label="Vektor-Karte löschen"
+        title="Vektor-Karte löschen"
         onClick={onClickButton}
         disabled={deleted === 1 || !userMayEdit}
         size="large"
@@ -97,4 +97,4 @@ const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
   )
 }
 
-export default observer(ProjectTileLayerDeleteButton)
+export default observer(ProjectVectorLayerDeleteButton)

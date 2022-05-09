@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Session } from '@supabase/supabase-js'
 
 import constants from '../../utils/constants'
-import { dexie, ProjectTileLayer } from '../../dexieClient'
+import { dexie,  ProjectVectorLayer } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 
 // TODO: alter css on isdragging
@@ -41,10 +41,10 @@ const RowLink = styled.div`
   justify-content: center;
 `
 type Props = {
-  row: ProjectTileLayer
+  row: ProjectVectorLayer
 }
 
-const ProjectTilelayerItem = ({ item, provided, isDragging }: Props) => {
+const ProjectVectorLayerItem = ({ item, provided, isDragging }: Props) => {
   const navigate = useNavigate()
   const session: Session = supabase.auth.session()
 
@@ -54,7 +54,7 @@ const ProjectTilelayerItem = ({ item, provided, isDragging }: Props) => {
       e.stopPropagation()
       const was = { ...item }
       const active = item.active === 1 ? 0 : 1
-      await dexie.project_tile_layers.update(item.id, {
+      await dexie.project_vector_layers.update(item.id, {
         active,
       })
 
@@ -88,4 +88,4 @@ const ProjectTilelayerItem = ({ item, provided, isDragging }: Props) => {
   )
 }
 
-export default ProjectTilelayerItem
+export default ProjectVectorLayerItem

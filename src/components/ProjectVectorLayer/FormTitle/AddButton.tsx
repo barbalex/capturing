@@ -4,14 +4,14 @@ import IconButton from '@mui/material/IconButton'
 import { useParams, useNavigate, resolvePath } from 'react-router-dom'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
-import insertProjectTileLayer from '../../../utils/insertProjectTileLayer'
+import insertProjectVectorLayer from '../../../utils/insertProjectVectorLayer'
 
-const ProjectTileLayerAddButton = ({ userMayEdit }) => {
+const ProjectVectorLayerAddButton = ({ userMayEdit }) => {
   const { projectId } = useParams()
   const navigate = useNavigate()
 
   const onClick = useCallback(async () => {
-    const newId = await insertProjectTileLayer({
+    const newId = await insertProjectVectorLayer({
       projectId,
     })
     navigate(resolvePath(`../${newId}`, window.location.pathname))
@@ -20,8 +20,8 @@ const ProjectTileLayerAddButton = ({ userMayEdit }) => {
   return (
     <ErrorBoundary>
       <IconButton
-        aria-label="neue Bild-Karte"
-        title="neue Bild-Karte"
+        aria-label="neue Vektor-Karte"
+        title="neue Vektor-Karte"
         onClick={onClick}
         size="large"
         disabled={!userMayEdit}
@@ -32,4 +32,4 @@ const ProjectTileLayerAddButton = ({ userMayEdit }) => {
   )
 }
 
-export default ProjectTileLayerAddButton
+export default ProjectVectorLayerAddButton

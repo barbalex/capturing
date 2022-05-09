@@ -10,7 +10,7 @@ import { Session } from '@supabase/supabase-js'
 import storeContext from '../../storeContext'
 import Item from './Item'
 import ErrorBoundary from '../shared/ErrorBoundary'
-import { dexie, ProjectTileLayer } from '../../dexieClient'
+import { dexie, ProjectVectorLayer } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import Title from './Title'
 import HeightPreservingItem from './HeightPreservingItem'
@@ -49,7 +49,7 @@ const ProjectTileLayersComponent = () => {
   const store = useContext(storeContext)
   const { formHeight, setTileLayerSorter } = store
 
-  const projectTileLayers: ProjectTileLayer[] = useLiveQuery(
+  const projectTileLayers: ProjectVectorLayer[] = useLiveQuery(
     async () =>
       await dexie.project_tile_layers
         .where({ deleted: 0, project_id: projectId })
@@ -57,7 +57,7 @@ const ProjectTileLayersComponent = () => {
     [projectId],
   )
 
-  const [items, setItems] = useState<ProjectTileLayer[]>([])
+  const [items, setItems] = useState<ProjectVectorLayer[]>([])
   useEffect(() => {
     if (!projectTileLayers) return
     setItems(projectTileLayers)

@@ -12,15 +12,12 @@ import JesNo from '../../shared/JesNo'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import {
   dexie,
-  WmsVersionEnum,
-  TileLayerTypeEnum,
-  IProjectTileLayer,
-  ProjectTileLayer,
+  IProjectVectorLayer,
+  ProjectVectorLayer,
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
-import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import Legends from './Legends'
 
 const FieldsContainer = styled.div`
@@ -34,8 +31,8 @@ type Props = {
 }
 
 // = '99999999-9999-9999-9999-999999999999'
-const ProjectTileLayerForm = ({ showFilter }: Props) => {
-  const { projectId, projectTileLayerId } = useParams()
+const ProjectVectorLayerForm = ({ showFilter }: Props) => {
+  const { projectId, projectVectorLayerId } = useParams()
 
   const store = useContext(StoreContext)
   const { filter, errors } = store
@@ -49,13 +46,13 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     [],
   ) // TODO: add errors, unsetError in store
   useEffect(() => {
-    unsetError('project_tile_layer')
-  }, [projectTileLayerId, unsetError])
+    unsetError('project_vector_layer')
+  }, [projectVectorLayerId, unsetError])
 
   // const data = {}
   const data = useLiveQuery(async () => {
     const [row, projectUser] = await Promise.all([
-      dexie.project_tile_layers.get(projectTileLayerId),
+      dexie.project_vector_layers.get(projectVectorLayerId),
       dexie.project_users.get({
         project_id: projectId,
         user_email: session?.user?.email,
@@ -71,26 +68,17 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
       row,
       userMayEdit,
     }
-  }, [projectId, projectTileLayerId, session?.user?.email])
+  }, [projectId, projectVectorLayerId, session?.user?.email])
 
-  const row: ProjectTileLayer = data?.row
+  const row: ProjectVectorLayer = data?.row
   const userMayEdit: boolean = data?.userMayEdit
 
-  const wmsVersionValues = Object.values(WmsVersionEnum).map((v) => ({
-    value: v,
-    label: v,
-  }))
-  const tileLayerTypeValues = Object.values(TileLayerTypeEnum).map((v) => ({
-    value: v,
-    label: v,
-  }))
-
   // need original row to be able to roll back optimistic ui updates
-  const originalRow = useRef<IProjectTileLayer>()
+  const originalRow = useRef<IProjectVectorLayer>()
   // need to update rowState on blur because of
   // when user directly closes app after last update in field
   // seems that waiting for dexie update goes too long
-  const rowState = useRef<IProjectTileLayer>()
+  const rowState = useRef<IProjectVectorLayer>()
   useEffect(() => {
     rowState.current = row
     // update originalRow only initially, once row has arrived
@@ -138,7 +126,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
 
       if (showFilter) {
         return filter.setValue({
-          table: 'project_tile_layer',
+          table: 'project_vector_layer',
           key: field,
           value: newValue,
         })
@@ -147,12 +135,12 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
       // update rowState
       rowState.current = { ...row, ...{ [field]: newValue } }
       // update dexie
-      dexie.project_tile_layers.update(row.id, { [field]: newValue })
+      dexie.project_vector_layers.update(row.id, { [field]: newValue })
     },
     [filter, row, showFilter],
   )
 
-  // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
+  // const showDeleted = filter?.project_vector_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
   if (!row) return <Spinner />
@@ -176,7 +164,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                 name="deleted"
                 value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.project_tile_layer?.deleted}
+                error={errors?.project_vector_layer?.deleted}
                 disabled={!userMayEdit}
               />
             ) : (
@@ -185,7 +173,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                 name="deleted"
                 value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.project_tile_layer?.deleted}
+                error={errors?.project_vector_layer?.deleted}
                 disabled={!userMayEdit}
               />
             )}
@@ -196,7 +184,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           label="Beschriftung"
           value={row.label}
           onBlur={onBlur}
-          error={errors?.project_tile_layer?.label}
+          error={errors?.project_vector_layer?.label}
           disabled={!userMayEdit}
         />
         <Checkbox2States
@@ -212,7 +200,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           label="Sortierung"
           value={row.sort}
           onBlur={onBlur}
-          error={errors?.project_tile_layer?.sort}
+          error={errors?.project_vector_layer?.sort}
           disabled={!userMayEdit}
           type="number"
         />
@@ -221,7 +209,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           label="Maximale Zoom-Stufe"
           value={row.max_zoom}
           onBlur={onBlur}
-          error={errors?.project_tile_layer?.max_zoom}
+          error={errors?.project_vector_layer?.max_zoom}
           disabled={!userMayEdit}
           type="number"
         />
@@ -230,7 +218,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           label="Minimale Zoom-Stufe"
           value={row.min_zoom}
           onBlur={onBlur}
-          error={errors?.project_tile_layer?.min_zoom}
+          error={errors?.project_vector_layer?.min_zoom}
           disabled={!userMayEdit}
           type="number"
         />
@@ -239,7 +227,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           label="Deckkraft / Opazität (0 - 1)"
           value={row.opacity}
           onBlur={onBlur}
-          error={errors?.project_tile_layer?.opacity}
+          error={errors?.project_vector_layer?.opacity}
           disabled={!userMayEdit}
           type="number"
         />
@@ -251,86 +239,46 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           error={errors?.field?.greyscale}
           disabled={!userMayEdit}
         />
-        <RadioButtonGroup
-          value={row.type}
-          name="type"
-          dataSource={tileLayerTypeValues}
+        <TextField
+          name="url"
+          label="URL"
+          value={row.url}
           onBlur={onBlur}
-          label="Typ"
-          error={errors?.project_tile_layer?.type}
+          error={errors?.project_vector_layer?.url}
+          disabled={!userMayEdit}
+          type="text"
         />
-        {row?.type === 'url_template' && (
-          <TextField
-            name="url_template"
-            label="URL-Vorlage"
-            value={row.url_template}
-            onBlur={onBlur}
-            error={errors?.project_tile_layer?.url_template}
-            disabled={!userMayEdit}
-            type="text"
-          />
-        )}
-        {row?.type === 'wms' && (
-          <>
-            <TextField
-              name="wms_base_url"
-              label="Basis-URL"
-              value={row.wms_base_url}
-              onBlur={onBlur}
-              error={errors?.project_tile_layer?.wms_base_url}
-              disabled={!userMayEdit}
-              type="text"
-            />
-            <TextField
-              name="wms_format"
-              label="(Bild-)Format"
-              value={row.wms_format}
-              onBlur={onBlur}
-              error={errors?.project_tile_layer?.wms_format}
-              disabled={!userMayEdit}
-              type="text"
-            />
-            <Checkbox2States
-              label="Transparent"
-              name="wms_transparent"
-              value={row.wms_transparent}
-              onBlur={onBlur}
-              error={errors?.field?.wms_transparent}
-              disabled={!userMayEdit}
-            />
-            <TextField
-              name="wms_layers"
-              label="Layer (wenn mehrere: mit Komma trennen. Beispiel: 'layer1,layer2')"
-              value={row.wms_layers}
-              onBlur={onBlur}
-              error={errors?.project_tile_layer?.wms_layers}
-              disabled={!userMayEdit}
-              multiLine
-              type="text"
-            />
-            {/* <TextField
-              name="wms_parameters"
-              label="Zusätzliche Parameter (Schreibweise für URL-Query). Noch nicht implementiert"
-              value={row.wms_parameters}
-              onBlur={onBlur}
-              error={errors?.project_tile_layer?.wms_parameters}
-              disabled={!userMayEdit}
-              type="text"
-            /> */}
-            <RadioButtonGroup
-              value={row.wms_version}
-              name="wms_version"
-              dataSource={wmsVersionValues}
-              onBlur={onBlur}
-              label="WMS-Version"
-              error={errors?.project_tile_layer?.wms_version}
-            />
-            <Legends row={row} />
-          </>
-        )}
+        <TextField
+          name="type_name"
+          label="Type Name"
+          value={row.type_name}
+          onBlur={onBlur}
+          error={errors?.project_vector_layer?.type_name}
+          disabled={!userMayEdit}
+          type="text"
+        />
+        <TextField
+          name="wfs_version"
+          label="WFS Version (z.B. 2.0.0)"
+          value={row.wfs_version}
+          onBlur={onBlur}
+          error={errors?.project_vector_layer?.wfs_version}
+          disabled={!userMayEdit}
+          type="text"
+        />
+        <TextField
+          name="output_format"
+          label="Format (GeoJSON wählen)"
+          value={row.output_format}
+          onBlur={onBlur}
+          error={errors?.project_vector_layer?.output_format}
+          disabled={!userMayEdit}
+          type="text"
+        />
+        <Legends row={row} />
       </FieldsContainer>
     </ErrorBoundary>
   )
 }
 
-export default observer(ProjectTileLayerForm)
+export default observer(ProjectVectorLayerForm)

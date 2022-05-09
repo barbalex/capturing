@@ -10,7 +10,7 @@ import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
 import { dexie } from '../../dexieClient'
-import insertProjectTileLayer from '../../utils/insertProjectTileLayer'
+import insertProjectVectorLayer from '../../utils/insertProjectVectorLayer'
 import FilterNumbers from '../shared/FilterNumbers'
 import { supabase } from '../../supabaseClient'
 
@@ -36,7 +36,7 @@ const TitleSymbols = styled.div`
   margin-bottom: auto;
 `
 
-const ProjectTileLayersTitle = () => {
+const ProjectVectorLayersTitle = () => {
   const session = supabase.auth.session()
   const { projectId } = useParams()
   const navigate = useNavigate()
@@ -46,10 +46,10 @@ const ProjectTileLayersTitle = () => {
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount, projectUser] = await Promise.all([
-      dexie.project_tile_layers
+      dexie.project_vector_layers
         .where({ deleted: 0, project_id: projectId })
         .count(), // TODO: pass in filter
-      dexie.project_tile_layers
+      dexie.project_vector_layers
         .where({ deleted: 0, project_id: projectId })
         .count(),
       dexie.project_users.get({
@@ -73,7 +73,7 @@ const ProjectTileLayersTitle = () => {
   const userMayEdit: boolean = data?.userMayEdit
 
   const add = useCallback(async () => {
-    const newId = await insertProjectTileLayer({ projectId })
+    const newId = await insertProjectVectorLayer({ projectId })
     navigate(newId)
   }, [navigate, projectId])
 
@@ -84,7 +84,7 @@ const ProjectTileLayersTitle = () => {
   return (
     <ErrorBoundary>
       <TitleContainer>
-        <Title>Bild-Karten</Title>
+        <Title>Vektor-Karten</Title>
         <TitleSymbols>
           <IconButton
             title="Zum Projekt"
@@ -96,8 +96,8 @@ const ProjectTileLayersTitle = () => {
             <FaArrowUp />
           </IconButton>
           <IconButton
-            aria-label="neue Bild-Karte"
-            title="neue Bild-Karte"
+            aria-label="neue Vektor-Karte"
+            title="neue Vektor-Karte"
             onClick={add}
             size="large"
             disabled={!userMayEdit}
@@ -114,4 +114,4 @@ const ProjectTileLayersTitle = () => {
   )
 }
 
-export default observer(ProjectTileLayersTitle)
+export default observer(ProjectVectorLayersTitle)
