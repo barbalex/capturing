@@ -18,7 +18,6 @@ const insertProjectVectorLayer = async ({ projectId }: Props) => {
     undefined,
     undefined,
     undefined,
-    0,
     undefined,
     undefined,
     undefined,

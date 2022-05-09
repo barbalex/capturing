@@ -231,14 +231,6 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           disabled={!userMayEdit}
           type="number"
         />
-        <Checkbox2States
-          label="Grautöne statt Farben"
-          name="greyscale"
-          value={row.greyscale}
-          onBlur={onBlur}
-          error={errors?.field?.greyscale}
-          disabled={!userMayEdit}
-        />
         <TextField
           name="url"
           label="URL"

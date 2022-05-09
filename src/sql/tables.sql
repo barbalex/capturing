@@ -1096,7 +1096,6 @@ CREATE TABLE project_vector_layers (
   wfs_version text DEFAULT NULL, -- often: 1.1.0 or 2.0.0
   output_format text DEFAULT NULL, -- need some form of json. TODO: Convert others?
   opacity integer DEFAULT 1,
-  greyscale integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),

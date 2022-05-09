@@ -572,7 +572,6 @@ export interface IProjectVectorLayer {
   type_name?: string
   wfs_version?: string
   output_format?: string
-  greyscale?: number
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -596,7 +595,6 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
   type_name?: string
   wfs_version?: string
   output_format?: stringum
-  greyscale?: number
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -615,7 +613,6 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     type_name?: string,
     wfs_version?: string,
     output_format?: string,
-    greyscale?: number,
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
@@ -633,7 +630,6 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     if (type_name) this.type_name = type_name
     if (wfs_version) this.wfs_version = wfs_version
     if (output_format) this.output_format = output_format
-    this.greyscale = greyscale ?? 0
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
