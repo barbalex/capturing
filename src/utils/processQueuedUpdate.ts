@@ -78,7 +78,7 @@ const processQueuedUpdate = async ({
       .upload(`files/${JSON.parse(queuedUpdate.value).id}`, queuedUpdate.file)
     if (error) return console.log(error)
   } else {
-    // TODO: upsert regular table
+    // upsert regular table
     // 1. create new Object
     const newObject = {
       ...JSON.parse(queuedUpdate.value),
