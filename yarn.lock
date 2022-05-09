@@ -2253,12 +2253,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supabase/gotrue-js@npm:^1.22.13":
-  version: 1.22.13
-  resolution: "@supabase/gotrue-js@npm:1.22.13"
+"@supabase/gotrue-js@npm:^1.22.14":
+  version: 1.22.14
+  resolution: "@supabase/gotrue-js@npm:1.22.14"
   dependencies:
     cross-fetch: ^3.0.6
-  checksum: 74e44dec3936dc844f64907933ebc8cef747c17a3d690581595cc43b8dd77ea366c9c7da36f22858116b4b974bdbe0984fa992dc4a6871629c476dc0b4a690d4
+  checksum: 3b4823834c078f33a1cdb5b1d6c8206f9b21c48730a9c35af52c77d111f7c7173a8c71f9c024a5e45edd7553f0fb21803677324ee6f54d825602bcf595d81c78
   languageName: node
   linkType: hard
 
@@ -2290,16 +2290,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supabase/supabase-js@npm:1.35.2":
-  version: 1.35.2
-  resolution: "@supabase/supabase-js@npm:1.35.2"
+"@supabase/supabase-js@npm:1.35.3":
+  version: 1.35.3
+  resolution: "@supabase/supabase-js@npm:1.35.3"
   dependencies:
     "@supabase/functions-js": ^1.3.3
-    "@supabase/gotrue-js": ^1.22.13
+    "@supabase/gotrue-js": ^1.22.14
     "@supabase/postgrest-js": ^0.37.2
     "@supabase/realtime-js": ^1.7.2
     "@supabase/storage-js": ^1.7.0
-  checksum: 0fa057c13078b33315480d4c71280e3036b9c5677a529f794968c5e2500ea4dfcfa6efe695b8e0ff8250d1f82748df8878b433eee647ba75ddb4981a3e894bb0
+  checksum: 2715ae245211c83fc25fa2f5f00d0af8097a96a0c834ea768d576914e155284510565e2f1245ef9713821353efb16002fdf380a38c12860fc7de92969f408503
   languageName: node
   linkType: hard
 
@@ -3260,7 +3260,7 @@ __metadata:
     "@mui/styled-engine": 5.6.1
     "@mui/styled-engine-sc": 5.6.1
     "@react-leaflet/core": 2.0.0
-    "@supabase/supabase-js": 1.35.2
+    "@supabase/supabase-js": 1.35.3
     "@turf/bbox": 6.5.0
     "@types/leaflet": 1.7.9
     "@types/node": 17.0.31
@@ -3306,7 +3306,7 @@ __metadata:
     react-leaflet: 4.0.0
     react-resize-detector: 7.0.0
     react-router-dom: 6.3.0
-    react-select: 5.3.1
+    react-select: 5.3.2
     react-split-pane: 0.1.92
     react-stylable-diff: 2.0.0
     react-virtualized-auto-sizer: 1.0.6
@@ -6312,9 +6312,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-select@npm:5.3.1":
-  version: 5.3.1
-  resolution: "react-select@npm:5.3.1"
+"react-select@npm:5.3.2":
+  version: 5.3.2
+  resolution: "react-select@npm:5.3.2"
   dependencies:
     "@babel/runtime": ^7.12.0
     "@emotion/cache": ^11.4.0
@@ -6326,7 +6326,7 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: d84581571b6374183ab176c9c95ec16858ea43d115de8daf417f83d1f2bd84f1d9b07e6f3d6f87bfb0f46e3691904ea54ded0e6801815bc9e6db1c988329e985
+  checksum: c8c0ecd75704098ef1010fba4df68bcc5e7d76ffcd6d3bac40bc3017758a9c035a887fa82ead9105dc719c14e04c4164d8b7a8e8fa61d0ed39e4bdf48ee3bf1c
   languageName: node
   linkType: hard
 
