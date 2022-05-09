@@ -1,4 +1,5 @@
 import buildTableNodes from './tableNodes'
+import buildTileLayerNodes from './tileLayerNodes'
 import { dexie } from '../../../../dexieClient'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 
@@ -12,8 +13,6 @@ const projectFoldersEditingProject = async ({
   // return if parent does not exist (in nodes)
   if (!isNodeOpen({ nodes, url: ['projects', project.id] })) return
 
-  const tileLayerNodes = []
-  // TODO: query tile layers and build their nodes
   const vectorLayerNodes = []
   // TODO: query vector layers and build their nodes
 
@@ -48,8 +47,16 @@ const projectFoldersEditingProject = async ({
         nodes,
         url: ['projects', project.id, 'tile-layers'],
       }),
-      children: tileLayerNodes,
-      childrenCount: tileLayerNodes.length,
+      children: await buildTileLayerNodes({
+        project,
+        nodes,
+      }),
+      childrenCount: await dexie.project_tile_layers
+        .where({
+          deleted: 0,
+          project_id: project.id,
+        })
+        .count(),
     },
     {
       id: `${project.id}/vectorLayersFolder`,
