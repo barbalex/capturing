@@ -66,7 +66,6 @@ const VectorLayerComponent = ({ layer }: Props) => {
         maxNativeZoom={19}
         minZoom={layer.min_zoom}
         maxZoom={layer.max_zoom}
-        greyscale={layer.greyscale}
         opacity={layer.opacity}
       />
       <Dialog
