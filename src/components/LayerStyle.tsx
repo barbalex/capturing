@@ -47,8 +47,8 @@ const TitleRow = styled.div`
   cursor: pointer;
   user-select: none;
   position: sticky;
-  top: 0;
-  z-index: 1;
+  top: -10px;
+  z-index: 4;
   &:first-of-type {
     margin-top: -10px;
   }
@@ -327,16 +327,14 @@ const LayerStyleForm = ({ userMayEdit }) => {
                 error={errors?.project?.fill}
                 disabled={!userMayEdit}
               />
-              <div>
-                <ColorPicker
-                  id={`${row.id}/fill_color`}
-                  label="Füllung: Farbe"
-                  name="fill_color"
-                  onBlur={onBlur}
-                  color={row.fill_color}
-                  disabled={!userMayEdit}
-                />
-              </div>
+              <ColorPicker
+                id={`${row.id}/fill_color`}
+                label="Füllung: Farbe"
+                name="fill_color"
+                onBlur={onBlur}
+                color={row.fill_color}
+                disabled={!userMayEdit}
+              />
               <TextField
                 name="fill_opacity"
                 label="Füllung: Deckkraft / Opazität"
