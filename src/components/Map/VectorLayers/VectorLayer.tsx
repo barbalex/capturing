@@ -56,18 +56,11 @@ const VectorLayerComponent = ({ layer }: Props) => {
       setData(res.data)
     }
     run()
-  }, [])
+  }, [layer])
 
   return (
     <>
-      <GeoJSON
-        key={data ? 1 : 0}
-        data={data}
-        maxNativeZoom={19}
-        minZoom={layer.min_zoom}
-        maxZoom={layer.max_zoom}
-        opacity={layer.opacity}
-      />
+      <GeoJSON key={data ? 1 : 0} data={data} opacity={layer.opacity} />
       <Dialog
         onClose={() => setError(null)}
         open={!!error}
