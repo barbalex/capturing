@@ -44,23 +44,26 @@ const ColorPicker = ({ color = '#ff0000', onBlur, label, name, disabled }) => {
     setTimeout(() => onBlurControl)
   }, [onBlurControl])
 
+  // weird placing without the div
   return (
-    <StyledFormControl onBlur={onBlurControl}>
-      <Label label={label} />
-      <HexColorPicker color={val} onChange={setVal} />
-      <InputRow>
-        <InputLabel>Hex-Wert:</InputLabel>
-        <StyledInput
-          id="input"
-          name={name}
-          value={val}
-          type="text"
-          onChange={(e) => setVal(e.target.value)}
-          onBlur={onBlurInput}
-          disabled={disabled}
-        />
-      </InputRow>
-    </StyledFormControl>
+    <div>
+      <StyledFormControl onBlur={onBlurControl}>
+        <Label label={label} />
+        <HexColorPicker color={val} onChange={setVal} />
+        <InputRow>
+          <InputLabel>Hex-Wert:</InputLabel>
+          <StyledInput
+            id="input"
+            name={name}
+            value={val}
+            type="text"
+            onChange={(e) => setVal(e.target.value)}
+            onBlur={onBlurInput}
+            disabled={disabled}
+          />
+        </InputRow>
+      </StyledFormControl>
+    </div>
   )
 }
 
