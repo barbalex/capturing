@@ -29,6 +29,8 @@ import TablesComponent from './components/Tables'
 import TableComponent from './components/Table'
 import ProjectTileLayersComponent from './components/ProjectTileLayers'
 import ProjectTileLayerComponent from './components/ProjectTileLayer'
+import ProjectVectorLayersComponent from './components/ProjectVectorLayers'
+import ProjectVectorLayerComponent from './components/ProjectVectorLayer'
 import FieldsComponent from './components/Fields'
 import FieldComponent from './components/Field'
 import RowsComponent from './components/Rows'
@@ -109,6 +111,14 @@ function App() {
                   <Route
                     path=":projectId/tile-layers/:projectTileLayerId"
                     element={<ProjectTileLayerComponent />}
+                  />
+                  <Route
+                    path=":projectId/vector-layers/*"
+                    element={<ProjectVectorLayersComponent />}
+                  />
+                  <Route
+                    path=":projectId/vector-layers/:projectVectorLayerId"
+                    element={<ProjectVectorLayerComponent />}
                   />
                   <Route
                     path=":projectId/tables/:tableId/fields/*"
