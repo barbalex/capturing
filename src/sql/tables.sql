@@ -1116,11 +1116,11 @@ ALTER publication supabase_realtime
   ADD TABLE project_vector_layers;
 
 --
--- seperate from project_vector_layers because pvl : pvl_geom = 1 : n
+-- seperate from project_vector_layers because pvl : pvl_geoms = 1 : n
 -- this way bbox can be used to load only what is in view
-DROP TABLE IF EXISTS pvl_geom CASCADE;
+DROP TABLE IF EXISTS pvl_geoms CASCADE;
 
-CREATE TABLE pvl_geom (
+CREATE TABLE pvl_geoms (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   pvl_id uuid DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
   geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
@@ -1135,34 +1135,35 @@ CREATE TABLE pvl_geom (
   deleted integer DEFAULT 0
 );
 
-CREATE INDEX ON pvl_geom USING btree (id);
 
-CREATE INDEX ON pvl_geom USING btree (pvl_id);
+CREATE INDEX ON pvl_geoms USING btree (id);
 
-COMMENT ON TABLE pvl_geom IS 'Goal: Save vector layers client side for 1. offline usage 2. better filtering (to viewport). Data is downloaded when manager configures vector layer. Not versioned (not recorded and only added by manager).';
+CREATE INDEX ON pvl_geoms USING btree (pvl_id);
 
-COMMENT ON COLUMN pvl_geom.pvl_id IS 'related project_vector_layers row';
+COMMENT ON TABLE pvl_geoms IS 'Goal: Save vector layers client side for 1. offline usage 2. better filtering (to viewport). Data is downloaded when manager configures vector layer. Not versioned (not recorded and only added by manager).';
 
-COMMENT ON COLUMN pvl_geom.geometry IS 'geometry-collection of this row';
+COMMENT ON COLUMN pvl_geoms.pvl_id IS 'related project_vector_layers row';
 
-COMMENT ON COLUMN pvl_geom.properties IS 'properties of this row';
+COMMENT ON COLUMN pvl_geoms.geometry IS 'geometry-collection of this row';
 
-COMMENT ON COLUMN pvl_geom.bbox_sw_lng IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
+COMMENT ON COLUMN pvl_geoms.properties IS 'properties of this row';
 
-COMMENT ON COLUMN pvl_geom.bbox_sw_lat IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
+COMMENT ON COLUMN pvl_geoms.bbox_sw_lng IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
 
-COMMENT ON COLUMN pvl_geom.bbox_ne_lng IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
+COMMENT ON COLUMN pvl_geoms.bbox_sw_lat IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
 
-COMMENT ON COLUMN pvl_geom.bbox_ne_lat IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
+COMMENT ON COLUMN pvl_geoms.bbox_ne_lng IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
 
-ALTER TABLE pvl_geom ENABLE ROW LEVEL SECURITY;
+COMMENT ON COLUMN pvl_geoms.bbox_ne_lat IS 'bbox of the geometry. Set client-side on every change of geometry. Used to filter geometries client-side for viewport';
+
+ALTER TABLE pvl_geoms ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE pvl_geom;
+  ADD TABLE pvl_geoms;
 
 -- not needed because only used client side:
--- CREATE INDEX ON pvl_geom USING gist (geometry);
--- CREATE INDEX ON pvl_geom USING gin (properties);
+-- CREATE INDEX ON pvl_geoms USING gist (geometry);
+-- CREATE INDEX ON pvl_geoms USING gin (properties);
 --+--
 -- IMPORTANT: create functions at end but before policies
 -- to ensure they never reference a structur not yet created
@@ -2021,28 +2022,28 @@ CREATE POLICY "project managers can delete project_tile_layers" ON project_tile_
   FOR DELETE
     USING (is_project_manager_by_project (auth.uid (), project_id));
 
-DROP POLICY IF EXISTS "project readers, editors and managers can view project_vector_layers geometries" ON pvl_geom;
+DROP POLICY IF EXISTS "project readers, editors and managers can view project_vector_layers geometries" ON pvl_geoms;
 
-CREATE POLICY "project readers, editors and managers can view project_vector_layers geometries" ON pvl_geom
+CREATE POLICY "project readers, editors and managers can view project_vector_layers geometries" ON pvl_geoms
   FOR SELECT
     USING (is_project_user_by_project_tile_layer (auth.uid (), pvl_id));
 
-DROP POLICY IF EXISTS "project managers can insert project_vector_layers geometries" ON pvl_geom;
+DROP POLICY IF EXISTS "project managers can insert project_vector_layers geometries" ON pvl_geoms;
 
-CREATE POLICY "project managers can insert project_vector_layers geometries" ON pvl_geom
+CREATE POLICY "project managers can insert project_vector_layers geometries" ON pvl_geoms
   FOR INSERT
     WITH CHECK (is_project_manager_by_project_tile_layer (auth.uid (), pvl_id));
 
-DROP POLICY IF EXISTS "project managers can update project_vector_layers geometries" ON pvl_geom;
+DROP POLICY IF EXISTS "project managers can update project_vector_layers geometries" ON pvl_geoms;
 
-CREATE POLICY "project managers can update project_vector_layers geometries" ON pvl_geom
+CREATE POLICY "project managers can update project_vector_layers geometries" ON pvl_geoms
   FOR UPDATE
     USING (is_project_user_by_project_tile_layer (auth.uid (), pvl_id))
     WITH CHECK (is_project_manager_by_project_tile_layer (auth.uid (), pvl_id));
 
-DROP POLICY IF EXISTS "project managers can delete project_vector_layers geometries" ON pvl_geom;
+DROP POLICY IF EXISTS "project managers can delete project_vector_layers geometries" ON pvl_geoms;
 
-CREATE POLICY "project managers can delete project_vector_layers geometries" ON pvl_geom
+CREATE POLICY "project managers can delete project_vector_layers geometries" ON pvl_geoms
   FOR DELETE
     USING (is_project_manager_by_project_tile_layer (auth.uid (), pvl_id));
 
