@@ -20,8 +20,8 @@ const ProjectTileLayerAddButton = ({ userMayEdit }) => {
   return (
     <ErrorBoundary>
       <IconButton
-        aria-label="neue Pixel/WMS-Karte"
-        title="neue Pixel/WMS-Karte"
+        aria-label="neue Bild-Karte"
+        title="neue Bild-Karte"
         onClick={onClick}
         size="large"
         disabled={!userMayEdit}

@@ -84,7 +84,7 @@ const ProjectTileLayersTitle = () => {
   return (
     <ErrorBoundary>
       <TitleContainer>
-        <Title>Pixel/WMS-Karten</Title>
+        <Title>Bild-Karten</Title>
         <TitleSymbols>
           <IconButton
             title="Zum Projekt"
@@ -96,8 +96,8 @@ const ProjectTileLayersTitle = () => {
             <FaArrowUp />
           </IconButton>
           <IconButton
-            aria-label="neue Pixel/WMS-Karte"
-            title="neue Pixel/WMS-Karte"
+            aria-label="neue Bild-Karte"
+            title="neue Bild-Karte"
             onClick={add}
             size="large"
             disabled={!userMayEdit}

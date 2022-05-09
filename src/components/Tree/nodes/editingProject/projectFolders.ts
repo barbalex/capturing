@@ -39,7 +39,7 @@ const projectFoldersEditingProject = async ({
     },
     {
       id: `${project.id}/tileLayersFolder`,
-      label: 'Pixel/WMS-Karten',
+      label: 'Bild-Karten',
       type: 'tileLayerFolder',
       object: project,
       activeNodeArray: ['projects', project.id, 'tile-layers'],

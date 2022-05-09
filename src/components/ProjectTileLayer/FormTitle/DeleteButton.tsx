@@ -70,8 +70,8 @@ const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
       <IconButton
         aria-controls="menu"
         aria-haspopup="true"
-        aria-label="Pixel/WMS-Karte löschen"
-        title="Pixel/WMS-Karte löschen"
+        aria-label="Bild-Karte löschen"
+        title="Bild-Karte löschen"
         onClick={onClickButton}
         disabled={deleted === 1 || !userMayEdit}
         size="large"
