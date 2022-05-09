@@ -11,15 +11,6 @@ import { MdClose } from 'react-icons/md'
 
 import { VectorLayer as VectorLayerType } from '../../../dexieClient'
 
-// TODO: check class
-const StyledVectorLayer = styled(GeoJSON)`
-  ${(props) =>
-    props.greyscale == 1 &&
-    `.leaflet-tile-container {
-    filter: grayscale(100%) !important;
-  }`}
-`
-
 const StyledXMLViewer = styled(XMLViewer)`
   font-size: small;
 `
@@ -69,7 +60,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
 
   return (
     <>
-      <StyledVectorLayer
+      <GeoJSON
         key={data ? 1 : 0}
         data={data}
         maxNativeZoom={19}
