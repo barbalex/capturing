@@ -254,6 +254,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
                 error={errors?.project?.stroke}
               />
               <ColorPicker
+                id={`${row.id}/color`}
                 label="Linien: Farbe"
                 onBlur={onBlur}
                 color={row.color}
@@ -326,13 +327,16 @@ const LayerStyleForm = ({ userMayEdit }) => {
                 error={errors?.project?.fill}
                 disabled={!userMayEdit}
               />
-              <ColorPicker
-                label="Füllung: Farbe"
-                name="fill_color"
-                onBlur={onBlur}
-                color={row.fill_color}
-                disabled={!userMayEdit}
-              />
+              <div>
+                <ColorPicker
+                  id={`${row.id}/fill_color`}
+                  label="Füllung: Farbe"
+                  name="fill_color"
+                  onBlur={onBlur}
+                  color={row.fill_color}
+                  disabled={!userMayEdit}
+                />
+              </div>
               <TextField
                 name="fill_opacity"
                 label="Füllung: Deckkraft / Opazität"

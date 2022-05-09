@@ -32,15 +32,14 @@ const ColorPicker = ({ color = '#ff0000', onBlur, label, name, disabled }) => {
   }, [color])
 
   const onBlurControl = useCallback(() => {
-    console.log('ColorPicker, onBlurControl, color:', val)
     const fakeEvent = {
       target: {
-        name: 'color',
+        name,
         value: val,
       },
     }
     onBlur(fakeEvent)
-  }, [onBlur, val])
+  }, [name, onBlur, val])
   const onBlurInput = useCallback(() => {
     setTimeout(() => onBlurControl)
   }, [onBlurControl])
