@@ -49,8 +49,7 @@ const ProjectsPage = () => {
   const store = useContext(StoreContext)
   const session = supabase.auth.session()
   const {
-    singleColumnView,
-    treeWidthInPercentOfScreen,
+    //singleColumnView,
     setTreeWidth,
     setFormWidth,
     setFormHeight,
@@ -150,13 +149,13 @@ const ProjectsPage = () => {
     formResizerWidth = 0
   }
 
-  // console.log('Projects', {
-  //   showTree,
-  //   showMap,
-  //   showForm,
-  //   treePaneSize,
-  //   formPaneSize,
-  // })
+  console.log('Projects', {
+    showTree,
+    showMap,
+    showForm,
+    treePaneSize,
+    formPaneSize,
+  })
 
   return (
     <Container ref={containerEl}>
@@ -172,7 +171,6 @@ const ProjectsPage = () => {
           size={formPaneSize}
           maxSize={-10}
           resizerStyle={{ width: formResizerWidth }}
-          //onDragFinished={onDragSplitter} // maybe set widths of parts in store, see apflora
         >
           {showForm ? <Outlet /> : <></>}
           <MapComponent />

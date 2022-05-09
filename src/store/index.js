@@ -34,7 +34,6 @@ export const MobxStore = types
     showMap: types.optional(types.boolean, false),
     singleColumnView: types.optional(types.boolean, false),
     showTreeInSingleColumnView: types.optional(types.boolean, false),
-    treeWidthInPercentOfScreen: types.optional(types.number, 33),
     subscriptionState: types.optional(types.string, 'INITIAL'),
     treeWidth: types.optional(types.number, 500),
     formWidth: types.optional(types.number, 500),
@@ -98,9 +97,6 @@ export const MobxStore = types
       },
       setFilterWidth(val) {
         self.filterWidth = val
-      },
-      setTreeWidthInPercentOfScreen(val) {
-        self.treeWidthInPercentOfScreen = val
       },
       setShowTreeInSingleColumnView(val) {
         self.showTreeInSingleColumnView = val
