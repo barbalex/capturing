@@ -18,6 +18,7 @@ import MapFetcher from './MapFetcher'
 import DrawControl from './DrawControl'
 import TableLayers from './TableLayers'
 import TileLayers from './TileLayers'
+import VectorLayers from './VectorLayers'
 import ZhUepWfs from './layers/zh_uep_wfs'
 
 const Container = styled.div`
@@ -50,7 +51,12 @@ const StyledMapContainer = styled(MapContainer)`
 const MapComponent = () => {
   const { rowId } = useParams()
   const store = useContext(storeContext)
-  const { bounds: boundsRaw, showMap, tileLayerSorter } = store
+  const {
+    bounds: boundsRaw,
+    showMap,
+    tileLayerSorter,
+    vectorLayerSorter,
+  } = store
   const bounds = getSnapshot(boundsRaw)
 
   const mapRef = useRef()
@@ -93,8 +99,9 @@ const MapComponent = () => {
           <LocationMarker />
           <MapFetcher />
           {!!rowId && <DrawControl />}
-          <ZhUepWfs />
+          {/* <ZhUepWfs /> */}
           <TableLayers />
+          <VectorLayers key={vectorLayerSorter} />
           <TileLayers key={tileLayerSorter} />
         </StyledMapContainer>
       </Container>
