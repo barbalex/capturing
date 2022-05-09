@@ -624,7 +624,7 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     this.id = id ?? uuidv1()
     if (label) this.label = label
     if (sort !== undefined) this.sort = sort
-    if (active !== undefined) this.active = active
+    this.active ?? 1
     if (project_id) this.project_id = project_id
     if (url) this.url = url
     if (max_zoom !== undefined) this.max_zoom = max_zoom
@@ -1504,7 +1504,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(32).stores({
+    this.version(33).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
@@ -1545,8 +1545,8 @@ export class MySubClassedDexie extends Dexie {
     this.news.mapToClass(New)
     this.news_delivery.mapToClass(NewsDelivery)
     this.project_tile_layers.mapToClass(ProjectTileLayer)
-    this.project_tile_layers.mapToClass(ProjectVectorLayer)
-    this.project_tile_layers.mapToClass(PVLGeom)
+    this.project_vector_layers.mapToClass(ProjectVectorLayer)
+    this.pvl_geoms.mapToClass(PVLGeom)
     this.projects.mapToClass(Project)
     this.project_users.mapToClass(ProjectUser)
     this.layer_styles.mapToClass(LayerStyle)

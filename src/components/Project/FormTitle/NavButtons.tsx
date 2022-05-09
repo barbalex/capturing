@@ -33,6 +33,20 @@ const ProjectNavButtons = () => {
       >
         Tabellen
       </MenuChildrenButton>
+      <MenuChildrenButton
+        endIcon={<FaArrowRight />}
+        component={Link}
+        to="tile-layers"
+      >
+        Bild-Karten
+      </MenuChildrenButton>
+      <MenuChildrenButton
+        endIcon={<FaArrowRight />}
+        component={Link}
+        to="vector-layers"
+      >
+        Vektor-Karten
+      </MenuChildrenButton>
     </>
   )
 }

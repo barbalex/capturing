@@ -73,6 +73,8 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
   const row: ProjectVectorLayer = data?.row
   const userMayEdit: boolean = data?.userMayEdit
 
+  console.log('ProjectVectorLayerForm, row:', row)
+
   // need original row to be able to roll back optimistic ui updates
   const originalRow = useRef<IProjectVectorLayer>()
   // need to update rowState on blur because of
