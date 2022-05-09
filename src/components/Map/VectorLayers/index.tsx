@@ -34,6 +34,7 @@ const VectorLayers = () => {
 
   return validVectorLayers.map((layer: VectorLayerType) => {
     const partsToRedrawOn = {
+      id: layer.id,
       url: layer.url,
       max_zoom: layer.max_zoom,
       min_zoom: layer.min_zoom,
