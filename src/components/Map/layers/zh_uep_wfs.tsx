@@ -85,16 +85,16 @@ const ZhUepWfs = () => {
     run()
   }, [zoom])
 
-  console.log('ZhUepWfs', {
-    data,
-    // typeofData: typeof data,
-    // dataParsed: typeof data === 'string' ? JSON.parse(data) : data,
-    error,
-    zoom,
-    // bounds,
-    // bbox,
-    // filter,
-  })
+  // console.log('ZhUepWfs', {
+  //   data,
+  //   // typeofData: typeof data,
+  //   // dataParsed: typeof data === 'string' ? JSON.parse(data) : data,
+  //   error,
+  //   zoom,
+  //   // bounds,
+  //   // bbox,
+  //   // filter,
+  // })
 
   // TODO: add name of layer to title
   // TODO: get styling from layer_styles
