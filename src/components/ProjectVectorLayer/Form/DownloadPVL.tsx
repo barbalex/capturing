@@ -48,7 +48,7 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
   const pvlGeomsCount: number = data?.pvlGeomsCount
 
   const title = pvlGeomsCount
-    ? 'WFS-Features erneut herunterladen (um sie zu aktualisieren)'
+    ? 'WFS-Features erneut herunterladen (wenn sie aktualisiert werden sollen)'
     : 'WFS-Features für Offline-Nutzung herunterladen'
 
   const onClickDownload = useCallback(async () => {

@@ -9,11 +9,13 @@ import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import { MdClose } from 'react-icons/md'
 import { useLiveQuery } from 'dexie-react-hooks'
+// import { useParams } from 'react-router-dom'
 
 import {
   dexie,
   LayerStyle,
   VectorLayer as VectorLayerType,
+  PVLGeom,
 } from '../../../dexieClient'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 
@@ -45,6 +47,17 @@ const VectorLayerComponent = ({ layer }: Props) => {
    */
   useEffect(() => {
     const run = async () => {
+      // TODO: filter only in bbox
+      const pvlGeoms: PVLGeom[] = await dexie.pvl_geoms
+        .where({ deleted: 0, pvl_id: layer.id })
+        .toArray()
+      if (pvlGeoms.length) {
+        console.log('VectorLayer setting data from pvl_geom')
+        const data = pvlGeoms.map((pvlGeom) => pvlGeom.geometry)
+        setData(data)
+        return
+      }
+
       let res
       try {
         res = await axios({
