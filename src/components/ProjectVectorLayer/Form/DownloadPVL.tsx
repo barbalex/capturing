@@ -52,10 +52,14 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
     : 'WFS-Features für Offline-Nutzung herunterladen'
 
   const onClickDownload = useCallback(async () => {
-    // TODO: first empty this pvl's geoms
+    // 1. empty this pvl's geoms
     if (pvlGeomsCount) {
       // empty geoms
+      await dexie.pvl_geoms
+        .where({ deleted: 0, pvl_id: projectVectorLayerId })
+        .delete()
     }
+    // 2. fetch features
     let res
     try {
       res = await axios({
@@ -78,6 +82,7 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
     console.log('data:', res.data)
     const features = res.data?.features
     console.log('features:', features)
+    // 3. build PVLGeoms
     const pvlGeoms = features.map(
       (feature) =>
         new PVLGeom(
@@ -88,7 +93,16 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
         ),
     )
     console.log('pvlGeoms:', pvlGeoms)
-  }, [row])
+    // 4. add to dexie
+    await dexie.pvl_geoms.bulkPut(pvlGeoms)
+  }, [
+    projectVectorLayerId,
+    pvlGeomsCount,
+    row.output_format,
+    row.type_name,
+    row.url,
+    row.wfs_version,
+  ])
 
   return (
     <ErrorBoundary>

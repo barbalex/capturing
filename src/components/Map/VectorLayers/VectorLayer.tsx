@@ -41,7 +41,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
 
   /**
    * TODO:
-   * if offline, load from pvl_geoms
+   * if offline/exists?, load from pvl_geoms
    */
   useEffect(() => {
     const run = async () => {
