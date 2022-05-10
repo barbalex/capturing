@@ -8,18 +8,20 @@ import { useParams } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
 import Checkbox2States from '../../shared/Checkbox2States'
+import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import JesNo from '../../shared/JesNo'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import {
   dexie,
   IProjectVectorLayer,
   ProjectVectorLayer,
+  VectorLayerTypeEnum,
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
 import LayerStyle from '../../LayerStyle'
-
+import Download from './Download'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -141,6 +143,20 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
     [filter, row, showFilter],
   )
 
+  const typeValues = Object.values(VectorLayerTypeEnum).map((v) => {
+    const comment =
+      v === 'wfs'
+        ? '(ein existierendes Web-Feature-Service wird verwendet)'
+        : v === 'upload'
+        ? '(es werden eigene Features importiert)'
+        : ''
+
+    return {
+      value: v,
+      label: `${v} ${comment}`,
+    }
+  })
+
   // const showDeleted = filter?.project_vector_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
@@ -232,42 +248,57 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           disabled={!userMayEdit}
           type="number"
         />
-        <TextField
-          name="url"
-          label="URL"
-          value={row.url}
+        <RadioButtonGroup
+          name="type"
+          value={row.type}
+          field="type"
+          label="Typ"
+          dataSource={typeValues}
           onBlur={onBlur}
-          error={errors?.project_vector_layer?.url}
+          error={errors?.field?.type}
           disabled={!userMayEdit}
-          type="text"
         />
-        <TextField
-          name="type_name"
-          label="Type Name"
-          value={row.type_name}
-          onBlur={onBlur}
-          error={errors?.project_vector_layer?.type_name}
-          disabled={!userMayEdit}
-          type="text"
-        />
-        <TextField
-          name="wfs_version"
-          label="WFS Version (z.B. 2.0.0)"
-          value={row.wfs_version}
-          onBlur={onBlur}
-          error={errors?.project_vector_layer?.wfs_version}
-          disabled={!userMayEdit}
-          type="text"
-        />
-        <TextField
-          name="output_format"
-          label="Format (GeoJSON wählen)"
-          value={row.output_format}
-          onBlur={onBlur}
-          error={errors?.project_vector_layer?.output_format}
-          disabled={!userMayEdit}
-          type="text"
-        />
+        {row.type === 'wfs' && (
+          <>
+            <TextField
+              name="url"
+              label="URL"
+              value={row.url}
+              onBlur={onBlur}
+              error={errors?.project_vector_layer?.url}
+              disabled={!userMayEdit}
+              type="text"
+            />
+            <TextField
+              name="type_name"
+              label="Type Name"
+              value={row.type_name}
+              onBlur={onBlur}
+              error={errors?.project_vector_layer?.type_name}
+              disabled={!userMayEdit}
+              type="text"
+            />
+            <TextField
+              name="wfs_version"
+              label="WFS Version (z.B. 2.0.0)"
+              value={row.wfs_version}
+              onBlur={onBlur}
+              error={errors?.project_vector_layer?.wfs_version}
+              disabled={!userMayEdit}
+              type="text"
+            />
+            <TextField
+              name="output_format"
+              label="Format (GeoJSON wählen)"
+              value={row.output_format}
+              onBlur={onBlur}
+              error={errors?.project_vector_layer?.output_format}
+              disabled={!userMayEdit}
+              type="text"
+            />
+            <Download row={row} />
+          </>
+        )}
         <LayerStyle userMayEdit={userMayEdit} />
       </FieldsContainer>
     </ErrorBoundary>
