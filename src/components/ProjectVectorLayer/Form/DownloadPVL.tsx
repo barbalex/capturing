@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useCallback, useRef } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
-import isEqual from 'lodash/isEqual'
 import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 import Button from '@mui/material/Button'
+import axios from 'redaxios'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import { dexie, ProjectVectorLayer, PVLGeom } from '../../../dexieClient'
@@ -52,9 +52,29 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
       ? 'WFS-Features erneut herunterladen (um sie zu aktualisieren)'
       : 'WFS-Features für Offline-Nutzung herunterladen'
 
-  const onClickDownload = useCallback(() => {
+  const onClickDownload = useCallback(async () => {
     // TODO:
-  }, [])
+    let res
+    try {
+      res = await axios({
+        method: 'get',
+        url: row.url,
+        params: {
+          service: 'WFS',
+          version: row.wfs_version,
+          request: 'GetFeature',
+          typeName: row.type_name,
+          srsName: 'EPSG:4326',
+          outputFormat: row.output_format,
+        },
+      })
+    } catch (error) {
+      setError(error.data)
+      return false
+    }
+    // TODO: load into dexie
+    console.log('data:', res.data)
+  }, [row])
 
   return (
     <ErrorBoundary>
