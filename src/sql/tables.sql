@@ -1081,6 +1081,13 @@ ALTER publication supabase_realtime
 
 --
 --
+
+
+CREATE TYPE vector_layer_type_enum AS enum (
+  'wfs',
+  'upload'
+);
+
 DROP TABLE IF EXISTS project_vector_layers CASCADE;
 
 CREATE TABLE project_vector_layers (
@@ -1089,6 +1096,7 @@ CREATE TABLE project_vector_layers (
   sort smallint DEFAULT 0,
   active integer DEFAULT 0,
   project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  type vector_layer_type_enum default 'wfs',
   url text DEFAULT NULL, -- WFS url, for example https://maps.zh.ch/wfs/OGDZHWFS
   max_zoom decimal DEFAULT 19,
   min_zoom decimal DEFAULT 0,
@@ -1101,6 +1109,8 @@ CREATE TABLE project_vector_layers (
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
 );
+
+alter table project_vector_layers add column type vector_layer_type_enum default 'wfs';
 
 CREATE INDEX ON project_vector_layers USING btree (id);
 

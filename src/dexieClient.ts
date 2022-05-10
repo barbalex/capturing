@@ -559,12 +559,17 @@ export class ProjectTileLayer implements IProjectTileLayer {
   }
 }
 
+export enum VectorLayerTypeEnum {
+  wfs = 'wfs',
+  upload = 'upload',
+}
 export interface IProjectVectorLayer {
   id: string
   label?: string
   sort?: number
   active?: number
   project_id?: string
+  type: VectorLayerTypeEnum
   url?: string
   max_zoom?: number
   min_zoom?: number
@@ -588,6 +593,7 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
   sort?: number
   active?: number
   project_id?: string
+  type: VectorLayerTypeEnum
   url?: string
   max_zoom?: number
   min_zoom?: number
@@ -606,6 +612,7 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     sort?: number,
     active?: number,
     project_id?: string,
+    type: VectorLayerTypeEnum,
     url?: string,
     max_zoom?: number,
     min_zoom?: number,
@@ -623,6 +630,7 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     if (sort !== undefined) this.sort = sort
     this.active ?? 1
     if (project_id) this.project_id = project_id
+    this.type = type ?? 'wfs'
     if (url) this.url = url
     if (max_zoom !== undefined) this.max_zoom = max_zoom
     if (min_zoom !== undefined) this.min_zoom = min_zoom
@@ -1500,7 +1508,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(33).stores({
+    this.version(34).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:

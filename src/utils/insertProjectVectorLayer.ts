@@ -11,6 +11,7 @@ const insertProjectVectorLayer = async ({ projectId }: Props) => {
     0,
     0,
     projectId,
+    'wfs',
     undefined,
     19,
     0,
