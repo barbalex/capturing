@@ -1,6 +1,5 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
-import styled from 'styled-components'
 import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
@@ -10,6 +9,7 @@ import axios from 'redaxios'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import { dexie, ProjectVectorLayer, PVLGeom } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
+import { time } from 'console'
 
 type Props = {
   row: ProjectVectorLayer
@@ -21,7 +21,9 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
 
   const session: Session = supabase.auth.session()
 
-  // TODO: fetch pvl_geoms to see if data exists
+  const [actionTitle, setActionTitle] = useState()
+
+  // fetch pvl_geoms to see if data exists
   const data = useLiveQuery(async () => {
     const [pvlGeomsCount, projectUser] = await Promise.all([
       dexie.pvl_geoms
@@ -47,11 +49,15 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
   const userMayEdit: boolean = data?.userMayEdit
   const pvlGeomsCount: number = data?.pvlGeomsCount
 
-  const title = pvlGeomsCount
+  const title = actionTitle
+    ? actionTitle
+    : pvlGeomsCount
     ? 'WFS-Features erneut herunterladen (wenn sie aktualisiert werden sollen)'
     : 'WFS-Features für Offline-Nutzung herunterladen'
 
+  const timeoutRef = useRef()
   const onClickDownload = useCallback(async () => {
+    setActionTitle('WFS-Features werden heruntergeladen...')
     // 1. empty this pvl's geoms
     if (pvlGeomsCount) {
       // empty geoms
@@ -76,12 +82,10 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
       })
     } catch (error) {
       setError(error.data)
+      setActionTitle(undefined)
       return false
     }
-    // TODO: load into dexie
-    console.log('data:', res.data)
     const features = res.data?.features
-    console.log('features:', features)
     // 3. build PVLGeoms
     const pvlGeoms = features.map(
       (feature) =>
@@ -92,9 +96,10 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
           feature.properties,
         ),
     )
-    console.log('pvlGeoms:', pvlGeoms)
     // 4. add to dexie
     await dexie.pvl_geoms.bulkPut(pvlGeoms)
+    setActionTitle('WFS-Features wurden heruntergeladen')
+    timeoutRef.current = setTimeout(() => setActionTitle(undefined), 30000)
   }, [
     projectVectorLayerId,
     pvlGeomsCount,
@@ -103,6 +108,11 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
     row.url,
     row.wfs_version,
   ])
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
 
   return (
     <ErrorBoundary>
