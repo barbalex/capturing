@@ -31,6 +31,8 @@ const customTheme = {
   attributeValueColor: '#2ECC40',
 }
 
+const bboxBuffer = 0.001
+
 type Props = {
   layer: VectorLayerType
 }
@@ -39,7 +41,11 @@ const VectorLayerComponent = ({ layer }: Props) => {
   const [data, setData] = useState()
 
   const map = useMapEvent('zoomend', () => setZoom(map.getZoom()))
+  useMapEvent('moveend', () => setBounds(map.getBounds()))
   const [zoom, setZoom] = useState(map.getZoom())
+  const [bounds, setBounds] = useState(map.getBounds())
+
+  console.log('bounds:', bounds)
 
   /**
    * TODO:
@@ -49,15 +55,32 @@ const VectorLayerComponent = ({ layer }: Props) => {
     const run = async () => {
       // TODO: filter only in bbox
       const pvlGeoms: PVLGeom[] = await dexie.pvl_geoms
-        .where({ deleted: 0, pvl_id: layer.id })
+        .where({
+          deleted: 0,
+          pvl_id: layer.id,
+        })
+        // .toArray()
+        .filter((g) => {
+          return (
+            bounds._southWest.lng < g.bbox_sw_lng + bboxBuffer &&
+            bounds._southWest.lat < g.bbox_sw_lat + bboxBuffer &&
+            bounds._northEast.lng + bboxBuffer > g.bbox_ne_lng &&
+            bounds._northEast.lat + bboxBuffer > g.bbox_ne_lat
+          )
+        })
         .toArray()
+      console.log(
+        `Fetching data for '${layer.label}' from pvl_geom. pvlGeomsCount:`,
+        pvlGeoms.length,
+      )
       if (pvlGeoms.length) {
-        console.log('VectorLayer setting data from pvl_geom')
+        console.log(`Fetching data for '${layer.label}' from pvl_geom`)
         const data = pvlGeoms.map((pvlGeom) => pvlGeom.geometry)
         setData(data)
         return
       }
 
+      console.log(`Fetching data for '${layer.label}' from wfs`)
       let res
       try {
         res = await axios({
@@ -79,7 +102,13 @@ const VectorLayerComponent = ({ layer }: Props) => {
       setData(res.data)
     }
     run()
-  }, [layer])
+  }, [
+    bounds._northEast.lat,
+    bounds._northEast.lng,
+    bounds._southWest.lat,
+    bounds._southWest.lng,
+    layer,
+  ])
 
   const layerStyle: LayerStyle = useLiveQuery(
     async () =>
