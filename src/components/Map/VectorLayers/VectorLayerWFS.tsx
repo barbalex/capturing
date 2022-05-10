@@ -9,13 +9,11 @@ import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import { MdClose } from 'react-icons/md'
 import { useLiveQuery } from 'dexie-react-hooks'
-// import { useParams } from 'react-router-dom'
 
 import {
   dexie,
   LayerStyle,
   VectorLayer as VectorLayerType,
-  PVLGeom,
 } from '../../../dexieClient'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 
@@ -31,56 +29,18 @@ const customTheme = {
   attributeValueColor: '#2ECC40',
 }
 
-const bboxBuffer = 0.001
-
 type Props = {
   layer: VectorLayerType
 }
 const VectorLayerComponent = ({ layer }: Props) => {
   const [error, setError] = useState()
-  const [data, setData] = useState()
 
   const map = useMapEvent('zoomend', () => setZoom(map.getZoom()))
-  useMapEvent('moveend', () => setBounds(map.getBounds()))
   const [zoom, setZoom] = useState(map.getZoom())
-  const [bounds, setBounds] = useState(map.getBounds())
 
-  console.log('bounds:', bounds)
-
-  /**
-   * TODO:
-   * if offline/exists?, load from pvl_geoms
-   */
+  const [data, setData] = useState()
   useEffect(() => {
     const run = async () => {
-      // TODO: filter only in bbox
-      const pvlGeoms: PVLGeom[] = await dexie.pvl_geoms
-        .where({
-          deleted: 0,
-          pvl_id: layer.id,
-        })
-        // .toArray()
-        .filter((g) => {
-          return (
-            bounds._southWest.lng < g.bbox_sw_lng + bboxBuffer &&
-            bounds._southWest.lat < g.bbox_sw_lat + bboxBuffer &&
-            bounds._northEast.lng + bboxBuffer > g.bbox_ne_lng &&
-            bounds._northEast.lat + bboxBuffer > g.bbox_ne_lat
-          )
-        })
-        .toArray()
-      console.log(
-        `Fetching data for '${layer.label}' from pvl_geom. pvlGeomsCount:`,
-        pvlGeoms.length,
-      )
-      if (pvlGeoms.length) {
-        console.log(`Fetching data for '${layer.label}' from pvl_geom`)
-        const data = pvlGeoms.map((pvlGeom) => pvlGeom.geometry)
-        setData(data)
-        return
-      }
-
-      console.log(`Fetching data for '${layer.label}' from wfs`)
       let res
       try {
         res = await axios({
@@ -102,13 +62,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
       setData(res.data)
     }
     run()
-  }, [
-    bounds._northEast.lat,
-    bounds._northEast.lng,
-    bounds._southWest.lat,
-    bounds._southWest.lng,
-    layer,
-  ])
+  }, [layer.output_format, layer.type_name, layer.url, layer.wfs_version])
 
   const layerStyle: LayerStyle = useLiveQuery(
     async () =>

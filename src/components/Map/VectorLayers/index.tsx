@@ -5,7 +5,7 @@ import {
   dexie,
   ProjectVectorLayer as VectorLayerType,
 } from '../../../dexieClient'
-import VectorLayer from './VectorLayer'
+import VectorLayerChooser from './VectorLayerChooser'
 
 const VectorLayers = () => {
   const { projectId } = useParams()
@@ -44,7 +44,9 @@ const VectorLayers = () => {
       output_format: layer.output_format,
     }
 
-    return <VectorLayer key={JSON.stringify(partsToRedrawOn)} layer={layer} />
+    return (
+      <VectorLayerChooser key={JSON.stringify(partsToRedrawOn)} layer={layer} />
+    )
   })
 }
 
