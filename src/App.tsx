@@ -36,6 +36,19 @@ import FieldComponent from './components/Field'
 import RowsComponent from './components/Rows'
 import RowComponent from './components/Row'
 
+// trying to persist indexedDB
+// https://dexie.org/docs/StorageManager#controlling-persistence
+// TODO: consider calling this only if user choose it in settings
+// or pop own window to explain as shown in above link
+// because it pops a request window
+async function persist() {
+  return (
+    (await navigator.storage) &&
+    navigator.storage.persist &&
+    navigator.storage.persist()
+  )
+}
+
 function App() {
   const [store, setStore] = useState()
   useEffect(() => {
@@ -69,6 +82,10 @@ function App() {
       supabase.removeAllSubscriptions()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    persist().then((val) => console.log('storage is persisted safely:', val))
   }, [])
   // console.log('App rendering, store:', store)
 
