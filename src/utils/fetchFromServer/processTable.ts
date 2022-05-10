@@ -103,6 +103,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
             .where({ deleted: 0, pvl_id: d.id })
             .count()
           if (count === 0) {
+            // no geometries have been downloaded yet
             // 1. download
             let res
             try {
