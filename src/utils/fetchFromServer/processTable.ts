@@ -1,5 +1,7 @@
+import axios from 'redaxios'
+
 import { supabase } from '../../supabaseClient'
-import { dexie, File } from '../../dexieClient'
+import { dexie, File, PVLGeom } from '../../dexieClient'
 import hex2buf from '../hex2buf'
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
@@ -86,13 +88,56 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
       }
     }
     /**
-     * TODO:
      * 4.3 if:
      * - project_vector_layers
      * - and: type 'wfs'
      * - and: no pvl_geoms yet
      * download the data from the wfs service and populate dexie!
+     * Reason: wfs data itself is not synced via the server,
+     * Only it's layer data. Reduce storage!
      */
+    if (tableName === 'project_vector_layers') {
+      for (const d of data) {
+        if (d.type === 'wfs') {
+          const count = await dexie.pvl_geoms
+            .where({ deleted: 0, pvl_id: d.id })
+            .count()
+          if (count === 0) {
+            // 1. download
+            let res
+            try {
+              res = await axios({
+                method: 'get',
+                url: d.url,
+                params: {
+                  service: 'WFS',
+                  version: d.wfs_version,
+                  request: 'GetFeature',
+                  typeName: d.type_name,
+                  srsName: 'EPSG:4326',
+                  outputFormat: d.output_format,
+                },
+              })
+            } catch (error) {
+              return
+            }
+            const features = res.data?.features
+            // 2. build PVLGeoms
+            const pvlGeoms = features.map(
+              (feature) =>
+                new PVLGeom(
+                  undefined,
+                  d.id,
+                  feature.geometry,
+                  feature.properties,
+                ),
+            )
+            // 3. add to dexie
+            await dexie.pvl_geoms.bulkPut(pvlGeoms)
+          }
+        }
+      }
+    }
   }
 }
 

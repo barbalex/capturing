@@ -9,7 +9,6 @@ import axios from 'redaxios'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import { dexie, ProjectVectorLayer, PVLGeom } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
-import { time } from 'console'
 
 type Props = {
   row: ProjectVectorLayer
@@ -59,12 +58,9 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
   const onClickDownload = useCallback(async () => {
     setActionTitle('WFS-Features werden heruntergeladen...')
     // 1. empty this pvl's geoms
-    if (pvlGeomsCount) {
-      // empty geoms
-      await dexie.pvl_geoms
-        .where({ deleted: 0, pvl_id: projectVectorLayerId })
-        .delete()
-    }
+    await dexie.pvl_geoms
+      .where({ deleted: 0, pvl_id: projectVectorLayerId })
+      .delete()
     // 2. fetch features
     let res
     try {
@@ -102,7 +98,6 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
     timeoutRef.current = setTimeout(() => setActionTitle(undefined), 30000)
   }, [
     projectVectorLayerId,
-    pvlGeomsCount,
     row.output_format,
     row.type_name,
     row.url,
