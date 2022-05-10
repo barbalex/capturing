@@ -21,7 +21,7 @@ import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
 import LayerStyle from '../../LayerStyle'
-import Download from './Download'
+import DownloadPVL from './DownloadPVL'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -146,14 +146,14 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
   const typeValues = Object.values(VectorLayerTypeEnum).map((v) => {
     const comment =
       v === 'wfs'
-        ? '(ein existierendes Web-Feature-Service wird verwendet)'
+        ? '       ein existierendes Web-Feature-Service verwenden'
         : v === 'upload'
-        ? '(es werden eigene Features importiert)'
+        ? ' eigene Features importieren'
         : ''
 
     return {
       value: v,
-      label: `${v} ${comment}`,
+      label: `${v}: ${comment}`,
     }
   })
 
@@ -252,7 +252,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           name="type"
           value={row.type}
           field="type"
-          label="Typ"
+          label="Typ: Woher kommen die Geometrien?"
           dataSource={typeValues}
           onBlur={onBlur}
           error={errors?.field?.type}
@@ -296,7 +296,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
               disabled={!userMayEdit}
               type="text"
             />
-            <Download row={row} />
+            <DownloadPVL row={row} />
           </>
         )}
         <LayerStyle userMayEdit={userMayEdit} />

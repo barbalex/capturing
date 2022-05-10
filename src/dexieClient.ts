@@ -691,7 +691,7 @@ type PVLGeomUpdateProps = {
 }
 export class PVLGeom implements IPVLGeom {
   id: string
-  pvl_id?: string
+  pvl_id: string
   geometry?: string
   properties?: string
   bbox_sw_lng?: number

@@ -36,12 +36,13 @@ const VectorLayerComponent = ({ layer }: Props) => {
   const [error, setError] = useState()
   const [data, setData] = useState()
 
-  const map = useMapEvent('zoomend', () => {
-    // console.log('VectorLayerComponent zoomend, zoom:', map.getZoom())
-    setZoom(map.getZoom())
-  })
+  const map = useMapEvent('zoomend', () => setZoom(map.getZoom()))
   const [zoom, setZoom] = useState(map.getZoom())
 
+  /**
+   * TODO:
+   * if offline, load from pvl_geoms
+   */
   useEffect(() => {
     const run = async () => {
       let res
@@ -56,9 +57,6 @@ const VectorLayerComponent = ({ layer }: Props) => {
             typeName: layer.type_name,
             srsName: 'EPSG:4326',
             outputFormat: layer.output_format,
-            // cql_filter: filterCQL,
-            // filter,
-            // bbox,
           },
         })
       } catch (error) {
