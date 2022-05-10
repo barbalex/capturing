@@ -47,13 +47,15 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
   const userMayEdit: boolean = data?.userMayEdit
   const pvlGeomsCount: number = data?.pvlGeomsCount
 
-  const title =
-    pvlGeomsCount > 0
-      ? 'WFS-Features erneut herunterladen (um sie zu aktualisieren)'
-      : 'WFS-Features für Offline-Nutzung herunterladen'
+  const title = pvlGeomsCount
+    ? 'WFS-Features erneut herunterladen (um sie zu aktualisieren)'
+    : 'WFS-Features für Offline-Nutzung herunterladen'
 
   const onClickDownload = useCallback(async () => {
-    // TODO:
+    // TODO: first empty this pvl's geoms
+    if (pvlGeomsCount) {
+      // empty geoms
+    }
     let res
     try {
       res = await axios({
@@ -74,6 +76,18 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
     }
     // TODO: load into dexie
     console.log('data:', res.data)
+    const features = res.data?.features
+    console.log('features:', features)
+    const pvlGeoms = features.map(
+      (feature) =>
+        new PVLGeom(
+          undefined,
+          projectVectorLayerId,
+          feature.geometry,
+          feature.properties,
+        ),
+    )
+    console.log('pvlGeoms:', pvlGeoms)
   }, [row])
 
   return (

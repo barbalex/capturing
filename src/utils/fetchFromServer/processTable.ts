@@ -7,8 +7,7 @@ const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 const processTable = async ({ table: tableName, store, hiddenError }) => {
   // dexie does not accept 'tables' as a table name > named it ttables
   const tableNameForDexie = tableName === 'tables' ? 'ttables' : tableName
-  // 1. projects
-  // 1.1. get last_updated_at from dexie
+  // 1. get last_updated_at from dexie
   const last = await dexie
     .table(tableNameForDexie)
     .orderBy('server_rev_at')
@@ -16,7 +15,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
     .first()
   // console.log(`ServerSubscriber, last ${tableName} in dexie:`, last)
   const lastUpdatedAt = last?.server_rev_at ?? fallbackRevAt
-  // 1.2. subscribe for changes and update dexie with changes from subscription
+  // 2. subscribe for changes and update dexie with changes from subscription
   // TODO: catch errors
   // TODO: Error 413: Payload Too Large. See: https://github.com/supabase/realtime/issues/252
   supabase
@@ -44,8 +43,8 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
         }
       }
     })
-  // 1.3. fetch all with newer last_updated_at
-  let { data, error: error } = await supabase
+  // 3. fetch all with newer last_updated_at
+  const { data, error: error } = await supabase
     .from(tableName)
     .select('*')
     .gte('server_rev_at', lastUpdatedAt)
@@ -61,14 +60,15 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
       data,
     )
   }
-  // 1.4. update dexie with these changes
+  // 4. update dexie with these changes
   if (data) {
+    // 4.1 update dexie
     try {
       await dexie.table(tableNameForDexie).bulkPut(data)
     } catch (error) {
       console.log(`error putting ${tableName}:`, error)
     }
-    // if files_meta: need to sync files
+    // 4.2 if files_meta: need to sync files
     if (tableName === 'files_meta') {
       for (const d of data) {
         if (d.deleted === 0) {
@@ -85,6 +85,14 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
         }
       }
     }
+    /**
+     * TODO:
+     * 4.3 if:
+     * - project_vector_layers
+     * - and: type 'wfs'
+     * - and: no pvl_geoms yet
+     * download the data from the wfs service and populate dexie!
+     */
   }
 }
 
