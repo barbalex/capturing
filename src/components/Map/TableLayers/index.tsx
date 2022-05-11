@@ -6,7 +6,7 @@ import TableLayer from './TableLayer'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 
 const getStyle = (feature) => ({
-  ...feature.properties,
+  ...(feature.properties?.style ?? {}),
 })
 
 const TableLayers = () => {
@@ -37,15 +37,24 @@ const TableLayers = () => {
         features: rows.map((e) => ({
           geometry: e.geometry,
           type: 'Feature',
-          properties: layerstyleToProperties({
-            layerStyle,
-            extraProps: e.id === rowId ? { color: 'red' } : {},
-          }),
+          properties: {
+            style: layerstyleToProperties({
+              layerStyle,
+              extraProps: e.id === rowId ? { color: 'red' } : {},
+            }),
+          },
         })),
       }
 
       if (rows.length)
-        _layers.push(<TableLayer key={table.id} data={data} style={getStyle} />)
+        _layers.push(
+          <TableLayer
+            key={table.id}
+            data={data}
+            table={table}
+            style={getStyle}
+          />,
+        )
     }
 
     return _layers
