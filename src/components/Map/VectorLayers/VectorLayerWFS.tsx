@@ -9,6 +9,7 @@ import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import { MdClose } from 'react-icons/md'
 import { useLiveQuery } from 'dexie-react-hooks'
+import * as ReactDOMServer from 'react-dom/server'
 
 import {
   dexie,
@@ -16,6 +17,7 @@ import {
   VectorLayer as VectorLayerType,
 } from '../../../dexieClient'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
+import Popup from '../Popup'
 
 const StyledXMLViewer = styled(XMLViewer)`
   font-size: small;
@@ -81,7 +83,13 @@ const VectorLayerComponent = ({ layer }: Props) => {
         key={data ? 1 : 0}
         data={data}
         opacity={layer.opacity}
-        style={layerStyle ? layerstyleToProperties({ layerStyle }) : {}}
+        style={layerstyleToProperties({ layerStyle })}
+        onEachFeature={(feature, _layer) => {
+          const popupContent = ReactDOMServer.renderToString(
+            <Popup feature={feature} label={layer.label} />,
+          )
+          _layer.bindPopup(popupContent)
+        }}
       />
       <Dialog
         onClose={() => setError(null)}

@@ -124,15 +124,14 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
             }
             const features = res.data?.features
             // 2. build PVLGeoms
-            const pvlGeoms = features.map(
-              (feature) =>
-                new PVLGeom(
-                  undefined,
-                  d.id,
-                  feature.geometry,
-                  feature.properties,
-                ),
-            )
+            const pvlGeoms = features.map((feature) => {
+              return new PVLGeom(
+                undefined,
+                d.id,
+                feature.geometry,
+                feature.properties,
+              )
+            })
             // 3. add to dexie
             await dexie.pvl_geoms.bulkPut(pvlGeoms)
           }

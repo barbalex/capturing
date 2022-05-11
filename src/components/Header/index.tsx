@@ -25,6 +25,7 @@ const StyledAppBar = styled(AppBar)`
 `
 const Header = () => {
   const session = supabase.auth.session()
+  // console.log({ session })
 
   return (
     <ErrorBoundary>
