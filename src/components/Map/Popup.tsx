@@ -19,7 +19,7 @@ const Popup = ({ feature, label }) => {
     <>
       <Title>{label}</Title>
       {Object.entries(properties)
-        .filter(([key, value]) => key !== 'style')
+        .filter(([key]) => key !== 'style')
         .map(([key, value]) => (
           <Row key={key}>
             <Label>{`${key}:`}</Label>
