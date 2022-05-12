@@ -15,6 +15,15 @@ const StyledWMSTileLayer = styled(WMSTileLayer)`
 const StyledXMLViewer = styled(XMLViewer)`
   font-size: small;
 `
+const StyledPopupContent = styled.div`
+  white-space: pre;
+`
+const PopupContainer = styled.div`
+  overflow: auto;
+  span {
+    font-size: x-small !important;
+  }
+`
 
 const xmlTheme = {
   attributeKeyColor: '#0074D9',
@@ -61,8 +70,15 @@ const WMS = ({ layer }) => {
     console.log('result from request:', res)
     console.log('data from request:', res.data)
     const popupContent = ReactDOMServer.renderToString(
-      <StyledXMLViewer xml={res.data} theme={xmlTheme} />,
+      <PopupContainer>
+        <StyledXMLViewer xml={res.data} theme={xmlTheme} />
+      </PopupContainer>,
     )
+    // const popupContent = ReactDOMServer.renderToString(
+    //   <PopupContainer>
+    //     <StyledPopupContent>{res.data}</StyledPopupContent>
+    //   </PopupContainer>,
+    // )
 
     const popup = L.popup()
       .setLatLng(e.latlng)
