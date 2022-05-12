@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { useMap, WMSTileLayer } from 'react-leaflet'
 import styled from 'styled-components'
 import { useMapEvent } from 'react-leaflet'
@@ -15,15 +14,11 @@ const StyledWMSTileLayer = styled(WMSTileLayer)`
 const WMS = ({ layer }) => {
   const map = useMap()
 
-  console.log('WMS, layer:', layer)
-
   useMapEvent('click', async (e) => {
-    console.log('clicked', e)
     let res
     try {
       const mapSize = map.getSize()
       const bounds = map.getBounds()
-      //const bbox = `${bounds._southWest.lng},${bounds._southWest.lat},${bounds._northEast.lng},${bounds._northEast.lat}`
       const bbox = `${bounds._southWest.lat},${bounds._southWest.lng},${bounds._northEast.lat},${bounds._northEast.lng}`
       const params = {
         service: 'WMS',
@@ -32,6 +27,7 @@ const WMS = ({ layer }) => {
         layers: layer.wms_layers,
         crs: 'EPSG:4326',
         format: layer.wms_format,
+        // TODO: let user choose? How to know?
         info_format: 'application/vnd.ogc.gml',
         // info_format: 'text/plain',
         query_layers: layer.wms_layers,

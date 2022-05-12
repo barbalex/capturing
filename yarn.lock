@@ -3350,6 +3350,7 @@ __metadata:
     vite: 2.9.9
     vite-plugin-pwa: 0.12.0
     vite-plugin-svgr: 2.1.0
+    wms-capabilities: ^0.5.1
   languageName: unknown
   linkType: soft
 
@@ -5468,7 +5469,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:^1.2.0, minimist@npm:^1.2.6":
+"minimist@npm:^1.2.0, minimist@npm:^1.2.5, minimist@npm:^1.2.6":
   version: 1.2.6
   resolution: "minimist@npm:1.2.6"
   checksum: d15428cd1e11eb14e1233bcfb88ae07ed7a147de251441d61158619dfb32c4d7e9061d09cab4825fdee18ecd6fce323228c8c47b5ba7cd20af378ca4048fb3fb
@@ -7627,6 +7628,17 @@ __metadata:
   version: 1.3.2
   resolution: "wkt-parser@npm:1.3.2"
   checksum: 35318a7fb3ef848b9bc9b29fa58d9b9371f8e47354f2a1325cfc9968b1b390334804a963751a5daeaf7d421b735fd85d3fe34d73a44ba2432e1ee5932c87d269
+  languageName: node
+  linkType: hard
+
+"wms-capabilities@npm:^0.5.1":
+  version: 0.5.1
+  resolution: "wms-capabilities@npm:0.5.1"
+  dependencies:
+    minimist: ^1.2.5
+  bin:
+    wmscapabilities: bin/wmscapabilities
+  checksum: f6a2323fa7100e4cb164201c0476a9ad38264061078aac1f835503b3058627ba46f99380cf43f15dc8fad65f0519c9889711e9581d0e4203047fea5ac7d2bed8
   languageName: node
   linkType: hard
 

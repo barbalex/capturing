@@ -26,11 +26,17 @@ const ZhUepWfs = () => {
     console.log('ZhUepWfs zoomend, zoom:', map.getZoom())
     setZoom(map.getZoom())
   })
+  useMapEvent('moveend', () => {
+    console.log('ZhUepWfs moveend')
+    setBounds(map.getBounds())
+  })
   const [error, setError] = useState()
   const [data, setData] = useState()
   const [zoom, setZoom] = useState(map.getZoom())
-  const bounds = map.getBounds()
-  const bbox = `${bounds._northEast.lng},${bounds._northEast.lat},${bounds._southWest.lng},${bounds._southWest.lat}`
+  const [bounds, setBounds] = useState(map.getBounds())
+
+  // const bbox = `${bounds._northEast.lng},${bounds._northEast.lat},${bounds._southWest.lng},${bounds._southWest.lat}`
+  const bbox = `${bounds._southWest.lng},${bounds._southWest.lat},${bounds._northEast.lng},${bounds._northEast.lat}`
 
   const filterOrig = `<Filter><BBOX><PropertyName>ms:ogd-0075_afv_gv_radwege_l</PropertyName><gml:Box srsName='EPSG:4326'><coordinates>${bounds._southWest.lng},${bounds._southWest.lat} ${bounds._northEast.lng},${bounds._northEast.lat}</coordinates></gml:Box></BBOX></Filter>`
 
@@ -69,7 +75,7 @@ const ZhUepWfs = () => {
             outputFormat: 'GEOJSON',
             // cql_filter: filterCQL,
             // filter,
-            // bbox,
+            bbox,
           },
           // dataType: 'jsonp',
         })
@@ -83,18 +89,9 @@ const ZhUepWfs = () => {
       setData(res.data)
     }
     run()
-  }, [zoom])
+  }, [bbox])
 
-  // console.log('ZhUepWfs', {
-  //   data,
-  //   // typeofData: typeof data,
-  //   // dataParsed: typeof data === 'string' ? JSON.parse(data) : data,
-  //   error,
-  //   zoom,
-  //   // bounds,
-  //   // bbox,
-  //   // filter,
-  // })
+  console.log('ZhUepWfs, data:', data)
 
   // TODO: add name of layer to title
   // TODO: get styling from layer_styles

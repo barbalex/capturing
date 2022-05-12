@@ -93,11 +93,11 @@ const MapComponent = () => {
           ref={mapRef}
           attributionControl={false}
         >
+          {/* <ZhUepWfs /> */}
           <LocationMarker />
           <BetterWmsAdder />
           <MapFetcher />
           {!!rowId && <DrawControl />}
-          {/* <ZhUepWfs /> */}
           <TableLayers />
           <VectorLayers key={`${vectorLayerSorter}/vectorLayers`} />
           <TileLayers key={`${tileLayerSorter}/tileLayers`} />
