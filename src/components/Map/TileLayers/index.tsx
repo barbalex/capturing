@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
-import { dexie, ProjectTileLayer as TileLayerType } from '../../../dexieClient'
+import { dexie, ProjectTileLayer as TileLayerType } from '../../../dexieClient' 
 import TileLayer from './TileLayer'
 import OsmColor from '../layers/OsmColor'
 
@@ -42,6 +42,14 @@ const TileLayers = () => {
   //   'Map, TileLayers, validTileLayers:',
   //   validTileLayers.map((t) => t.label),
   // )
+  
+  /**
+   * TODO:
+   * Profit from server combining wms in single image
+   * Find unique wms sources
+   * create leaflet.wms source
+   * then in layer only call source.getLayer
+   */
 
   return validTileLayers.map((layer: TileLayerType) => {
     const partsToRedrawOn = {

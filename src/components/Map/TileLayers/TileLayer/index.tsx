@@ -1,7 +1,9 @@
-import { TileLayer, WMSTileLayer } from 'react-leaflet'
+import { TileLayer, useMap, WMSTileLayer } from 'react-leaflet'
 import styled from 'styled-components'
+import { useMapEvent } from 'react-leaflet'
 
-import { TileLayer as TileLayerType } from '../../../dexieClient'
+import { TileLayer as TileLayerType } from '../../../../dexieClient'
+import WMS from './LeafletWms'
 
 const StyledTileLayer = styled(TileLayer)`
   ${(props) =>
@@ -22,6 +24,9 @@ type Props = {
   layer: TileLayerType
 }
 const TileLayerComponent = ({ layer }: Props) => {
+  useMapEvent('click', (e) => {
+    console.log('clicked', e)
+  })
   if (layer.type === 'url_template') {
     return (
       <StyledTileLayer
@@ -35,6 +40,7 @@ const TileLayerComponent = ({ layer }: Props) => {
     )
   } else {
     return (
+      // <WMS layer={layer} />
       <StyledWMSTileLayer
         url={layer.wms_base_url}
         layers={layer.wms_layers}
