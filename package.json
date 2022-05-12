@@ -29,7 +29,6 @@
     "is-uuid": "1.0.2",
     "leaflet": "1.8.0",
     "leaflet-draw": "1.0.4",
-    "leaflet.wms": "^0.2.0",
     "lexical": "0.2.9",
     "localforage": "1.10.0",
     "lodash": "4.17.21",
