@@ -1,4 +1,10 @@
 // https://davidwalsh.name/convert-xml-json
+/**
+ * Getting xml
+ * Extracting an array of:
+ * - layer title
+ * - properties
+ */
 const xmlToJson = (xml) => {
   // Create the return object
   let obj = {}
@@ -35,25 +41,37 @@ const xmlToJson = (xml) => {
       }
     }
   }
+
+  return obj
+}
+
+const jsonToLayerData = (xml) => {
+  const obj = xmlToJson(xml)
   // extract layers
   const output = obj?.HTML?.BODY?.MSGMLOUTPUT
   const layers = Object.entries(output ?? {})
     .filter(([key]) => key.toLowerCase().includes('_layer'))
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .map(([key, value]) => value)
 
-  const layersDataKeyValueArray = layers.map((l) => {
-    const title = l['GML:NAME']?.['#text']
-    const propsValue = Object.entries(l ?? {})
+  const layersData = layers.map((l) => {
+    const label = l['GML:NAME']?.['#text']
+
+    const propsObject = Object.entries(l ?? {})
       .filter(([key]) => key.toLowerCase().includes('_feature'))
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .map(([key, value]) => value)?.[0]
-    if (propsValue?.['#text']) delete propsValue['#text']
-    const props = Object.entries(propsValue)
+
+    if (propsObject?.['#text']) delete propsObject['#text']
+    const properties = Object.entries(propsObject)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .filter(([key, value]) => !key.includes(':'))
       .map(([key, value]) => [key, value?.['#text']])
-    return [title, props]
+
+    return { label, properties }
   })
-  console.log('xmlToJson, layersDataKeyValueArray:', layersDataKeyValueArray)
-  return obj
+
+  return layersData
 }
 
-export default xmlToJson
+export default jsonToLayerData

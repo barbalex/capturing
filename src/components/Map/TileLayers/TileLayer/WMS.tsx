@@ -5,7 +5,7 @@ import axios from 'redaxios'
 import XMLViewer from 'react-xml-viewer'
 import * as ReactDOMServer from 'react-dom/server'
 
-import xmlToJson from '../../../../utils/xmlToJson'
+import xmlToLayersData from '../../../../utils/xmlToLayersData'
 
 const StyledWMSTileLayer = styled(WMSTileLayer)`
   ${(props) =>
@@ -83,8 +83,8 @@ const WMS = ({ layer }) => {
     // )
     const parser = new window.DOMParser()
     console.log(
-      'json:',
-      xmlToJson(parser.parseFromString(res.data, 'text/html')),
+      'layersData:',
+      xmlToLayersData(parser.parseFromString(res.data, 'text/html')),
     )
 
     const popup = L.popup()
