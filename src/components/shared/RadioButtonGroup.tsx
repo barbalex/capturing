@@ -111,42 +111,46 @@ const RadioButtonGroup = ({
       : ''
 
   return (
-    <StyledFormControl
-      component="fieldset"
-      error={!!error}
-      aria-describedby={`${label}ErrorText`}
-      variant="standard"
-    >
-      <StyledFormLabel component="legend" labelsize={labelSize}>
-        {label}
-      </StyledFormLabel>
-      <RadioGroup
-        aria-label={label}
-        value={valueSelected}
-        onChange={onChangeGroup}
+    <div>
+      <StyledFormControl
+        component="fieldset"
+        error={!!error}
+        aria-describedby={`${label}ErrorText`}
+        variant="standard"
       >
-        {dataSource.length ? (
-          dataSource.map((e, index) => (
-            <StyledControlLabel
-              key={index}
-              value={toStringIfPossible(e.value)}
-              control={<StyledRadio color="primary" />}
-              label={e.label}
-              labelsize={labelSize}
-              onClick={onClickButton}
-            />
-          ))
-        ) : (
-          <NoDataMessage>{noDataMessage}</NoDataMessage>
+        <StyledFormLabel component="legend" labelsize={labelSize}>
+          {label}
+        </StyledFormLabel>
+        <RadioGroup
+          aria-label={label}
+          value={valueSelected}
+          onChange={onChangeGroup}
+        >
+          {dataSource.length ? (
+            dataSource.map((e, index) => (
+              <StyledControlLabel
+                key={index}
+                value={toStringIfPossible(e.value)}
+                control={<StyledRadio color="primary" />}
+                label={e.label}
+                labelsize={labelSize}
+                onClick={onClickButton}
+              />
+            ))
+          ) : (
+            <NoDataMessage>{noDataMessage}</NoDataMessage>
+          )}
+        </RadioGroup>
+        {!!error && (
+          <FormHelperText id={`${label}ErrorText`}>{error}</FormHelperText>
         )}
-      </RadioGroup>
-      {!!error && (
-        <FormHelperText id={`${label}ErrorText`}>{error}</FormHelperText>
-      )}
-      {!!helperText && (
-        <FormHelperText id={`${label}HelperText`}>{helperText}</FormHelperText>
-      )}
-    </StyledFormControl>
+        {!!helperText && (
+          <FormHelperText id={`${label}HelperText`}>
+            {helperText}
+          </FormHelperText>
+        )}
+      </StyledFormControl>
+    </div>
   )
 }
 
