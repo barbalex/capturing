@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useCallback, useRef } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useCallback,
+  useRef,
+  useState,
+} from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
@@ -154,11 +160,36 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     [filter, row, showFilter],
   )
 
+  const [wmsFormatValues, setWmsFormatValues] = useState()
   const onClickFetchCapabilities = useCallback(async () => {
     const capabilities = await fetchWmsGetCapabilities(row?.wms_base_url)
     console.log('ProjectTileLayerForm, capabilities:', capabilities)
     onBlur({ target: { name: 'wms_version', value: capabilities.version } })
-  }, [row?.wms_base_url])
+    setWmsFormatValues(
+      capabilities?.Capability?.Request?.GetMap?.Format.filter((v) =>
+        v.toLowerCase().includes('image'),
+      ).map((v) => ({
+        label: v,
+        value: v,
+      })),
+    )
+    // TODO: set label with title?
+    onBlur({ target: { name: 'label', value: capabilities?.Service?.Title } })
+    // TODO: let user choose from layers
+    // capabilities.Capability?.Layer?.Layer
+    // filter only layers with crs EPSG:4326
+    // build tool to choose what layers. RadioButtonGroup?
+
+    // TODO: fetch legends from
+    // Array: capabilities.Capability?.Layer?.Layer[this]?.Style?.LegendURL (filter image)
+    // Then read OnlineResource
+
+    // use capabilities.Capability?.Layer?.Layer[this]?.queryable to allow/disallow getting feature info?
+
+    // TODO: use capabilities.Capability?.Request?.GetFeatureInfo?.Format
+    // to set queryable and query_format
+  }, [onBlur, row?.wms_base_url])
+  console.log({ wmsFormatValues })
 
   // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
@@ -323,15 +354,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               multiLine
               type="text"
             />
-            {/* <TextField
-              name="wms_parameters"
-              label="Zusätzliche Parameter (Schreibweise für URL-Query). Noch nicht implementiert"
-              value={row.wms_parameters}
-              onBlur={onBlur}
-              error={errors?.project_tile_layer?.wms_parameters}
-              disabled={!userMayEdit}
-              type="text"
-            /> */}
             <RadioButtonGroup
               value={row.wms_version}
               name="wms_version"
