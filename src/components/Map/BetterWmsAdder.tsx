@@ -3,8 +3,6 @@ import { useMap } from 'react-leaflet'
 import 'leaflet'
 import axios from 'redaxios'
 
-import storeContext from '../../storeContext'
-
 const BetterWmsAdder = () => {
   const map = useMap()
 
@@ -25,7 +23,7 @@ const BetterWmsAdder = () => {
           map.off('click', this.getFeatureInfo, this)
         },
 
-        getFeatureInfo: function (evt) {
+        getFeatureInfo: async function (evt) {
           // Make an AJAX request to the server and hope for the best
           const url = this.getFeatureInfoUrl(evt.latlng),
             showResults = L.Util.bind(this.showGetFeatureInfo, this)
