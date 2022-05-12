@@ -2,6 +2,8 @@ import { useMap, WMSTileLayer } from 'react-leaflet'
 import styled from 'styled-components'
 import { useMapEvent } from 'react-leaflet'
 import axios from 'redaxios'
+import XMLViewer from 'react-xml-viewer'
+import * as ReactDOMServer from 'react-dom/server'
 
 const StyledWMSTileLayer = styled(WMSTileLayer)`
   ${(props) =>
@@ -10,11 +12,20 @@ const StyledWMSTileLayer = styled(WMSTileLayer)`
     filter: grayscale(100%) !important;
   }`}
 `
+const StyledXMLViewer = styled(XMLViewer)`
+  font-size: small;
+`
+
+const xmlTheme = {
+  attributeKeyColor: '#0074D9',
+  attributeValueColor: '#2ECC40',
+}
 
 const WMS = ({ layer }) => {
   const map = useMap()
 
   useMapEvent('click', async (e) => {
+    console.log({ e })
     let res
     try {
       const mapSize = map.getSize()
@@ -49,6 +60,14 @@ const WMS = ({ layer }) => {
     }
     console.log('result from request:', res)
     console.log('data from request:', res.data)
+    const popupContent = ReactDOMServer.renderToString(
+      <StyledXMLViewer xml={res.data} theme={xmlTheme} />,
+    )
+
+    const popup = L.popup()
+      .setLatLng(e.latlng)
+      .setContent(popupContent)
+      .openOn(map)
   })
 
   return (

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { GeoJSON, useMapEvent } from 'react-leaflet'
 import styled from 'styled-components'
 import axios from 'redaxios'
-import XMLViewer from 'react-xml-viewer'
+import XMLViewer from 'react-xml-viewer' 
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -26,7 +26,7 @@ const StyledDialogContent = styled(DialogContent)`
   padding-top: 0;
 `
 
-const customTheme = {
+const xmlTheme = {
   attributeKeyColor: '#0074D9',
   attributeValueColor: '#2ECC40',
 }
@@ -111,7 +111,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
           <MdClose />
         </IconButton>
         <StyledDialogContent>
-          <StyledXMLViewer xml={error} theme={customTheme} />
+          <StyledXMLViewer xml={error} theme={xmlTheme} />
         </StyledDialogContent>
       </Dialog>
     </>
