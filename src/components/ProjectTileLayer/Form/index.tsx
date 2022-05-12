@@ -5,6 +5,7 @@ import isEqual from 'lodash/isEqual'
 import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
+import Button from '@mui/material/Button'
 
 import StoreContext from '../../../storeContext'
 import Checkbox2States from '../../shared/Checkbox2States'
@@ -22,6 +23,7 @@ import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import Legends from './Legends'
+import fetchWmsGetCapabilities from '../../../utils/fetchWmsGetCapabilities'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -152,6 +154,12 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     [filter, row, showFilter],
   )
 
+  const onClickFetchCapabilities = useCallback(async () => {
+    const capabilities = await fetchWmsGetCapabilities(row?.wms_base_url)
+    console.log('ProjectTileLayerForm, capabilities:', capabilities)
+    onBlur({ target: { name: 'wms_version', value: capabilities.version } })
+  }, [row?.wms_base_url])
+
   // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
@@ -272,6 +280,13 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         )}
         {row?.type === 'wms' && (
           <>
+            <Button
+              variant="outlined"
+              onClick={onClickFetchCapabilities}
+              disabled={!userMayEdit && !!row.wms_base_url}
+            >
+              Fetch GetCapabilities
+            </Button>
             <TextField
               name="wms_base_url"
               label="Basis-URL"
