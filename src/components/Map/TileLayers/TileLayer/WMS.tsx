@@ -5,6 +5,8 @@ import axios from 'redaxios'
 import XMLViewer from 'react-xml-viewer'
 import * as ReactDOMServer from 'react-dom/server'
 
+import xmlToJson from '../../../../utils/xmlToJson'
+
 const StyledWMSTileLayer = styled(WMSTileLayer)`
   ${(props) =>
     props.greyscale == 1 &&
@@ -79,6 +81,11 @@ const WMS = ({ layer }) => {
     //     <StyledPopupContent>{res.data}</StyledPopupContent>
     //   </PopupContainer>,
     // )
+    const parser = new window.DOMParser()
+    console.log(
+      'json:',
+      xmlToJson(parser.parseFromString(res.data, 'text/html')),
+    )
 
     const popup = L.popup()
       .setLatLng(e.latlng)
