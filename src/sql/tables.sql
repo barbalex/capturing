@@ -674,6 +674,18 @@ CREATE TYPE fill_rule_enum AS enum (
   'nonzero',
   'evenodd'
 );
+
+
+CREATE TYPE tile_layer_type_enum AS enum (
+  'url_template',
+  'wms'
+);
+
+
+CREATE TYPE wms_version_enum AS enum (
+  '1.1.1',
+  '1.3.0'
+);
 --
 
 --
@@ -1033,15 +1045,6 @@ ALTER publication supabase_realtime
   ADD TABLE news_delivery;
 
 --
-CREATE TYPE wms_version_enum AS enum (
-  '1.1.1',
-  '1.3.0'
-);
-
-CREATE TYPE tile_layer_type_enum AS enum (
-  'url_template',
-  'wms'
-);
 
 --
 DROP TABLE IF EXISTS tile_layers CASCADE;
