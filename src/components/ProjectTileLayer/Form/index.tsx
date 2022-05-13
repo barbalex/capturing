@@ -367,21 +367,24 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
             />
             <CheckboxGroup
               value={row.wms_layers?.split ? row.wms_layers?.split?.(',') : []}
-              label="Layer"
+              label="Layer (gemäss WMS-Server)"
               name="wms_layers"
               options={layerOptions}
               onBlur={onBlur}
             />
-            <TextField
-              name="wms_layers"
-              label="Layer (wenn mehrere: mit Komma trennen. Beispiel: 'layer1,layer2')"
-              value={row.wms_layers}
-              onBlur={onBlur}
-              error={errors?.project_tile_layer?.wms_layers}
-              disabled={!userMayEdit}
-              multiLine
-              type="text"
-            />
+            {layerOptions.length === 0 && (
+              <TextField
+                name="wms_layers"
+                label="Layer (wenn mehrere: mit Komma trennen. Beispiel: 'layer1,layer2')"
+                value={row.wms_layers}
+                onBlur={onBlur}
+                error={errors?.project_tile_layer?.wms_layers}
+                disabled={!userMayEdit}
+                multiLine
+                type="text"
+                helperText="Wenn die Layer vom WMS-Server gelesen werden konnten, ist es einfacher, sie oben direkt zu wählen"
+              />
+            )}
             <TextField
               name="wms_version"
               label="WMS-Version (wird automatisch ausgelesen)"

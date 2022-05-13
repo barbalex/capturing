@@ -4,6 +4,19 @@ import FormControl from '@mui/material/FormControl'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
+import styled from 'styled-components'
+
+const StyledFormControl = styled(FormControl)`
+  padding-bottom: 19px;
+`
+const StyledFormLabel = styled(FormLabel)`
+  padding-top: 10px !important;
+  padding-bottom: 8px !important;
+  font-size: 12px !important;
+  cursor: text;
+  user-select: none;
+  pointer-events: none;
+`
 
 type Option = {
   value: text
@@ -41,24 +54,22 @@ const CheckboxGroup = ({ value, label, name, options = [], onBlur }: Props) => {
   // console.log('CheckboxGroup', { options, value })
 
   return (
-    <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-      <FormLabel component="legend">{label}</FormLabel>
-      <FormGroup>
-        {options.map((o) => (
-          <FormControlLabel
-            key={o.value}
-            control={
-              <Checkbox
-                checked={value.includes(o.value)}
-                onChange={handleChange}
-                name={o.value}
-              />
-            }
-            label={o.label}
-          />
-        ))}
-      </FormGroup>
-    </FormControl>
+    <StyledFormControl component="fieldset" variant="standard">
+      <StyledFormLabel component="legend">{label}</StyledFormLabel>
+      {options.map((o) => (
+        <FormControlLabel
+          key={o.value}
+          control={
+            <Checkbox
+              checked={value.includes(o.value)}
+              onChange={handleChange}
+              name={o.value}
+            />
+          }
+          label={o.label}
+        />
+      ))}
+    </StyledFormControl>
   )
 }
 
