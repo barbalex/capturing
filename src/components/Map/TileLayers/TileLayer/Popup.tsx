@@ -17,19 +17,18 @@ const Label = styled.div`
 `
 
 const WMSPopup = ({ layersData }) => {
+  console.log({ layersData })
   return (
     <>
       {layersData.map((ld) => (
         <>
           <Title>{ld.label}</Title>
-          {Object.entries(ld.properties)
-            .filter(([key]) => key !== 'style')
-            .map(([key, value]) => (
-              <Row key={key}>
-                <Label>{`${key}:`}</Label>
-                <div>{value}</div>
-              </Row>
-            ))}
+          {ld.properties.map((props) => (
+            <Row key={props[0]}>
+              <Label>{`${props[0]}:`}</Label>
+              <div>{props[1]}</div>
+            </Row>
+          ))}
         </>
       ))}
     </>

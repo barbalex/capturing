@@ -63,6 +63,7 @@ const jsonToLayerData = (xml) => {
       .map(([key, value]) => value)?.[0]
 
     if (propsObject?.['#text']) delete propsObject['#text']
+    console.log({ propsObject })
     const properties = Object.entries(propsObject)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .filter(([key, value]) => !key.includes(':'))
