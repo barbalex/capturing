@@ -2,7 +2,6 @@ import { useMap, WMSTileLayer } from 'react-leaflet'
 import styled from 'styled-components'
 import { useMapEvent } from 'react-leaflet'
 import axios from 'redaxios'
-import XMLViewer from 'react-xml-viewer'
 import * as ReactDOMServer from 'react-dom/server'
 
 import xmlToLayersData from '../../../../utils/xmlToLayersData'
@@ -15,23 +14,6 @@ const StyledWMSTileLayer = styled(WMSTileLayer)`
     filter: grayscale(100%) !important;
   }`}
 `
-const StyledXMLViewer = styled(XMLViewer)`
-  font-size: small;
-`
-const StyledPopupContent = styled.div`
-  white-space: pre;
-`
-const PopupContainer = styled.div`
-  overflow: auto;
-  span {
-    font-size: x-small !important;
-  }
-`
-
-const xmlTheme = {
-  attributeKeyColor: '#0074D9',
-  attributeValueColor: '#2ECC40',
-}
 
 const WMS = ({ layer }) => {
   const map = useMap()
