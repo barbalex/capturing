@@ -7,6 +7,9 @@ const Row = styled.div`
 const Title = styled.h4`
   margin-top: 0;
   margin-bottom: 8px;
+  &:not(:first-of-type) {
+    margin-top: 8px;
+  }
 `
 const Label = styled.div`
   color: rgba(0, 0, 0, 0.6);
