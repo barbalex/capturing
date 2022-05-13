@@ -675,19 +675,17 @@ CREATE TYPE fill_rule_enum AS enum (
   'evenodd'
 );
 
-
 CREATE TYPE tile_layer_type_enum AS enum (
   'url_template',
   'wms'
 );
 
-
 CREATE TYPE wms_version_enum AS enum (
   '1.1.1',
   '1.3.0'
 );
---
 
+--
 --
 DROP TABLE IF EXISTS project_tile_layers CASCADE;
 
@@ -729,6 +727,47 @@ ALTER TABLE project_tile_layers ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
   ADD TABLE project_tile_layers;
+
+--
+CREATE TYPE vector_layer_type_enum AS enum (
+  'wfs',
+  'upload'
+);
+
+DROP TABLE IF EXISTS project_vector_layers CASCADE;
+
+CREATE TABLE project_vector_layers (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+  label text DEFAULT NULL,
+  sort smallint DEFAULT 0,
+  active integer DEFAULT 0,
+  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  type vector_layer_type_enum DEFAULT 'wfs',
+  url text DEFAULT NULL, -- WFS url, for example https://maps.zh.ch/wfs/OGDZHWFS
+  max_zoom decimal DEFAULT 19,
+  min_zoom decimal DEFAULT 0,
+  type_name text DEFAULT NULL, -- type name, for example ms:ogd-0119_giszhpub_feuchtgebietinv_79_90_beob_p
+  wfs_version text DEFAULT NULL, -- often: 1.1.0 or 2.0.0
+  output_format text DEFAULT NULL, -- need some form of json. TODO: Convert others?
+  opacity integer DEFAULT 1,
+  client_rev_at timestamp with time zone DEFAULT now(),
+  client_rev_by text DEFAULT NULL,
+  server_rev_at timestamp with time zone DEFAULT now(),
+  deleted integer DEFAULT 0
+);
+
+CREATE INDEX ON project_vector_layers USING btree (id);
+
+CREATE INDEX ON project_vector_layers USING btree (sort);
+
+CREATE INDEX ON project_vector_layers USING btree (deleted);
+
+COMMENT ON TABLE project_vector_layers IS 'Goal: Bring your own tile layers. Either from wfs or importing GeoJSON. Not versioned (not recorded and only added by manager).';
+
+ALTER TABLE project_vector_layers ENABLE ROW LEVEL SECURITY;
+
+ALTER publication supabase_realtime
+  ADD TABLE project_vector_layers;
 
 --
 --
@@ -1045,7 +1084,6 @@ ALTER publication supabase_realtime
   ADD TABLE news_delivery;
 
 --
-
 --
 DROP TABLE IF EXISTS tile_layers CASCADE;
 
@@ -1085,51 +1123,6 @@ ALTER publication supabase_realtime
   ADD TABLE tile_layers;
 
 --
-
-
-CREATE TYPE vector_layer_type_enum AS enum (
-  'wfs',
-  'upload'
-);
-
-DROP TABLE IF EXISTS project_vector_layers CASCADE;
-
-CREATE TABLE project_vector_layers (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  label text DEFAULT NULL,
-  sort smallint DEFAULT 0,
-  active integer DEFAULT 0,
-  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
-  type vector_layer_type_enum default 'wfs',
-  url text DEFAULT NULL, -- WFS url, for example https://maps.zh.ch/wfs/OGDZHWFS
-  max_zoom decimal DEFAULT 19,
-  min_zoom decimal DEFAULT 0,
-  type_name text DEFAULT NULL, -- type name, for example ms:ogd-0119_giszhpub_feuchtgebietinv_79_90_beob_p
-  wfs_version text DEFAULT NULL, -- often: 1.1.0 or 2.0.0
-  output_format text DEFAULT NULL, -- need some form of json. TODO: Convert others?
-  opacity integer DEFAULT 1,
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
-);
-
-alter table project_vector_layers add column type vector_layer_type_enum default 'wfs';
-
-CREATE INDEX ON project_vector_layers USING btree (id);
-
-CREATE INDEX ON project_vector_layers USING btree (sort);
-
-CREATE INDEX ON project_vector_layers USING btree (deleted);
-
-COMMENT ON TABLE project_vector_layers IS 'Goal: Bring your own tile layers. Either from wfs or importing GeoJSON. Not versioned (not recorded and only added by manager).';
-
-ALTER TABLE project_vector_layers ENABLE ROW LEVEL SECURITY;
-
-ALTER publication supabase_realtime
-  ADD TABLE project_vector_layers;
-
---
 -- seperate from project_vector_layers because pvl : pvl_geoms = 1 : n
 -- this way bbox can be used to load only what is in view
 DROP TABLE IF EXISTS pvl_geoms CASCADE;
@@ -1148,7 +1141,6 @@ CREATE TABLE pvl_geoms (
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
 );
-
 
 CREATE INDEX ON pvl_geoms USING btree (id);
 
