@@ -19,7 +19,7 @@ const WMS = ({ layer }) => {
   const map = useMap()
 
   useMapEvent('click', async (e) => {
-    console.log({ e })
+    // console.log({ e })
     let res
     try {
       const mapSize = map.getSize()
@@ -42,7 +42,7 @@ const WMS = ({ layer }) => {
         height: mapSize.y,
         bbox,
       }
-      console.log('will call, params:', params)
+      // console.log('will call, params:', params)
       res = await axios({
         method: 'get',
         url: layer.wms_base_url,

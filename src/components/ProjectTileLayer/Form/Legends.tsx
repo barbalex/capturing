@@ -12,7 +12,7 @@ import Spinner from '../../shared/Spinner'
 import constants from '../../../utils/constants'
 
 const Container = styled.div`
-  margin: 0 -10px 10px -10px;
+  margin: 15px -10px 10px -10px;
 `
 const TitleRow = styled.div`
   background-color: rgba(248, 243, 254, 1);

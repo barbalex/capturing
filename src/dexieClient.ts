@@ -511,20 +511,20 @@ export class ProjectTileLayer implements IProjectTileLayer {
     this.id = id ?? uuidv1()
     if (label) this.label = label
     if (sort !== undefined) this.sort = sort
-    if (active !== undefined) this.active = active
+    this.active = active ?? 1
     if (project_id) this.project_id = project_id
-    this.type = type ?? 'url_template'
+    this.type = type ?? 'wms'
     if (url_template) this.url_template = url_template
     if (subdomains) this.subdomains = subdomains
     if (max_zoom !== undefined) this.max_zoom = max_zoom
     if (min_zoom !== undefined) this.min_zoom = min_zoom
-    if (opacity !== undefined) this.opacity = opacity
+    this.opacity = opacity ?? 1
     if (wms_base_url) this.wms_base_url = wms_base_url
     if (wms_format) this.wms_format = wms_format
     if (wms_layers) this.wms_layers = wms_layers
     if (wms_parameters) this.wms_parameters = wms_parameters
     if (wms_styles) this.wms_styles = wms_styles
-    if (wms_transparent !== undefined) this.wms_transparent = wms_transparent
+    this.wms_transparent = wms_transparent ?? 1
     if (wms_version) this.wms_version = wms_version
     this.greyscale = greyscale ?? 0
     this.client_rev_at = new window.Date().toISOString()

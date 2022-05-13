@@ -216,14 +216,22 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         // capabilities.Capability?.Layer?.Layer
         // filter only layers with crs EPSG:4326
         // build tool to choose what layers. RadioButtonGroup?
-        setLayerOptions(
-          capabilities?.Capability?.Layer?.Layer?.filter((v) => true).map(
-            (v) => ({
-              label: `${v.Name} (${v.Title})`,
-              value: v.Name,
-            }),
-          ),
-        )
+        const layerOptions = capabilities?.Capability?.Layer?.Layer?.filter(
+          (v) => v?.CRS?.includes('EPSG:4326'),
+        ).map((v) => ({
+          label: `${v.Name} (${v.Title})`,
+          value: v.Name,
+        }))
+        setLayerOptions(layerOptions)
+        if (!upToDateRow.wms_layers && layerOptions?.map) {
+          // activate all layers
+          onBlur({
+            target: {
+              name: 'wms_layers',
+              value: layerOptions.map((o) => o.value).join(','),
+            },
+          })
+        }
 
         // TODO: fetch legends from
         // Array: capabilities.Capability?.Layer?.Layer[this]?.Style?.LegendURL (filter image)
@@ -276,6 +284,98 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                 error={errors?.project_tile_layer?.deleted}
                 disabled={!userMayEdit}
               />
+            )}
+          </>
+        )}
+        <RadioButtonGroup
+          value={row.type}
+          name="type"
+          dataSource={tileLayerTypeValues}
+          onBlur={onBlur}
+          label="Typ"
+          error={errors?.project_tile_layer?.type}
+        />
+        {row?.type === 'url_template' && (
+          <TextField
+            name="url_template"
+            label="URL-Vorlage"
+            value={row.url_template}
+            onBlur={onBlur}
+            error={errors?.project_tile_layer?.url_template}
+            disabled={!userMayEdit}
+            type="text"
+          />
+        )}
+        {row?.type === 'wms' && (
+          <>
+            <TextField
+              name="wms_base_url"
+              label="Basis-URL"
+              value={row.wms_base_url}
+              onBlur={onBlur}
+              error={errors?.project_tile_layer?.wms_base_url}
+              disabled={!userMayEdit}
+              type="text"
+            />
+            {!!row?.wms_base_url && (
+              <>
+                <RadioButtonGroup
+                  value={row.wms_format}
+                  name="wms_format"
+                  dataSource={wmsFormatValues}
+                  onBlur={onBlur}
+                  label="(Bild-)Format (welche der WMS-Server anbietet)"
+                  helperText="Empfehlenswert ist 'image/png' (wenn vorhanden), weil es transparenten Hintergrund ermöglicht"
+                  error={errors?.project_tile_layer?.wms_format}
+                />
+                {wmsFormatValues?.length === 0 && (
+                  <TextField
+                    name="wms_format"
+                    label="(Bild-)Format"
+                    value={row.wms_format}
+                    onBlur={onBlur}
+                    error={errors?.project_tile_layer?.wms_format}
+                    disabled={!userMayEdit}
+                    type="text"
+                  />
+                )}
+                <Checkbox2States
+                  label="Transparent (funktioniert nur bei geeigneten Bild-Formaten, v.a. png)"
+                  name="wms_transparent"
+                  value={row.wms_transparent}
+                  onBlur={onBlur}
+                  error={errors?.field?.wms_transparent}
+                  disabled={!userMayEdit}
+                />
+                <CheckboxGroup
+                  value={
+                    row.wms_layers?.split ? row.wms_layers?.split?.(',') : []
+                  }
+                  label="Layer (welche der WMS-Server anbietet)"
+                  name="wms_layers"
+                  options={layerOptions}
+                  onBlur={onBlur}
+                />
+                {layerOptions?.length === 0 && (
+                  <TextField
+                    name="wms_layers"
+                    label="Layer (wenn mehrere: mit Komma trennen. Beispiel: 'layer1,layer2')"
+                    value={row.wms_layers}
+                    onBlur={onBlur}
+                    error={errors?.project_tile_layer?.wms_layers}
+                    disabled={!userMayEdit}
+                    multiLine
+                  />
+                )}
+                <TextField
+                  name="wms_version"
+                  label="WMS-Version (wird automatisch ausgelesen)"
+                  value={row.wms_version}
+                  onBlur={onBlur}
+                  error={errors?.project_tile_layer?.wms_version}
+                  disabled={true}
+                />
+              </>
             )}
           </>
         )}
@@ -339,93 +439,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           error={errors?.field?.greyscale}
           disabled={!userMayEdit}
         />
-        <RadioButtonGroup
-          value={row.type}
-          name="type"
-          dataSource={tileLayerTypeValues}
-          onBlur={onBlur}
-          label="Typ"
-          error={errors?.project_tile_layer?.type}
-        />
-        {row?.type === 'url_template' && (
-          <TextField
-            name="url_template"
-            label="URL-Vorlage"
-            value={row.url_template}
-            onBlur={onBlur}
-            error={errors?.project_tile_layer?.url_template}
-            disabled={!userMayEdit}
-            type="text"
-          />
-        )}
-        {row?.type === 'wms' && (
-          <>
-            <TextField
-              name="wms_base_url"
-              label="Basis-URL"
-              value={row.wms_base_url}
-              onBlur={onBlur}
-              error={errors?.project_tile_layer?.wms_base_url}
-              disabled={!userMayEdit}
-              type="text"
-            />
-            <RadioButtonGroup
-              value={row.wms_format}
-              name="wms_format"
-              dataSource={wmsFormatValues}
-              onBlur={onBlur}
-              label="(Bild-)Format (welche der WMS-Server anbietet)"
-              helperText="Empfehlenswert ist 'image/png' (wenn vorhanden), weil es transparenten Hintergrund ermöglicht"
-              error={errors?.project_tile_layer?.wms_format}
-            />
-            {(true || wmsFormatValues?.length === 0) && (
-              <TextField
-                name="wms_format"
-                label="(Bild-)Format"
-                value={row.wms_format}
-                onBlur={onBlur}
-                error={errors?.project_tile_layer?.wms_format}
-                disabled={!userMayEdit}
-                type="text"
-              />
-            )}
-            <Checkbox2States
-              label="Transparent (funktioniert nur bei geeigneten Bild-Formaten, v.a. png)"
-              name="wms_transparent"
-              value={row.wms_transparent}
-              onBlur={onBlur}
-              error={errors?.field?.wms_transparent}
-              disabled={!userMayEdit}
-            />
-            <CheckboxGroup
-              value={row.wms_layers?.split ? row.wms_layers?.split?.(',') : []}
-              label="Layer (welche der WMS-Server anbietet)"
-              name="wms_layers"
-              options={layerOptions}
-              onBlur={onBlur}
-            />
-            {layerOptions?.length === 0 && (
-              <TextField
-                name="wms_layers"
-                label="Layer (wenn mehrere: mit Komma trennen. Beispiel: 'layer1,layer2')"
-                value={row.wms_layers}
-                onBlur={onBlur}
-                error={errors?.project_tile_layer?.wms_layers}
-                disabled={!userMayEdit}
-                multiLine
-              />
-            )}
-            <TextField
-              name="wms_version"
-              label="WMS-Version (wird automatisch ausgelesen)"
-              value={row.wms_version}
-              onBlur={onBlur}
-              error={errors?.project_tile_layer?.wms_version}
-              disabled={true}
-            />
-            <Legends row={row} />
-          </>
-        )}
+        {!!row?.wms_base_url && <Legends row={row} />}
       </FieldsContainer>
     </ErrorBoundary>
   )

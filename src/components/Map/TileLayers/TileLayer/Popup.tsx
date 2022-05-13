@@ -29,8 +29,8 @@ const WMSPopup = ({ layersData }) => (
     {layersData.map((ld) => (
       <>
         <Title key={ld.label}>{ld.label}</Title>
-        {ld.properties.map(([key, value]) => (
-          <Row key={key}>
+        {ld.properties.map(([key, value], index) => (
+          <Row key={`${key}/${index}`}>
             <Label>{`${key}:`}</Label>
             <Linkify
               componentDecorator={(decoratedHref, decoratedText, key) => (
