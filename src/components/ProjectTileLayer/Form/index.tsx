@@ -164,6 +164,8 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     [filter, row, showFilter],
   )
 
+  const [wmsFormatValues, setWmsFormatValues] = useState()
+  const [layerOptions, setLayerOptions] = useState()
   useEffect(() => {
     const run = async () => {
       if (row?.wms_base_url) {
@@ -215,9 +217,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     run()
   }, [onBlur, row?.wms_base_url, projectTileLayerId])
 
-  const [wmsFormatValues, setWmsFormatValues] = useState()
-  const [layerOptions, setLayerOptions] = useState()
-  console.log({ wmsFormatValues, layerOptions, wms_layers: row?.wms_layers })
+  // console.log({ wmsFormatValues, layerOptions, wms_layers: row?.wms_layers })
 
   // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
@@ -348,17 +348,28 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               disabled={!userMayEdit}
               type="text"
             />
-            <TextField
-              name="wms_format"
-              label="(Bild-)Format"
+            <RadioButtonGroup
               value={row.wms_format}
+              name="wms_format"
+              dataSource={wmsFormatValues}
               onBlur={onBlur}
+              label="(Bild-)Format (welche der WMS-Server anbietet)"
+              helperText="Empfehlenswert ist 'image/png' (wenn vorhanden), weil es transparenten Hintergrund ermöglicht"
               error={errors?.project_tile_layer?.wms_format}
-              disabled={!userMayEdit}
-              type="text"
             />
+            {wmsFormatValues?.length === 0 && (
+              <TextField
+                name="wms_format"
+                label="(Bild-)Format"
+                value={row.wms_format}
+                onBlur={onBlur}
+                error={errors?.project_tile_layer?.wms_format}
+                disabled={!userMayEdit}
+                type="text"
+              />
+            )}
             <Checkbox2States
-              label="Transparent"
+              label="Transparent (funktioniert nur bei geeigneten Bild-Formaten, v.a. png)"
               name="wms_transparent"
               value={row.wms_transparent}
               onBlur={onBlur}
@@ -367,12 +378,12 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
             />
             <CheckboxGroup
               value={row.wms_layers?.split ? row.wms_layers?.split?.(',') : []}
-              label="Layer (gemäss WMS-Server)"
+              label="Layer (welche der WMS-Server anbietet)"
               name="wms_layers"
               options={layerOptions}
               onBlur={onBlur}
             />
-            {layerOptions.length === 0 && (
+            {layerOptions?.length === 0 && (
               <TextField
                 name="wms_layers"
                 label="Layer (wenn mehrere: mit Komma trennen. Beispiel: 'layer1,layer2')"
@@ -381,8 +392,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                 error={errors?.project_tile_layer?.wms_layers}
                 disabled={!userMayEdit}
                 multiLine
-                type="text"
-                helperText="Wenn die Layer vom WMS-Server gelesen werden konnten, ist es einfacher, sie oben direkt zu wählen"
               />
             )}
             <TextField
