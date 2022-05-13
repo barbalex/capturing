@@ -52,13 +52,16 @@ const WMS = ({ layer }) => {
       console.log(error)
       return false
     }
-    console.log('result from request:', res)
-    console.log('data from request:', res.data)
+
     const parser = new window.DOMParser()
     const layersData = xmlToLayersData(
       parser.parseFromString(res.data, 'text/html'),
     )
-    console.log('layersData:', layersData)
+    // console.log('layersData:', layersData)
+
+    // do not open empty popups
+    if (!layersData.length) return
+
     const popupContent = ReactDOMServer.renderToString(
       <WMSPopup layersData={layersData} />,
     )
