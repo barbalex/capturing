@@ -168,7 +168,12 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
   useEffect(() => {
     const run = async () => {
       if (row?.wms_base_url) {
-        const capabilities = await fetchWmsGetCapabilities(row?.wms_base_url)
+        const upToDateRow = await dexie.project_tile_layers.get(
+          projectTileLayerId,
+        )
+        const capabilities = await fetchWmsGetCapabilities(
+          upToDateRow?.wms_base_url,
+        )
         // console.log('ProjectTileLayerForm, capabilities:', capabilities)
         onBlur({ target: { name: 'wms_version', value: capabilities.version } })
         setWmsFormatValues(
@@ -180,9 +185,11 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           })),
         )
         // TODO: set label with title?
-        onBlur({
-          target: { name: 'label', value: capabilities?.Service?.Title },
-        })
+        if (!upToDateRow.label) {
+          onBlur({
+            target: { name: 'label', value: capabilities?.Service?.Title },
+          })
+        }
         // TODO: let user choose from layers
         // capabilities.Capability?.Layer?.Layer
         // filter only layers with crs EPSG:4326
@@ -207,7 +214,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
       }
     }
     run()
-  }, [onBlur, row?.wms_base_url])
+  }, [onBlur, row?.wms_base_url, projectTileLayerId])
 
   const [wmsFormatValues, setWmsFormatValues] = useState()
   const [layerOptions, setLayerOptions] = useState()
@@ -376,13 +383,13 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               multiLine
               type="text"
             />
-            <RadioButtonGroup
-              value={row.wms_version}
+            <TextField
               name="wms_version"
-              dataSource={wmsVersionValues}
+              label="WMS-Version (wird automatisch ausgelesen)"
+              value={row.wms_version}
               onBlur={onBlur}
-              label="WMS-Version"
               error={errors?.project_tile_layer?.wms_version}
+              disabled={true}
             />
             <Legends row={row} />
           </>
