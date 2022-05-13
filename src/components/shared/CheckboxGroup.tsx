@@ -38,21 +38,23 @@ const CheckboxGroup = ({ value, label, name, options = [], onBlur }: Props) => {
     [name, onBlur, value],
   )
 
+  // console.log('CheckboxGroup', { options, value })
+
   return (
     <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
       <FormLabel component="legend">{label}</FormLabel>
       <FormGroup>
-        {options.map((v) => (
+        {options.map((o) => (
           <FormControlLabel
-            key={v.value}
+            key={o.value}
             control={
               <Checkbox
-                checked={value.includes(v.value)}
+                checked={value.includes(o.value)}
                 onChange={handleChange}
-                name={v.value}
+                name={o.value}
               />
             }
-            label={v.label}
+            label={o.label}
           />
         ))}
       </FormGroup>

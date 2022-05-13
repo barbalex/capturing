@@ -149,13 +149,13 @@ const ProjectsPage = () => {
     formResizerWidth = 0
   }
 
-  console.log('Projects', {
-    showTree,
-    showMap,
-    showForm,
-    treePaneSize,
-    formPaneSize,
-  })
+  // console.log('Projects', {
+  //   showTree,
+  //   showMap,
+  //   showForm,
+  //   treePaneSize,
+  //   formPaneSize,
+  // })
 
   return (
     <Container ref={containerEl}>

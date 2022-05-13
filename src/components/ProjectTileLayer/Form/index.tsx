@@ -140,9 +140,10 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
       const { name: field, value, type, valueAsNumber } = event.target
       let newValue = type === 'number' ? valueAsNumber : value
       if ([undefined, '', NaN].includes(newValue)) newValue = null
-      if (type === 'array' && name === 'wms_layers') {
+      if (type === 'array' && field === 'wms_layers') {
         newValue = value.join(',')
       }
+      console.log('ProjectTileLayer Form onBlur', { newValue, type, field })
 
       // return if value has not changed
       const previousValue = rowState.current[field]
@@ -168,7 +169,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
   const [layerOptions, setLayerOptions] = useState()
   const onClickFetchCapabilities = useCallback(async () => {
     const capabilities = await fetchWmsGetCapabilities(row?.wms_base_url)
-    console.log('ProjectTileLayerForm, capabilities:', capabilities)
+    // console.log('ProjectTileLayerForm, capabilities:', capabilities)
     onBlur({ target: { name: 'wms_version', value: capabilities.version } })
     setWmsFormatValues(
       capabilities?.Capability?.Request?.GetMap?.Format.filter((v) =>
@@ -200,7 +201,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     // TODO: use capabilities.Capability?.Request?.GetFeatureInfo?.Format
     // to set queryable and query_format
   }, [onBlur, row?.wms_base_url])
-  console.log({ wmsFormatValues, layerOptions })
+  console.log({ wmsFormatValues, layerOptions, wms_layers: row?.wms_layers })
 
   // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
@@ -356,7 +357,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               disabled={!userMayEdit}
             />
             <CheckboxGroup
-              value={row.wms_layers?.split(',')}
+              value={row.wms_layers?.split ? row.wms_layers?.split?.(',') : []}
               label="Layer"
               name="wms_layers"
               options={layerOptions}
