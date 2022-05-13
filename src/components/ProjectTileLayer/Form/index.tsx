@@ -15,6 +15,7 @@ import Button from '@mui/material/Button'
 
 import StoreContext from '../../../storeContext'
 import Checkbox2States from '../../shared/Checkbox2States'
+import CheckboxGroup from '../../shared/CheckboxGroup'
 import JesNo from '../../shared/JesNo'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import {
@@ -139,6 +140,9 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
       const { name: field, value, type, valueAsNumber } = event.target
       let newValue = type === 'number' ? valueAsNumber : value
       if ([undefined, '', NaN].includes(newValue)) newValue = null
+      if (type === 'array' && name === 'wms_layers') {
+        newValue = value.join(',')
+      }
 
       // return if value has not changed
       const previousValue = rowState.current[field]
@@ -161,6 +165,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
   )
 
   const [wmsFormatValues, setWmsFormatValues] = useState()
+  const [layerOptions, setLayerOptions] = useState()
   const onClickFetchCapabilities = useCallback(async () => {
     const capabilities = await fetchWmsGetCapabilities(row?.wms_base_url)
     console.log('ProjectTileLayerForm, capabilities:', capabilities)
@@ -179,6 +184,12 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     // capabilities.Capability?.Layer?.Layer
     // filter only layers with crs EPSG:4326
     // build tool to choose what layers. RadioButtonGroup?
+    setLayerOptions(
+      capabilities?.Capability?.Layer?.Layer?.filter((v) => true).map((v) => ({
+        label: `${v.Name} (${v.Title})`,
+        value: v.Name,
+      })),
+    )
 
     // TODO: fetch legends from
     // Array: capabilities.Capability?.Layer?.Layer[this]?.Style?.LegendURL (filter image)
@@ -189,7 +200,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     // TODO: use capabilities.Capability?.Request?.GetFeatureInfo?.Format
     // to set queryable and query_format
   }, [onBlur, row?.wms_base_url])
-  console.log({ wmsFormatValues })
+  console.log({ wmsFormatValues, layerOptions })
 
   // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
@@ -343,6 +354,13 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               onBlur={onBlur}
               error={errors?.field?.wms_transparent}
               disabled={!userMayEdit}
+            />
+            <CheckboxGroup
+              value={row.wms_layers?.split(',')}
+              label="Layer"
+              name="wms_layers"
+              options={layerOptions}
+              onBlur={onBlur}
             />
             <TextField
               name="wms_layers"
