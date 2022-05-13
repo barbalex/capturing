@@ -3,6 +3,7 @@ import styled from 'styled-components'
 const Row = styled.div`
   display: grid;
   grid-template-columns: 80px 1fr;
+  font-size: x-small !important;
 `
 const Title = styled.h4`
   margin-top: 0;
