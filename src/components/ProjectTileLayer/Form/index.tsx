@@ -84,10 +84,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
   const row: ProjectTileLayer = data?.row
   const userMayEdit: boolean = data?.userMayEdit
 
-  const wmsVersionValues = Object.values(WmsVersionEnum).map((v) => ({
-    value: v,
-    label: v,
-  }))
   const tileLayerTypeValues = Object.values(TileLayerTypeEnum).map((v) => ({
     value: v,
     label: v,
@@ -142,7 +138,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
       if (type === 'array' && field === 'wms_layers') {
         newValue = value.join(',')
       }
-      console.log('ProjectTileLayer Form onBlur', { newValue, type, field })
+      // console.log('ProjectTileLayer Form onBlur', { newValue, type, field })
 
       // return if value has not changed
       const previousValue = rowState.current[field]
@@ -177,14 +173,27 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         )
         // console.log('ProjectTileLayerForm, capabilities:', capabilities)
         onBlur({ target: { name: 'wms_version', value: capabilities.version } })
-        setWmsFormatValues(
+        const formatValues =
           capabilities?.Capability?.Request?.GetMap?.Format.filter((v) =>
             v.toLowerCase().includes('image'),
           ).map((v) => ({
             label: v,
             value: v,
-          })),
-        )
+          }))
+        setWmsFormatValues(formatValues)
+        // if wms_format is not yet set, set version with png or jpg
+        if (!upToDateRow.wms_format) {
+          const preferedFormat =
+            formatValues.find((v) => v?.toLowerCase().includes('image/png')) ??
+            formatValues.find((v) => v?.toLowerCase().includes('png')) ??
+            formatValues.find((v) => v?.toLowerCase().includes('image/jpeg')) ??
+            formatValues.find((v) => v?.toLowerCase().includes('jpeg'))
+          if (preferedFormat) {
+            onBlur({
+              target: { name: 'wms_format', value: preferedFormat },
+            })
+          }
+        }
         // TODO: set label with title?
         if (!upToDateRow.label) {
           onBlur({
