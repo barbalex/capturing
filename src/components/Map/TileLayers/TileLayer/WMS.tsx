@@ -6,6 +6,7 @@ import XMLViewer from 'react-xml-viewer'
 import * as ReactDOMServer from 'react-dom/server'
 
 import xmlToLayersData from '../../../../utils/xmlToLayersData'
+import WMSPopup from './Popup'
 
 const StyledWMSTileLayer = styled(WMSTileLayer)`
   ${(props) =>
@@ -71,26 +72,21 @@ const WMS = ({ layer }) => {
     }
     console.log('result from request:', res)
     console.log('data from request:', res.data)
+    const parser = new window.DOMParser()
+    const layersData = xmlToLayersData(
+      parser.parseFromString(res.data, 'text/html'),
+    )
+    console.log('layersData:', layersData)
     const popupContent = ReactDOMServer.renderToString(
-      <PopupContainer>
-        <StyledXMLViewer xml={res.data} theme={xmlTheme} />
-      </PopupContainer>,
+      <WMSPopup layersData={layersData} />,
     )
     // const popupContent = ReactDOMServer.renderToString(
     //   <PopupContainer>
     //     <StyledPopupContent>{res.data}</StyledPopupContent>
     //   </PopupContainer>,
     // )
-    const parser = new window.DOMParser()
-    console.log(
-      'layersData:',
-      xmlToLayersData(parser.parseFromString(res.data, 'text/html')),
-    )
 
-    const popup = L.popup()
-      .setLatLng(e.latlng)
-      .setContent(popupContent)
-      .openOn(map)
+    L.popup().setLatLng(e.latlng).setContent(popupContent).openOn(map)
   })
 
   return (
