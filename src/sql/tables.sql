@@ -674,7 +674,51 @@ CREATE TYPE fill_rule_enum AS enum (
   'nonzero',
   'evenodd'
 );
+--
 
+--
+DROP TABLE IF EXISTS project_tile_layers CASCADE;
+
+CREATE TABLE project_tile_layers (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+  label text DEFAULT NULL,
+  sort smallint DEFAULT 0,
+  active integer DEFAULT 0,
+  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  type tile_layer_type_enum DEFAULT 'url_template',
+  url_template text DEFAULT NULL,
+  subdomains text[] DEFAULT NULL,
+  max_zoom decimal DEFAULT 19,
+  min_zoom decimal DEFAULT 0,
+  opacity decimal DEFAULT 1,
+  wms_base_url text DEFAULT NULL,
+  wms_format text DEFAULT NULL,
+  wms_layers text DEFAULT NULL,
+  wms_parameters jsonb DEFAULT NULL,
+  wms_styles text[] DEFAULT NULL,
+  wms_transparent integer DEFAULT 0,
+  wms_version wms_version_enum DEFAULT NULL,
+  greyscale integer DEFAULT 0,
+  client_rev_at timestamp with time zone DEFAULT now(),
+  client_rev_by text DEFAULT NULL,
+  server_rev_at timestamp with time zone DEFAULT now(),
+  deleted integer DEFAULT 0
+);
+
+CREATE INDEX ON project_tile_layers USING btree (id);
+
+CREATE INDEX ON project_tile_layers USING btree (sort);
+
+CREATE INDEX ON project_tile_layers USING btree (deleted);
+
+COMMENT ON TABLE project_tile_layers IS 'Goal: Bring your own tile layers. Not versioned (not recorded and only added by manager).';
+
+ALTER TABLE project_tile_layers ENABLE ROW LEVEL SECURITY;
+
+ALTER publication supabase_realtime
+  ADD TABLE project_tile_layers;
+
+--
 --
 DROP TABLE IF EXISTS layer_styles CASCADE;
 
@@ -1037,49 +1081,6 @@ ALTER TABLE tile_layers ENABLE ROW LEVEL SECURITY;
 ALTER publication supabase_realtime
   ADD TABLE tile_layers;
 
---
-DROP TABLE IF EXISTS project_tile_layers CASCADE;
-
-CREATE TABLE project_tile_layers (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  label text DEFAULT NULL,
-  sort smallint DEFAULT 0,
-  active integer DEFAULT 0,
-  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
-  type tile_layer_type_enum DEFAULT 'url_template',
-  url_template text DEFAULT NULL,
-  subdomains text[] DEFAULT NULL,
-  max_zoom decimal DEFAULT 19,
-  min_zoom decimal DEFAULT 0,
-  opacity decimal DEFAULT 1,
-  wms_base_url text DEFAULT NULL,
-  wms_format text DEFAULT NULL,
-  wms_layers text DEFAULT NULL,
-  wms_parameters jsonb DEFAULT NULL,
-  wms_styles text[] DEFAULT NULL,
-  wms_transparent integer DEFAULT 0,
-  wms_version wms_version_enum DEFAULT NULL,
-  greyscale integer DEFAULT 0,
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
-);
-
-CREATE INDEX ON project_tile_layers USING btree (id);
-
-CREATE INDEX ON project_tile_layers USING btree (sort);
-
-CREATE INDEX ON project_tile_layers USING btree (deleted);
-
-COMMENT ON TABLE project_tile_layers IS 'Goal: Bring your own tile layers. Not versioned (not recorded and only added by manager).';
-
-ALTER TABLE project_tile_layers ENABLE ROW LEVEL SECURITY;
-
-ALTER publication supabase_realtime
-  ADD TABLE project_tile_layers;
-
---
 --
 
 
