@@ -161,6 +161,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
 
   const [wmsFormatValues, setWmsFormatValues] = useState()
   const [layerOptions, setLayerOptions] = useState()
+  const [wmsVersion, setWmsVersion] = useState()
   useEffect(() => {
     const run = async () => {
       if (row?.wms_base_url) {
@@ -171,9 +172,12 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           upToDateRow?.wms_base_url,
         )
         console.log('ProjectTileLayerForm, capabilities:', capabilities)
-        onBlur({
-          target: { name: 'wms_version', value: capabilities?.version },
-        })
+        setWmsVersion(capabilities?.version)
+        if (!upToDateRow.wms_version) {
+          onBlur({
+            target: { name: 'wms_version', value: capabilities?.version },
+          })
+        }
         const formatValues =
           capabilities?.Capability?.Request?.GetMap?.Format.filter((v) =>
             v.toLowerCase().includes('image'),
@@ -367,14 +371,16 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                     multiLine
                   />
                 )}
-                <TextField
-                  name="wms_version"
-                  label="WMS-Version (wird automatisch ausgelesen)"
-                  value={row.wms_version}
-                  onBlur={onBlur}
-                  error={errors?.project_tile_layer?.wms_version}
-                  disabled={true}
-                />
+                {!wmsVersion && (
+                  <TextField
+                    name="wms_version"
+                    label="WMS-Version (wird automatisch ausgelesen)"
+                    value={row.wms_version}
+                    onBlur={onBlur}
+                    error={errors?.project_tile_layer?.wms_version}
+                    disabled={true}
+                  />
+                )}
               </>
             )}
           </>
