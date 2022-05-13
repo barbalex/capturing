@@ -165,42 +165,52 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     [filter, row, showFilter],
   )
 
+  useEffect(() => {
+    const run = async () => {
+      if (row?.wms_base_url) {
+        const capabilities = await fetchWmsGetCapabilities(row?.wms_base_url)
+        // console.log('ProjectTileLayerForm, capabilities:', capabilities)
+        onBlur({ target: { name: 'wms_version', value: capabilities.version } })
+        setWmsFormatValues(
+          capabilities?.Capability?.Request?.GetMap?.Format.filter((v) =>
+            v.toLowerCase().includes('image'),
+          ).map((v) => ({
+            label: v,
+            value: v,
+          })),
+        )
+        // TODO: set label with title?
+        onBlur({
+          target: { name: 'label', value: capabilities?.Service?.Title },
+        })
+        // TODO: let user choose from layers
+        // capabilities.Capability?.Layer?.Layer
+        // filter only layers with crs EPSG:4326
+        // build tool to choose what layers. RadioButtonGroup?
+        setLayerOptions(
+          capabilities?.Capability?.Layer?.Layer?.filter((v) => true).map(
+            (v) => ({
+              label: `${v.Name} (${v.Title})`,
+              value: v.Name,
+            }),
+          ),
+        )
+
+        // TODO: fetch legends from
+        // Array: capabilities.Capability?.Layer?.Layer[this]?.Style?.LegendURL (filter image)
+        // Then read OnlineResource
+
+        // use capabilities.Capability?.Layer?.Layer[this]?.queryable to allow/disallow getting feature info?
+
+        // TODO: use capabilities.Capability?.Request?.GetFeatureInfo?.Format
+        // to set queryable and query_format
+      }
+    }
+    run()
+  }, [onBlur, row?.wms_base_url])
+
   const [wmsFormatValues, setWmsFormatValues] = useState()
   const [layerOptions, setLayerOptions] = useState()
-  const onClickFetchCapabilities = useCallback(async () => {
-    const capabilities = await fetchWmsGetCapabilities(row?.wms_base_url)
-    // console.log('ProjectTileLayerForm, capabilities:', capabilities)
-    onBlur({ target: { name: 'wms_version', value: capabilities.version } })
-    setWmsFormatValues(
-      capabilities?.Capability?.Request?.GetMap?.Format.filter((v) =>
-        v.toLowerCase().includes('image'),
-      ).map((v) => ({
-        label: v,
-        value: v,
-      })),
-    )
-    // TODO: set label with title?
-    onBlur({ target: { name: 'label', value: capabilities?.Service?.Title } })
-    // TODO: let user choose from layers
-    // capabilities.Capability?.Layer?.Layer
-    // filter only layers with crs EPSG:4326
-    // build tool to choose what layers. RadioButtonGroup?
-    setLayerOptions(
-      capabilities?.Capability?.Layer?.Layer?.filter((v) => true).map((v) => ({
-        label: `${v.Name} (${v.Title})`,
-        value: v.Name,
-      })),
-    )
-
-    // TODO: fetch legends from
-    // Array: capabilities.Capability?.Layer?.Layer[this]?.Style?.LegendURL (filter image)
-    // Then read OnlineResource
-
-    // use capabilities.Capability?.Layer?.Layer[this]?.queryable to allow/disallow getting feature info?
-
-    // TODO: use capabilities.Capability?.Request?.GetFeatureInfo?.Format
-    // to set queryable and query_format
-  }, [onBlur, row?.wms_base_url])
   console.log({ wmsFormatValues, layerOptions, wms_layers: row?.wms_layers })
 
   // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
@@ -323,13 +333,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         )}
         {row?.type === 'wms' && (
           <>
-            <Button
-              variant="outlined"
-              onClick={onClickFetchCapabilities}
-              disabled={!userMayEdit && !!row.wms_base_url}
-            >
-              Fetch GetCapabilities
-            </Button>
             <TextField
               name="wms_base_url"
               label="Basis-URL"
