@@ -11,7 +11,6 @@ import isEqual from 'lodash/isEqual'
 import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
-import Button from '@mui/material/Button'
 
 import StoreContext from '../../../storeContext'
 import Checkbox2States from '../../shared/Checkbox2States'
