@@ -9,7 +9,7 @@ const insertProjectTileLayer = async ({ projectId }: Props) => {
     undefined,
     undefined,
     0,
-    0,
+    1, // set it active so user can check if it works
     projectId,
     'url_template',
     undefined,

@@ -19,7 +19,6 @@ import JesNo from '../../shared/JesNo'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import {
   dexie,
-  WmsVersionEnum,
   TileLayerTypeEnum,
   IProjectTileLayer,
   ProjectTileLayer,
@@ -171,8 +170,10 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         const capabilities = await fetchWmsGetCapabilities(
           upToDateRow?.wms_base_url,
         )
-        // console.log('ProjectTileLayerForm, capabilities:', capabilities)
-        onBlur({ target: { name: 'wms_version', value: capabilities.version } })
+        console.log('ProjectTileLayerForm, capabilities:', capabilities)
+        onBlur({
+          target: { name: 'wms_version', value: capabilities?.version },
+        })
         const formatValues =
           capabilities?.Capability?.Request?.GetMap?.Format.filter((v) =>
             v.toLowerCase().includes('image'),
@@ -182,12 +183,23 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           }))
         setWmsFormatValues(formatValues)
         // if wms_format is not yet set, set version with png or jpg
+        console.log('wms_format', upToDateRow.wms_format)
         if (!upToDateRow.wms_format) {
+          const formatValueStrings = formatValues
+            ? formatValues.map((v) => v.value)
+            : []
           const preferedFormat =
-            formatValues.find((v) => v?.toLowerCase().includes('image/png')) ??
-            formatValues.find((v) => v?.toLowerCase().includes('png')) ??
-            formatValues.find((v) => v?.toLowerCase().includes('image/jpeg')) ??
-            formatValues.find((v) => v?.toLowerCase().includes('jpeg'))
+            formatValueStrings.find((v) =>
+              v?.toLowerCase?.().includes('image/png'),
+            ) ??
+            formatValueStrings.find((v) =>
+              v?.toLowerCase?.().includes('png'),
+            ) ??
+            formatValueStrings.find((v) =>
+              v?.toLowerCase?.().includes('image/jpeg'),
+            ) ??
+            formatValueStrings.find((v) => v?.toLowerCase?.().includes('jpeg'))
+          console.log('preferedFormat', { formatValues })
           if (preferedFormat) {
             onBlur({
               target: { name: 'wms_format', value: preferedFormat },
@@ -366,7 +378,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               helperText="Empfehlenswert ist 'image/png' (wenn vorhanden), weil es transparenten Hintergrund ermöglicht"
               error={errors?.project_tile_layer?.wms_format}
             />
-            {wmsFormatValues?.length === 0 && (
+            {(true || wmsFormatValues?.length === 0) && (
               <TextField
                 name="wms_format"
                 label="(Bild-)Format"

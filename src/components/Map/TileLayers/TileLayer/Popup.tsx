@@ -28,7 +28,7 @@ const WMSPopup = ({ layersData }) => (
   <>
     {layersData.map((ld) => (
       <>
-        <Title>{ld.label}</Title>
+        <Title key={ld.label}>{ld.label}</Title>
         {ld.properties.map(([key, value]) => (
           <Row key={key}>
             <Label>{`${key}:`}</Label>
