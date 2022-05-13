@@ -25,7 +25,7 @@ const StyledFormLabel = styled(FormLabel)`
   padding-bottom: 8px !important;
 `
 const StyledRadio = styled(Radio)`
-  height: 2px !important;
+  /* height: 2px !important; */
 `
 const NoDataMessage = styled.div`
   font-size: small;
@@ -37,6 +37,9 @@ const StyledControlLabel = styled(FormControlLabel)`
     font-size: ${(props) => props.labelsize * 1}rem !important;
     white-space: pre-wrap;
   }
+`
+const StyledFormHelperText = styled(FormHelperText)`
+  line-height: 1.3em;
 `
 
 const RadioButtonGroup = ({
@@ -142,12 +145,14 @@ const RadioButtonGroup = ({
           )}
         </RadioGroup>
         {!!error && (
-          <FormHelperText id={`${label}ErrorText`}>{error}</FormHelperText>
+          <StyledFormHelperText id={`${label}ErrorText`}>
+            {error}
+          </StyledFormHelperText>
         )}
         {!!helperText && (
-          <FormHelperText id={`${label}HelperText`}>
+          <StyledFormHelperText id={`${label}HelperText`}>
             {helperText}
-          </FormHelperText>
+          </StyledFormHelperText>
         )}
       </StyledFormControl>
     </div>

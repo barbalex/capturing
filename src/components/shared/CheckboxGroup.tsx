@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 import FormLabel from '@mui/material/FormLabel'
 import FormControl from '@mui/material/FormControl'
-import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 import styled from 'styled-components'
@@ -16,6 +15,11 @@ const StyledFormLabel = styled(FormLabel)`
   cursor: text;
   user-select: none;
   pointer-events: none;
+`
+const StyledFormControlLabel = styled(FormControlLabel)`
+  .MuiFormControlLabel-label {
+    line-height: 1.4;
+  }
 `
 
 type Option = {
@@ -57,13 +61,14 @@ const CheckboxGroup = ({ value, label, name, options = [], onBlur }: Props) => {
     <StyledFormControl component="fieldset" variant="standard">
       <StyledFormLabel component="legend">{label}</StyledFormLabel>
       {options.map((o) => (
-        <FormControlLabel
+        <StyledFormControlLabel
           key={o.value}
           control={
             <Checkbox
               checked={value.includes(o.value)}
               onChange={handleChange}
               name={o.value}
+              dense
             />
           }
           label={o.label}

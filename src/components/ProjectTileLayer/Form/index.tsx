@@ -219,7 +219,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         const layerOptions = capabilities?.Capability?.Layer?.Layer?.filter(
           (v) => v?.CRS?.includes('EPSG:4326'),
         ).map((v) => ({
-          label: `${v.Name} (${v.Title})`,
+          label: v.Title,
           value: v.Name,
         }))
         setLayerOptions(layerOptions)
