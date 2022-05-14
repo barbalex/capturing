@@ -162,6 +162,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
   const [wmsFormatValues, setWmsFormatValues] = useState()
   const [layerOptions, setLayerOptions] = useState()
   const [wmsVersion, setWmsVersion] = useState()
+  const [legendUrls, setLegendUrls] = useState()
   useEffect(() => {
     const run = async () => {
       if (row?.wms_base_url) {
@@ -210,22 +211,21 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
             })
           }
         }
-        // TODO: set label with title?
+        // set title as label if undefined
         if (!upToDateRow.label) {
           onBlur({
             target: { name: 'label', value: capabilities?.Service?.Title },
           })
         }
-        // TODO: let user choose from layers
-        // capabilities.Capability?.Layer?.Layer
+        // let user choose from layers
         // filter only layers with crs EPSG:4326
-        // build tool to choose what layers. RadioButtonGroup?
-        const layerOptions = capabilities?.Capability?.Layer?.Layer?.filter(
-          (v) => v?.CRS?.includes('EPSG:4326'),
-        ).map((v) => ({
-          label: v.Title,
-          value: v.Name,
-        }))
+        const layers = capabilities?.Capability?.Layer?.Layer
+        const layerOptions = layers
+          ?.filter((v) => v?.CRS?.includes('EPSG:4326'))
+          .map((v) => ({
+            label: v.Title,
+            value: v.Name,
+          }))
         setLayerOptions(layerOptions)
         if (!upToDateRow.wms_layers && layerOptions?.map) {
           // activate all layers
@@ -237,9 +237,14 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           })
         }
 
-        // TODO: fetch legends from
-        // Array: capabilities.Capability?.Layer?.Layer[this]?.Style?.LegendURL (filter image)
-        // Then read OnlineResource
+        // fetch legends
+        const lUrls = layers
+          .map((l) => ({
+            title: l.Title,
+            url: l.Style?.[0]?.LegendURL?.[0]?.OnlineResource,
+          }))
+          .filter((u) => !!u.url)
+        setLegendUrls(lUrls)
 
         // use capabilities.Capability?.Layer?.Layer[this]?.queryable to allow/disallow getting feature info?
 
@@ -250,7 +255,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     run()
   }, [onBlur, row?.wms_base_url, projectTileLayerId])
 
-  // console.log({ wmsFormatValues, layerOptions, wms_layers: row?.wms_layers })
+  console.log('ProjectTileLayerForm, legendUrls:', legendUrls)
 
   // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
@@ -445,7 +450,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           error={errors?.field?.greyscale}
           disabled={!userMayEdit}
         />
-        {!!row?.wms_base_url && <Legends row={row} />}
+        {!!legendUrls?.length && <Legends legendUrls={legendUrls} />}
       </FieldsContainer>
     </ErrorBoundary>
   )

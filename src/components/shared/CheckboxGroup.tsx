@@ -70,7 +70,6 @@ const CheckboxGroup = ({ value, label, name, options = [], onBlur }: Props) => {
                 checked={value.includes(o.value)}
                 onChange={handleChange}
                 name={o.value}
-                dense
               />
             }
             label={o.label}
