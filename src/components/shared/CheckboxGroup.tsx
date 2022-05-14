@@ -57,24 +57,27 @@ const CheckboxGroup = ({ value, label, name, options = [], onBlur }: Props) => {
 
   // console.log('CheckboxGroup', { options, value })
 
+  // containing div needed to prevent control from appearing right of previous
   return (
-    <StyledFormControl component="fieldset" variant="standard">
-      <StyledFormLabel component="legend">{label}</StyledFormLabel>
-      {options.map((o) => (
-        <StyledFormControlLabel
-          key={o.value}
-          control={
-            <Checkbox
-              checked={value.includes(o.value)}
-              onChange={handleChange}
-              name={o.value}
-              dense
-            />
-          }
-          label={o.label}
-        />
-      ))}
-    </StyledFormControl>
+    <div>
+      <StyledFormControl component="fieldset" variant="standard">
+        <StyledFormLabel component="legend">{label}</StyledFormLabel>
+        {options.map((o) => (
+          <StyledFormControlLabel
+            key={o.value}
+            control={
+              <Checkbox
+                checked={value.includes(o.value)}
+                onChange={handleChange}
+                name={o.value}
+                dense
+              />
+            }
+            label={o.label}
+          />
+        ))}
+      </StyledFormControl>
+    </div>
   )
 }
 
