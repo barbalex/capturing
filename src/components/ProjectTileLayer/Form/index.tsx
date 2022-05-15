@@ -163,6 +163,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
   const [layerOptions, setLayerOptions] = useState()
   const [wmsVersion, setWmsVersion] = useState()
   const [legendUrls, setLegendUrls] = useState()
+  const [infoFormatValues, setInfoFormatValues] = useState()
   useEffect(() => {
     const run = async () => {
       if (row?.wms_base_url) {
@@ -179,19 +180,19 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
             target: { name: 'wms_version', value: capabilities?.version },
           })
         }
-        const formatValues =
+        const imageFormatValues =
           capabilities?.Capability?.Request?.GetMap?.Format.filter((v) =>
             v.toLowerCase().includes('image'),
           ).map((v) => ({
             label: v,
             value: v,
           }))
-        setWmsFormatValues(formatValues)
+        setWmsFormatValues(imageFormatValues)
         // if wms_format is not yet set, set version with png or jpg
         console.log('wms_format', upToDateRow.wms_format)
         if (!upToDateRow.wms_format) {
-          const formatValueStrings = formatValues
-            ? formatValues.map((v) => v.value)
+          const formatValueStrings = imageFormatValues
+            ? imageFormatValues.map((v) => v.value)
             : []
           const preferedFormat =
             formatValueStrings.find((v) =>
@@ -204,7 +205,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               v?.toLowerCase?.().includes('image/jpeg'),
             ) ??
             formatValueStrings.find((v) => v?.toLowerCase?.().includes('jpeg'))
-          console.log('preferedFormat', { formatValues })
           if (preferedFormat) {
             onBlur({
               target: { name: 'wms_format', value: preferedFormat },
@@ -252,15 +252,50 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
 
         // TODO: use capabilities.Capability?.Request?.GetFeatureInfo?.Format
         // to set queryable and query_format
-        const infoFormat =
-          capabilities?.Capability?.Request?.GetFeatureInfo?.Format
-        console.log('ProjectTileLayerForm, infoFormat:', infoFormat)
+        const infoFormats =
+          capabilities?.Capability?.Request?.GetFeatureInfo?.Format ?? []
+        console.log({ _infoFormats: infoFormats })
+        setInfoFormatValues(
+          infoFormats.map((l) => ({
+            label: l,
+            value: l,
+          })),
+        )
+        // set info_format if undefined
+        if (!upToDateRow.wms_info_format) {
+          // for values see: https://docs.geoserver.org/stable/en/user/services/wms/reference.html#getfeatureinfo
+          const preferedFormat =
+            infoFormats.find(
+              (v) => v?.toLowerCase?.() === 'application/vnd.ogc.gml',
+            ) ??
+            infoFormats.find((v) =>
+              v?.toLowerCase?.().includes('application/vnd.ogc.gml'),
+            ) ??
+            infoFormats.find((v) =>
+              v?.toLowerCase?.().includes('text/plain'),
+            ) ??
+            infoFormats.find((v) =>
+              v?.toLowerCase?.().includes('application/json'),
+            ) ??
+            infoFormats.find((v) =>
+              v?.toLowerCase?.().includes('text/javascript'),
+            ) ??
+            infoFormats.find((v) => v?.toLowerCase?.().includes('text/html'))
+          if (preferedFormat) {
+            onBlur({
+              target: {
+                name: 'wms_info_format',
+                value: preferedFormat,
+              },
+            })
+          }
+        }
       }
     }
     run()
   }, [onBlur, row?.wms_base_url, projectTileLayerId])
 
-  console.log('ProjectTileLayerForm, legendUrls:', legendUrls)
+  console.log('ProjectTileLayerForm, infoFormats:', infoFormatValues)
 
   // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
@@ -350,7 +385,25 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                     onBlur={onBlur}
                     error={errors?.project_tile_layer?.wms_format}
                     disabled={!userMayEdit}
-                    type="text"
+                  />
+                )}
+                <RadioButtonGroup
+                  value={row.wms_info_format}
+                  name="wms_info_format"
+                  dataSource={infoFormatValues}
+                  onBlur={onBlur}
+                  label="Format der Informationen (welche der WMS-Server anbietet)"
+                  helperText="Empfehlenswert ist 'application/vnd.ogc.gml' (wenn vorhanden) oder eine andere Form von gml, weil es die beste Darstellung ermöglicht"
+                  error={errors?.project_tile_layer?.wms_info_format}
+                />
+                {infoFormatValues?.length === 0 && (
+                  <TextField
+                    name="wms_info_format"
+                    label="Format der Informationen"
+                    value={row.wms_info_format}
+                    onBlur={onBlur}
+                    error={errors?.project_tile_layer?.wms_info_format}
+                    disabled={!userMayEdit}
                   />
                 )}
                 <Checkbox2States

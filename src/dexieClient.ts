@@ -477,6 +477,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
   wms_styles?: string[]
   wms_transparent?: number
   wms_version?: WmsVersionEnum
+  wms_info_format?: string
   greyscale?: number
   client_rev_at?: Date
   client_rev_by?: string
@@ -502,6 +503,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
     wms_styles?: string[],
     wms_transparent?: number,
     wms_version?: WmsVersionEnum,
+    wms_info_format?: string,
     greyscale?: number,
     client_rev_at?: Date,
     client_rev_by?: string,
@@ -526,6 +528,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
     if (wms_styles) this.wms_styles = wms_styles
     this.wms_transparent = wms_transparent ?? 1
     if (wms_version) this.wms_version = wms_version
+    if (wms_info_format) this.wms_info_format = wms_info_format
     this.greyscale = greyscale ?? 0
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
