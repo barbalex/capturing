@@ -28,8 +28,8 @@ const WMS = ({ layer }) => {
   const map = useMap()
 
   useMapEvent('click', async (e) => {
-    // console.log({ e })
     let res
+    let failedToFetch = false
     try {
       const mapSize = map.getSize()
       const bounds = map.getBounds()
@@ -57,60 +57,94 @@ const WMS = ({ layer }) => {
         params,
       })
     } catch (error) {
-      console.log(error)
-      return false
+      // console.log(`error fetching ${row.label}`, error?.toJSON())
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log('error.response.data', error.response.data)
+        console.log('error.response.status', error.response.status)
+        console.log('error.response.headers', error.response.headers)
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log('error.request:', error.request)
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        // TODO: surface
+        console.log('error.message', error.message)
+      }
+      if (error.message?.toLowerCase()?.includes('failed to fetch')) {
+        failedToFetch = true
+      } else {
+        return
+      }
     }
 
-    // TODO: build popup depending on wms_info_format
+    // build popup depending on wms_info_format
     let popupContent
     // see for values: https://docs.geoserver.org/stable/en/user/services/wms/reference.html#getfeatureinfo
-    switch (layer.wms_info_format) {
-      case 'application/vnd.ogc.gml':
-      case 'application/vnd.ogc.gml/3.1.1': {
-        const parser = new window.DOMParser()
-        const layersData = xmlToLayersData(
-          parser.parseFromString(res.data, 'text/html'),
-        )
-
-        // do not open empty popups
-        if (!layersData.length) return
-
-        popupContent = ReactDOMServer.renderToString(
-          <WMSPopup layersData={layersData} />,
-        )
-        break
-      }
-      case 'text/html': {
+    if (failedToFetch) {
+      popupContent = ReactDOMServer.renderToString(
         <PopupContainer>
-          <div dangerouslySetInnerHTML={{ __html: res.data }} />
-        </PopupContainer>
-        break
-      }
-      case 'application/json': {
-        // do not open empty popups
-        if (!res.data?.length) return
-        if (res.data.includes('no results')) return
+          <StyledPopupContent>{`Sie könnten offline sein.\n\nOffline können keine WMS-Informationen\nabgerufen werden.`}</StyledPopupContent>
+        </PopupContainer>,
+      )
+    } else {
+      switch (layer.wms_info_format) {
+        case 'application/vnd.ogc.gml':
+        case 'application/vnd.ogc.gml/3.1.1': {
+          const parser = new window.DOMParser()
+          const layersData = xmlToLayersData(
+            parser.parseFromString(res.data, 'text/html'),
+          )
 
-        popupContent = ReactDOMServer.renderToString(
-          <PopupContainer>
-            <StyledPopupContent>{JSON.stringify(res.data)}</StyledPopupContent>
-          </PopupContainer>,
-        )
-        break
-      }
-      case 'text/plain':
-      case 'text/javascript':
-      default: {
-        // do not open empty popups
-        if (!res.data?.length) return
-        if (res.data.includes('no results')) return
+          // do not open empty popups
+          if (!layersData.length) return
 
-        popupContent = ReactDOMServer.renderToString(
-          <PopupContainer>
-            <StyledPopupContent>{res.data}</StyledPopupContent>
-          </PopupContainer>,
-        )
-        break
+          popupContent = ReactDOMServer.renderToString(
+            <WMSPopup layersData={layersData} />,
+          )
+          break
+        }
+        // TODO: test
+        case 'text/html': {
+          popupContent = (
+            <PopupContainer>
+              <div dangerouslySetInnerHTML={{ __html: res.data }} />
+            </PopupContainer>
+          )
+          break
+        }
+        // TODO: test
+        case 'application/json':
+        case 'text/javascript': {
+          // do not open empty popups
+          if (!res.data?.length) return
+          if (res.data.includes('no results')) return
+
+          popupContent = ReactDOMServer.renderToString(
+            <PopupContainer>
+              <StyledPopupContent>
+                {JSON.stringify(res.data)}
+              </StyledPopupContent>
+            </PopupContainer>,
+          )
+          break
+        }
+        case 'text/plain':
+        default: {
+          // do not open empty popups
+          if (!res.data?.length) return
+          if (res.data.includes('no results')) return
+
+          popupContent = ReactDOMServer.renderToString(
+            <PopupContainer>
+              <StyledPopupContent>{res.data}</StyledPopupContent>
+            </PopupContainer>,
+          )
+          break
+        }
       }
     }
 
