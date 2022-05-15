@@ -1636,10 +1636,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fontsource/roboto@npm:4.5.5":
-  version: 4.5.5
-  resolution: "@fontsource/roboto@npm:4.5.5"
-  checksum: ab6675e04392ccd5def878762be67dbbf64f77c49c26030c6a1d03c34ce33045b0eb1199ad1bd3f398f362e5fa1fcbcbe25c18af8dda855ab43df45561eea569
+"@fontsource/roboto@npm:4.5.7":
+  version: 4.5.7
+  resolution: "@fontsource/roboto@npm:4.5.7"
+  checksum: 3f9afc7f4c77e517e804e65823db5aea2513e8352fbc26cf7ea8b8b11e7dc6eff48d7a2855ed71e3a6b727446b2bf137629e2389fe3d676be45d95dd9992b558
   languageName: node
   linkType: hard
 
@@ -3282,7 +3282,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "capturing@workspace:."
   dependencies:
-    "@fontsource/roboto": 4.5.5
+    "@fontsource/roboto": 4.5.7
     "@lexical/react": 0.2.9
     "@mui/material": 5.7.0
     "@mui/styled-engine": 5.7.0
@@ -3332,7 +3332,7 @@ __metadata:
     react-icons: 4.3.1
     react-is: 18.1.0
     react-leaflet: 4.0.0
-    react-linkify: ^1.0.0-alpha
+    react-linkify: 1.0.0-alpha
     react-resize-detector: 7.0.0
     react-router-dom: 6.3.0
     react-select: 5.3.2
@@ -6263,7 +6263,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-linkify@npm:^1.0.0-alpha":
+"react-linkify@npm:1.0.0-alpha":
   version: 1.0.0-alpha
   resolution: "react-linkify@npm:1.0.0-alpha"
   dependencies:

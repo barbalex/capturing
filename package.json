@@ -10,7 +10,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@fontsource/roboto": "4.5.5",
+    "@fontsource/roboto": "4.5.7",
     "@lexical/react": "0.2.9",
     "@mui/material": "5.7.0",
     "@mui/styled-engine": "5.7.0",

@@ -238,6 +238,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         }
 
         // fetch legends
+        // TODO: save them in dexie for offline usage
         const lUrls = layers
           .map((l) => ({
             title: l.Title,
@@ -246,6 +247,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           .filter((u) => !!u.url)
         setLegendUrls(lUrls)
 
+        // TODO:
         // use capabilities.Capability?.Layer?.Layer[this]?.queryable to allow/disallow getting feature info?
 
         // TODO: use capabilities.Capability?.Request?.GetFeatureInfo?.Format
