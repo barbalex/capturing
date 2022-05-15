@@ -1108,9 +1108,6 @@ CREATE TABLE tile_layers (
   deleted integer DEFAULT 0
 );
 
-ALTER TABLE tile_layers
-  ALTER COLUMN wms_layers TYPE text;
-
 CREATE INDEX ON tile_layers USING btree (id);
 
 CREATE INDEX ON tile_layers USING btree (deleted);
