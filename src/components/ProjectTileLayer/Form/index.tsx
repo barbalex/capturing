@@ -252,6 +252,9 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
 
         // TODO: use capabilities.Capability?.Request?.GetFeatureInfo?.Format
         // to set queryable and query_format
+        const infoFormat =
+          capabilities?.Capability?.Request?.GetFeatureInfo?.Format
+        console.log('ProjectTileLayerForm, infoFormat:', infoFormat)
       }
     }
     run()
