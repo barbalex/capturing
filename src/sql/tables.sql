@@ -709,12 +709,15 @@ CREATE TABLE project_tile_layers (
   wms_transparent integer DEFAULT 0,
   wms_version wms_version_enum DEFAULT NULL,
   wms_info_format text default null,
+  wms_queryable integer default null,
   greyscale integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
 );
+
+alter table project_tile_layers add column wms_queryable integer default null;
 
 
 CREATE INDEX ON project_tile_layers USING btree (id);

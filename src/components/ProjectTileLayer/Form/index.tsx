@@ -189,7 +189,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           }))
         setWmsFormatValues(imageFormatValues)
         // if wms_format is not yet set, set version with png or jpg
-        console.log('wms_format', upToDateRow.wms_format)
         if (!upToDateRow.wms_format) {
           const formatValueStrings = imageFormatValues
             ? imageFormatValues.map((v) => v.value)
@@ -249,12 +248,20 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
 
         // TODO:
         // use capabilities.Capability?.Layer?.Layer[this]?.queryable to allow/disallow getting feature info?
+        // console.log('ProjectTileLayerForm, layers:', layers)
+        if (![0, 1].includes(upToDateRow.wms_queryable)) {
+          onBlur({
+            target: {
+              name: 'wms_queryable',
+              value: layers.some((l) => l.queryable) ? 1 : 0,
+            },
+          })
+        }
 
-        // TODO: use capabilities.Capability?.Request?.GetFeatureInfo?.Format
+        // use capabilities.Capability?.Request?.GetFeatureInfo?.Format
         // to set queryable and query_format
         const infoFormats =
           capabilities?.Capability?.Request?.GetFeatureInfo?.Format ?? []
-        console.log({ _infoFormats: infoFormats })
         setInfoFormatValues(
           infoFormats.map((l) => ({
             label: l,
@@ -294,8 +301,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     }
     run()
   }, [onBlur, row?.wms_base_url, projectTileLayerId])
-
-  console.log('ProjectTileLayerForm, infoFormats:', infoFormatValues)
 
   // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false

@@ -28,6 +28,8 @@ const WMS = ({ layer }) => {
   const map = useMap()
 
   useMapEvent('click', async (e) => {
+    // console.log({ layer })
+    if (layer.wms_queryable === 0) return
     let res
     let failedToFetch = false
     try {
@@ -50,7 +52,6 @@ const WMS = ({ layer }) => {
         height: mapSize.y,
         bbox,
       }
-      // console.log('will call, params:', params)
       res = await axios({
         method: 'get',
         url: layer.wms_base_url,
