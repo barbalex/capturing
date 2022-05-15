@@ -65,18 +65,6 @@ const WMS = ({ layer }) => {
     let popupContent
     // see for values: https://docs.geoserver.org/stable/en/user/services/wms/reference.html#getfeatureinfo
     switch (layer.wms_info_format) {
-      case 'text/plain': {
-        // do not open empty popups
-        if (!res.data.length) return
-        if (res.data.includes('no results')) return
-
-        popupContent = ReactDOMServer.renderToString(
-          <PopupContainer>
-            <StyledPopupContent>{res.data}</StyledPopupContent>
-          </PopupContainer>,
-        )
-        break
-      }
       case 'application/vnd.ogc.gml':
       case 'application/vnd.ogc.gml/3.1.1': {
         const parser = new window.DOMParser()
@@ -92,8 +80,37 @@ const WMS = ({ layer }) => {
         )
         break
       }
+      case 'text/html': {
+        <PopupContainer>
+          <div dangerouslySetInnerHTML={{ __html: res.data }} />
+        </PopupContainer>
+        break
+      }
+      case 'application/json': {
+        // do not open empty popups
+        if (!res.data?.length) return
+        if (res.data.includes('no results')) return
+
+        popupContent = ReactDOMServer.renderToString(
+          <PopupContainer>
+            <StyledPopupContent>{JSON.stringify(res.data)}</StyledPopupContent>
+          </PopupContainer>,
+        )
+        break
+      }
+      case 'text/plain':
+      case 'text/javascript':
       default: {
-        ('TODO:')
+        // do not open empty popups
+        if (!res.data?.length) return
+        if (res.data.includes('no results')) return
+
+        popupContent = ReactDOMServer.renderToString(
+          <PopupContainer>
+            <StyledPopupContent>{res.data}</StyledPopupContent>
+          </PopupContainer>,
+        )
+        break
       }
     }
 
