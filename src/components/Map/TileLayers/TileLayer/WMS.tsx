@@ -72,7 +72,6 @@ const WMS = ({ layer }) => {
         console.log('error.request:', error.request)
       } else {
         // Something happened in setting up the request that triggered an Error
-        // TODO: surface
         console.log('error.message', error.message)
       }
       if (error.message?.toLowerCase()?.includes('failed to fetch')) {

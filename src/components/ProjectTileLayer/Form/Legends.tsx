@@ -66,6 +66,10 @@ const ProjectTileLayerFormLegends = ({ legendUrls }) => {
       }
 
       setLegends(legends)
+      if (lengends.length && !row.wms_legends) {
+        // TODO: add legends into row
+        // TODO: then always fetch them from there
+      }
     }
     run()
   }, [legendUrls])

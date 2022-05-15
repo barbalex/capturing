@@ -479,6 +479,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
   wms_version?: WmsVersionEnum
   wms_info_format?: string
   wms_queryable?: number
+  wms_legends?: blob[]
   greyscale?: number
   client_rev_at?: Date
   client_rev_by?: string
@@ -506,6 +507,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
     wms_version?: WmsVersionEnum,
     wms_info_format?: string,
     wms_queryable?: number,
+    wms_legends?: blob[],
     greyscale?: number,
     client_rev_at?: Date,
     client_rev_by?: string,
@@ -532,6 +534,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
     if (wms_version) this.wms_version = wms_version
     if (wms_info_format) this.wms_info_format = wms_info_format
     if (wms_queryable) this.wms_queryable = wms_queryable
+    if (wms_legends) this.wms_legends = wms_legends
     this.greyscale = greyscale ?? 0
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
@@ -545,6 +548,8 @@ export class ProjectTileLayer implements IProjectTileLayer {
       client_rev_at: new window.Date().toISOString(),
       client_rev_by: session.user?.email ?? session.user?.id,
     }
+    // wms_legends exists only client side
+    delete isReved.wms_legends
     const update = new QueuedUpdate(
       undefined,
       undefined,

@@ -246,7 +246,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           .filter((u) => !!u.url)
         setLegendUrls(lUrls)
 
-        // TODO:
         // use capabilities.Capability?.Layer?.Layer[this]?.queryable to allow/disallow getting feature info?
         // console.log('ProjectTileLayerForm, layers:', layers)
         if (![0, 1].includes(upToDateRow.wms_queryable)) {
@@ -259,7 +258,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         }
 
         // use capabilities.Capability?.Request?.GetFeatureInfo?.Format
-        // to set queryable and query_format
+        // to set wms_info_format
         const infoFormats =
           capabilities?.Capability?.Request?.GetFeatureInfo?.Format ?? []
         setInfoFormatValues(
@@ -513,7 +512,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           error={errors?.field?.greyscale}
           disabled={!userMayEdit}
         />
-        {!!legendUrls?.length && <Legends legendUrls={legendUrls} />}
+        {!!legendUrls?.length && <Legends legendUrls={legendUrls} row={row} />}
       </FieldsContainer>
     </ErrorBoundary>
   )
