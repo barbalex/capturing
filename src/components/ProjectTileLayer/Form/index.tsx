@@ -372,15 +372,17 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
             />
             {!!row?.wms_base_url && (
               <>
-                <RadioButtonGroup
-                  value={row.wms_format}
-                  name="wms_format"
-                  dataSource={wmsFormatValues}
-                  onBlur={onBlur}
-                  label="(Bild-)Format (welche der WMS-Server anbietet)"
-                  helperText="Empfehlenswert ist 'image/png' (wenn vorhanden), weil es transparenten Hintergrund ermöglicht"
-                  error={errors?.project_tile_layer?.wms_format}
-                />
+                {wmsFormatValues?.length > 0 && (
+                  <RadioButtonGroup
+                    value={row.wms_format}
+                    name="wms_format"
+                    dataSource={wmsFormatValues}
+                    onBlur={onBlur}
+                    label="(Bild-)Format (welche der WMS-Server anbietet)"
+                    helperText="Empfehlenswert ist 'image/png' (wenn vorhanden), weil es transparenten Hintergrund ermöglicht"
+                    error={errors?.project_tile_layer?.wms_format}
+                  />
+                )}
                 {wmsFormatValues?.length === 0 && (
                   <TextField
                     name="wms_format"
@@ -391,15 +393,17 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                     disabled={!userMayEdit}
                   />
                 )}
-                <RadioButtonGroup
-                  value={row.wms_info_format}
-                  name="wms_info_format"
-                  dataSource={infoFormatValues}
-                  onBlur={onBlur}
-                  label="Format der Informationen (welche der WMS-Server anbietet)"
-                  helperText="Empfehlenswert ist 'application/vnd.ogc.gml' (wenn vorhanden) oder eine andere Form von gml, weil es die beste Darstellung ermöglicht"
-                  error={errors?.project_tile_layer?.wms_info_format}
-                />
+                {infoFormatValues?.length > 0 && (
+                  <RadioButtonGroup
+                    value={row.wms_info_format}
+                    name="wms_info_format"
+                    dataSource={infoFormatValues}
+                    onBlur={onBlur}
+                    label="Format der Informationen (welche der WMS-Server anbietet)"
+                    helperText="Empfehlenswert ist 'application/vnd.ogc.gml' (wenn vorhanden) oder eine andere Form von gml, weil es die beste Darstellung ermöglicht"
+                    error={errors?.project_tile_layer?.wms_info_format}
+                  />
+                )}
                 {infoFormatValues?.length === 0 && (
                   <TextField
                     name="wms_info_format"
@@ -418,15 +422,17 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                   error={errors?.field?.wms_transparent}
                   disabled={!userMayEdit}
                 />
-                <CheckboxGroup
-                  value={
-                    row.wms_layers?.split ? row.wms_layers?.split?.(',') : []
-                  }
-                  label="Layer (welche der WMS-Server anbietet)"
-                  name="wms_layers"
-                  options={layerOptions}
-                  onBlur={onBlur}
-                />
+                {layerOptions?.length > 0 && (
+                  <CheckboxGroup
+                    value={
+                      row.wms_layers?.split ? row.wms_layers?.split?.(',') : []
+                    }
+                    label="Layer (welche der WMS-Server anbietet)"
+                    name="wms_layers"
+                    options={layerOptions}
+                    onBlur={onBlur}
+                  />
+                )}
                 {layerOptions?.length === 0 && (
                   <TextField
                     name="wms_layers"
