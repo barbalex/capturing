@@ -93,12 +93,12 @@ const Files = ({ field }: Props) => {
           // Do whatever you want with the file contents
           const binaryStr = reader.result // seems to be ArrayBuffer
 
-          console.log('file content:', {
-            name: file.name,
-            content: binaryStr,
-            file,
-            fileType: file.type,
-          })
+          // console.log('file content:', {
+          //   name: file.name,
+          //   content: binaryStr,
+          //   file,
+          //   fileType: file.type,
+          // })
 
           const id = await insertFile({ file: binaryStr })
 
