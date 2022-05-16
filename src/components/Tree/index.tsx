@@ -49,7 +49,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
   // console.log('Tree, nodes:', getSnapshot(nodes))
 
   const onToggle = useCallback((val) => {
-    console.log('TreeComponent, this id was toggled:', val)
+    // console.log('TreeComponent, this id was toggled:', val)
   }, [])
 
   return (
