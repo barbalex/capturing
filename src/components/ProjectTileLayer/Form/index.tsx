@@ -173,7 +173,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         const capabilities = await fetchWmsGetCapabilities(
           upToDateRow?.wms_base_url,
         )
-        console.log('ProjectTileLayerForm, capabilities:', capabilities)
+        // console.log('ProjectTileLayerForm, capabilities:', capabilities)
         setWmsVersion(capabilities?.version)
         if (!upToDateRow.wms_version) {
           onBlur({
@@ -237,7 +237,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         }
 
         // fetch legends
-        // TODO: save them in dexie for offline usage
         const lUrls = layers
           .map((l) => ({
             title: l.Title,
