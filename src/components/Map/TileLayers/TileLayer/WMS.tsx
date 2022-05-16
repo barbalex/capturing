@@ -19,6 +19,7 @@ const StyledPopupContent = styled.div`
 `
 const PopupContainer = styled.div`
   overflow: auto;
+  max-height: ${(props) => `${props.maxheight}px`};
   span {
     font-size: x-small !important;
   }
@@ -112,7 +113,7 @@ const WMS = ({ layer }) => {
         // TODO: test
         case 'text/html': {
           popupContent = (
-            <PopupContainer>
+            <PopupContainer maxheight={mapSize.y - 40}>
               <div dangerouslySetInnerHTML={{ __html: res.data }} />
             </PopupContainer>
           )
@@ -126,7 +127,7 @@ const WMS = ({ layer }) => {
           if (res.data.includes('no results')) return
 
           popupContent = ReactDOMServer.renderToString(
-            <PopupContainer>
+            <PopupContainer maxheight={mapSize.y - 40}>
               <StyledPopupContent>
                 {JSON.stringify(res.data)}
               </StyledPopupContent>
@@ -141,7 +142,7 @@ const WMS = ({ layer }) => {
           if (res.data.includes('no results')) return
 
           popupContent = ReactDOMServer.renderToString(
-            <PopupContainer>
+            <PopupContainer maxheight={mapSize.y - 40}>
               <StyledPopupContent>{res.data}</StyledPopupContent>
             </PopupContainer>,
           )
