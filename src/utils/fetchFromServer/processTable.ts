@@ -3,6 +3,7 @@ import axios from 'redaxios'
 import { supabase } from '../../supabaseClient'
 import { dexie, File, PVLGeom } from '../../dexieClient'
 import hex2buf from '../hex2buf'
+import fetchWmsGetCapabilities from '../fetchWmsGetCapabilities'
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 
@@ -134,6 +135,52 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
             })
             // 3. add to dexie
             await dexie.pvl_geoms.bulkPut(pvlGeoms)
+          }
+        }
+      }
+    }
+    /**
+     * 4.4 if:
+     * - project_tile_layers
+     * - and: type 'wms'
+     * - and: no wms_legends yet
+     * download the legends from the wms service and populate dexie!
+     */
+    if (tableName === 'project_tile_layers') {
+      for (const d of data) {
+        if (d.type === 'wms' && !d.wms_legends?.length) {
+          // console.log('processTable processing project_tile_layers, title:', d)
+          const capabilities = await fetchWmsGetCapabilities(d?.wms_base_url)
+          const layers = capabilities?.Capability?.Layer?.Layer ?? []
+          const lUrls = layers
+            .map((l) => ({
+              title: l.Title,
+              url: l.Style?.[0]?.LegendURL?.[0]?.OnlineResource,
+            }))
+            .filter((u) => !!u.url)
+          const _legendBlobs = []
+          for (const lUrl of lUrls) {
+            let res
+            try {
+              res = await axios.get(lUrl.url, {
+                responseType: 'blob',
+              })
+            } catch (error) {
+              // error can also be caused by timeout
+              console.log(
+                `error fetching legend for layer '${lUrl.title}':`,
+                error,
+              )
+              break
+            }
+            if (res.data) _legendBlobs.push([lUrl.title, res.data])
+          }
+
+          if (_legendBlobs.length) {
+            // add legends into row to reduce network activity and make them offline available
+            await dexie.project_tile_layers.update(d.id, {
+              wms_legends: _legendBlobs,
+            })
           }
         }
       }
