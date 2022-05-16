@@ -30,11 +30,11 @@ const WMS = ({ layer }) => {
   useMapEvent('click', async (e) => {
     // console.log({ layer })
     if (layer.wms_queryable === 0) return
+    const mapSize = map.getSize()
+    const bounds = map.getBounds()
     let res
     let failedToFetch = false
     try {
-      const mapSize = map.getSize()
-      const bounds = map.getBounds()
       const bbox = `${bounds._southWest.lat},${bounds._southWest.lng},${bounds._northEast.lat},${bounds._northEast.lng}`
       const params = {
         service: 'WMS',
@@ -81,6 +81,8 @@ const WMS = ({ layer }) => {
       }
     }
 
+    // console.log({ mapSize, y: mapSize.y })
+
     // build popup depending on wms_info_format
     let popupContent
     // see for values: https://docs.geoserver.org/stable/en/user/services/wms/reference.html#getfeatureinfo
@@ -103,7 +105,7 @@ const WMS = ({ layer }) => {
           if (!layersData.length) return
 
           popupContent = ReactDOMServer.renderToString(
-            <WMSPopup layersData={layersData} />,
+            <WMSPopup layersData={layersData} mapHeight={mapSize.y} />,
           )
           break
         }

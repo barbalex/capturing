@@ -1,6 +1,10 @@
 import styled from 'styled-components'
 import Linkify from 'react-linkify'
 
+const Container = styled.div`
+  overflow: auto;
+  max-height: ${(props) => `${props.maxheight}px`};
+`
 const Row = styled.div`
   display: grid;
   grid-template-columns: 80px 1fr;
@@ -24,11 +28,11 @@ const Value = styled.div`
   overflow-wrap: anywhere;
 `
 
-const WMSPopup = ({ layersData }) => (
-  <>
+const WMSPopup = ({ layersData, mapHeight }) => (
+  <Container maxheight={mapHeight - 40}>
     {layersData.map((ld) => (
-      <>
-        <Title key={ld.label}>{ld.label}</Title>
+      <div key={ld.label}>
+        <Title>{ld.label}</Title>
         {ld.properties.map(([key, value], index) => (
           <Row key={`${key}/${index}`}>
             <Label>{`${key}:`}</Label>
@@ -43,9 +47,9 @@ const WMSPopup = ({ layersData }) => (
             </Linkify>
           </Row>
         ))}
-      </>
+      </div>
     ))}
-  </>
+  </Container>
 )
 
 export default WMSPopup
