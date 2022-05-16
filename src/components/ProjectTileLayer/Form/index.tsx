@@ -218,7 +218,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         }
         // let user choose from layers
         // filter only layers with crs EPSG:4326
-        const layers = capabilities?.Capability?.Layer?.Layer
+        const layers = capabilities?.Capability?.Layer?.Layer ?? []
         const layerOptions = layers
           ?.filter((v) => v?.CRS?.includes('EPSG:4326'))
           .map((v) => ({
@@ -512,7 +512,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           error={errors?.field?.greyscale}
           disabled={!userMayEdit}
         />
-        {!!legendUrls?.length && <Legends legendUrls={legendUrls} row={row} />}
+        <Legends legendUrls={legendUrls} row={row} />
       </FieldsContainer>
     </ErrorBoundary>
   )

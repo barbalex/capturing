@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import Label from '../../shared/Label'
 import constants from '../../../utils/constants'
+import { dexie } from '../../../dexieClient'
 
 const Container = styled.div`
   margin: 15px -10px 10px -10px;
@@ -35,11 +36,15 @@ const LegendsContainer = styled.div`
 `
 
 // = '99999999-9999-9999-9999-999999999999'
-const ProjectTileLayerFormLegends = ({ legendUrls }) => {
-  const [legends, setLegends] = useState()
+const ProjectTileLayerFormLegends = ({ legendUrls, row }) => {
+  console.log('ProjectTileLayerFormLegends', { legendUrls, row })
   useEffect(() => {
     const run = async () => {
-      const legends = []
+      // only fetch if not done yet
+      if (row?.wms_legends?.length) return
+      if (!legendUrls) return
+
+      const _legendBlobs = []
       for (const lUrl of legendUrls) {
         let res
         try {
@@ -51,28 +56,38 @@ const ProjectTileLayerFormLegends = ({ legendUrls }) => {
           console.log(`error fetching legend for layer '${lUrl.title}':`, error)
           return false
         }
-        let objectUrl
-        try {
-          objectUrl = URL.createObjectURL(
-            new Blob([res.data], { type: 'image/png' }),
-          )
-        } catch (error) {
-          return console.log(
-            `error creating objectUrl for legend for layer '${lUrl.title}'`,
-            error,
-          )
-        }
-        if (objectUrl) legends.push([lUrl.title, objectUrl])
+        // console.log('Legends, res.data:', res.data)
+        if (res.data) _legendBlobs.push([lUrl.title, res.data])
       }
 
-      setLegends(legends)
-      if (lengends.length && !row.wms_legends) {
-        // TODO: add legends into row
-        // TODO: then always fetch them from there
+      if (_legendBlobs.length) {
+        // add legends into row to reduce network activity and make them offline available
+        dexie.project_tile_layers.update(row.id, { wms_legends: _legendBlobs })
       }
     }
     run()
-  }, [legendUrls])
+  }, [legendUrls, row])
+
+  const [legends, setLegends] = useState()
+  useEffect(() => {
+    // get legends from row
+    const _legends = []
+    for (const legend of row.wms_legends ?? []) {
+      let objectUrl
+      try {
+        objectUrl = URL.createObjectURL(
+          new Blob([legend[1]], { type: 'image/png' }),
+        )
+      } catch (error) {
+        return console.log(
+          `error creating objectUrl for legend for layer '${legend[0]}'`,
+          error,
+        )
+      }
+      if (objectUrl) _legends.push([legend[0], objectUrl])
+    }
+    setLegends(_legends)
+  }, [row])
 
   return (
     <ErrorBoundary>
