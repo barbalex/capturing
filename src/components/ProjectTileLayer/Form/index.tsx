@@ -175,11 +175,14 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         service: 'WMS',
       })
       // console.log('ProjectTileLayerForm, capabilities:', capabilities)
-      setWmsVersion(capabilities?.version)
-      if (!upToDateRow.wms_version) {
-        onBlur({
-          target: { name: 'wms_version', value: capabilities?.version },
-        })
+      const _wmsVersion = capabilities?.version
+      if (_wmsVersion) {
+        setWmsVersion(_wmsVersion)
+        if (!upToDateRow.wms_version) {
+          onBlur({
+            target: { name: 'wms_version', value: _wmsVersion },
+          })
+        }
       }
       const imageFormatValues =
         capabilities?.Capability?.Request?.GetMap?.Format.filter((v) =>
