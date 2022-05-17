@@ -263,8 +263,9 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
       }
 
       // 4. layers
-      const layers = capabilities?.FEATURETYPELIST?.FEATURETYPE ?? []
-      console.log('ProjectVectorLayerForm, effect, layers:', layers)
+      let layers = capabilities?.FEATURETYPELIST?.FEATURETYPE ?? []
+      // this value can be array OR object!!!
+      if (!Array.isArray(layers)) layers = [layers]
       const _layerOptions = layers
         .filter(
           (l) =>
