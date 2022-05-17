@@ -161,10 +161,17 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
   useEffect(() => {
     const run = async () => {
       //TODO:
-      if (!row.url) return
+      if (!row?.url) return
+      const upToDateRow: ProjectVectorLayer =
+        await dexie.project_vector_layers.get(projectVectorLayerId)
+      const capabilities = await getCapabilities({
+        url: upToDateRow?.url,
+        service: 'WFS',
+      })
+      console.log('ProjectVectorLayerForm, effect, capabilities:', capabilities)
     }
     run()
-  }, [row])
+  }, [projectVectorLayerId, row])
 
   // const showDeleted = filter?.project_vector_layer?.deleted !== false || row?.deleted
   const showDeleted = false
