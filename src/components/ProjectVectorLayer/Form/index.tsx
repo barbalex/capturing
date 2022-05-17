@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useCallback, useRef } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useCallback,
+  useRef,
+  useState,
+} from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
@@ -158,20 +164,35 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
     }
   })
 
+  const [wfsVersion, setWfsVersion] = useState()
   useEffect(() => {
     const run = async () => {
       //TODO:
       if (!row?.url) return
       const upToDateRow: ProjectVectorLayer =
         await dexie.project_vector_layers.get(projectVectorLayerId)
-      const capabilities = await getCapabilities({
+      const responce = await getCapabilities({
         url: upToDateRow?.url,
         service: 'WFS',
       })
+      const capabilities = responce?.HTML?.BODY?.['WFS:WFS_CAPABILITIES']
       console.log('ProjectVectorLayerForm, effect, capabilities:', capabilities)
+      console.log(
+        'ProjectVectorLayerForm, effect, wfsVersion:',
+        capabilities?.['@attributes']?.version,
+      )
+      const _wfsVersion = capabilities?.['@attributes']?.version
+      if (_wfsVersion) {
+        setWfsVersion(_wfsVersion)
+        if (!upToDateRow.wfs_version) {
+          onBlur({
+            target: { name: 'wfs_version', value: _wfsVersion },
+          })
+        }
+      }
     }
     run()
-  }, [projectVectorLayerId, row])
+  }, [onBlur, projectVectorLayerId, row])
 
   // const showDeleted = filter?.project_vector_layer?.deleted !== false || row?.deleted
   const showDeleted = false
