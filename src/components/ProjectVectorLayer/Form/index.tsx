@@ -166,6 +166,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
 
   const [wfsVersion, setWfsVersion] = useState()
   const [outputFormatValues, setOutputFormatValues] = useState()
+  const [layerOptions, setLayerOptions] = useState()
   useEffect(() => {
     const run = async () => {
       //TODO:
@@ -202,7 +203,16 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
       const acceptableOutputFormats = _outputFormats.filter((v) =>
         v?.toLowerCase?.()?.includes('json'),
       )
+      let preferredOutputFormat
       if (acceptableOutputFormats.length) {
+        preferredOutputFormat =
+          acceptableOutputFormats.filter((v) =>
+            v.toLowerCase().includes('geojson'),
+          )[0] ??
+          acceptableOutputFormats.filter((v) =>
+            v.toLowerCase().includes('application/json'),
+          )[0] ??
+          acceptableOutputFormats[0]
         setOutputFormatValues(
           acceptableOutputFormats.map((v) => ({ label: v, value: v })),
         )
@@ -211,21 +221,13 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           onBlur({
             target: {
               name: 'output_format',
-              value:
-                acceptableOutputFormats.filter((v) =>
-                  v.toLowerCase().includes('geojson'),
-                )[0] ??
-                acceptableOutputFormats.filter((v) =>
-                  v.toLowerCase().includes('application/json'),
-                )[0] ??
-                acceptableOutputFormats[0],
+              value: preferredOutputFormat,
             },
           })
         }
       }
 
-      // 3. title
-      // set label
+      // 3. label
       const _label =
         capabilities?.['OWS:SERVICEIDENTIFICATION']?.['OWS:TITLE']?.['#text']
       if (!upToDateRow.label && !!_label) {
@@ -236,6 +238,29 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           },
         })
       }
+
+      // 4. layers
+      const layers = capabilities?.FEATURETYPELIST?.FEATURETYPE ?? []
+      console.log('ProjectVectorLayerForm, effect, layers:', layers)
+      const layerOptions = layers
+        .filter(
+          (l) =>
+            l.OTHERCRS?.map((o) => o?.['#text']?.includes('EPSG:4326')) ||
+            l.DefaultCRS?.map((o) => o?.['#text']?.includes('EPSG:4326')),
+        )
+        // .filter((l) =>
+        //   preferredOutputFormat
+        //     ? l.OUTPUTFORMATS?.FORMAT?.map((f) => f?.['#text'])?.includes(
+        //         preferredOutputFormat,
+        //       )
+        //     : true,
+        // )
+        .map((v) => ({
+          label: v.TITLE?.['#text'] ?? v.NAME?.['#text'],
+          value: v.NAME?.['#text'],
+        }))
+      console.log('ProjectVectorLayerForm, effect, layerOptions:', layerOptions)
+      // setLayerOptions(layerOptions)
     }
     run()
   }, [onBlur, projectVectorLayerId, row])
