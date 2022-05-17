@@ -177,6 +177,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           <>
             {showFilter ? (
               <JesNo
+                key={`${row.id}deleted/jesno`}
                 label="gelöscht"
                 name="deleted"
                 value={row.deleted}
@@ -186,6 +187,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
               />
             ) : (
               <Checkbox2States
+                key={`${row.id}deleted/cb`}
                 label="gelöscht"
                 name="deleted"
                 value={row.deleted}
@@ -197,6 +199,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           </>
         )}
         <TextField
+          key={`${row.id}label`}
           name="label"
           label="Beschriftung"
           value={row.label}
@@ -205,6 +208,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           disabled={!userMayEdit}
         />
         <Checkbox2States
+          key={`${row.id}active`}
           label="aktiv"
           name="active"
           value={row.active}
@@ -213,6 +217,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           disabled={!userMayEdit}
         />
         <TextField
+          key={`${row.id}sort`}
           name="sort"
           label="Sortierung"
           value={row.sort}
@@ -222,6 +227,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           type="number"
         />
         <TextField
+          key={`${row.id}max_zoom`}
           name="max_zoom"
           label="Maximale Zoom-Stufe"
           value={row.max_zoom}
@@ -231,6 +237,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           type="number"
         />
         <TextField
+          key={`${row.id}min_zoom`}
           name="min_zoom"
           label="Minimale Zoom-Stufe"
           value={row.min_zoom}
@@ -240,6 +247,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           type="number"
         />
         <TextField
+          key={`${row.id}opacity`}
           name="opacity"
           label="Deckkraft / Opazität (0 - 1)"
           value={row.opacity}
@@ -249,6 +257,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           type="number"
         />
         <RadioButtonGroup
+          key={`${row.id}type`}
           name="type"
           value={row.type}
           field="type"
@@ -261,6 +270,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
         {row.type === 'wfs' && (
           <>
             <TextField
+              key={`${row.id}url`}
               name="url"
               label="URL"
               value={row.url}
@@ -270,6 +280,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
               type="text"
             />
             <TextField
+              key={`${row.id}type_name`}
               name="type_name"
               label="Type Name"
               value={row.type_name}
@@ -279,6 +290,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
               type="text"
             />
             <TextField
+              key={`${row.id}wfs_version`}
               name="wfs_version"
               label="WFS Version (z.B. 2.0.0)"
               value={row.wfs_version}
@@ -288,6 +300,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
               type="text"
             />
             <TextField
+              key={`${row.id}output_format`}
               name="output_format"
               label="Format (GeoJSON wählen)"
               value={row.output_format}
@@ -296,7 +309,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
               disabled={!userMayEdit}
               type="text"
             />
-            <DownloadPVL row={row} />
+            <DownloadPVL key={`${row.id}downloadpvl`} row={row} />
           </>
         )}
         <LayerStyle userMayEdit={userMayEdit} />
