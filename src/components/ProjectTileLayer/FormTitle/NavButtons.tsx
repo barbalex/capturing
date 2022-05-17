@@ -2,24 +2,23 @@ import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import IconButton from '@mui/material/IconButton'
 import { FaArrowUp, FaArrowLeft, FaArrowRight } from 'react-icons/fa'
-import { Link, resolvePath } from 'react-router-dom'
+import { Link, resolvePath, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useParams } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
-import { dexie, ProjectTileLayer } from '../../../dexieClient'
+import { dexie } from '../../../dexieClient'
 
 const ProjectTileLayerNavButtons = () => {
   const { projectId, projectTileLayerId } = useParams()
+
   const store = useContext(StoreContext)
   const { activeNodeArray, removeNode } = store
 
   const projectTileLayerIds: string[] =
     useLiveQuery(async () => {
-      const projectTileLayers: ProjectTileLayer[] =
-        await dexie.project_tile_layers
-          .where({ deleted: 0, project_id: projectId })
-          .sortBy('sort')
+      const projectTileLayers = await dexie.project_tile_layers
+        .where({ deleted: 0, project_id: projectId })
+        .sortBy('sort')
       return projectTileLayers.map((p) => p.id)
     }, [projectId]) ?? []
 
