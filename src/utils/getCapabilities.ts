@@ -1,11 +1,11 @@
 import WMSCapabilities from 'wms-capabilities'
 import axios from 'redaxios'
 
-const fetchWmsGetCapabilities = async (base_url) => {
+const fetchWmsGetCapabilities = async ({ url, service }) => {
   // Exaple url to get: https://wms.zh.ch/FnsSVOZHWMS?service=WMS&request=GetCapabilities
   let res
   try {
-    res = await axios.get(`${base_url}?service=WMS&request=GetCapabilities`)
+    res = await axios.get(`${url}?service=${service}&request=GetCapabilities`)
   } catch (error) {
     // console.log(`error fetching ${row.label}`, error?.toJSON())
     if (error.response) {

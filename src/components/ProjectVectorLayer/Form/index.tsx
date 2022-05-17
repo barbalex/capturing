@@ -22,6 +22,7 @@ import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
 import LayerStyle from '../../LayerStyle'
 import DownloadPVL from './DownloadPVL'
+import getCapabilities from '../../../utils/getCapabilities'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -156,6 +157,14 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
       label: `${v}: ${comment}`,
     }
   })
+
+  useEffect(() => {
+    const run = async () => {
+      //TODO:
+      if (!row.url) return
+    }
+    run()
+  }, [row])
 
   // const showDeleted = filter?.project_vector_layer?.deleted !== false || row?.deleted
   const showDeleted = false

@@ -3,7 +3,7 @@ import axios from 'redaxios'
 import { supabase } from '../../supabaseClient'
 import { dexie, File, PVLGeom } from '../../dexieClient'
 import hex2buf from '../hex2buf'
-import fetchWmsGetCapabilities from '../fetchWmsGetCapabilities'
+import fetchWmsGetCapabilities from '../getCapabilities'
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 
