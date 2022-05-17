@@ -26,6 +26,7 @@ import {
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
+import CheckboxGroup from '../../shared/CheckboxGroup'
 import LayerStyle from '../../LayerStyle'
 import DownloadPVL from './DownloadPVL'
 import getCapabilities from '../../../utils/getCapabilities'
@@ -129,6 +130,9 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
       const { name: field, value, type, valueAsNumber } = event.target
       let newValue = type === 'number' ? valueAsNumber : value
       if ([undefined, '', NaN].includes(newValue)) newValue = null
+      if (type === 'array' && field === 'type_name') {
+        newValue = value.filter((v) => !!v).join(',')
+      }
 
       // return if value has not changed
       const previousValue = rowState.current[field]
@@ -141,6 +145,8 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           value: newValue,
         })
       }
+
+      console.log('ProjectVectorLayer, onBlur', { field, value, newValue })
 
       // update rowState
       rowState.current = { ...row, ...{ [field]: newValue } }
@@ -242,25 +248,28 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
       // 4. layers
       const layers = capabilities?.FEATURETYPELIST?.FEATURETYPE ?? []
       console.log('ProjectVectorLayerForm, effect, layers:', layers)
-      const layerOptions = layers
+      const _layerOptions = layers
         .filter(
           (l) =>
             l.OTHERCRS?.map((o) => o?.['#text']?.includes('EPSG:4326')) ||
             l.DefaultCRS?.map((o) => o?.['#text']?.includes('EPSG:4326')),
         )
-        // .filter((l) =>
-        //   preferredOutputFormat
-        //     ? l.OUTPUTFORMATS?.FORMAT?.map((f) => f?.['#text'])?.includes(
-        //         preferredOutputFormat,
-        //       )
-        //     : true,
-        // )
+        .filter((l) =>
+          preferredOutputFormat
+            ? l.OUTPUTFORMATS?.FORMAT?.map((f) => f?.['#text'])?.includes(
+                preferredOutputFormat,
+              )
+            : true,
+        )
         .map((v) => ({
           label: v.TITLE?.['#text'] ?? v.NAME?.['#text'],
           value: v.NAME?.['#text'],
         }))
-      console.log('ProjectVectorLayerForm, effect, layerOptions:', layerOptions)
-      // setLayerOptions(layerOptions)
+      console.log(
+        'ProjectVectorLayerForm, effect, layerOptions:',
+        _layerOptions,
+      )
+      setLayerOptions(_layerOptions)
     }
     run()
   }, [onBlur, projectVectorLayerId, row])
@@ -387,16 +396,28 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
               disabled={!userMayEdit}
               type="text"
             />
-            <TextField
-              key={`${row.id}type_name`}
-              name="type_name"
-              label="Type Name"
-              value={row.type_name}
-              onBlur={onBlur}
-              error={errors?.project_vector_layer?.type_name}
-              disabled={!userMayEdit}
-              type="text"
-            />
+            {layerOptions?.length > 0 && (
+              <CheckboxGroup
+                key={`${row.id}type_name/cb`}
+                value={row.type_name?.split ? row.type_name?.split?.(',') : []}
+                label="Layer (welche der WFS-Server anbietet)"
+                name="type_name"
+                options={layerOptions}
+                onBlur={onBlur}
+                disabled={!userMayEdit}
+              />
+            )}
+            {layerOptions?.length === 0 && (
+              <TextField
+                key={`${row.id}type_name`}
+                name="type_name"
+                label="Layer (welche der WFS-Server anbietet)"
+                value={row.type_name}
+                onBlur={onBlur}
+                error={errors?.project_vector_layer?.type_name}
+                disabled={!userMayEdit}
+              />
+            )}
             {!wfsVersion && (
               <TextField
                 key={`${row.id}wfs_version`}

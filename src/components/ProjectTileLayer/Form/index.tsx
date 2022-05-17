@@ -221,19 +221,19 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
       // let user choose from layers
       // filter only layers with crs EPSG:4326
       const layers = capabilities?.Capability?.Layer?.Layer ?? []
-      const layerOptions = layers
+      const _layerOptions = layers
         ?.filter((v) => v?.CRS?.includes('EPSG:4326'))
         .map((v) => ({
           label: v.Title,
           value: v.Name,
         }))
-      setLayerOptions(layerOptions)
-      if (!upToDateRow.wms_layers && layerOptions?.map) {
+      setLayerOptions(_layerOptions)
+      if (!upToDateRow.wms_layers && _layerOptions?.map) {
         // activate all layers
         onBlur({
           target: {
             name: 'wms_layers',
-            value: layerOptions.map((o) => o.value).join(','),
+            value: _layerOptions.map((o) => o.value).join(','),
           },
         })
       }
