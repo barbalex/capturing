@@ -6,11 +6,10 @@ import { Link, resolvePath, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../../storeContext'
-import sortByLabelName from '../../../utils/sortByLabelName'
 import { dexie } from '../../../dexieClient'
 
 const FieldNavButtons = () => {
-  const { projectId, tableId, fieldId } = useParams()
+  const { tableId, fieldId } = useParams()
   const store = useContext(StoreContext)
   const { activeNodeArray, removeNode } = store
 
@@ -20,7 +19,7 @@ const FieldNavButtons = () => {
         .where({ deleted: 0, table_id: tableId })
         .sortBy('sort')
       return fields.map((t) => t.id)
-    }, [tableId, projectId]) ?? []
+    }, [tableId]) ?? []
 
   const parentPath = resolvePath(`..`, window.location.pathname)?.pathname
   const activeIndex = fieldIds.indexOf(fieldId)

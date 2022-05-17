@@ -14,7 +14,6 @@ import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
 import { dexie, Project } from '../../dexieClient'
 import insertField from '../../utils/insertField'
-import sortByLabelName from '../../utils/sortByLabelName'
 import FilterNumbers from '../shared/FilterNumbers'
 import { supabase } from '../../supabaseClient'
 
