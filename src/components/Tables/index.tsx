@@ -72,7 +72,7 @@ const TablesComponent = () => {
     return {
       tables: sortByLabelName({
         objects: tables,
-        useLabels,
+        useLabels: project.use_labels,
       }),
       filteredCount,
       totalCount,
