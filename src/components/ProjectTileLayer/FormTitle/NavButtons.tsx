@@ -23,15 +23,15 @@ const ProjectTileLayerNavButtons = () => {
       return projectTileLayers.map((p) => p.id)
     }, [projectId]) ?? []
 
-  const activeIndex = (projectTileLayerIds ?? []).indexOf(projectTileLayerId)
+  const parentPath = resolvePath(`..`, window.location.pathname)?.pathname
+  const activeIndex = projectTileLayerIds.indexOf(projectTileLayerId)
   const previousId =
     activeIndex > 0 ? projectTileLayerIds[activeIndex - 1] : activeIndex
+  const previousPath = `${parentPath}/${previousId}`
   const nextId =
     activeIndex === projectTileLayerIds.length - 1
       ? projectTileLayerIds[activeIndex]
       : projectTileLayerIds[activeIndex + 1]
-  const parentPath = resolvePath(`..`, window.location.pathname)?.pathname
-  const previousPath = `${parentPath}/${previousId}`
   const nextPath = `${parentPath}/${nextId}`
 
   const onClickUp = useCallback(() => {
