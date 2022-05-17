@@ -1,14 +1,38 @@
 import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import IconButton from '@mui/material/IconButton'
-import { FaArrowUp } from 'react-icons/fa'
-import { Link, resolvePath } from 'react-router-dom'
+import { FaArrowUp, FaArrowRight, FaArrowLeft } from 'react-icons/fa'
+import { Link, resolvePath, useParams } from 'react-router-dom'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../../storeContext'
+import { dexie } from '../../../dexieClient'
+import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
 
 const RowNavButtons = () => {
+  const { tableId, rowId } = useParams()
   const store = useContext(StoreContext)
   const { activeNodeArray, removeNode } = store
+
+  const rowIds: string[] =
+    useLiveQuery(async () => {
+      const rows = await dexie.rows
+        .where({ deleted: 0, table_id: tableId })
+        .toArray()
+
+      const rWL = await rowsWithLabelFromRows(rows)
+      return rWL.map((r) => r.id)
+    }, [tableId]) ?? []
+
+  const parentPath = resolvePath(`..`, window.location.pathname)?.pathname
+  const activeIndex = rowIds.indexOf(rowId)
+  const previousId = activeIndex > 0 ? rowIds[activeIndex - 1] : activeIndex
+  const previousPath = `${parentPath}/${previousId}`
+  const nextId =
+    activeIndex === rowIds.length - 1
+      ? rowIds[activeIndex]
+      : rowIds[activeIndex + 1]
+  const nextPath = `${parentPath}/${nextId}`
 
   const onClickUp = useCallback(() => {
     removeNode(activeNodeArray)
@@ -24,6 +48,24 @@ const RowNavButtons = () => {
         size="large"
       >
         <FaArrowUp />
+      </IconButton>
+      <IconButton
+        title="Zum vorigen"
+        component={Link}
+        to={previousPath}
+        size="large"
+        disabled={activeIndex === 0}
+      >
+        <FaArrowLeft />
+      </IconButton>
+      <IconButton
+        title="Zum nächsten"
+        component={Link}
+        to={nextPath}
+        size="large"
+        disabled={activeIndex === rowIds.length - 1}
+      >
+        <FaArrowRight />
       </IconButton>
     </>
   )
