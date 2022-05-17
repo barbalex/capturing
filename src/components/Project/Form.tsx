@@ -192,7 +192,7 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
             error={errors?.project?.account_id}
           />
         </FieldsContainer>
-        <ProjectUsers />
+        <ProjectUsers key={`${row.id}ProjectUsers`} />
       </FormContainer>
     </ErrorBoundary>
   )
