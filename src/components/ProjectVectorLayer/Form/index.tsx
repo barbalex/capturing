@@ -165,6 +165,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
   })
 
   const [wfsVersion, setWfsVersion] = useState()
+  const [outputFormatValues, setOutputFormatValues] = useState()
   useEffect(() => {
     const run = async () => {
       //TODO:
@@ -177,10 +178,8 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
       })
       const capabilities = responce?.HTML?.BODY?.['WFS:WFS_CAPABILITIES']
       console.log('ProjectVectorLayerForm, effect, capabilities:', capabilities)
-      console.log(
-        'ProjectVectorLayerForm, effect, wfsVersion:',
-        capabilities?.['@attributes']?.version,
-      )
+
+      // 1. wfs version
       const _wfsVersion = capabilities?.['@attributes']?.version
       if (_wfsVersion) {
         setWfsVersion(_wfsVersion)
@@ -189,6 +188,53 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
             target: { name: 'wfs_version', value: _wfsVersion },
           })
         }
+      }
+
+      // 2. output formats
+      const _operations =
+        capabilities?.['OWS:OPERATIONSMETADATA']?.['OWS:OPERATION']
+      const getFeatureOperation = _operations.find(
+        (o) => o?.['@attributes']?.name === 'GetFeature',
+      )
+      const _outputFormats = getFeatureOperation?.['OWS:PARAMETER']?.[
+        'OWS:ALLOWEDVALUES'
+      ]?.['OWS:VALUE']?.map((v) => v?.['#text'])
+      const acceptableOutputFormats = _outputFormats.filter((v) =>
+        v?.toLowerCase?.()?.includes('json'),
+      )
+      if (acceptableOutputFormats.length) {
+        setOutputFormatValues(
+          acceptableOutputFormats.map((v) => ({ label: v, value: v })),
+        )
+        if (!upToDateRow.output_format) {
+          // set preferred value if upToDateRow.output_format is empty
+          onBlur({
+            target: {
+              name: 'output_format',
+              value:
+                acceptableOutputFormats.filter((v) =>
+                  v.toLowerCase().includes('geojson'),
+                )[0] ??
+                acceptableOutputFormats.filter((v) =>
+                  v.toLowerCase().includes('application/json'),
+                )[0] ??
+                acceptableOutputFormats[0],
+            },
+          })
+        }
+      }
+
+      // 3. title
+      // set label
+      const _label =
+        capabilities?.['OWS:SERVICEIDENTIFICATION']?.['OWS:TITLE']?.['#text']
+      if (!upToDateRow.label && !!_label) {
+        onBlur({
+          target: {
+            name: 'label',
+            value: _label,
+          },
+        })
       }
     }
     run()
@@ -326,26 +372,42 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
               disabled={!userMayEdit}
               type="text"
             />
-            <TextField
-              key={`${row.id}wfs_version`}
-              name="wfs_version"
-              label="WFS Version (z.B. 2.0.0)"
-              value={row.wfs_version}
-              onBlur={onBlur}
-              error={errors?.project_vector_layer?.wfs_version}
-              disabled={!userMayEdit}
-              type="text"
-            />
-            <TextField
-              key={`${row.id}output_format`}
-              name="output_format"
-              label="Format (GeoJSON wählen)"
-              value={row.output_format}
-              onBlur={onBlur}
-              error={errors?.project_vector_layer?.output_format}
-              disabled={!userMayEdit}
-              type="text"
-            />
+            {!wfsVersion && (
+              <TextField
+                key={`${row.id}wfs_version`}
+                name="wfs_version"
+                label="WFS Version (z.B. 2.0.0)"
+                value={row.wfs_version}
+                onBlur={onBlur}
+                error={errors?.project_vector_layer?.wfs_version}
+                disabled={!userMayEdit}
+              />
+            )}
+
+            {outputFormatValues?.length > 0 && (
+              <RadioButtonGroup
+                key={`${row.id}output_format/cb`}
+                value={row.output_format}
+                name="output_format"
+                dataSource={outputFormatValues}
+                onBlur={onBlur}
+                label="Daten-Format"
+                helperText="Nur JSON-Formate können verwendet werden"
+                error={errors?.project_tile_layer?.output_format}
+              />
+            )}
+            {outputFormatValues?.length === 0 && (
+              <TextField
+                key={`${row.id}output_format`}
+                name="output_format"
+                label="Format (GeoJSON wählen)"
+                value={row.output_format}
+                onBlur={onBlur}
+                error={errors?.project_vector_layer?.output_format}
+                disabled={!userMayEdit}
+                type="text"
+              />
+            )}
             <DownloadPVL key={`${row.id}downloadpvl`} row={row} />
           </>
         )}
