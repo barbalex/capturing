@@ -320,6 +320,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           <>
             {showFilter ? (
               <JesNo
+                key={`${row.id}deleted/jesno`}
                 label="gelöscht"
                 name="deleted"
                 value={row.deleted}
@@ -329,6 +330,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               />
             ) : (
               <Checkbox2States
+                key={`${row.id}deleted/db`}
                 label="gelöscht"
                 name="deleted"
                 value={row.deleted}
@@ -340,6 +342,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           </>
         )}
         <RadioButtonGroup
+          key={`${row.id}type`}
           value={row.type}
           name="type"
           dataSource={tileLayerTypeValues}
@@ -349,6 +352,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         />
         {row?.type === 'url_template' && (
           <TextField
+            key={`${row.id}url_template`}
             name="url_template"
             label="URL-Vorlage"
             value={row.url_template}
@@ -361,6 +365,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
         {row?.type === 'wms' && (
           <>
             <TextField
+              key={`${row.id}wms_base_url`}
               name="wms_base_url"
               label="Basis-URL"
               value={row.wms_base_url}
@@ -373,6 +378,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
               <>
                 {wmsFormatValues?.length > 0 && (
                   <RadioButtonGroup
+                    key={`${row.id}wms_format/cb`}
                     value={row.wms_format}
                     name="wms_format"
                     dataSource={wmsFormatValues}
@@ -384,6 +390,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                 )}
                 {wmsFormatValues?.length === 0 && (
                   <TextField
+                    key={`${row.id}wms_format/text`}
                     name="wms_format"
                     label="(Bild-)Format"
                     value={row.wms_format}
@@ -394,6 +401,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                 )}
                 {infoFormatValues?.length > 0 && (
                   <RadioButtonGroup
+                    key={`${row.id}wms_info_format/cb`}
                     value={row.wms_info_format}
                     name="wms_info_format"
                     dataSource={infoFormatValues}
@@ -405,6 +413,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                 )}
                 {infoFormatValues?.length === 0 && (
                   <TextField
+                    key={`${row.id}wms_info_format/text`}
                     name="wms_info_format"
                     label="Format der Informationen"
                     value={row.wms_info_format}
@@ -414,6 +423,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                   />
                 )}
                 <Checkbox2States
+                  key={`${row.id}wms_transparent`}
                   label="Transparent (funktioniert nur bei geeigneten Bild-Formaten, v.a. png)"
                   name="wms_transparent"
                   value={row.wms_transparent}
@@ -423,6 +433,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                 />
                 {layerOptions?.length > 0 && (
                   <CheckboxGroup
+                    key={`${row.id}wms_layers/cb`}
                     value={
                       row.wms_layers?.split ? row.wms_layers?.split?.(',') : []
                     }
@@ -434,6 +445,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                 )}
                 {layerOptions?.length === 0 && (
                   <TextField
+                    key={`${row.id}wms_layers/text`}
                     name="wms_layers"
                     label="Layer (wenn mehrere: mit Komma trennen. Beispiel: 'layer1,layer2')"
                     value={row.wms_layers}
@@ -445,6 +457,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                 )}
                 {!wmsVersion && (
                   <TextField
+                    key={`${row.id}wms_version`}
                     name="wms_version"
                     label="WMS-Version (wird automatisch ausgelesen)"
                     value={row.wms_version}
@@ -458,6 +471,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           </>
         )}
         <TextField
+          key={`${row.id}label`}
           name="label"
           label="Beschriftung"
           value={row.label}
@@ -466,6 +480,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           disabled={!userMayEdit}
         />
         <Checkbox2States
+          key={`${row.id}active`}
           label="aktiv"
           name="active"
           value={row.active}
@@ -474,6 +489,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           disabled={!userMayEdit}
         />
         <TextField
+          key={`${row.id}sort`}
           name="sort"
           label="Sortierung"
           value={row.sort}
@@ -483,6 +499,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           type="number"
         />
         <TextField
+          key={`${row.id}max_zoom`}
           name="max_zoom"
           label="Maximale Zoom-Stufe"
           value={row.max_zoom}
@@ -492,6 +509,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           type="number"
         />
         <TextField
+          key={`${row.id}min_zoom`}
           name="min_zoom"
           label="Minimale Zoom-Stufe"
           value={row.min_zoom}
@@ -501,6 +519,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           type="number"
         />
         <TextField
+          key={`${row.id}opacity`}
           name="opacity"
           label="Deckkraft / Opazität (0 - 1)"
           value={row.opacity}
@@ -510,6 +529,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           type="number"
         />
         <Checkbox2States
+          key={`${row.id}greyscale`}
           label="Grautöne statt Farben"
           name="greyscale"
           value={row.greyscale}
@@ -517,7 +537,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           error={errors?.field?.greyscale}
           disabled={!userMayEdit}
         />
-        <Legends legendUrls={legendUrls} row={row} />
+        <Legends key={`${row.id}legends`} legendUrls={legendUrls} row={row} />
       </FieldsContainer>
     </ErrorBoundary>
   )
