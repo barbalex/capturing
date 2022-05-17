@@ -9,7 +9,7 @@ const fetchWmsGetCapabilities = async ({ url, service = 'WFS' }) => {
   try {
     res = await axios.get(`${url}?service=${service}&request=GetCapabilities`)
   } catch (error) {
-    // console.log(`error fetching ${row.label}`, error?.toJSON())
+    console.log(`error fetching capabilities for ${url}`, error)
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
@@ -27,7 +27,7 @@ const fetchWmsGetCapabilities = async ({ url, service = 'WFS' }) => {
       console.log('Error', error.message)
     }
     console.log(error.config)
-    return
+    throw error
   }
   if (service === 'WMS') return new WMSCapabilities().parse(res.data)
   // is WFS

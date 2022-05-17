@@ -159,9 +159,9 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
   const typeValues = Object.values(VectorLayerTypeEnum).map((v) => {
     const comment =
       v === 'wfs'
-        ? '       ein existierendes Web-Feature-Service verwenden'
+        ? 'Web-Feature-Service verwenden'
         : v === 'upload'
-        ? ' eigene Features importieren'
+        ? 'eigene Features importieren'
         : ''
 
     return {
@@ -175,15 +175,30 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
   const [layerOptions, setLayerOptions] = useState()
   useEffect(() => {
     const run = async () => {
-      //TODO:
       if (!row?.url) return
+
       const upToDateRow: ProjectVectorLayer =
         await dexie.project_vector_layers.get(projectVectorLayerId)
-      const responce = await getCapabilities({
-        url: upToDateRow?.url,
-        service: 'WFS',
-      })
-      const capabilities = responce?.HTML?.BODY?.['WFS:WFS_CAPABILITIES']
+      let response
+      try {
+        response = await getCapabilities({
+          url: upToDateRow?.url,
+          service: 'WFS',
+        })
+      } catch (error) {
+        // TODO: surface this error
+        console.log({
+          url: error?.url,
+          error,
+          status: error?.status,
+          statusText: error?.statusText,
+          data: error?.data,
+          type: error?.type,
+        })
+      }
+
+      console.log('ProjectVectorLayerForm, effect, responce:', response)
+      const capabilities = response?.HTML?.BODY?.['WFS:WFS_CAPABILITIES']
       console.log('ProjectVectorLayerForm, effect, capabilities:', capabilities)
 
       // 1. wfs version
@@ -199,13 +214,15 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
 
       // 2. output formats
       const _operations =
-        capabilities?.['OWS:OPERATIONSMETADATA']?.['OWS:OPERATION']
+        capabilities?.['OWS:OPERATIONSMETADATA']?.['OWS:OPERATION'] ?? []
       const getFeatureOperation = _operations.find(
         (o) => o?.['@attributes']?.name === 'GetFeature',
       )
-      const _outputFormats = getFeatureOperation?.['OWS:PARAMETER']?.[
-        'OWS:ALLOWEDVALUES'
-      ]?.['OWS:VALUE']?.map((v) => v?.['#text'])
+      const _outputFormats = (
+        getFeatureOperation?.['OWS:PARAMETER']?.['OWS:ALLOWEDVALUES']?.[
+          'OWS:VALUE'
+        ] ?? []
+      ).map((v) => v?.['#text'])
       const acceptableOutputFormats = _outputFormats.filter((v) =>
         v?.toLowerCase?.()?.includes('json'),
       )
