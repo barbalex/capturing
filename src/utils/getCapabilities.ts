@@ -1,7 +1,9 @@
 import WMSCapabilities from 'wms-capabilities'
 import axios from 'redaxios'
 
-const fetchWmsGetCapabilities = async ({ url, service }) => { 
+import xmlToJson from './xmlToJson'
+
+const fetchWmsGetCapabilities = async ({ url, service = 'WFS' }) => {
   // Exaple url to get: https://wms.zh.ch/FnsSVOZHWMS?service=WMS&request=GetCapabilities
   let res
   try {
@@ -27,7 +29,11 @@ const fetchWmsGetCapabilities = async ({ url, service }) => {
     console.log(error.config)
     return
   }
-  return new WMSCapabilities().parse(res.data)
+  if (service === 'WMS') return new WMSCapabilities().parse(res.data)
+  // is WFS
+  const parser = new window.DOMParser()
+  const data = xmlToJson(parser.parseFromString(res.data, 'text/html'))
+  return data
 }
 
 export default fetchWmsGetCapabilities
