@@ -385,6 +385,7 @@ const RowForm = ({
 
         {online && !showFilter && row?._conflicts?.map && (
           <ConflictList
+            key={`${row.id}/_conflicts`}
             conflicts={row._conflicts}
             activeConflict={activeConflict}
             setActiveConflict={setActiveConflict}
