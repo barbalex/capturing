@@ -76,7 +76,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
 
   // const data = {}
   const data = useLiveQuery(async () => {
-    const [project,  tables, row, projectUser] = await Promise.all([
+    const [project, tables, row, projectUser] = await Promise.all([
       dexie.projects.get(projectId),
       dexie.ttables
         .where({ deleted: 0, project_id: projectId, type: 'standard' })
@@ -262,6 +262,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           />
         )}
         <RadioButtonGroup
+          key={`${row?.id}type`}
           value={row.type}
           name="type"
           dataSource={tableTypeValues}
@@ -282,6 +283,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
         />
         {!!row.parent_id && (
           <RadioButtonGroupWithInfo
+            key={`${row?.id ?? ''}rel_type`}
             value={row.rel_type}
             name="rel_type"
             dataSource={relTypeDataSource}
@@ -318,7 +320,10 @@ const TableForm = ({ showFilter }: TableFormProps) => {
             Werte-Listen werden automatisch mit den Werten selbst beschriftet
           </p>
         )}
-        <LayerStyle userMayEdit={userMayEdit} />
+        <LayerStyle
+          key={`${row?.id ?? ''}layerstyle`}
+          userMayEdit={userMayEdit}
+        />
       </FieldsContainer>
     </ErrorBoundary>
   )
