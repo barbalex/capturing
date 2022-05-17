@@ -61,7 +61,7 @@ const FieldsComponent = () => {
   const data = useLiveQuery(async () => {
     const [fields, filteredCount, totalCount, projectUser, project] =
       await Promise.all([
-        dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
+        dexie.fields.where({ deleted: 0, table_id: tableId }).sortBy('sort'),
         dexie.fields.where({ deleted: 0, table_id: tableId }).count(), // TODO: pass in filter
         dexie.fields.where({ deleted: 0, table_id: tableId }).count(),
         dexie.project_users.get({
@@ -72,10 +72,7 @@ const FieldsComponent = () => {
       ])
 
     return {
-      fields: sortByLabelName({
-        objects: fields ?? [],
-        useLabels: project.use_labels,
-      }),
+      fields,
       filteredCount,
       totalCount,
       userMayEdit: ['account_manager', 'project_manager'].includes(

@@ -8,7 +8,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
 
 import StoreContext from '../../../storeContext'
-import { dexie, Table } from '../../../dexieClient'
+import { dexie } from '../../../dexieClient'
 import sortByLabelName from '../../../utils/sortByLabelName'
 
 export const MenuChildrenButton = styled(Button)`

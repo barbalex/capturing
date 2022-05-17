@@ -18,7 +18,7 @@ const fieldNodes = async ({ project, table, fieldId, nodes }) => {
       deleted: 0,
       table_id: table.id,
     })
-    .toArray()
+    .sortBy('sort')
 
   const fieldNodes = []
   for (const field: Field of fields) {

@@ -38,7 +38,7 @@ const FieldDeleteButton = ({ userMayEdit }) => {
   const deleted: boolean = useLiveQuery(async () => {
     const row: Row = await dexie.fields.get(fieldId)
     // only return needed values to minimize re-renders
-    return row.deleted
+    return row?.deleted
   }, [fieldId])
 
   const [anchorEl, setAnchorEl] = useState(null)

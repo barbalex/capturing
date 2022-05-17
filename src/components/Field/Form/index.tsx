@@ -63,7 +63,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
   }, [fieldId, unsetError])
 
   const data = useLiveQuery(async () => {
-    const [project, optionsTables, row, fields, fieldTypes, projectUser] =
+    const [project, optionsTables, row, fieldTypes, projectUser] =
       await Promise.all([
         dexie.projects.get(projectId),
         dexie.ttables
@@ -75,7 +75,6 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           )
           .toArray(),
         dexie.fields.get(fieldId),
-        dexie.fields.where({ deleted: 0, table_id: tableId }).toArray(),
         dexie.field_types.where({ deleted: 0 }).sortBy('sort'),
         dexie.project_users.get({
           project_id: projectId,
@@ -109,7 +108,6 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
         label: labelFromLabeledTable({ object: t, useLabels }),
       })),
       row,
-      fields,
       fieldTypeValues: fieldTypes
         .map((t) => ({
           value: t.value,

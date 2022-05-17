@@ -1,29 +1,71 @@
 import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import IconButton from '@mui/material/IconButton'
-import { FaArrowUp } from 'react-icons/fa'
-import { Link, resolvePath } from 'react-router-dom'
+import { FaArrowUp, FaArrowRight, FaArrowLeft } from 'react-icons/fa'
+import { Link, resolvePath, useParams } from 'react-router-dom'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../../storeContext'
+import sortByLabelName from '../../../utils/sortByLabelName'
+import { dexie } from '../../../dexieClient'
 
 const FieldNavButtons = () => {
+  const { projectId, tableId, fieldId } = useParams()
   const store = useContext(StoreContext)
   const { activeNodeArray, removeNode } = store
+
+  const fieldIds: string[] =
+    useLiveQuery(async () => {
+      const fields = await dexie.fields
+        .where({ deleted: 0, table_id: tableId })
+        .sortBy('sort')
+      return fields.map((t) => t.id)
+    }, [tableId, projectId]) ?? []
+
+  const parentPath = resolvePath(`..`, window.location.pathname)?.pathname
+  const activeIndex = fieldIds.indexOf(fieldId)
+  const previousId = activeIndex > 0 ? fieldIds[activeIndex - 1] : activeIndex
+  const previousPath = `${parentPath}/${previousId}`
+  const nextId =
+    activeIndex === fieldIds.length - 1
+      ? fieldIds[activeIndex]
+      : fieldIds[activeIndex + 1]
+  const nextPath = `${parentPath}/${nextId}`
 
   const onClickUp = useCallback(() => {
     removeNode(activeNodeArray)
   }, [activeNodeArray, removeNode])
 
   return (
-    <IconButton
-      title="Zur Liste"
-      component={Link}
-      to={resolvePath(`..`, window.location.pathname)}
-      onClick={onClickUp}
-      size="large"
-    >
-      <FaArrowUp />
-    </IconButton>
+    <>
+      <IconButton
+        title="Zur Liste"
+        component={Link}
+        to={resolvePath(`..`, window.location.pathname)}
+        onClick={onClickUp}
+        size="large"
+      >
+        <FaArrowUp />
+      </IconButton>
+      <IconButton
+        title="Zum vorigen"
+        component={Link}
+        to={previousPath}
+        size="large"
+        disabled={activeIndex === 0}
+      >
+        <FaArrowLeft />
+      </IconButton>
+      <IconButton
+        title="Zum nächsten"
+        component={Link}
+        to={nextPath}
+        size="large"
+        disabled={activeIndex === fieldIds.length - 1}
+      >
+        <FaArrowRight />
+      </IconButton>
+    </>
   )
 }
 
