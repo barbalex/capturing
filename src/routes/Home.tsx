@@ -133,22 +133,26 @@ const Home = () => {
               <p>Egal, wie viele.</p>
             </Card>
             <Card>
-              <CardTitle>Alle können gleichzeitig arbeiten</CardTitle>
-              <p>Daten werden live synchronisiert.</p>
-              <p>Zwei Eingaben widersprechen sich?</p>
-              <p>
-                Kein Problem. Konflikte werden angezeigt und können einfach
-                gelöst werden.
-              </p>
-            </Card>
-            <Card>
-              <CardTitle>Mit dem Gerät Ihrer Wahl</CardTitle>
+              <CardTitle>Mit Ihrem Gerät</CardTitle>
               <p>Handy, Tablet, Notebook, PC…</p>
               <p>Windows, MacOS, Android, iOS, Linux…</p>
             </Card>
             <Card>
               <CardTitle>Mit minimalem Aufwand</CardTitle>
               <p>Keine Installation: Anmelden und loslegen.</p>
+            </Card>
+            <Card>
+              <CardTitle>Alle können gleichzeitig arbeiten</CardTitle>
+              <p>Daten werden live synchronisiert.</p>
+              <p>Zwei Eingaben widersprechen sich? Kein Problem:</p>
+              <p>
+                Konflikte werden angezeigt und können einfach gelöst werden.
+              </p>
+            </Card>
+            <Card>
+              <CardTitle>Fragen?</CardTitle>
+              <p>Ich helfe Ihnen gerne beim Start.</p>
+              <p>Kontaktieren Sie mich.</p>
             </Card>
           </CardContainer>
           <BottomSpacer />
