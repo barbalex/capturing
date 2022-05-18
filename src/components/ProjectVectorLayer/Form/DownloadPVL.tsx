@@ -139,7 +139,15 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
       <Button
         variant="outlined"
         onClick={onClickDownload}
-        disabled={!userMayEdit}
+        disabled={
+          !(
+            userMayEdit &&
+            row.output_format &&
+            row.type_name &&
+            row.url &&
+            row.wfs_version
+          )
+        }
       >
         {title}
       </Button>
