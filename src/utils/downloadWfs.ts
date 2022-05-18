@@ -6,6 +6,7 @@ type Props = {
 }
 
 const downloadWfs = async ({ pvl, store }: Props) => {
+  const { addNotification, removeNotificationById } = store
   if (
     !(
       pvl.type === 'wfs' &&
@@ -14,7 +15,7 @@ const downloadWfs = async ({ pvl, store }: Props) => {
       pvl.output_format
     )
   ) {
-    store.addNotification({
+    addNotification({
       message: `Die Voraussetzungen, um Geometrien für ${pvl.label} zu laden, sind nicht erfüllt. Bitter ergänzen Sie die fehlenden Angaben`,
       type: 'warning',
     })
@@ -23,7 +24,7 @@ const downloadWfs = async ({ pvl, store }: Props) => {
   // 1. empty this pvl's geoms
   await dexie.pvl_geoms.where({ deleted: 0, pvl_id: pvl.id }).delete()
   // 2. fetch features
-  const loadingNotifId = store.addNotification({
+  const loadingNotifId = addNotification({
     message: `Lade Geometrien für ${pvl.label}...`,
     type: 'info',
     duration: 1000000,
@@ -43,7 +44,9 @@ const downloadWfs = async ({ pvl, store }: Props) => {
       },
     })
   } catch (error) {
-    store.removeNotificationById(loadingNotifId)
+    // TODO:
+    // try finding edge cases and check if errors are correctly surfaced
+    removeNotificationById(loadingNotifId)
     console.log('DownloadPVL, error:', {
       url: error?.url,
       error,
@@ -66,17 +69,16 @@ const downloadWfs = async ({ pvl, store }: Props) => {
       console.log(error.request)
     } else {
       // Something happened in setting up the request that triggered an Error
-      // TODO: surface
       console.log('Error', error.message)
     }
     // console.log(error.config)
 
-    store.addNotification({
+    addNotification({
       message: `Fehler beim Laden der Geometrien für ${pvl.label}: Status ${error?.status}, ${error?.statusText}, Daten: ${error?.data}, Typ: ${error?.type}`,
     })
     return false
   }
-  store.removeNotificationById(loadingNotifId)
+  removeNotificationById(loadingNotifId)
   const features = res.data?.features
   // 3. build PVLGeoms
   const pvlGeoms = features.map(

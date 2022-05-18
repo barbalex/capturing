@@ -10,12 +10,23 @@ import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 import Button from '@mui/material/Button'
+import styled from 'styled-components'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
+import Label from '../../shared/Label'
 import { dexie, ProjectVectorLayer } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import downloadWfs from '../../../utils/downloadWfs'
 import storeContext from '../../../storeContext'
+
+const OfflineReadyText = styled.p`
+  margin-top: 0;
+`
+const ButtonRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+`
 
 type Props = {
   row: ProjectVectorLayer
@@ -56,18 +67,18 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
   const userMayEdit: boolean = data?.userMayEdit
   const pvlGeomsCount: number = data?.pvlGeomsCount
 
-  const title = actionTitle
+  const downloadText = actionTitle
     ? actionTitle
     : pvlGeomsCount
-    ? 'WFS-Features erneut herunterladen (wenn sie aktualisiert werden sollen)'
-    : 'WFS-Features für Offline-Nutzung herunterladen'
+    ? 'Daten erneut herunterladen (aktualisieren)'
+    : 'Daten für Offline-Nutzung herunterladen'
 
   const timeoutRef = useRef()
   const onClickDownload = useCallback(async () => {
-    setActionTitle('WFS-Features werden heruntergeladen...')
+    setActionTitle('Die Daten werden heruntergeladen...')
     const worked = await downloadWfs({ pvl: row, store })
     if (worked) {
-      setActionTitle('WFS-Features wurden heruntergeladen')
+      setActionTitle('Die Daten wurden heruntergeladen')
       timeoutRef.current = setTimeout(() => setActionTitle(undefined), 30000)
     } else {
       setActionTitle(undefined)
@@ -79,23 +90,46 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
     }
   }, [])
 
+  const onClickDelete = useCallback(
+    () =>
+      dexie.pvl_geoms
+        .where({ deleted: 0, pvl_id: projectVectorLayerId })
+        .delete(),
+    [projectVectorLayerId],
+  )
+
+  const offlineReadyText = pvlGeomsCount
+    ? 'Die Daten sind offline verfügbar.'
+    : 'Die Daten sind nicht offline verfügbar.'
+
   return (
     <ErrorBoundary>
-      <Button
-        variant="outlined"
-        onClick={onClickDownload}
-        disabled={
-          !(
-            userMayEdit &&
-            row.output_format &&
-            row.type_name &&
-            row.url &&
-            row.wfs_version
-          )
-        }
-      >
-        {title}
-      </Button>
+      <Label label="Offline-Verfügbarkeit" />
+      <OfflineReadyText>{offlineReadyText}</OfflineReadyText>
+      <ButtonRow>
+        <Button
+          variant="outlined"
+          onClick={onClickDownload}
+          disabled={
+            !(
+              userMayEdit &&
+              row.output_format &&
+              row.type_name &&
+              row.url &&
+              row.wfs_version
+            )
+          }
+        >
+          {downloadText}
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={onClickDelete}
+          disabled={!pvlGeomsCount}
+        >
+          Daten entfernen
+        </Button>
+      </ButtonRow>
     </ErrorBoundary>
   )
 }

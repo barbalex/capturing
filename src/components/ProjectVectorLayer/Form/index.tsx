@@ -30,11 +30,35 @@ import CheckboxGroup from '../../shared/CheckboxGroup'
 import LayerStyle from '../../LayerStyle'
 import DownloadPVL from './DownloadPVL'
 import getCapabilities from '../../../utils/getCapabilities'
+import constants from '../../../utils/constants'
 
 const FieldsContainer = styled.div`
   padding: 10px;
   height: 100%;
   overflow-y: auto;
+`
+
+const TitleRow = styled.div`
+  margin: 10px -10px 10px -10px;
+  background-color: rgba(248, 243, 254, 1);
+  flex-shrink: 0;
+  display: flex;
+  height: ${constants.titleRowHeight}px;
+  justify-content: space-between;
+  padding: 0 10px;
+  cursor: pointer;
+  user-select: none;
+  position: sticky;
+  top: -10px;
+  z-index: 4;
+  &:first-of-type {
+    margin-top: -10px;
+  }
+`
+const Title = styled.div`
+  font-weight: bold;
+  margin-top: auto;
+  margin-bottom: auto;
 `
 
 type Props = {
@@ -161,15 +185,16 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
       v === 'wfs'
         ? 'Web-Feature-Service verwenden'
         : v === 'upload'
-        ? 'eigene Features importieren'
+        ? 'Eigene Features importieren'
         : ''
 
     return {
       value: v,
-      label: `${v}: ${comment}`,
+      label: comment,
     }
   })
 
+  const [loadingCapabilities, setLoadingCapabilities] = useState(true)
   const [wfsVersion, setWfsVersion] = useState()
   const [outputFormatValues, setOutputFormatValues] = useState()
   const [layerOptions, setLayerOptions] = useState()
@@ -196,6 +221,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           type: error?.type,
         })
       }
+      setLoadingCapabilities(false)
 
       // console.log('ProjectVectorLayerForm, effect, responce:', response)
       const capabilities = response?.HTML?.BODY?.['WFS:WFS_CAPABILITIES']
@@ -334,7 +360,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           name="type"
           value={row.type}
           field="type"
-          label="Typ: Woher kommen die Geometrien?"
+          label="Woher kommen die Daten?"
           dataSource={typeValues}
           onBlur={onBlur}
           error={errors?.field?.type}
@@ -342,6 +368,9 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
         />
         {row.type === 'wfs' && (
           <>
+            <TitleRow>
+              <Title>WFS konfigurieren</Title>
+            </TitleRow>
             <TextField
               key={`${row.id}url`}
               name="url"
@@ -352,62 +381,70 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
               disabled={!userMayEdit}
               type="text"
             />
-            {layerOptions?.length > 0 && (
-              <CheckboxGroup
-                key={`${row.id}type_name/cb`}
-                value={row.type_name?.split ? row.type_name?.split?.(',') : []}
-                label="Layer (welche der WFS-Server anbietet)"
-                name="type_name"
-                options={layerOptions}
-                onBlur={onBlur}
-                disabled={!userMayEdit}
-              />
-            )}
-            {layerOptions?.length === 0 && (
-              <TextField
-                key={`${row.id}type_name`}
-                name="type_name"
-                label="Layer (welche der WFS-Server anbietet)"
-                value={row.type_name}
-                onBlur={onBlur}
-                error={errors?.project_vector_layer?.type_name}
-                disabled={!userMayEdit}
-              />
-            )}
-            {!wfsVersion && (
-              <TextField
-                key={`${row.id}wfs_version`}
-                name="wfs_version"
-                label="WFS Version (z.B. 2.0.0)"
-                value={row.wfs_version}
-                onBlur={onBlur}
-                error={errors?.project_vector_layer?.wfs_version}
-                disabled={!userMayEdit}
-              />
-            )}
-            {outputFormatValues?.length > 0 && (
-              <RadioButtonGroup
-                key={`${row.id}output_format/cb`}
-                value={row.output_format}
-                name="output_format"
-                dataSource={outputFormatValues}
-                onBlur={onBlur}
-                label="Daten-Format"
-                helperText="Nur JSON-Formate können verwendet werden"
-                error={errors?.project_tile_layer?.output_format}
-              />
-            )}
-            {outputFormatValues?.length === 0 && (
-              <TextField
-                key={`${row.id}output_format`}
-                name="output_format"
-                label="Format (GeoJSON wählen)"
-                value={row.output_format}
-                onBlur={onBlur}
-                error={errors?.project_vector_layer?.output_format}
-                disabled={!userMayEdit}
-                type="text"
-              />
+            {loadingCapabilities ? (
+              <Spinner />
+            ) : (
+              <>
+                {layerOptions?.length > 0 && (
+                  <CheckboxGroup
+                    key={`${row.id}type_name/cb`}
+                    value={
+                      row.type_name?.split ? row.type_name?.split?.(',') : []
+                    }
+                    label="Layer (welche der WFS-Server anbietet)"
+                    name="type_name"
+                    options={layerOptions}
+                    onBlur={onBlur}
+                    disabled={!userMayEdit}
+                  />
+                )}
+                {layerOptions?.length === 0 && (
+                  <TextField
+                    key={`${row.id}type_name`}
+                    name="type_name"
+                    label="Layer (welche der WFS-Server anbietet)"
+                    value={row.type_name}
+                    onBlur={onBlur}
+                    error={errors?.project_vector_layer?.type_name}
+                    disabled={!userMayEdit}
+                  />
+                )}
+                {!wfsVersion && (
+                  <TextField
+                    key={`${row.id}wfs_version`}
+                    name="wfs_version"
+                    label="WFS Version (z.B. 2.0.0)"
+                    value={row.wfs_version}
+                    onBlur={onBlur}
+                    error={errors?.project_vector_layer?.wfs_version}
+                    disabled={!userMayEdit}
+                  />
+                )}
+                {outputFormatValues?.length > 0 && (
+                  <RadioButtonGroup
+                    key={`${row.id}output_format/cb`}
+                    value={row.output_format}
+                    name="output_format"
+                    dataSource={outputFormatValues}
+                    onBlur={onBlur}
+                    label="Daten-Format"
+                    helperText="Nur JSON-Formate können verwendet werden"
+                    error={errors?.project_tile_layer?.output_format}
+                  />
+                )}
+                {outputFormatValues?.length === 0 && (
+                  <TextField
+                    key={`${row.id}output_format`}
+                    name="output_format"
+                    label="Format (GeoJSON wählen)"
+                    value={row.output_format}
+                    onBlur={onBlur}
+                    error={errors?.project_vector_layer?.output_format}
+                    disabled={!userMayEdit}
+                    type="text"
+                  />
+                )}
+              </>
             )}
             <TextField
               key={`${row.id}label`}

@@ -29,10 +29,10 @@ import {
 } from '../dexieClient'
 import { supabase } from '../supabaseClient'
 import TextField from './shared/TextField'
+import Spinner from './shared/Spinner'
 import RadioButtonGroup from './shared/RadioButtonGroup'
 
 import constants from '../utils/constants'
-import insertLayerStyle from '../utils/insertLayerStyle'
 
 const Container = styled.div`
   margin: 25px -10px 10px -10px;
@@ -139,34 +139,6 @@ const LayerStyleForm = ({ userMayEdit }) => {
     [row],
   )
 
-  const [open, setOpen] = useState(false)
-  const anim = useAnimation()
-  const onClickToggle = useCallback(
-    async (e) => {
-      e.stopPropagation()
-      if (!row) {
-        await insertLayerStyle({
-          tableId,
-          projectTileLayerId,
-          projectVectorLayerId,
-        })
-      }
-      if (open) {
-        const was = open
-        await anim.start({ opacity: 0 })
-        await anim.start({ height: 0 })
-        setOpen(!was)
-      } else {
-        setOpen(!open)
-        setTimeout(async () => {
-          await anim.start({ height: 'auto' })
-          await anim.start({ opacity: 1 })
-        })
-      }
-    },
-    [anim, open, projectTileLayerId, projectVectorLayerId, row, tableId],
-  )
-
   const showDeleted = false
 
   const lineCapValues = Object.values(LineCapEnum).map((v) => ({
@@ -182,183 +154,170 @@ const LayerStyleForm = ({ userMayEdit }) => {
     label: v,
   }))
 
+  if (!row) return <Spinner />
+
   return (
     <ErrorBoundary>
       <Container>
-        <TitleRow
-          onClick={onClickToggle}
-          title={open ? 'schliessen' : 'öffnen'}
-        >
+        <TitleRow>
           <Title>Styling von Geometrien</Title>
-          <div>
-            <IconButton
-              aria-label={open ? 'schliessen' : 'öffnen'}
-              title={open ? 'schliessen' : 'öffnen'}
-              onClick={onClickToggle}
-              size="large"
-            >
-              {open ? <FaChevronUp /> : <FaChevronDown />}
-            </IconButton>
-          </div>
         </TitleRow>
-        <motion.div animate={anim} transition={{ type: 'just', duration: 0.2 }}>
-          {open && !!row && (
-            <FieldsContainer
-              onBlur={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget)) {
-                  // focus left the container
-                  // https://github.com/facebook/react/issues/6410#issuecomment-671915381
-                  updateOnServer()
-                }
-              }}
-            >
-              {showDeleted && (
-                <Checkbox2States
-                  label="gelöscht"
-                  name="deleted"
-                  value={row.deleted}
-                  onBlur={onBlur}
-                  error={errors?.project?.deleted}
-                  disabled={!userMayEdit}
-                />
-              )}
-              <TextField
-                name="icon_url"
-                label="URL für Punkt-Icon"
-                value={row.icon_url}
-                onBlur={onBlur}
-                error={errors?.project?.icon_url}
-                disabled={!userMayEdit}
-              />
-              <TextField
-                name="icon_retina_url"
-                label="URL für Punkt-Icon, hochauflösend"
-                value={row.icon_retina_url}
-                onBlur={onBlur}
-                error={errors?.project?.icon_retina_url}
-              />
-              <TextField
-                name="icon_size"
-                label="Icon Grösse (in Bild-Punkten)"
-                value={row.icon_size}
-                onBlur={onBlur}
-                error={errors?.project?.icon_size}
-                type="number"
-                disabled={!userMayEdit}
-              />
+        {!!row && (
+          <FieldsContainer
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget)) {
+                // focus left the container
+                // https://github.com/facebook/react/issues/6410#issuecomment-671915381
+                updateOnServer()
+              }
+            }}
+          >
+            {showDeleted && (
               <Checkbox2States
-                label="(Umriss-)Linien zeichnen (Polygone und Kreise)"
-                name="stroke"
-                value={row.stroke}
+                label="gelöscht"
+                name="deleted"
+                value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.project?.stroke}
-              />
-              <ColorPicker
-                id={`${row.id}/color`}
-                label="Linien: Farbe"
-                onBlur={onBlur}
-                color={row.color}
-                name="color"
+                error={errors?.project?.deleted}
                 disabled={!userMayEdit}
               />
-              <TextField
-                name="weight"
-                label="Linien: Breite (in Bild-Punkten)"
-                value={row.weight}
+            )}
+            <TextField
+              name="icon_url"
+              label="URL für Punkt-Icon"
+              value={row.icon_url}
+              onBlur={onBlur}
+              error={errors?.project?.icon_url}
+              disabled={!userMayEdit}
+            />
+            <TextField
+              name="icon_retina_url"
+              label="URL für Punkt-Icon, hochauflösend"
+              value={row.icon_retina_url}
+              onBlur={onBlur}
+              error={errors?.project?.icon_retina_url}
+            />
+            <TextField
+              name="icon_size"
+              label="Icon Grösse (in Bild-Punkten)"
+              value={row.icon_size}
+              onBlur={onBlur}
+              error={errors?.project?.icon_size}
+              type="number"
+              disabled={!userMayEdit}
+            />
+            <Checkbox2States
+              label="(Umriss-)Linien zeichnen (Polygone und Kreise)"
+              name="stroke"
+              value={row.stroke}
+              onBlur={onBlur}
+              error={errors?.project?.stroke}
+            />
+            <ColorPicker
+              id={`${row.id}/color`}
+              label="Linien: Farbe"
+              onBlur={onBlur}
+              color={row.color}
+              name="color"
+              disabled={!userMayEdit}
+            />
+            <TextField
+              name="weight"
+              label="Linien: Breite (in Bild-Punkten)"
+              value={row.weight}
+              onBlur={onBlur}
+              error={errors?.project?.weight}
+              type="number"
+              disabled={!userMayEdit}
+            />
+            <TextField
+              name="opacity"
+              label="Linien: Deckkraft / Opazität"
+              value={row.opacity}
+              onBlur={onBlur}
+              error={errors?.project?.opacity}
+              type="number"
+              disabled={!userMayEdit}
+            />
+            <div>
+              <RadioButtonGroup
+                name="line_cap"
+                value={row.line_cap}
+                field="line_cap"
+                label="Linien: Abschluss"
+                dataSource={lineCapValues}
                 onBlur={onBlur}
-                error={errors?.project?.weight}
-                type="number"
+                error={errors?.field?.line_cap}
                 disabled={!userMayEdit}
               />
-              <TextField
-                name="opacity"
-                label="Linien: Deckkraft / Opazität"
-                value={row.opacity}
+            </div>
+            <div>
+              <RadioButtonGroup
+                name="line_join"
+                value={row.line_join}
+                field="line_join"
+                label="Linien: Ecken"
+                dataSource={lineJoinValues}
                 onBlur={onBlur}
-                error={errors?.project?.opacity}
-                type="number"
+                error={errors?.field?.line_join}
                 disabled={!userMayEdit}
               />
-              <div>
-                <RadioButtonGroup
-                  name="line_cap"
-                  value={row.line_cap}
-                  field="line_cap"
-                  label="Linien: Abschluss"
-                  dataSource={lineCapValues}
-                  onBlur={onBlur}
-                  error={errors?.field?.line_cap}
-                  disabled={!userMayEdit}
-                />
-              </div>
-              <div>
-                <RadioButtonGroup
-                  name="line_join"
-                  value={row.line_join}
-                  field="line_join"
-                  label="Linien: Ecken"
-                  dataSource={lineJoinValues}
-                  onBlur={onBlur}
-                  error={errors?.field?.line_join}
-                  disabled={!userMayEdit}
-                />
-              </div>
-              <TextField
-                name="dash_array"
-                label="Linien: Dash-Array"
-                value={row.dash_array}
+            </div>
+            <TextField
+              name="dash_array"
+              label="Linien: Dash-Array"
+              value={row.dash_array}
+              onBlur={onBlur}
+              error={errors?.project?.dash_array}
+              disabled={!userMayEdit}
+            />
+            <TextField
+              name="dash_offset"
+              label="Linien: Dash-Offset"
+              value={row.dash_offset}
+              onBlur={onBlur}
+              error={errors?.project?.dash_offset}
+              disabled={!userMayEdit}
+            />
+            <Checkbox2States
+              label="Flächen füllen"
+              name="fill"
+              value={row.fill}
+              onBlur={onBlur}
+              error={errors?.project?.fill}
+              disabled={!userMayEdit}
+            />
+            <ColorPicker
+              id={`${row.id}/fill_color`}
+              label="Füllung: Farbe"
+              name="fill_color"
+              onBlur={onBlur}
+              color={row.fill_color}
+              disabled={!userMayEdit}
+            />
+            <TextField
+              name="fill_opacity"
+              label="Füllung: Deckkraft / Opazität"
+              value={row.fill_opacity}
+              onBlur={onBlur}
+              error={errors?.project?.fill_opacity}
+              type="number"
+              disabled={!userMayEdit}
+            />
+            <div>
+              <RadioButtonGroup
+                name="fill_rule"
+                value={row.fill_rule}
+                field="fill_rule"
+                label="Füllung: Regel, um den Inhalt von Flächen zu bestimmen"
+                dataSource={fillRuleValues}
                 onBlur={onBlur}
-                error={errors?.project?.dash_array}
+                error={errors?.field?.fill_rule}
                 disabled={!userMayEdit}
               />
-              <TextField
-                name="dash_offset"
-                label="Linien: Dash-Offset"
-                value={row.dash_offset}
-                onBlur={onBlur}
-                error={errors?.project?.dash_offset}
-                disabled={!userMayEdit}
-              />
-              <Checkbox2States
-                label="Flächen füllen"
-                name="fill"
-                value={row.fill}
-                onBlur={onBlur}
-                error={errors?.project?.fill}
-                disabled={!userMayEdit}
-              />
-              <ColorPicker
-                id={`${row.id}/fill_color`}
-                label="Füllung: Farbe"
-                name="fill_color"
-                onBlur={onBlur}
-                color={row.fill_color}
-                disabled={!userMayEdit}
-              />
-              <TextField
-                name="fill_opacity"
-                label="Füllung: Deckkraft / Opazität"
-                value={row.fill_opacity}
-                onBlur={onBlur}
-                error={errors?.project?.fill_opacity}
-                type="number"
-                disabled={!userMayEdit}
-              />
-              <div>
-                <RadioButtonGroup
-                  name="fill_rule"
-                  value={row.fill_rule}
-                  field="fill_rule"
-                  label="Füllung: Regel, um den Inhalt von Flächen zu bestimmen"
-                  dataSource={fillRuleValues}
-                  onBlur={onBlur}
-                  error={errors?.field?.fill_rule}
-                  disabled={!userMayEdit}
-                />
-              </div>
-            </FieldsContainer>
-          )}
-        </motion.div>
+            </div>
+          </FieldsContainer>
+        )}
       </Container>
     </ErrorBoundary>
   )
