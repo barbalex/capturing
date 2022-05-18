@@ -116,26 +116,26 @@ const Home = () => {
           </PageTitle>
           <CardContainer>
             <Card>
-              <CardTitle>Aller Art</CardTitle>
+              <CardTitle>Was Sie wollen</CardTitle>
               Text, Pläne, Fotos, Audio, beliebige Dateien.
             </Card>
             <Card>
               <CardTitle>Wie Sie wollen</CardTitle>
-              Daten-Strukturen sind individuell und flexibel konfigurierbar.
+              Daten-Strukturen und -Felder flexibel konfigurieren.
             </Card>
             <Card>
               <CardTitle>Wo Sie wollen</CardTitle>
-              Kein Internet-Empfang? Egal!
+              Kein Internet? Egal!
             </Card>
             <Card>
               <CardTitle>Mit wem Sie wollen</CardTitle>
-              <p>Neue Mitarbeiter einfach und rasch ergänzen.</p>
-              <p>Es können beliebig viele Personen mitarbeiten.</p>
+              <p>Neue Mitarbeitende einfach ergänzen.</p>
+              <p>Egal, wie viele.</p>
             </Card>
-            <Card>
+            {/* <Card>
               <CardTitle>Wann Sie wollen</CardTitle>
               Daten werden live synchronisiert.
-            </Card>
+            </Card> */}
             <Card>
               <CardTitle>Mit dem Gerät Ihrer Wahl</CardTitle>
               <p>Handy, Tablet, Notebook, PC…</p>
@@ -143,8 +143,7 @@ const Home = () => {
             </Card>
             <Card>
               <CardTitle>Mit minimalem Aufwand</CardTitle>
-              <p>Nur einmal vor- und nachbereiten.</p>
-              <p>Egal wie viele Mitarbeiter.</p>
+              <p>Keine Installation: Anmelden und loslegen.</p>
             </Card>
           </CardContainer>
           <BottomSpacer />
