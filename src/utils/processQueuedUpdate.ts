@@ -1,5 +1,4 @@
 import { supabase } from '../supabaseClient'
-import { Session } from '@supabase/supabase-js'
 import { dexie, QueuedUpdate } from '../dexieClient'
 import { v1 as uuidv1 } from 'uuid'
 import SparkMD5 from 'spark-md5'
@@ -15,9 +14,8 @@ const processQueuedUpdate = async ({
   queuedUpdate,
   store,
 }: ProcessQueuedUpdateProps) => {
-  const session: Session = supabase.auth.session()
   const { online, setOnline } = store
-  // console.log('processQueuedUpdate', queuedUpdate)
+  console.log('processQueuedUpdate', queuedUpdate)
 
   const isRevTable = revTables.includes(queuedUpdate.table)
   const isInsert = !queuedUpdate.revert_id
@@ -34,8 +32,6 @@ const processQueuedUpdate = async ({
     delete newObject.file
     const newRevObject = {
       ...newObject,
-      client_rev_at: new window.Date().toISOString(),
-      client_rev_by: session.user?.email ?? session.user?.id,
       depth,
       parent_rev: newObject?.revisions?.[0] ?? null,
     }
@@ -82,12 +78,8 @@ const processQueuedUpdate = async ({
     // would be good for: pvl_geom
     // upsert regular table
     // 1. create new Object
-    const newObject = {
-      ...JSON.parse(queuedUpdate.value),
-      client_rev_at: new window.Date().toISOString(),
-      client_rev_by: session.user.email,
-    }
-    // 2. send revision to server
+    const newObject = JSON.parse(queuedUpdate.value)
+    // 2. send it to server
     const { error } = await supabase.from(queuedUpdate.table).upsert(newObject)
     if (error) {
       // 3. deal with errors
