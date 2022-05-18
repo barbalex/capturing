@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { GeoJSON, useMapEvent } from 'react-leaflet'
 import styled from 'styled-components'
 import axios from 'redaxios'
-import XMLViewer from 'react-xml-viewer' 
+import XMLViewer from 'react-xml-viewer'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -58,6 +58,14 @@ const VectorLayerComponent = ({ layer }: Props) => {
           },
         })
       } catch (error) {
+        console.log('VectorLayerWFS, error:', {
+          url: error?.url,
+          error,
+          status: error?.status,
+          statusText: error?.statusText,
+          data: error?.data,
+          type: error?.type,
+        })
         setError(error.data)
         return false
       }
