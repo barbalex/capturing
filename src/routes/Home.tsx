@@ -88,6 +88,7 @@ const PageTitle = styled(Typography)`
 `
 const CardTitle = styled.h3`
   font-weight: 700;
+  margin-top: 0;
 `
 const BottomSpacer = styled.div`
   height: 15px;
@@ -125,7 +126,8 @@ const Home = () => {
             </Card>
             <Card>
               <CardTitle>Wo Sie wollen</CardTitle>
-              Kein Internet? Egal!
+              <p>Kein Internet? Egal!</p>
+              <p>Erfassen geht mit Ihnen durch Dick und Dünn.</p>
             </Card>
             <Card>
               <CardTitle>Mit wem Sie wollen</CardTitle>
@@ -142,6 +144,11 @@ const Home = () => {
               <p>Keine Installation: Anmelden und loslegen.</p>
             </Card>
             <Card>
+              <CardTitle>Einer für alle, alle für einen</CardTitle>
+              <p>Eine Person konfiguriert.</p>
+              <p>Die übrigen können direkt erfassen.</p>
+            </Card>
+            <Card>
               <CardTitle>Alle können gleichzeitig arbeiten</CardTitle>
               <p>Daten werden live synchronisiert.</p>
               <p>Zwei Eingaben widersprechen sich? Kein Problem:</p>
@@ -152,6 +159,11 @@ const Home = () => {
             <Card>
               <CardTitle>Fragen?</CardTitle>
               <p>Ich helfe Ihnen gerne beim Start.</p>
+              <p>
+                Ihr Anwendungsfall interessiert mich und hilft bei der
+                Weiter-Entwicklung.
+              </p>
+              <p>Sie zahlen erst, wenn Sie Erfassen produktiv nutzen.</p>
               <p>Kontaktieren Sie mich.</p>
             </Card>
           </CardContainer>
