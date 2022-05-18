@@ -16,7 +16,7 @@ const StyledIconButton = styled(IconButton)`
   margin-left: 5px !important;
 `
 
-import StoreContext from '../../storeContext' 
+import StoreContext from '../../storeContext'
 import Notification from './Notification'
 
 const Notifications = () => {
@@ -36,7 +36,7 @@ const Notifications = () => {
   if (notificationsSorted.length === 0) return null
 
   return (
-    <Container>
+    <Container key={notifications.length}>
       {notificationsSorted.map((n) => (
         <Notification key={n.id} notification={n} />
       ))}
