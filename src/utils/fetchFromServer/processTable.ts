@@ -99,13 +99,24 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
      */
     if (tableName === 'project_vector_layers') {
       for (const d of data) {
-        if (d.type === 'wfs') {
+        console.log('processTable, pvl:', { d })
+        if (
+          d.type === 'wfs' &&
+          d.type_name &&
+          d.wfs_version &&
+          d.output_format
+        ) {
           const count = await dexie.pvl_geoms
             .where({ deleted: 0, pvl_id: d.id })
             .count()
           if (count === 0) {
             // no geometries have been downloaded yet
             // 1. download
+            const loadingNotifId = store.addNotification({
+              message: `Lade Geometrien für ${d.label}...`,
+              type: 'info',
+              duration: 1000000,
+            })
             let res
             try {
               res = await axios({
@@ -121,8 +132,24 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
                 },
               })
             } catch (error) {
+              store.removeNotificationById(loadingNotifId)
+              console.log(
+                'processTable project_vector_layers, donwloading wfs, error:',
+                {
+                  url: error?.url,
+                  error,
+                  status: error?.status,
+                  statusText: error?.statusText,
+                  data: error?.data,
+                  type: error?.type,
+                },
+              )
+              store.addNotification({
+                message: `Fehler beim Laden der Geometrien für ${d.label}: Status ${error?.status}, ${error?.statusText}, Daten: ${error?.data}, Typ: ${error?.type}`,
+              })
               return
             }
+            store.removeNotificationById(loadingNotifId)
             const features = res.data?.features
             // 2. build PVLGeoms
             const pvlGeoms = features.map((feature) => {
