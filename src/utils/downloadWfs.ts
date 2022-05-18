@@ -14,10 +14,8 @@ const downloadWfs = async ({ pvl, store }: Props) => {
       pvl.output_format
     )
   ) {
-    // TODO: tell user data is not ready?
-
     store.addNotification({
-      message: `Die Voraussetzungen, um Geometrien für ${pvl.label} zu laden, sind nicht erfüllt`,
+      message: `Die Voraussetzungen, um Geometrien für ${pvl.label} zu laden, sind nicht erfüllt. Bitter ergänzen Sie die fehlenden Angaben`,
       type: 'warning',
     })
     return

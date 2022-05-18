@@ -110,7 +110,6 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
             .where({ deleted: 0, pvl_id: pvl.id })
             .count()
           if (count === 0) {
-            // console.log('processTable, pvl:', pvl)
             downloadWfs({ pvl, store })
           }
         }
