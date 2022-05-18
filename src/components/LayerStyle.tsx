@@ -1,19 +1,10 @@
-import React, {
-  useContext,
-  useEffect,
-  useCallback,
-  useRef,
-  useState,
-} from 'react'
+import React, { useContext, useEffect, useCallback, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
 import { Session } from '@supabase/supabase-js'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { motion, useAnimation } from 'framer-motion'
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
-import IconButton from '@mui/material/IconButton'
 
 // TODO: check references
 import StoreContext from '../storeContext'
@@ -35,7 +26,7 @@ import RadioButtonGroup from './shared/RadioButtonGroup'
 import constants from '../utils/constants'
 
 const Container = styled.div`
-  margin: 25px -10px 10px -10px;
+  margin: 25px -10px 0 -10px;
 `
 const TitleRow = styled.div`
   background-color: rgba(248, 243, 254, 1);
@@ -59,7 +50,7 @@ const Title = styled.div`
   margin-bottom: auto;
 `
 const FieldsContainer = styled.div`
-  padding: 10px;
+  padding: 15px 10px 10px 10px;
 `
 
 const LayerStyleForm = ({ userMayEdit }) => {

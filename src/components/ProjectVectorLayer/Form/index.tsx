@@ -39,7 +39,7 @@ const FieldsContainer = styled.div`
 `
 
 const TitleRow = styled.div`
-  margin: 10px -10px 10px -10px;
+  margin: 0 -10px 15px -10px;
   background-color: rgba(248, 243, 254, 1);
   flex-shrink: 0;
   display: flex;
