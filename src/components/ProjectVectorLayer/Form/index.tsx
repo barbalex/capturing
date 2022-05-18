@@ -146,7 +146,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
         })
       }
 
-      console.log('ProjectVectorLayer, onBlur', { field, value, newValue })
+      // console.log('ProjectVectorLayer, onBlur', { field, value, newValue })
 
       // update rowState
       rowState.current = { ...row, ...{ [field]: newValue } }
@@ -197,7 +197,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
         })
       }
 
-      console.log('ProjectVectorLayerForm, effect, responce:', response)
+      // console.log('ProjectVectorLayerForm, effect, responce:', response)
       const capabilities = response?.HTML?.BODY?.['WFS:WFS_CAPABILITIES']
       console.log('ProjectVectorLayerForm, effect, capabilities:', capabilities)
 
@@ -283,10 +283,6 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
           label: v.TITLE?.['#text'] ?? v.NAME?.['#text'],
           value: v.NAME?.['#text'],
         }))
-      console.log(
-        'ProjectVectorLayerForm, effect, layerOptions:',
-        _layerOptions,
-      )
       setLayerOptions(_layerOptions)
     }
     run()
@@ -333,64 +329,6 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
             )}
           </>
         )}
-        <TextField
-          key={`${row.id}label`}
-          name="label"
-          label="Beschriftung"
-          value={row.label}
-          onBlur={onBlur}
-          error={errors?.project_vector_layer?.label}
-          disabled={!userMayEdit}
-        />
-        <Checkbox2States
-          key={`${row.id}active`}
-          label="aktiv"
-          name="active"
-          value={row.active}
-          onBlur={onBlur}
-          error={errors?.field?.active}
-          disabled={!userMayEdit}
-        />
-        <TextField
-          key={`${row.id}sort`}
-          name="sort"
-          label="Sortierung"
-          value={row.sort}
-          onBlur={onBlur}
-          error={errors?.project_vector_layer?.sort}
-          disabled={!userMayEdit}
-          type="number"
-        />
-        <TextField
-          key={`${row.id}max_zoom`}
-          name="max_zoom"
-          label="Maximale Zoom-Stufe"
-          value={row.max_zoom}
-          onBlur={onBlur}
-          error={errors?.project_vector_layer?.max_zoom}
-          disabled={!userMayEdit}
-          type="number"
-        />
-        <TextField
-          key={`${row.id}min_zoom`}
-          name="min_zoom"
-          label="Minimale Zoom-Stufe"
-          value={row.min_zoom}
-          onBlur={onBlur}
-          error={errors?.project_vector_layer?.min_zoom}
-          disabled={!userMayEdit}
-          type="number"
-        />
-        <TextField
-          key={`${row.id}opacity`}
-          name="opacity"
-          label="Deckkraft / Opazität (0 - 1)"
-          value={row.opacity}
-          onBlur={onBlur}
-          error={errors?.project_vector_layer?.opacity}
-          disabled={!userMayEdit}
-          type="number"
-        />
         <RadioButtonGroup
           key={`${row.id}type`}
           name="type"
@@ -447,7 +385,6 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                 disabled={!userMayEdit}
               />
             )}
-
             {outputFormatValues?.length > 0 && (
               <RadioButtonGroup
                 key={`${row.id}output_format/cb`}
@@ -472,6 +409,64 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                 type="text"
               />
             )}
+            <TextField
+              key={`${row.id}label`}
+              name="label"
+              label="Beschriftung"
+              value={row.label}
+              onBlur={onBlur}
+              error={errors?.project_vector_layer?.label}
+              disabled={!userMayEdit}
+            />
+            <Checkbox2States
+              key={`${row.id}active`}
+              label="aktiv"
+              name="active"
+              value={row.active}
+              onBlur={onBlur}
+              error={errors?.field?.active}
+              disabled={!userMayEdit}
+            />
+            <TextField
+              key={`${row.id}sort`}
+              name="sort"
+              label="Sortierung"
+              value={row.sort}
+              onBlur={onBlur}
+              error={errors?.project_vector_layer?.sort}
+              disabled={!userMayEdit}
+              type="number"
+            />
+            <TextField
+              key={`${row.id}max_zoom`}
+              name="max_zoom"
+              label="Maximale Zoom-Stufe"
+              value={row.max_zoom}
+              onBlur={onBlur}
+              error={errors?.project_vector_layer?.max_zoom}
+              disabled={!userMayEdit}
+              type="number"
+            />
+            <TextField
+              key={`${row.id}min_zoom`}
+              name="min_zoom"
+              label="Minimale Zoom-Stufe"
+              value={row.min_zoom}
+              onBlur={onBlur}
+              error={errors?.project_vector_layer?.min_zoom}
+              disabled={!userMayEdit}
+              type="number"
+            />
+            <TextField
+              key={`${row.id}opacity`}
+              name="opacity"
+              label="Deckkraft / Opazität (0 - 1)"
+              value={row.opacity}
+              onBlur={onBlur}
+              error={errors?.project_vector_layer?.opacity}
+              disabled={!userMayEdit}
+              type="number"
+            />
             <DownloadPVL key={`${row.id}downloadpvl`} row={row} />
           </>
         )}
