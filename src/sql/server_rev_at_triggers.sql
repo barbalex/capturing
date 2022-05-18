@@ -86,3 +86,15 @@ CREATE TRIGGER project_tile_layers_set_server_rev_at
   FOR EACH ROW
   EXECUTE PROCEDURE set_server_rev_at ();
 
+-- project_vector_layer
+CREATE TRIGGER project_vector_layers_set_server_rev_at
+  BEFORE INSERT OR UPDATE ON project_vector_layers
+  FOR EACH ROW
+  EXECUTE PROCEDURE set_server_rev_at ();
+
+-- project_vector_layer
+CREATE TRIGGER pvl_geoms_set_server_rev_at
+  BEFORE INSERT OR UPDATE ON pvl_geoms
+  FOR EACH ROW
+  EXECUTE PROCEDURE set_server_rev_at ();
+
