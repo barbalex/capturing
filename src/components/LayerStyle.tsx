@@ -151,7 +151,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
     <ErrorBoundary>
       <Container>
         <TitleRow>
-          <Title>Styling von Geometrien</Title>
+          <Title>Geometrien stylen</Title>
         </TitleRow>
         {!!row && (
           <FieldsContainer
