@@ -77,6 +77,14 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
         },
       })
     } catch (error) {
+      console.log('DownloadPVL, error:', {
+        url: error?.url,
+        error,
+        status: error?.status,
+        statusText: error?.statusText,
+        data: error?.data,
+        type: error?.type,
+      })
       // console.log(`error fetching ${row.label}`, error?.toJSON())
       if (error.response) {
         // The request was made and the server responded with a status code
