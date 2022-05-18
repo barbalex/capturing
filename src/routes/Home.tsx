@@ -132,10 +132,15 @@ const Home = () => {
               <p>Neue Mitarbeitende einfach ergänzen.</p>
               <p>Egal, wie viele.</p>
             </Card>
-            {/* <Card>
-              <CardTitle>Wann Sie wollen</CardTitle>
-              Daten werden live synchronisiert.
-            </Card> */}
+            <Card>
+              <CardTitle>Alle können gleichzeitig arbeiten</CardTitle>
+              <p>Daten werden live synchronisiert.</p>
+              <p>Zwei Eingaben widersprechen sich?</p>
+              <p>
+                Kein Problem. Konflikte werden angezeigt und können einfach
+                gelöst werden.
+              </p>
+            </Card>
             <Card>
               <CardTitle>Mit dem Gerät Ihrer Wahl</CardTitle>
               <p>Handy, Tablet, Notebook, PC…</p>
