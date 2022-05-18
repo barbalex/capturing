@@ -44,6 +44,13 @@ const CheckboxGroup = ({ value, label, name, options = [], onBlur }: Props) => {
       } else {
         newValue = [...value].filter((v) => v !== event.target.name)
       }
+      console.log('CheckboxGroup, handleChange', {
+        value,
+        label,
+        name,
+        options,
+        newValue,
+      })
       onBlur({
         target: {
           value: newValue,
