@@ -1,9 +1,10 @@
 import axios from 'redaxios'
 
 import { supabase } from '../../supabaseClient'
-import { dexie, File, PVLGeom } from '../../dexieClient'
+import { dexie, File } from '../../dexieClient'
 import hex2buf from '../hex2buf'
 import fetchWmsGetCapabilities from '../getCapabilities'
+import downloadWfs from '../downloadWfs'
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 
@@ -98,70 +99,19 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
      * Only it's layer data. Reduce storage!
      */
     if (tableName === 'project_vector_layers') {
-      for (const d of data) {
-        console.log('processTable, pvl:', { d })
+      for (const pvl of data) {
         if (
-          d.type === 'wfs' &&
-          d.type_name &&
-          d.wfs_version &&
-          d.output_format
+          pvl.type === 'wfs' &&
+          pvl.type_name &&
+          pvl.wfs_version &&
+          pvl.output_format
         ) {
           const count = await dexie.pvl_geoms
-            .where({ deleted: 0, pvl_id: d.id })
+            .where({ deleted: 0, pvl_id: pvl.id })
             .count()
           if (count === 0) {
-            // no geometries have been downloaded yet
-            // 1. download
-            const loadingNotifId = store.addNotification({
-              message: `Lade Geometrien für ${d.label}...`,
-              type: 'info',
-              duration: 1000000,
-            })
-            let res
-            try {
-              res = await axios({
-                method: 'get',
-                url: d.url,
-                params: {
-                  service: 'WFS',
-                  version: d.wfs_version,
-                  request: 'GetFeature',
-                  typeName: d.type_name,
-                  srsName: 'EPSG:4326',
-                  outputFormat: d.output_format,
-                },
-              })
-            } catch (error) {
-              store.removeNotificationById(loadingNotifId)
-              console.log(
-                'processTable project_vector_layers, donwloading wfs, error:',
-                {
-                  url: error?.url,
-                  error,
-                  status: error?.status,
-                  statusText: error?.statusText,
-                  data: error?.data,
-                  type: error?.type,
-                },
-              )
-              store.addNotification({
-                message: `Fehler beim Laden der Geometrien für ${d.label}: Status ${error?.status}, ${error?.statusText}, Daten: ${error?.data}, Typ: ${error?.type}`,
-              })
-              return
-            }
-            store.removeNotificationById(loadingNotifId)
-            const features = res.data?.features
-            // 2. build PVLGeoms
-            const pvlGeoms = features.map((feature) => {
-              return new PVLGeom(
-                undefined,
-                d.id,
-                feature.geometry,
-                feature.properties,
-              )
-            })
-            // 3. add to dexie
-            await dexie.pvl_geoms.bulkPut(pvlGeoms)
+            // console.log('processTable, pvl:', pvl)
+            downloadWfs({ pvl, store })
           }
         }
       }
