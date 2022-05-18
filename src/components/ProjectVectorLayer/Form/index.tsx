@@ -31,6 +31,7 @@ import LayerStyle from '../../LayerStyle'
 import DownloadPVL from './DownloadPVL'
 import getCapabilities from '../../../utils/getCapabilities'
 import constants from '../../../utils/constants'
+import downloadWfs from '../../../utils/downloadWfs'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -176,8 +177,16 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
       rowState.current = { ...row, ...{ [field]: newValue } }
       // update dexie
       dexie.project_vector_layers.update(row.id, { [field]: newValue })
+      if (field === 'type_name') {
+        console.log('re-downloading data', { field, value })
+        if (value?.length) {
+          downloadWfs({ pvl: rowState.current, store })
+        } else {
+          dexie.pvl_geoms.where({ deleted: 0, pvl_id: row.id }).delete()
+        }
+      }
     },
-    [filter, row, showFilter],
+    [filter, row, showFilter, store],
   )
 
   const typeValues = Object.values(VectorLayerTypeEnum).map((v) => {
@@ -225,7 +234,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
 
       // console.log('ProjectVectorLayerForm, effect, responce:', response)
       const capabilities = response?.HTML?.BODY?.['WFS:WFS_CAPABILITIES']
-      console.log('ProjectVectorLayerForm, effect, capabilities:', capabilities)
+      // console.log('ProjectVectorLayerForm, effect, capabilities:', capabilities)
 
       // 1. wfs version
       const _wfsVersion = capabilities?.['@attributes']?.version
@@ -389,7 +398,9 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                   <CheckboxGroup
                     key={`${row.id}type_name/cb`}
                     value={
-                      row.type_name?.split ? row.type_name?.split?.(',') : []
+                      row.type_name?.split
+                        ? row.type_name?.split?.(',').filter((v) => v)
+                        : []
                     }
                     label="Layer (welche der WFS-Server anbietet)"
                     name="type_name"
