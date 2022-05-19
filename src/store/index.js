@@ -48,6 +48,7 @@ export const MobxStore = types
     ]),
     tileLayerSorter: types.optional(types.string, ''),
     vectorLayerSorter: types.optional(types.string, ''),
+    fieldSorter: types.optional(types.string, ''),
   })
   .volatile(() => ({ navigate: undefined, map: undefined }))
   .actions((self) => {
@@ -67,6 +68,9 @@ export const MobxStore = types
       },
       setVectorLayerSorter(val) {
         self.vectorLayerSorter = val
+      },
+      setFieldSorter(val) {
+        self.fieldSorter = val
       },
       setBounds(val) {
         self.bounds = val

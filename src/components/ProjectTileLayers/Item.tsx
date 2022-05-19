@@ -4,7 +4,7 @@ import Checkbox from '@mui/material/Checkbox'
 import { useNavigate } from 'react-router-dom'
 import { Session } from '@supabase/supabase-js'
 
-import constants from '../../utils/constants'
+import constants from '../../utils/constants' 
 import { dexie, ProjectTileLayer } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 
