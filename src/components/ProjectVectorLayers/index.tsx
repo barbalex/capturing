@@ -47,7 +47,7 @@ const ProjectVectorLayersComponent = () => {
   const { projectId } = useParams()
 
   const store = useContext(storeContext)
-  const { formHeight, setVectorLayerSorter } = store
+  const { formHeight, setVectorLayerSorter, rebuildTree } = store
 
   const projectVectorLayers: ProjectVectorLayer[] = useLiveQuery(
     async () =>
@@ -96,10 +96,11 @@ const ProjectVectorLayersComponent = () => {
       setVectorLayerSorter(
         projectVectorLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
       )
+      rebuildTree()
 
       return result
     },
-    [projectVectorLayers, session, setVectorLayerSorter],
+    [projectVectorLayers, rebuildTree, session, setVectorLayerSorter],
   )
 
   const onDragEnd = useCallback(
