@@ -20,7 +20,7 @@ const tableFoldersEditingProject = async ({
 
   const tableFolderNodes = [
     {
-      id: `${table.id}rowsFolder`,
+      id: `${table.id}/rowsFolder`,
       label: 'Datensätze',
       type: 'rowsFolder',
       object: table,
@@ -38,7 +38,7 @@ const tableFoldersEditingProject = async ({
         .count(),
     },
     {
-      id: `${table.id}fieldsFolder`,
+      id: `${table.id}/fieldsFolder`,
       label: 'Felder',
       type: 'fieldsFolder',
       object: table,
