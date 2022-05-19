@@ -54,12 +54,15 @@ const TreeComponent = React.forwardRef((props, ref) => {
   const onToggle = useCallback((val) => {
     // console.log('TreeComponent, this id was toggled:', val)
   }, [])
-  const rebuild = useCallback(()=>{
+  const rebuild = useCallback(() => {
     setRebuildCount(rebuildCount + 1)
-  },[rebuildCount])
-  const onMove = useCallback((idsMoved, folderDroppedIn, endIndex) => {
-    onMoveFunction({idsMoved, folderDroppedIn, endIndex,rebuild})
-  }, [rebuild])
+  }, [rebuildCount])
+  const onMove = useCallback(
+    (idsMoved, folderDroppedIn, endIndex) => {
+      onMoveFunction({ idsMoved, folderDroppedIn, endIndex, rebuild })
+    },
+    [rebuild],
+  )
 
   return (
     <Container ref={ref}>
