@@ -47,7 +47,7 @@ const ProjectTileLayersComponent = () => {
   const { projectId } = useParams()
 
   const store = useContext(storeContext)
-  const { formHeight, setTileLayerSorter } = store
+  const { formHeight, setTileLayerSorter, rebuildTree } = store
 
   const projectTileLayers: ProjectTileLayer[] = useLiveQuery(
     async () =>
@@ -96,10 +96,11 @@ const ProjectTileLayersComponent = () => {
       setTileLayerSorter(
         projectTileLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
       )
+      rebuildTree()
 
       return result
     },
-    [projectTileLayers, session, setTileLayerSorter],
+    [projectTileLayers, rebuildTree, session, setTileLayerSorter],
   )
 
   const onDragEnd = useCallback(
