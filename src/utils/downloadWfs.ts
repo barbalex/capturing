@@ -85,7 +85,7 @@ const downloadWfs = async ({ pvl, store }: Props) => {
     return false
   }
   removeNotificationById(loadingNotifId)
-  const features = res.data?.features
+  const features = res.data?.features ?? []
   // 3. build PVLGeoms
   const pvlGeoms = features.map(
     (feature) =>
