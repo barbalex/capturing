@@ -8,6 +8,7 @@ import { getSnapshot } from 'mobx-state-tree'
 
 import buildNodes from './nodes'
 import Node from './Node'
+import onMoveFunction from './onMove'
 import storeContext from '../../storeContext'
 
 const Container = styled.div`
@@ -26,6 +27,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
     id: 'root',
     children: [],
   })
+  const [rebuildCount, setRebuildCount] = useState(0)
   useEffect(() => {
     buildNodes({
       tableId,
@@ -42,8 +44,9 @@ const TreeComponent = React.forwardRef((props, ref) => {
     fieldId,
     editingProjects,
     activeNodeArray,
-    nodes.length, // need length because array of array os not observed
+    nodes.length, // need length because array of array is not observed
     nodes,
+    rebuildCount,
   ])
 
   // console.log('Tree, nodes:', getSnapshot(nodes))
@@ -51,6 +54,12 @@ const TreeComponent = React.forwardRef((props, ref) => {
   const onToggle = useCallback((val) => {
     // console.log('TreeComponent, this id was toggled:', val)
   }, [])
+  const rebuild = useCallback(()=>{
+    setRebuildCount(rebuildCount + 1)
+  },[rebuildCount])
+  const onMove = useCallback((idsMoved, folderDroppedIn, endIndex) => {
+    onMoveFunction({idsMoved, folderDroppedIn, endIndex,rebuild})
+  }, [rebuild])
 
   return (
     <Container ref={ref}>
@@ -65,6 +74,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
             <Tree
               data={data}
               onToggle={onToggle}
+              onMove={onMove}
               height={height}
               width={width}
               hideRoot

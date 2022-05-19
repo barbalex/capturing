@@ -15,7 +15,7 @@ const buildNodes = async ({
 }) => {
   const projects: Project[] = await dexie.projects
     .where({ deleted: 0 })
-    .sortBy('', sortProjectsByLabelName)
+    .sortBy('', sortProjectsByLabelName) 
 
   const projectNodes = []
   for (const project of projects) {
