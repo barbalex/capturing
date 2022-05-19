@@ -34,7 +34,7 @@ const FieldsComponent = () => {
   const session: Session = supabase.auth.session()
   const { projectId, tableId } = useParams()
   const store = useContext(storeContext)
-  const { formHeight, setFieldSorter } = store
+  const { formHeight, setFieldSorter, rebuildTree } = store
 
   // console.log('FieldsList rendering')
 
@@ -86,12 +86,13 @@ const FieldsComponent = () => {
         }
       }
       // push in bulk to reduce re-renders via liveQuery
-      await dexie.project_tile_layers.bulkPut(fieldsToUpdate)
+      await dexie.fields.bulkPut(fieldsToUpdate)
       setFieldSorter(fields.map((e) => `${e.sort}-${e.id}`).join('/'))
+      rebuildTree()
 
       return result
     },
-    [fields, session, setFieldSorter],
+    [fields, rebuildTree, session, setFieldSorter],
   )
 
   const onDragEnd = useCallback(
