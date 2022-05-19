@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { FaPlus, FaArrowUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { Virtuoso } from 'react-virtuoso'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams, useNavigate, Link, resolvePath } from 'react-router-dom'
 import { Session } from '@supabase/supabase-js'
@@ -16,6 +17,7 @@ import { dexie, Project } from '../../dexieClient'
 import insertField from '../../utils/insertField'
 import FilterNumbers from '../shared/FilterNumbers'
 import { supabase } from '../../supabaseClient'
+import HeightPreservingItem from '../shared/HeightPreservingItem'
 
 const Container = styled.div`
   height: 100%;
