@@ -20,14 +20,19 @@ const TreeComponent = React.forwardRef((props, ref) => {
   const { projectId, tableId, rowId, fieldId } = useParams()
 
   const store = useContext(storeContext)
-  const { editingProjects: editingProjectsRaw, activeNodeArray, nodes } = store
+  const {
+    editingProjects: editingProjectsRaw,
+    activeNodeArray,
+    nodes,
+    treeRebuildCount,
+    rebuildTree,
+  } = store
   const editingProjects = getSnapshot(editingProjectsRaw)
 
   const [data, setData] = useState({
     id: 'root',
     children: [],
   })
-  const [rebuildCount, setRebuildCount] = useState(0)
   useEffect(() => {
     buildNodes({
       tableId,
@@ -46,22 +51,19 @@ const TreeComponent = React.forwardRef((props, ref) => {
     activeNodeArray,
     nodes.length, // need length because array of array is not observed
     nodes,
-    rebuildCount,
+    treeRebuildCount,
   ])
 
-  // console.log('Tree, nodes:', getSnapshot(nodes))
+  // console.log('Tree, treeRebuildCount:', treeRebuildCount)
 
   const onToggle = useCallback(() => {
     // console.log('TreeComponent, this id was toggled:', val)
   }, [])
-  const rebuild = useCallback(() => {
-    setRebuildCount(rebuildCount + 1)
-  }, [rebuildCount])
   const onMove = useCallback(
     (idsMoved, folderDroppedIn, endIndex) => {
-      onMoveFunction({ idsMoved, folderDroppedIn, endIndex, rebuild })
+      onMoveFunction({ idsMoved, folderDroppedIn, endIndex, rebuildTree })
     },
-    [rebuild],
+    [rebuildTree],
   )
 
   return (
