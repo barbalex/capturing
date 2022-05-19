@@ -49,8 +49,12 @@ export const MobxStore = types
     tileLayerSorter: types.optional(types.string, ''),
     vectorLayerSorter: types.optional(types.string, ''),
     fieldSorter: types.optional(types.string, ''),
+    treeRebuildCount: types.optional(types.number, 0),
   })
-  .volatile(() => ({ navigate: undefined, map: undefined }))
+  .volatile(() => ({
+    navigate: undefined,
+    map: undefined,
+  }))
   .actions((self) => {
     // autorun(() =>
     //   console.log(
@@ -60,6 +64,12 @@ export const MobxStore = types
     // )
 
     return {
+      rebuildTree() {
+        self.treeRebuildCount = self.treeRebuildCount + 1
+      },
+      setTreeRebuildCount(val) {
+        self.treeRebuildCount = val
+      },
       setMap(val) {
         self.map = val
       },
