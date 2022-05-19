@@ -147,7 +147,7 @@ const HeaderAuthenticated = () => {
               to="/projects"
               disabled={isProject}
             >
-              Projekte
+              Daten
             </NavButton>
           )}
           <NavButton
