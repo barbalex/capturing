@@ -3,7 +3,6 @@ import onMoveTileLayers from './onMoveTileLayers'
 import onMoveField from './onMoveField'
 
 const onMove = async ({ idsMoved, folderDroppedIn, endIndex, rebuildTree }) => {
-  console.log('onMove', { idsMoved, folderDroppedIn, endIndex })
   // do not know how multiple nodes can be mooved at once?
   const idMoved = idsMoved[0]
   if (folderDroppedIn.includes('vectorLayersFolder')) {
