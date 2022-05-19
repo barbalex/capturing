@@ -18,7 +18,6 @@ const onMoveVectorLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
   const startIndex = projectVectorLayers.findIndex((pvl) => pvl.id === idMoved)
   // 3. return if moved node was not pvl
   if (startIndex === undefined) return
-  console.log('TreeComponent, onMove, startIndex:', startIndex)
   // 4. re-order array
   const result = Array.from(projectVectorLayers)
   const [removed] = result.splice(startIndex, 1)
