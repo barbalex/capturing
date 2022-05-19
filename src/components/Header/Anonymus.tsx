@@ -82,7 +82,7 @@ const HeaderAnonymus = () => {
             to="/projects"
             disabled={pathname === '/projects'}
           >
-            Projekte
+            Daten
           </NavButton>
           <NavButton
             variant="outlined"
