@@ -13,7 +13,7 @@ import ErrorBoundary from '../shared/ErrorBoundary'
 import { dexie, ProjectVectorLayer } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import Title from './Title'
-import HeightPreservingItem from './HeightPreservingItem'
+import HeightPreservingItem from '../shared/HeightPreservingItem'
 
 const Container = styled.div`
   height: 100%;
