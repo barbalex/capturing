@@ -214,8 +214,8 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
       const upToDateRow: ProjectVectorLayer =
         await dexie.project_vector_layers.get(projectVectorLayerId)
       if (!upToDateRow?.url) return
-      
-      console.log({ url: upToDateRow?.url })
+
+      // console.log({ url: upToDateRow?.url })
       let response
       try {
         response = await getCapabilities({
@@ -331,7 +331,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
 
   if (!row) return <Spinner />
 
-  console.log({ row, url: row.url, urlExists: !!row.url, loadingCapabilities })
+  // console.log({ row, url: row.url, urlExists: !!row.url, loadingCapabilities })
 
   return (
     <ErrorBoundary>
