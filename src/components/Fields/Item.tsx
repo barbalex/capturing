@@ -14,7 +14,7 @@ const StyledListItem = styled(ListItem)`
   margin: -1px 0;
   padding: 10px;
   ${(props) =>
-    props.isdragging &&
+    props.isdragging === 'true' &&
     `
     /*background: rgba(230, 81, 0, 0.1);*/
     background: rgba(74, 20, 140, 0.1);
@@ -40,7 +40,7 @@ const FieldRow = ({ item, project, provided, isDragging }) => {
       {...provided.dragHandleProps}
       ref={provided.innerRef}
       style={provided.draggableProps.style}
-      isdragging={isDragging}
+      isdragging={isDragging?.toString()}
     >
       {label}
     </StyledListItem>
