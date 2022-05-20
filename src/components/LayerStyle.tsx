@@ -6,7 +6,6 @@ import { Session } from '@supabase/supabase-js'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 
-// TODO: check references
 import StoreContext from '../storeContext'
 import Checkbox2States from './shared/Checkbox2States'
 import ErrorBoundary from './shared/ErrorBoundary'
@@ -145,7 +144,7 @@ const LayerStyleForm = ({ userMayEdit }) => {
     label: v,
   }))
 
-  if (!row) return <Spinner />
+  if (!row) return null // no spinner as is null until enough data input
 
   return (
     <ErrorBoundary>
