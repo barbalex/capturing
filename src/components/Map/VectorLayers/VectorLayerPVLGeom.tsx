@@ -22,7 +22,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
   const [data, setData] = useState()
 
   const store = useContext(storeContext)
-  const { addNotification, removeNotificationById } = store
+  const { addNotification, removeNotificationById, showMap } = store
 
   const removeNotifs = useCallback(() => {
     // console.log('removing notifs')
@@ -42,6 +42,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
 
   const fetchData = useCallback(
     async ({ bounds }) => {
+      if (!showMap) return
       // console.log('VectorLayerPVLGeom fetching data')
       removeNotifs()
       const loadingNotifId = addNotification({
@@ -85,13 +86,14 @@ const VectorLayerComponent = ({ layer }: Props) => {
       layer.max_features,
       map,
       removeNotifs,
+      showMap,
     ],
   )
   const fetchDataDebounced = useDebouncedCallback(fetchData, 600)
 
   useEffect(() => {
     fetchDataDebounced({ bounds: map.getBounds() })
-  }, [fetchDataDebounced, map])
+  }, [fetchDataDebounced, map, showMap])
   const loadingNotifIds = useRef([])
 
   // include only if zoom between min_zoom and max_zoom
