@@ -170,6 +170,8 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
       const upToDateRow = await dexie.project_tile_layers.get(
         projectTileLayerId,
       )
+      if (!upToDateRow?.wms_base_url) return
+
       const capabilities = await getCapabilities({
         url: upToDateRow?.wms_base_url,
         service: 'WMS',
