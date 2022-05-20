@@ -6,7 +6,6 @@ import isNodeOpen from '../../../../utils/isNodeOpen'
 const tableFoldersEditingProject = async ({
   project,
   table,
-  fieldId,
   rowId,
   nodes,
 }) => {
@@ -47,7 +46,7 @@ const tableFoldersEditingProject = async ({
         nodes,
         url: ['projects', project.id, 'tables', table.id, 'fields'],
       }),
-      children: await buildFieldNodes({ project, table, fieldId, nodes }),
+      children: await buildFieldNodes({ project, table,  nodes }),
       childrenCount: await dexie.fields
         .where({
           deleted: 0,
