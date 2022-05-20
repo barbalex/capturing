@@ -2030,6 +2030,33 @@ CREATE POLICY "project managers can delete project_tile_layers" ON project_tile_
   FOR DELETE
     USING (is_project_manager_by_project (auth.uid (), project_id));
 
+--
+DROP POLICY IF EXISTS "project readers, editors and managers can view project_vector_layers" ON project_vector_layers;
+
+CREATE POLICY "project readers, editors and managers can view project_vector_layers" ON project_vector_layers
+  FOR SELECT
+    USING (is_project_user_by_project (auth.uid (), project_id));
+
+DROP POLICY IF EXISTS "project managers can insert project_vector_layers" ON project_vector_layers;
+
+CREATE POLICY "project managers can insert project_vector_layers" ON project_vector_layers
+  FOR INSERT
+    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
+
+DROP POLICY IF EXISTS "project managers can update project_vector_layers" ON project_vector_layers;
+
+CREATE POLICY "project managers can update project_vector_layers" ON project_vector_layers
+  FOR UPDATE
+    USING (is_project_user_by_project (auth.uid (), project_id))
+    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
+
+DROP POLICY IF EXISTS "project managers can delete project_vector_layers" ON project_vector_layers;
+
+CREATE POLICY "project managers can delete project_vector_layers" ON project_vector_layers
+  FOR DELETE
+    USING (is_project_manager_by_project (auth.uid (), project_id));
+
+--
 DROP POLICY IF EXISTS "project readers, editors and managers can view project_vector_layers geometries" ON pvl_geoms;
 
 CREATE POLICY "project readers, editors and managers can view project_vector_layers geometries" ON pvl_geoms
