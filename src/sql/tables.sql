@@ -717,9 +717,6 @@ CREATE TABLE project_tile_layers (
   deleted integer DEFAULT 0
 );
 
-ALTER TABLE project_tile_layers
-  ADD COLUMN wms_queryable integer DEFAULT NULL;
-
 CREATE INDEX ON project_tile_layers USING btree (id);
 
 CREATE INDEX ON project_tile_layers USING btree (sort);
