@@ -6,13 +6,11 @@ import isNodeOpen from '../../../../utils/isNodeOpen'
 
 const projectFoldersEditingProject = async ({
   project,
-  tableId,
-  fieldId,
   rowId,
   nodes,
 }) => {
   // return if parent does not exist (in nodes)
-  if (!isNodeOpen({ nodes, url: ['projects', project.id] })) return
+  if (!isNodeOpen({ nodes, url: ['projects', project.id] })) return []
 
   const folderNodes = [
     {
@@ -24,7 +22,6 @@ const projectFoldersEditingProject = async ({
       isOpen: isNodeOpen({ nodes, url: ['projects', project.id, 'tables'] }),
       children: await buildTableNodes({
         project,
-        fieldId,
         rowId,
         nodes,
       }),
