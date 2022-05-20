@@ -178,6 +178,7 @@ export const MobxStore = types
         return val.id
       },
       removeNotificationById(id) {
+        // does not seem to work for many???
         self.notifications.delete(id)
       },
       removeAllNotifications() {

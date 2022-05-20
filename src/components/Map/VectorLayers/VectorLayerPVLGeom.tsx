@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext, useRef, useCallback } from 'react'
-import { GeoJSON, useMapEvent } from 'react-leaflet'
+import { GeoJSON, useMapEvent, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
+import { useDebouncedCallback } from 'use-debounce'
 
 import {
   dexie,
@@ -24,31 +25,25 @@ const VectorLayerComponent = ({ layer }: Props) => {
   const { addNotification, removeNotificationById } = store
 
   const removeNotifs = useCallback(() => {
-    for (const id in [...loadingNotifIds.current]) {
-      removeNotificationById(id)
-      loadingNotifIds.current = loadingNotifIds.current.filter((e) => e !== id)
-    }
+    // console.log('removing notifs')
+    loadingNotifIds.current.forEach((id) => removeNotificationById(id))
+    loadingNotifIds.current = []
   }, [removeNotificationById])
 
-  const map = useMapEvent('zoomend', () => {
-    console.log('zoomend')
-    setZoom(map.getZoom())
-    removeNotifs()
-  })
-  useMapEvent('moveend', () => {
-    console.log('moveend')
-    setBounds(map.getBounds())
-  })
+  const map = useMap()
+
   const [zoom, setZoom] = useState<number>(map.getZoom())
   const [layerStyle, setLayerStyle] = useState<LayerStyle>()
-  const [bounds, setBounds] = useState(map.getBounds())
-  const loadingNotifIds = useRef([])
 
-  console.log('bounds:', bounds)
-  // turned filtering by bounds off because did not work well on edges
+  useMapEvent('dragend zoomend ', () => {
+    // console.log('dragend zoomend ')
+    fetchDataDebounced({ bounds: map.getBounds() })
+  })
 
-  useEffect(() => {
-    const run = async () => {
+  const fetchData = useCallback(
+    async ({ bounds }) => {
+      // console.log('VectorLayerPVLGeom fetching data')
+      removeNotifs()
       const pvlGeoms: PVLGeom[] = await dexie.pvl_geoms
         .where({
           deleted: 0,
@@ -69,30 +64,27 @@ const VectorLayerComponent = ({ layer }: Props) => {
         ...pvlGeom.geometry,
         properties: pvlGeom.properties,
       }))
-      console.log(`Fetching data for '${layer.label}' from pvl_geom`, {
-        bounds,
-        length: data.length,
-      })
       setData(data)
       const _layerStyle: LayerStyle = await dexie.layer_styles.get({
         project_vector_layer_id: layer.id,
       })
       setLayerStyle(_layerStyle)
-    }
-    run()
-  }, [
-    bounds,
-    bounds._northEast.lat,
-    bounds._northEast.lng,
-    bounds._southWest.lat,
-    bounds._southWest.lng,
-    layer,
-  ])
+      setZoom(map.getZoom())
+    },
+    [layer.id, layer.max_features, map, removeNotifs],
+  )
+  const fetchDataDebounced = useDebouncedCallback(fetchData, 600)
+
+  useEffect(() => {
+    fetchDataDebounced({ bounds: map.getBounds() })
+  }, [fetchDataDebounced, map])
+  const loadingNotifIds = useRef([])
 
   // include only if zoom between min_zoom and max_zoom
   if (layer.min_zoom !== undefined && zoom < layer.min_zoom) return null
   if (layer.max_zoom !== undefined && zoom > layer.max_zoom) return null
 
+  removeNotifs()
   if (
     data?.length === layer.max_features ??
     (1000 && !loadingNotifIds.current.length)
@@ -107,7 +99,9 @@ const VectorLayerComponent = ({ layer }: Props) => {
     loadingNotifIds.current = [loadingNotifId, ...loadingNotifIds.current]
   }
 
-  console.log('VectorLayerPVLGeom, data.length:', data?.length)
+  // console.log('VectorLayerPVLGeom, dataLength:', data?.length)
+
+  if (!data?.length) return null
 
   return (
     <GeoJSON

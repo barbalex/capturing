@@ -34,10 +34,14 @@ const Notifications = () => {
     [removeAllNotifications],
   )
 
+  const notifObject = notifications.toJSON()
+
+  // console.log('Notifications, notifications', Object.keys(notifObject))
+
   if (notificationsSorted.length === 0) return null
 
   return (
-    <Container key={notifications.length}>
+    <Container key={Object.keys(notifObject)}>
       {notificationsSorted.map((n) => (
         <Notification key={n.id} notification={n} />
       ))}
