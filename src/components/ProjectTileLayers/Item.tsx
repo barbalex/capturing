@@ -4,7 +4,7 @@ import Checkbox from '@mui/material/Checkbox'
 import { useNavigate } from 'react-router-dom'
 import { Session } from '@supabase/supabase-js'
 
-import constants from '../../utils/constants' 
+import constants from '../../utils/constants'
 import { dexie, ProjectTileLayer } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 
@@ -21,7 +21,7 @@ const Container = styled.div`
   align-items: center;
   cursor: pointer;
   ${(props) =>
-    props.isdragging &&
+    props.isdragging === 'true' &&
     `
     /*background: rgba(230, 81, 0, 0.1);*/
     background: rgba(74, 20, 140, 0.1);
@@ -76,7 +76,7 @@ const ProjectTilelayerItem = ({ item, provided, isDragging }: Props) => {
       {...provided.dragHandleProps}
       ref={provided.innerRef}
       style={provided.draggableProps.style}
-      isdragging={isDragging}
+      isdragging={isDragging?.toString()}
     >
       <RowLink>{item.label}</RowLink>
       <Checkbox
