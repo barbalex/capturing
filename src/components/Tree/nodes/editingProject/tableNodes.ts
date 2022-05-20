@@ -4,7 +4,7 @@ import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 import buildFolders from './tableFolders'
 
-const tableNodesEditingProject = async ({ project, fieldId, rowId, nodes }) => {
+const tableNodesEditingProject = async ({ project,  rowId, nodes }) => {
   // return if parent does not exist (in nodes)
   if (!isNodeOpen({ nodes, url: ['projects', project.id, 'tables'] })) return
 
@@ -39,7 +39,6 @@ const tableNodesEditingProject = async ({ project, fieldId, rowId, nodes }) => {
       children: await buildFolders({
         project,
         table,
-        fieldId,
         rowId,
         nodes,
       }),
