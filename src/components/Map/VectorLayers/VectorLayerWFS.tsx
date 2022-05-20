@@ -93,6 +93,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
     layer.type_name,
     layer.url,
     layer.wfs_version,
+    removeNotificationById,
   ])
 
   const layerStyle: LayerStyle = useLiveQuery(
