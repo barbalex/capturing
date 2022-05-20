@@ -48,7 +48,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
   useEffect(() => {
     const run = async () => {
       const loadingNotifId = addNotification({
-        message: `Lade Geometrien für ${pvl.label}...`,
+        message: `Lade Geometrien für ${layer.label}...`,
         type: 'info',
         duration: 1000000,
       })
@@ -78,7 +78,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
         })
         setError(error.data)
         addNotification({
-          message: `Fehler beim Laden der Geometrien für ${pvl.label}: Status ${error?.status}, ${error?.statusText}, Daten: ${error?.data}, Typ: ${error?.type}`,
+          message: `Fehler beim Laden der Geometrien für ${layer.label}: Status ${error?.status}, ${error?.statusText}, Daten: ${error?.data}, Typ: ${error?.type}`,
         })
         return false
       }
@@ -88,6 +88,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
     run()
   }, [
     addNotification,
+    layer.label,
     layer.output_format,
     layer.type_name,
     layer.url,
@@ -105,7 +106,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
   if (layer.min_zoom !== undefined && zoom < layer.min_zoom) return null
   if (layer.max_zoom !== undefined && zoom > layer.max_zoom) return null
 
-  console.log('VectorLayerWFS, data:', data)
+  // console.log('VectorLayerWFS, data:', data)
 
   return (
     <>

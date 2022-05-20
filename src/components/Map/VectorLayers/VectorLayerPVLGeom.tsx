@@ -79,7 +79,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
   if (layer.min_zoom !== undefined && zoom < layer.min_zoom) return null
   if (layer.max_zoom !== undefined && zoom > layer.max_zoom) return null
 
-  console.log('VectorLayerPVLGeom, data:', data)
+  // console.log('VectorLayerPVLGeom, data:', data)
 
   return (
     <GeoJSON
