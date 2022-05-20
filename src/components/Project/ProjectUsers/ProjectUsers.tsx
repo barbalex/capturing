@@ -14,8 +14,6 @@ const ProjectUsersComponent = () => {
           .sortBy('user_email'),
     ) ?? []
 
-  console.log('ProjectUsers, projectUsers:', projectUsers)
-
   return projectUsers.map((u) => (
     <ProjectUserComponent key={u.id} projectUser={u} />
   ))
