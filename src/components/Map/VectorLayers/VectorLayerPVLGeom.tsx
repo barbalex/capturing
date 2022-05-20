@@ -44,6 +44,12 @@ const VectorLayerComponent = ({ layer }: Props) => {
     async ({ bounds }) => {
       // console.log('VectorLayerPVLGeom fetching data')
       removeNotifs()
+      const loadingNotifId = addNotification({
+        message: `Lade Vektor-Karte ${layer.label}...`,
+        type: 'info',
+        duration: 100000,
+      })
+      loadingNotifIds.current = [loadingNotifId, ...loadingNotifIds.current]
       const pvlGeoms: PVLGeom[] = await dexie.pvl_geoms
         .where({
           deleted: 0,
@@ -64,6 +70,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
         ...pvlGeom.geometry,
         properties: pvlGeom.properties,
       }))
+      removeNotifs()
       setData(data)
       const _layerStyle: LayerStyle = await dexie.layer_styles.get({
         project_vector_layer_id: layer.id,
@@ -71,7 +78,14 @@ const VectorLayerComponent = ({ layer }: Props) => {
       setLayerStyle(_layerStyle)
       setZoom(map.getZoom())
     },
-    [layer.id, layer.max_features, map, removeNotifs],
+    [
+      addNotification,
+      layer.id,
+      layer.label,
+      layer.max_features,
+      map,
+      removeNotifs,
+    ],
   )
   const fetchDataDebounced = useDebouncedCallback(fetchData, 600)
 
