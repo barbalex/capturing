@@ -1,21 +1,13 @@
-import isEqual from 'lodash/isEqual'
-
 import { dexie, Table } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 import rowNodes from './rowNodes'
 
-const tableNodesEditingData = async ({
-  project,
-  tableId,
-  rowId,
-  nodes,
-  activeNodeArray,
-}) => {
+const tableNodesEditingData = async ({ project, rowId, nodes }) => {
   // console.log('tableNodesEditingData', { nodes: nodes.slice() })
   // return if parent does not exist (in nodes)
-  if (!isNodeOpen({ nodes, url: ['projects', project.id] })) return
+  if (!isNodeOpen({ nodes, url: ['projects', project.id] })) return []
 
   const tables = await dexie.ttables
     .where({
