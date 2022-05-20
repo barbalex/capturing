@@ -1,3 +1,5 @@
+import { getSnapshot } from 'mobx-state-tree'
+
 import { dexie, Project } from '../../../dexieClient'
 import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
@@ -5,48 +7,47 @@ import isNodeOpen from '../../../utils/isNodeOpen'
 import tableNodesEditingData from './editingData/tableNodes'
 import projectFoldersEditingProject from './editingProject/projectFolders'
 
-const buildNodes = async ({
-  tableId,
-  rowId,
-  fieldId,
-  editingProjects,
-  activeNodeArray,
-  nodes,
-}) => {
+const buildNodes = async ({ rowId, editingProjects, nodes }) => {
   const projects: Project[] = await dexie.projects
     .where({ deleted: 0 })
-    .sortBy('', sortProjectsByLabelName) 
+    .sortBy('', sortProjectsByLabelName)
 
   const projectNodes = []
   for (const project of projects) {
     const isOpen = isNodeOpen({ nodes, url: ['projects', project.id] })
-    const childrenCount = await dexie.ttables
-      .where({ deleted: 0, project_id: project.id })
-      .count()
     const editing = editingProjects[project.id]?.editing ?? false
+
     const children = editing
       ? await projectFoldersEditingProject({
           project,
-          tableId,
-          fieldId,
           rowId,
-          activeNodeArray,
           nodes,
         })
       : await tableNodesEditingData({
           project,
-          tableId,
           rowId,
-          activeNodeArray,
           nodes,
         })
-    const label = labelFromLabeledTable({
-      object: project,
-      useLabels: project.use_labels,
-    })
+    const childrenCount = editing
+      ? 3
+      : await dexie.ttables
+          .where({ deleted: 0, project_id: project.id })
+          .count()
+
+    // console.log({
+    //   children,
+    //   nodes: getSnapshot(nodes),
+    //   childrenCount,
+    //   editing,
+    //   project: project.name,
+    // })
+
     const node = {
       id: project.id,
-      label,
+      label: labelFromLabeledTable({
+        object: project,
+        useLabels: project.use_labels,
+      }),
       type: 'project',
       object: project,
       activeNodeArray: ['projects', project.id],
