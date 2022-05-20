@@ -39,7 +39,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
   const [error, setError] = useState()
 
   const store = useContext(storeContext)
-  const { addNotification } = store
+  const { addNotification, removeNotificationById } = store
 
   const map = useMapEvent('zoomend', () => setZoom(map.getZoom()))
   const [zoom, setZoom] = useState(map.getZoom())

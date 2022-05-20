@@ -5,9 +5,10 @@ import IconButton from '@mui/material/IconButton'
 import { MdClose as CloseIcon } from 'react-icons/md'
 import sortBy from 'lodash/sortBy'
 
+// z-index needs to cover map, thus so hight
 const Container = styled.div`
   padding: 5px;
-  z-index: 10;
+  z-index: 500;
   position: absolute;
   bottom: 10px;
   left: 10px;

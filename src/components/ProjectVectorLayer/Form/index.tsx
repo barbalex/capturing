@@ -515,6 +515,17 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
               disabled={!userMayEdit}
               type="number"
             />
+            <TextField
+              key={`${row.id}max_features`}
+              name="max_features"
+              label="Maximale Anzahl darzustellender Features"
+              value={row.max_features}
+              onBlur={onBlur}
+              error={errors?.project_vector_layer?.max_features}
+              disabled={!userMayEdit}
+              type="number"
+              helperText="Das Laden zu vieler Features überlastet Ihr Gerät"
+            />
             <DownloadPVL key={`${row.id}downloadpvl`} row={row} />
           </>
         )}

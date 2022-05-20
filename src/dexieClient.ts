@@ -611,7 +611,8 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
   opacity?: number
   type_name?: string
   wfs_version?: string
-  output_format?: stringum
+  output_format?: string
+  max_features?: number
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -631,6 +632,7 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     type_name?: string,
     wfs_version?: string,
     output_format?: string,
+    max_features?: number,
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
@@ -649,6 +651,7 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     if (type_name) this.type_name = type_name
     if (wfs_version) this.wfs_version = wfs_version
     if (output_format) this.output_format = output_format
+    this.max_features = max_features ?? 1000
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at
@@ -1519,7 +1522,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(35).stores({
+    this.version(36).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:

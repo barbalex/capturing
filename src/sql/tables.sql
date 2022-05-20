@@ -708,8 +708,8 @@ CREATE TABLE project_tile_layers (
   wms_styles text[] DEFAULT NULL,
   wms_transparent integer DEFAULT 0,
   wms_version wms_version_enum DEFAULT NULL,
-  wms_info_format text default null,
-  wms_queryable integer default null,
+  wms_info_format text DEFAULT NULL,
+  wms_queryable integer DEFAULT NULL,
   greyscale integer DEFAULT 0,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
@@ -717,8 +717,8 @@ CREATE TABLE project_tile_layers (
   deleted integer DEFAULT 0
 );
 
-alter table project_tile_layers add column wms_queryable integer default null;
-
+ALTER TABLE project_tile_layers
+  ADD COLUMN wms_queryable integer DEFAULT NULL;
 
 CREATE INDEX ON project_tile_layers USING btree (id);
 
@@ -755,6 +755,7 @@ CREATE TABLE project_vector_layers (
   wfs_version text DEFAULT NULL, -- often: 1.1.0 or 2.0.0
   output_format text DEFAULT NULL, -- need some form of json. TODO: Convert others?
   opacity integer DEFAULT 1,
+  max_features integer DEFAULT 1000,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -768,6 +769,8 @@ CREATE INDEX ON project_vector_layers USING btree (sort);
 CREATE INDEX ON project_vector_layers USING btree (deleted);
 
 COMMENT ON TABLE project_vector_layers IS 'Goal: Bring your own tile layers. Either from wfs or importing GeoJSON. Not versioned (not recorded and only added by manager).';
+
+COMMENT ON COLUMN project_vector_layers.max_features IS 'maximum number of features to be loaded into a map';
 
 ALTER TABLE project_vector_layers ENABLE ROW LEVEL SECURITY;
 
