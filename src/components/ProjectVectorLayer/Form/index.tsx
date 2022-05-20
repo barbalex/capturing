@@ -213,6 +213,9 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
 
       const upToDateRow: ProjectVectorLayer =
         await dexie.project_vector_layers.get(projectVectorLayerId)
+      if (!upToDateRow?.url) return
+      
+      console.log({ url: upToDateRow?.url })
       let response
       try {
         response = await getCapabilities({
@@ -328,6 +331,8 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
 
   if (!row) return <Spinner />
 
+  console.log({ row, url: row.url, urlExists: !!row.url, loadingCapabilities })
+
   return (
     <ErrorBoundary>
       <FieldsContainer
@@ -390,146 +395,154 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
               disabled={!userMayEdit}
               type="text"
             />
-            {loadingCapabilities ? (
-              <Spinner />
-            ) : (
+            {!!row.url && (
               <>
-                {layerOptions?.length > 0 && (
-                  <CheckboxGroup
-                    key={`${row.id}type_name/cb`}
-                    value={
-                      row.type_name?.split
-                        ? row.type_name?.split?.(',').filter((v) => v)
-                        : []
-                    }
-                    label="Layer (welche der WFS-Server anbietet)"
-                    name="type_name"
-                    options={layerOptions}
-                    onBlur={onBlur}
-                    disabled={!userMayEdit}
-                  />
-                )}
-                {layerOptions?.length === 0 && (
-                  <TextField
-                    key={`${row.id}type_name`}
-                    name="type_name"
-                    label="Layer (welche der WFS-Server anbietet)"
-                    value={row.type_name}
-                    onBlur={onBlur}
-                    error={errors?.project_vector_layer?.type_name}
-                    disabled={!userMayEdit}
-                  />
-                )}
-                {!wfsVersion && (
-                  <TextField
-                    key={`${row.id}wfs_version`}
-                    name="wfs_version"
-                    label="WFS Version (z.B. 2.0.0)"
-                    value={row.wfs_version}
-                    onBlur={onBlur}
-                    error={errors?.project_vector_layer?.wfs_version}
-                    disabled={!userMayEdit}
-                  />
-                )}
-                {outputFormatValues?.length > 0 && (
-                  <RadioButtonGroup
-                    key={`${row.id}output_format/cb`}
-                    value={row.output_format}
-                    name="output_format"
-                    dataSource={outputFormatValues}
-                    onBlur={onBlur}
-                    label="Daten-Format"
-                    helperText="Nur JSON-Formate können verwendet werden"
-                    error={errors?.project_tile_layer?.output_format}
-                  />
-                )}
-                {outputFormatValues?.length === 0 && (
-                  <TextField
-                    key={`${row.id}output_format`}
-                    name="output_format"
-                    label="Format (GeoJSON wählen)"
-                    value={row.output_format}
-                    onBlur={onBlur}
-                    error={errors?.project_vector_layer?.output_format}
-                    disabled={!userMayEdit}
-                    type="text"
-                  />
+                {loadingCapabilities ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    {layerOptions?.length > 0 && (
+                      <CheckboxGroup
+                        key={`${row.id}type_name/cb`}
+                        value={
+                          row.type_name?.split
+                            ? row.type_name?.split?.(',').filter((v) => v)
+                            : []
+                        }
+                        label="Layer (welche der WFS-Server anbietet)"
+                        name="type_name"
+                        options={layerOptions}
+                        onBlur={onBlur}
+                        disabled={!userMayEdit}
+                      />
+                    )}
+                    {layerOptions?.length === 0 && (
+                      <TextField
+                        key={`${row.id}type_name`}
+                        name="type_name"
+                        label="Layer (welche der WFS-Server anbietet)"
+                        value={row.type_name}
+                        onBlur={onBlur}
+                        error={errors?.project_vector_layer?.type_name}
+                        disabled={!userMayEdit}
+                      />
+                    )}
+                    {!wfsVersion && (
+                      <TextField
+                        key={`${row.id}wfs_version`}
+                        name="wfs_version"
+                        label="WFS Version (z.B. 2.0.0)"
+                        value={row.wfs_version}
+                        onBlur={onBlur}
+                        error={errors?.project_vector_layer?.wfs_version}
+                        disabled={!userMayEdit}
+                      />
+                    )}
+                    {outputFormatValues?.length > 0 && (
+                      <RadioButtonGroup
+                        key={`${row.id}output_format/cb`}
+                        value={row.output_format}
+                        name="output_format"
+                        dataSource={outputFormatValues}
+                        onBlur={onBlur}
+                        label="Daten-Format"
+                        helperText="Nur JSON-Formate können verwendet werden"
+                        error={errors?.project_tile_layer?.output_format}
+                      />
+                    )}
+                    {outputFormatValues?.length === 0 && (
+                      <TextField
+                        key={`${row.id}output_format`}
+                        name="output_format"
+                        label="Format (GeoJSON wählen)"
+                        value={row.output_format}
+                        onBlur={onBlur}
+                        error={errors?.project_vector_layer?.output_format}
+                        disabled={!userMayEdit}
+                        type="text"
+                      />
+                    )}
+                  </>
                 )}
               </>
             )}
-            <TextField
-              key={`${row.id}label`}
-              name="label"
-              label="Beschriftung"
-              value={row.label}
-              onBlur={onBlur}
-              error={errors?.project_vector_layer?.label}
-              disabled={!userMayEdit}
-            />
-            <Checkbox2States
-              key={`${row.id}active`}
-              label="aktiv"
-              name="active"
-              value={row.active}
-              onBlur={onBlur}
-              error={errors?.field?.active}
-              disabled={!userMayEdit}
-            />
-            <TextField
-              key={`${row.id}sort`}
-              name="sort"
-              label="Sortierung"
-              value={row.sort}
-              onBlur={onBlur}
-              error={errors?.project_vector_layer?.sort}
-              disabled={!userMayEdit}
-              type="number"
-            />
-            <TextField
-              key={`${row.id}max_zoom`}
-              name="max_zoom"
-              label="Maximale Zoom-Stufe"
-              value={row.max_zoom}
-              onBlur={onBlur}
-              error={errors?.project_vector_layer?.max_zoom}
-              disabled={!userMayEdit}
-              type="number"
-            />
-            <TextField
-              key={`${row.id}min_zoom`}
-              name="min_zoom"
-              label="Minimale Zoom-Stufe"
-              value={row.min_zoom}
-              onBlur={onBlur}
-              error={errors?.project_vector_layer?.min_zoom}
-              disabled={!userMayEdit}
-              type="number"
-            />
-            <TextField
-              key={`${row.id}opacity`}
-              name="opacity"
-              label="Deckkraft / Opazität (0 - 1)"
-              value={row.opacity}
-              onBlur={onBlur}
-              error={errors?.project_vector_layer?.opacity}
-              disabled={!userMayEdit}
-              type="number"
-            />
-            <TextField
-              key={`${row.id}max_features`}
-              name="max_features"
-              label="Maximale Anzahl darzustellender Features"
-              value={row.max_features}
-              onBlur={onBlur}
-              error={errors?.project_vector_layer?.max_features}
-              disabled={!userMayEdit}
-              type="number"
-              helperText="Das Laden zu vieler Features überlastet Ihr Gerät"
-            />
-            <DownloadPVL key={`${row.id}downloadpvl`} row={row} />
+            {!!row.url && (
+              <>
+                <TextField
+                  key={`${row.id}label`}
+                  name="label"
+                  label="Beschriftung"
+                  value={row.label}
+                  onBlur={onBlur}
+                  error={errors?.project_vector_layer?.label}
+                  disabled={!userMayEdit}
+                />
+                <Checkbox2States
+                  key={`${row.id}active`}
+                  label="aktiv"
+                  name="active"
+                  value={row.active}
+                  onBlur={onBlur}
+                  error={errors?.field?.active}
+                  disabled={!userMayEdit}
+                />
+                <TextField
+                  key={`${row.id}sort`}
+                  name="sort"
+                  label="Sortierung"
+                  value={row.sort}
+                  onBlur={onBlur}
+                  error={errors?.project_vector_layer?.sort}
+                  disabled={!userMayEdit}
+                  type="number"
+                />
+                <TextField
+                  key={`${row.id}max_zoom`}
+                  name="max_zoom"
+                  label="Maximale Zoom-Stufe"
+                  value={row.max_zoom}
+                  onBlur={onBlur}
+                  error={errors?.project_vector_layer?.max_zoom}
+                  disabled={!userMayEdit}
+                  type="number"
+                />
+                <TextField
+                  key={`${row.id}min_zoom`}
+                  name="min_zoom"
+                  label="Minimale Zoom-Stufe"
+                  value={row.min_zoom}
+                  onBlur={onBlur}
+                  error={errors?.project_vector_layer?.min_zoom}
+                  disabled={!userMayEdit}
+                  type="number"
+                />
+                <TextField
+                  key={`${row.id}opacity`}
+                  name="opacity"
+                  label="Deckkraft / Opazität (0 - 1)"
+                  value={row.opacity}
+                  onBlur={onBlur}
+                  error={errors?.project_vector_layer?.opacity}
+                  disabled={!userMayEdit}
+                  type="number"
+                />
+                <TextField
+                  key={`${row.id}max_features`}
+                  name="max_features"
+                  label="Maximale Anzahl darzustellender Features"
+                  value={row.max_features}
+                  onBlur={onBlur}
+                  error={errors?.project_vector_layer?.max_features}
+                  disabled={!userMayEdit}
+                  type="number"
+                  helperText="Das Laden zu vieler Features überlastet Ihr Gerät"
+                />
+                <DownloadPVL key={`${row.id}downloadpvl`} row={row} />
+              </>
+            )}
           </>
         )}
-        <LayerStyle userMayEdit={userMayEdit} />
+        {!!row.url && <LayerStyle userMayEdit={userMayEdit} />}
       </FieldsContainer>
     </ErrorBoundary>
   )
