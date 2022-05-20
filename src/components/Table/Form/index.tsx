@@ -310,20 +310,22 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           type="number"
         />
         {row.type === 'standard' ? (
-          <RowLabel
-            useLabels={useLabels}
-            updateOnServer={updateOnServer}
-            rowState={rowState}
-          />
+          <>
+            <RowLabel
+              useLabels={useLabels}
+              updateOnServer={updateOnServer}
+              rowState={rowState}
+            />
+            <LayerStyle
+              key={`${row?.id ?? ''}layerstyle`}
+              userMayEdit={userMayEdit}
+            />
+          </>
         ) : (
           <p>
             Werte-Listen werden automatisch mit den Werten selbst beschriftet
           </p>
         )}
-        <LayerStyle
-          key={`${row?.id ?? ''}layerstyle`}
-          userMayEdit={userMayEdit}
-        />
       </FieldsContainer>
     </ErrorBoundary>
   )
