@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { GeoJSON, useMapEvent } from 'react-leaflet'
 import styled from 'styled-components'
 import axios from 'redaxios'
@@ -18,6 +18,7 @@ import {
 } from '../../../dexieClient'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 import Popup from '../Popup'
+import storeContext from '../../../storeContext'
 
 const StyledXMLViewer = styled(XMLViewer)`
   font-size: small;
@@ -37,12 +38,20 @@ type Props = {
 const VectorLayerComponent = ({ layer }: Props) => {
   const [error, setError] = useState()
 
+  const store = useContext(storeContext)
+  const { addNotification } = store
+
   const map = useMapEvent('zoomend', () => setZoom(map.getZoom()))
   const [zoom, setZoom] = useState(map.getZoom())
 
   const [data, setData] = useState()
   useEffect(() => {
     const run = async () => {
+      const loadingNotifId = addNotification({
+        message: `Lade Geometrien für ${pvl.label}...`,
+        type: 'info',
+        duration: 1000000,
+      })
       let res
       try {
         res = await axios({
@@ -58,6 +67,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
           },
         })
       } catch (error) {
+        removeNotificationById(loadingNotifId)
         console.log('VectorLayerWFS, error:', {
           url: error?.url,
           error,
@@ -67,12 +77,22 @@ const VectorLayerComponent = ({ layer }: Props) => {
           type: error?.type,
         })
         setError(error.data)
+        addNotification({
+          message: `Fehler beim Laden der Geometrien für ${pvl.label}: Status ${error?.status}, ${error?.statusText}, Daten: ${error?.data}, Typ: ${error?.type}`,
+        })
         return false
       }
+      removeNotificationById(loadingNotifId)
       setData(res.data)
     }
     run()
-  }, [layer.output_format, layer.type_name, layer.url, layer.wfs_version])
+  }, [
+    addNotification,
+    layer.output_format,
+    layer.type_name,
+    layer.url,
+    layer.wfs_version,
+  ])
 
   const layerStyle: LayerStyle = useLiveQuery(
     async () =>
@@ -84,6 +104,8 @@ const VectorLayerComponent = ({ layer }: Props) => {
   // include only if zoom between min_zoom and max_zoom
   if (layer.min_zoom !== undefined && zoom < layer.min_zoom) return null
   if (layer.max_zoom !== undefined && zoom > layer.max_zoom) return null
+
+  console.log('VectorLayerWFS, data:', data)
 
   return (
     <>
