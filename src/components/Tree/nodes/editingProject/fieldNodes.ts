@@ -2,7 +2,7 @@ import { dexie, Field } from '../../../../dexieClient'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 
-const fieldNodes = async ({ project, table, fieldId, nodes }) => {
+const fieldNodes = async ({ project, table,  nodes }) => {
   // return if parent does not exist (in nodes)
   if (
     !isNodeOpen({
