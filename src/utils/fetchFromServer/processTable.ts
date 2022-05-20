@@ -124,7 +124,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
      */
     if (tableName === 'project_tile_layers') {
       for (const d of data) {
-        if (d.type === 'wms' && !d.wms_legends?.length) {
+        if (d.type === 'wms' && !d.wms_legends?.length && d?.wms_base_url) {
           // console.log('processTable processing project_tile_layers, title:', d)
           const capabilities = await fetchWmsGetCapabilities(d?.wms_base_url)
           const layers = capabilities?.Capability?.Layer?.Layer ?? []
