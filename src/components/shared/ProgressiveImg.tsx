@@ -7,15 +7,13 @@ const Img = styled.img`
   width: 100%;
   object-fit: cover;
   filter: ${(props) => (props.loading ? 'blur(10px)' : 'blur(0px)')};
-  filter: contrast(1.35) brightness(0.25);
+  filter: contrast(0.2) brightness(2);
   ${(props) => props.loading && 'clip-path: inset(0);'}
   ${(props) => props.loaded && 'transition: filter 0.5s linear;'}
 `
 
 const ProgressiveImg = ({ placeholderSrc, src, ...props }) => {
   const [imgSrc, setImgSrc] = useState(placeholderSrc || src)
-
-  console.log('ProgressiveImg', { placeholderSrc, src })
 
   useEffect(() => {
     const img = new Image()

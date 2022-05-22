@@ -68,11 +68,12 @@ const CardContainer = styled.div`
 `
 const Card = styled(MaterialCard)`
   padding: 30px;
-  color: white;
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  outline: white 1px solid;
-  font-weight: 500;
-  text-shadow: 1px 1px 2px black;
+  /* color: white; */
+  background-color: rgba(74, 20, 140, 0.05) !important;
+  /* outline: #4a148c 1px solid; */
+  font-weight: 700;
+  font-size: 1.2em !important;
+  text-shadow: 0.5px 0.5px 1px white;
   ul {
     margin-bottom: 0;
   }
@@ -87,8 +88,8 @@ const PageTitle = styled(Typography)`
   font-size: 2em !important;
   padding-bottom: 15px;
   font-weight: 700 !important;
-  text-shadow: 1px 1px 2px black;
-  color: white;
+  text-shadow: 0.5px 0.5px 1px white;
+  /* color: white; */
   @media (min-width: 700px) {
     padding-bottom: 20px;
   }
