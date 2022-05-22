@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { onSnapshot } from 'mobx-state-tree'
+import { onSnapshot, getSnapshot } from 'mobx-state-tree'
 import isEqual from 'lodash/isEqual'
 
 import { MobxStore } from './store'
@@ -54,7 +54,6 @@ function App() {
   useEffect(() => {
     // on first render regenerate store (if exists)
     dexie.stores.get('store').then((dbStore) => {
-      // console.log('App, Effect, store from db:', dbStore)
       const st = MobxStore.create(dbStore?.store)
       setStore(st)
       fetchFromServer(st)
@@ -72,9 +71,11 @@ function App() {
       }
       // persist store on every snapshot
       onSnapshot(st, (ss) => {
-        // console.log('App, Effect, snapshot:', ss)
-        // TODO: remove from snapshot what should not be persisted (if that exists)
-        dexie.stores.put({ id: 'store', store: ss })
+        // remove from snapshot or reset what should not be persisted
+        const editableStore = { ...ss }
+        editableStore.mapInitiated = false
+        editableStore.notifications = {}
+        dexie.stores.put({ id: 'store', store: editableStore })
       })
     })
 
