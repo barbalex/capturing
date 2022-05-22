@@ -19,7 +19,7 @@ import DrawControl from './DrawControl'
 import TableLayers from './TableLayers'
 import TileLayers from './TileLayers'
 import VectorLayers from './VectorLayers'
-import ZhUepWfs from './layers/zh_uep_wfs'
+// import ZhUepWfs from './layers/zh_uep_wfs'
 import BetterWmsAdder from './BetterWmsAdder'
 
 const Container = styled.div`
