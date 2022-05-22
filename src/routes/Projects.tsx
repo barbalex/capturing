@@ -58,9 +58,10 @@ const ProjectsPage = () => {
     showTree,
     showForm,
     showMap,
+    mapInitiated,
   } = store
 
-  // console.log('Projects, subscriptionState:', store.subscriptionState)
+  // console.log('Projects, mapInitiated:', mapInitiated)
 
   const containerEl = useRef(null)
   const treeEl = useRef(null)
@@ -173,7 +174,7 @@ const ProjectsPage = () => {
           resizerStyle={{ width: formResizerWidth }}
         >
           {showForm ? <Outlet /> : <></>}
-          <MapComponent />
+          {mapInitiated ? <MapComponent /> : <></>}
         </StyledSplitPane>
       </StyledSplitPane>
     </Container>

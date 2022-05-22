@@ -1,4 +1,4 @@
-import { types } from 'mobx-state-tree'
+import { types, onAction } from 'mobx-state-tree'
 // import { autorun } from 'mobx'
 import { v1 as uuidv1 } from 'uuid'
 import isEqual from 'lodash/isEqual'
@@ -32,6 +32,7 @@ export const MobxStore = types
     showTree: types.optional(types.boolean, true),
     showForm: types.optional(types.boolean, true),
     showMap: types.optional(types.boolean, false),
+    mapInitiated: types.optional(types.boolean, false),
     singleColumnView: types.optional(types.boolean, false),
     showTreeInSingleColumnView: types.optional(types.boolean, false),
     subscriptionState: types.optional(types.string, 'INITIAL'),
@@ -56,14 +57,18 @@ export const MobxStore = types
     map: undefined,
   }))
   .actions((self) => {
-    // autorun(() =>
-    //   console.log(
-    //     'store, activeNodeArray changed to:',
-    //     self.activeNodeArray.slice(),
-    //   ),
-    // )
+    // autorun(() => {
+    //   console.log('store, showMap changed to:', self.showMap)
+    //   if (!self.showMap) self.setMapInitiated(true)
+    // })
+    onAction(self, (call) => {
+      if (call.name === 'setShowMap') self.setMapInitiated(true)
+    })
 
     return {
+      setMapInitiated(val) {
+        self.mapInitiated = val
+      },
       rebuildTree() {
         self.treeRebuildCount = self.treeRebuildCount + 1
       },
