@@ -54,6 +54,9 @@ function App() {
   useEffect(() => {
     // on first render regenerate store (if exists)
     dexie.stores.get('store').then((dbStore) => {
+      // reset some values
+      if (!dbStore.store.showMap) dbStore.store.mapInitiated = false
+      dbStore.store.notifications = {}
       const st = MobxStore.create(dbStore?.store)
       setStore(st)
       fetchFromServer(st)
@@ -70,13 +73,7 @@ function App() {
         }/${dbStore?.activeNodeArray?.join('/')}`
       }
       // persist store on every snapshot
-      onSnapshot(st, (ss) => {
-        // remove from snapshot or reset what should not be persisted
-        const editableStore = { ...ss }
-        editableStore.mapInitiated = false
-        editableStore.notifications = {}
-        dexie.stores.put({ id: 'store', store: editableStore })
-      })
+      onSnapshot(st, (ss) => dexie.stores.put({ id: 'store', store: ss }))
     })
 
     return () => {
