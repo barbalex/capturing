@@ -1,7 +1,7 @@
 /**
  * Not sure if this is ever used - data should always be downloaded
  */
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState, useContext, useCallback, useRef } from 'react'
 import { GeoJSON, useMapEvent } from 'react-leaflet'
 import styled from 'styled-components'
 import axios from 'redaxios'
@@ -13,6 +13,7 @@ import IconButton from '@mui/material/IconButton'
 import { MdClose } from 'react-icons/md'
 import { useLiveQuery } from 'dexie-react-hooks'
 import * as ReactDOMServer from 'react-dom/server'
+import { useDebouncedCallback } from 'use-debounce'
 
 import {
   dexie,
@@ -44,18 +45,28 @@ const VectorLayerComponent = ({ layer }: Props) => {
   const store = useContext(storeContext)
   const { addNotification, removeNotificationById, showMap } = store
 
+  const removeNotifs = useCallback(() => {
+    // console.log('removing notifs')
+    loadingNotifIds.current.forEach((id) => removeNotificationById(id))
+    loadingNotifIds.current = []
+  }, [removeNotificationById])
+
   const map = useMapEvent('zoomend', () => setZoom(map.getZoom()))
   const [zoom, setZoom] = useState(map.getZoom())
 
   const [data, setData] = useState()
-  useEffect(() => {
-    const run = async () => {
+  const fetchData = useCallback(
+    async ({ bounds }) => {
       if (!showMap) return
+
+      const mapSize = map.getSize()
+      removeNotifs()
       const loadingNotifId = addNotification({
         message: `Lade Geometrien für ${layer.label}...`,
         type: 'info',
         duration: 1000000,
       })
+      loadingNotifIds.current = [loadingNotifId, ...loadingNotifIds.current]
       let res
       try {
         res = await axios({
@@ -69,6 +80,12 @@ const VectorLayerComponent = ({ layer }: Props) => {
             srsName: 'EPSG:4326',
             outputFormat: layer.output_format,
             maxfeatures: 1000,
+            // bbox is NOT WORKING
+            // always returning 0 features...
+            // bbox: `${bounds.toBBoxString()},EPSG:4326`,
+            // bbox: bounds.toBBoxString(),
+            // width: mapSize.x,
+            // height: mapSize.y,
           },
         })
       } catch (error) {
@@ -87,20 +104,28 @@ const VectorLayerComponent = ({ layer }: Props) => {
         })
         return false
       }
-      removeNotificationById(loadingNotifId)
-      setData(res.data)
-    }
-    run()
-  }, [
-    addNotification,
-    layer.label,
-    layer.output_format,
-    layer.type_name,
-    layer.url,
-    layer.wfs_version,
-    removeNotificationById,
-    showMap,
-  ])
+      removeNotifs()
+      setData(res.data?.features)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      addNotification,
+      layer.label,
+      layer.output_format,
+      layer.type_name,
+      layer.url,
+      layer.wfs_version,
+      removeNotificationById,
+      removeNotifs,
+      showMap,
+    ],
+  )
+
+  const fetchDataDebounced = useDebouncedCallback(fetchData, 600)
+  useEffect(() => {
+    fetchDataDebounced({ bounds: map.getBounds() })
+  }, [fetchDataDebounced, map, showMap])
+  const loadingNotifIds = useRef([])
 
   const layerStyle: LayerStyle = useLiveQuery(
     async () =>
@@ -113,12 +138,27 @@ const VectorLayerComponent = ({ layer }: Props) => {
   if (layer.min_zoom !== undefined && zoom < layer.min_zoom) return null
   if (layer.max_zoom !== undefined && zoom > layer.max_zoom) return null
 
-  // console.log('VectorLayerWFS, data:', data)
+  removeNotifs()
+  if (
+    data?.length >= layer.max_features ??
+    (1000 && !loadingNotifIds.current.length)
+  ) {
+    const loadingNotifId = addNotification({
+      message: `Die maximale Anzahl Features von ${
+        layer.max_features ?? 1000
+      } für Vektor-Karte ${layer.label} wurde geladen. Zoomen sie näher ran`,
+      type: 'warning',
+      duration: 1000000,
+    })
+    loadingNotifIds.current = [loadingNotifId, ...loadingNotifIds.current]
+  }
+
+  console.log('VectorLayerWFS, data:', data)
 
   return (
     <>
       <GeoJSON
-        key={data ? 1 : 0}
+        key={data?.length ?? 0}
         data={data}
         opacity={layer.opacity}
         style={layerstyleToProperties({ layerStyle })}

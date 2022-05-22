@@ -20,6 +20,8 @@ const VectorLayerChooser = ({ layer }) => {
       .then((count) => setPvlGeomCount(count))
   }, [layer.id])
 
+  // TODO: only accept pre-downloaded layers because of
+  // problems filtering by bbox?
   if (pvlGeomCount === undefined) return null
   if (pvlGeomCount === 0) return <VectorLayerWFS layer={layer} />
   return <VectorLayerPVLGeom layer={layer} />
