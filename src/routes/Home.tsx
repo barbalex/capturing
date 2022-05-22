@@ -6,10 +6,20 @@ import MaterialCard from '@mui/material/Card'
 
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 import constants from '../utils/constants'
+import image from '../images/puls_vulg.jpg'
+import placeholderSrc from '../images/puls_vulg_small.jpg'
+import ProgressiveImg from '../components/shared/ProgressiveImg'
 
-const ScrollContainer = styled.div`
+const OuterContainer = styled.div`
   height: calc(100% - ${constants.appBarHeight}px);
   position: relative;
+  overflow: hidden;
+`
+const ScrollContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
   overflow-y: auto;
   /* prevent layout shift when scrollbar appears */
   scrollbar-gutter: stable;
@@ -58,8 +68,11 @@ const CardContainer = styled.div`
 `
 const Card = styled(MaterialCard)`
   padding: 30px;
-  background-color: rgba(255, 255, 255, 0.65) !important;
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  outline: white 1px solid;
   font-weight: 500;
+  text-shadow: 1px 1px 2px black;
   ul {
     margin-bottom: 0;
   }
@@ -74,8 +87,8 @@ const PageTitle = styled(Typography)`
   font-size: 2em !important;
   padding-bottom: 15px;
   font-weight: 700 !important;
-  text-shadow: 2px 2px 3px white, -2px -2px 3px white, 2px -2px 3px white,
-    -2px 2px 3px white;
+  text-shadow: 1px 1px 2px black;
+  color: white;
   @media (min-width: 700px) {
     padding-bottom: 20px;
   }
@@ -110,66 +123,69 @@ const Home = () => {
 
   return (
     <ErrorBoundary>
-      <ScrollContainer>
-        <Container>
-          <PageTitle align="center" variant="h6" color="inherit">
-            Daten erfassen:
-          </PageTitle>
-          <CardContainer>
-            <Card>
-              <CardTitle>Was Sie wollen</CardTitle>
-              Text, Pläne, Fotos, Audio, beliebige Dateien.
-            </Card>
-            <Card>
-              <CardTitle>Wie Sie wollen</CardTitle>
-              Daten-Strukturen und -Felder flexibel konfigurieren.
-            </Card>
-            <Card>
-              <CardTitle>Wo Sie wollen</CardTitle>
-              <p>Kein Internet? Egal!</p>
-              <p>Erfassen geht mit Ihnen durch Dick und Dünn.</p>
-            </Card>
-            <Card>
-              <CardTitle>Mit wem Sie wollen</CardTitle>
-              <p>Neue Mitarbeitende einfach ergänzen.</p>
-              <p>Egal, wie viele.</p>
-            </Card>
-            <Card>
-              <CardTitle>Mit Ihrem Gerät</CardTitle>
-              <p>Handy, Tablet, Notebook, PC…</p>
-              <p>Windows, MacOS, Android, iOS, Linux…</p>
-            </Card>
-            <Card>
-              <CardTitle>Mit minimalem Aufwand</CardTitle>
-              <p>Keine Installation: Anmelden und loslegen.</p>
-            </Card>
-            <Card>
-              <CardTitle>Einer für alle, alle für einen</CardTitle>
-              <p>Eine Person konfiguriert.</p>
-              <p>Die übrigen können direkt erfassen.</p>
-            </Card>
-            <Card>
-              <CardTitle>Alle können gleichzeitig arbeiten</CardTitle>
-              <p>Daten werden live synchronisiert.</p>
-              <p>Zwei Eingaben widersprechen sich? Kein Problem:</p>
-              <p>
-                Konflikte werden angezeigt und können einfach gelöst werden.
-              </p>
-            </Card>
-            <Card>
-              <CardTitle>Fragen?</CardTitle>
-              <p>Ich helfe Ihnen gerne beim Start.</p>
-              <p>
-                Ihr Anwendungsfall interessiert mich und hilft bei der
-                Weiter-Entwicklung.
-              </p>
-              <p>Sie zahlen erst, wenn Sie Erfassen produktiv nutzen.</p>
-              <p>Kontaktieren Sie mich.</p>
-            </Card>
-          </CardContainer>
-          <BottomSpacer />
-        </Container>
-      </ScrollContainer>
+      <OuterContainer>
+        <ProgressiveImg src={image} placeholderSrc={placeholderSrc} />
+        <ScrollContainer>
+          <Container>
+            <PageTitle align="center" variant="h6" color="inherit">
+              Daten erfassen:
+            </PageTitle>
+            <CardContainer>
+              <Card>
+                <CardTitle>Was Sie wollen</CardTitle>
+                Text, Pläne, Fotos, Audio, beliebige Dateien.
+              </Card>
+              <Card>
+                <CardTitle>Wie Sie wollen</CardTitle>
+                Daten-Strukturen und -Felder flexibel konfigurieren.
+              </Card>
+              <Card>
+                <CardTitle>Wo Sie wollen</CardTitle>
+                <p>Kein Internet? Egal!</p>
+                <p>Erfassen geht mit Ihnen durch Dick und Dünn.</p>
+              </Card>
+              <Card>
+                <CardTitle>Mit wem Sie wollen</CardTitle>
+                <p>Neue Mitarbeitende einfach ergänzen.</p>
+                <p>Egal, wie viele.</p>
+              </Card>
+              <Card>
+                <CardTitle>Mit Ihrem Gerät</CardTitle>
+                <p>Handy, Tablet, Notebook, PC…</p>
+                <p>Windows, MacOS, Android, iOS, Linux…</p>
+              </Card>
+              <Card>
+                <CardTitle>Mit minimalem Aufwand</CardTitle>
+                <p>Keine Installation: Anmelden und loslegen.</p>
+              </Card>
+              <Card>
+                <CardTitle>Einer für alle, alle für einen</CardTitle>
+                <p>Eine Person konfiguriert.</p>
+                <p>Die übrigen können direkt erfassen.</p>
+              </Card>
+              <Card>
+                <CardTitle>Alle können gleichzeitig arbeiten</CardTitle>
+                <p>Daten werden live synchronisiert.</p>
+                <p>Zwei Eingaben widersprechen sich? Kein Problem:</p>
+                <p>
+                  Konflikte werden angezeigt und können einfach gelöst werden.
+                </p>
+              </Card>
+              <Card>
+                <CardTitle>Fragen?</CardTitle>
+                <p>Ich helfe Ihnen gerne beim Start.</p>
+                <p>
+                  Ihr Anwendungsfall interessiert mich und hilft bei der
+                  Weiter-Entwicklung.
+                </p>
+                <p>Sie zahlen erst, wenn Sie Erfassen produktiv nutzen.</p>
+                <p>Kontaktieren Sie mich.</p>
+              </Card>
+            </CardContainer>
+            <BottomSpacer />
+          </Container>
+        </ScrollContainer>
+      </OuterContainer>
     </ErrorBoundary>
   )
 }

@@ -3,15 +3,19 @@ import styled from 'styled-components'
 
 const Img = styled.img`
   display: block;
-  max-width: 100%;
-  height: auto;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
   filter: ${(props) => (props.loading ? 'blur(10px)' : 'blur(0px)')};
+  filter: contrast(1.35) brightness(0.25);
   ${(props) => props.loading && 'clip-path: inset(0);'}
   ${(props) => props.loaded && 'transition: filter 0.5s linear;'}
 `
 
 const ProgressiveImg = ({ placeholderSrc, src, ...props }) => {
   const [imgSrc, setImgSrc] = useState(placeholderSrc || src)
+
+  console.log('ProgressiveImg', { placeholderSrc, src })
 
   useEffect(() => {
     const img = new Image()
