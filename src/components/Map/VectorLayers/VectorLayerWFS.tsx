@@ -1,3 +1,6 @@
+/**
+ * Not sure if this is ever used - data should always be downloaded
+ */
 import { useEffect, useState, useContext } from 'react'
 import { GeoJSON, useMapEvent } from 'react-leaflet'
 import styled from 'styled-components'
@@ -39,7 +42,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
   const [error, setError] = useState()
 
   const store = useContext(storeContext)
-  const { addNotification, removeNotificationById } = store
+  const { addNotification, removeNotificationById, showMap } = store
 
   const map = useMapEvent('zoomend', () => setZoom(map.getZoom()))
   const [zoom, setZoom] = useState(map.getZoom())
@@ -47,6 +50,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
   const [data, setData] = useState()
   useEffect(() => {
     const run = async () => {
+      if (!showMap) return
       const loadingNotifId = addNotification({
         message: `Lade Geometrien für ${layer.label}...`,
         type: 'info',
@@ -64,6 +68,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
             typeName: layer.type_name,
             srsName: 'EPSG:4326',
             outputFormat: layer.output_format,
+            maxfeatures: 1000,
           },
         })
       } catch (error) {
@@ -94,6 +99,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
     layer.url,
     layer.wfs_version,
     removeNotificationById,
+    showMap,
   ])
 
   const layerStyle: LayerStyle = useLiveQuery(
