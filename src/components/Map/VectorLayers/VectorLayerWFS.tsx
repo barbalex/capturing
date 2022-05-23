@@ -148,7 +148,6 @@ const VectorLayerComponent = ({ layer }: Props) => {
         layer.max_features ?? 1000
       } für Vektor-Karte ${layer.label} wurde geladen. Zoomen sie näher ran`,
       type: 'warning',
-      duration: 1000000,
     })
     loadingNotifIds.current = [loadingNotifId, ...loadingNotifIds.current]
   }

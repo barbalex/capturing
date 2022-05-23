@@ -26,6 +26,12 @@ const ProgressiveImg = ({ placeholderSrc, src, ...props }) => {
   const customClass =
     placeholderSrc && imgSrc === placeholderSrc ? 'loading' : 'loaded'
 
+    /**
+     * TODO:
+     * use picture element: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/picture
+     * use uploadcare adaptive delivery, but with offline fallback
+     * https://uploadcare.com/docs/delivery/adaptive-delivery/#adaptive-delivery
+     */
   return (
     <Img
       {...{ src: imgSrc, ...props }}

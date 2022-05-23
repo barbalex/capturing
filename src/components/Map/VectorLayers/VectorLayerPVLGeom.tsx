@@ -96,6 +96,17 @@ const VectorLayerComponent = ({ layer }: Props) => {
   }, [fetchDataDebounced, map, showMap])
   const loadingNotifIds = useRef([])
 
+  useEffect(() => {
+    // goal: remove own notifs when (de-)activating layer
+    removeNotifs()
+  }, [layer.active, removeNotifs])
+  useEffect(() => {
+    return () => {
+      // goal: remove notifs on leaving component. Does not seem to work
+      removeNotifs()
+    }
+  }, [removeNotifs])
+
   // include only if zoom between min_zoom and max_zoom
   if (layer.min_zoom !== undefined && zoom < layer.min_zoom) return null
   if (layer.max_zoom !== undefined && zoom > layer.max_zoom) return null
@@ -110,7 +121,6 @@ const VectorLayerComponent = ({ layer }: Props) => {
         layer.max_features ?? 1000
       } für Vektor-Karte ${layer.label} wurde geladen. Zoomen sie näher ran`,
       type: 'warning',
-      duration: 1000000,
     })
     loadingNotifIds.current = [loadingNotifId, ...loadingNotifIds.current]
   }
