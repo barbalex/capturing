@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react'
 import { GeoJSON, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
 
-import Popup from '../Popup'
 import WMSPopup from '../TileLayers/TileLayer/Popup'
 
 /**

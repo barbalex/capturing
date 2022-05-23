@@ -42,7 +42,7 @@ const TableLayers = () => {
               layerStyle,
               extraProps: row.id === rowId ? { color: 'red' } : {},
             }),
-            ['Spiel']: await row.label,
+            ...row.data,
           },
         })
       }
