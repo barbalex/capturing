@@ -2,7 +2,7 @@
 // https://www.xml.com/pub/a/2006/05/31/converting-between-xml-and-json.html
 /**
  * Getting xml
- * Extracting an array of:
+ * Extracting an array of: 
  * - layer title
  * - properties
  */

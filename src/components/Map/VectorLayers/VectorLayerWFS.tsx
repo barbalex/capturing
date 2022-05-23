@@ -21,7 +21,7 @@ import {
   VectorLayer as VectorLayerType,
 } from '../../../dexieClient'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
-import Popup from '../Popup'
+import WMSPopup from '../TileLayers/TileLayer/Popup'
 import storeContext from '../../../storeContext'
 
 const StyledXMLViewer = styled(XMLViewer)`
@@ -56,10 +56,10 @@ const VectorLayerComponent = ({ layer }: Props) => {
 
   const [data, setData] = useState()
   const fetchData = useCallback(
-    async ({ bounds }) => {
+    async (/*{ bounds }*/) => {
       if (!showMap) return
 
-      const mapSize = map.getSize()
+      // const mapSize = map.getSize()
       removeNotifs()
       const loadingNotifId = addNotification({
         message: `Lade Geometrien für ${layer.label}...`,
@@ -153,6 +153,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
   }
 
   console.log('VectorLayerWFS, data:', data)
+  const mapSize = map.getSize()
 
   return (
     <>
@@ -162,8 +163,14 @@ const VectorLayerComponent = ({ layer }: Props) => {
         opacity={layer.opacity}
         style={layerstyleToProperties({ layerStyle })}
         onEachFeature={(feature, _layer) => {
+          const layersData = [
+            {
+              label: layer.label,
+              properties: Object.entries(feature?.properties ?? {}),
+            },
+          ]
           const popupContent = ReactDOMServer.renderToString(
-            <Popup feature={feature} label={layer.label} />,
+            <WMSPopup layersData={layersData} mapHeight={mapSize.y} />,
           )
           _layer.bindPopup(popupContent)
         }}
