@@ -21,38 +21,34 @@ const TableLayers = () => {
 
     const _layers = []
     for (const table of tables) {
-      const rows: Row[] = await dexie.rows
-        .filter(
-          (row: Row) =>
-            row.deleted === 0 && row.table_id === table.id && !!row.geometry,
-        )
-        .toArray()
+      const rows: Row[] =
+        (await dexie.rows
+          .filter(
+            (row: Row) =>
+              row.deleted === 0 && row.table_id === table.id && !!row.geometry,
+          )
+          .toArray()) ?? []
       const layerStyle: LayerStyle = await dexie.layer_styles.get({
         table_id: table.id,
       })
       // convert geometry collection into feature collection to add properties (color)
 
-      const features = []
-      for (const row of rows) {
-        features.push({
-          geometry: row.geometry,
-          type: 'Feature',
-          properties: {
-            style: layerstyleToProperties({
-              layerStyle,
-              extraProps: row.id === rowId ? { color: 'red' } : {},
-            }),
-            ...row.data,
-          },
-        })
-      }
+      if (rows.length) {
+        const data = {
+          type: 'FeatureCollection',
+          features: rows.map((row) => ({
+            geometry: row.geometry,
+            type: 'Feature',
+            properties: {
+              style: layerstyleToProperties({
+                layerStyle,
+                extraProps: row.id === rowId ? { color: 'red' } : {},
+              }),
+              ...row.data,
+            },
+          })),
+        }
 
-      const data = {
-        type: 'FeatureCollection',
-        features,
-      }
-
-      if (rows.length)
         _layers.push(
           <TableLayer
             key={table.id}
@@ -61,6 +57,7 @@ const TableLayers = () => {
             style={getStyle}
           />,
         )
+      }
     }
 
     return _layers
