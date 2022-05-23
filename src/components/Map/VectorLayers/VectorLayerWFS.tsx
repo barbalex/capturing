@@ -21,7 +21,7 @@ import {
   VectorLayer as VectorLayerType,
 } from '../../../dexieClient'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
-import WMSPopup from '../TileLayers/TileLayer/Popup'
+import Popup from '../Popup'
 import storeContext from '../../../storeContext'
 
 const StyledXMLViewer = styled(XMLViewer)`
@@ -170,7 +170,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
             },
           ]
           const popupContent = ReactDOMServer.renderToString(
-            <WMSPopup layersData={layersData} mapHeight={mapSize.y} />,
+            <Popup layersData={layersData} mapHeight={mapSize.y} />,
           )
           _layer.bindPopup(popupContent)
         }}

@@ -5,7 +5,7 @@ import axios from 'redaxios'
 import * as ReactDOMServer from 'react-dom/server'
 
 import xmlToLayersData from '../../../../utils/xmlToLayersData'
-import WMSPopup from './Popup'
+import Popup from '../../Popup'
 
 const StyledWMSTileLayer = styled(WMSTileLayer)`
   ${(props) =>
@@ -96,7 +96,7 @@ const WMS = ({ layer }) => {
     } else {
       switch (layer.wms_info_format) {
         case 'application/vnd.ogc.gml':
-        case 'application/vnd.ogc.gml/3.1.1': { 
+        case 'application/vnd.ogc.gml/3.1.1': {
           const parser = new window.DOMParser()
           const layersData = xmlToLayersData(
             parser.parseFromString(res.data, 'text/html'),
@@ -106,7 +106,7 @@ const WMS = ({ layer }) => {
           if (!layersData.length) return
 
           popupContent = ReactDOMServer.renderToString(
-            <WMSPopup layersData={layersData} mapHeight={mapSize.y} />,
+            <Popup layersData={layersData} mapHeight={mapSize.y} />,
           )
           break
         }

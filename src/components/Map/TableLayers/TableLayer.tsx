@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { GeoJSON, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
 
-import WMSPopup from '../TileLayers/TileLayer/Popup'
+import Popup from '../Popup'
 
 /**
  * ref is to ensure layer is updated when data changes
@@ -36,7 +36,7 @@ const TableLayer = ({ data, style, table }) => {
           },
         ]
         const popupContent = ReactDOMServer.renderToString(
-          <WMSPopup layersData={layersData} mapHeight={mapSize.y} />,
+          <Popup layersData={layersData} mapHeight={mapSize.y} />,
         )
         _layer.bindPopup(popupContent)
       }}
