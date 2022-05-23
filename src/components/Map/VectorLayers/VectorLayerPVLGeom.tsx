@@ -10,7 +10,7 @@ import {
   PVLGeom,
 } from '../../../dexieClient'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
-import Popup from '../Popup'
+import WMSPopup from '../TileLayers/TileLayer/Popup'
 import storeContext from '../../../storeContext'
 
 // const bboxBuffer = 0.01
@@ -129,6 +129,8 @@ const VectorLayerComponent = ({ layer }: Props) => {
 
   if (!data?.length) return null
 
+  const mapSize = map.getSize()
+
   return (
     <GeoJSON
       key={data?.length ?? 0}
@@ -136,8 +138,14 @@ const VectorLayerComponent = ({ layer }: Props) => {
       opacity={layer.opacity}
       style={layerstyleToProperties({ layerStyle })}
       onEachFeature={(feature, _layer) => {
+        const layersData = [
+          {
+            label: layer.label,
+            properties: Object.entries(feature?.properties ?? {}),
+          },
+        ]
         const popupContent = ReactDOMServer.renderToString(
-          <Popup feature={feature} label={layer.label} />,
+          <WMSPopup layersData={layersData} mapHeight={mapSize.y} />,
         )
         _layer.bindPopup(popupContent)
       }}
