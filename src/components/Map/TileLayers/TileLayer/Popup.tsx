@@ -7,7 +7,7 @@ const Container = styled.div`
 `
 const Row = styled.div`
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: 85px 1fr;
   font-size: x-small !important;
   &:nth-child(odd) {
     background-color: rgba(0, 0, 0, 0.05);
@@ -23,6 +23,7 @@ const Title = styled.h4`
 `
 const Label = styled.div`
   color: rgba(0, 0, 0, 0.6);
+  overflow-wrap: anywhere;
 `
 const Value = styled.div`
   overflow-wrap: anywhere;
