@@ -37,14 +37,27 @@ const LegendsContainer = styled.div`
 
 // = '99999999-9999-9999-9999-999999999999'
 const ProjectTileLayerFormLegends = ({ legendUrls, row }) => {
+  // console.log('ProjectTileLayerFormLegends', {
+  //   legendUrls,
+  //   row,
+  //   wmsLayers: row?.wms_layers,
+  // })
   useEffect(() => {
     const run = async () => {
       // only fetch if not done yet
-      if (row?.wms_legends?.length) return
-      if (!legendUrls) return
+      if (!row?.wms_layers) return
+      if (!legendUrls?.length) return
+
+      const legendUrlsToUse = legendUrls.filter((lUrl) =>
+        row.wms_layers.includes(lUrl.name),
+      )
+      console.log(
+        'ProjectTileLayerFormLegends, legendUrlsToUse:',
+        legendUrlsToUse,
+      )
 
       const _legendBlobs = []
-      for (const lUrl of legendUrls) {
+      for (const lUrl of legendUrlsToUse) {
         let res
         try {
           res = await axios.get(lUrl.url, {
