@@ -71,6 +71,7 @@ const LayersControl = () => {
             )}
           </div>
         </CardHeader>
+        {legendsExpanded && <div>legends</div>}
       </Card>
     </CardContainer>
   )
