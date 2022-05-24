@@ -169,8 +169,8 @@ const ProjectTileLayerForm = () => {
   const [capabilitiesData, setCapabilitiesData] = useState()
   useEffect(() => {
     if (!row?.wms_base_url) return
-    getCapabilitiesData({ wms_base_url:row.wms_base_url }).then((capabilities) =>
-      setCapabilitiesData(capabilities),
+    getCapabilitiesData({ wms_base_url: row.wms_base_url }).then(
+      (capabilities) => setCapabilitiesData(capabilities),
     )
   }, [projectTileLayerId, row?.wms_base_url])
 
@@ -180,7 +180,7 @@ const ProjectTileLayerForm = () => {
   const infoFormatValues = capabilitiesData?.infoFormatValues
 
   useEffect(() => {
-    if (!capabilitiesData) return
+    if (!capabilitiesData.capabilities) return
     setValuesFromCapabilities({
       capabilities: capabilitiesData.capabilities,
       wms_format: row?.wms_format,
@@ -192,7 +192,7 @@ const ProjectTileLayerForm = () => {
       projectTileLayerId,
     })
   }, [
-    capabilitiesData,
+    capabilitiesData.capabilities,
     row?.wms_format,
     row?.wms_version,
     row?.label,
