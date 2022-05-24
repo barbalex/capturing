@@ -1,11 +1,15 @@
+import { useContext } from 'react'
 import { useMap, WMSTileLayer } from 'react-leaflet'
 import styled from 'styled-components'
 import { useMapEvent } from 'react-leaflet'
 import axios from 'redaxios'
 import * as ReactDOMServer from 'react-dom/server'
+import { useDebouncedCallback } from 'use-debounce'
 
 import xmlToLayersData from '../../../../utils/xmlToLayersData'
 import Popup from '../../Popup'
+import onTileError from './onTileError'
+import storeContext from '../../../../storeContext'
 
 const StyledWMSTileLayer = styled(WMSTileLayer)`
   ${(props) =>
@@ -27,6 +31,7 @@ const PopupContainer = styled.div`
 
 const WMS = ({ layer }) => {
   const map = useMap()
+  const store = useContext(storeContext)
 
   useMapEvent('click', async (e) => {
     // console.log({ layer })
@@ -153,7 +158,15 @@ const WMS = ({ layer }) => {
 
     L.popup().setLatLng(e.latlng).setContent(popupContent).openOn(map)
   })
+  const onTileErrorDebounced = useDebouncedCallback(
+    onTileError.bind(store, map, layer),
+    600,
+  )
 
+  // TODO:
+  // leaflet calls server internally
+  // BUT: if call errors, leaflet does not surface the error
+  // instead ALL WMS LAYERS FAIL!!!!!!!!
   return (
     <StyledWMSTileLayer
       url={layer.wms_base_url}
@@ -165,6 +178,9 @@ const WMS = ({ layer }) => {
       greyscale={layer.greyscale}
       opacity={layer.opacity}
       transparent={layer.wms_transparent === 1}
+      eventHandlers={{
+        tileerror: onTileErrorDebounced,
+      }}
     />
   )
 }
