@@ -77,7 +77,7 @@ const setValuesFromCapabilities = async ({
   }
 
   // dexie.put if changed
-  if (Object.entries(valuesToSet).length) {
+  if (Object.keys(valuesToSet).length) {
     const row: ProjectTileLayer = await dexie.project_tile_layers.get(
       projectTileLayerId,
     )
