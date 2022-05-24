@@ -55,7 +55,7 @@ const BetterWmsAdder = () => {
               transparent: this.wmsParams.transparent,
               version: this.wmsParams.version,
               format: this.wmsParams.format,
-              bbox: this._map.getBounds().toBBoxString(),
+              bbox: this._map.getBounds().toBBoxString(), 
               height: size.y,
               width: size.x,
               layers: this.wmsParams.layers,
