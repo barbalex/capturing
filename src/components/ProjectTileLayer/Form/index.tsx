@@ -9,8 +9,8 @@ import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
 import { Session } from '@supabase/supabase-js'
-import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../../storeContext'
 import Checkbox2States from '../../shared/Checkbox2States'
@@ -28,7 +28,7 @@ import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import Legends from './Legends'
-import getCapabilities from '../../../utils/getCapabilities'
+import getCapabilities from './getCapabilities'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -36,16 +36,12 @@ const FieldsContainer = styled.div`
   overflow-y: auto;
 `
 
-type Props = {
-  showFilter: (boolean) => void
-}
-
 // = '99999999-9999-9999-9999-999999999999'
-const ProjectTileLayerForm = ({ showFilter }: Props) => {
+const ProjectTileLayerForm = () => {
   const { projectId, projectTileLayerId } = useParams()
 
   const store = useContext(StoreContext)
-  const { filter, errors } = store
+  const { errors } = store
 
   const session: Session = supabase.auth.session()
 
@@ -59,7 +55,6 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
     unsetError('project_tile_layer')
   }, [projectTileLayerId, unsetError])
 
-  // const data = {}
   const data = useLiveQuery(async () => {
     const [row, projectUser] = await Promise.all([
       dexie.project_tile_layers.get(projectTileLayerId),
@@ -74,14 +69,25 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
       userRole,
     )
 
+    // const { wmsFormatValues, layerOptions, legendUrls, infoFormatValues } =
+    //   await getCapabilities({ onBlur, row })
+
     return {
       row,
       userMayEdit,
+      // wmsFormatValues,
+      // layerOptions,
+      // legendUrls,
+      // infoFormatValues,
     }
   }, [projectId, projectTileLayerId, session?.user?.email])
 
   const row: ProjectTileLayer = data?.row
   const userMayEdit: boolean = data?.userMayEdit
+  // const wmsFormatValues = data?.wmsFormatValues
+  // const layerOptions = data?.layerOptions
+  // const legendUrls = data?.legendUrls
+  // const infoFormatValues = data?.infoFormatValues
 
   const tileLayerTypeValues = Object.values(TileLayerTypeEnum).map((v) => ({
     value: v,
@@ -143,168 +149,40 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
       const previousValue = rowState.current[field]
       if (newValue === previousValue) return
 
-      if (showFilter) {
-        return filter.setValue({
-          table: 'project_tile_layer',
-          key: field,
-          value: newValue,
-        })
-      }
+      // if (showFilter) {
+      //   return filter.setValue({
+      //     table: 'project_tile_layer',
+      //     key: field,
+      //     value: newValue,
+      //   })
+      // }
 
       // update rowState
       rowState.current = { ...row, ...{ [field]: newValue } }
       // update dexie
       dexie.project_tile_layers.update(row.id, { [field]: newValue })
     },
-    [filter, row, showFilter],
+    [row],
   )
 
-  const [wmsFormatValues, setWmsFormatValues] = useState()
-  const [layerOptions, setLayerOptions] = useState()
-  const [wmsVersion, setWmsVersion] = useState()
-  const [legendUrls, setLegendUrls] = useState()
-  const [infoFormatValues, setInfoFormatValues] = useState()
+  const [capabilitiesData, setCapabilitiesData] = useState()
   useEffect(() => {
-    const run = async () => {
-      if (!row?.wms_base_url) return
-      const upToDateRow = await dexie.project_tile_layers.get(
-        projectTileLayerId,
-      )
-      if (!upToDateRow?.wms_base_url) return
+    getCapabilities({ onBlur, row }).then((capabilities) =>
+      setCapabilitiesData(capabilities),
+    )
+  }, [projectTileLayerId, row?.wms_base_url, row?.wms_layers, onBlur])
 
-      const capabilities = await getCapabilities({
-        url: upToDateRow?.wms_base_url,
-        service: 'WMS',
-      })
-      // console.log('ProjectTileLayerForm, capabilities:', capabilities)
-      const _wmsVersion = capabilities?.version
-      if (_wmsVersion) {
-        setWmsVersion(_wmsVersion)
-        if (!upToDateRow.wms_version) {
-          onBlur({
-            target: { name: 'wms_version', value: _wmsVersion },
-          })
-        }
-      }
-      const imageFormatValues =
-        capabilities?.Capability?.Request?.GetMap?.Format.filter((v) =>
-          v.toLowerCase().includes('image'),
-        ).map((v) => ({
-          label: v,
-          value: v,
-        }))
-      setWmsFormatValues(imageFormatValues)
-      // if wms_format is not yet set, set version with png or jpg
-      if (!upToDateRow.wms_format) {
-        const formatValueStrings = imageFormatValues
-          ? imageFormatValues.map((v) => v.value)
-          : []
-        const preferedFormat =
-          formatValueStrings.find((v) =>
-            v?.toLowerCase?.().includes('image/png'),
-          ) ??
-          formatValueStrings.find((v) => v?.toLowerCase?.().includes('png')) ??
-          formatValueStrings.find((v) =>
-            v?.toLowerCase?.().includes('image/jpeg'),
-          ) ??
-          formatValueStrings.find((v) => v?.toLowerCase?.().includes('jpeg'))
-        if (preferedFormat) {
-          onBlur({
-            target: { name: 'wms_format', value: preferedFormat },
-          })
-        }
-      }
-      // set title as label if undefined
-      if (!upToDateRow.label) {
-        onBlur({
-          target: { name: 'label', value: capabilities?.Service?.Title },
-        })
-      }
-      // let user choose from layers
-      // filter only layers with crs EPSG:4326
-      const layers = capabilities?.Capability?.Layer?.Layer ?? []
-      const _layerOptions = layers
-        ?.filter((v) => v?.CRS?.includes('EPSG:4326'))
-        .map((v) => ({
-          label: v.Title,
-          value: v.Name,
-        }))
-      setLayerOptions(_layerOptions)
-      if (!upToDateRow.wms_layers && _layerOptions?.map) {
-        // activate all layers
-        onBlur({
-          target: {
-            name: 'wms_layers',
-            value: _layerOptions.map((o) => o.value).join(','),
-          },
-        })
-      }
-
-      // fetch legends
-      const lUrls = layers
-        .map((l) => ({
-          title: l.Title,
-          url: l.Style?.[0]?.LegendURL?.[0]?.OnlineResource,
-        }))
-        .filter((u) => !!u.url)
-      setLegendUrls(lUrls)
-
-      // use capabilities.Capability?.Layer?.Layer[this]?.queryable to allow/disallow getting feature info?
-      // console.log('ProjectTileLayerForm, layers:', layers)
-      if (![0, 1].includes(upToDateRow.wms_queryable)) {
-        onBlur({
-          target: {
-            name: 'wms_queryable',
-            value: layers.some((l) => l.queryable) ? 1 : 0,
-          },
-        })
-      }
-
-      // use capabilities.Capability?.Request?.GetFeatureInfo?.Format
-      // to set wms_info_format
-      const infoFormats =
-        capabilities?.Capability?.Request?.GetFeatureInfo?.Format ?? []
-      setInfoFormatValues(
-        infoFormats.map((l) => ({
-          label: l,
-          value: l,
-        })),
-      )
-      // set info_format if undefined
-      if (!upToDateRow.wms_info_format) {
-        // for values see: https://docs.geoserver.org/stable/en/user/services/wms/reference.html#getfeatureinfo
-        const preferedFormat =
-          infoFormats.find(
-            (v) => v?.toLowerCase?.() === 'application/vnd.ogc.gml',
-          ) ??
-          infoFormats.find((v) =>
-            v?.toLowerCase?.().includes('application/vnd.ogc.gml'),
-          ) ??
-          infoFormats.find((v) => v?.toLowerCase?.().includes('text/plain')) ??
-          infoFormats.find((v) =>
-            v?.toLowerCase?.().includes('application/json'),
-          ) ??
-          infoFormats.find((v) =>
-            v?.toLowerCase?.().includes('text/javascript'),
-          ) ??
-          infoFormats.find((v) => v?.toLowerCase?.().includes('text/html'))
-        if (preferedFormat) {
-          onBlur({
-            target: {
-              name: 'wms_info_format',
-              value: preferedFormat,
-            },
-          })
-        }
-      }
-    }
-    run()
-  }, [onBlur, row?.wms_base_url, projectTileLayerId])
+  const wmsFormatValues = capabilitiesData?.wmsFormatValues
+  const layerOptions = capabilitiesData?.layerOptions
+  const legendUrls = capabilitiesData?.legendUrls
+  const infoFormatValues = capabilitiesData?.infoFormatValues
 
   // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
   if (!row) return <Spinner />
+
+  // console.log('PTL Form rendering, legendUrls:', legendUrls)
 
   return (
     <ErrorBoundary>
@@ -456,7 +334,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
                     multiLine
                   />
                 )}
-                {!wmsVersion && (
+                {!row.wms_version && (
                   <TextField
                     key={`${row.id}wms_version`}
                     name="wms_version"
@@ -538,7 +416,7 @@ const ProjectTileLayerForm = ({ showFilter }: Props) => {
           error={errors?.field?.greyscale}
           disabled={!userMayEdit}
         />
-        <Legends key={`${row.id}legends`} legendUrls={legendUrls} row={row} />
+        <Legends key={`${row.id}/legends`} legendUrls={legendUrls} row={row} />
       </FieldsContainer>
     </ErrorBoundary>
   )
