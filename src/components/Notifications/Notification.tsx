@@ -17,13 +17,16 @@ const Container = styled.div`
   border-radius: 3px;
   background-color: ${(props) => props['data-color']};
   color: white;
-  font-weight: 500;
+  /* font-weight: 500; */
   min-height: 18px;
   max-width: calc(100% - 10px);
   word-wrap: break-word;
 `
 const StyledIconButton = styled(IconButton)`
-  margin-left: 8px !important;
+  /* margin-left: 8px !important; */
+  position: absolute;
+  top: 16px;
+  right: 14px;
 `
 const StyledButton = styled(Button)`
   color: white !important;
@@ -37,11 +40,12 @@ const StyledButton = styled(Button)`
 const Message = styled.div`
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 `
 const Title = styled.div`
   font-weight: 500;
+  margin-right: 30px;
 `
 
 const colorMap = {
@@ -106,7 +110,7 @@ const Notification = ({ notification: n }) => {
 
   return (
     <Container data-color={color}>
-      {!!title && <Title>{`${title}. Fehler-Meldung:`}</Title>}
+      {!!title && <Title>{`${title}:`}</Title>}
       <Message>{message}</Message>
       {!!actionName && !!actionLabel && (
         <StyledButton onClick={onClickAction} variant="outlined">

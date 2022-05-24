@@ -32,7 +32,7 @@ const fetchWmsGetCapabilities = async ({ url, service = 'WFS' }) => {
   if (service === 'WMS') return new WMSCapabilities().parse(res.data)
   // is WFS
   const parser = new window.DOMParser()
-  const data = xmlToJson(parser.parseFromString(res.data, 'text/html'))
+  const data = xmlToJson(parser.parseFromString(res.data, 'text/html')) 
   return data
 }
 

@@ -159,7 +159,7 @@ const WMS = ({ layer }) => {
     L.popup().setLatLng(e.latlng).setContent(popupContent).openOn(map)
   })
   const onTileErrorDebounced = useDebouncedCallback(
-    onTileError.bind(store, map, layer),
+    onTileError.bind(this, store, map, layer),
     600,
   )
 

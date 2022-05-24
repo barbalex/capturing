@@ -9,7 +9,7 @@ const getCapabilities = async ({ onBlur, row }) => {
     url: row?.wms_base_url,
     service: 'WMS',
   })
-  console.log('getCapabilities:', capabilities)
+  // console.log('getCapabilities:', capabilities)
   const _wmsVersion = capabilities?.version
   if (_wmsVersion) {
     if (!row.wms_version) {

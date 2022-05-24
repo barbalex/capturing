@@ -51,10 +51,10 @@ const ProjectTileLayerFormLegends = ({ legendUrls, row }) => {
       const legendUrlsToUse = legendUrls.filter((lUrl) =>
         row.wms_layers.includes(lUrl.name),
       )
-      console.log(
-        'ProjectTileLayerFormLegends, legendUrlsToUse:',
-        legendUrlsToUse,
-      )
+      // console.log(
+      //   'ProjectTileLayerFormLegends, legendUrlsToUse:',
+      //   legendUrlsToUse,
+      // )
 
       const _legendBlobs = []
       for (const lUrl of legendUrlsToUse) {

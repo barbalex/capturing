@@ -2,15 +2,10 @@
 import axios from 'redaxios'
 
 import { ProjectTileLayer } from '../../../../dexieClient'
+import xmlToJson from '../../../../utils/xmlToJson'
 
-type Props = {
-  layer: ProjectTileLayer
-  store: any
-  map: any
-}
-
-const onTileError = async (map, layer, store) => {
-  console.log('onTileError', { store, layer, map })
+const onTileError = async (store, map, layer: ProjectTileLayer, ignore) => {
+  console.log('onTileError', { ignore, map, layer, store })
   const mapSize = map.getSize()
   const bbox = map.getBounds().toBBoxString()
   const res = await axios({
@@ -28,9 +23,23 @@ const onTileError = async (map, layer, store) => {
       bbox,
     },
   })
-  console.log(`onTileError res.data:`, res.data)
+  // console.log(`onTileError res.data:`, res.data)
   const isXML = res.data.includes('<ServiceException>')
-  console.log(`onTileError isXML:`, isXML)
+  // console.log(`onTileError isXML:`, isXML)
+  if (!isXML) return
+
+  const parser = new window.DOMParser()
+  const data = xmlToJson(parser.parseFromString(res.data, 'text/html'))
+  // console.log(`onTileError data:`, data)
+  const errorMessage =
+    data?.HTML?.BODY?.SERVICEEXCEPTIONREPORT?.SERVICEEXCEPTION?.['#text']
+  // console.log(`onTileError errorMessage:`, errorMessage)
+  store.addNotification({
+    title: `Fehler beim Laden der Bild-Karte '${layer.label}'. Der WMS-Server meldet`,
+    message: errorMessage,
+    type: 'error',
+    duration: 20000,
+  })
 }
 
 export default onTileError
