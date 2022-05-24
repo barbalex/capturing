@@ -21,6 +21,8 @@ import TileLayers from './TileLayers'
 import VectorLayers from './VectorLayers'
 // import ZhUepWfs from './layers/zh_uep_wfs'
 import BetterWmsAdder from './BetterWmsAdder'
+import Control from './Control'
+import OwnControls from './OwnControls'
 
 const Container = styled.div`
   height: 100%;
@@ -100,7 +102,10 @@ const MapComponent = () => {
           {!!rowId && <DrawControl />}
           <TableLayers />
           <VectorLayers key={`${vectorLayerSorter}/vectorLayers`} />
-          <TileLayers key={`${tileLayerSorter}/tileLayers`} />
+          <TileLayers key={`${tileLayerSorter}/tileLayers`} />{' '}
+          <Control position="topright" visible={true}>
+            <OwnControls />
+          </Control>
         </StyledMapContainer>
       </Container>
     </ErrorBoundary>
