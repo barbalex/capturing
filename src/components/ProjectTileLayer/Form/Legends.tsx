@@ -101,6 +101,9 @@ const ProjectTileLayerFormLegends = ({ legendUrls, row }) => {
     setLegends(_legends)
   }, [row])
 
+  if (!legends) return null
+  if (!legends.length) return null
+
   return (
     <ErrorBoundary>
       <Container>

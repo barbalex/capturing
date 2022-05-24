@@ -180,9 +180,9 @@ const ProjectTileLayerForm = () => {
   const infoFormatValues = capabilitiesData?.infoFormatValues
 
   useEffect(() => {
-    if (!capabilitiesData.capabilities) return
+    if (!capabilitiesData?.capabilities) return
     setValuesFromCapabilities({
-      capabilities: capabilitiesData.capabilities,
+      capabilities: capabilitiesData?.capabilities,
       wms_format: row?.wms_format,
       wms_version: row?.wms_version,
       label: row?.label,
@@ -192,7 +192,7 @@ const ProjectTileLayerForm = () => {
       projectTileLayerId,
     })
   }, [
-    capabilitiesData.capabilities,
+    capabilitiesData?.capabilities,
     row?.wms_format,
     row?.wms_version,
     row?.label,
@@ -441,7 +441,7 @@ const ProjectTileLayerForm = () => {
           error={errors?.field?.greyscale}
           disabled={!userMayEdit}
         />
-        <Legends key={`${row.id}/legends`} legendUrls={legendUrls} row={row} />
+        {!!legendUrls?.length && <Legends legendUrls={legendUrls} row={row} />}
       </FieldsContainer>
     </ErrorBoundary>
   )
