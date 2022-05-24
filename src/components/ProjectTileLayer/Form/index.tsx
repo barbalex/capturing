@@ -28,7 +28,8 @@ import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import Legends from './Legends'
-import getCapabilities from './getCapabilities'
+import getCapabilitiesData from './getCapabilitiesData'
+import setValuesFromCapabilities from './setValuesFromCapabilities'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -167,22 +168,46 @@ const ProjectTileLayerForm = () => {
 
   const [capabilitiesData, setCapabilitiesData] = useState()
   useEffect(() => {
-    getCapabilities({ onBlur, row }).then((capabilities) =>
+    if (!row?.wms_base_url) return
+    getCapabilitiesData({ wms_base_url:row.wms_base_url }).then((capabilities) =>
       setCapabilitiesData(capabilities),
     )
-  }, [projectTileLayerId, row?.wms_base_url, row?.wms_layers, onBlur])
+  }, [projectTileLayerId, row?.wms_base_url])
 
   const wmsFormatValues = capabilitiesData?.wmsFormatValues
   const layerOptions = capabilitiesData?.layerOptions
   const legendUrls = capabilitiesData?.legendUrls
   const infoFormatValues = capabilitiesData?.infoFormatValues
 
+  useEffect(() => {
+    if (!capabilitiesData) return
+    setValuesFromCapabilities({
+      capabilities: capabilitiesData.capabilities,
+      wms_format: row?.wms_format,
+      wms_version: row?.wms_version,
+      label: row?.label,
+      wms_layers: row?.wms_layers,
+      wms_queryable: row?.wms_queryable,
+      wms_info_format: row?.wms_info_format,
+      projectTileLayerId,
+    })
+  }, [
+    capabilitiesData,
+    row?.wms_format,
+    row?.wms_version,
+    row?.label,
+    row?.wms_layers,
+    row?.wms_queryable,
+    row?.wms_info_format,
+    projectTileLayerId,
+  ])
+
   // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
   if (!row) return <Spinner />
 
-  // console.log('PTL Form rendering, legendUrls:', legendUrls)
+  console.log('PTL Form rendering, legendUrls:', legendUrls)
 
   return (
     <ErrorBoundary>
