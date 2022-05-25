@@ -36,7 +36,7 @@ const LegendsContainer = styled.div`
 `
 
 // = '99999999-9999-9999-9999-999999999999'
-const ProjectTileLayerFormLegends = ({ legendUrls, row }) => {
+const ProjectTileLayerFormLegends = ({ row }) => {
   // console.log('ProjectTileLayerFormLegends', {
   //   legendUrls,
   //   row,
@@ -46,9 +46,9 @@ const ProjectTileLayerFormLegends = ({ legendUrls, row }) => {
     const run = async () => {
       // only fetch if not done yet
       if (!row?.wms_layers) return
-      if (!legendUrls?.length) return
+      if (!row?.legendUrls?.length) return
 
-      const legendUrlsToUse = legendUrls.filter((lUrl) =>
+      const legendUrlsToUse = row.legendUrls.filter((lUrl) =>
         row.wms_layers.includes(lUrl.name),
       )
       // console.log(
@@ -74,17 +74,17 @@ const ProjectTileLayerFormLegends = ({ legendUrls, row }) => {
 
       if (_legendBlobs.length) {
         // add legends into row to reduce network activity and make them offline available
-        dexie.project_tile_layers.update(row.id, { wms_legends: _legendBlobs })
+        dexie.project_tile_layers.update(row.id, { wmsLegends: _legendBlobs })
       }
     }
     run()
-  }, [legendUrls, row])
+  }, [row])
 
   const [legends, setLegends] = useState()
   useEffect(() => {
     // get legends from row
     const _legends = []
-    for (const legend of row.wms_legends ?? []) {
+    for (const legend of row.wmsLegends ?? []) {
       let objectUrl
       try {
         objectUrl = URL.createObjectURL(

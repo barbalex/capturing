@@ -1,6 +1,6 @@
 import { dexie, ProjectTileLayer } from '../../../dexieClient'
 
-const setValuesFromCapabilities = async ({
+const getValuesToSetFromCapabilities = async ({
   capabilities,
   wms_format,
   wms_version,
@@ -8,7 +8,6 @@ const setValuesFromCapabilities = async ({
   wms_layers,
   wms_queryable,
   wms_info_format,
-  projectTileLayerId,
 }) => {
   const valuesToSet = {}
   // setWmsFormatValues(imageFormatValues)
@@ -76,15 +75,7 @@ const setValuesFromCapabilities = async ({
     }
   }
 
-  // dexie.put if changed
-  if (Object.keys(valuesToSet).length) {
-    const row: ProjectTileLayer = await dexie.project_tile_layers.get(
-      projectTileLayerId,
-    )
-    const newRow = { ...row, ...valuesToSet }
-    // console.log('setValuesFromCapabilities', { row, newRow })
-    dexie.project_tile_layers.put(newRow)
-  }
+  return valuesToSet
 }
 
-export default setValuesFromCapabilities
+export default getValuesToSetFromCapabilities

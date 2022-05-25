@@ -1,11 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useCallback,
-  useRef,
-  useState,
-  useMemo,
-} from 'react'
+import React, { useContext, useEffect, useCallback, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
@@ -30,7 +23,6 @@ import Spinner from '../../shared/Spinner'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import Legends from './Legends'
 import getCapabilitiesData from './getCapabilitiesData'
-import setValuesFromCapabilities from './setValuesFromCapabilities'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -71,25 +63,14 @@ const ProjectTileLayerForm = () => {
       userRole,
     )
 
-    // const { wmsFormatValues, layerOptions, legendUrls, infoFormatValues } =
-    //   await getCapabilities({ onBlur, row })
-
     return {
       row,
       userMayEdit,
-      // wmsFormatValues,
-      // layerOptions,
-      // legendUrls,
-      // infoFormatValues,
     }
   }, [projectId, projectTileLayerId, session?.user?.email])
 
   const row: ProjectTileLayer = data?.row
   const userMayEdit: boolean = data?.userMayEdit
-  // const wmsFormatValues = data?.wmsFormatValues
-  // const layerOptions = data?.layerOptions
-  // const legendUrls = data?.legendUrls
-  // const infoFormatValues = data?.infoFormatValues
 
   const tileLayerTypeValues = Object.values(TileLayerTypeEnum).map((v) => ({
     value: v,
@@ -167,48 +148,19 @@ const ProjectTileLayerForm = () => {
     [row],
   )
 
-  const [capabilitiesData, setCapabilitiesData] = useState()
   useEffect(() => {
     if (!row?.wms_base_url) return
-    getCapabilitiesData({ wms_base_url: row.wms_base_url }).then(
-      (capabilities) => setCapabilitiesData(capabilities),
-    )
-  }, [projectTileLayerId, row?.wms_base_url])
-
-  const wmsFormatValues = capabilitiesData?.wmsFormatValues
-  const layerOptions = capabilitiesData?.layerOptions
-  const legendUrls = capabilitiesData?.legendUrls
-  const infoFormatValues = capabilitiesData?.infoFormatValues
-
-  useEffect(() => {
-    if (!capabilitiesData?.capabilities) return
-    setValuesFromCapabilities({
-      capabilities: capabilitiesData?.capabilities,
-      wms_format: row?.wms_format,
-      wms_version: row?.wms_version,
-      label: row?.label,
-      wms_layers: row?.wms_layers,
-      wms_queryable: row?.wms_queryable,
-      wms_info_format: row?.wms_info_format,
-      projectTileLayerId,
-    })
-  }, [
-    capabilitiesData?.capabilities,
-    row?.wms_format,
-    row?.wms_version,
-    row?.label,
-    row?.wms_layers,
-    row?.wms_queryable,
-    row?.wms_info_format,
-    projectTileLayerId,
-  ])
+    if (row?.layerOptions?.length) return
+    getCapabilitiesData({ row })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectTileLayerId, row?.wms_base_url, row?.layerOptions?.length])
 
   // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
   if (!row) return <Spinner />
 
-  console.log('PTL Form rendering, capabilitiesData:', capabilitiesData)
+  console.log('PTL Form rendering')
 
   return (
     <ErrorBoundary>
@@ -281,19 +233,19 @@ const ProjectTileLayerForm = () => {
             />
             {!!row?.wms_base_url && (
               <>
-                {wmsFormatValues?.length > 0 && (
+                {row.wmsFormatOptions?.length > 0 && (
                   <RadioButtonGroup
                     key={`${row.id}wms_format/cb`}
                     value={row.wms_format}
                     name="wms_format"
-                    dataSource={wmsFormatValues}
+                    dataSource={row.wmsFormatOptions}
                     onBlur={onBlur}
                     label="(Bild-)Format (welche der WMS-Server anbietet)"
                     helperText="Empfehlenswert ist 'image/png' (wenn vorhanden), weil es transparenten Hintergrund ermöglicht"
                     error={errors?.project_tile_layer?.wms_format}
                   />
                 )}
-                {wmsFormatValues?.length === 0 && (
+                {row.wmsFormatOptions?.length === 0 && (
                   <TextField
                     key={`${row.id}wms_format/text`}
                     name="wms_format"
@@ -304,19 +256,19 @@ const ProjectTileLayerForm = () => {
                     disabled={!userMayEdit}
                   />
                 )}
-                {infoFormatValues?.length > 0 && (
+                {row.infoFormatOptions?.length > 0 && (
                   <RadioButtonGroup
                     key={`${row.id}wms_info_format/cb`}
                     value={row.wms_info_format}
                     name="wms_info_format"
-                    dataSource={infoFormatValues}
+                    dataSource={row.infoFormatOptions}
                     onBlur={onBlur}
                     label="Format der Informationen (welche der WMS-Server anbietet)"
                     helperText="Empfehlenswert ist 'application/vnd.ogc.gml' (wenn vorhanden) oder eine andere Form von gml, weil es die beste Darstellung ermöglicht"
                     error={errors?.project_tile_layer?.wms_info_format}
                   />
                 )}
-                {infoFormatValues?.length === 0 && (
+                {row.infoFormatOptions?.length === 0 && (
                   <TextField
                     key={`${row.id}wms_info_format/text`}
                     name="wms_info_format"
@@ -336,7 +288,7 @@ const ProjectTileLayerForm = () => {
                   error={errors?.field?.wms_transparent}
                   disabled={!userMayEdit}
                 />
-                {layerOptions?.length > 0 && (
+                {row.layerOptions?.length > 0 && (
                   <CheckboxGroup
                     key={`${row.id}wms_layers/cb`}
                     value={
@@ -344,11 +296,11 @@ const ProjectTileLayerForm = () => {
                     }
                     label="Layer (welche der WMS-Server anbietet)"
                     name="wms_layers"
-                    options={layerOptions}
+                    options={row.layerOptions}
                     onBlur={onBlur}
                   />
                 )}
-                {layerOptions?.length === 0 && (
+                {row.layerOptions?.length === 0 && (
                   <TextField
                     key={`${row.id}wms_layers/text`}
                     name="wms_layers"
@@ -442,7 +394,7 @@ const ProjectTileLayerForm = () => {
           error={errors?.field?.greyscale}
           disabled={!userMayEdit}
         />
-        {!!legendUrls?.length && <Legends legendUrls={legendUrls} row={row} />}
+        {!!row.legendUrls?.length && <Legends row={row} />}
       </FieldsContainer>
     </ErrorBoundary>
   )

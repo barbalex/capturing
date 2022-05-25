@@ -38,7 +38,7 @@ const MapLegends = () => {
     } else {
       if (!l.wms_base_url) return false
       if (!l.wms_layers) return false
-      if (!l.wms_legends?.length) return false
+      if (!l.wmsLegends?.length) return false
     }
     return true
   })
@@ -48,7 +48,7 @@ const MapLegends = () => {
   const legends = useMemo(() => {
     const _legends = []
     for (const row: ProjectTileLayer of validTileLayers) {
-      for (const legend of row?.wms_legends ?? []) {
+      for (const legend of row?.wmsLegends ?? []) {
         let objectUrl
         try {
           objectUrl = URL.createObjectURL(

@@ -1,18 +1,19 @@
 import fetchCapabilities from '../../../utils/getCapabilities'
+import { dexie } from '../../../dexieClient'
+import getValuesToSetFromCapabilities from './getValuesToSetFromCapabilities'
+import { values } from 'mobx'
 
-const getCapabilitiesData = async ({ wms_base_url }) => {
-  if (!wms_base_url) return undefined
+const getCapabilitiesData = async ({ row }) => {
+  if (!row?.wms_base_url) return undefined
 
   const cbData = {}
 
   const capabilities = await fetchCapabilities({
-    url: wms_base_url,
+    url: row.wms_base_url,
     service: 'WMS',
   })
 
-  cbData.capabilities = capabilities
-
-  cbData.wmsFormatValues =
+  cbData.wmsFormatOptions =
     capabilities?.Capability?.Request?.GetMap?.Format.filter((v) =>
       v.toLowerCase().includes('image'),
     ).map((v) => ({
@@ -43,12 +44,24 @@ const getCapabilitiesData = async ({ wms_base_url }) => {
   // to set wms_info_format
   const infoFormats =
     capabilities?.Capability?.Request?.GetFeatureInfo?.Format ?? []
-  cbData.infoFormatValues = infoFormats.map((l) => ({
+  cbData.infoFormatOptions = infoFormats.map((l) => ({
     label: l,
     value: l,
   }))
   // console.log('ProjectTileLayerForm, cbData:', cbData)
-  return cbData
+  const uptoDateRow = await dexie.project_tile_layers.get(row.id)
+  const valuesToSet = getValuesToSetFromCapabilities({
+    capabilities,
+    wms_format: row?.wms_format,
+    wms_version: row?.wms_version,
+    label: row?.label,
+    wms_layers: row?.wms_layers,
+    wms_queryable: row?.wms_queryable,
+    wms_info_format: row?.wms_info_format,
+  })
+  const newValue = { ...uptoDateRow, ...cbData, ...valuesToSet }
+  await dexie.project_tile_layers.put(newValue)
+  return
 }
 
 export default getCapabilitiesData

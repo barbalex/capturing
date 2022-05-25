@@ -426,6 +426,13 @@ export interface IProjectTileLayer {
   wms_styles?: string[]
   wms_transparent?: number
   wms_version?: WmsVersionEnum
+  wms_info_format?: string
+  wms_queryable?: number
+  wmsLegends?: blob[] // only local!
+  wmsFormatOptions?: optionsList[] // local
+  layerOptions?: optionsList[] // local
+  legendUrls?: legendUrlList[] // local
+  infoFormatOptions?: optionsList[] // local
   greyscale?: number
   client_rev_at?: Date
   client_rev_by?: string
@@ -457,6 +464,16 @@ export enum FillRuleEnum {
   evenodd = 'evenodd',
 }
 
+type optionsList = {
+  label: string | number
+  value: string | number
+}
+type legendUrlList = {
+  title: string
+  url: string
+  name: string
+}
+
 type ProjectTileLayerUpdateProps = { row: IProjectTileLayer; session: Session }
 export class ProjectTileLayer implements IProjectTileLayer {
   id: string
@@ -479,7 +496,11 @@ export class ProjectTileLayer implements IProjectTileLayer {
   wms_version?: WmsVersionEnum
   wms_info_format?: string
   wms_queryable?: number
-  wms_legends?: blob[]  // only local!
+  wmsLegends?: blob[] // only local!
+  wmsFormatOptions?: optionsList[] // local
+  layerOptions?: optionsList[] // local
+  legendUrls?: legendUrlList[] // local
+  infoFormatOptions?: optionsList[] // local
   greyscale?: number
   client_rev_at?: Date
   client_rev_by?: string
@@ -507,7 +528,11 @@ export class ProjectTileLayer implements IProjectTileLayer {
     wms_version?: WmsVersionEnum,
     wms_info_format?: string,
     wms_queryable?: number,
-    wms_legends?: blob[],
+    wmsLegends?: blob[],
+    wmsFormatOptions?: optionsList[],
+    layerOptions?: optionsList[],
+    legendUrls?: legendUrlList[],
+    infoFormatOptions?: optionsList[],
     greyscale?: number,
     client_rev_at?: Date,
     client_rev_by?: string,
@@ -534,7 +559,11 @@ export class ProjectTileLayer implements IProjectTileLayer {
     if (wms_version) this.wms_version = wms_version
     if (wms_info_format) this.wms_info_format = wms_info_format
     if (wms_queryable) this.wms_queryable = wms_queryable
-    if (wms_legends) this.wms_legends = wms_legends
+    if (wmsLegends) this.wmsLegends = wmsLegends
+    if (wmsFormatOptions) this.wmsFormatOptions = wmsFormatOptions
+    if (layerOptions) this.layerOptions = layerOptions
+    if (legendUrls) this.legendUrls = legendUrls
+    if (infoFormatOptions) this.infoFormatOptions = infoFormatOptions
     this.greyscale = greyscale ?? 0
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
@@ -548,8 +577,8 @@ export class ProjectTileLayer implements IProjectTileLayer {
       client_rev_at: new window.Date().toISOString(),
       client_rev_by: session.user?.email ?? session.user?.id,
     }
-    // wms_legends exists only client side
-    delete isReved.wms_legends
+    // wmsLegends exists only client side
+    delete isReved.wmsLegends
     const update = new QueuedUpdate(
       undefined,
       undefined,
