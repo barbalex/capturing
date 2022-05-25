@@ -479,7 +479,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
   wms_version?: WmsVersionEnum
   wms_info_format?: string
   wms_queryable?: number
-  wms_legends?: blob[]
+  wms_legends?: blob[]  // only local!
   greyscale?: number
   client_rev_at?: Date
   client_rev_by?: string

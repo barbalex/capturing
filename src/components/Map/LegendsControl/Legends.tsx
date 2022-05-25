@@ -38,6 +38,7 @@ const MapLegends = () => {
     } else {
       if (!l.wms_base_url) return false
       if (!l.wms_layers) return false
+      if (!l.wms_legends?.length) return false
     }
     return true
   })

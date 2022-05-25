@@ -64,13 +64,25 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
       data,
     )
   }
+  // 4. TODO: Some tables have extra data - needs to be preserved
+  //    need to know if is new > fetch and add the extra data
+  //    if not new, preserve existing extra data
   // 4. update dexie with these changes
   if (data) {
     // 4.1 update dexie
-    try {
-      await dexie.table(tableNameForDexie).bulkPut(data)
-    } catch (error) {
-      console.log(`error putting ${tableName}:`, error)
+    if (tableNameForDexie === 'project_tile_layers') {
+      // TODO
+      for (const d of data) {
+        const existing = await dexie.project_tile_layers.get(d.id)
+        const _new = { ...d, wms_legends: existing.wms_legends }
+        await dexie.project_tile_layers.put(_new)
+      }
+    } else {
+      try {
+        await dexie.table(tableNameForDexie).bulkPut(data)
+      } catch (error) {
+        console.log(`error putting ${tableName}:`, error)
+      }
     }
     // 4.2 if files_meta: need to sync files
     if (tableName === 'files_meta') {
