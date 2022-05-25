@@ -167,9 +167,7 @@ const ProjectTileLayerForm = () => {
 
   if (!row) return <Spinner />
 
-  console.log('PTL Form rendering', {
-    wms_layers: row.wms_layers?.split?.(','),
-  })
+  // console.log('PTL Form rendering')
 
   return (
     <ErrorBoundary>
