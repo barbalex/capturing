@@ -208,15 +208,6 @@ const ProjectTileLayerForm = () => {
             )}
           </>
         )}
-        <RadioButtonGroup
-          key={`${row.id}type2`}
-          value={row.type}
-          name="type"
-          dataSource={tileLayerTypeValues}
-          onBlur={onBlur}
-          label="Typ"
-          error={errors?.project_tile_layer?.type}
-        />
         <ToggleButtonGroup
           key={`${row.id}type`}
           value={row.type}
