@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { MdExpandMore, MdExpandLess } from 'react-icons/md'
 import { observer } from 'mobx-react-lite'
+import { motion, useAnimation } from 'framer-motion'
 
 import Legends from './Legends'
 
@@ -51,11 +52,22 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
 const LayersControl = () => {
   // const store = useContext(storeContext)
 
+  const anim = useAnimation()
   const [legendsExpanded, setLegendsExpanded] = useState(false)
 
-  const onToggleApfloraLayersExpanded = useCallback(() => {
-    setLegendsExpanded(!legendsExpanded)
-  }, [legendsExpanded])
+  const onToggleApfloraLayersExpanded = useCallback(async () => {
+    if (legendsExpanded) {
+      await anim.start({ opacity: 0 })
+      await anim.start({ height: 0 })
+      setLegendsExpanded(false)
+    } else {
+      setLegendsExpanded(true)
+      setTimeout(async () => {
+        await anim.start({ height: 'auto' })
+        await anim.start({ opacity: 1 })
+      })
+    }
+  }, [anim, legendsExpanded])
 
   const ApfloraCard = legendsExpanded ? CardTitle : CardTitleApfloraOpen
 
@@ -75,7 +87,9 @@ const LayersControl = () => {
             )}
           </div>
         </CardHeader>
-        {legendsExpanded && <Legends />}
+        <motion.div animate={anim} transition={{ type: 'just', duration: 0.2 }}>
+          {legendsExpanded && <Legends />}
+        </motion.div>
       </Card>
     </CardContainer>
   )
