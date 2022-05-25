@@ -16,6 +16,9 @@ const StyledFormControl = styled(FormControl)`
   padding-left: 1px !important;
   padding-bottom: 19px !important;
   break-inside: avoid;
+  .Mui-selected {
+    background-color: rgba(74, 20, 140, 0.1);
+  }
 `
 const StyledFormLabel = styled(FormLabel)`
   padding-top: 1px !important;
@@ -135,10 +138,12 @@ const ToggleButtonGroupComponent = ({
               <ToggleButton
                 key={index}
                 value={toStringIfPossible(e.value)}
-                control={<StyledRadio color="primary" />}
-                label={e.label}
+                // control={<StyledRadio color="primary" />}
+                // label={e.label}
                 onClick={onClickButton}
-              />
+              >
+                {e.label}
+              </ToggleButton>
             ))
           ) : (
             <NoDataMessage>{noDataMessage}</NoDataMessage>
