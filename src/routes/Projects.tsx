@@ -7,7 +7,6 @@ import { Outlet } from 'react-router-dom'
 import StoreContext from '../storeContext'
 import Login from '../components/Login'
 import constants from '../utils/constants'
-import nodesFromActiveNodeArray from '../utils/nodesFromActiveNodeArray'
 import Tree from '../components/Tree'
 import { supabase } from '../supabaseClient'
 import MapComponent from '../components/Map'
@@ -48,15 +47,7 @@ const standardWidth = 500
 const ProjectsPage = () => {
   const store = useContext(StoreContext)
   const session = supabase.auth.session()
-  const {
-    setFormHeight,
-    setNodes,
-    activeNodeArray,
-    showTree,
-    showForm,
-    showMap,
-    mapInitiated,
-  } = store
+  const { setFormHeight, showTree, showForm, showMap, mapInitiated } = store
 
   // console.log('Projects, mapInitiated:', mapInitiated)
 
