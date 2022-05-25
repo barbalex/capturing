@@ -1,8 +1,7 @@
 import React, { useCallback } from 'react'
-import Select, { StylesConfig } from 'react-select'
+import Select from 'react-select'
 import FormHelperText from '@mui/material/FormHelperText'
 import styled from 'styled-components'
-import chroma from 'chroma-js'
 
 const Container = styled.div`
   display: flex;
@@ -69,60 +68,14 @@ const StyledSelect = styled(Select)`
     /* make it open over titlerow (which needs to have z-index 1 to hide text scolling below it)*/
     z-index: 2;
   }
+  .react-select__multi-value {
+    background-color: rgba(74, 20, 140, 0.1);
+  }
+  .react-select__multi-value__remove:hover {
+    color: white;
+    background-color: rgba(74, 20, 140, 0.2);
+  }
 `
-
-const colourStyles: StylesConfig<ColourOption, true> = {
-  control: (styles) => ({ ...styles, backgroundColor: 'white' }),
-  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-    const color = chroma(data.color)
-    return {
-      ...styles,
-      backgroundColor: isDisabled
-        ? undefined
-        : isSelected
-        ? data.color
-        : isFocused
-        ? color.alpha(0.1).css()
-        : undefined,
-      color: isDisabled
-        ? '#ccc'
-        : isSelected
-        ? chroma.contrast(color, 'white') > 2
-          ? 'white'
-          : 'black'
-        : data.color,
-      cursor: isDisabled ? 'not-allowed' : 'default',
-
-      ':active': {
-        ...styles[':active'],
-        backgroundColor: !isDisabled
-          ? isSelected
-            ? data.color
-            : color.alpha(0.3).css()
-          : undefined,
-      },
-    }
-  },
-  multiValue: (styles, { data }) => {
-    const color = chroma('#4a148c')
-    return {
-      ...styles,
-      backgroundColor: color.alpha(0.1).css(),
-    }
-  },
-  multiValueLabel: (styles, { data }) => ({
-    ...styles,
-    color: chroma('#4a148c'),
-  }),
-  multiValueRemove: (styles, { data }) => ({
-    ...styles,
-    color: data.color,
-    ':hover': {
-      backgroundColor: data.color,
-      color: 'white',
-    },
-  }),
-}
 
 const SharedMultiSelect = ({
   value: valuePassed,
@@ -169,7 +122,6 @@ const SharedMultiSelect = ({
         classNamePrefix="react-select"
         nocaret={noCaret}
         isMulti
-        styles={colourStyles}
       />
       {error && <Error>{error}</Error>}
       {!!helperText && <FormHelperText>{helperText}</FormHelperText>}
