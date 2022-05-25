@@ -15,7 +15,7 @@ const CardContainer = styled.div`
   background-color: white;
   background-clip: padding-box;
   border-radius: 5px;
-  border: 2px solid rgba(0, 0, 0, 0.2);
+  outline: 2px solid rgba(0, 0, 0, 0.2);
 `
 const Card = styled.div`
   padding-top: 3px;
@@ -26,10 +26,11 @@ const CardHeader = styled.div`
   justify-content: space-between;
   padding-left: 7px;
   padding-right: 2px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  ${(props) => props.open && `border-bottom: 1px solid rgba(0, 0, 0, 0.2);`}
   cursor: pointer;
   font-weight: bold;
   user-select: none;
+  height: 21px;
 `
 const CardTitle = styled.div`
   padding-right: 5px;
@@ -61,7 +62,10 @@ const LayersControl = () => {
   return (
     <CardContainer>
       <Card>
-        <CardHeader onClick={onToggleApfloraLayersExpanded}>
+        <CardHeader
+          onClick={onToggleApfloraLayersExpanded}
+          open={legendsExpanded}
+        >
           <ApfloraCard>Legenden</ApfloraCard>
           <div>
             {legendsExpanded ? (
