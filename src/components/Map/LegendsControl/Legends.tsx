@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
+import { useMap } from 'react-leaflet'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import Label from '../../shared/Label'
@@ -9,11 +10,16 @@ import { dexie, ProjectTileLayer } from '../../../dexieClient'
 
 const LegendsContainer = styled.div`
   padding: 10px;
+  max-height: ${(props) => `${props.maxheight}px`};
+  max-width: ${(props) => `${props.maxwidth}px`};
+  overflow: auto;
 `
 
 // = '99999999-9999-9999-9999-999999999999'
 const MapLegends = () => {
   const { projectId } = useParams()
+  const map = useMap()
+  const mapSize = map.getSize()
 
   const where = projectId
     ? // Beware: projectId can be undefined and dexie does not like that
@@ -68,7 +74,7 @@ const MapLegends = () => {
 
   return (
     <ErrorBoundary>
-      <LegendsContainer>
+      <LegendsContainer maxheight={mapSize.y - 70} maxwidth={mapSize.x - 45}>
         {(legends ?? []).map(([title, blob]) => {
           return (
             <div key={title}>
