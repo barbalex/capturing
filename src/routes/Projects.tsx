@@ -44,6 +44,13 @@ const Container = styled.div`
 
 const standardWidth = 500
 
+/**
+ * TODO:
+ * try using split (https://github.com/nathancahill/split/tree/master/packages/react-split)
+ * to:
+ * - animate changeds of columns
+ */
+
 const ProjectsPage = () => {
   const store = useContext(StoreContext)
   const session = supabase.auth.session()
