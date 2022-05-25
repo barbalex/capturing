@@ -50,8 +50,6 @@ const ProjectsPage = () => {
   const session = supabase.auth.session()
   const {
     //singleColumnView,
-    setTreeWidth,
-    setFormWidth,
     setFormHeight,
     setNodes,
     activeNodeArray,
@@ -67,10 +65,8 @@ const ProjectsPage = () => {
   const treeEl = useRef(null)
 
   const setDimensions = useCallback(() => {
-    setTreeWidth(treeEl?.current?.clientWidth ?? standardWidth)
-    setFormWidth(containerEl?.current?.clientWidth ?? standardWidth)
     setFormHeight(containerEl?.current?.clientHeight ?? standardWidth)
-  }, [setFormHeight, setFormWidth, setTreeWidth])
+  }, [setFormHeight])
   // re-calc dimensions every time containerEl changes
   useEffect(() => {
     setDimensions()

@@ -36,8 +36,6 @@ export const MobxStore = types
     singleColumnView: types.optional(types.boolean, false),
     showTreeInSingleColumnView: types.optional(types.boolean, false),
     subscriptionState: types.optional(types.string, 'INITIAL'),
-    treeWidth: types.optional(types.number, 500),
-    formWidth: types.optional(types.number, 500),
     formHeight: types.optional(types.number, 500),
     filterWidth: types.optional(types.number, 500),
     online: types.optional(types.boolean, true),
@@ -104,12 +102,6 @@ export const MobxStore = types
       },
       setOnline(val) {
         self.online = val
-      },
-      setTreeWidth(val) {
-        self.treeWidth = val
-      },
-      setFormWidth(val) {
-        self.formWidth = val
       },
       setFormHeight(val) {
         self.formHeight = val
