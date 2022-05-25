@@ -165,7 +165,7 @@ const ProjectTileLayerForm = () => {
 
   if (!row) return <Spinner />
 
-  console.log('PTL Form rendering')
+  // console.log('PTL Form rendering')
 
   return (
     <ErrorBoundary>
