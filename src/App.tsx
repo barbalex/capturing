@@ -90,7 +90,7 @@ function App() {
   useEffect(() => {
     persist().then((val) => console.log('storage is persisted safely:', val))
   }, [])
-  console.log('App rendering, store:', store)
+  // console.log('App rendering, store:', store)
 
   // on first render returns null
   if (!store) return null
