@@ -54,10 +54,15 @@ function App() {
   useEffect(() => {
     // on first render regenerate store (if exists)
     dexie.stores.get('store').then((dbStore) => {
-      // reset some values
-      if (!dbStore.store.showMap) dbStore.store.mapInitiated = false
-      dbStore.store.notifications = {}
-      const st = MobxStore.create(dbStore?.store)
+      let st
+      if (dbStore) {
+        // reset some values
+        if (!dbStore?.store?.showMap) dbStore.store.mapInitiated = false
+        dbStore.store.notifications = {}
+        st = MobxStore.create(dbStore?.store)
+      } else {
+        st = MobxStore.create()
+      }
       setStore(st)
       fetchFromServer(st)
       // navigate to previous activeNodeArray - if exists
@@ -85,7 +90,7 @@ function App() {
   useEffect(() => {
     persist().then((val) => console.log('storage is persisted safely:', val))
   }, [])
-  // console.log('App rendering, store:', store)
+  console.log('App rendering, store:', store)
 
   // on first render returns null
   if (!store) return null

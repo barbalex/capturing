@@ -20,7 +20,7 @@ import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
-import ToggleButtonGroup from '../../shared/ToggleButtonGroup'
+// import ToggleButtonGroup from '../../shared/ToggleButtonGroup'
 import MultiSelect from '../../shared/MultiSelect'
 import Select from '../../shared/Select'
 import Legends from './Legends'
@@ -217,7 +217,7 @@ const ProjectTileLayerForm = () => {
           label="Typ"
           error={errors?.project_tile_layer?.type}
         />
-        <ToggleButtonGroup
+        {/* <ToggleButtonGroup
           key={`${row.id}type`}
           value={row.type}
           name="type"
@@ -225,7 +225,7 @@ const ProjectTileLayerForm = () => {
           onBlur={onBlur}
           label="Typ"
           error={errors?.project_tile_layer?.type}
-        />
+        /> */}
         {row?.type === 'url_template' && (
           <TextField
             key={`${row.id}url_template`}

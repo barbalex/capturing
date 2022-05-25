@@ -74,11 +74,11 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
         const existing = await dexie.project_tile_layers.get(d.id)
         const _new = {
           ...d,
-          _wmsLegends: existing._wmsLegends,
-          _wmsFormatOptions: existing._wmsFormatOptions,
-          _layerOptions: existing._layerOptions,
-          _legendUrls: existing._legendUrls,
-          _infoFormatOptions: existing._infoFormatOptions,
+          _wmsLegends: existing?._wmsLegends,
+          _wmsFormatOptions: existing?._wmsFormatOptions,
+          _layerOptions: existing?._layerOptions,
+          _legendUrls: existing?._legendUrls,
+          _infoFormatOptions: existing?._infoFormatOptions,
         }
         await dexie.project_tile_layers.put(_new)
       }
