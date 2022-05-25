@@ -8,7 +8,6 @@ import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../../storeContext'
 import Checkbox2States from '../../shared/Checkbox2States'
-import CheckboxGroup from '../../shared/CheckboxGroup'
 import JesNo from '../../shared/JesNo'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import {
@@ -21,6 +20,7 @@ import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
+import MultiSelect from '../../shared/MultiSelect'
 import Legends from './Legends'
 import getCapabilitiesData from './getCapabilitiesData'
 
@@ -124,6 +124,7 @@ const ProjectTileLayerForm = () => {
       let newValue = type === 'number' ? valueAsNumber : value
       if ([undefined, '', NaN].includes(newValue)) newValue = null
       if (type === 'array' && field === 'wms_layers') {
+        console.log('PTL, onBlur', { value, field })
         newValue = value.join(',')
       }
       // console.log('ProjectTileLayer Form onBlur', { newValue, type, field })
@@ -294,15 +295,16 @@ const ProjectTileLayerForm = () => {
                   disabled={!userMayEdit}
                 />
                 {row._layerOptions?.length > 0 && (
-                  <CheckboxGroup
-                    key={`${row.id}wms_layers/cb`}
-                    value={
-                      row.wms_layers?.split ? row.wms_layers?.split?.(',') : []
-                    }
-                    label="Layer (welche der WMS-Server anbietet)"
+                  <MultiSelect
                     name="wms_layers"
+                    value={row._layerOptions?.filter((o) =>
+                      (row.wms_layers?.split?.(',') ?? []).includes(o.value),
+                    )}
+                    field="wms_layers"
+                    label="Layer (welche der WMS-Server anbietet)"
                     options={row._layerOptions}
                     onBlur={onBlur}
+                    helperText="Sie können mehrere Layer wählen"
                   />
                 )}
                 {row._layerOptions?.length === 0 && (

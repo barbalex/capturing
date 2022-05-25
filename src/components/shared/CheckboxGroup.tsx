@@ -5,7 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 import styled from 'styled-components'
 
-const StyledFormControl = styled(FormControl)`
+const StyledFormControl = styled(FormControl)` 
   padding-bottom: 19px;
 `
 const StyledFormLabel = styled(FormLabel)`
