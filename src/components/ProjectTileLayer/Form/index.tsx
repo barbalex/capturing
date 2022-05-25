@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useRef,
   useState,
+  useMemo,
 } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
@@ -207,7 +208,7 @@ const ProjectTileLayerForm = () => {
 
   if (!row) return <Spinner />
 
-  console.log('PTL Form rendering, legendUrls:', legendUrls)
+  console.log('PTL Form rendering, capabilitiesData:', capabilitiesData)
 
   return (
     <ErrorBoundary>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useMemo, useCallback, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
@@ -42,12 +42,11 @@ const MapLegends = () => {
     return true
   })
 
-  console.log('MapLegends, validTileLayers:', validTileLayers)
+  // console.log('MapLegends, validTileLayers:', validTileLayers)
 
   const legends = useMemo(() => {
     const _legends = []
     for (const row: ProjectTileLayer of validTileLayers) {
-      console.log('MapLegends, legends, row:', row)
       for (const legend of row?.wms_legends ?? []) {
         let objectUrl
         try {
@@ -66,14 +65,16 @@ const MapLegends = () => {
     return _legends
   }, [validTileLayers])
 
-  console.log('MapLegends, legends:', legends)
-
-  if (!legends) return null
-  if (!legends.length) return null
+  // prevent click propagation on to map
+  // https://stackoverflow.com/a/57013052/712005
+  const containerRef = useRef()
+  useEffect(() => {
+    L.DomEvent.disableClickPropagation(containerRef.current)
+  }, [containerRef])
 
   return (
     <ErrorBoundary>
-      <LegendsContainer>
+      <LegendsContainer ref={containerRef}>
         {(legends ?? []).map(([title, blob]) => {
           return (
             <div key={title}>
