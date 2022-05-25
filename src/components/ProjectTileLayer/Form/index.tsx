@@ -21,6 +21,7 @@ import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import MultiSelect from '../../shared/MultiSelect'
+import Select from '../../shared/Select'
 import Legends from './Legends'
 import getCapabilitiesData from './getCapabilitiesData'
 
@@ -166,7 +167,9 @@ const ProjectTileLayerForm = () => {
 
   if (!row) return <Spinner />
 
-  // console.log('PTL Form rendering')
+  console.log('PTL Form rendering', {
+    wms_layers: row.wms_layers?.split?.(','),
+  })
 
   return (
     <ErrorBoundary>
@@ -239,16 +242,51 @@ const ProjectTileLayerForm = () => {
             />
             {!!row?.wms_base_url && (
               <>
-                {row._wmsFormatOptions?.length > 0 && (
-                  <RadioButtonGroup
-                    key={`${row.id}wms_format/cb`}
-                    value={row.wms_format}
-                    name="wms_format"
-                    dataSource={row._wmsFormatOptions}
+                {row._layerOptions?.length > 0 && (
+                  <MultiSelect
+                    name="wms_layers"
+                    value={row._layerOptions?.filter((o) =>
+                      (row.wms_layers?.split?.(',') ?? []).includes(o.value),
+                    )}
+                    field="wms_layers"
+                    label="Layer"
+                    options={row._layerOptions}
                     onBlur={onBlur}
-                    label="(Bild-)Format (welche der WMS-Server anbietet)"
-                    helperText="Empfehlenswert ist 'image/png' (wenn vorhanden), weil es transparenten Hintergrund ermöglicht"
+                    helperText={
+                      row.wms_layers?.split?.(',')?.length > 1
+                        ? ''
+                        : 'Sie können mehrere wählen'
+                    }
+                  />
+                )}
+                {row._layerOptions?.length === 0 && (
+                  <TextField
+                    key={`${row.id}wms_layers/text`}
+                    name="wms_layers"
+                    label="Layer (wenn mehrere: mit Komma trennen. Beispiel: 'layer1,layer2')"
+                    value={row.wms_layers}
+                    onBlur={onBlur}
+                    error={errors?.project_tile_layer?.wms_layers}
+                    disabled={!userMayEdit}
+                    multiLine
+                  />
+                )}
+                {row._wmsFormatOptions?.length > 0 && (
+                  <Select
+                    key={`${row.id}wms_format/cb`}
+                    name="wms_format"
+                    value={row.wms_format}
+                    field="wms_format"
+                    label="(Bild-)Format"
+                    options={row._wmsFormatOptions}
+                    saveToDb={onBlur}
                     error={errors?.project_tile_layer?.wms_format}
+                    disabled={!userMayEdit}
+                    helperText={
+                      row.wms_format === 'image/png'
+                        ? ''
+                        : `Empfehlung: 'image/png'. Ermöglicht transparenten Hintergrund`
+                    }
                   />
                 )}
                 {row._wmsFormatOptions?.length === 0 && (
@@ -263,15 +301,21 @@ const ProjectTileLayerForm = () => {
                   />
                 )}
                 {row._infoFormatOptions?.length > 0 && (
-                  <RadioButtonGroup
+                  <Select
                     key={`${row.id}wms_info_format/cb`}
-                    value={row.wms_info_format}
                     name="wms_info_format"
-                    dataSource={row._infoFormatOptions}
-                    onBlur={onBlur}
-                    label="Format der Informationen (welche der WMS-Server anbietet)"
-                    helperText="Empfehlenswert ist 'application/vnd.ogc.gml' (wenn vorhanden) oder eine andere Form von gml, weil es die beste Darstellung ermöglicht"
+                    value={row.wms_info_format}
+                    field="wms_info_format"
+                    label="Format der Informationen"
+                    options={row._infoFormatOptions}
+                    saveToDb={onBlur}
                     error={errors?.project_tile_layer?.wms_info_format}
+                    disabled={!userMayEdit}
+                    helperText={
+                      row.wms_info_format === 'application/vnd.ogc.gml'
+                        ? ''
+                        : `Empfehlung: 'application/vnd.ogc.gml' oder ein anderes gml`
+                    }
                   />
                 )}
                 {row._infoFormatOptions?.length === 0 && (
@@ -294,31 +338,6 @@ const ProjectTileLayerForm = () => {
                   error={errors?.field?.wms_transparent}
                   disabled={!userMayEdit}
                 />
-                {row._layerOptions?.length > 0 && (
-                  <MultiSelect
-                    name="wms_layers"
-                    value={row._layerOptions?.filter((o) =>
-                      (row.wms_layers?.split?.(',') ?? []).includes(o.value),
-                    )}
-                    field="wms_layers"
-                    label="Layer (welche der WMS-Server anbietet)"
-                    options={row._layerOptions}
-                    onBlur={onBlur}
-                    helperText="Sie können mehrere Layer wählen"
-                  />
-                )}
-                {row._layerOptions?.length === 0 && (
-                  <TextField
-                    key={`${row.id}wms_layers/text`}
-                    name="wms_layers"
-                    label="Layer (wenn mehrere: mit Komma trennen. Beispiel: 'layer1,layer2')"
-                    value={row.wms_layers}
-                    onBlur={onBlur}
-                    error={errors?.project_tile_layer?.wms_layers}
-                    disabled={!userMayEdit}
-                    multiLine
-                  />
-                )}
                 {!row.wms_version && (
                   <TextField
                     key={`${row.id}wms_version`}
