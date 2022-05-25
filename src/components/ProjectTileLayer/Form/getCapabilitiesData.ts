@@ -48,7 +48,7 @@ const getCapabilitiesData = async ({ row }: Props) => {
     .filter((u) => !!u.url)
 
   const legendUrlsToUse = cbData._legendUrls.filter((lUrl) =>
-    row.wms_layers.includes(lUrl.name),
+    row.wms_layers?.includes?.(lUrl.name),
   )
 
   const _legendBlobs = []
