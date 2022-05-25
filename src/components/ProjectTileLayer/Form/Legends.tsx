@@ -37,11 +37,11 @@ const LegendsContainer = styled.div`
 
 // = '99999999-9999-9999-9999-999999999999'
 const ProjectTileLayerFormLegends = ({ legendUrls, row }) => {
-  // console.log('ProjectTileLayerFormLegends', {
-  //   legendUrls,
-  //   row,
-  //   wmsLayers: row?.wms_layers,
-  // })
+  console.log('ProjectTileLayerFormLegends', {
+    legendUrls,
+    row,
+    wmsLayers: row?.wms_layers,
+  })
   useEffect(() => {
     const run = async () => {
       // only fetch if not done yet

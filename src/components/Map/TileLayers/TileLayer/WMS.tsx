@@ -178,6 +178,7 @@ const WMS = ({ layer }) => {
       greyscale={layer.greyscale}
       opacity={layer.opacity}
       transparent={layer.wms_transparent === 1}
+      // exceptions="inimage"
       eventHandlers={{
         tileerror: onTileErrorDebounced,
       }}
