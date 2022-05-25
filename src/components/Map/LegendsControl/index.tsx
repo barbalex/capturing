@@ -59,11 +59,13 @@ const LayersControl = () => {
     if (legendsExpanded) {
       await anim.start({ opacity: 0 })
       await anim.start({ height: 0 })
+      await anim.start({ width: 108 })
       setLegendsExpanded(false)
     } else {
       setLegendsExpanded(true)
       setTimeout(async () => {
         await anim.start({ height: 'auto' })
+        await anim.start({ width: 'auto' })
         await anim.start({ opacity: 1 })
       })
     }
