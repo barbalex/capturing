@@ -1,6 +1,6 @@
 import fetchCapabilities from '../../../utils/getCapabilities'
 
-const getCapabilities = async ({ wms_base_url }) => {
+const getCapabilitiesData = async ({ wms_base_url }) => {
   if (!wms_base_url) return undefined
 
   const cbData = {}
@@ -51,4 +51,4 @@ const getCapabilities = async ({ wms_base_url }) => {
   return cbData
 }
 
-export default getCapabilities
+export default getCapabilitiesData
