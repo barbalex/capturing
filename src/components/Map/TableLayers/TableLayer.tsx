@@ -36,7 +36,7 @@ const TableLayer = ({ data, style, table }) => {
           },
         ]
         const popupContent = ReactDOMServer.renderToString(
-          <Popup layersData={layersData} mapHeight={mapSize.y} />,
+          <Popup layersData={layersData} mapSize={mapSize} />,
         )
         _layer.bindPopup(popupContent)
       }}

@@ -111,7 +111,7 @@ const WMS = ({ layer }) => {
           if (!layersData.length) return
 
           popupContent = ReactDOMServer.renderToString(
-            <Popup layersData={layersData} mapHeight={mapSize.y} />,
+            <Popup layersData={layersData} mapSize={mapSize} />,
           )
           break
         }
