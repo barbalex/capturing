@@ -1,9 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react'
-import Radio from '@mui/material/Radio'
 import FormLabel from '@mui/material/FormLabel'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import styled from 'styled-components'
@@ -28,19 +26,9 @@ const StyledFormLabel = styled(FormLabel)`
   pointer-events: none;
   padding-bottom: 8px !important;
 `
-const StyledRadio = styled(Radio)`
-  /* height: 2px !important; */
-`
 const NoDataMessage = styled.div`
   font-size: small;
   color: grey;
-`
-const StyledControlLabel = styled(FormControlLabel)`
-  min-height: 24px;
-  .MuiFormControlLabel-label {
-    font-size: ${(props) => props.labelsize * 1}rem !important;
-    white-space: pre-wrap;
-  }
 `
 const StyledFormHelperText = styled(FormHelperText)`
   line-height: 1.3em;
