@@ -64,14 +64,12 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
       data,
     )
   }
-  // 4. TODO: Some tables have extra data - needs to be preserved
-  //    need to know if is new > fetch and add the extra data
-  //    if not new, preserve existing extra data
   // 4. update dexie with these changes
+  //    Some tables have extra data - needs to be preserved
   if (data) {
     // 4.1 update dexie
     if (tableNameForDexie === 'project_tile_layers') {
-      // TODO
+      // TODO: do this more generally for all local fields beginning with _?
       for (const d of data) {
         const existing = await dexie.project_tile_layers.get(d.id)
         const _new = {
