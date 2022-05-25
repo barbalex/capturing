@@ -26,7 +26,6 @@ const StyledSelect = styled(Select)`
     border-right: none;
     border-radius: 0;
     min-height: 36px !important;
-    height: 36px !important;
   }
   .react-select__control:hover {
     border-bottom-width: 2px;
