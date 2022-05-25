@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useRef, useEffect } from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
@@ -65,16 +65,9 @@ const MapLegends = () => {
     return _legends
   }, [validTileLayers])
 
-  // prevent click propagation on to map
-  // https://stackoverflow.com/a/57013052/712005
-  const containerRef = useRef()
-  useEffect(() => {
-    L.DomEvent.disableClickPropagation(containerRef.current)
-  }, [containerRef])
-
   return (
     <ErrorBoundary>
-      <LegendsContainer ref={containerRef}>
+      <LegendsContainer>
         {(legends ?? []).map(([title, blob]) => {
           return (
             <div key={title}>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
 
 const OuterDiv = styled.div`
@@ -25,10 +25,18 @@ const Control = ({ children, position, visible = true }) => {
   const positionClass =
     (position && POSITION_CLASSES[position]) || POSITION_CLASSES.topright
 
+  // prevent click propagation on to map
+  // https://stackoverflow.com/a/57013052/712005
+  const ref = useRef()
+  useEffect(() => {
+    L.DomEvent.disableClickPropagation(ref.current)
+  }, [])
+
   return (
     <OuterDiv
       className="leaflet-control-container first"
       data-visible={visible}
+      ref={ref}
     >
       <div className={positionClass}>
         <InnerDiv className="leaflet-control leaflet-bar">{children}</InnerDiv>
