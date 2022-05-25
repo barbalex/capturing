@@ -1,14 +1,15 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
 import FormLabel from '@mui/material/FormLabel'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import ToggleButton from '@mui/material/ToggleButton'
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import styled from 'styled-components'
 import { observer } from 'mobx-react-lite'
 
-import toStringIfPossible from '../../utils/toStringIfPossible' 
+import toStringIfPossible from '../../utils/toStringIfPossible'
 
 // without slight padding radio is slightly cut off!
 const StyledFormControl = styled(FormControl)`
@@ -42,7 +43,7 @@ const StyledFormHelperText = styled(FormHelperText)`
   line-height: 1.3em;
 `
 
-const RadioButtonGroup = ({
+const ToggleButtonGroupComponent = ({
   value: valuePassed,
   label,
   labelSize = 1,
@@ -124,26 +125,25 @@ const RadioButtonGroup = ({
         <StyledFormLabel component="legend" labelsize={labelSize}>
           {label}
         </StyledFormLabel>
-        <RadioGroup
+        <ToggleButtonGroup
           aria-label={label}
           value={valueSelected}
           onChange={onChangeGroup}
         >
           {dataSource.length ? (
             dataSource.map((e, index) => (
-              <StyledControlLabel
+              <ToggleButton
                 key={index}
                 value={toStringIfPossible(e.value)}
                 control={<StyledRadio color="primary" />}
                 label={e.label}
-                labelsize={labelSize}
                 onClick={onClickButton}
               />
             ))
           ) : (
             <NoDataMessage>{noDataMessage}</NoDataMessage>
           )}
-        </RadioGroup>
+        </ToggleButtonGroup>
         {!!error && (
           <StyledFormHelperText id={`${label}ErrorText`}>
             {error}
@@ -159,4 +159,4 @@ const RadioButtonGroup = ({
   )
 }
 
-export default observer(RadioButtonGroup)
+export default observer(ToggleButtonGroupComponent)
