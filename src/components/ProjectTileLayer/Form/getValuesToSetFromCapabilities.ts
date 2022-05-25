@@ -38,12 +38,12 @@ const getValuesToSetFromCapabilities = async ({
     valuesToSet.label = capabilities?.Service?.Title
   }
   const layers = capabilities?.Capability?.Layer?.Layer ?? []
-  const layerOptions = layers
+  const _layerOptions = layers
     ?.filter((v) => v?.CRS?.includes('EPSG:4326'))
     .map((v) => v.Name)
   // activate all layers, if only one
-  if (!wms_layers && layerOptions?.map && layerOptions?.length === 1) {
-    valuesToSet.wms_layers = layerOptions.map((o) => o.value).join(',')
+  if (!wms_layers && _layerOptions?.map && _layerOptions?.length === 1) {
+    valuesToSet.wms_layers = _layerOptions.map((o) => o.value).join(',')
   }
 
   // use capabilities.Capability?.Layer?.Layer[this]?.queryable to allow/disallow getting feature info?

@@ -19,12 +19,15 @@ const processQueuedUpdate = async ({
 
   const isRevTable = revTables.includes(queuedUpdate.table)
   const isInsert = !queuedUpdate.revert_id
+  const newObject = JSON.parse(queuedUpdate.value)
+  // remove all local fields
+  const localFields = Object.keys(newObject).filter((k) => k.startsWith('_'))
+  localFields.forEach((field) => delete newObject[field])
   // insert _rev or upsert regular table
   if (isRevTable) {
     const revTableName =
       queuedUpdate.table === 'rows' ? 'row_revs' : 'files_meta_revs'
     // 1 create revision
-    const newObject = JSON.parse(queuedUpdate.value)
     const id = newObject.id
     const depth = isInsert ? 1 : newObject.depth + 1
     delete newObject.id
@@ -71,15 +74,12 @@ const processQueuedUpdate = async ({
     console.log('processQueuedUpdate, should process file', { queuedUpdate })
     const { error } = await supabase.storage
       .from('files')
-      .upload(`files/${JSON.parse(queuedUpdate.value).id}`, queuedUpdate.file)
+      .upload(`files/${newObject.id}`, queuedUpdate.file)
     if (error) return console.log(error)
   } else {
     // OPTION: with extra values property could upsert multiple values at once
     // would be good for: pvl_geom
     // upsert regular table
-    // 1. create new Object
-    const newObject = JSON.parse(queuedUpdate.value)
-    // 2. send it to server
     const { error } = await supabase.from(queuedUpdate.table).upsert(newObject)
     if (error) {
       // 3. deal with errors

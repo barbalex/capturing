@@ -76,11 +76,11 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
         const existing = await dexie.project_tile_layers.get(d.id)
         const _new = {
           ...d,
-          wmsLegends: existing.wmsLegends,
-          wmsFormatOptions: existing.wmsFormatOptions,
-          layerOptions: existing.layerOptions,
-          legendUrls: existing.legendUrls,
-          infoFormatOptions: existing.infoFormatOptions,
+          _wmsLegends: existing._wmsLegends,
+          _wmsFormatOptions: existing._wmsFormatOptions,
+          _layerOptions: existing._layerOptions,
+          _legendUrls: existing._legendUrls,
+          _infoFormatOptions: existing._infoFormatOptions,
         }
         await dexie.project_tile_layers.put(_new)
       }
@@ -138,12 +138,12 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
      * 4.4 if:
      * - project_tile_layers
      * - and: type 'wms'
-     * - and: no wmsLegends yet
+     * - and: no _wmsLegends yet
      * download the legends from the wms service and populate dexie!
      */
     if (tableName === 'project_tile_layers') {
       for (const d of data) {
-        if (d.type === 'wms' && !d.wmsLegends?.length && d?.wms_base_url) {
+        if (d.type === 'wms' && !d._wmsLegends?.length && d?.wms_base_url) {
           // console.log('processTable processing project_tile_layers, title:', d)
           const capabilities = await fetchWmsGetCapabilities(d?.wms_base_url)
           const layers = capabilities?.Capability?.Layer?.Layer ?? []
@@ -174,7 +174,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
           if (_legendBlobs.length) {
             // add legends into row to reduce network activity and make them offline available
             await dexie.project_tile_layers.update(d.id, {
-              wmsLegends: _legendBlobs,
+              _wmsLegends: _legendBlobs,
             })
           }
         }

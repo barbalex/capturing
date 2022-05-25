@@ -150,10 +150,15 @@ const ProjectTileLayerForm = () => {
 
   useEffect(() => {
     if (!row?.wms_base_url) return
-    if (row?.layerOptions?.length) return
+    if (row?._layerOptions?.length) return
     getCapabilitiesData({ row })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectTileLayerId, row?.wms_base_url, row?.layerOptions?.length])
+  }, [
+    projectTileLayerId,
+    row?.wms_base_url,
+    row?._layerOptions?.length,
+    row?.wms_layers,
+  ])
 
   // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
@@ -233,19 +238,19 @@ const ProjectTileLayerForm = () => {
             />
             {!!row?.wms_base_url && (
               <>
-                {row.wmsFormatOptions?.length > 0 && (
+                {row._wmsFormatOptions?.length > 0 && (
                   <RadioButtonGroup
                     key={`${row.id}wms_format/cb`}
                     value={row.wms_format}
                     name="wms_format"
-                    dataSource={row.wmsFormatOptions}
+                    dataSource={row._wmsFormatOptions}
                     onBlur={onBlur}
                     label="(Bild-)Format (welche der WMS-Server anbietet)"
                     helperText="Empfehlenswert ist 'image/png' (wenn vorhanden), weil es transparenten Hintergrund ermöglicht"
                     error={errors?.project_tile_layer?.wms_format}
                   />
                 )}
-                {row.wmsFormatOptions?.length === 0 && (
+                {row._wmsFormatOptions?.length === 0 && (
                   <TextField
                     key={`${row.id}wms_format/text`}
                     name="wms_format"
@@ -256,19 +261,19 @@ const ProjectTileLayerForm = () => {
                     disabled={!userMayEdit}
                   />
                 )}
-                {row.infoFormatOptions?.length > 0 && (
+                {row._infoFormatOptions?.length > 0 && (
                   <RadioButtonGroup
                     key={`${row.id}wms_info_format/cb`}
                     value={row.wms_info_format}
                     name="wms_info_format"
-                    dataSource={row.infoFormatOptions}
+                    dataSource={row._infoFormatOptions}
                     onBlur={onBlur}
                     label="Format der Informationen (welche der WMS-Server anbietet)"
                     helperText="Empfehlenswert ist 'application/vnd.ogc.gml' (wenn vorhanden) oder eine andere Form von gml, weil es die beste Darstellung ermöglicht"
                     error={errors?.project_tile_layer?.wms_info_format}
                   />
                 )}
-                {row.infoFormatOptions?.length === 0 && (
+                {row._infoFormatOptions?.length === 0 && (
                   <TextField
                     key={`${row.id}wms_info_format/text`}
                     name="wms_info_format"
@@ -288,7 +293,7 @@ const ProjectTileLayerForm = () => {
                   error={errors?.field?.wms_transparent}
                   disabled={!userMayEdit}
                 />
-                {row.layerOptions?.length > 0 && (
+                {row._layerOptions?.length > 0 && (
                   <CheckboxGroup
                     key={`${row.id}wms_layers/cb`}
                     value={
@@ -296,11 +301,11 @@ const ProjectTileLayerForm = () => {
                     }
                     label="Layer (welche der WMS-Server anbietet)"
                     name="wms_layers"
-                    options={row.layerOptions}
+                    options={row._layerOptions}
                     onBlur={onBlur}
                   />
                 )}
-                {row.layerOptions?.length === 0 && (
+                {row._layerOptions?.length === 0 && (
                   <TextField
                     key={`${row.id}wms_layers/text`}
                     name="wms_layers"
@@ -394,7 +399,7 @@ const ProjectTileLayerForm = () => {
           error={errors?.field?.greyscale}
           disabled={!userMayEdit}
         />
-        {!!row.legendUrls?.length && <Legends row={row} />}
+        <Legends row={row} />
       </FieldsContainer>
     </ErrorBoundary>
   )

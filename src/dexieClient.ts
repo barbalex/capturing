@@ -428,11 +428,11 @@ export interface IProjectTileLayer {
   wms_version?: WmsVersionEnum
   wms_info_format?: string
   wms_queryable?: number
-  wmsLegends?: blob[] // only local!
-  wmsFormatOptions?: optionsList[] // local
-  layerOptions?: optionsList[] // local
-  legendUrls?: legendUrlList[] // local
-  infoFormatOptions?: optionsList[] // local
+  _wmsLegends?: blob[] // only local!
+  _wmsFormatOptions?: optionsList[] // local
+  _layerOptions?: optionsList[] // local
+  _legendUrls?: legendUrlList[] // local
+  _infoFormatOptions?: optionsList[] // local
   greyscale?: number
   client_rev_at?: Date
   client_rev_by?: string
@@ -496,11 +496,11 @@ export class ProjectTileLayer implements IProjectTileLayer {
   wms_version?: WmsVersionEnum
   wms_info_format?: string
   wms_queryable?: number
-  wmsLegends?: blob[] // only local!
-  wmsFormatOptions?: optionsList[] // local
-  layerOptions?: optionsList[] // local
-  legendUrls?: legendUrlList[] // local
-  infoFormatOptions?: optionsList[] // local
+  _wmsLegends?: blob[] // local
+  _wmsFormatOptions?: optionsList[] // local
+  _layerOptions?: optionsList[] // local
+  _legendUrls?: legendUrlList[] // local
+  _infoFormatOptions?: optionsList[] // local
   greyscale?: number
   client_rev_at?: Date
   client_rev_by?: string
@@ -528,11 +528,11 @@ export class ProjectTileLayer implements IProjectTileLayer {
     wms_version?: WmsVersionEnum,
     wms_info_format?: string,
     wms_queryable?: number,
-    wmsLegends?: blob[],
-    wmsFormatOptions?: optionsList[],
-    layerOptions?: optionsList[],
-    legendUrls?: legendUrlList[],
-    infoFormatOptions?: optionsList[],
+    _wmsLegends?: blob[],
+    _wmsFormatOptions?: optionsList[],
+    _layerOptions?: optionsList[],
+    _legendUrls?: legendUrlList[],
+    _infoFormatOptions?: optionsList[],
     greyscale?: number,
     client_rev_at?: Date,
     client_rev_by?: string,
@@ -559,11 +559,11 @@ export class ProjectTileLayer implements IProjectTileLayer {
     if (wms_version) this.wms_version = wms_version
     if (wms_info_format) this.wms_info_format = wms_info_format
     if (wms_queryable) this.wms_queryable = wms_queryable
-    if (wmsLegends) this.wmsLegends = wmsLegends
-    if (wmsFormatOptions) this.wmsFormatOptions = wmsFormatOptions
-    if (layerOptions) this.layerOptions = layerOptions
-    if (legendUrls) this.legendUrls = legendUrls
-    if (infoFormatOptions) this.infoFormatOptions = infoFormatOptions
+    if (_wmsLegends) this._wmsLegends = _wmsLegends
+    if (_wmsFormatOptions) this._wmsFormatOptions = _wmsFormatOptions
+    if (_layerOptions) this._layerOptions = _layerOptions
+    if (_legendUrls) this._legendUrls = _legendUrls
+    if (_infoFormatOptions) this._infoFormatOptions = _infoFormatOptions
     this.greyscale = greyscale ?? 0
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
@@ -577,8 +577,8 @@ export class ProjectTileLayer implements IProjectTileLayer {
       client_rev_at: new window.Date().toISOString(),
       client_rev_by: session.user?.email ?? session.user?.id,
     }
-    // wmsLegends exists only client side
-    delete isReved.wmsLegends
+    // _wmsLegends exists only client side
+    delete isReved._wmsLegends
     const update = new QueuedUpdate(
       undefined,
       undefined,
@@ -1551,7 +1551,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(36).stores({
+    this.version(37).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:

@@ -38,53 +38,16 @@ const LegendsContainer = styled.div`
 // = '99999999-9999-9999-9999-999999999999'
 const ProjectTileLayerFormLegends = ({ row }) => {
   // console.log('ProjectTileLayerFormLegends', {
-  //   legendUrls,
+  //   _legendUrls,
   //   row,
   //   wmsLayers: row?.wms_layers,
   // })
-  useEffect(() => {
-    const run = async () => {
-      // only fetch if not done yet
-      if (!row?.wms_layers) return
-      if (!row?.legendUrls?.length) return
-
-      const legendUrlsToUse = row.legendUrls.filter((lUrl) =>
-        row.wms_layers.includes(lUrl.name),
-      )
-      // console.log(
-      //   'ProjectTileLayerFormLegends, legendUrlsToUse:',
-      //   legendUrlsToUse,
-      // )
-
-      const _legendBlobs = []
-      for (const lUrl of legendUrlsToUse) {
-        let res
-        try {
-          res = await axios.get(lUrl.url, {
-            responseType: 'blob',
-          })
-        } catch (error) {
-          // error can also be caused by timeout
-          console.log(`error fetching legend for layer '${lUrl.title}':`, error)
-          return false
-        }
-        // console.log('Legends, res.data:', res.data)
-        if (res.data) _legendBlobs.push([lUrl.title, res.data])
-      }
-
-      if (_legendBlobs.length) {
-        // add legends into row to reduce network activity and make them offline available
-        dexie.project_tile_layers.update(row.id, { wmsLegends: _legendBlobs })
-      }
-    }
-    run()
-  }, [row])
 
   const [legends, setLegends] = useState()
   useEffect(() => {
     // get legends from row
     const _legends = []
-    for (const legend of row.wmsLegends ?? []) {
+    for (const legend of row._wmsLegends ?? []) {
       let objectUrl
       try {
         objectUrl = URL.createObjectURL(

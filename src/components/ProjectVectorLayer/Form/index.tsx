@@ -206,7 +206,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
   const [loadingCapabilities, setLoadingCapabilities] = useState(true)
   const [wfsVersion, setWfsVersion] = useState()
   const [outputFormatValues, setOutputFormatValues] = useState()
-  const [layerOptions, setLayerOptions] = useState()
+  const [_layerOptions, setLayerOptions] = useState()
   useEffect(() => {
     const run = async () => {
       if (!row?.url) return
@@ -401,7 +401,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                   <Spinner />
                 ) : (
                   <>
-                    {layerOptions?.length > 0 && (
+                    {_layerOptions?.length > 0 && (
                       <CheckboxGroup
                         key={`${row.id}type_name/cb`}
                         value={
@@ -411,12 +411,12 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                         }
                         label="Layer (welche der WFS-Server anbietet)"
                         name="type_name"
-                        options={layerOptions}
+                        options={_layerOptions}
                         onBlur={onBlur}
                         disabled={!userMayEdit}
                       />
                     )}
-                    {layerOptions?.length === 0 && (
+                    {_layerOptions?.length === 0 && (
                       <TextField
                         key={`${row.id}type_name`}
                         name="type_name"
