@@ -1,7 +1,6 @@
 import fetchCapabilities from '../../../utils/getCapabilities'
 import { dexie } from '../../../dexieClient'
 import getValuesToSetFromCapabilities from './getValuesToSetFromCapabilities'
-import { values } from 'mobx'
 
 const getCapabilitiesData = async ({ row }) => {
   if (!row?.wms_base_url) return undefined
