@@ -49,7 +49,6 @@ const ProjectsPage = () => {
   const store = useContext(StoreContext)
   const session = supabase.auth.session()
   const {
-    //singleColumnView,
     setFormHeight,
     setNodes,
     activeNodeArray,
@@ -75,20 +74,6 @@ const ProjectsPage = () => {
 
   useEffect(() => {
     document.title = 'Erfassen: Projekte'
-  }, [])
-
-  // on first render set nodes
-  // DO NOT add activeNodeArray to useEffet's dependency array or
-  // it will not be possible to open multiple branches in tree
-  // as nodes is overwritten every time activeNodeArray changes
-  // TODO: is this needed?
-  useEffect(() => {
-    // console.log('Project setting initial open nodes', {
-    //   activeNodeArray: activeNodeArray.slice(),
-    //   newOpenNodes: nodesFromActiveNodeArray(activeNodeArray),
-    // })
-    setNodes(nodesFromActiveNodeArray(activeNodeArray))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (!session) return <Login />
