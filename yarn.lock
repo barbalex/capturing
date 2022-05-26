@@ -3306,7 +3306,7 @@ __metadata:
     eslint-plugin-react: 7.30.0
     eslint-plugin-react-hooks: 4.5.0
     file-saver: 2.0.5
-    framer-motion: 6.3.3
+    framer-motion: 6.3.4
     is-uuid: 1.0.2
     leaflet: 1.8.0
     leaflet-draw: 1.0.4
@@ -3334,6 +3334,7 @@ __metadata:
     react-resize-detector: 7.1.1
     react-router-dom: 6.3.0
     react-select: 5.3.2
+    react-split: ^2.0.14
     react-split-pane: 0.1.92
     react-stylable-diff: 2.0.0
     react-virtualized-auto-sizer: 1.0.6
@@ -4524,9 +4525,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:6.3.3":
-  version: 6.3.3
-  resolution: "framer-motion@npm:6.3.3"
+"framer-motion@npm:6.3.4":
+  version: 6.3.4
+  resolution: "framer-motion@npm:6.3.4"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
     framesync: 6.0.1
@@ -4540,7 +4541,7 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: 905ccf2679a45b00f6fd3fa6220f73f176e0c14b43d65ceb5feb93e23b12098def275930b98926c9bd4320f0436564745ebcfd488d7a477646a7a4600362fdbf
+  checksum: ea4ea22059f6723804f3890327e4f22c3ead564cbd54dc1df66ff6b010835202e42de0fe325f956074033359904206af72714f01c26859cb80279583908ae3e9
   languageName: node
   linkType: hard
 
@@ -6126,7 +6127,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.5.4, prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.4, prop-types@npm:^15.5.7, prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -6480,6 +6481,18 @@ __metadata:
     react: ^16.0.0-0
     react-dom: ^16.0.0-0
   checksum: 4890f172636baeb4bb197195e8d896297ef8eec3c9887331e4a3854da6cf66b2f7758132c3e05f4b38eed595710f678ae1399cb0ca82e9811db06ad95410eee6
+  languageName: node
+  linkType: hard
+
+"react-split@npm:^2.0.14":
+  version: 2.0.14
+  resolution: "react-split@npm:2.0.14"
+  dependencies:
+    prop-types: ^15.5.7
+    split.js: ^1.6.0
+  peerDependencies:
+    react: "*"
+  checksum: 8e9e22b8ef48063ab0b55a96bbb3ff66012ddbe899661deac30b10b72aa08c1b669eb644e599ec1ac0ce880017fc2d4b2e6cb48b113789646d6186d61d8f55f2
   languageName: node
   linkType: hard
 
@@ -7092,6 +7105,13 @@ __metadata:
   version: 3.0.2
   resolution: "spark-md5@npm:3.0.2"
   checksum: 5feebff0bfabcecf56ba03af3e38fdb068272ed41fbf0a94ff9ef65b9bb9cb1dd69be3684db6542e62497b1eac3ae324c07ac4dcb606465dc36ca048177077bf
+  languageName: node
+  linkType: hard
+
+"split.js@npm:^1.6.0":
+  version: 1.6.5
+  resolution: "split.js@npm:1.6.5"
+  checksum: a3e77d8e0628de06c58e2d8e6ab41872132586c417b4f40ac3d3dbf76c2b31f40745dd86c133609dacd5599ada5d4bee157f6290403223b86bd79fe700a77983
   languageName: node
   linkType: hard
 
