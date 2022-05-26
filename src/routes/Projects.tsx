@@ -2,7 +2,8 @@ import { useEffect, useContext, useRef, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SplitPane from 'react-split-pane'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
+import { motion } from 'framer-motion'
 
 import StoreContext from '../storeContext'
 import Login from '../components/Login'
@@ -44,6 +45,8 @@ const Container = styled.div`
 
 const standardWidth = 500
 
+const PageLayout = ({ children }) => children
+
 /**
  * TODO:
  * try using split (https://github.com/nathancahill/split/tree/master/packages/react-split)
@@ -55,6 +58,8 @@ const ProjectsPage = () => {
   const store = useContext(StoreContext)
   const session = supabase.auth.session()
   const { setFormHeight, showTree, showForm, showMap, mapInitiated } = store
+
+  const location = useLocation()
 
   // console.log('Projects, mapInitiated:', mapInitiated)
 
@@ -152,7 +157,23 @@ const ProjectsPage = () => {
           maxSize={-10}
           resizerStyle={{ width: formResizerWidth }}
         >
-          {showForm ? <Outlet /> : <></>}
+          {showForm ? (
+            <PageLayout>
+              <motion.div
+                key={location.pathname}
+                initial={{ width: 0 }}
+                // initial={{ width: '100%' }}
+                animate={{ width: '100%' }}
+                // animate={{ width: 0 }}
+                exit={{ x: 1000, transition: { duration: 1.0 } }}
+                // exit={{ x: 0, transition: { duration: 1.0 } }}
+              >
+                <Outlet />
+              </motion.div>
+            </PageLayout>
+          ) : (
+            <></>
+          )}
           {mapInitiated ? <MapComponent /> : <></>}
         </StyledSplitPane>
       </StyledSplitPane>
