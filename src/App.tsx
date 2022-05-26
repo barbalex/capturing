@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { onSnapshot, getSnapshot } from 'mobx-state-tree'
+import { onSnapshot } from 'mobx-state-tree'
 import isEqual from 'lodash/isEqual'
 
 import { MobxStore } from './store'
