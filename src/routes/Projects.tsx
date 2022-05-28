@@ -145,6 +145,8 @@ const ProjectsPage = () => {
   //   formPaneSize,
   // })
 
+  const transition = { duration: 0.5 }
+
   return (
     <Container ref={containerEl}>
       <StyledSplitPane
@@ -166,42 +168,52 @@ const ProjectsPage = () => {
                 <StyledMotionDiv
                   key={location.pathname}
                   // enter, horizontal, next:
-                  // initial={{ x: '100%', opacity: 0 }}
-                  // animate={{ x: 0, opacity: 1, transition: { duration: 0.5 } }}
+                  initial={{ x: '100%', opacity: 0 }}
+                  animate={{ x: 0, opacity: 1, transition }}
+                  // enter, horizontal, previous:
+                  // initial={{ x: '-100%', opacity: 0 }}
+                  // animate={{ x: 0, opacity: 1, transition }}
                   // leave, horizontal, next:
                   // initial={{ x: 0, opacity: 1 }}
                   // animate={{
                   //   x: '100%',
                   //   opacity: 0,
-                  //   transition: { duration: 0.5 },
+                  //   transition,
+                  // }}
+                  // leave, horizontal, previous:
+                  // initial={{ x: 0, opacity: 1 }}
+                  // animate={{
+                  //   x: '-100%',
+                  //   opacity: 0,
+                  //   transition,
                   // }}
                   // enter, vertical, up:
                   // initial={{ y: '100%', opacity: 0 }}
                   // animate={{
                   //   y: 0,
                   //   opacity: 1,
-                  //   transition: { duration: 0.5 },
+                  //   transition,
                   // }}
                   // enter, vertical, down:
                   // initial={{ y: '-100%', opacity: 0 }}
                   // animate={{
                   //   y: 0,
                   //   opacity: 1,
-                  //   transition: { duration: 0.5 },
+                  //   transition,
                   // }}
                   // leave, vertical, down:
                   // initial={{ y: 0, opacity: 1 }}
                   // animate={{
                   //   y: '100%',
                   //   opacity: 0,
-                  //   transition: { duration: 0.5 },
+                  //   transition,
                   // }}
                   // leave, vertical, up:
                   // initial={{ y: '100%', opacity: 1 }}
                   // animate={{
                   //   y: 0,
                   //   opacity: 0,
-                  //   transition: { duration: 0.5 },
+                  //   transition,
                   // }}
                 >
                   <Outlet />
