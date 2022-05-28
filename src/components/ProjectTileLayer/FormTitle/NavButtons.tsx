@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from 'react'
+import React, { useContext, useCallback, useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import IconButton from '@mui/material/IconButton'
 import { FaArrowUp, FaArrowLeft, FaArrowRight } from 'react-icons/fa'
@@ -12,14 +12,18 @@ const ProjectTileLayerNavButtons = () => {
   const { projectId, projectTileLayerId } = useParams()
 
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeNode } = store
+  const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 
   const projectTileLayerIds: string[] =
     useLiveQuery(async () => {
       const projectTileLayers = await dexie.project_tile_layers
         .where({ deleted: 0, project_id: projectId })
         .sortBy('sort')
-      return projectTileLayers.map((p) => p.id)
+
+      const ids = projectTileLayers.map((p) => p.id)
+      setHorizontalNavIds(ids)
+
+      return ids
     }, [projectId]) ?? []
 
   const parentPath = resolvePath(`..`, window.location.pathname)?.pathname

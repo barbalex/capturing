@@ -1,5 +1,5 @@
 import { types, onAction } from 'mobx-state-tree'
-// import { autorun } from 'mobx'
+import { autorun } from 'mobx'
 import { v1 as uuidv1 } from 'uuid'
 import isEqual from 'lodash/isEqual'
 
@@ -49,21 +49,35 @@ export const MobxStore = types
     vectorLayerSorter: types.optional(types.string, ''),
     fieldSorter: types.optional(types.string, ''),
     treeRebuildCount: types.optional(types.number, 0),
+    horizontalNavIds: types.optional(types.array(types.string), []),
   })
   .volatile(() => ({
     navigate: undefined,
     map: undefined,
   }))
   .actions((self) => {
-    // autorun(() => {
-    //   console.log('store, showMap changed to:', self.showMap)
-    //   if (!self.showMap) self.setMapInitiated(true)
-    // })
+    autorun(() => {
+      console.log(
+        'store, horizontalNavIds changed to:',
+        self.horizontalNavIds.toJSON(),
+      )
+    })
     onAction(self, (call) => {
       if (call.name === 'setShowMap') self.setMapInitiated(true)
     })
 
     return {
+      setHorizontalNavIds(val) {
+        // console.log('store, setHorizontalNavIds, val:', val)
+        if (!val) {
+          if (!self.horizontalNavIds.length) return
+          return (self.horizontalNavIds = [])
+        }
+        if (isEqual(val, self.horizontalNavIds)) {
+          return
+        }
+        self.horizontalNavIds = val
+      },
       setMapInitiated(val) {
         self.mapInitiated = val
       },
