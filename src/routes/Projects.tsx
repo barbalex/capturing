@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SplitPane from 'react-split-pane'
 import { Outlet, useLocation } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import StoreContext from '../storeContext'
 import Login from '../components/Login'
@@ -157,23 +157,25 @@ const ProjectsPage = () => {
           maxSize={-10}
           resizerStyle={{ width: formResizerWidth }}
         >
-          {showForm ? (
-            <PageLayout>
-              <motion.div
-                key={location.pathname}
-                initial={{ width: 0 }}
-                // initial={{ width: '100%' }}
-                animate={{ width: '100%' }}
-                // animate={{ width: 0 }}
-                exit={{ x: 1000, transition: { duration: 1.0 } }}
-                // exit={{ x: 0, transition: { duration: 1.0 } }}
-              >
-                <Outlet />
-              </motion.div>
-            </PageLayout>
-          ) : (
-            <></>
-          )}
+          <AnimatePresence exitBeforeEnter initial={false}>
+            {showForm ? (
+              <PageLayout>
+                <motion.div
+                  key={location.pathname}
+                  initial={{ width: 0 }}
+                  // initial={{ width: '100%' }}
+                  animate={{ width: '100%' }}
+                  // animate={{ width: 0 }}
+                  exit={{ x: 1000, transition: { duration: 1.0 } }}
+                  // exit={{ x: 0, transition: { duration: 1.0 } }}
+                >
+                  <Outlet />
+                </motion.div>
+              </PageLayout>
+            ) : (
+              <></>
+            )}
+          </AnimatePresence>
           {mapInitiated ? <MapComponent /> : <></>}
         </StyledSplitPane>
       </StyledSplitPane>
