@@ -2539,10 +2539,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:17.0.35":
-  version: 17.0.35
-  resolution: "@types/node@npm:17.0.35"
-  checksum: 7a24946ae7fd20267ed92466384f594e448bfb151081158d565cc635d406ecb29ea8fb85fcd2a1f71efccf26fb5bd3c6f509bde56077eb8b832b847a6664bc62
+"@types/node@npm:17.0.36":
+  version: 17.0.36
+  resolution: "@types/node@npm:17.0.36"
+  checksum: 11055fde0a1e1421113849b5e32c7022911efc0be670729947bf0162970e79962d804b1eb8a9afb291380cac97cf0e684511415d586ae5fe1560322c940fe188
   languageName: node
   linkType: hard
 
@@ -3289,7 +3289,7 @@ __metadata:
     "@supabase/supabase-js": 1.35.3
     "@turf/bbox": 6.5.0
     "@types/leaflet": 1.7.10
-    "@types/node": 17.0.35
+    "@types/node": 17.0.36
     "@types/react": 18.0.9
     "@types/react-dom": 18.0.5
     "@typescript-eslint/eslint-plugin": 5.26.0
@@ -3320,7 +3320,7 @@ __metadata:
     proj4: 2.8.0
     proj4leaflet: 1.0.2
     react: 18.1.0
-    react-arborist: 1.0.3
+    react-arborist: 1.1.0
     react-beautiful-dnd: 13.1.0
     react-colorful: 5.5.1
     react-datepicker: 4.8.0
@@ -6168,9 +6168,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-arborist@npm:1.0.3":
-  version: 1.0.3
-  resolution: "react-arborist@npm:1.0.3"
+"react-arborist@npm:1.1.0":
+  version: 1.1.0
+  resolution: "react-arborist@npm:1.1.0"
   dependencies:
     memoize-one: ^6.0.0
     react-dnd: ^14.0.3
@@ -6179,7 +6179,7 @@ __metadata:
   peerDependencies:
     react: ">= 16.14"
     react-dom: ">= 16.14"
-  checksum: af1abc02a2fd4d313d46bac7297535f19b63b76b25f6cd821dec669fd474dfd489445f869c79f0ad0562d07ae6c5b2d7046455c60d489a4c7a122f3b8da16710
+  checksum: b19ce8c6746b7b1f181a78be2619b2172d378b57659a90d12b1057f9d866e1e837ee64dee6d51fd77b6c8665f620d8967ff2c467baaa2ab34ee2b4d59b192c50
   languageName: node
   linkType: hard
 
