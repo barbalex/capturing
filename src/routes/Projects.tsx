@@ -50,7 +50,7 @@ const standardWidth = 500
 
 const PageLayout = ({ children }) => children
 
-const transition1 = { duration: 0.1 }
+const transition1 = { duration: 0.05 }
 const transition2 = { duration: 0.4 }
 const initial = {
   next: { x: '100%', opacity: 1 },
