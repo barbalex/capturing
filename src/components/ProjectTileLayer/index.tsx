@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 
-import ErrorBoundary from '../shared/ErrorBoundary'
 import FormTitle from './FormTitle'
 import Form from './Form'
 
@@ -18,12 +17,10 @@ const ProjectTileLayerComponent = ({ filter: showFilter }) => {
   if (!showFilter && filter.show) return null
 
   return (
-    <ErrorBoundary>
-      <Container showfilter={showFilter}>
-        <FormTitle showFilter={showFilter} />
-        <Form showFilter={showFilter} />
-      </Container>
-    </ErrorBoundary>
+    <Container showfilter={showFilter}>
+      <FormTitle showFilter={showFilter} />
+      <Form showFilter={showFilter} />
+    </Container>
   )
 }
 
