@@ -75,25 +75,26 @@ const animate = {
 /**
  * exit animation is one behind when direction changes
  * that is hideous
+ * Reason: exit transition is set on component mount <> next direction is known later...
  */
-const exit = {
-  next: {
-    x: '-100%',
-    transition: transition1,
-  },
-  previous: {
-    x: '100%',
-    transition: transition1,
-  },
-  down: {
-    y: '-100%',
-    transition: transition1,
-  },
-  up: {
-    y: '100%',
-    transition: transition1,
-  },
-}
+// const exit = {
+//   next: {
+//     x: '-100%',
+//     transition: transition1,
+//   },
+//   previous: {
+//     x: '100%',
+//     transition: transition1,
+//   },
+//   down: {
+//     y: '-100%',
+//     transition: transition1,
+//   },
+//   up: {
+//     y: '100%',
+//     transition: transition1,
+//   },
+// }
 
 /**
  * TODO:
