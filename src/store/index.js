@@ -52,7 +52,6 @@ export const MobxStore = types
     vectorLayerSorter: types.optional(types.string, ''),
     fieldSorter: types.optional(types.string, ''),
     treeRebuildCount: types.optional(types.number, 0),
-    navDirection: types.optional(types.string, ''),
     horizontalNavIds: types.optional(types.array(types.string), []),
   })
   .volatile(() => ({
@@ -77,9 +76,6 @@ export const MobxStore = types
     })
 
     return {
-      setNavDirection(val) {
-        self.navDirection = val
-      },
       setHorizontalNavIds(val) {
         // console.log('store, setHorizontalNavIds, val:', val)
         if (!val) {

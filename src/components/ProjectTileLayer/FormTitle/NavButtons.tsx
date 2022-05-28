@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useEffect } from 'react'
+import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import IconButton from '@mui/material/IconButton'
 import { FaArrowUp, FaArrowLeft, FaArrowRight } from 'react-icons/fa'
@@ -12,8 +12,7 @@ const ProjectTileLayerNavButtons = () => {
   const { projectId, projectTileLayerId } = useParams()
 
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeNode, setHorizontalNavIds, setNavDirection } =
-    store
+  const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 
   const projectTileLayerIds: string[] =
     useLiveQuery(async () => {
@@ -39,17 +38,8 @@ const ProjectTileLayerNavButtons = () => {
   const nextPath = `${parentPath}/${nextId}`
 
   const onClickUp = useCallback(() => {
-    setNavDirection('up')
     removeNode(activeNodeArray)
-  }, [activeNodeArray, removeNode, setNavDirection])
-  const onClickNext = useCallback(
-    () => setNavDirection('next'),
-    [setNavDirection],
-  )
-  const onClickPrevious = useCallback(
-    () => setNavDirection('previous'),
-    [setNavDirection],
-  )
+  }, [activeNodeArray, removeNode])
 
   return (
     <>
@@ -66,7 +56,6 @@ const ProjectTileLayerNavButtons = () => {
         title="Zum vorigen"
         component={Link}
         to={previousPath}
-        onClick={onClickPrevious}
         size="large"
         disabled={activeIndex === 0}
       >
@@ -76,7 +65,6 @@ const ProjectTileLayerNavButtons = () => {
         title="Zum nächsten"
         component={Link}
         to={nextPath}
-        onClick={onClickNext}
         size="large"
         disabled={activeIndex === projectTileLayerIds.length - 1}
       >

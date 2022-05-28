@@ -201,7 +201,7 @@ const ProjectsPage = () => {
       ? 'next'
       : 'previous'
 
-  console.log('Projects, navDirection:', navDirection)
+  // console.log('Projects, navDirection:', navDirection)
   // console.log('Projects', { initial, animate, exit })
 
   return (
