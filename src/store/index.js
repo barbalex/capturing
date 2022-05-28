@@ -52,6 +52,7 @@ export const MobxStore = types
     vectorLayerSorter: types.optional(types.string, ''),
     fieldSorter: types.optional(types.string, ''),
     treeRebuildCount: types.optional(types.number, 0),
+    // needed to create animations when horizontally navigating
     horizontalNavIds: types.optional(types.array(types.string), []),
   })
   .volatile(() => ({
@@ -59,12 +60,12 @@ export const MobxStore = types
     map: undefined,
   }))
   .actions((self) => {
-    autorun(() => {
-      console.log(
-        'store, horizontalNavIds changed to:',
-        self.horizontalNavIds.toJSON(),
-      )
-    })
+    // autorun(() => {
+    //   console.log(
+    //     'store, horizontalNavIds changed to:',
+    //     self.horizontalNavIds.toJSON(),
+    //   )
+    // })
     // autorun(() => {
     //   console.log('store, activeNodeArray changed to:', {
     //     activeNodeArray: self.activeNodeArray.slice(),
