@@ -165,23 +165,13 @@ const ProjectsPage = () => {
               <PageLayout>
                 <StyledMotionDiv
                   key={location.pathname}
-                  // horizontal, next:
-                  initial={{ x: '100%', opacity: 0 }}
-                  animate={{ x: 0, opacity: 1, transition: { duration: 0.5 } }}
-                  exit={{
-                    x: '-100%',
-                    opacity: 0,
-                    transition: { duration: 0.5 },
-                  }}
+                  // enter, horizontal, next:
+                  // initial={{ x: '100%', opacity: 0 }}
+                  // animate={{ x: 0, opacity: 1, transition: { duration: 0.5 } }}
                   // leave, horizontal, next:
                   // initial={{ x: 0, opacity: 1 }}
                   // animate={{
                   //   x: '100%',
-                  //   opacity: 0,
-                  //   transition: { duration: 0.5 },
-                  // }}
-                  // exit={{
-                  //   x: '-100%',
                   //   opacity: 0,
                   //   transition: { duration: 0.5 },
                   // }}
@@ -192,9 +182,11 @@ const ProjectsPage = () => {
                   //   opacity: 1,
                   //   transition: { duration: 0.5 },
                   // }}
-                  // exit={{
-                  //   y: '-100%',
-                  //   opacity: 0,
+                  // enter, vertical, down:
+                  // initial={{ y: '-100%', opacity: 0 }}
+                  // animate={{
+                  //   y: 0,
+                  //   opacity: 1,
                   //   transition: { duration: 0.5 },
                   // }}
                   // leave, vertical, down:
@@ -204,11 +196,13 @@ const ProjectsPage = () => {
                   //   opacity: 0,
                   //   transition: { duration: 0.5 },
                   // }}
-                  // exit={{
-                  //   y: '100%',
-                  //   opacity: 1,
-                  //   transition: { duration: 0.5 },
-                  // }}
+                  // leave, vertical, up:
+                  initial={{ y: '100%', opacity: 1 }}
+                  animate={{
+                    y: 0,
+                    opacity: 0,
+                    transition: { duration: 0.5 },
+                  }}
                 >
                   <Outlet />
                 </StyledMotionDiv>
