@@ -197,12 +197,12 @@ const ProjectsPage = () => {
                   //   transition: { duration: 0.5 },
                   // }}
                   // leave, vertical, up:
-                  initial={{ y: '100%', opacity: 1 }}
-                  animate={{
-                    y: 0,
-                    opacity: 0,
-                    transition: { duration: 0.5 },
-                  }}
+                  // initial={{ y: '100%', opacity: 1 }}
+                  // animate={{
+                  //   y: 0,
+                  //   opacity: 0,
+                  //   transition: { duration: 0.5 },
+                  // }}
                 >
                   <Outlet />
                 </StyledMotionDiv>
