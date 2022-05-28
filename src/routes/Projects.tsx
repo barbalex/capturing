@@ -145,7 +145,8 @@ const ProjectsPage = () => {
   //   formPaneSize,
   // })
 
-  const transition = { duration: 0.5 }
+  const transition1 = { duration: 0.2 }
+  const transition2 = { duration: 0.5 }
 
   return (
     <Container ref={containerEl}>
@@ -162,31 +163,26 @@ const ProjectsPage = () => {
           maxSize={-10}
           resizerStyle={{ width: formResizerWidth }}
         >
-          <AnimatePresence exitBeforeEnter initial={false}>
+          <AnimatePresence /*exitBeforeEnter*/ initial={false}>
             {showForm ? (
-              <PageLayout>
+              <PageLayout key={location.pathname}>
                 <StyledMotionDiv
-                  key={location.pathname}
-                  // enter, horizontal, next:
-                  initial={{ x: '100%', opacity: 0 }}
-                  animate={{ x: 0, opacity: 1, transition }}
-                  // enter, horizontal, previous:
-                  // initial={{ x: '-100%', opacity: 0 }}
-                  // animate={{ x: 0, opacity: 1, transition }}
-                  // leave, horizontal, next:
-                  // initial={{ x: 0, opacity: 1 }}
-                  // animate={{
-                  //   x: '100%',
-                  //   opacity: 0,
-                  //   transition,
-                  // }}
-                  // leave, horizontal, previous:
-                  // initial={{ x: 0, opacity: 1 }}
-                  // animate={{
+                  // horizontal, next:
+                  // initial={{ x: '100%', opacity: 0 }}
+                  // animate={{ x: 0, opacity: 1, transition: transition2 }}
+                  // exit={{
                   //   x: '-100%',
                   //   opacity: 0,
-                  //   transition,
+                  //   transition: transition1,
                   // }}
+                  // horizontal, previous:
+                  initial={{ x: '-100%', opacity: 0 }}
+                  animate={{ x: 0, opacity: 1, transition: transition2 }}
+                  exit={{
+                    x: '100%',
+                    opacity: 0,
+                    transition: transition1,
+                  }}
                   // enter, vertical, up:
                   // initial={{ y: '100%', opacity: 0 }}
                   // animate={{
