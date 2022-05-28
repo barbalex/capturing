@@ -168,48 +168,43 @@ const ProjectsPage = () => {
               <PageLayout key={location.pathname}>
                 <StyledMotionDiv
                   // horizontal, next:
-                  // initial={{ x: '100%', opacity: 0 }}
+                  initial={{ x: '100%' }}
+                  animate={{ x: 0, transition: transition2 }}
+                  exit={{
+                    x: '-100%',
+                    transition: transition1,
+                  }}
+                  // horizontal, previous:
+                  // initial={{ x: '-100%', opacity: 0 }}
                   // animate={{ x: 0, opacity: 1, transition: transition2 }}
                   // exit={{
-                  //   x: '-100%',
+                  //   x: '100%',
                   //   opacity: 0,
                   //   transition: transition1,
                   // }}
-                  // horizontal, previous:
-                  initial={{ x: '-100%', opacity: 0 }}
-                  animate={{ x: 0, opacity: 1, transition: transition2 }}
-                  exit={{
-                    x: '100%',
-                    opacity: 0,
-                    transition: transition1,
-                  }}
-                  // enter, vertical, up:
+                  // vertical, down:
                   // initial={{ y: '100%', opacity: 0 }}
                   // animate={{
                   //   y: 0,
                   //   opacity: 1,
-                  //   transition,
+                  //   transition: transition2,
                   // }}
-                  // enter, vertical, down:
+                  // exit={{
+                  //   y: '-100%',
+                  //   opacity: 0,
+                  //   transition: transition1,
+                  // }}
+                  // vertical, up:
                   // initial={{ y: '-100%', opacity: 0 }}
                   // animate={{
                   //   y: 0,
                   //   opacity: 1,
-                  //   transition,
+                  //   transition: transition2,
                   // }}
-                  // leave, vertical, down:
-                  // initial={{ y: 0, opacity: 1 }}
-                  // animate={{
+                  // exit={{
                   //   y: '100%',
                   //   opacity: 0,
-                  //   transition,
-                  // }}
-                  // leave, vertical, up:
-                  // initial={{ y: '100%', opacity: 1 }}
-                  // animate={{
-                  //   y: 0,
-                  //   opacity: 0,
-                  //   transition,
+                  //   transition: transition1,
                   // }}
                 >
                   <Outlet />
