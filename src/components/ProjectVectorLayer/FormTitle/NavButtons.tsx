@@ -12,7 +12,7 @@ import { dexie, ProjectVectorLayer } from '../../../dexieClient'
 const ProjectVectorLayerNavButtons = () => {
   const { projectId, projectVectorLayerId } = useParams()
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeNode } = store
+  const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 
   const projectVectorLayerIds: string[] =
     useLiveQuery(async () => {
@@ -20,7 +20,11 @@ const ProjectVectorLayerNavButtons = () => {
         await dexie.project_vector_layers
           .where({ deleted: 0, project_id: projectId })
           .sortBy('sort')
-      return projectVectorLayers.map((p) => p.id)
+
+      const ids = projectVectorLayers.map((p) => p.id)
+      setHorizontalNavIds(ids)
+
+      return ids
     }, [projectId]) ?? []
 
   const parentPath = resolvePath(`..`, window.location.pathname)?.pathname

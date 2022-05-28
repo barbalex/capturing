@@ -12,7 +12,7 @@ import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
 const RowNavButtons = () => {
   const { tableId, rowId } = useParams()
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeNode } = store
+  const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 
   const rowIds: string[] =
     useLiveQuery(async () => {
@@ -21,7 +21,10 @@ const RowNavButtons = () => {
         .toArray()
 
       const rWL = await rowsWithLabelFromRows(rows)
-      return rWL.map((r) => r.id)
+      const ids = rWL.map((r) => r.id)
+      setHorizontalNavIds(ids)
+
+      return ids
     }, [tableId]) ?? []
 
   const parentPath = resolvePath(`..`, window.location.pathname)?.pathname

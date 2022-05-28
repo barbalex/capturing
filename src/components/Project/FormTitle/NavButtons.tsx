@@ -14,7 +14,7 @@ const ProjectNavButtons = () => {
   const { projectId } = useParams()
 
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeNode } = store
+  const { activeNodeArray, removeNode,setHorizontalNavIds } = store
 
   const projectIds: string[] =
     useLiveQuery(async () => {

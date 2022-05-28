@@ -20,7 +20,8 @@ export const MenuChildrenButton = styled(Button)`
 const TableNavButtons = () => {
   const { projectId, tableId } = useParams()
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeNode, editingProjects } = store
+  const { activeNodeArray, removeNode, editingProjects, setHorizontalNavIds } =
+    store
   const editing = editingProjects.get(projectId)?.editing ?? false
 
   const data = useLiveQuery(async () => {
@@ -28,12 +29,14 @@ const TableNavButtons = () => {
       dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
       dexie.projects.get(projectId),
     ])
+    const ids = sortByLabelName({
+      objects: tables,
+      useLabels: project.use_labels,
+    }).map((t) => t.id)
+    setHorizontalNavIds(ids)
 
     return {
-      tableIds: sortByLabelName({
-        objects: tables,
-        useLabels: project.use_labels,
-      }).map((t) => t.id),
+      tableIds: ids,
     }
   }, [projectId])
   const tableIds: string[] = data?.tableIds ?? []

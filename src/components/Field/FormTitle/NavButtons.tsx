@@ -11,7 +11,7 @@ import { dexie } from '../../../dexieClient'
 const FieldNavButtons = () => {
   const { tableId, fieldId } = useParams()
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeNode } = store
+  const { activeNodeArray, removeNode,setHorizontalNavIds } = store
 
   const fieldIds: string[] =
     useLiveQuery(async () => {
