@@ -42,6 +42,9 @@ const Container = styled.div`
   min-height: calc(100vh - ${constants.appBarHeight}px);
   position: relative;
 `
+const StyledMotionDiv = styled(motion.div)`
+  height: 100%;
+`
 
 const standardWidth = 500
 
@@ -160,17 +163,55 @@ const ProjectsPage = () => {
           <AnimatePresence exitBeforeEnter initial={false}>
             {showForm ? (
               <PageLayout>
-                <motion.div
+                <StyledMotionDiv
                   key={location.pathname}
-                  initial={{ width: 0 }}
-                  // initial={{ width: '100%' }}
-                  animate={{ width: '100%' }}
-                  // animate={{ width: 0 }}
-                  exit={{ x: 1000, transition: { duration: 1.0 } }}
-                  // exit={{ x: 0, transition: { duration: 1.0 } }}
+                  // horizontal, next:
+                  initial={{ x: '100%', opacity: 0 }}
+                  animate={{ x: 0, opacity: 1, transition: { duration: 0.5 } }}
+                  exit={{
+                    x: '-100%',
+                    opacity: 0,
+                    transition: { duration: 0.5 },
+                  }}
+                  // leave, horizontal, next:
+                  // initial={{ x: 0, opacity: 1 }}
+                  // animate={{
+                  //   x: '100%',
+                  //   opacity: 0,
+                  //   transition: { duration: 0.5 },
+                  // }}
+                  // exit={{
+                  //   x: '-100%',
+                  //   opacity: 0,
+                  //   transition: { duration: 0.5 },
+                  // }}
+                  // enter, vertical, up:
+                  // initial={{ y: '100%', opacity: 0 }}
+                  // animate={{
+                  //   y: 0,
+                  //   opacity: 1,
+                  //   transition: { duration: 0.5 },
+                  // }}
+                  // exit={{
+                  //   y: '-100%',
+                  //   opacity: 0,
+                  //   transition: { duration: 0.5 },
+                  // }}
+                  // leave, vertical, down:
+                  // initial={{ y: 0, opacity: 1 }}
+                  // animate={{
+                  //   y: '100%',
+                  //   opacity: 0,
+                  //   transition: { duration: 0.5 },
+                  // }}
+                  // exit={{
+                  //   y: '100%',
+                  //   opacity: 1,
+                  //   transition: { duration: 0.5 },
+                  // }}
                 >
                   <Outlet />
-                </motion.div>
+                </StyledMotionDiv>
               </PageLayout>
             ) : (
               <></>
