@@ -7,7 +7,7 @@ import storeContext from '../storeContext'
 import getActiveNodeArrayFromUrl from '../utils/activeNodeArrayFromUrl'
 
 // syncs activeNodeArray with browser navigation
-const NavigationSyncController = () => {
+const NavigationSyncController = () => { 
   const { pathname } = useLocation()
 
   const navigate = useNavigate()

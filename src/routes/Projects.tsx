@@ -2,7 +2,7 @@ import { useEffect, useContext, useRef, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SplitPane from 'react-split-pane'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 
 import StoreContext from '../storeContext'
@@ -50,6 +50,51 @@ const standardWidth = 500
 
 const PageLayout = ({ children }) => children
 
+const transition1 = { duration: 0.2 }
+const transition2 = { duration: 0.4 }
+const initial = {
+  next: { x: '100%', opacity: 1 },
+  previous: { x: '-100%', opacity: 1 },
+  down: { y: '100%', opacity: 1 },
+  up: { y: '-100%', opacity: 1 },
+}
+const animate = {
+  next: { x: 0, transition: transition2, opacity: 1 },
+  previous: { x: 0, transition: transition2, opacity: 1 },
+  down: {
+    y: 0,
+    transition: transition2,
+    opacity: 1,
+  },
+  up: {
+    y: 0,
+    transition: transition2,
+    opacity: 1,
+  },
+}
+/**
+ * exit animation is one behind when direction changes
+ * that is hideous
+ */
+const exit = {
+  next: {
+    x: '-100%',
+    transition: transition1,
+  },
+  previous: {
+    x: '100%',
+    transition: transition1,
+  },
+  down: {
+    y: '-100%',
+    transition: transition1,
+  },
+  up: {
+    y: '100%',
+    transition: transition1,
+  },
+}
+
 /**
  * TODO:
  * try using split (https://github.com/nathancahill/split/tree/master/packages/react-split)
@@ -60,9 +105,16 @@ const PageLayout = ({ children }) => children
 const ProjectsPage = () => {
   const store = useContext(StoreContext)
   const session = supabase.auth.session()
-  const { setFormHeight, showTree, showForm, showMap, mapInitiated } = store
-
-  const location = useLocation()
+  const {
+    setFormHeight,
+    showTree,
+    showForm,
+    showMap,
+    mapInitiated,
+    horizontalNavIds,
+    activeNodeArray,
+    previousActiveNodeArray,
+  } = store
 
   // console.log('Projects, mapInitiated:', mapInitiated)
 
@@ -137,16 +189,20 @@ const ProjectsPage = () => {
     formResizerWidth = 0
   }
 
-  // console.log('Projects', {
-  //   showTree,
-  //   showMap,
-  //   showForm,
-  //   treePaneSize,
-  //   formPaneSize,
-  // })
+  const prevId = previousActiveNodeArray.at(-1)
+  const newId = activeNodeArray.at(-1)
 
-  const transition1 = { duration: 0.2 }
-  const transition2 = { duration: 0.5 }
+  const navDirection =
+    previousActiveNodeArray.length > activeNodeArray.length
+      ? 'up'
+      : previousActiveNodeArray.length < activeNodeArray.length
+      ? 'down'
+      : horizontalNavIds.indexOf(prevId) < horizontalNavIds.indexOf(newId)
+      ? 'next'
+      : 'previous'
+
+  console.log('Projects, navDirection:', navDirection)
+  // console.log('Projects', { initial, animate, exit })
 
   return (
     <Container ref={containerEl}>
@@ -163,49 +219,18 @@ const ProjectsPage = () => {
           maxSize={-10}
           resizerStyle={{ width: formResizerWidth }}
         >
-          <AnimatePresence /*exitBeforeEnter*/ initial={false}>
+          <AnimatePresence initial={false}>
             {showForm ? (
-              <PageLayout key={location.pathname}>
+              <PageLayout key={activeNodeArray.slice().join('/')}>
                 <StyledMotionDiv
-                  // horizontal, next:
-                  initial={{ x: '100%' }}
-                  animate={{ x: 0, transition: transition2 }}
+                  initial={initial[navDirection]}
+                  animate={animate[navDirection]}
+                  // exit sliding is one behind > hideous on direction change
+                  // exit={exit[navDirection]}
                   exit={{
-                    x: '-100%',
+                    opacity: 0,
                     transition: transition1,
                   }}
-                  // horizontal, previous:
-                  // initial={{ x: '-100%', opacity: 0 }}
-                  // animate={{ x: 0, opacity: 1, transition: transition2 }}
-                  // exit={{
-                  //   x: '100%',
-                  //   opacity: 0,
-                  //   transition: transition1,
-                  // }}
-                  // vertical, down:
-                  // initial={{ y: '100%', opacity: 0 }}
-                  // animate={{
-                  //   y: 0,
-                  //   opacity: 1,
-                  //   transition: transition2,
-                  // }}
-                  // exit={{
-                  //   y: '-100%',
-                  //   opacity: 0,
-                  //   transition: transition1,
-                  // }}
-                  // vertical, up:
-                  // initial={{ y: '-100%', opacity: 0 }}
-                  // animate={{
-                  //   y: 0,
-                  //   opacity: 1,
-                  //   transition: transition2,
-                  // }}
-                  // exit={{
-                  //   y: '100%',
-                  //   opacity: 0,
-                  //   transition: transition1,
-                  // }}
                 >
                   <Outlet />
                 </StyledMotionDiv>

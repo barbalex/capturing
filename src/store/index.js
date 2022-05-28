@@ -23,7 +23,10 @@ export const MobxStore = types
       types.array(types.union(types.string, types.number)),
       [],
     ),
-    // TODO: this is really visibleNodes i.e. nodes
+    previousActiveNodeArray: types.optional(
+      types.array(types.union(types.string, types.number)),
+      [],
+    ),
     nodes: types.optional(
       types.array(types.array(types.union(types.string, types.number))),
       [],
@@ -49,6 +52,7 @@ export const MobxStore = types
     vectorLayerSorter: types.optional(types.string, ''),
     fieldSorter: types.optional(types.string, ''),
     treeRebuildCount: types.optional(types.number, 0),
+    navDirection: types.optional(types.string, ''),
     horizontalNavIds: types.optional(types.array(types.string), []),
   })
   .volatile(() => ({
@@ -62,11 +66,20 @@ export const MobxStore = types
         self.horizontalNavIds.toJSON(),
       )
     })
+    // autorun(() => {
+    //   console.log('store, activeNodeArray changed to:', {
+    //     activeNodeArray: self.activeNodeArray.slice(),
+    //     previous: self.previousActiveNodeArray.slice(),
+    //   })
+    // })
     onAction(self, (call) => {
       if (call.name === 'setShowMap') self.setMapInitiated(true)
     })
 
     return {
+      setNavDirection(val) {
+        self.navDirection = val
+      },
       setHorizontalNavIds(val) {
         // console.log('store, setHorizontalNavIds, val:', val)
         if (!val) {
@@ -133,6 +146,7 @@ export const MobxStore = types
         return (self.navigate = val)
       },
       setActiveNodeArray(val) {
+        self.previousActiveNodeArray = self.activeNodeArray.slice()
         self.activeNodeArray = val
       },
       setNodes(val) {

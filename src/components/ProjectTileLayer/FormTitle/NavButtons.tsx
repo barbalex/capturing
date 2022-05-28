@@ -12,7 +12,8 @@ const ProjectTileLayerNavButtons = () => {
   const { projectId, projectTileLayerId } = useParams()
 
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeNode, setHorizontalNavIds } = store
+  const { activeNodeArray, removeNode, setHorizontalNavIds, setNavDirection } =
+    store
 
   const projectTileLayerIds: string[] =
     useLiveQuery(async () => {
@@ -38,8 +39,17 @@ const ProjectTileLayerNavButtons = () => {
   const nextPath = `${parentPath}/${nextId}`
 
   const onClickUp = useCallback(() => {
+    setNavDirection('up')
     removeNode(activeNodeArray)
-  }, [activeNodeArray, removeNode])
+  }, [activeNodeArray, removeNode, setNavDirection])
+  const onClickNext = useCallback(
+    () => setNavDirection('next'),
+    [setNavDirection],
+  )
+  const onClickPrevious = useCallback(
+    () => setNavDirection('previous'),
+    [setNavDirection],
+  )
 
   return (
     <>
@@ -56,6 +66,7 @@ const ProjectTileLayerNavButtons = () => {
         title="Zum vorigen"
         component={Link}
         to={previousPath}
+        onClick={onClickPrevious}
         size="large"
         disabled={activeIndex === 0}
       >
@@ -65,6 +76,7 @@ const ProjectTileLayerNavButtons = () => {
         title="Zum nächsten"
         component={Link}
         to={nextPath}
+        onClick={onClickNext}
         size="large"
         disabled={activeIndex === projectTileLayerIds.length - 1}
       >
