@@ -11,14 +11,17 @@ import { dexie } from '../../../dexieClient'
 const FieldNavButtons = () => {
   const { tableId, fieldId } = useParams()
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeNode,setHorizontalNavIds } = store
+  const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 
   const fieldIds: string[] =
     useLiveQuery(async () => {
       const fields = await dexie.fields
         .where({ deleted: 0, table_id: tableId })
         .sortBy('sort')
-      return fields.map((t) => t.id)
+      const ids = fields.map((t) => t.id)
+      setHorizontalNavIds(ids)
+
+      return ids
     }, [tableId]) ?? []
 
   const parentPath = resolvePath(`..`, window.location.pathname)?.pathname

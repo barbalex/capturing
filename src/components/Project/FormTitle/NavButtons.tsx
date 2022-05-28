@@ -14,7 +14,7 @@ const ProjectNavButtons = () => {
   const { projectId } = useParams()
 
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeNode,setHorizontalNavIds } = store
+  const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 
   const projectIds: string[] =
     useLiveQuery(async () => {
@@ -22,7 +22,10 @@ const ProjectNavButtons = () => {
         .where({ deleted: 0 })
         .sortBy('', sortProjectsByLabelName)
 
-      return projects.map((p) => p.id)
+      const ids = projects.map((p) => p.id)
+      setHorizontalNavIds(ids)
+
+      return ids
     }, []) ?? []
 
   const parentPath = resolvePath(`..`, window.location.pathname)?.pathname
