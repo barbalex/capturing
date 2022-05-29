@@ -73,6 +73,9 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
     ? 'Daten erneut herunterladen (aktualisieren)'
     : 'Daten für Offline-Nutzung herunterladen'
 
+  const [removing, setRemoving] = useState(false)
+  const removeText = removing ? 'Daten werden entfernt...' : 'Daten entfernen'
+
   const timeoutRef = useRef()
   const onClickDownload = useCallback(async () => {
     setActionTitle('Die Daten werden heruntergeladen...')
@@ -90,13 +93,13 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
     }
   }, [])
 
-  const onClickDelete = useCallback(
-    () =>
-      dexie.pvl_geoms
-        .where({ deleted: 0, pvl_id: projectVectorLayerId })
-        .delete(),
-    [projectVectorLayerId],
-  )
+  const onClickDelete = useCallback(async () => {
+    setRemoving(true)
+    await dexie.pvl_geoms
+      .where({ deleted: 0, pvl_id: projectVectorLayerId })
+      .delete()
+    setRemoving(false)
+  }, [projectVectorLayerId])
 
   const offlineReadyText = pvlGeomsCount
     ? 'Die Daten sind offline verfügbar.'
@@ -127,7 +130,7 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
           onClick={onClickDelete}
           disabled={!pvlGeomsCount}
         >
-          Daten entfernen
+          {removeText}
         </Button>
       </ButtonRow>
     </ErrorBoundary>
