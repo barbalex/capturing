@@ -1,4 +1,7 @@
 import axios from 'redaxios'
+import countBy from 'lodash/countBy'
+import sumBy from 'lodash/sumBy'
+
 import { dexie, PVLGeom, ProjectVectorLayer } from '../dexieClient'
 
 type Props = {
@@ -86,7 +89,6 @@ const downloadWfs = async ({ pvl, store }: Props) => {
     })
     return false
   }
-  removeNotificationById(loadingNotifId)
   const features = res.data?.features ?? []
   // 3. build PVLGeoms
   const pvlGeoms = features.map(
@@ -95,6 +97,31 @@ const downloadWfs = async ({ pvl, store }: Props) => {
   )
   // 4. add to dexie
   await dexie.pvl_geoms.bulkPut(pvlGeoms)
+
+  // 5. add statistics to pvl
+  const geometries = features.map((f) => f.geometry)
+  const geomTypes = countBy(geometries, 'type')
+  //  Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon
+  //  Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon
+  const typeCounts = {
+    feature_count: geometries.length,
+    point_count: sumBy(Object.entries(geomTypes), ([key, value]) =>
+      key.toLowerCase().includes('point') ? value : 0,
+    ),
+    line_count: sumBy(Object.entries(geomTypes), ([key, value]) =>
+      key.toLowerCase().includes('line') ? value : 0,
+    ),
+    polygon_count: sumBy(Object.entries(geomTypes), ([key, value]) =>
+      key.toLowerCase().includes('polygon') ? value : 0,
+    ),
+  }
+  // console.log('downloadWfs, typeCounts:', typeCounts)
+  const upToDatePvl = await dexie.project_vector_layers.get(pvl.id)
+  const newPvl = { ...upToDatePvl, ...typeCounts }
+  await dexie.project_vector_layers.put(newPvl)
+
+  // 6. clean up
+  removeNotificationById(loadingNotifId)
   return true
 }
 
