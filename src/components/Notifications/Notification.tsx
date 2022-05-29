@@ -110,8 +110,10 @@ const Notification = ({ notification: n }) => {
 
   return (
     <Container data-color={color}>
-      {!!title && <Title>{`${title}:`}</Title>}
-      <Message>{message}</Message>
+      <div>
+        {!!title && <Title>{`${title}:`}</Title>}
+        <Message>{message}</Message>
+      </div>
       {!!actionName && !!actionLabel && (
         <StyledButton onClick={onClickAction} variant="outlined">
           {actionLabel}
