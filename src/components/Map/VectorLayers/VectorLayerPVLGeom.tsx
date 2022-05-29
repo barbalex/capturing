@@ -117,6 +117,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
     (1000 && !loadingNotifIds.current.length)
   ) {
     const loadingNotifId = addNotification({
+      title: `Zuviele Geometrien`,
       message: `Die maximale Anzahl Features von ${
         layer.max_features ?? 1000
       } für Vektor-Karte ${layer.label} wurde geladen. Zoomen sie näher ran`,
