@@ -23,10 +23,7 @@ const Container = styled.div`
   word-wrap: break-word;
 `
 const StyledIconButton = styled(IconButton)`
-  /* margin-left: 8px !important; */
-  position: absolute;
-  top: 16px;
-  right: 14px;
+  align-self: flex-start;
 `
 const StyledButton = styled(Button)`
   color: white !important;
