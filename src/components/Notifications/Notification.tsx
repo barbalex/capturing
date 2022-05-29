@@ -17,7 +17,6 @@ const Container = styled.div`
   border-radius: 3px;
   background-color: ${(props) => props['data-color']};
   color: white;
-  /* font-weight: 500; */
   min-height: 18px;
   max-width: calc(100% - 10px);
   word-wrap: break-word;
