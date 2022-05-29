@@ -27,6 +27,11 @@ const ButtonRow = styled.div`
   flex-wrap: wrap;
   gap: 12px;
 `
+const UL = styled.ul`
+  margin-top: -10px;
+  font-size: small;
+`
+const LI = styled.li``
 
 type Props = {
   row: ProjectVectorLayer
@@ -102,13 +107,29 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
   }, [projectVectorLayerId])
 
   const offlineReadyText = pvlGeomsCount
-    ? 'Die Daten sind offline verfügbar.'
+    ? 'Die Daten sind offline verfügbar:'
     : 'Die Daten sind nicht offline verfügbar.'
 
   return (
     <ErrorBoundary>
       <Label label="Offline-Verfügbarkeit" />
       <OfflineReadyText>{offlineReadyText}</OfflineReadyText>
+      {!!pvlGeomsCount && (
+        <UL>
+          <LI>{`${new Intl.NumberFormat('de-CH').format(
+            row.feature_count,
+          )} Geometrien`}</LI>
+          <LI>{`${new Intl.NumberFormat('de-CH').format(
+            row.point_count ?? 0,
+          )} Punkte`}</LI>
+          <LI>{`${new Intl.NumberFormat('de-CH').format(
+            row.line_count ?? 0,
+          )} Linien`}</LI>
+          <LI>{`${new Intl.NumberFormat('de-CH').format(
+            row.polygon_count ?? 0,
+          )} Polygone`}</LI>
+        </UL>
+      )}
       <ButtonRow>
         <Button
           variant="outlined"
