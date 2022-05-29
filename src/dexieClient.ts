@@ -617,6 +617,11 @@ export interface IProjectVectorLayer {
   type_name?: string
   wfs_version?: string
   output_format?: string
+  max_features?: number
+  feature_count?: number
+  point_count?: number
+  line_count?: number
+  polygon_count?: number
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
