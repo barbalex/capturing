@@ -753,7 +753,10 @@ CREATE TABLE project_vector_layers (
   output_format text DEFAULT NULL, -- need some form of json. TODO: Convert others?
   opacity integer DEFAULT 1,
   max_features integer DEFAULT 1000,
-  client_rev_at timestamp with time zone DEFAULT now(),
+  feature_count integer DEFAULT 0,
+  point_count integer DEFAULT 0,
+  line_count integer DEFAULT 0,
+  polygon_count integer DEFAULT 0 client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
@@ -768,6 +771,14 @@ CREATE INDEX ON project_vector_layers USING btree (deleted);
 COMMENT ON TABLE project_vector_layers IS 'Goal: Bring your own tile layers. Either from wfs or importing GeoJSON. Not versioned (not recorded and only added by manager).';
 
 COMMENT ON COLUMN project_vector_layers.max_features IS 'maximum number of features to be loaded into a map';
+
+COMMENT ON COLUMN project_vector_layers.feature_count IS 'Number of features. Set when downloaded features';
+
+COMMENT ON COLUMN project_vector_layers.point_count IS 'Number of point features. Used to show styling for points - or not. Set when downloaded features';
+
+COMMENT ON COLUMN project_vector_layers.line_count IS 'Number of line features. Used to show styling for lines - or not. Set when downloaded features';
+
+COMMENT ON COLUMN project_vector_layers.polygon_count IS 'Number of polygon features. Used to show styling for polygons - or not. Set when downloaded features';
 
 ALTER TABLE project_vector_layers ENABLE ROW LEVEL SECURITY;
 
