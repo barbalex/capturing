@@ -2,6 +2,7 @@ import { useEffect, useState, useContext, useRef, useCallback } from 'react'
 import { GeoJSON, useMapEvent, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
 import { useDebouncedCallback } from 'use-debounce'
+import countBy from 'lodash/countBy'
 
 import {
   dexie,
@@ -126,7 +127,11 @@ const VectorLayerComponent = ({ layer }: Props) => {
     loadingNotifIds.current = [loadingNotifId, ...loadingNotifIds.current]
   }
 
-  // console.log('VectorLayerPVLGeom, dataLength:', data?.length)
+  console.log('VectorLayerPVLGeom, dataLength:', data?.length)
+  console.log('VectorLayerPVLGeom, data:', data)
+  const geomTypes = countBy(data, 'type')
+  console.log('VectorLayerPVLGeom, geomTypes:', geomTypes)
+  //  Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon
 
   if (!data?.length) return null
 
