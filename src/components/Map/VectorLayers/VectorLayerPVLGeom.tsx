@@ -127,8 +127,6 @@ const VectorLayerComponent = ({ layer }: Props) => {
     loadingNotifIds.current = [loadingNotifId, ...loadingNotifIds.current]
   }
 
-  console.log('VectorLayerPVLGeom, dataLength:', data?.length)
-  console.log('VectorLayerPVLGeom, data:', data)
   const geomTypes = countBy(data, 'type')
   console.log('VectorLayerPVLGeom, geomTypes:', geomTypes)
   //  Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon
