@@ -100,7 +100,8 @@ const VectorLayerComponent = ({ layer }: Props) => {
         })
         setError(error.data)
         addNotification({
-          message: `Fehler beim Laden der Geometrien für ${layer.label}: Status ${error?.status}, ${error?.statusText}, Daten: ${error?.data}, Typ: ${error?.type}`,
+          title: `Fehler beim Laden der Geometrien für ${layer.label}`,
+          message: `Status ${error?.status}, ${error?.statusText}, Daten: ${error?.data}, Typ: ${error?.type}`,
         })
         return false
       }
@@ -144,6 +145,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
     (1000 && !loadingNotifIds.current.length)
   ) {
     const loadingNotifId = addNotification({
+      title: `Zuviele Geometrien`,
       message: `Die maximale Anzahl Features von ${
         layer.max_features ?? 1000
       } für Vektor-Karte ${layer.label} wurde geladen. Zoomen sie näher ran`,
