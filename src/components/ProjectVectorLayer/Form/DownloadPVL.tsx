@@ -21,7 +21,7 @@ import storeContext from '../../../storeContext'
 
 export const DownloadingText = styled.span`
   ${(props) =>
-    props.loading &&
+    props['data-loading'] &&
     `font-style: italic;
   animation: blinker 1s linear infinite; 
   white-space: nowrap;
@@ -140,7 +140,7 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
             )
           }
         >
-          <DownloadingText loading={downloading}>
+          <DownloadingText data-loading={downloading}>
             {downloading
               ? 'Daten werden heruntergeladen...'
               : pvlGeomsCount
@@ -153,7 +153,9 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
           onClick={onClickDelete}
           disabled={!pvlGeomsCount}
         >
-          <DownloadingText loading={removing}>{removeText}</DownloadingText>
+          <DownloadingText data-loading={removing}>
+            {removeText}
+          </DownloadingText>
         </Button>
       </ButtonRow>
     </ErrorBoundary>
