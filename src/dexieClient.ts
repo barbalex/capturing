@@ -642,6 +642,10 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
   wfs_version?: string
   output_format?: string
   max_features?: number
+  feature_count?: number
+  point_count?: number
+  line_count?: number
+  polygon_count?: number
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -662,6 +666,10 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     wfs_version?: string,
     output_format?: string,
     max_features?: number,
+    feature_count?: number,
+    point_count?: number,
+    line_count?: number,
+    polygon_count?: number,
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
@@ -681,6 +689,10 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     if (wfs_version) this.wfs_version = wfs_version
     if (output_format) this.output_format = output_format
     this.max_features = max_features ?? 1000
+    if (feature_count) this.feature_count = feature_count
+    if (point_count) this.point_count = point_count
+    if (line_count) this.line_count = line_count
+    if (polygon_count) this.polygon_count = polygon_count
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at

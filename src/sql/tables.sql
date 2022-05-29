@@ -753,10 +753,11 @@ CREATE TABLE project_vector_layers (
   output_format text DEFAULT NULL, -- need some form of json. TODO: Convert others?
   opacity integer DEFAULT 1,
   max_features integer DEFAULT 1000,
-  feature_count integer DEFAULT 0,
-  point_count integer DEFAULT 0,
-  line_count integer DEFAULT 0,
-  polygon_count integer DEFAULT 0 client_rev_at timestamp with time zone DEFAULT now(),
+  feature_count integer DEFAULT NULL,
+  point_count integer DEFAULT NULL,
+  line_count integer DEFAULT NULL,
+  polygon_count integer DEFAULT NULL,
+  client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0

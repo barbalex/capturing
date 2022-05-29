@@ -4,7 +4,7 @@ type Props = {
   projectId: string
 }
 
-const insertProjectVectorLayer = async ({ projectId }: Props) => { 
+const insertProjectVectorLayer = async ({ projectId }: Props) => {  
   const newProjectVectorLayer = new ProjectVectorLayer(
     undefined,
     undefined,
@@ -16,6 +16,10 @@ const insertProjectVectorLayer = async ({ projectId }: Props) => {
     19,
     0,
     1,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
     undefined,
     undefined,
     undefined,
