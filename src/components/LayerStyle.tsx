@@ -19,8 +19,8 @@ import {
 } from '../dexieClient'
 import { supabase } from '../supabaseClient'
 import TextField from './shared/TextField'
-import Spinner from './shared/Spinner'
 import RadioButtonGroup from './shared/RadioButtonGroup'
+import insertLayerStyle from '../utils/insertLayerStyle'
 
 import constants from '../utils/constants'
 
@@ -77,8 +77,19 @@ const LayerStyleForm = ({ userMayEdit }) => {
     : 'none'
   const row: Row = useLiveQuery(async () => {
     const _row: Row = await dexie.layer_styles.get(criteria)
-    // TODO: create layer_style for this table / project_tile_layer / project_vector_layer
+    // create layer_style for this table / project_tile_layer / project_vector_layer
     // IF it does not yet exist
+    if (!_row) {
+      console.log(
+        'Creating layer_style for',
+        Object.keys(criteria)[0].replace('_id', ''),
+      )
+      insertLayerStyle({
+        tableId,
+        projectTileLayerId,
+        projectVectorLayerId,
+      })
+    }
 
     return _row
   }, [projectTileLayerId, projectVectorLayerId, tableId])
