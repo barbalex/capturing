@@ -63,9 +63,10 @@ const LayerStyleForm = ({ userMayEdit, row: layerPassed }) => {
 
   const LayerType = tableId ? Table : ProjectVectorLayer
   const layer = layerPassed as LayerType
-  const pointCount = layerPassed?.point_count
-  const lineCount = layerPassed?.line_count
-  const polygonCount = layerPassed?.polygon_count
+  // TODO: get these numbers for tables
+  const pointCount = layer?.point_count
+  const lineCount = layer?.line_count
+  const polygonCount = layer?.polygon_count
 
   const unsetError = useCallback(
     () => () => {
