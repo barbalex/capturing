@@ -203,6 +203,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
     }
   })
 
+  // TODO: set local values in PVL, as in PTL
   const [loadingCapabilities, setLoadingCapabilities] = useState(true)
   const [wfsVersion, setWfsVersion] = useState()
   const [outputFormatValues, setOutputFormatValues] = useState()
