@@ -22,7 +22,8 @@ const downloadWfs = async ({ pvl, store }: Props) => {
     //   output_format: pvl.output_format,
     // })
     addNotification({
-      message: `Die Voraussetzungen, um Geometrien für ${pvl.label} zu laden, sind nicht erfüllt. Bitter ergänzen Sie die fehlenden Angaben`,
+      title: `Geometrien für ${pvl.label} können nicht geladen werden`,
+      message: `Es fehlen benötigte Angaben. Bitte konfigurieren Sie den WFS`,
       type: 'warning',
     })
     return
@@ -80,7 +81,8 @@ const downloadWfs = async ({ pvl, store }: Props) => {
     // console.log(error.config)
 
     addNotification({
-      message: `Fehler beim Laden der Geometrien für ${pvl.label}: Status ${error?.status}, ${error?.statusText}, Daten: ${error?.data}, Typ: ${error?.type}`,
+      title: `Fehler beim Laden der Geometrien für ${pvl.label}`,
+      message: `Status ${error?.status}, ${error?.statusText}, Daten: ${error?.data}, Typ: ${error?.type}`,
     })
     return false
   }
