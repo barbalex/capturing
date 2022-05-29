@@ -19,6 +19,19 @@ import { supabase } from '../../../supabaseClient'
 import downloadWfs from '../../../utils/downloadWfs'
 import storeContext from '../../../storeContext'
 
+export const DownloadingText = styled.span`
+  ${(props) =>
+    props.loading &&
+    `font-style: italic;
+  animation: blinker 1s linear infinite; 
+  white-space: nowrap;
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }`}
+`
+
 const OfflineReadyText = styled.p`
   margin-top: 0;
 `
@@ -43,8 +56,6 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
   const { projectVectorLayerId, projectId } = useParams()
 
   const session: Session = supabase.auth.session()
-
-  const [actionTitle, setActionTitle] = useState()
 
   // fetch pvl_geoms to see if data exists
   const data = useLiveQuery(async () => {
@@ -72,31 +83,16 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
   const userMayEdit: boolean = data?.userMayEdit
   const pvlGeomsCount: number = data?.pvlGeomsCount
 
-  const downloadText = actionTitle
-    ? actionTitle
-    : pvlGeomsCount
-    ? 'Daten erneut herunterladen (aktualisieren)'
-    : 'Daten für Offline-Nutzung herunterladen'
+  const [downloading, setDownloading] = useState(false)
 
   const [removing, setRemoving] = useState(false)
   const removeText = removing ? 'Daten werden entfernt...' : 'Daten entfernen'
 
-  const timeoutRef = useRef()
   const onClickDownload = useCallback(async () => {
-    setActionTitle('Die Daten werden heruntergeladen...')
-    const worked = await downloadWfs({ pvl: row, store })
-    if (worked) {
-      setActionTitle('Die Daten wurden heruntergeladen')
-      timeoutRef.current = setTimeout(() => setActionTitle(undefined), 30000)
-    } else {
-      setActionTitle(undefined)
-    }
+    setDownloading(true)
+    await downloadWfs({ pvl: row, store })
+    setDownloading(false)
   }, [row, store])
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    }
-  }, [])
 
   const onClickDelete = useCallback(async () => {
     setRemoving(true)
@@ -144,14 +140,20 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
             )
           }
         >
-          {downloadText}
+          <DownloadingText loading={downloading}>
+            {downloading
+              ? 'Daten werden heruntergeladen...'
+              : pvlGeomsCount
+              ? 'Daten erneut herunterladen (aktualisieren)'
+              : 'Daten für Offline-Nutzung herunterladen'}
+          </DownloadingText>
         </Button>
         <Button
           variant="outlined"
           onClick={onClickDelete}
           disabled={!pvlGeomsCount}
         >
-          {removeText}
+          <DownloadingText loading={removing}>{removeText}</DownloadingText>
         </Button>
       </ButtonRow>
     </ErrorBoundary>
