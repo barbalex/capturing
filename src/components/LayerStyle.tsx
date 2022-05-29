@@ -16,9 +16,6 @@ import {
   LineCapEnum,
   LineJoinEnum,
   FillRuleEnum,
-  Table,
-  ProjectTileLayer,
-  ProjectVectorLayer,
 } from '../dexieClient'
 import { supabase } from '../supabaseClient'
 import TextField from './shared/TextField'
@@ -55,15 +52,14 @@ const FieldsContainer = styled.div`
   padding: 15px 10px 10px 10px;
 `
 
-const LayerStyleForm = ({ userMayEdit, row: layerPassed }) => {
+const LayerStyleForm = ({ userMayEdit, row: layer }) => {
   const session: Session = supabase.auth.session()
   const { projectVectorLayerId, tableId } = useParams()
   const store = useContext(StoreContext)
   const { errors } = store
 
-  const LayerType = tableId ? Table : ProjectVectorLayer
-  const layer = layerPassed as LayerType
-  // TODO: get these numbers for tables
+  // Get these numbers for tables?
+  // No: Manager should be able to set styling before features exist
   const pointCount = layer?.point_count
   const lineCount = layer?.line_count
   const polygonCount = layer?.polygon_count
