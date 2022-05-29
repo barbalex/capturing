@@ -203,11 +203,11 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
     }
   })
 
-  // TODO: set local values in PVL, as in PTL
   const [loadingCapabilities, setLoadingCapabilities] = useState(true)
   const [wfsVersion, setWfsVersion] = useState()
-  const [outputFormatValues, setOutputFormatValues] = useState()
-  const [_layerOptions, setLayerOptions] = useState()
+  // TODO: set local values in PVL, as in PTL
+  const [outputFormatOptions, setOutputFormatOptions] = useState()
+  const [layerOptions, setLayerOptions] = useState()
   useEffect(() => {
     const run = async () => {
       if (!row?.url) return
@@ -275,7 +275,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
             v.toLowerCase().includes('application/json'),
           )[0] ??
           acceptableOutputFormats[0]
-        setOutputFormatValues(
+        setOutputFormatOptions(
           acceptableOutputFormats.map((v) => ({ label: v, value: v })),
         )
         if (!upToDateRow.output_format) {
@@ -402,7 +402,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                   <Spinner />
                 ) : (
                   <>
-                    {_layerOptions?.length > 0 && (
+                    {layerOptions?.length > 0 && (
                       <CheckboxGroup
                         key={`${row.id}type_name/cb`}
                         value={
@@ -412,12 +412,12 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                         }
                         label="Layer (welche der WFS-Server anbietet)"
                         name="type_name"
-                        options={_layerOptions}
+                        options={layerOptions}
                         onBlur={onBlur}
                         disabled={!userMayEdit}
                       />
                     )}
-                    {_layerOptions?.length === 0 && (
+                    {layerOptions?.length === 0 && (
                       <TextField
                         key={`${row.id}type_name`}
                         name="type_name"
@@ -439,19 +439,19 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                         disabled={!userMayEdit}
                       />
                     )}
-                    {outputFormatValues?.length > 0 && (
+                    {outputFormatOptions?.length > 0 && (
                       <RadioButtonGroup
                         key={`${row.id}output_format/cb`}
                         value={row.output_format}
                         name="output_format"
-                        dataSource={outputFormatValues}
+                        dataSource={outputFormatOptions}
                         onBlur={onBlur}
                         label="Daten-Format"
                         helperText="Nur JSON-Formate können verwendet werden"
                         error={errors?.project_tile_layer?.output_format}
                       />
                     )}
-                    {outputFormatValues?.length === 0 && (
+                    {outputFormatOptions?.length === 0 && (
                       <TextField
                         key={`${row.id}output_format`}
                         name="output_format"
