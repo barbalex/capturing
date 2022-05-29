@@ -816,7 +816,6 @@ export class PVLGeom implements IPVLGeom {
 export interface ILayerStyle {
   id: string
   table_id?: string
-  project_tile_layer_id?: string
   project_vector_layer_id?: string
   icon_url?: string
   icon_retina_url?: string
@@ -847,7 +846,6 @@ type LayerStyleUpdateProps = {
 export class LayerStyle implements ILayerStyle {
   id: string
   table_id?: string
-  project_tile_layer_id?: string
   project_vector_layer_id?: string
   icon_url?: string
   icon_retina_url?: string
@@ -872,7 +870,6 @@ export class LayerStyle implements ILayerStyle {
   constructor(
     id: string,
     table_id?: string,
-    project_tile_layer_id?: string,
     project_vector_layer_id?: string,
     icon_url?: string,
     icon_retina_url?: string,
@@ -896,8 +893,6 @@ export class LayerStyle implements ILayerStyle {
   ) {
     this.id = id ?? uuidv1()
     if (table_id) this.table_id = table_id
-    if (project_tile_layer_id)
-      this.project_tile_layer_id = project_tile_layer_id
     if (project_vector_layer_id)
       this.project_vector_layer_id = project_vector_layer_id
     if (icon_url) this.icon_url = icon_url
@@ -1563,7 +1558,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(37).stores({
+    this.version(38).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
@@ -1581,7 +1576,7 @@ export class MySubClassedDexie extends Dexie {
       project_users:
         'id, user_email, [project_id+user_email], project_id, server_rev_at, deleted',
       layer_styles:
-        'id, &table_id, &project_tile_layer_id, &project_vector_layer_id, server_rev_at, deleted',
+        'id, &table_id, &project_vector_layer_id, server_rev_at, deleted',
       projects:
         'id, label, name, server_rev_at, deleted, use_labels, [deleted+id]',
       rows: 'id, server_rev_at, deleted, [deleted+table_id], [deleted+parent_id]',

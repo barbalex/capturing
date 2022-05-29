@@ -319,6 +319,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
             <LayerStyle
               key={`${row?.id ?? ''}layerstyle`}
               userMayEdit={userMayEdit}
+              row={row}
             />
           </>
         ) : (

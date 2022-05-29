@@ -16,6 +16,9 @@ import {
   LineCapEnum,
   LineJoinEnum,
   FillRuleEnum,
+  Table,
+  ProjectTileLayer,
+  ProjectVectorLayer,
 } from '../dexieClient'
 import { supabase } from '../supabaseClient'
 import TextField from './shared/TextField'
@@ -52,11 +55,14 @@ const FieldsContainer = styled.div`
   padding: 15px 10px 10px 10px;
 `
 
-const LayerStyleForm = ({ userMayEdit }) => {
+const LayerStyleForm = ({ userMayEdit, row: layerPassed }) => {
   const session: Session = supabase.auth.session()
-  const { projectTileLayerId, projectVectorLayerId, tableId } = useParams()
+  const { projectVectorLayerId, tableId } = useParams()
   const store = useContext(StoreContext)
   const { errors } = store
+
+  const LayerType = tableId ? Table : ProjectVectorLayer
+  const layer = layerPassed as LayerType
 
   const unsetError = useCallback(
     () => () => {
@@ -66,12 +72,10 @@ const LayerStyleForm = ({ userMayEdit }) => {
   ) // TODO: add errors, unsetError in store
   useEffect(() => {
     unsetError('project')
-  }, [projectTileLayerId, projectVectorLayerId, tableId, unsetError])
+  }, [projectVectorLayerId, tableId, unsetError])
 
   const criteria = tableId
     ? { table_id: tableId }
-    : projectTileLayerId
-    ? { project_tile_layer_id: projectTileLayerId }
     : projectVectorLayerId
     ? { project_vector_layer_id: projectVectorLayerId }
     : 'none'
@@ -86,13 +90,12 @@ const LayerStyleForm = ({ userMayEdit }) => {
       )
       insertLayerStyle({
         tableId,
-        projectTileLayerId,
         projectVectorLayerId,
       })
     }
 
     return _row
-  }, [projectTileLayerId, projectVectorLayerId, tableId])
+  }, [projectVectorLayerId, tableId])
 
   const originalRow = useRef<LayerStyle>()
   const rowState = useRef<LayerStyle>()

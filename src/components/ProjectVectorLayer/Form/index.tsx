@@ -542,7 +542,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
             )}
           </>
         )}
-        {!!row.url && <LayerStyle userMayEdit={userMayEdit} />}
+        {!!row.url && <LayerStyle userMayEdit={userMayEdit} row={row} />}
       </FieldsContainer>
     </ErrorBoundary>
   )
