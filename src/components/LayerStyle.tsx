@@ -58,8 +58,6 @@ const LayerStyleForm = ({ userMayEdit }) => {
   const store = useContext(StoreContext)
   const { errors } = store
 
-  // console.log('ProjectForm rendering')
-
   const unsetError = useCallback(
     () => () => {
       console.log('TODO: unsetError')
@@ -77,10 +75,13 @@ const LayerStyleForm = ({ userMayEdit }) => {
     : projectVectorLayerId
     ? { project_vector_layer_id: projectVectorLayerId }
     : 'none'
-  const row: Row = useLiveQuery(
-    async () => await dexie.layer_styles.get(criteria),
-    [projectTileLayerId, projectVectorLayerId, tableId],
-  )
+  const row: Row = useLiveQuery(async () => {
+    const _row: Row = await dexie.layer_styles.get(criteria)
+    // TODO: create layer_style for this table / project_tile_layer / project_vector_layer
+    // IF it does not yet exist
+
+    return _row
+  }, [projectTileLayerId, projectVectorLayerId, tableId])
 
   const originalRow = useRef<LayerStyle>()
   const rowState = useRef<LayerStyle>()
@@ -90,6 +91,12 @@ const LayerStyleForm = ({ userMayEdit }) => {
       originalRow.current = row
     }
   }, [row])
+
+  console.log('LayerStyleForm rendering', {
+    row,
+    projectVectorLayerId,
+    criteria,
+  })
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
