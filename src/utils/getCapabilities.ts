@@ -3,7 +3,7 @@ import axios from 'redaxios'
 
 import xmlToJson from './xmlToJson'
 
-const fetchGetCapabilities = async ({ url, service = 'WFS' }) => {
+const getCapabilities = async ({ url, service = 'WFS' }) => {
   // Exaple url to get: https://wms.zh.ch/FnsSVOZHWMS?service=WMS&request=GetCapabilities
   let res
   try {
@@ -36,4 +36,4 @@ const fetchGetCapabilities = async ({ url, service = 'WFS' }) => {
   return xmlToJson(parser.parseFromString(res.data, 'text/html'))
 }
 
-export default fetchGetCapabilities
+export default getCapabilities
