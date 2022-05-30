@@ -29,9 +29,9 @@ import Spinner from '../../shared/Spinner'
 import CheckboxGroup from '../../shared/CheckboxGroup'
 import LayerStyle from '../../LayerStyle'
 import DownloadPVL from './DownloadPVL'
-import getCapabilities from '../../../utils/getCapabilities'
 import constants from '../../../utils/constants'
 import downloadWfs from '../../../utils/downloadWfs'
+import getCapabilitiesData from './getCapabilitiesData'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -203,136 +203,28 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
     }
   })
 
-  const [loadingCapabilities, setLoadingCapabilities] = useState(true)
-  const [wfsVersion, setWfsVersion] = useState()
-  // TODO: set local values in PVL, as in PTL
-  const [outputFormatOptions, setOutputFormatOptions] = useState()
-  const [layerOptions, setLayerOptions] = useState()
+  const [loadingCapabilities, setLoadingCapabilities] = useState(false)
   useEffect(() => {
-    const run = async () => {
-      if (!row?.url) return
-
-      const upToDateRow: ProjectVectorLayer =
-        await dexie.project_vector_layers.get(projectVectorLayerId)
-      if (!upToDateRow?.url) return
-
-      // console.log({ url: upToDateRow?.url })
-      let response
-      try {
-        response = await getCapabilities({
-          url: upToDateRow?.url,
-          service: 'WFS',
-        })
-      } catch (error) {
-        // TODO: surface this error
-        console.log({
-          url: error?.url,
-          error,
-          status: error?.status,
-          statusText: error?.statusText,
-          data: error?.data,
-          type: error?.type,
-        })
-      }
+    // only set if url exists
+    if (!row?.url) return
+    // only set if not yet done
+    if (row?.type_name) return
+    setLoadingCapabilities(true)
+    getCapabilitiesData({ row }).then(() => {
       setLoadingCapabilities(false)
-
-      // console.log('ProjectVectorLayerForm, effect, responce:', response)
-      const capabilities = response?.HTML?.BODY?.['WFS:WFS_CAPABILITIES']
-      // console.log('ProjectVectorLayerForm, effect, capabilities:', capabilities)
-
-      // 1. wfs version
-      const _wfsVersion = capabilities?.['@attributes']?.version
-      if (_wfsVersion) {
-        setWfsVersion(_wfsVersion)
-        if (!upToDateRow.wfs_version) {
-          onBlur({
-            target: { name: 'wfs_version', value: _wfsVersion },
-          })
-        }
-      }
-
-      // 2. output formats
-      const _operations =
-        capabilities?.['OWS:OPERATIONSMETADATA']?.['OWS:OPERATION'] ?? []
-      const getFeatureOperation = _operations.find(
-        (o) => o?.['@attributes']?.name === 'GetFeature',
-      )
-      const _outputFormats = (
-        getFeatureOperation?.['OWS:PARAMETER']?.['OWS:ALLOWEDVALUES']?.[
-          'OWS:VALUE'
-        ] ?? []
-      ).map((v) => v?.['#text'])
-      const acceptableOutputFormats = _outputFormats.filter((v) =>
-        v?.toLowerCase?.()?.includes('json'),
-      )
-      let preferredOutputFormat
-      if (acceptableOutputFormats.length) {
-        preferredOutputFormat =
-          acceptableOutputFormats.filter((v) =>
-            v.toLowerCase().includes('geojson'),
-          )[0] ??
-          acceptableOutputFormats.filter((v) =>
-            v.toLowerCase().includes('application/json'),
-          )[0] ??
-          acceptableOutputFormats[0]
-        setOutputFormatOptions(
-          acceptableOutputFormats.map((v) => ({ label: v, value: v })),
-        )
-        if (!upToDateRow.output_format) {
-          // set preferred value if upToDateRow.output_format is empty
-          onBlur({
-            target: {
-              name: 'output_format',
-              value: preferredOutputFormat,
-            },
-          })
-        }
-      }
-
-      // 3. label
-      const _label =
-        capabilities?.['OWS:SERVICEIDENTIFICATION']?.['OWS:TITLE']?.['#text']
-      if (!upToDateRow.label && !!_label) {
-        onBlur({
-          target: {
-            name: 'label',
-            value: _label,
-          },
-        })
-      }
-
-      // 4. layers
-      let layers = capabilities?.FEATURETYPELIST?.FEATURETYPE ?? []
-      // this value can be array OR object!!!
-      if (!Array.isArray(layers)) layers = [layers]
-      const _layerOptions = layers
-        .filter(
-          (l) =>
-            l.OTHERCRS?.map((o) => o?.['#text']?.includes('EPSG:4326')) ||
-            l.DefaultCRS?.map((o) => o?.['#text']?.includes('EPSG:4326')),
-        )
-        .filter((l) =>
-          preferredOutputFormat
-            ? l.OUTPUTFORMATS?.FORMAT?.map((f) => f?.['#text'])?.includes(
-                preferredOutputFormat,
-              )
-            : true,
-        )
-        .map((v) => ({
-          label: v.TITLE?.['#text'] ?? v.NAME?.['#text'],
-          value: v.NAME?.['#text'],
-        }))
-      setLayerOptions(_layerOptions)
-    }
-    run()
-  }, [onBlur, projectVectorLayerId, row])
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [row?.url, row?.type_name, projectVectorLayerId])
 
   // const showDeleted = filter?.project_vector_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
-  if (!row) return <Spinner />
+  // console.log('ProjectVectorLayer rendering', {
+  //   row,
+  //   loadingCapabilities,
+  // })
 
-  // console.log({ row, url: row.url, urlExists: !!row.url, loadingCapabilities })
+  if (!row) return <Spinner />
 
   return (
     <ErrorBoundary>
@@ -402,7 +294,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                   <Spinner />
                 ) : (
                   <>
-                    {layerOptions?.length > 0 && (
+                    {row._layerOptions?.length > 0 && (
                       <CheckboxGroup
                         key={`${row.id}type_name/cb`}
                         value={
@@ -412,12 +304,12 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                         }
                         label="Layer (welche der WFS-Server anbietet)"
                         name="type_name"
-                        options={layerOptions}
+                        options={row._layerOptions}
                         onBlur={onBlur}
                         disabled={!userMayEdit}
                       />
                     )}
-                    {layerOptions?.length === 0 && (
+                    {row._layerOptions?.length === 0 && (
                       <TextField
                         key={`${row.id}type_name`}
                         name="type_name"
@@ -428,7 +320,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                         disabled={!userMayEdit}
                       />
                     )}
-                    {!wfsVersion && (
+                    {!row.wfs_version && (
                       <TextField
                         key={`${row.id}wfs_version`}
                         name="wfs_version"
@@ -439,19 +331,19 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                         disabled={!userMayEdit}
                       />
                     )}
-                    {outputFormatOptions?.length > 0 && (
+                    {row._outputFormatOptions?.length > 0 && (
                       <RadioButtonGroup
                         key={`${row.id}output_format/cb`}
                         value={row.output_format}
                         name="output_format"
-                        dataSource={outputFormatOptions}
+                        dataSource={row._outputFormatOptions}
                         onBlur={onBlur}
                         label="Daten-Format"
                         helperText="Nur JSON-Formate können verwendet werden"
                         error={errors?.project_tile_layer?.output_format}
                       />
                     )}
-                    {outputFormatOptions?.length === 0 && (
+                    {row._outputFormatOptions?.length === 0 && (
                       <TextField
                         key={`${row.id}output_format`}
                         name="output_format"
