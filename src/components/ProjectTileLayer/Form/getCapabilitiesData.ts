@@ -2,7 +2,6 @@ import axios from 'redaxios'
 
 import fetchCapabilities from '../../../utils/getCapabilities'
 import { dexie, ProjectTileLayer } from '../../../dexieClient'
-import getValuesToSetFromCapabilities from './getValuesToSetFromCapabilities' 
 
 type Props = {
   row: ProjectTileLayer
@@ -13,14 +12,14 @@ const getCapabilitiesData = async ({ row }: Props) => {
 
   console.log('getCapabilitiesData for row:', row.label)
 
-  const cbData = {}
+  const values = {}
 
   const capabilities = await fetchCapabilities({
     url: row.wms_base_url,
     service: 'WMS',
   })
 
-  cbData._wmsFormatOptions =
+  values._wmsFormatOptions =
     capabilities?.Capability?.Request?.GetMap?.Format.filter((v) =>
       v.toLowerCase().includes('image'),
     ).map((v) => ({
@@ -33,13 +32,13 @@ const getCapabilitiesData = async ({ row }: Props) => {
   const layers = (capabilities?.Capability?.Layer?.Layer ?? []).filter((v) =>
     v?.CRS?.includes('EPSG:4326'),
   )
-  cbData._layerOptions = layers.map((v) => ({
+  values._layerOptions = layers.map((v) => ({
     label: v.Title,
     value: v.Name,
   }))
 
   // fetch legends
-  cbData._legendUrls = layers
+  values._legendUrls = layers
     .map((l) => ({
       title: l.Title,
       url: l.Style?.[0]?.LegendURL?.[0]?.OnlineResource,
@@ -47,7 +46,7 @@ const getCapabilitiesData = async ({ row }: Props) => {
     }))
     .filter((u) => !!u.url)
 
-  const legendUrlsToUse = cbData._legendUrls.filter((lUrl) =>
+  const legendUrlsToUse = values._legendUrls.filter((lUrl) =>
     row.wms_layers?.includes?.(lUrl.name),
   )
 
@@ -68,29 +67,83 @@ const getCapabilitiesData = async ({ row }: Props) => {
   }
 
   // add legends into row to reduce network activity and make them offline available
-  cbData._wmsLegends = _legendBlobs.length ? _legendBlobs : undefined
+  values._wmsLegends = _legendBlobs.length ? _legendBlobs : undefined
 
   // use capabilities.Capability?.Request?.GetFeatureInfo?.Format
   // to set wms_info_format
   const infoFormats =
     capabilities?.Capability?.Request?.GetFeatureInfo?.Format ?? []
-  cbData._infoFormatOptions = infoFormats.map((l) => ({
+  values._infoFormatOptions = infoFormats.map((l) => ({
     label: l,
     value: l,
   }))
   // console.log('ProjectTileLayerForm, cbData:', cbData)
+
+  // if wms_format is not yet set, set version with png or jpg
+  if (!row?.wms_format) {
+    const _wmsFormatValues =
+      capabilities?.Capability?.Request?.GetMap?.Format.filter((v) =>
+        v.toLowerCase().includes('image'),
+      )
+    const preferedFormat =
+      _wmsFormatValues.find((v) => v?.toLowerCase?.().includes('image/png')) ??
+      _wmsFormatValues.find((v) => v?.toLowerCase?.().includes('png')) ??
+      _wmsFormatValues.find((v) => v?.toLowerCase?.().includes('image/jpeg')) ??
+      _wmsFormatValues.find((v) => v?.toLowerCase?.().includes('jpeg'))
+    if (preferedFormat) {
+      values.wms_format = preferedFormat
+    }
+  }
+
+  const _wmsVersion = capabilities?.version
+  if (_wmsVersion) {
+    if (!row?.wms_version) {
+      values.wms_version = _wmsVersion
+    }
+  }
+
+  // set title as label if undefined
+  if (!row?.label && capabilities?.Service?.Title) {
+    values.label = capabilities?.Service?.Title
+  }
+
+  const _layerOptions = layers.map((v) => v.Name)
+  // activate layer, if only one
+  if (!row?.wms_layers && _layerOptions?.map && _layerOptions?.length === 1) {
+    values.wms_layers = _layerOptions.map((o) => o.value).join(',')
+  }
+
+  // use capabilities.Capability?.Layer?.Layer[this]?.queryable to allow/disallow getting feature info?
+  if (![0, 1].includes(row?.wms_queryable)) {
+    values.wms_queryable = layers.some((l) => l.queryable) ? 1 : 0
+  }
+
+  // set info_format if undefined
+  if (!row?.wms_info_format && infoFormats.length) {
+    // for values see: https://docs.geoserver.org/stable/en/user/services/wms/reference.html#getfeatureinfo
+    const preferedFormat =
+      infoFormats.find(
+        (v) => v?.toLowerCase?.() === 'application/vnd.ogc.gml',
+      ) ??
+      infoFormats.find((v) =>
+        v?.toLowerCase?.().includes('application/vnd.ogc.gml'),
+      ) ??
+      infoFormats.find((v) => v?.toLowerCase?.().includes('text/plain')) ??
+      infoFormats.find((v) =>
+        v?.toLowerCase?.().includes('application/json'),
+      ) ??
+      infoFormats.find((v) => v?.toLowerCase?.().includes('text/javascript')) ??
+      infoFormats.find((v) => v?.toLowerCase?.().includes('text/html'))
+    if (preferedFormat) {
+      values.wms_info_format = preferedFormat
+    }
+  }
+
   const uptoDateRow = await dexie.project_tile_layers.get(row.id)
-  const valuesToSet = getValuesToSetFromCapabilities({
-    capabilities,
-    wms_format: row?.wms_format,
-    wms_version: row?.wms_version,
-    label: row?.label,
-    wms_layers: row?.wms_layers,
-    wms_queryable: row?.wms_queryable,
-    wms_info_format: row?.wms_info_format,
-  })
-  const newValue = { ...uptoDateRow, ...cbData, ...valuesToSet }
+
+  const newValue = { ...uptoDateRow, ...values }
   await dexie.project_tile_layers.put(newValue)
+
   return
 }
 
