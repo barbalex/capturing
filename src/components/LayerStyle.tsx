@@ -106,11 +106,11 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
     }
   }, [row])
 
-  console.log('LayerStyleForm rendering', {
-    row,
-    projectVectorLayerId,
-    criteria,
-  })
+  // console.log('LayerStyleForm rendering', {
+  //   row,
+  //   projectVectorLayerId,
+  //   criteria,
+  // })
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
