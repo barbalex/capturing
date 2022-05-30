@@ -2,7 +2,7 @@ import axios from 'redaxios'
 
 import fetchCapabilities from '../../../utils/getCapabilities'
 import { dexie, ProjectTileLayer } from '../../../dexieClient'
-import getValuesToSetFromCapabilities from './getValuesToSetFromCapabilities'
+import getValuesToSetFromCapabilities from './getValuesToSetFromCapabilities' 
 
 type Props = {
   row: ProjectTileLayer
