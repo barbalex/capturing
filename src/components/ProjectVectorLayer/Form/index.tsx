@@ -221,12 +221,12 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
   // const showDeleted = filter?.project_vector_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
-  console.log('ProjectVectorLayer rendering', {
-    row,
-    loadingCapabilities,
-    type_name: row?.type_name,
-    _layerOptions: row?._layerOptions,
-  })
+  // console.log('ProjectVectorLayer rendering', {
+  //   row,
+  //   loadingCapabilities,
+  //   type_name: row?.type_name,
+  //   _layerOptions: row?._layerOptions,
+  // })
 
   if (!row) return <Spinner />
 
