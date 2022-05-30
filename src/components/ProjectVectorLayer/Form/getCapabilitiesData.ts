@@ -1,7 +1,8 @@
 import getCapabilities from '../../../utils/getCapabilities'
 import { dexie } from '../../../dexieClient'
 
-const getCapabilitiesData = async ({ row }) => {
+const getCapabilitiesDataForVectorLayer = async ({ row }) => {
+  console.log('getCapabilitiesDataForVectorLayer, row:', row)
   if (!row) return
   const values = {}
 
@@ -89,4 +90,4 @@ const getCapabilitiesData = async ({ row }) => {
   return
 }
 
-export default getCapabilitiesData
+export default getCapabilitiesDataForVectorLayer

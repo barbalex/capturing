@@ -27,11 +27,13 @@ import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
 import CheckboxGroup from '../../shared/CheckboxGroup'
+import MultiSelect from '../../shared/MultiSelect'
+import ToggleButtonGroup from '../../shared/ToggleButtonGroup'
 import LayerStyle from '../../LayerStyle'
 import DownloadPVL from './DownloadPVL'
 import constants from '../../../utils/constants'
 import downloadWfs from '../../../utils/downloadWfs'
-import getCapabilitiesData from './getCapabilitiesData'
+import getCapabilitiesDataForVectorLayer from './getCapabilitiesData'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -155,8 +157,8 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
       const { name: field, value, type, valueAsNumber } = event.target
       let newValue = type === 'number' ? valueAsNumber : value
       if ([undefined, '', NaN].includes(newValue)) newValue = null
-      if (type === 'array' && field === 'type_name') {
-        newValue = value.filter((v) => !!v).join(',')
+      if (field === 'type_name') {
+        newValue = value?.filter((v) => !!v)?.join(',')
       }
 
       // return if value has not changed
@@ -210,7 +212,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
     // only set if not yet done
     if (row?.type_name) return
     setLoadingCapabilities(true)
-    getCapabilitiesData({ row }).then(() => {
+    getCapabilitiesDataForVectorLayer({ row }).then(() => {
       setLoadingCapabilities(false)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -219,10 +221,12 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
   // const showDeleted = filter?.project_vector_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
-  // console.log('ProjectVectorLayer rendering', {
-  //   row,
-  //   loadingCapabilities,
-  // })
+  console.log('ProjectVectorLayer rendering', {
+    row,
+    loadingCapabilities,
+    type_name: row?.type_name,
+    _layerOptions: row?._layerOptions,
+  })
 
   if (!row) return <Spinner />
 
@@ -262,14 +266,13 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
             )}
           </>
         )}
-        <RadioButtonGroup
+        <ToggleButtonGroup
           key={`${row.id}type`}
-          name="type"
           value={row.type}
-          field="type"
-          label="Woher kommen die Daten?"
+          name="type"
           dataSource={typeValues}
           onBlur={onBlur}
+          label="Woher kommen die Daten?"
           error={errors?.field?.type}
           disabled={!userMayEdit}
         />
@@ -295,25 +298,45 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                 ) : (
                   <>
                     {row._layerOptions?.length > 0 && (
-                      <CheckboxGroup
-                        key={`${row.id}type_name/cb`}
-                        value={
-                          row.type_name?.split
-                            ? row.type_name?.split?.(',').filter((v) => v)
-                            : []
-                        }
-                        label="Layer (welche der WFS-Server anbietet)"
-                        name="type_name"
-                        options={row._layerOptions}
-                        onBlur={onBlur}
-                        disabled={!userMayEdit}
-                      />
+                      <>
+                        <MultiSelect
+                          name="type_name"
+                          value={row._layerOptions?.filter((o) =>
+                            (
+                              row.type_name?.split?.(',').filter((v) => v) ?? []
+                            ).includes(o.value),
+                          )}
+                          field="type_name"
+                          label="Layer"
+                          options={row._layerOptions}
+                          onBlur={onBlur}
+                          helperText={
+                            row._layerOptions?.length > 1
+                              ? 'Sie können mehrere wählen'
+                              : ''
+                          }
+                        />
+                        <CheckboxGroup
+                          key={`${row.id}type_name/cb`}
+                          value={
+                            row.type_name?.split
+                              ? row.type_name?.split?.(',').filter((v) => v)
+                              : []
+                          }
+                          label="Layer"
+                          name="type_name"
+                          options={row._layerOptions}
+                          onBlur={onBlur}
+                          disabled={!userMayEdit}
+                        />
+                      </>
                     )}
-                    {row._layerOptions?.length === 0 && (
+                    {(!row._layerOptions ||
+                      row._layerOptions?.length === 0) && (
                       <TextField
                         key={`${row.id}type_name`}
                         name="type_name"
-                        label="Layer (welche der WFS-Server anbietet)"
+                        label="Layer"
                         value={row.type_name}
                         onBlur={onBlur}
                         error={errors?.project_vector_layer?.type_name}

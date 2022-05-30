@@ -1,9 +1,6 @@
-import axios from 'redaxios'
-
 import { supabase } from '../../supabaseClient'
 import { dexie, File } from '../../dexieClient'
 import hex2buf from '../hex2buf'
-import getCapabilities from '../getCapabilities'
 import downloadWfs from '../downloadWfs'
 
 import getCapabilitiesDataForTileLayer from '../../components/ProjectTileLayer/Form/getCapabilitiesData'

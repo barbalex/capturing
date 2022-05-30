@@ -125,7 +125,6 @@ const ProjectTileLayerForm = () => {
       let newValue = type === 'number' ? valueAsNumber : value
       if ([undefined, '', NaN].includes(newValue)) newValue = null
       if (type === 'array' && field === 'wms_layers') {
-        console.log('PTL, onBlur', { value, field })
         newValue = value.join(',')
       }
       // console.log('ProjectTileLayer Form onBlur', { newValue, type, field })

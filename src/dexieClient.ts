@@ -615,8 +615,10 @@ export interface IProjectVectorLayer {
   min_zoom?: number
   opacity?: number
   type_name?: string
+  _layerOptions?: optionsList[]
   wfs_version?: string
   output_format?: string
+  _outputFormatOptions?: optionsList[]
   max_features?: number
   feature_count?: number
   point_count?: number
@@ -732,7 +734,14 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     const was = { ...this }
     this.deleted = 1
     dexie.project_vector_layers.put(this)
-    return this.updateOnServer({ was, is: this, session })
+    this.updateOnServer({ was, is: this, session })
+
+    // if layer_style exists, also delete
+    const lSt = await dexie.layer_styles.get({
+      project_vector_layer_id: this.id,
+    })
+    if (lSt) await lSt.deleteOnServerAndClient({ session })
+    return
   }
 }
 

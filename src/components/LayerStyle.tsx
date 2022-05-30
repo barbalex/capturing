@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useCallback, useRef } from 'react'
+import React, { useEffect, useCallback, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
@@ -6,7 +6,6 @@ import { Session } from '@supabase/supabase-js'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 
-import StoreContext from '../storeContext'
 import Checkbox2States from './shared/Checkbox2States'
 import ErrorBoundary from './shared/ErrorBoundary'
 import ColorPicker from './shared/ColorPicker'
@@ -55,8 +54,6 @@ const FieldsContainer = styled.div`
 const LayerStyleForm = ({ userMayEdit, row: layer }) => {
   const session: Session = supabase.auth.session()
   const { projectVectorLayerId, tableId } = useParams()
-  const store = useContext(StoreContext)
-  const { errors } = store
 
   // Get these numbers for tables?
   // No: Manager should be able to set styling before features exist
@@ -64,34 +61,23 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
   const lineCount = layer?.line_count
   const polygonCount = layer?.polygon_count
 
-  const unsetError = useCallback(
-    () => () => {
-      console.log('TODO: unsetError')
-    },
-    [],
-  ) // TODO: add errors, unsetError in store
-  useEffect(() => {
-    unsetError('project')
-  }, [projectVectorLayerId, tableId, unsetError])
-
   const criteria = tableId
     ? { table_id: tableId }
     : projectVectorLayerId
     ? { project_vector_layer_id: projectVectorLayerId }
     : 'none'
   const row: Row = useLiveQuery(async () => {
-    const _row: Row = await dexie.layer_styles.get(criteria)
-    // create layer_style for this table / project_tile_layer / project_vector_layer
+    let _row: Row = await dexie.layer_styles.get(criteria)
+    console.log('LayerStyle, querying row, _row:', _row)
+    // create layer_style for this table / project_vector_layer
     // IF it does not yet exist
     if (!_row) {
-      console.log(
-        'Creating layer_style for',
-        Object.keys(criteria)[0].replace('_id', ''),
-      )
-      insertLayerStyle({
+      _row = await insertLayerStyle({
         tableId,
         projectVectorLayerId,
       })
+      console.log('LayerStyle, querying row, _row after inserting:', _row)
+      // _row = await dexie.layer_styles.get(criteria)
     }
 
     return _row
@@ -189,7 +175,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                 name="deleted"
                 value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.project?.deleted}
+                // error={errors?.project?.deleted}
                 disabled={!userMayEdit}
               />
             )}
@@ -200,7 +186,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                   label="URL für Punkt-Icon"
                   value={row.icon_url}
                   onBlur={onBlur}
-                  error={errors?.project?.icon_url}
+                  // error={errors?.project?.icon_url}
                   disabled={!userMayEdit}
                 />
                 <TextField
@@ -208,14 +194,14 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                   label="URL für Punkt-Icon, hochauflösend"
                   value={row.icon_retina_url}
                   onBlur={onBlur}
-                  error={errors?.project?.icon_retina_url}
+                  // error={errors?.project?.icon_retina_url}
                 />
                 <TextField
                   name="icon_size"
                   label="Icon Grösse (in Bild-Punkten)"
                   value={row.icon_size}
                   onBlur={onBlur}
-                  error={errors?.project?.icon_size}
+                  // error={errors?.project?.icon_size}
                   type="number"
                   disabled={!userMayEdit}
                 />
@@ -236,7 +222,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                   label="Linien: Breite (in Bild-Punkten)"
                   value={row.weight}
                   onBlur={onBlur}
-                  error={errors?.project?.weight}
+                  // error={errors?.project?.weight}
                   type="number"
                   disabled={!userMayEdit}
                 />
@@ -245,7 +231,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                   label="Linien: Deckkraft / Opazität"
                   value={row.opacity}
                   onBlur={onBlur}
-                  error={errors?.project?.opacity}
+                  // error={errors?.project?.opacity}
                   type="number"
                   disabled={!userMayEdit}
                 />
@@ -257,7 +243,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                     label="Linien: Abschluss"
                     dataSource={lineCapValues}
                     onBlur={onBlur}
-                    error={errors?.field?.line_cap}
+                    // error={errors?.field?.line_cap}
                     disabled={!userMayEdit}
                   />
                 </div>
@@ -269,7 +255,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                     label="Linien: Ecken"
                     dataSource={lineJoinValues}
                     onBlur={onBlur}
-                    error={errors?.field?.line_join}
+                    // error={errors?.field?.line_join}
                     disabled={!userMayEdit}
                   />
                 </div>
@@ -278,7 +264,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                   label="Linien: Dash-Array"
                   value={row.dash_array}
                   onBlur={onBlur}
-                  error={errors?.project?.dash_array}
+                  // error={errors?.project?.dash_array}
                   disabled={!userMayEdit}
                 />
                 <TextField
@@ -286,7 +272,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                   label="Linien: Dash-Offset"
                   value={row.dash_offset}
                   onBlur={onBlur}
-                  error={errors?.project?.dash_offset}
+                  // error={errors?.project?.dash_offset}
                   disabled={!userMayEdit}
                 />
               </>
@@ -298,14 +284,14 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                   name="stroke"
                   value={row.stroke}
                   onBlur={onBlur}
-                  error={errors?.project?.stroke}
+                  // error={errors?.project?.stroke}
                 />
                 <Checkbox2States
                   label="Flächen füllen"
                   name="fill"
                   value={row.fill}
                   onBlur={onBlur}
-                  error={errors?.project?.fill}
+                  // error={errors?.project?.fill}
                   disabled={!userMayEdit}
                 />
                 <ColorPicker
@@ -321,7 +307,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                   label="Füllung: Deckkraft / Opazität"
                   value={row.fill_opacity}
                   onBlur={onBlur}
-                  error={errors?.project?.fill_opacity}
+                  // error={errors?.project?.fill_opacity}
                   type="number"
                   disabled={!userMayEdit}
                 />
@@ -333,7 +319,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                     label="Füllung: Regel, um den Inhalt von Flächen zu bestimmen"
                     dataSource={fillRuleValues}
                     onBlur={onBlur}
-                    error={errors?.field?.fill_rule}
+                    // error={errors?.field?.fill_rule}
                     disabled={!userMayEdit}
                   />
                 </div>

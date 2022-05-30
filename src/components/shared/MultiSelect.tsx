@@ -77,7 +77,7 @@ const StyledSelect = styled(Select)`
 `
 
 const SharedMultiSelect = ({
-  value: valuePassed,
+  value,
   field = '',
   label,
   name,
@@ -109,7 +109,7 @@ const SharedMultiSelect = ({
       <StyledSelect
         id={field}
         name={field}
-        value={valuePassed}
+        value={value}
         options={options}
         onChange={onChange}
         hideSelectedOptions
