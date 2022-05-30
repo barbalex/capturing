@@ -252,8 +252,8 @@ const ProjectTileLayerForm = () => {
                     onBlur={onBlur}
                     helperText={
                       row.wms_layers?.split?.(',')?.length > 1
-                        ? ''
-                        : 'Sie können mehrere wählen'
+                        ? 'Sie können mehrere wählen'
+                        : ''
                     }
                   />
                 )}
