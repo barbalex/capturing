@@ -3,7 +3,7 @@ import axios from 'redaxios'
 import { supabase } from '../../supabaseClient'
 import { dexie, File } from '../../dexieClient'
 import hex2buf from '../hex2buf'
-import fetchWmsGetCapabilities from '../getCapabilities'
+import getCapabilities from '../getCapabilities'
 import downloadWfs from '../downloadWfs'
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
@@ -138,12 +138,15 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
      * - and: type 'wms'
      * - and: no _wmsLegends yet
      * download the legends from the wms service and populate dexie!
+     * TODO:
+     * 1. get all local fields
+     * 2. same for project_vector_layers
      */
     if (tableName === 'project_tile_layers') {
       for (const d of data) {
         if (d.type === 'wms' && !d._wmsLegends?.length && d?.wms_base_url) {
           // console.log('processTable processing project_tile_layers, title:', d)
-          const capabilities = await fetchWmsGetCapabilities(d?.wms_base_url)
+          const capabilities = await getCapabilities(d?.wms_base_url)
           const layers = capabilities?.Capability?.Layer?.Layer ?? []
           const lUrls = layers
             .map((l) => ({
