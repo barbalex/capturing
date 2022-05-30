@@ -68,7 +68,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
     : 'none'
   const row: Row = useLiveQuery(async () => {
     let _row: Row = await dexie.layer_styles.get(criteria)
-    console.log('LayerStyle, querying row, _row:', _row)
+    // console.log('LayerStyle, querying row, _row:', _row)
     // create layer_style for this table / project_vector_layer
     // IF it does not yet exist
     if (!_row) {
@@ -82,7 +82,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
        * first call returns undefined
        * second: already exists...
        */
-      console.log('LayerStyle, querying row, _row after inserting:', _row)
+      // console.log('LayerStyle, querying row, _row after inserting:', _row)
       // _row = await dexie.layer_styles.get(criteria)
     }
 
