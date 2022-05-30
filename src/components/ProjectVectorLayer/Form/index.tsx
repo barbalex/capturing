@@ -298,38 +298,23 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                 ) : (
                   <>
                     {row._layerOptions?.length > 0 && (
-                      <>
-                        <MultiSelect
-                          name="type_name"
-                          value={row._layerOptions?.filter((o) =>
-                            (
-                              row.type_name?.split?.(',').filter((v) => v) ?? []
-                            ).includes(o.value),
-                          )}
-                          field="type_name"
-                          label="Layer"
-                          options={row._layerOptions}
-                          onBlur={onBlur}
-                          helperText={
-                            row._layerOptions?.length > 1
-                              ? 'Sie können mehrere wählen'
-                              : ''
-                          }
-                        />
-                        <CheckboxGroup
-                          key={`${row.id}type_name/cb`}
-                          value={
-                            row.type_name?.split
-                              ? row.type_name?.split?.(',').filter((v) => v)
-                              : []
-                          }
-                          label="Layer"
-                          name="type_name"
-                          options={row._layerOptions}
-                          onBlur={onBlur}
-                          disabled={!userMayEdit}
-                        />
-                      </>
+                      <MultiSelect
+                        name="type_name"
+                        value={row._layerOptions?.filter((o) =>
+                          (
+                            row.type_name?.split?.(',').filter((v) => v) ?? []
+                          ).includes(o.value),
+                        )}
+                        field="type_name"
+                        label="Layer"
+                        options={row._layerOptions}
+                        onBlur={onBlur}
+                        helperText={
+                          row._layerOptions?.length > 1
+                            ? 'Sie können mehrere wählen'
+                            : ''
+                        }
+                      />
                     )}
                     {(!row._layerOptions ||
                       row._layerOptions?.length === 0) && (
