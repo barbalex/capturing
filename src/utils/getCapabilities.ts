@@ -3,7 +3,7 @@ import axios from 'redaxios'
 
 import xmlToJson from './xmlToJson'
 
-const fetchWmsGetCapabilities = async ({ url, service = 'WFS' }) => {
+const fetchGetCapabilities = async ({ url, service = 'WFS' }) => {
   // Exaple url to get: https://wms.zh.ch/FnsSVOZHWMS?service=WMS&request=GetCapabilities
   let res
   try {
@@ -30,10 +30,10 @@ const fetchWmsGetCapabilities = async ({ url, service = 'WFS' }) => {
     throw error
   }
   if (service === 'WMS') return new WMSCapabilities().parse(res.data)
+
   // is WFS
   const parser = new window.DOMParser()
-  const data = xmlToJson(parser.parseFromString(res.data, 'text/html')) 
-  return data
+  return xmlToJson(parser.parseFromString(res.data, 'text/html'))
 }
 
-export default fetchWmsGetCapabilities
+export default fetchGetCapabilities
