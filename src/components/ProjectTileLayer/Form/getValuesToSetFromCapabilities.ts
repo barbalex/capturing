@@ -1,5 +1,3 @@
-import { dexie, ProjectTileLayer } from '../../../dexieClient'
-
 const getValuesToSetFromCapabilities = async ({
   capabilities,
   wms_format,
