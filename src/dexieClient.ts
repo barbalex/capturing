@@ -644,8 +644,10 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
   min_zoom?: number
   opacity?: number
   type_name?: string
+  _layerOptions?: optionsList[]
   wfs_version?: string
   output_format?: string
+  _outputFormatOptions?: optionsList[]
   max_features?: number
   feature_count?: number
   point_count?: number
@@ -668,8 +670,10 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     min_zoom?: number,
     opacity?: number,
     type_name?: string,
+    _layerOptions?: optionsList[],
     wfs_version?: string,
     output_format?: string,
+    _outputFormatOptions?: optionsList[],
     max_features?: number,
     feature_count?: number,
     point_count?: number,
@@ -691,8 +695,10 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     if (min_zoom !== undefined) this.min_zoom = min_zoom
     if (opacity !== undefined) this.opacity = opacity
     if (type_name) this.type_name = type_name
+    if (_layerOptions) this._layerOptions = _layerOptions
     if (wfs_version) this.wfs_version = wfs_version
     if (output_format) this.output_format = output_format
+    if (_outputFormatOptions) this._outputFormatOptions = _outputFormatOptions
     this.max_features = max_features ?? 1000
     if (feature_count) this.feature_count = feature_count
     if (point_count) this.point_count = point_count
@@ -1563,7 +1569,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(38).stores({
+    this.version(39).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
