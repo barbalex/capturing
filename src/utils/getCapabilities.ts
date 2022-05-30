@@ -9,24 +9,24 @@ const getCapabilities = async ({ url, service = 'WFS' }) => {
   try {
     res = await axios.get(`${url}?service=${service}&request=GetCapabilities`)
   } catch (error) {
-    console.log(`error fetching capabilities for ${url}`, error)
+    console.error(`error fetching capabilities for ${url}`, error)
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
-      console.log(error.response.data)
-      console.log(error.response.status)
-      console.log(error.response.headers)
+      console.error(error.response.data)
+      console.error(error.response.status)
+      console.error(error.response.headers)
     } else if (error.request) {
       // The request was made but no response was received
       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
       // http.ClientRequest in node.js
-      console.log(error.request)
+      console.error(error.request)
     } else {
       // Something happened in setting up the request that triggered an Error
       // TODO: surface
-      console.log('Error', error.message)
+      console.error('Error', error.message)
     }
-    console.log(error.config)
+    console.error(error.config)
     throw error
   }
   if (service === 'WMS') return new WMSCapabilities().parse(res.data)

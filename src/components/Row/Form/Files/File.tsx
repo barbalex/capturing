@@ -84,7 +84,7 @@ const Files = ({ fileMeta }: Props) => {
       try {
         objectUrl = URL.createObjectURL(blob)
       } catch (error) {
-        return console.log('Error creating object url:', error)
+        return console.error('Error creating object url:', error)
       }
       setPreview(objectUrl)
     }

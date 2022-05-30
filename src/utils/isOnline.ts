@@ -23,7 +23,7 @@ const isOnline = async (token) => {
     )
   } catch (error) {
     // error can also be caused by timeout
-    console.log('isOnline, error:', error)
+    console.error('isOnline, error:', error)
     return false
   }
   // console.log('isOnline, res:', res)

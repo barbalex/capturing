@@ -59,7 +59,7 @@ const getCapabilitiesData = async ({ row }: Props) => {
       })
     } catch (error) {
       // error can also be caused by timeout
-      console.log(`error fetching legend for layer '${lUrl.title}':`, error)
+      console.error(`error fetching legend for layer '${lUrl.title}':`, error)
       return false
     }
     // console.log('Legends, res.data:', res.data)

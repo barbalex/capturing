@@ -31,7 +31,7 @@ const BetterWmsAdder = () => {
           try {
             res = await axios.get(url)
           } catch (error) {
-            console.log(error.data)
+            console.error(error.data)
             showResults(error)
             return
           }

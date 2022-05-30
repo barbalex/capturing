@@ -89,7 +89,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
       try {
         await dexie.table(tableNameForDexie).bulkPut(data)
       } catch (error) {
-        console.log(`error putting ${tableName}:`, error)
+        console.error(`error putting ${tableName}:`, error)
       }
     }
     // 4.2 if files_meta: need to sync files

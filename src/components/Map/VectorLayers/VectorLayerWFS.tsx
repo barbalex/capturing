@@ -90,7 +90,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
         })
       } catch (error) {
         removeNotificationById(loadingNotifId)
-        console.log('VectorLayerWFS, error:', {
+        console.error('VectorLayerWFS, error:', {
           url: error?.url,
           error,
           status: error?.status,

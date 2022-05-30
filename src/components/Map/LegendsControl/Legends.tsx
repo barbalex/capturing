@@ -61,7 +61,7 @@ const MapLegends = () => {
             new Blob([legend[1]], { type: 'image/png' }),
           )
         } catch (error) {
-          return console.log(
+          return console.error(
             `error creating objectUrl for legend for layer '${legend[0]}'`,
             error,
           )

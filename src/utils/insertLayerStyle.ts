@@ -22,7 +22,7 @@ const insertLayerStyle = async ({ tableId, projectVectorLayerId }: Props) => {
       dexie.queued_updates.add(update),
     ])
   } catch (error) {
-    console.log(
+    console.error(
       'insertLayerStyle, error putting layer_styles and adding queued_updates:',
       error.message,
     )
