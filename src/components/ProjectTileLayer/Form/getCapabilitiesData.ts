@@ -10,7 +10,7 @@ type Props = {
 const getCapabilitiesData = async ({ row }: Props) => {
   if (!row?.wms_base_url) return undefined
 
-  console.log('getCapabilitiesData for row:', row.label)
+  // console.log('getCapabilitiesData for row:', row.label)
 
   const values = {}
 

@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import Label from '../../shared/Label'
 import constants from '../../../utils/constants'
-import { dexie } from '../../../dexieClient'
+import { dexie } from '../../../dexieClient' 
 
 const Container = styled.div`
   margin: 15px -10px 10px -10px;

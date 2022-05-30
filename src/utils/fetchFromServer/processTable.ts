@@ -6,6 +6,9 @@ import hex2buf from '../hex2buf'
 import getCapabilities from '../getCapabilities'
 import downloadWfs from '../downloadWfs'
 
+import getCapabilitiesDataForTileLayer from '../../components/ProjectTileLayer/Form/getCapabilitiesData'
+import getCapabilitiesDataForVectorLayer from '../../components/ProjectVectorLayer/Form/getCapabilitiesData'
+
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 
 const processTable = async ({ table: tableName, store, hiddenError }) => {
@@ -67,20 +70,23 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
   // 4. update dexie with these changes
   //    Some tables have extra data - needs to be preserved
   if (data) {
-    // 4.1 update dexie
-    if (tableNameForDexie === 'project_tile_layers') {
-      // TODO: do this more generally for all local fields beginning with _?
+    // 4.1 keep values of local fields
+    if (
+      ['project_tile_layers', 'project_vector_layers'].includes(
+        tableNameForDexie,
+      )
+    ) {
       for (const d of data) {
-        const existing = await dexie.project_tile_layers.get(d.id)
-        const _new = {
+        const existing = await dexie[tableNameForDexie].get(d.id)
+        const localFields = Object.keys(existing).filter((key) =>
+          key.startsWith('_'),
+        )
+        if (!localFields.length) break
+        const incoming = {
           ...d,
-          _wmsLegends: existing?._wmsLegends,
-          _wmsFormatOptions: existing?._wmsFormatOptions,
-          _layerOptions: existing?._layerOptions,
-          _legendUrls: existing?._legendUrls,
-          _infoFormatOptions: existing?._infoFormatOptions,
         }
-        await dexie.project_tile_layers.put(_new)
+        localFields.forEach((f) => (incoming[f] = existing?.[f]))
+        await dexie[tableNameForDexie].put(incoming)
       }
     } else {
       try {
@@ -133,52 +139,22 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
       }
     }
     /**
-     * 4.4 if:
-     * - project_tile_layers
-     * - and: type 'wms'
-     * - and: no _wmsLegends yet
-     * download the legends from the wms service and populate dexie!
-     * TODO:
-     * 1. get all local fields
-     * 2. same for project_vector_layers
+     * 4.4
+     * if: project_tile_layers or project_vector_layers
+     * get capabilities for local fields if needed
      */
     if (tableName === 'project_tile_layers') {
       for (const d of data) {
-        if (d.type === 'wms' && !d._wmsLegends?.length && d?.wms_base_url) {
-          // console.log('processTable processing project_tile_layers, title:', d)
-          const capabilities = await getCapabilities(d?.wms_base_url)
-          const layers = capabilities?.Capability?.Layer?.Layer ?? []
-          const lUrls = layers
-            .map((l) => ({
-              title: l.Title,
-              url: l.Style?.[0]?.LegendURL?.[0]?.OnlineResource,
-            }))
-            .filter((u) => !!u.url)
-          const _legendBlobs = []
-          for (const lUrl of lUrls) {
-            let res
-            try {
-              res = await axios.get(lUrl.url, {
-                responseType: 'blob',
-              })
-            } catch (error) {
-              // error can also be caused by timeout
-              console.log(
-                `error fetching legend for layer '${lUrl.title}':`,
-                error,
-              )
-              break
-            }
-            if (res.data) _legendBlobs.push([lUrl.title, res.data])
-          }
-
-          if (_legendBlobs.length) {
-            // add legends into row to reduce network activity and make them offline available
-            await dexie.project_tile_layers.update(d.id, {
-              _wmsLegends: _legendBlobs,
-            })
-          }
-        }
+        if (!d?.wms_base_url) break
+        if (d?._layerOptions?.length) break
+        getCapabilitiesDataForTileLayer({ row: d })
+      }
+    }
+    if (tableName === 'project_vector_layers') {
+      for (const d of data) {
+        if (!d?.wms_base_url) break
+        if (d?._layerOptions?.length) break
+        getCapabilitiesDataForVectorLayer({ row: d })
       }
     }
   }
