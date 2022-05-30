@@ -76,6 +76,12 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
         tableId,
         projectVectorLayerId,
       })
+      /**
+       * TODO:
+       * somehow this is FUCKED UP
+       * first call returns undefined
+       * second: already exists...
+       */
       console.log('LayerStyle, querying row, _row after inserting:', _row)
       // _row = await dexie.layer_styles.get(criteria)
     }

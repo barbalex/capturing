@@ -5,7 +5,7 @@ type Props = {
   projectVectorLayerId: string
 }
 
-const insertLayerStyle = async ({ tableId, projectVectorLayerId }: Props) => {
+const insertLayerStyle = async ({ tableId, projectVectorLayerId }: Props) => { 
   const newLayerStyle = new LayerStyle(undefined, tableId, projectVectorLayerId)
   const update = new QueuedUpdate(
     undefined,
