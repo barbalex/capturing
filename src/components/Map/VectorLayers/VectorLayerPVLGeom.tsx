@@ -2,7 +2,6 @@ import { useEffect, useState, useContext, useRef, useCallback } from 'react'
 import { GeoJSON, useMapEvent, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
 import { useDebouncedCallback } from 'use-debounce'
-import countBy from 'lodash/countBy'
 
 import {
   dexie,
