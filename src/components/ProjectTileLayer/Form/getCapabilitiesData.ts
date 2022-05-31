@@ -108,8 +108,8 @@ const getCapabilitiesData = async ({ row }: Props) => {
   }
 
   const _layerOptions = layers.map((v) => v.Name)
-  // activate layer, if only one
-  if (!row?.wms_layers && _layerOptions?.map && _layerOptions?.length === 1) {
+  // activate layer, if not too many
+  if (!row?.wms_layers && _layerOptions?.map && _layerOptions?.length <= 5) {
     values.wms_layers = _layerOptions.map((o) => o.value).join(',')
   }
 
