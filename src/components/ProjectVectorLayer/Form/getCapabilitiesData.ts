@@ -2,7 +2,7 @@ import getCapabilities from '../../../utils/getCapabilities'
 import { dexie } from '../../../dexieClient'
 
 const getCapabilitiesDataForVectorLayer = async ({ row }) => {
-  console.log('getCapabilitiesDataForVectorLayer, row:', row)
+  // console.log('getCapabilitiesDataForVectorLayer, row:', row)
   if (!row) return
   const values = {}
 
@@ -12,6 +12,8 @@ const getCapabilitiesDataForVectorLayer = async ({ row }) => {
   })
 
   const capabilities = response?.HTML?.BODY?.['WFS:WFS_CAPABILITIES']
+
+  // console.log('getCapabilitiesDataForVectorLayer, capabilities:', capabilities)
 
   // 1. wfs version
   if (!row.wfs_version) {
@@ -29,8 +31,15 @@ const getCapabilitiesDataForVectorLayer = async ({ row }) => {
       'OWS:VALUE'
     ] ?? []
   ).map((v) => v?.['#text'])
-  const acceptableOutputFormats = _outputFormats.filter((v) =>
-    v?.toLowerCase?.()?.includes('json'),
+  // TODO:
+  // also accept gml
+  // example: https://maps.zh.ch/wfs/VeloparkieranlagenZHWFS
+  // enable dealing with it...
+  // OR: do not allow to choose layers that do not allow json
+  const acceptableOutputFormats = _outputFormats.filter(
+    (v) =>
+      v?.toLowerCase?.()?.includes('json') ||
+      v?.toLowerCase?.()?.includes('gml'),
   )
   const preferredOutputFormat =
     acceptableOutputFormats.filter((v) =>
