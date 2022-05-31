@@ -3,6 +3,8 @@ import countBy from 'lodash/countBy'
 import sumBy from 'lodash/sumBy'
 
 import { dexie, PVLGeom, ProjectVectorLayer } from '../dexieClient'
+import xmlToJson from './xmlToJson'
+import featureFromWfsGml from './featureFromWfsGml'
 
 type Props = {
   pvl: ProjectVectorLayer
@@ -89,7 +91,20 @@ const downloadWfs = async ({ pvl, store }: Props) => {
     })
     return false
   }
-  const features = res.data?.features ?? []
+  let features
+  const isXml = pvl.output_format.toLowerCase().includes('gml')
+  if (isXml) {
+    const parser = new window.DOMParser()
+    const parsedXml = xmlToJson(parser.parseFromString(res.data, 'text/html'))
+    const xmlFeatures =
+      parsedXml?.HTML?.BODY?.['WFS:FEATURECOLLECTION']?.['WFS:MEMBER']
+    features = xmlFeatures.map((xmlFeature) =>
+      featureFromWfsGml({ xmlFeature, typeName: pvl.type_name }),
+    )
+  } else {
+    features = res.data?.features ?? []
+  }
+  // console.log('downloadWfs, features:', features)
   // 3. build PVLGeoms
   const pvlGeoms = features.map(
     (feature) =>
@@ -101,7 +116,6 @@ const downloadWfs = async ({ pvl, store }: Props) => {
   // 5. add statistics to pvl
   const geometries = features.map((f) => f.geometry)
   const geomTypes = countBy(geometries, 'type')
-  //  Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon
   //  Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon
   const typeCounts = {
     feature_count: geometries.length,
