@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef } from 'react'
+import React, { useEffect, useCallback, useRef, useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
@@ -61,33 +61,57 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
   const lineCount = layer?.line_count
   const polygonCount = layer?.polygon_count
 
-  const criteria = tableId
-    ? { table_id: tableId }
-    : projectVectorLayerId
-    ? { project_vector_layer_id: projectVectorLayerId }
-    : 'none'
-  const row: Row = useLiveQuery(async () => {
-    let _row: Row = await dexie.layer_styles.get(criteria)
-    // console.log('LayerStyle, querying row, _row:', _row)
-    // create layer_style for this table / project_vector_layer
-    // IF it does not yet exist
-    if (!_row) {
-      _row = await insertLayerStyle({
-        tableId,
-        projectVectorLayerId,
-      })
-      /**
-       * TODO:
-       * somehow this is FUCKED UP
-       * first call returns undefined
-       * second: already exists...
-       */
-      // console.log('LayerStyle, querying row, _row after inserting:', _row)
-      // _row = await dexie.layer_styles.get(criteria)
-    }
+  const criteria = useMemo(
+    () =>
+      tableId
+        ? { table_id: tableId }
+        : projectVectorLayerId
+        ? { project_vector_layer_id: projectVectorLayerId }
+        : 'none',
+    [projectVectorLayerId, tableId],
+  )
+  const row: LayerStyle = useLiveQuery(
+    async () => {
+      const _row: LayerStyle = await dexie.layer_styles.get(criteria)
 
-    return _row
-  }, [projectVectorLayerId, tableId])
+      // create layer_style for this table / project_vector_layer
+      // IF it does not yet exist
+      // if (!_row) {
+      //   _row = await insertLayerStyle({
+      //     tableId,
+      //     projectVectorLayerId,
+      //   })
+      //   /**
+      //    * somehow this is FUCKED UP
+      //    * first call returns undefined
+      //    * second: already exists...
+      //    * Unable to add key to index 'project_vector_layer_id': at least one key does not satisfy the uniqueness requirements
+      //    */
+      // }
+
+      return _row
+    },
+    [projectVectorLayerId, tableId],
+    // pass value to be used on first render
+    null,
+  )
+
+  useEffect(() => {
+    const run = async () => {
+      if (row === null) {
+        // first: check DOUBLE if not already exists
+        const layerStyle: LayerStyle = await dexie.layer_styles.get(criteria)
+        if (!layerStyle) {
+          console.log('inserting new layer_style')
+          insertLayerStyle({
+            tableId,
+            projectVectorLayerId,
+          })
+        }
+      }
+    }
+    run()
+  }, [criteria, projectVectorLayerId, row, tableId])
 
   const originalRow = useRef<LayerStyle>()
   const rowState = useRef<LayerStyle>()
@@ -98,11 +122,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
     }
   }, [row])
 
-  // console.log('LayerStyleForm rendering', {
-  //   row,
-  //   projectVectorLayerId,
-  //   criteria,
-  // })
+  // console.log('LayerStyleForm rendering, row:', row)
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
