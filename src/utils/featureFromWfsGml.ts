@@ -32,6 +32,11 @@ const featureFromWfsGml = ({ xmlFeature, typeName }) => {
   const gml5 = gml4[gml5Key]?.['#text']
   // console.log('featureFromWfsGml, gml5:', gml5)
   const geometryType = gml2Key?.replace('GML:', '')
+  const coordinates = gml5
+    .split(' ')
+    .filter((o) => !!o)
+    .reverse()
+  console.log('featureFromWfsGml, coordinates:', coordinates)
 
   const feature = {
     type: 'Feature',
@@ -41,8 +46,8 @@ const featureFromWfsGml = ({ xmlFeature, typeName }) => {
         t.toLowerCase().includes(geometryType?.toLowerCase?.()),
       ),
       coordinates: geometryType?.toLowerCase?.().includes('multi')
-        ? [gml5.split(' ').reverse()]
-        : gml5.split(' ').reverse(),
+        ? [coordinates]
+        : coordinates,
     },
   }
 

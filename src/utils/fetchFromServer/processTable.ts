@@ -67,6 +67,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
   // 4. update dexie with these changes
   //    Some tables have extra data - needs to be preserved
   if (data) {
+    console.log('processTable, got data for:', tableNameForDexie)
     // 4.1 keep values of local fields
     if (
       ['project_tile_layers', 'project_vector_layers'].includes(
@@ -75,14 +76,18 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
     ) {
       for (const d of data) {
         const existing = await dexie[tableNameForDexie].get(d.id)
+        console.log('processTable, existing:', existing)
         const localFields = Object.keys(existing).filter((key) =>
           key.startsWith('_'),
         )
-        if (!localFields.length) break
+        console.log('processTable, localFields:', localFields)
+        // if (!localFields.length) break
         const incoming = {
           ...d,
         }
+        console.log('processTable, incoming:', incoming)
         localFields.forEach((f) => (incoming[f] = existing?.[f]))
+        console.log('processTable, incoming with local fields:', incoming)
         await dexie[tableNameForDexie].put(incoming)
       }
     } else {
@@ -149,7 +154,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
     }
     if (tableName === 'project_vector_layers') {
       for (const d of data) {
-        if (!d?.wms_base_url) break
+        if (!d?.url) break
         if (d?._layerOptions?.length) break
         getCapabilitiesDataForVectorLayer({ row: d })
       }

@@ -30,7 +30,7 @@ const Value = styled.div`
   overflow-wrap: anywhere;
 `
 
-const WMSPopup = ({ layersData, mapSize = {} }) => (
+const Popup = ({ layersData, mapSize = {} }) => (
   <Container maxheight={mapSize.y - 40} maxwidth={mapSize.x - 60}>
     {layersData.map((ld) => (
       <div key={ld.label}>
@@ -54,4 +54,4 @@ const WMSPopup = ({ layersData, mapSize = {} }) => (
   </Container>
 )
 
-export default WMSPopup
+export default Popup

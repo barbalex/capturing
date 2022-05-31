@@ -26,7 +26,7 @@ import {
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
-import CheckboxGroup from '../../shared/CheckboxGroup'
+import Select from '../../shared/Select'
 import MultiSelect from '../../shared/MultiSelect'
 import ToggleButtonGroup from '../../shared/ToggleButtonGroup'
 import LayerStyle from '../../LayerStyle'
@@ -158,7 +158,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
       let newValue = type === 'number' ? valueAsNumber : value
       if ([undefined, '', NaN].includes(newValue)) newValue = null
       if (field === 'type_name') {
-        newValue = value?.filter((v) => !!v)?.join(',')
+        newValue = value?.filter?.((v) => !!v)?.join(',')
       }
 
       // return if value has not changed
@@ -221,12 +221,12 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
   // const showDeleted = filter?.project_vector_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
-  // console.log('ProjectVectorLayer rendering', {
-  //   row,
-  //   loadingCapabilities,
-  //   type_name: row?.type_name,
-  //   _layerOptions: row?._layerOptions,
-  // })
+  console.log('ProjectVectorLayer rendering', {
+    row,
+    loadingCapabilities,
+    type_name: row?.type_name,
+    _layerOptions: row?._layerOptions,
+  })
 
   if (!row) return <Spinner />
 
@@ -316,8 +316,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                         }
                       />
                     )}
-                    {(!row._layerOptions ||
-                      row._layerOptions?.length === 0) && (
+                    {[0, undefined].includes(row._layerOptions?.length) && (
                       <TextField
                         key={`${row.id}type_name`}
                         name="type_name"
@@ -340,22 +339,26 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                       />
                     )}
                     {row._outputFormatOptions?.length > 0 && (
-                      <RadioButtonGroup
+                      <Select
                         key={`${row.id}output_format/cb`}
-                        value={row.output_format}
                         name="output_format"
-                        dataSource={row._outputFormatOptions}
-                        onBlur={onBlur}
+                        value={row.output_format}
+                        field="output_format"
                         label="Daten-Format"
-                        helperText="Nur JSON-Formate können verwendet werden"
+                        options={row._outputFormatOptions}
+                        saveToDb={onBlur}
                         error={errors?.project_tile_layer?.output_format}
+                        disabled={!userMayEdit}
+                        helperText="JSON-Formate sind optimal, gml-Formate funktionieren nur zum Teil"
                       />
                     )}
-                    {row._outputFormatOptions?.length === 0 && (
+                    {[0, undefined].includes(
+                      row._outputFormatOptions?.length,
+                    ) && (
                       <TextField
                         key={`${row.id}output_format`}
                         name="output_format"
-                        label="Format (GeoJSON wählen)"
+                        label="Daten-Format"
                         value={row.output_format}
                         onBlur={onBlur}
                         error={errors?.project_vector_layer?.output_format}

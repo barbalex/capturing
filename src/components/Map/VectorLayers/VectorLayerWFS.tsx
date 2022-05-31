@@ -154,7 +154,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
     loadingNotifIds.current = [loadingNotifId, ...loadingNotifIds.current]
   }
 
-  console.log('VectorLayerWFS, data:', data)
+  // console.log('VectorLayerWFS, data:', data)
   const mapSize = map.getSize()
 
   return (

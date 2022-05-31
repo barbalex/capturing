@@ -12,6 +12,7 @@ import {
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 import Popup from '../Popup'
 import storeContext from '../../../storeContext'
+import MapErrorBoundary from '../../../components/shared/MapErrorBoundary'
 
 // const bboxBuffer = 0.01
 
@@ -131,24 +132,26 @@ const VectorLayerComponent = ({ layer }: Props) => {
   const mapSize = map.getSize()
 
   return (
-    <GeoJSON
-      key={data?.length ?? 0}
-      data={data}
-      opacity={layer.opacity}
-      style={layerstyleToProperties({ layerStyle })}
-      onEachFeature={(feature, _layer) => {
-        const layersData = [
-          {
-            label: layer.label,
-            properties: Object.entries(feature?.properties ?? {}),
-          },
-        ]
-        const popupContent = ReactDOMServer.renderToString(
-          <Popup layersData={layersData} mapSize={mapSize} />,
-        )
-        _layer.bindPopup(popupContent)
-      }}
-    />
+    <MapErrorBoundary layer={layer}>
+      <GeoJSON
+        key={data?.length ?? 0}
+        data={data}
+        opacity={layer.opacity}
+        style={layerstyleToProperties({ layerStyle })}
+        onEachFeature={(feature, _layer) => {
+          const layersData = [
+            {
+              label: layer.label,
+              properties: Object.entries(feature?.properties ?? {}),
+            },
+          ]
+          const popupContent = ReactDOMServer.renderToString(
+            <Popup layersData={layersData} mapSize={mapSize} />,
+          )
+          _layer.bindPopup(popupContent)
+        }}
+      />
+    </MapErrorBoundary>
   )
 }
 
