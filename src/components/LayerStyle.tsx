@@ -165,174 +165,172 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
         <TitleRow>
           <Title>Geometrien stylen</Title>
         </TitleRow>
-        {!!row && (
-          <FieldsContainer
-            onBlur={(e) => {
-              if (!e.currentTarget.contains(e.relatedTarget)) {
-                // focus left the container
-                // https://github.com/facebook/react/issues/6410#issuecomment-671915381
-                updateOnServer()
-              }
-            }}
-          >
-            {showDeleted && (
-              <Checkbox2States
-                label="gelöscht"
-                name="deleted"
-                value={row.deleted}
+        <FieldsContainer
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget)) {
+              // focus left the container
+              // https://github.com/facebook/react/issues/6410#issuecomment-671915381
+              updateOnServer()
+            }
+          }}
+        >
+          {showDeleted && (
+            <Checkbox2States
+              label="gelöscht"
+              name="deleted"
+              value={row.deleted}
+              onBlur={onBlur}
+              // error={errors?.project?.deleted}
+              disabled={!userMayEdit}
+            />
+          )}
+          {pointCount !== 0 && (
+            <>
+              <TextField
+                name="icon_url"
+                label="URL für Punkt-Icon"
+                value={row.icon_url}
                 onBlur={onBlur}
-                // error={errors?.project?.deleted}
+                // error={errors?.project?.icon_url}
                 disabled={!userMayEdit}
               />
-            )}
-            {pointCount !== 0 && (
-              <>
-                <TextField
-                  name="icon_url"
-                  label="URL für Punkt-Icon"
-                  value={row.icon_url}
+              <TextField
+                name="icon_retina_url"
+                label="URL für Punkt-Icon, hochauflösend"
+                value={row.icon_retina_url}
+                onBlur={onBlur}
+                // error={errors?.project?.icon_retina_url}
+              />
+              <TextField
+                name="icon_size"
+                label="Icon Grösse (in Bild-Punkten)"
+                value={row.icon_size}
+                onBlur={onBlur}
+                // error={errors?.project?.icon_size}
+                type="number"
+                disabled={!userMayEdit}
+              />
+            </>
+          )}
+          {(lineCount !== 0 || polygonCount !== 0) && (
+            <>
+              <ColorPicker
+                id={`${row.id}/color`}
+                label="Linien: Farbe"
+                onBlur={onBlur}
+                color={row.color}
+                name="color"
+                disabled={!userMayEdit}
+              />
+              <TextField
+                name="weight"
+                label="Linien: Breite (in Bild-Punkten)"
+                value={row.weight}
+                onBlur={onBlur}
+                // error={errors?.project?.weight}
+                type="number"
+                disabled={!userMayEdit}
+              />
+              <TextField
+                name="opacity"
+                label="Linien: Deckkraft / Opazität"
+                value={row.opacity}
+                onBlur={onBlur}
+                // error={errors?.project?.opacity}
+                type="number"
+                disabled={!userMayEdit}
+              />
+              <div>
+                <RadioButtonGroup
+                  name="line_cap"
+                  value={row.line_cap}
+                  field="line_cap"
+                  label="Linien: Abschluss"
+                  dataSource={lineCapValues}
                   onBlur={onBlur}
-                  // error={errors?.project?.icon_url}
+                  // error={errors?.field?.line_cap}
                   disabled={!userMayEdit}
                 />
-                <TextField
-                  name="icon_retina_url"
-                  label="URL für Punkt-Icon, hochauflösend"
-                  value={row.icon_retina_url}
+              </div>
+              <div>
+                <RadioButtonGroup
+                  name="line_join"
+                  value={row.line_join}
+                  field="line_join"
+                  label="Linien: Ecken"
+                  dataSource={lineJoinValues}
                   onBlur={onBlur}
-                  // error={errors?.project?.icon_retina_url}
-                />
-                <TextField
-                  name="icon_size"
-                  label="Icon Grösse (in Bild-Punkten)"
-                  value={row.icon_size}
-                  onBlur={onBlur}
-                  // error={errors?.project?.icon_size}
-                  type="number"
+                  // error={errors?.field?.line_join}
                   disabled={!userMayEdit}
                 />
-              </>
-            )}
-            {(lineCount !== 0 || polygonCount !== 0) && (
-              <>
-                <ColorPicker
-                  id={`${row.id}/color`}
-                  label="Linien: Farbe"
+              </div>
+              <TextField
+                name="dash_array"
+                label="Linien: Dash-Array"
+                value={row.dash_array}
+                onBlur={onBlur}
+                // error={errors?.project?.dash_array}
+                disabled={!userMayEdit}
+              />
+              <TextField
+                name="dash_offset"
+                label="Linien: Dash-Offset"
+                value={row.dash_offset}
+                onBlur={onBlur}
+                // error={errors?.project?.dash_offset}
+                disabled={!userMayEdit}
+              />
+            </>
+          )}
+          {polygonCount !== 0 && (
+            <>
+              <Checkbox2States
+                label="(Umriss-)Linien zeichnen (Polygone und Kreise)"
+                name="stroke"
+                value={row.stroke}
+                onBlur={onBlur}
+                // error={errors?.project?.stroke}
+              />
+              <Checkbox2States
+                label="Flächen füllen"
+                name="fill"
+                value={row.fill}
+                onBlur={onBlur}
+                // error={errors?.project?.fill}
+                disabled={!userMayEdit}
+              />
+              <ColorPicker
+                id={`${row.id}/fill_color`}
+                label="Füllung: Farbe"
+                name="fill_color"
+                onBlur={onBlur}
+                color={row.fill_color}
+                disabled={!userMayEdit}
+              />
+              <TextField
+                name="fill_opacity"
+                label="Füllung: Deckkraft / Opazität"
+                value={row.fill_opacity}
+                onBlur={onBlur}
+                // error={errors?.project?.fill_opacity}
+                type="number"
+                disabled={!userMayEdit}
+              />
+              <div>
+                <RadioButtonGroup
+                  name="fill_rule"
+                  value={row.fill_rule}
+                  field="fill_rule"
+                  label="Füllung: Regel, um den Inhalt von Flächen zu bestimmen"
+                  dataSource={fillRuleValues}
                   onBlur={onBlur}
-                  color={row.color}
-                  name="color"
+                  // error={errors?.field?.fill_rule}
                   disabled={!userMayEdit}
                 />
-                <TextField
-                  name="weight"
-                  label="Linien: Breite (in Bild-Punkten)"
-                  value={row.weight}
-                  onBlur={onBlur}
-                  // error={errors?.project?.weight}
-                  type="number"
-                  disabled={!userMayEdit}
-                />
-                <TextField
-                  name="opacity"
-                  label="Linien: Deckkraft / Opazität"
-                  value={row.opacity}
-                  onBlur={onBlur}
-                  // error={errors?.project?.opacity}
-                  type="number"
-                  disabled={!userMayEdit}
-                />
-                <div>
-                  <RadioButtonGroup
-                    name="line_cap"
-                    value={row.line_cap}
-                    field="line_cap"
-                    label="Linien: Abschluss"
-                    dataSource={lineCapValues}
-                    onBlur={onBlur}
-                    // error={errors?.field?.line_cap}
-                    disabled={!userMayEdit}
-                  />
-                </div>
-                <div>
-                  <RadioButtonGroup
-                    name="line_join"
-                    value={row.line_join}
-                    field="line_join"
-                    label="Linien: Ecken"
-                    dataSource={lineJoinValues}
-                    onBlur={onBlur}
-                    // error={errors?.field?.line_join}
-                    disabled={!userMayEdit}
-                  />
-                </div>
-                <TextField
-                  name="dash_array"
-                  label="Linien: Dash-Array"
-                  value={row.dash_array}
-                  onBlur={onBlur}
-                  // error={errors?.project?.dash_array}
-                  disabled={!userMayEdit}
-                />
-                <TextField
-                  name="dash_offset"
-                  label="Linien: Dash-Offset"
-                  value={row.dash_offset}
-                  onBlur={onBlur}
-                  // error={errors?.project?.dash_offset}
-                  disabled={!userMayEdit}
-                />
-              </>
-            )}
-            {polygonCount !== 0 && (
-              <>
-                <Checkbox2States
-                  label="(Umriss-)Linien zeichnen (Polygone und Kreise)"
-                  name="stroke"
-                  value={row.stroke}
-                  onBlur={onBlur}
-                  // error={errors?.project?.stroke}
-                />
-                <Checkbox2States
-                  label="Flächen füllen"
-                  name="fill"
-                  value={row.fill}
-                  onBlur={onBlur}
-                  // error={errors?.project?.fill}
-                  disabled={!userMayEdit}
-                />
-                <ColorPicker
-                  id={`${row.id}/fill_color`}
-                  label="Füllung: Farbe"
-                  name="fill_color"
-                  onBlur={onBlur}
-                  color={row.fill_color}
-                  disabled={!userMayEdit}
-                />
-                <TextField
-                  name="fill_opacity"
-                  label="Füllung: Deckkraft / Opazität"
-                  value={row.fill_opacity}
-                  onBlur={onBlur}
-                  // error={errors?.project?.fill_opacity}
-                  type="number"
-                  disabled={!userMayEdit}
-                />
-                <div>
-                  <RadioButtonGroup
-                    name="fill_rule"
-                    value={row.fill_rule}
-                    field="fill_rule"
-                    label="Füllung: Regel, um den Inhalt von Flächen zu bestimmen"
-                    dataSource={fillRuleValues}
-                    onBlur={onBlur}
-                    // error={errors?.field?.fill_rule}
-                    disabled={!userMayEdit}
-                  />
-                </div>
-              </>
-            )}
-          </FieldsContainer>
-        )}
+              </div>
+            </>
+          )}
+        </FieldsContainer>
       </Container>
     </ErrorBoundary>
   )
