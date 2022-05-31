@@ -733,7 +733,7 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     const was = { ...this }
     this.deleted = 1
-    dexie.project_vector_layers.put(this)
+    dexie.project_vector_layers.update(this.id, { deleted: 1 })
     this.updateOnServer({ was, is: this, session })
 
     // if layer_style exists, also delete
