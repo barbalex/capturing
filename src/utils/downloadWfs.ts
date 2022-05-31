@@ -116,9 +116,7 @@ const downloadWfs = async ({ pvl, store }: Props) => {
     ),
   }
   // console.log('downloadWfs, typeCounts:', typeCounts)
-  const upToDatePvl = await dexie.project_vector_layers.get(pvl.id)
-  const newPvl = { ...upToDatePvl, ...typeCounts }
-  await dexie.project_vector_layers.put(newPvl)
+  await dexie.project_vector_layers.update(pvl.id, typeCounts)
 
   // 6. clean up
   removeNotificationById(loadingNotifId)

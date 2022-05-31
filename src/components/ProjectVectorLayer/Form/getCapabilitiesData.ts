@@ -81,9 +81,7 @@ const getCapabilitiesDataForVectorLayer = async ({ row }) => {
       }))
   }
 
-  const uptoDateRow = await dexie.project_vector_layers.get(row.id)
-  const newValue = { ...uptoDateRow, ...values }
-  await dexie.project_vector_layers.put(newValue)
+  await dexie.project_vector_layers.update(row.id, values)
 
   // console.log('pvl, getCapabilitiesData, values:', values)
 

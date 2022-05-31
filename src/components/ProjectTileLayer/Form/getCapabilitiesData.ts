@@ -138,11 +138,7 @@ const getCapabilitiesData = async ({ row }: Props) => {
       values.wms_info_format = preferedFormat
     }
   }
-
-  const uptoDateRow = await dexie.project_tile_layers.get(row.id)
-
-  const newValue = { ...uptoDateRow, ...values }
-  await dexie.project_tile_layers.put(newValue)
+  await dexie.project_tile_layers.update(row.id, values)
 
   return
 }
