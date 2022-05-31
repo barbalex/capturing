@@ -79,8 +79,8 @@ const getCapabilitiesDataForVectorLayer = async ({ row }) => {
       )
       .filter((l) =>
         preferredOutputFormat
-          ? l.OUTPUTFORMATS?.FORMAT?.map((f) => f?.['#text'])?.includes(
-              preferredOutputFormat,
+          ? l.OUTPUTFORMATS?.FORMAT?.map((f) =>
+              acceptableOutputFormats.includes(f?.['#text']),
             )
           : true,
       )
@@ -90,9 +90,19 @@ const getCapabilitiesDataForVectorLayer = async ({ row }) => {
       }))
   }
 
+  // activate layer, if only one
+  if (
+    !row?.type_name &&
+    values._layerOptions?.map &&
+    values._layerOptions?.length === 1
+  ) {
+    values.type_name = values._layerOptions.map((o) => o.value).join(',')
+    values.active = true
+  }
+
   await dexie.project_vector_layers.update(row.id, values)
 
-  // console.log('pvl, getCapabilitiesData, values:', values)
+  console.log('pvl, getCapabilitiesData, values:', values)
 
   return
 }
