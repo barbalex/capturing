@@ -53,6 +53,9 @@ const MapLegends = () => {
 
   const legends = useMemo(() => {
     const _legends = []
+    // TODO:
+    // add legends of tables
+    // add legends of vector layers
     for (const row: ProjectTileLayer of validTileLayers) {
       for (const legend of row?._wmsLegends ?? []) {
         let objectUrl
