@@ -116,50 +116,52 @@ const FieldsComponent = () => {
       <Container showfilter={false}>
         <Title />
         <RowsContainer>
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable
-              droppableId="droppable"
-              mode="virtual"
-              renderClone={(provided, snapshot, rubric) => (
-                <Item
-                  provided={provided}
-                  isDragging={snapshot.isDragging}
-                  item={items[rubric.source.index]}
-                  project={project}
-                />
-              )}
-            >
-              {(provided) => (
-                <Virtuoso
-                  components={{
-                    Item: HeightPreservingItem,
-                  }}
-                  scrollerRef={provided.innerRef}
-                  data={items}
-                  height={formHeight}
-                  totalCount={items.length}
-                  itemContent={(index, item) => {
-                    return (
-                      <Draggable
-                        draggableId={item.id}
-                        index={index}
-                        key={item.id}
-                      >
-                        {(provided) => (
-                          <Item
-                            provided={provided}
-                            item={item}
-                            isDragging={false}
-                            project={project}
-                          />
-                        )}
-                      </Draggable>
-                    )
-                  }}
-                />
-              )}
-            </Droppable>
-          </DragDropContext>
+          {!!items.length && (
+            <DragDropContext onDragEnd={onDragEnd}>
+              <Droppable
+                droppableId="droppable"
+                mode="virtual"
+                renderClone={(provided, snapshot, rubric) => (
+                  <Item
+                    provided={provided}
+                    isDragging={snapshot.isDragging}
+                    item={items[rubric.source.index]}
+                    project={project}
+                  />
+                )}
+              >
+                {(provided) => (
+                  <Virtuoso
+                    components={{
+                      Item: HeightPreservingItem,
+                    }}
+                    scrollerRef={provided.innerRef}
+                    data={items}
+                    height={formHeight}
+                    totalCount={items.length}
+                    itemContent={(index, item) => {
+                      return (
+                        <Draggable
+                          draggableId={item.id}
+                          index={index}
+                          key={item.id}
+                        >
+                          {(provided) => (
+                            <Item
+                              provided={provided}
+                              item={item}
+                              isDragging={false}
+                              project={project}
+                            />
+                          )}
+                        </Draggable>
+                      )
+                    }}
+                  />
+                )}
+              </Droppable>
+            </DragDropContext>
+          )}
         </RowsContainer>
       </Container>
     </ErrorBoundary>

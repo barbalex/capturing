@@ -132,7 +132,6 @@ const TablesComponent = () => {
         </TitleContainer>
         <RowsContainer>
           <Virtuoso
-            //initialTopMostItemIndex={initialTopMostIndex}
             height={formHeight}
             totalCount={tables.length}
             itemContent={(index) => {
