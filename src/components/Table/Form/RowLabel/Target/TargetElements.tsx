@@ -9,6 +9,7 @@ import BetweenCharactersElement from '../BetweenCharacters'
 
 const TargetContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   flex-grow: 1;
   min-height: 42px;
