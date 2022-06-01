@@ -14,7 +14,8 @@ const LegendsContainer = styled.div`
 `
 const Legend = styled.div`
   padding: 5px 10px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  ${(props) =>
+    !props['data-last'] && `border-bottom: 1px solid rgba(0, 0, 0, 0.1);`}
 `
 const Label = styled.div`
   cursor: text;
