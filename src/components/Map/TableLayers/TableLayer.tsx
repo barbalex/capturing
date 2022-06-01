@@ -40,6 +40,13 @@ const TableLayer = ({ data, style, table }) => {
         )
         _layer.bindPopup(popupContent)
       }}
+      pointToLayer={(geoJsonPoint, latlng) => {
+        // TODO:
+        // depending on settings in LayerStyle, use circleMarker or marker
+        // and choose markers?
+        // return L.marker(latlng)
+        return L.circleMarker(latlng, { ...style, radius: 8 })
+      }}
     />
   )
 }
