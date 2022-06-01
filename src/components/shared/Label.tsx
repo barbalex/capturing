@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const StyledLabel = styled.div`
+const StyledLabel = styled.div` 
   margin-top: 10px;
   cursor: text;
   font-size: 12px;

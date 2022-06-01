@@ -5,14 +5,33 @@ import { useParams } from 'react-router-dom'
 import { useMap } from 'react-leaflet'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
-import Label from '../../shared/Label'
 import { dexie, ProjectTileLayer } from '../../../dexieClient'
 
 const LegendsContainer = styled.div`
-  padding: 10px;
   max-height: ${(props) => `${props.maxheight}px`};
   max-width: ${(props) => `${props.maxwidth}px`};
   overflow: auto;
+`
+const Legend = styled.div`
+  padding: 5px 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+`
+const Label = styled.div`
+  cursor: text;
+  font-size: 12px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  user-select: none;
+`
+const Title = styled.div`
+  margin-top: 2px;
+  cursor: text;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  user-select: none;
+  padding-bottom: 8px;
 `
 
 // = '99999999-9999-9999-9999-999999999999'
@@ -69,7 +88,8 @@ const MapLegends = () => {
             error,
           )
         }
-        if (objectUrl) _legends.push({ title: legend[0], blob: objectUrl })
+        if (objectUrl)
+          _legends.push({ title: legend[0], blob: objectUrl, label: row.label })
       }
     }
     return _legends
@@ -78,12 +98,16 @@ const MapLegends = () => {
   return (
     <ErrorBoundary>
       <LegendsContainer maxheight={mapSize.y - 70} maxwidth={mapSize.x - 45}>
-        {(legends ?? []).map((legend) => {
+        {(legends ?? []).map((legend, index) => {
           return (
-            <div key={legend.title}>
-              <Label label={legend.title} />
+            <Legend
+              key={`${legend.label}/${legend.title}`}
+              data-last={index === legends.length - 1}
+            >
+              <Label>{legend.label}</Label>
+              <Title>{legend.title}</Title>
               {!!legend.blob && <img src={legend.blob} />}
-            </div>
+            </Legend>
           )
         })}
       </LegendsContainer>
