@@ -119,7 +119,6 @@ const TablesComponent = () => {
               title="neue Tabelle"
               onClick={add}
               size="large"
-              // TODO: get users role for this project
               disabled={!userMayEdit}
             >
               <FaPlus />
