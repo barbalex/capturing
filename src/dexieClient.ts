@@ -737,10 +737,10 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     this.updateOnServer({ was, is: this, session })
 
     // if layer_style exists, also delete
-    const lSt = await dexie.layer_styles.get({
+    const layerStyle = await dexie.layer_styles.get({
       project_vector_layer_id: this.id,
     })
-    if (lSt) await lSt.deleteOnServerAndClient({ session })
+    if (layerStyle) await layerStyle.deleteOnServerAndClient({ session })
     return
   }
 }
