@@ -67,7 +67,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
   // 4. update dexie with these changes
   //    Some tables have extra data - needs to be preserved
   if (data) {
-    console.log('processTable, got data for:', tableNameForDexie)
+    // console.log('processTable, got data for:', tableNameForDexie)
     // 4.1 keep values of local fields
     if (
       ['project_tile_layers', 'project_vector_layers'].includes(
