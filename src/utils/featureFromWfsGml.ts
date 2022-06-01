@@ -36,7 +36,7 @@ const featureFromWfsGml = ({ xmlFeature, typeName }) => {
     .split(' ')
     .filter((o) => !!o)
     .reverse()
-  console.log('featureFromWfsGml, coordinates:', coordinates)
+  // console.log('featureFromWfsGml, coordinates:', coordinates)
 
   const feature = {
     type: 'Feature',
