@@ -138,7 +138,7 @@ export class Field implements IField {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     const was = { ...this }
     this.deleted = 1
-    dexie.fields.put(this)
+    dexie.fields.update(this.id, { deleted: 1 })
     return this.updateOnServer({ was, is: this, session })
   }
 }
@@ -267,7 +267,7 @@ export class FileMeta implements IFileMeta {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     const was = { ...this }
     this.deleted = 1
-    dexie.files_meta.put(this)
+    dexie.files_meta.update(this.id, { deleted: 1 })
     return this.updateOnServer({ was, is: this, session })
   }
 }
@@ -594,7 +594,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     const was = { ...this }
     this.deleted = 1
-    dexie.project_tile_layers.put(this)
+    dexie.project_tile_layers.update(this.id, { deleted: 1 })
     return this.updateOnServer({ was, is: this, session })
   }
 }
@@ -828,7 +828,7 @@ export class PVLGeom implements IPVLGeom {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     const was = { ...this }
     this.deleted = 1
-    dexie.pvl_geoms.put(this)
+    dexie.pvl_geoms.update(this.id, { deleted: 1 })
     return this.updateOnServer({ was, is: this, session })
   }
 }
@@ -956,7 +956,7 @@ export class LayerStyle implements ILayerStyle {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     const was = { ...this }
     this.deleted = 1
-    dexie.layer_styles.put(this)
+    dexie.layer_styles.update(this.id, { deleted: 1 })
     return this.updateOnServer({ was, is: this, session })
   }
 }
@@ -1027,7 +1027,7 @@ export class ProjectUser implements IProjectUser {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     const was = { ...this }
     this.deleted = 1
-    dexie.project_users.put(this)
+    dexie.project_users.update(this.id, { deleted: 1 })
     return this.updateOnServer({ was, is: this, session })
   }
 }
@@ -1104,7 +1104,7 @@ export class Project implements IProject {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     const was = { ...this }
     this.deleted = 1
-    dexie.projects.put(this)
+    dexie.projects.update(this.id, { deleted: 1 })
     return this.updateOnServer({ was, is: this, session })
   }
 }
@@ -1244,7 +1244,7 @@ export class Row implements IRow {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     const was = { ...this }
     this.deleted = 1
-    dexie.rows.put(this)
+    dexie.rows.update(this.id, { deleted: 1 })
     return this.updateOnServer({ was, is: this, session })
   }
 }
@@ -1333,7 +1333,7 @@ export class Table implements ITable {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     const was = { ...this }
     this.deleted = 1
-    dexie.ttables.put(this)
+    dexie.ttables.update(this.id, { deleted: 1 })
     return this.updateOnServer({ was, is: this, session })
   }
 }
