@@ -30,6 +30,7 @@ const Control = ({ children, position, visible = true }) => {
   const ref = useRef()
   useEffect(() => {
     L.DomEvent.disableClickPropagation(ref.current)
+    L.DomEvent.disableScrollPropagation(ref.current)
   }, [])
 
   return (
