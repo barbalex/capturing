@@ -25,12 +25,13 @@ const BetweenCharacters = ({ el, rowState, index, children }) => {
     (event) => {
       const clonedRowLabel = [...rowState.current.row_label]
       clonedRowLabel[index].text = event.target.value
+      const newRowLabel = clonedRowLabel.length ? clonedRowLabel : null
       const newRow = {
         ...rowState.current,
-        row_label: clonedRowLabel.length ? clonedRowLabel : null,
+        row_label: newRowLabel,
       }
       rowState.current = newRow
-      dexie.ttables.put(newRow)
+      dexie.ttables.update(rowState.current.id, { row_label: newRowLabel })
     },
     [index, rowState],
   )
