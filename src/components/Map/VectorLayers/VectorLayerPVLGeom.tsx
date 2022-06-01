@@ -47,7 +47,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
       // console.log('VectorLayerPVLGeom fetching data')
       removeNotifs()
       const loadingNotifId = addNotification({
-        message: `Lade Vektor-Karte ${layer.label}...`,
+        message: `Lade Vektor-Karte '${layer.label}'...`,
         type: 'info',
         duration: 100000,
       })
@@ -121,7 +121,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
       title: `Zuviele Geometrien`,
       message: `Die maximale Anzahl Features von ${
         layer.max_features ?? 1000
-      } für Vektor-Karte ${layer.label} wurde geladen. Zoomen sie näher ran`,
+      } für Vektor-Karte '${layer.label}' wurde geladen. Zoomen sie näher ran`,
       type: 'warning',
     })
     loadingNotifIds.current = [loadingNotifId, ...loadingNotifIds.current]

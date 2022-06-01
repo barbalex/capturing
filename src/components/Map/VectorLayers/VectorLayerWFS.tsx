@@ -62,7 +62,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
       // const mapSize = map.getSize()
       removeNotifs()
       const loadingNotifId = addNotification({
-        message: `Lade Geometrien für ${layer.label}...`,
+        message: `Lade Geometrien für '${layer.label}'...`,
         type: 'info',
         duration: 1000000,
       })
@@ -101,7 +101,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
         setError(error.data)
         addNotification({
           title: `Fehler beim Laden der Geometrien für ${layer.label}`,
-          message: `Status ${error?.status}, ${error?.statusText}, Daten: ${error?.data}, Typ: ${error?.type}`,
+          message: error.message,
         })
         return false
       }
@@ -148,7 +148,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
       title: `Zuviele Geometrien`,
       message: `Die maximale Anzahl Features von ${
         layer.max_features ?? 1000
-      } für Vektor-Karte ${layer.label} wurde geladen. Zoomen sie näher ran`,
+      } für Vektor-Karte '${layer.label}' wurde geladen. Zoomen sie näher ran`,
       type: 'warning',
     })
     loadingNotifIds.current = [loadingNotifId, ...loadingNotifIds.current]

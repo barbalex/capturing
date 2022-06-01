@@ -2,7 +2,7 @@ import axios from 'redaxios'
 import countBy from 'lodash/countBy'
 import sumBy from 'lodash/sumBy'
 
-import { dexie, PVLGeom, ProjectVectorLayer } from '../dexieClient' 
+import { dexie, PVLGeom, ProjectVectorLayer } from '../dexieClient'
 import xmlToJson from './xmlToJson'
 import featureFromWfsGml from './featureFromWfsGml'
 
@@ -27,7 +27,7 @@ const downloadWfs = async ({ pvl, store }: Props) => {
     //   output_format: pvl.output_format,
     // })
     addNotification({
-      title: `Geometrien für ${pvl.label} können nicht geladen werden`,
+      title: `Geometrien für '${pvl.label}' können nicht geladen werden`,
       message: `Es fehlen benötigte Angaben. Bitte konfigurieren Sie den WFS`,
       type: 'warning',
     })
@@ -37,7 +37,7 @@ const downloadWfs = async ({ pvl, store }: Props) => {
   await dexie.pvl_geoms.where({ deleted: 0, pvl_id: pvl.id }).delete()
   // 2. fetch features
   const loadingNotifId = addNotification({
-    message: `Lade Geometrien für ${pvl.label}...`,
+    message: `Lade Geometrien für '${pvl.label}'...`,
     type: 'info',
     duration: 1000000,
   })
@@ -56,38 +56,11 @@ const downloadWfs = async ({ pvl, store }: Props) => {
       },
     })
   } catch (error) {
-    // TODO:
-    // try finding edge cases and check if errors are correctly surfaced
     removeNotificationById(loadingNotifId)
-    console.error('DownloadPVL, error:', {
-      url: error?.url,
-      error,
-      status: error?.status,
-      statusText: error?.statusText,
-      data: error?.data,
-      type: error?.type,
-    })
-    // console.log(`error fetching ${row.label}`, error?.toJSON())
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.error(error.response.data)
-      console.error(error.response.status)
-      console.error(error.response.headers)
-    } else if (error.request) {
-      // The request was made but no response was received
-      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-      // http.ClientRequest in node.js
-      console.error(error.request)
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.error('Error', error.message)
-    }
-    // console.log(error.config)
-
     addNotification({
-      title: `Fehler beim Laden der Geometrien für ${pvl.label}`,
-      message: `Status ${error?.status}, ${error?.statusText}, Daten: ${error?.data}, Typ: ${error?.type}`,
+      title: `Fehler beim Laden der Geometrien für '${pvl.label}'`,
+      message: error.message,
+      duration: 20000,
     })
     return false
   }
