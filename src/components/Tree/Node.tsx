@@ -5,8 +5,6 @@ import {
 } from 'react-icons/md'
 import IconButton from '@mui/material/IconButton'
 import styled from 'styled-components'
-import isUuid from 'is-uuid'
-import last from 'lodash/last'
 import isEqual from 'lodash/isEqual'
 import { useNavigate } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
@@ -66,7 +64,6 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     activeNodeArray.slice(0, data.activeNodeArray.length),
     data.activeNodeArray.slice(),
   )
-  // const isActive = data.id === last(activeNodeArray.filter((e) => isUuid.v1(e)))
   const isActive = isEqual(data.activeNodeArray, activeNodeArray)
 
   const userMayEditStructure: boolean = useLiveQuery(async () => {
