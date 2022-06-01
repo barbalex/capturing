@@ -69,7 +69,7 @@ const MapLegends = () => {
             error,
           )
         }
-        if (objectUrl) _legends.push([legend[0], objectUrl])
+        if (objectUrl) _legends.push({ title: legend[0], blob: objectUrl })
       }
     }
     return _legends
@@ -78,11 +78,11 @@ const MapLegends = () => {
   return (
     <ErrorBoundary>
       <LegendsContainer maxheight={mapSize.y - 70} maxwidth={mapSize.x - 45}>
-        {(legends ?? []).map(([title, blob]) => {
+        {(legends ?? []).map((legend) => {
           return (
-            <div key={title}>
-              <Label label={title} />
-              {!!blob && <img src={blob} />}
+            <div key={legend.title}>
+              <Label label={legend.title} />
+              {!!legend.blob && <img src={legend.blob} />}
             </div>
           )
         })}
