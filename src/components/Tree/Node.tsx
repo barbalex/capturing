@@ -48,6 +48,7 @@ const ProjectEditIconButton = styled(IconButton)`
 `
 
 const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
+  // console.log('Node', { data, state, tree, handlers })
   const session: Session = supabase.auth.session()
   const navigate = useNavigate()
 
