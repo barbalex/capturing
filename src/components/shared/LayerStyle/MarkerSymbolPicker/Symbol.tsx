@@ -14,8 +14,8 @@ const Symbol = ({ Component, name, onBlur, active }) => {
     return (
       <Component
         style={{
-          backgroundColor: active ? 'rgba(74, 20, 140, 0.1)' : 'unset',
-          outline: active ? '2px solid rgba(74, 20, 140, 1)' : 'unset',
+          backgroundColor: 'rgba(74, 20, 140, 0.1)',
+          outline: '2px solid rgba(74, 20, 140, 1)',
         }}
       />
     )
