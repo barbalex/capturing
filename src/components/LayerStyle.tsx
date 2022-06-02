@@ -15,6 +15,7 @@ import {
   LineCapEnum,
   LineJoinEnum,
   FillRuleEnum,
+  MarkerTypeEnum,
 } from '../dexieClient'
 import { supabase } from '../supabaseClient'
 import TextField from './shared/TextField'
@@ -22,6 +23,11 @@ import RadioButtonGroup from './shared/RadioButtonGroup'
 import insertLayerStyle from '../utils/insertLayerStyle'
 
 import constants from '../utils/constants'
+
+const markerTypeGerman = {
+  circle: 'Kreis',
+  marker: 'Symbol',
+}
 
 const Container = styled.div`
   margin: 25px -10px 0 -10px;
@@ -176,6 +182,10 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
     value: v,
     label: v,
   }))
+  const markerTypeValues = Object.values(MarkerTypeEnum).map((v) => ({
+    value: v,
+    label: markerTypeGerman[v],
+  }))
 
   if (!row) return null // no spinner as is null until enough data input
 
@@ -206,6 +216,29 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
           )}
           {pointCount !== 0 && (
             <>
+              <div>
+                <RadioButtonGroup
+                  name="marker_type"
+                  value={row.marker_type}
+                  field="marker_type"
+                  label="Punkt-Typ"
+                  dataSource={markerTypeValues}
+                  onBlur={onBlur}
+                  // error={errors?.field?.marker_type}
+                  disabled={!userMayEdit}
+                />
+              </div>
+              {row.marker_type === 'circle' && (
+                <TextField
+                  name="circle_marker_radius"
+                  label="Kreis-Radius in Bild-Punkten"
+                  value={row.circle_marker_radius}
+                  onBlur={onBlur}
+                  // error={errors?.project?.circle_marker_radius}
+                  type="number"
+                  disabled={!userMayEdit}
+                />
+              )}
               <TextField
                 name="icon_url"
                 label="URL für Punkt-Icon"
