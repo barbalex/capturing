@@ -164,7 +164,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
               radius: layerStyle.circle_marker_radius ?? 8,
             })
           }
-          const Component = icons[layerStyle.marker_symbol]
+          const Component = icons[layerStyle.marker_symbol] ?? icons.MdPlace
           return L.marker(latlng, {
             icon: new L.divIcon({
               html: ReactDOMServer.renderToString(
