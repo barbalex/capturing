@@ -73,10 +73,10 @@ const VectorLayerComponent = ({ layer }: Props) => {
         properties: pvlGeom.properties,
       }))
       removeNotifs()
-      setData(data)
       const _layerStyle: LayerStyle = await dexie.layer_styles.get({
         project_vector_layer_id: layer.id,
       })
+      setData(data)
       setLayerStyle(_layerStyle)
       setZoom(map.getZoom())
     },
@@ -128,6 +128,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
   }
 
   if (!data?.length) return null
+  if (!layerStyle) return null
 
   const mapSize = map.getSize()
 
@@ -149,6 +150,19 @@ const VectorLayerComponent = ({ layer }: Props) => {
             <Popup layersData={layersData} mapSize={mapSize} />,
           )
           _layer.bindPopup(popupContent)
+        }}
+        pointToLayer={(geoJsonPoint, latlng) => {
+          // depending on settings in LayerStyle, use circleMarker or marker
+          // and choose markers?
+          const marker =
+            layerStyle?.marker_type === 'marker'
+              ? L.marker(latlng)
+              : L.circleMarker(latlng, {
+                  ...layerStyle,
+                  radius: layerStyle?.circle_marker_radius ?? 8,
+                })
+
+          return marker
         }}
       />
     </MapErrorBoundary>
