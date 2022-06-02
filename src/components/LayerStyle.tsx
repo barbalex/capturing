@@ -265,16 +265,18 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
               />
             </>
           )}
+          {(lineCount !== 0 || polygonCount !== 0 || pointCount !== 0) && (
+            <ColorPicker
+              id={`${row.id}/color`}
+              label="Linien und Punkt-Symbole: Farbe"
+              onBlur={onBlur}
+              color={row.color}
+              name="color"
+              disabled={!userMayEdit}
+            />
+          )}
           {(lineCount !== 0 || polygonCount !== 0) && (
             <>
-              <ColorPicker
-                id={`${row.id}/color`}
-                label="Linien: Farbe"
-                onBlur={onBlur}
-                color={row.color}
-                name="color"
-                disabled={!userMayEdit}
-              />
               <TextField
                 name="weight"
                 label="Linien: Breite (in Bild-Punkten)"
