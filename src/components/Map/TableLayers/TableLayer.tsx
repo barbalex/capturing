@@ -3,12 +3,20 @@ import { GeoJSON, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
 
 import Popup from '../Popup'
+import { LayerStyle, Table } from '../../../dexieClient'
 
 /**
  * ref is to ensure layer is updated when data changes
  * https://github.com/PaulLeCam/react-leaflet/issues/332#issuecomment-731379795
  */
-const TableLayer = ({ data, style, table }) => {
+type Props = {
+  data: any
+  style: any
+  table: Table
+  layerStyle: LayerStyle
+}
+
+const TableLayer = ({ data, style, table, layerStyle }: Props) => {
   const map = useMap()
   const mapSize = map.getSize()
 
@@ -41,11 +49,17 @@ const TableLayer = ({ data, style, table }) => {
         _layer.bindPopup(popupContent)
       }}
       pointToLayer={(geoJsonPoint, latlng) => {
-        // TODO:
         // depending on settings in LayerStyle, use circleMarker or marker
         // and choose markers?
-        // return L.marker(latlng)
-        return L.circleMarker(latlng, { ...style, radius: 8 })
+        const marker =
+          layerStyle.marker_type === 'circle'
+            ? L.circleMarker(latlng, {
+                ...style,
+                radius: layerStyle.circle_marker_radius ?? 8,
+              })
+            : L.marker(latlng)
+
+        return marker
       }}
     />
   )

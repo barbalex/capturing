@@ -55,6 +55,7 @@ const TableLayers = () => {
             data={data}
             table={table}
             style={getStyle}
+            layerStyle={layerStyle}
           />,
         )
       }
