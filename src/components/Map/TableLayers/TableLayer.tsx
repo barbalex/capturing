@@ -32,7 +32,7 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
 
   return (
     <GeoJSON
-      key={`${table.id}/${layerStyle.marker_symbol}/${layerStyle?.marker_size}/${layerStyle?.color}`}
+      key={`${table.id}/${layerStyle.marker_symbol}/${layerStyle?.marker_size}/${layerStyle?.color}/${layerStyle?.opacity}`}
       data={data}
       style={style}
       ref={ref}
@@ -51,8 +51,7 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
         _layer.bindPopup(popupContent)
       }}
       pointToLayer={(geoJsonPoint, latlng) => {
-        // depending on settings in LayerStyle, use circleMarker or marker
-        // and choose markers?
+        // TODO: add font-weight setting
         if (layerStyle.marker_type === 'circle') {
           return L.circleMarker(latlng, {
             ...style,
