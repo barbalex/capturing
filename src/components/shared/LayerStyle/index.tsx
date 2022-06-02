@@ -240,7 +240,6 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                   disabled={!userMayEdit}
                 />
               )}
-              {/* TODO: add symbol picker to set marker_symbol */}
               {row.marker_type === 'marker' && (
                 <>
                   <MarkerSymbolPicker
@@ -264,7 +263,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
             <>
               <ColorPicker
                 id={`${row.id}/color`}
-                label="Linien und Punkt-Symbole: Farbe"
+                label="Linien und Punkte: Farbe"
                 onBlur={onBlur}
                 color={row.color}
                 name="color"
@@ -272,7 +271,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
               />
               <TextField
                 name="opacity"
-                label="Linien und Punkt-Symbole: Deckkraft"
+                label="Linien und Punkte: Deckkraft"
                 value={row.opacity}
                 onBlur={onBlur}
                 // error={errors?.project?.opacity}
