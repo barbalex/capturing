@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { GeoJSON, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
-import { MdFilterCenterFocus } from 'react-icons/md'
+import * as icons from 'react-icons/md'
 
 import Popup from '../Popup'
 import { LayerStyle, Table } from '../../../dexieClient'
@@ -32,6 +32,7 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
 
   return (
     <GeoJSON
+      key={`${table.id}/${layerStyle.marker_symbol}/${layerStyle?.marker_size}/${layerStyle?.color}`}
       data={data}
       style={style}
       ref={ref}
@@ -52,29 +53,26 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
       pointToLayer={(geoJsonPoint, latlng) => {
         // depending on settings in LayerStyle, use circleMarker or marker
         // and choose markers?
-        const marker =
-          layerStyle.marker_type === 'circle'
-            ? L.circleMarker(latlng, {
-                ...style,
-                radius: layerStyle.circle_marker_radius ?? 8,
-              })
-            : L.marker(latlng, {
-                // icon: new L.Icon.Default(),
-                // TODO: choose icon and it's size from setting in layerStyle
-                icon: new L.divIcon({
-                  html: ReactDOMServer.renderToString(
-                    <MdFilterCenterFocus
-                      style={{
-                        color: layerStyle?.color,
-                        fontSize: `${layerStyle?.marker_size ?? 16}px`,
-                      }}
-                    />,
-                  ),
-                }),
-                opacity: layerStyle.opacity,
-              })
-
-        return marker
+        if (layerStyle.marker_type === 'circle') {
+          return L.circleMarker(latlng, {
+            ...style,
+            radius: layerStyle.circle_marker_radius ?? 8,
+          })
+        }
+        const Component = icons[layerStyle.marker_symbol]
+        return L.marker(latlng, {
+          icon: new L.divIcon({
+            html: ReactDOMServer.renderToString(
+              <Component
+                style={{
+                  color: layerStyle?.color,
+                  fontSize: `${layerStyle?.marker_size ?? 16}px`,
+                }}
+              />,
+            ),
+          }),
+          opacity: layerStyle.opacity,
+        })
       }}
     />
   )
