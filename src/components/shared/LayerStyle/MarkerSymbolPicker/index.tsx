@@ -2,16 +2,25 @@ import React, { useMemo } from 'react'
 import * as icons from 'react-icons/md'
 import styled from 'styled-components'
 
+import Label from '../../Label'
+import Symbol from './Symbol'
+
 const SymbolContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   height: 500px;
   overflow: auto;
+  > svg {
+    font-size: x-large;
+    padding: 3px;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(74, 20, 140, 0.1);
+    }
+  }
 `
 
-import Label from '../Label'
-
-const MarkerSymbolPicker = () => {
+const MarkerSymbolPicker = ({ onBlur, value }) => {
   // console.log('MarkerSymbolPicker, images:', icons)
   const wantedIconKeys = useMemo(
     () =>
@@ -21,7 +30,7 @@ const MarkerSymbolPicker = () => {
         .filter((key) => !key.endsWith('KPlus')),
     [],
   )
-  console.log('MarkerSymbolPicker, wantedIconKeys:', wantedIconKeys)
+  // console.log('MarkerSymbolPicker, wantedIconKeys:', wantedIconKeys)
 
   return (
     <>
@@ -31,9 +40,12 @@ const MarkerSymbolPicker = () => {
           const Component = icons[key]
 
           return (
-            <Component
+            <Symbol
               key={key}
-              style={{ fontSize: 'x-large', padding: '3px', cursor: 'hand' }}
+              Component={Component}
+              name={key}
+              onBlur={onBlur}
+              active={value === key}
             />
           )
         })}

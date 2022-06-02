@@ -243,7 +243,10 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
               {/* TODO: add symbol picker to set marker_symbol */}
               {row.marker_type === 'marker' && (
                 <>
-                  <MarkerSymbolPicker />
+                  <MarkerSymbolPicker
+                    onBlur={onBlur}
+                    value={row.marker_symbol}
+                  />
                   <TextField
                     name="marker_size"
                     label="Symbol-Grösse (in Bild-Punkten)"
