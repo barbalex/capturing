@@ -10,6 +10,8 @@ const SymbolContainer = styled.div`
   flex-wrap: wrap;
   height: 500px;
   overflow: auto;
+  outline: 1px solid rgba(74, 20, 140, 0.1);
+  margin-bottom: 19px;
   > svg {
     font-size: x-large;
     padding: 4px;
@@ -34,7 +36,7 @@ const MarkerSymbolPicker = ({ onBlur, value }) => {
 
   return (
     <>
-      <Label label="Symbol wählen" />
+      <Label label="Symbol" />
       <SymbolContainer>
         {wantedIconKeys.map((key) => {
           const Component = icons[key]
