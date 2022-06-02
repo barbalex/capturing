@@ -2,7 +2,7 @@ import { useEffect, useState, useContext, useRef, useCallback } from 'react'
 import { GeoJSON, useMapEvent, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
 import { useDebouncedCallback } from 'use-debounce'
-import { MdFilterCenterFocus } from 'react-icons/md'
+import * as icons from 'react-icons/md'
 
 import {
   dexie,
@@ -136,7 +136,11 @@ const VectorLayerComponent = ({ layer }: Props) => {
   return (
     <MapErrorBoundary layer={layer}>
       <GeoJSON
-        key={data?.length ?? 0}
+        key={`${layer.id}/${layerStyle.marker_symbol}/${
+          layerStyle?.marker_size
+        }/${layerStyle?.color}/${layerStyle?.opacity}/${
+          layerStyle?.marker_type
+        }/${data?.length ?? 0}`}
         data={data}
         opacity={layer.opacity}
         style={layerstyleToProperties({ layerStyle })}
@@ -153,29 +157,27 @@ const VectorLayerComponent = ({ layer }: Props) => {
           _layer.bindPopup(popupContent)
         }}
         pointToLayer={(geoJsonPoint, latlng) => {
-          // depending on settings in LayerStyle, use circleMarker or marker
-          // and choose markers?
-          const marker =
-            layerStyle?.marker_type === 'marker'
-              ? L.marker(latlng, {
-                  icon: new L.divIcon({
-                    html: ReactDOMServer.renderToString(
-                      <MdFilterCenterFocus
-                        style={{
-                          color: layerStyle?.color,
-                          fontSize: `${layerStyle?.marker_size ?? 16}px`,
-                        }}
-                      />,
-                    ),
-                  }),
-                  opacity: layer.opacity * layerStyle.opacity,
-                })
-              : L.circleMarker(latlng, {
-                  ...layerStyle,
-                  radius: layerStyle?.circle_marker_radius ?? 8,
-                })
-
-          return marker
+          // TODO: add font-weight setting
+          if (layerStyle.marker_type === 'circle') {
+            return L.circleMarker(latlng, {
+              ...layerStyle,
+              radius: layerStyle.circle_marker_radius ?? 8,
+            })
+          }
+          const Component = icons[layerStyle.marker_symbol]
+          return L.marker(latlng, {
+            icon: new L.divIcon({
+              html: ReactDOMServer.renderToString(
+                <Component
+                  style={{
+                    color: layerStyle?.color,
+                    fontSize: `${layerStyle?.marker_size ?? 16}px`,
+                  }}
+                />,
+              ),
+            }),
+            opacity: layerStyle.opacity,
+          })
         }}
       />
     </MapErrorBoundary>
