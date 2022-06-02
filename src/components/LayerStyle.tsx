@@ -266,14 +266,25 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
             </>
           )}
           {(lineCount !== 0 || polygonCount !== 0 || pointCount !== 0) && (
-            <ColorPicker
-              id={`${row.id}/color`}
-              label="Linien und Punkt-Symbole: Farbe"
-              onBlur={onBlur}
-              color={row.color}
-              name="color"
-              disabled={!userMayEdit}
-            />
+            <>
+              <ColorPicker
+                id={`${row.id}/color`}
+                label="Linien und Punkt-Symbole: Farbe"
+                onBlur={onBlur}
+                color={row.color}
+                name="color"
+                disabled={!userMayEdit}
+              />
+              <TextField
+                name="opacity"
+                label="Linien und Punkt-Symbole: Deckkraft"
+                value={row.opacity}
+                onBlur={onBlur}
+                // error={errors?.project?.opacity}
+                type="number"
+                disabled={!userMayEdit}
+              />
+            </>
           )}
           {(lineCount !== 0 || polygonCount !== 0) && (
             <>
@@ -283,15 +294,6 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                 value={row.weight}
                 onBlur={onBlur}
                 // error={errors?.project?.weight}
-                type="number"
-                disabled={!userMayEdit}
-              />
-              <TextField
-                name="opacity"
-                label="Linien: Deckkraft / Opazität"
-                value={row.opacity}
-                onBlur={onBlur}
-                // error={errors?.project?.opacity}
                 type="number"
                 disabled={!userMayEdit}
               />

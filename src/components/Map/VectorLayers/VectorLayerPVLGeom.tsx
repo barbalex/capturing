@@ -2,6 +2,7 @@ import { useEffect, useState, useContext, useRef, useCallback } from 'react'
 import { GeoJSON, useMapEvent, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
 import { useDebouncedCallback } from 'use-debounce'
+import { MdFilterCenterFocus } from 'react-icons/md'
 
 import {
   dexie,
@@ -157,7 +158,14 @@ const VectorLayerComponent = ({ layer }: Props) => {
           const marker =
             layerStyle?.marker_type === 'marker'
               ? L.marker(latlng, {
-                  opacity: layer.opacity,
+                  icon: new L.divIcon({
+                    html: ReactDOMServer.renderToString(
+                      <MdFilterCenterFocus
+                        style={{ color: layerStyle?.color, fontSize: '30px' }}
+                      />,
+                    ),
+                  }),
+                  opacity: layer.opacity * layerStyle.opacity,
                 })
               : L.circleMarker(latlng, {
                   ...layerStyle,

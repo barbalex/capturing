@@ -68,6 +68,7 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
                     />,
                   ),
                 }),
+                opacity: layerStyle.opacity,
               })
 
         return marker
