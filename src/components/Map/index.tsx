@@ -33,6 +33,11 @@ const StyledMapContainer = styled(MapContainer)`
     user-select: none !important;
   }
 
+  .leaflet-div-icon {
+    background: rgba(0, 0, 0, 0);
+    border: none;
+  }
+
   @media print {
     height: 100%;
     width: 100%;
