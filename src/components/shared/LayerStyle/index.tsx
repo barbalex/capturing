@@ -6,9 +6,9 @@ import { Session } from '@supabase/supabase-js'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 
-import Checkbox2States from './shared/Checkbox2States'
-import ErrorBoundary from './shared/ErrorBoundary'
-import ColorPicker from './shared/ColorPicker'
+import Checkbox2States from '../Checkbox2States'
+import ErrorBoundary from '../ErrorBoundary'
+import ColorPicker from '../ColorPicker'
 import {
   dexie,
   LayerStyle,
@@ -16,13 +16,14 @@ import {
   LineJoinEnum,
   FillRuleEnum,
   MarkerTypeEnum,
-} from '../dexieClient'
-import { supabase } from '../supabaseClient'
-import TextField from './shared/TextField'
-import RadioButtonGroup from './shared/RadioButtonGroup'
-import insertLayerStyle from '../utils/insertLayerStyle'
+} from '../../../dexieClient'
+import { supabase } from '../../../supabaseClient'
+import TextField from '../TextField'
+import RadioButtonGroup from '../RadioButtonGroup'
+import insertLayerStyle from '../../../utils/insertLayerStyle'
+import MarkerSymbolPicker from './MarkerSymbolPicker'
 
-import constants from '../utils/constants'
+import constants from '../../../utils/constants'
 
 const markerTypeGerman = {
   circle: 'Kreis',
@@ -240,15 +241,20 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                 />
               )}
               {/* TODO: add symbol picker to set marker_symbol */}
-              <TextField
-                name="marker_size"
-                label="Icon Grösse (in Bild-Punkten)"
-                value={row.marker_size}
-                onBlur={onBlur}
-                // error={errors?.project?.marker_size}
-                type="number"
-                disabled={!userMayEdit}
-              />
+              {row.marker_type === 'marker' && (
+                <>
+                  <MarkerSymbolPicker />
+                  <TextField
+                    name="marker_size"
+                    label="Symbol-Grösse (in Bild-Punkten)"
+                    value={row.marker_size}
+                    onBlur={onBlur}
+                    // error={errors?.project?.marker_size}
+                    type="number"
+                    disabled={!userMayEdit}
+                  />
+                </>
+              )}
             </>
           )}
           {(lineCount !== 0 || polygonCount !== 0 || pointCount !== 0) && (

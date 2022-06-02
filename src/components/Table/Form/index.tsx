@@ -27,7 +27,7 @@ import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import RelTypePopover from './RelTypePopover'
 import RowLabel from './RowLabel'
-import LayerStyle from '../../LayerStyle'
+import LayerStyle from '../../shared/LayerStyle'
 
 const FieldsContainer = styled.div`
   padding: 10px;
