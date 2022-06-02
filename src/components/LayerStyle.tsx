@@ -239,27 +239,13 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                   disabled={!userMayEdit}
                 />
               )}
+              {/* TODO: add symbol picker to set marker_symbol */}
               <TextField
-                name="icon_url"
-                label="URL für Punkt-Icon"
-                value={row.icon_url}
-                onBlur={onBlur}
-                // error={errors?.project?.icon_url}
-                disabled={!userMayEdit}
-              />
-              <TextField
-                name="icon_retina_url"
-                label="URL für Punkt-Icon, hochauflösend"
-                value={row.icon_retina_url}
-                onBlur={onBlur}
-                // error={errors?.project?.icon_retina_url}
-              />
-              <TextField
-                name="icon_size"
+                name="marker_size"
                 label="Icon Grösse (in Bild-Punkten)"
-                value={row.icon_size}
+                value={row.marker_size}
                 onBlur={onBlur}
-                // error={errors?.project?.icon_size}
+                // error={errors?.project?.marker_size}
                 type="number"
                 disabled={!userMayEdit}
               />

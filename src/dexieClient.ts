@@ -843,9 +843,8 @@ export interface ILayerStyle {
   project_vector_layer_id?: string
   marker_type?: MarkerTypeEnum
   circle_marker_radius?: number
-  icon_url?: string
-  icon_retina_url?: string
-  icon_size?: number
+  marker_symbol?: string
+  marker_size?: number
   stroke?: number
   color?: string
   weight?: number
@@ -875,9 +874,8 @@ export class LayerStyle implements ILayerStyle {
   project_vector_layer_id?: string
   marker_type?: MarkerTypeEnum
   circle_marker_radius?: number
-  icon_url?: string
-  icon_retina_url?: string
-  icon_size?: number
+  marker_symbol?: string
+  marker_size?: number
   stroke?: number
   color?: string
   weight?: number
@@ -901,9 +899,8 @@ export class LayerStyle implements ILayerStyle {
     project_vector_layer_id?: string,
     marker_type?: MarkerTypeEnum,
     circle_marker_radius?: number,
-    icon_url?: string,
-    icon_retina_url?: string,
-    icon_size?: number,
+    marker_symbol?: string,
+    marker_size?: number,
     stroke?: number,
     color?: string,
     weight?: number,
@@ -927,9 +924,8 @@ export class LayerStyle implements ILayerStyle {
       this.project_vector_layer_id = project_vector_layer_id
     this.marker_type = marker_type ?? 'circle'
     this.circle_marker_radius = circle_marker_radius ?? 8
-    if (icon_url) this.icon_url = icon_url
-    if (icon_retina_url) this.icon_retina_url = icon_retina_url
-    if (icon_size) this.icon_size = icon_size
+    if (marker_symbol) this.marker_symbol = marker_symbol
+    this.marker_size = marker_size ?? 16
     this.stroke = stroke ?? 1
     this.color = color ?? '#ff0000'
     this.weight = weight ?? 3
@@ -1590,7 +1586,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(40).stores({
+    this.version(41).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:

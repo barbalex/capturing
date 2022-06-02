@@ -64,7 +64,10 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
                 icon: new L.divIcon({
                   html: ReactDOMServer.renderToString(
                     <MdFilterCenterFocus
-                      style={{ color: layerStyle?.color, fontSize: '30px' }}
+                      style={{
+                        color: layerStyle?.color,
+                        fontSize: `${layerStyle?.marker_size ?? 16}px`,
+                      }}
                     />,
                   ),
                 }),

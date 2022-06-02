@@ -801,9 +801,8 @@ CREATE TABLE layer_styles (
   project_vector_layer_id uuid UNIQUE DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
   marker_type marker_type_enum DEFAULT 'circle',
   circle_marker_radius integer DEFAULT 8,
-  icon_url text DEFAULT NULL,
-  icon_retina_url text DEFAULT NULL,
-  icon_size integer[] DEFAULT NULL,
+  marker_symbol text default null,
+  marker_size integer DEFAULT 16,
   stroke integer DEFAULT 1,
   color text DEFAULT '#3388ff',
   weight integer DEFAULT 3,
@@ -822,6 +821,8 @@ CREATE TABLE layer_styles (
   deleted integer DEFAULT 0
 );
 
+alter table layer_styles add column marker_size integer DEFAULT 16;
+
 CREATE INDEX ON layer_styles USING btree (id);
 
 CREATE INDEX ON layer_styles USING btree (table_id);
@@ -834,11 +835,9 @@ COMMENT ON COLUMN layer_styles.id IS 'primary key';
 
 COMMENT ON COLUMN layer_styles.table_id IS 'associated table';
 
-COMMENT ON COLUMN layer_styles.icon_url IS '(required) The URL to the icon image (absolute or relative to your script path). https://leafletjs.com/reference.html#icon-iconurl';
+COMMENT ON COLUMN layer_styles.marker_symbol IS 'Name of the symbol used for the marker';
 
-COMMENT ON COLUMN layer_styles.icon_retina_url IS 'The URL to a retina sized version of the icon image (absolute or relative to your script path). Used for Retina screen devices. https://leafletjs.com/reference.html#icon-iconretinaurl';
-
-COMMENT ON COLUMN layer_styles.icon_size IS 'Size of the icon image in pixels. https://leafletjs.com/reference.html#icon-iconsize';
+COMMENT ON COLUMN layer_styles.marker_size IS 'Size in pixels of the symbol used for the marker. Defaults to 16';
 
 COMMENT ON COLUMN layer_styles.stroke IS 'Whether to draw stroke along the path. Set it to false to disable borders on polygons or circles. https://leafletjs.com/reference.html#path-stroke';
 

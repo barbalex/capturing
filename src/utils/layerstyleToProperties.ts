@@ -7,10 +7,8 @@ type Props = {
 const layerstyleToProperties = ({ layerStyle: style, extraProps }: Props) => {
   if (!style) return {}
 
+  // TODO: add missing styles for points?
   return {
-    ...(style.icon_url && { iconUrl: style.icon_url }),
-    ...(style.icon_retina_url && { iconRetinaUrl: style.icon_retina_url }),
-    ...(style.icon_size && { iconSize: style.icon_size }),
     ...(typeof style.stroke === 'number' && { stroke: style.stroke === 1 }),
     ...(style.color && { color: style.color }),
     ...(typeof style.weight === 'number' && { weight: style.weight }),
