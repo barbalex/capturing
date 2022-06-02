@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { GeoJSON, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
+import { MdFilterCenterFocus } from 'react-icons/md'
 
 import Popup from '../Popup'
 import { LayerStyle, Table } from '../../../dexieClient'
@@ -57,7 +58,17 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
                 ...style,
                 radius: layerStyle.circle_marker_radius ?? 8,
               })
-            : L.marker(latlng)
+            : L.marker(latlng, {
+                // icon: new L.Icon.Default(),
+                // TODO: choose icon and it's size from setting in layerStyle
+                icon: new L.divIcon({
+                  html: ReactDOMServer.renderToString(
+                    <MdFilterCenterFocus
+                      style={{ color: layerStyle?.color, fontSize: '30px' }}
+                    />,
+                  ),
+                }),
+              })
 
         return marker
       }}
