@@ -12,7 +12,7 @@ const SymbolContainer = styled.div`
   overflow: auto;
   > svg {
     font-size: x-large;
-    padding: 3px;
+    padding: 4px;
     cursor: pointer;
     &:hover {
       background-color: rgba(74, 20, 140, 0.1);

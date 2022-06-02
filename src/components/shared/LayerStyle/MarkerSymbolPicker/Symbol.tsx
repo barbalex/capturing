@@ -10,12 +10,18 @@ const Symbol = ({ Component, name, onBlur, active }) => {
     })
   }, [name, onBlur])
 
-  return (
-    <Component
-      onClick={onClick}
-      style={{ backgroundColor: active ? 'rgba(74, 20, 140, 0.1)' : 'unset' }}
-    />
-  )
+  if (active) {
+    return (
+      <Component
+        style={{
+          backgroundColor: active ? 'rgba(74, 20, 140, 0.1)' : 'unset',
+          outline: active ? '2px solid rgba(74, 20, 140, 1)' : 'unset',
+        }}
+      />
+    )
+  }
+
+  return <Component onClick={onClick} />
 }
 
 export default Symbol
