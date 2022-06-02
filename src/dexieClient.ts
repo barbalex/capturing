@@ -833,6 +833,11 @@ export class PVLGeom implements IPVLGeom {
   }
 }
 
+
+export enum MarkerTypeEnum {
+  circle = 'circle',
+  marker = 'marker',
+}
 export interface ILayerStyle {
   id: string
   table_id?: string

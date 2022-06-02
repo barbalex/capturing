@@ -800,7 +800,7 @@ CREATE TABLE layer_styles (
   table_id uuid UNIQUE DEFAULT NULL REFERENCES tables (id) ON DELETE CASCADE ON UPDATE CASCADE,
   project_vector_layer_id uuid UNIQUE DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
   marker_type marker_type_enum DEFAULT 'circle',
-  circle_radius integer DEFAULT 8,
+  circle_marker_radius integer DEFAULT 8,
   icon_url text DEFAULT NULL,
   icon_retina_url text DEFAULT NULL,
   icon_size integer[] DEFAULT NULL,
@@ -821,12 +821,6 @@ CREATE TABLE layer_styles (
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
 );
-
-ALTER TABLE layer_styles
-  ADD COLUMN marker_type marker_type_enum DEFAULT 'circle';
-
-ALTER TABLE layer_styles
-  ADD COLUMN circle_radius integer DEFAULT 8;
 
 CREATE INDEX ON layer_styles USING btree (id);
 
