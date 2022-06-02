@@ -156,7 +156,9 @@ const VectorLayerComponent = ({ layer }: Props) => {
           // and choose markers?
           const marker =
             layerStyle?.marker_type === 'marker'
-              ? L.marker(latlng)
+              ? L.marker(latlng, {
+                  opacity: layer.opacity,
+                })
               : L.circleMarker(latlng, {
                   ...layerStyle,
                   radius: layerStyle?.circle_marker_radius ?? 8,
