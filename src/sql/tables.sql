@@ -787,6 +787,11 @@ ALTER publication supabase_realtime
   ADD TABLE project_vector_layers;
 
 --
+CREATE TYPE marker_type_enum AS enum (
+  'circle',
+  'marker'
+);
+
 --
 DROP TABLE IF EXISTS layer_styles CASCADE;
 
@@ -794,6 +799,8 @@ CREATE TABLE layer_styles (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   table_id uuid UNIQUE DEFAULT NULL REFERENCES tables (id) ON DELETE CASCADE ON UPDATE CASCADE,
   project_vector_layer_id uuid UNIQUE DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  marker_type marker_type_enum DEFAULT 'circle',
+  circle_radius integer DEFAULT 8,
   icon_url text DEFAULT NULL,
   icon_retina_url text DEFAULT NULL,
   icon_size integer[] DEFAULT NULL,
@@ -815,11 +822,15 @@ CREATE TABLE layer_styles (
   deleted integer DEFAULT 0
 );
 
+ALTER TABLE layer_styles
+  ADD COLUMN marker_type marker_type_enum DEFAULT 'circle';
+
+ALTER TABLE layer_styles
+  ADD COLUMN circle_radius integer DEFAULT 8;
 
 CREATE INDEX ON layer_styles USING btree (id);
 
 CREATE INDEX ON layer_styles USING btree (table_id);
-
 
 CREATE INDEX ON layer_styles USING btree (deleted);
 
@@ -828,7 +839,6 @@ COMMENT ON TABLE layer_styles IS 'Goal: style table layers, project tile layers 
 COMMENT ON COLUMN layer_styles.id IS 'primary key';
 
 COMMENT ON COLUMN layer_styles.table_id IS 'associated table';
-
 
 COMMENT ON COLUMN layer_styles.icon_url IS '(required) The URL to the icon image (absolute or relative to your script path). https://leafletjs.com/reference.html#icon-iconurl';
 
