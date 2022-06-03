@@ -58,12 +58,12 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
       error,
     )
   }
-  if (tableName === 'rows') {
-    console.log(
-      `ServerSubscriber, last ${tableName} fetched from supabase:`,
-      data,
-    )
-  }
+  // if (tableName === 'rows') {
+  //   console.log(
+  //     `ServerSubscriber, last ${tableName} fetched from supabase:`,
+  //     data,
+  //   )
+  // }
   // 4. update dexie with these changes
   //    Some tables have extra data - needs to be preserved
   if (data) {
@@ -76,18 +76,18 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
     ) {
       for (const d of data) {
         const existing = await dexie[tableNameForDexie].get(d.id)
-        console.log('processTable, existing:', existing)
+        // console.log('processTable, existing:', existing)
         const localFields = Object.keys(existing).filter((key) =>
           key.startsWith('_'),
         )
-        console.log('processTable, localFields:', localFields)
+        // console.log('processTable, localFields:', localFields)
         // if (!localFields.length) break
         const incoming = {
           ...d,
         }
-        console.log('processTable, incoming:', incoming)
+        // console.log('processTable, incoming:', incoming)
         localFields.forEach((f) => (incoming[f] = existing?.[f]))
-        console.log('processTable, incoming with local fields:', incoming)
+        // console.log('processTable, incoming with local fields:', incoming)
         await dexie[tableNameForDexie].put(incoming)
       }
     } else {
