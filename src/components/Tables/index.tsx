@@ -54,14 +54,18 @@ const TablesComponent = () => {
   const navigate = useNavigate()
 
   const store = useContext(storeContext)
-  const { activeNodeArray, removeNode, formHeight } = store
+  const { activeNodeArray, removeNode, formHeight, editingProjects } = store
+  const editing = editingProjects.get(projectId)?.editing ?? false
+
+  const criteria = { deleted: 0, project_id: projectId }
+  if (!editing) criteria.type = 'standard'
 
   const data = useLiveQuery(async () => {
     const [tables, filteredCount, totalCount, projectUser, project] =
       await Promise.all([
-        dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
-        dexie.ttables.where({ deleted: 0, project_id: projectId }).count(), // TODO: pass in filter
-        dexie.ttables.where({ deleted: 0, project_id: projectId }).count(),
+        dexie.ttables.where(criteria).toArray(),
+        dexie.ttables.where(criteria).count(), // TODO: pass in filter
+        dexie.ttables.where(criteria).count(),
         dexie.project_users.get({
           project_id: projectId,
           user_email: session?.user?.email,
@@ -83,7 +87,7 @@ const TablesComponent = () => {
         'project_editor',
       ].includes(projectUser?.role),
     }
-  }, [projectId, session?.user?.email])
+  }, [projectId, session?.user?.email, criteria])
   const useLabels: boolean = data?.useLabels
   const tables: Table[] = data?.tables ?? []
   const filteredCount: integer = data?.filteredCount
