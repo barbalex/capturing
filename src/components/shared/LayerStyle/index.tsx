@@ -16,10 +16,12 @@ import {
   LineJoinEnum,
   FillRuleEnum,
   MarkerTypeEnum,
+  MarkerWeightEnum,
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../TextField'
 import RadioButtonGroup from '../RadioButtonGroup'
+import Select from '../Select'
 import insertLayerStyle from '../../../utils/insertLayerStyle'
 import MarkerSymbolPicker from './MarkerSymbolPicker'
 
@@ -187,6 +189,10 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
     value: v,
     label: markerTypeGerman[v],
   }))
+  const markerWeightValues = Object.values(MarkerWeightEnum).map((v) => ({
+    value: v,
+    label: v,
+  }))
 
   if (!row) return null // no spinner as is null until enough data input
 
@@ -248,12 +254,23 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                   />
                   <TextField
                     name="marker_size"
-                    label="Symbol-Grösse (in Bild-Punkten)"
+                    label="Symbol: Grösse (in Bild-Punkten)"
                     value={row.marker_size}
                     onBlur={onBlur}
                     // error={errors?.project?.marker_size}
                     type="number"
                     disabled={!userMayEdit}
+                  />
+                  <Select
+                    key={`${row.id}marker_weight/cb`}
+                    name="marker_weight"
+                    value={row.marker_weight}
+                    field="marker_weight"
+                    label="Symbol: (Linien-)Dicke"
+                    options={markerWeightValues}
+                    saveToDb={onBlur}
+                    disabled={!userMayEdit}
+                    helperText="100 ist dünn, 900 dick"
                   />
                 </>
               )}
