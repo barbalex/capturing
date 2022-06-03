@@ -77,6 +77,12 @@ export const MobxStore = types
     })
 
     return {
+      flyToMapBounds(bounds) {
+        // this exists because:
+        // zoom to row can be clicked BEFORE map was instantiated
+        // so need to fly to bounds after a timeout
+        self.map.flyToBounds(bounds)
+      },
       setHorizontalNavIds(val) {
         // console.log('store, setHorizontalNavIds, val:', val)
         if (!val) {

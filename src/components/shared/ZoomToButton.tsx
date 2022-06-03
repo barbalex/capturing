@@ -14,12 +14,12 @@ type Props = {
 
 const ZoomToButton = ({ bbox, geometryExists }: Props) => {
   const store = useContext(storeContext)
-  const { showMap, setShowMap, map } = store
+  const { showMap, setShowMap, flyToMapBounds } = store
 
   const onClick = useCallback(async () => {
     if (!showMap) setShowMap(true)
-    map.flyToBounds(boundsFromBbox(bbox))
-  }, [map, bbox, setShowMap, showMap])
+    setTimeout(() => flyToMapBounds(boundsFromBbox(bbox)))
+  }, [showMap, setShowMap, flyToMapBounds, bbox])
 
   return (
     <ErrorBoundary>
