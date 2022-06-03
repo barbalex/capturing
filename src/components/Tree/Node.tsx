@@ -21,8 +21,9 @@ const Container = styled.div``
 const Indent = styled.div`
   display: flex;
   align-items: center;
-  font-weight: ${(props) => (props.isInActiveNodeArray ? 'bold' : 'normal')};
-  ${(props) => props.isActive && 'color: red;'}
+  font-weight: ${(props) =>
+    props['data-inactivenodearray'] ? 'bold' : 'normal'};
+  ${(props) => props['data-active'] && 'color: red;'}
 `
 const Label = styled.div`
   font-size: 1em;
@@ -55,19 +56,45 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
 
   const store = useContext(storeContext)
   const {
-    activeNodeArray,
+    activeNodeArray: aNARaw,
     setActiveNodeArray,
     editingProjects,
     setProjectEditing,
     addNode,
     removeNodeWithChildren,
   } = store
+  const activeNodeArray = aNARaw.slice()
   const editing = editingProjects.get(projectId)?.editing ?? false
   const isInActiveNodeArray = isEqual(
     activeNodeArray.slice(0, data.activeNodeArray.length),
     data.activeNodeArray,
   )
-  const isActive = isEqual(data.activeNodeArray, activeNodeArray.slice())
+  let isActive = isEqual(data.activeNodeArray, activeNodeArray.slice())
+  // when not editing, other nodes in activeNodeArray may be active:
+  if (
+    data.type === 'project' &&
+    !editing &&
+    isInActiveNodeArray &&
+    activeNodeArray.length < 4
+  ) {
+    isActive = true
+  }
+  if (
+    data.type === 'table' &&
+    !editing &&
+    isInActiveNodeArray &&
+    activeNodeArray.length === 5
+  ) {
+    isActive = true
+  }
+
+  console.log('Node', {
+    data,
+    editing,
+    isActive,
+    activeNodeArray: activeNodeArray.slice(),
+    isInActiveNodeArray,
+  })
 
   const userMayEditStructure: boolean = useLiveQuery(async () => {
     const projectUser = await dexie.project_users.get({
@@ -173,9 +200,9 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     <Container ref={innerRef} style={styles.row}>
       <Indent
         style={styles.indent}
-        isInActiveNodeArray={isInActiveNodeArray}
+        data-inactivenodearray={isInActiveNodeArray}
         isSelected={state.isSelected}
-        isActive={isActive}
+        data-active={isActive}
         onClick={onClickIndent}
       >
         <IconButton
