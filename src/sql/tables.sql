@@ -791,18 +791,6 @@ CREATE TYPE marker_type_enum AS enum (
   'circle',
   'marker'
 );
-CREATE TYPE marker_weight_enum AS enum (
-  '100',
-  '200',
-  '300',
-  '400',
-  '500',
-  '600',
-  '700',
-  '800',
-  '900'
-);
-
 --
 DROP TABLE IF EXISTS layer_styles CASCADE;
 
@@ -814,7 +802,7 @@ CREATE TABLE layer_styles (
   circle_marker_radius integer DEFAULT 8,
   marker_symbol text default null,
   marker_size integer DEFAULT 16,
-  marker_weight marker_weight_enum DEFAULT '400',
+  marker_weight integer DEFAULT null,
   stroke integer DEFAULT 1,
   color text DEFAULT '#3388ff',
   weight integer DEFAULT 3,
@@ -833,7 +821,7 @@ CREATE TABLE layer_styles (
   deleted integer DEFAULT 0
 );
 
-alter table layer_styles add column marker_weight marker_weight_enum DEFAULT '400';
+alter table layer_styles add column marker_weight integer DEFAULT null;
 
 CREATE INDEX ON layer_styles USING btree (id);
 

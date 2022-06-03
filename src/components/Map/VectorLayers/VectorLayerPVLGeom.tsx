@@ -3,6 +3,7 @@ import { GeoJSON, useMapEvent, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
 import { useDebouncedCallback } from 'use-debounce'
 import * as icons from 'react-icons/md'
+import styled from 'styled-components'
 
 import {
   dexie,
@@ -140,7 +141,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
           layerStyle?.marker_size
         }/${layerStyle?.color}/${layerStyle?.opacity}/${
           layerStyle?.marker_type
-        }/${data?.length ?? 0}`}
+        }/${layerStyle?.marker_weight}/${data?.length ?? 0}`}
         data={data}
         opacity={layer.opacity}
         style={layerstyleToProperties({ layerStyle })}
@@ -164,7 +165,14 @@ const VectorLayerComponent = ({ layer }: Props) => {
               radius: layerStyle.circle_marker_radius ?? 8,
             })
           }
-          const Component = icons[layerStyle.marker_symbol] ?? icons.MdPlace
+          let Component = icons[layerStyle.marker_symbol] ?? icons.MdPlace
+          if (layerStyle.marker_weight) {
+            Component = styled(Component)`
+              path:nth-of-type(2) {
+                stroke-width: ${layerStyle.marker_weight};
+              }
+            `
+          }
           return L.marker(latlng, {
             icon: new L.divIcon({
               html: ReactDOMServer.renderToString(

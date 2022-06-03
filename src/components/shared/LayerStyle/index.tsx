@@ -16,12 +16,12 @@ import {
   LineJoinEnum,
   FillRuleEnum,
   MarkerTypeEnum,
-  MarkerWeightEnum,
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../TextField'
 import RadioButtonGroup from '../RadioButtonGroup'
 import Select from '../Select'
+import Slider from '../Slider'
 import insertLayerStyle from '../../../utils/insertLayerStyle'
 import MarkerSymbolPicker from './MarkerSymbolPicker'
 
@@ -189,10 +189,6 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
     value: v,
     label: markerTypeGerman[v],
   }))
-  const markerWeightValues = Object.values(MarkerWeightEnum).map((v) => ({
-    value: v,
-    label: v,
-  }))
 
   if (!row) return null // no spinner as is null until enough data input
 
@@ -261,16 +257,16 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
                     type="number"
                     disabled={!userMayEdit}
                   />
-                  <Select
-                    key={`${row.id}marker_weight/cb`}
+                  <Slider
+                    key={`${row.id}marker_weight/slider`}
                     name="marker_weight"
                     value={row.marker_weight}
-                    field="marker_weight"
-                    label="Symbol: (Linien-)Dicke"
-                    options={markerWeightValues}
-                    saveToDb={onBlur}
-                    disabled={!userMayEdit}
-                    helperText="100 ist dünn, 900 dick"
+                    label="Symbol: Linien-Dicke"
+                    min={0}
+                    max={5}
+                    step={0.1}
+                    onBlur={onBlur}
+                    helperText="0 ist dünn, 5 dick. Funktioniert nur bei linien-artigen Symbolen gut"
                   />
                 </>
               )}

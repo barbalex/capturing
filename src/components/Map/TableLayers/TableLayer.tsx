@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { GeoJSON, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
 import * as icons from 'react-icons/md'
+import styled from 'styled-components'
 
 import Popup from '../Popup'
 import { LayerStyle, Table } from '../../../dexieClient'
@@ -32,7 +33,7 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
 
   return (
     <GeoJSON
-      key={`${table.id}/${layerStyle.marker_symbol}/${layerStyle?.marker_size}/${layerStyle?.color}/${layerStyle?.opacity}`}
+      key={`${table.id}/${layerStyle.marker_symbol}/${layerStyle?.marker_size}/${layerStyle?.color}/${layerStyle?.opacity}/${layerStyle?.marker_weight}`}
       data={data}
       style={style}
       ref={ref}
@@ -58,7 +59,14 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
             radius: layerStyle.circle_marker_radius ?? 8,
           })
         }
-        const Component = icons[layerStyle.marker_symbol] ?? icons.MdPlace
+        let Component = icons[layerStyle.marker_symbol] ?? icons.MdPlace
+        if (layerStyle.marker_weight) {
+          Component = styled(Component)`
+            path:nth-of-type(2) {
+              stroke-width: ${layerStyle.marker_weight};
+            }
+          `
+        }
         return L.marker(latlng, {
           icon: new L.divIcon({
             html: ReactDOMServer.renderToString(

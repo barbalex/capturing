@@ -837,17 +837,7 @@ export enum MarkerTypeEnum {
   circle = 'circle',
   marker = 'marker',
 }
-export enum MarkerWeightEnum {
-  '100' = '100',
-  '200' = '200',
-  '300' = '300',
-  '400' = '400',
-  '500' = '500',
-  '600' = '600',
-  '700' = '700',
-  '800' = '800',
-  '900' = '900',
-}
+
 export interface ILayerStyle {
   id: string
   table_id?: string
@@ -856,7 +846,7 @@ export interface ILayerStyle {
   circle_marker_radius?: number
   marker_symbol?: string
   marker_size?: number
-  marker_weight?: MarkerWeightEnum
+  marker_weight?: number
   stroke?: number
   color?: string
   weight?: number
@@ -888,7 +878,7 @@ export class LayerStyle implements ILayerStyle {
   circle_marker_radius?: number
   marker_symbol?: string
   marker_size?: number
-  marker_weight?: MarkerWeightEnum
+  marker_weight?: number
   stroke?: number
   color?: string
   weight?: number
@@ -914,7 +904,7 @@ export class LayerStyle implements ILayerStyle {
     circle_marker_radius?: number,
     marker_symbol?: string,
     marker_size?: number,
-    marker_weight?: MarkerWeightEnum,
+    marker_weight?: number,
     stroke?: number,
     color?: string,
     weight?: number,
@@ -940,7 +930,7 @@ export class LayerStyle implements ILayerStyle {
     this.circle_marker_radius = circle_marker_radius ?? 8
     if (marker_symbol) this.marker_symbol = marker_symbol
     this.marker_size = marker_size ?? 16
-    this.marker_weight = marker_weight ?? '400'
+    if (marker_weight) this.marker_weight = marker_weight
     this.stroke = stroke ?? 1
     this.color = color ?? '#ff0000'
     this.weight = weight ?? 3
