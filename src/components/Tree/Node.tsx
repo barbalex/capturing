@@ -88,13 +88,13 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     isActive = true
   }
 
-  console.log('Node', {
-    data,
-    editing,
-    isActive,
-    activeNodeArray: activeNodeArray.slice(),
-    isInActiveNodeArray,
-  })
+  // console.log('Node', {
+  //   data,
+  //   editing,
+  //   isActive,
+  //   activeNodeArray: activeNodeArray.slice(),
+  //   isInActiveNodeArray,
+  // })
 
   const userMayEditStructure: boolean = useLiveQuery(async () => {
     const projectUser = await dexie.project_users.get({
@@ -106,13 +106,13 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   }, [session?.user?.email])
 
   const onClickIndent = useCallback(async () => {
-    console.log({
-      data,
-      editing,
-      isActive,
-      activeNodeArray: activeNodeArray.slice(),
-      isInActiveNodeArray,
-    })
+    // console.log({
+    //   data,
+    //   editing,
+    //   isActive,
+    //   activeNodeArray: activeNodeArray.slice(),
+    //   isInActiveNodeArray,
+    // })
     if (data.type === 'project' && !editing && isActive) {
       // if exists only one standard table, go directly to it's rows
       const tables = await dexie.ttables

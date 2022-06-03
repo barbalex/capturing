@@ -12,7 +12,7 @@ import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import ZoomToButton from '../shared/ZoomToButton'
 import constants from '../../utils/constants'
-import { dexie } from '../../dexieClient'
+import { dexie, Table } from '../../dexieClient'
 import insertRow from '../../utils/insertRow'
 import FilterNumbers from '../shared/FilterNumbers'
 import { supabase } from '../../supabaseClient'
@@ -74,14 +74,22 @@ const RowsTitle = ({ rowsWithLabel }: Props) => {
   // console.log('RowsTitle', { bbox, bboxIsInfinity: bboxIsInfinite })
 
   const data = useLiveQuery(async () => {
-    const [filteredCount, totalCount, projectUser] = await Promise.all([
-      dexie.rows.where({ deleted: 0, table_id: tableId }).count(), // TODO: pass in filter
-      dexie.rows.where({ deleted: 0, table_id: tableId }).count(),
-      dexie.project_users.get({
-        project_id: projectId,
-        user_email: session?.user?.email,
-      }),
-    ])
+    const [filteredCount, totalCount, projectUser, tablesOfProject] =
+      await Promise.all([
+        dexie.rows.where({ deleted: 0, table_id: tableId }).count(), // TODO: pass in filter
+        dexie.rows.where({ deleted: 0, table_id: tableId }).count(),
+        dexie.project_users.get({
+          project_id: projectId,
+          user_email: session?.user?.email,
+        }),
+        dexie.ttables
+          .where({
+            deleted: 0,
+            project_id: projectId,
+            type: 'standard',
+          })
+          .toArray(),
+      ])
 
     return {
       filteredCount,
@@ -91,12 +99,14 @@ const RowsTitle = ({ rowsWithLabel }: Props) => {
         'project_manager',
         'project_editor',
       ].includes(projectUser.role),
+      tablesOfProject,
     }
   }, [tableId, projectId, session?.user?.email])
 
   const filteredCount: integer = data?.filteredCount
   const totalCount: integer = data?.totalCount
   const userMayEdit: boolean = data?.userMayEdit
+  const tablesOfProject: Table[] = data?.tablesOfProject ?? []
 
   const add = useCallback(async () => {
     const newId = await insertRow({ tableId })
@@ -109,8 +119,14 @@ const RowsTitle = ({ rowsWithLabel }: Props) => {
 
   const up = editing
     ? resolvePath(`..`, window.location.pathname)
+    : tablesOfProject.length === 1
+    ? resolvePath(`projects/${projectId}`)
     : resolvePath(`../..`, window.location.pathname)
-  const upTitle = editing ? 'Zur Tabelle' : 'Zu den Tabellen'
+  const upTitle = editing
+    ? 'Zur Tabelle'
+    : tablesOfProject.length === 1
+    ? 'Zum Projekt'
+    : 'Zu den Tabellen'
 
   return (
     <ErrorBoundary>
