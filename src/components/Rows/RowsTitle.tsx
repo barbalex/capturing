@@ -16,6 +16,7 @@ import { dexie, Table } from '../../dexieClient'
 import insertRow from '../../utils/insertRow'
 import FilterNumbers from '../shared/FilterNumbers'
 import { supabase } from '../../supabaseClient'
+import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
@@ -74,22 +75,35 @@ const RowsTitle = ({ rowsWithLabel }: Props) => {
   // console.log('RowsTitle', { bbox, bboxIsInfinity: bboxIsInfinite })
 
   const data = useLiveQuery(async () => {
-    const [filteredCount, totalCount, projectUser, tablesOfProject] =
-      await Promise.all([
-        dexie.rows.where({ deleted: 0, table_id: tableId }).count(), // TODO: pass in filter
-        dexie.rows.where({ deleted: 0, table_id: tableId }).count(),
-        dexie.project_users.get({
+    const [
+      filteredCount,
+      totalCount,
+      projectUser,
+      tablesOfProject,
+      table,
+      project,
+    ] = await Promise.all([
+      dexie.rows.where({ deleted: 0, table_id: tableId }).count(), // TODO: pass in filter
+      dexie.rows.where({ deleted: 0, table_id: tableId }).count(),
+      dexie.project_users.get({
+        project_id: projectId,
+        user_email: session?.user?.email,
+      }),
+      dexie.ttables
+        .where({
+          deleted: 0,
           project_id: projectId,
-          user_email: session?.user?.email,
-        }),
-        dexie.ttables
-          .where({
-            deleted: 0,
-            project_id: projectId,
-            type: 'standard',
-          })
-          .toArray(),
-      ])
+          type: 'standard',
+        })
+        .toArray(),
+      dexie.ttables.get(tableId),
+      dexie.projects.get(projectId),
+    ])
+
+    const tableLabel = labelFromLabeledTable({
+      object: table,
+      useLabels: project.use_labels,
+    })
 
     return {
       filteredCount,
@@ -100,6 +114,7 @@ const RowsTitle = ({ rowsWithLabel }: Props) => {
         'project_editor',
       ].includes(projectUser.role),
       tablesOfProject,
+      tableLabel,
     }
   }, [tableId, projectId, session?.user?.email])
 
@@ -107,6 +122,9 @@ const RowsTitle = ({ rowsWithLabel }: Props) => {
   const totalCount: integer = data?.totalCount
   const userMayEdit: boolean = data?.userMayEdit
   const tablesOfProject: Table[] = data?.tablesOfProject ?? []
+  const tableLabel: string = data?.tableLabel ?? 'Datensätze'
+  const tableLabelToUse = editing ? 'Datensätze' : tableLabel
+  // console.log('RowsTitle', { tableLabel })
 
   const add = useCallback(async () => {
     const newId = await insertRow({ tableId })
@@ -131,7 +149,7 @@ const RowsTitle = ({ rowsWithLabel }: Props) => {
   return (
     <ErrorBoundary>
       <TitleContainer>
-        <Title>Datensätze</Title>
+        <Title>{tableLabelToUse}</Title>
         <TitleSymbols>
           <IconButton
             title={upTitle}
