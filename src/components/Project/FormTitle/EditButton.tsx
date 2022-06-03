@@ -13,7 +13,7 @@ const ProjectEditButton = () => {
   const store = useContext(storeContext)
   const { editingProjects, setProjectEditing } = store
   const editing = editingProjects.get(projectId)?.editing ?? false
-
+ 
   const onClick = useCallback(
     async () =>
       setProjectEditing({

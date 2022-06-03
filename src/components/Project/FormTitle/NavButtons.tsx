@@ -24,7 +24,9 @@ const ProjectNavButtons = () => {
   const { projectId } = useParams()
 
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeNode, setHorizontalNavIds } = store
+  const { activeNodeArray, removeNode, setHorizontalNavIds, editingProjects } =
+    store
+  const editing = editingProjects.get(projectId)?.editing ?? false
 
   const projectIds: string[] =
     useLiveQuery(async () => {
@@ -88,20 +90,24 @@ const ProjectNavButtons = () => {
       >
         Tabellen
       </MenuChildrenButton>
-      <MenuChildrenButton
-        endIcon={<StyledFaArrowDown />}
-        component={Link}
-        to="tile-layers"
-      >
-        Bild-Karten
-      </MenuChildrenButton>
-      <MenuChildrenButton
-        endIcon={<StyledFaArrowDown />}
-        component={Link}
-        to="vector-layers"
-      >
-        Vektor-Karten
-      </MenuChildrenButton>
+      {editing && (
+        <>
+          <MenuChildrenButton
+            endIcon={<StyledFaArrowDown />}
+            component={Link}
+            to="tile-layers"
+          >
+            Bild-Karten
+          </MenuChildrenButton>
+          <MenuChildrenButton
+            endIcon={<StyledFaArrowDown />}
+            component={Link}
+            to="vector-layers"
+          >
+            Vektor-Karten
+          </MenuChildrenButton>
+        </>
+      )}
     </>
   )
 }
