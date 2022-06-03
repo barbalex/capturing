@@ -28,17 +28,32 @@ const ProjectNavButtons = () => {
     store
   const editing = editingProjects.get(projectId)?.editing ?? false
 
-  const projectIds: string[] =
-    useLiveQuery(async () => {
-      const projects = await dexie.projects
-        .where({ deleted: 0 })
-        .sortBy('', sortProjectsByLabelName)
+  const result = useLiveQuery(async () => {
+    const projects = await dexie.projects
+      .where({ deleted: 0 })
+      .sortBy('', sortProjectsByLabelName)
 
-      const ids = projects.map((p) => p.id)
-      setHorizontalNavIds(ids)
+    const projectIds = projects.map((p) => p.id)
+    setHorizontalNavIds(projectIds)
 
-      return ids
-    }, []) ?? []
+    const tables = await dexie.ttables
+      .where({
+        deleted: 0,
+        project_id: projectId,
+        type: 'standard',
+      })
+      .toArray()
+
+    return { projectIds, tables }
+  }, [])
+  const projectIds: string[] = result?.projectIds ?? []
+  const tables: string[] = result?.tables ?? []
+  const tablesTo =
+    !editing && tables.length === 1
+      ? `${['tables', tables[0]?.id, 'rows'].join('/')}`
+      : 'tables'
+  const tablesTitle =
+    !editing && tables.length === 1 ? tables[0]?.name : 'Tabellen'
 
   const parentPath = resolvePath(`..`, window.location.pathname)?.pathname
   const activeIndex = projectIds.indexOf(projectId)
@@ -86,9 +101,9 @@ const ProjectNavButtons = () => {
       <MenuChildrenButton
         endIcon={<StyledFaArrowDown />}
         component={Link}
-        to="tables"
+        to={tablesTo}
       >
-        Tabellen
+        {tablesTitle}
       </MenuChildrenButton>
       {editing && (
         <>

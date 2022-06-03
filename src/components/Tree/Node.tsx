@@ -56,6 +56,7 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   const store = useContext(storeContext)
   const {
     activeNodeArray,
+    setActiveNodeArray,
     editingProjects,
     setProjectEditing,
     addNode,
@@ -64,9 +65,9 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   const editing = editingProjects.get(projectId)?.editing ?? false
   const isInActiveNodeArray = isEqual(
     activeNodeArray.slice(0, data.activeNodeArray.length),
-    data.activeNodeArray.slice(),
+    data.activeNodeArray,
   )
-  const isActive = isEqual(data.activeNodeArray, activeNodeArray)
+  const isActive = isEqual(data.activeNodeArray, activeNodeArray.slice())
 
   const userMayEditStructure: boolean = useLiveQuery(async () => {
     const projectUser = await dexie.project_users.get({
@@ -77,8 +78,44 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     return ['account_manager', 'project_manager'].includes(projectUser?.role)
   }, [session?.user?.email])
 
-  const onClickIndent = useCallback(() => {
+  const onClickIndent = useCallback(async () => {
+    console.log({
+      data,
+      editing,
+      isActive,
+      activeNodeArray: activeNodeArray.slice(),
+      isInActiveNodeArray,
+    })
+    if (data.type === 'project' && !editing && isActive) {
+      // if exists only one standard table, go directly to it's rows
+      const tables = await dexie.ttables
+        .where({
+          deleted: 0,
+          project_id: data.id,
+          type: 'standard',
+        })
+        .toArray()
+      if (tables.length === 1) {
+        addNode(data.activeNodeArray)
+        addNode([...data.activeNodeArray, 'tables'])
+        addNode([...data.activeNodeArray, 'tables', tables[0]?.id])
+        addNode([...data.activeNodeArray, 'tables', tables[0]?.id, 'rows'])
+        setActiveNodeArray([
+          ...data.activeNodeArray,
+          'tables',
+          tables[0]?.id,
+          'rows',
+        ])
+        navigate(
+          `/${[...data.activeNodeArray, 'tables', tables[0]?.id, 'rows'].join(
+            '/',
+          )}`,
+        )
+        return
+      }
+    }
     if (data.type === 'table' && !editing) {
+      // if editing data leave out table (nothing to edit)
       const newANA = [...data.activeNodeArray, 'rows']
       addNode(data.activeNodeArray)
       addNode(newANA)
@@ -87,7 +124,16 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     }
     addNode(data.activeNodeArray)
     navigate(`/${data.activeNodeArray.join('/')}`)
-  }, [data, editing, addNode, navigate])
+  }, [
+    data,
+    editing,
+    isActive,
+    activeNodeArray,
+    isInActiveNodeArray,
+    addNode,
+    navigate,
+    setActiveNodeArray,
+  ])
 
   const onClickProjectEdit = useCallback(
     async (e) => {
