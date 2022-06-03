@@ -50,7 +50,8 @@ const RowsTitle = ({ rowsWithLabel }: Props) => {
   const navigate = useNavigate()
 
   const store = useContext(storeContext)
-  const { activeNodeArray, removeNode } = store
+  const { activeNodeArray, removeNode, editingProjects } = store
+  const editing = editingProjects.get(projectId)?.editing ?? false
 
   const [bbox, bboxIsInfinite] = useMemo(() => {
     const fc = {
@@ -106,15 +107,20 @@ const RowsTitle = ({ rowsWithLabel }: Props) => {
     removeNode(activeNodeArray)
   }, [activeNodeArray, removeNode])
 
+  const up = editing
+    ? resolvePath(`..`, window.location.pathname)
+    : resolvePath(`../..`, window.location.pathname)
+  const upTitle = editing ? 'Zur Tabelle' : 'Zu den Tabellen'
+
   return (
     <ErrorBoundary>
       <TitleContainer>
         <Title>Datensätze</Title>
         <TitleSymbols>
           <IconButton
-            title="Zur Tabelle"
+            title={upTitle}
             component={Link}
-            to={resolvePath(`..`, window.location.pathname)}
+            to={up}
             onClick={onClickUp}
             size="large"
           >
