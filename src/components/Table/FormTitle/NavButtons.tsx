@@ -21,6 +21,9 @@ export const MenuChildrenButton = styled(Button)`
     margin-left: 4px;
   }
 `
+const StyledFaArrowDown = styled(FaArrowDown)`
+  font-size: 1.75rem !important;
+`
 
 const TableNavButtons = () => {
   const { projectId, tableId } = useParams()
@@ -91,14 +94,18 @@ const TableNavButtons = () => {
       </IconButton>
       {!!editing && (
         <MenuChildrenButton
-          endIcon={<FaArrowDown />}
+          endIcon={<StyledFaArrowDown />}
           component={Link}
           to="fields"
         >
           Felder
         </MenuChildrenButton>
       )}
-      <MenuChildrenButton endIcon={<FaArrowDown />} component={Link} to="rows">
+      <MenuChildrenButton
+        endIcon={<StyledFaArrowDown />}
+        component={Link}
+        to="rows"
+      >
         Datensätze
       </MenuChildrenButton>
     </>
