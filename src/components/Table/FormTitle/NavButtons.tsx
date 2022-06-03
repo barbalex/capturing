@@ -2,7 +2,12 @@ import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
-import { FaArrowUp, FaArrowRight, FaArrowLeft } from 'react-icons/fa'
+import {
+  FaArrowUp,
+  FaArrowRight,
+  FaArrowLeft,
+  FaArrowDown,
+} from 'react-icons/fa'
 import { Link, useParams, resolvePath } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import styled from 'styled-components'
@@ -86,14 +91,14 @@ const TableNavButtons = () => {
       </IconButton>
       {!!editing && (
         <MenuChildrenButton
-          endIcon={<FaArrowRight />}
+          endIcon={<FaArrowDown />}
           component={Link}
           to="fields"
         >
           Felder
         </MenuChildrenButton>
       )}
-      <MenuChildrenButton endIcon={<FaArrowRight />} component={Link} to="rows">
+      <MenuChildrenButton endIcon={<FaArrowDown />} component={Link} to="rows">
         Datensätze
       </MenuChildrenButton>
     </>
