@@ -251,15 +251,26 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           disabled={!userMayEdit}
         />
         {useLabels === 1 && (
-          <TextField
-            key={`${row.id}label`}
-            name="label"
-            label="Beschriftung"
-            value={row.label}
-            onBlur={onBlur}
-            error={errors?.table?.label}
-            disabled={!userMayEdit}
-          />
+          <>
+            <TextField
+              key={`${row.id}label`}
+              name="label"
+              label="Beschriftung"
+              value={row.label}
+              onBlur={onBlur}
+              error={errors?.table?.label}
+              disabled={!userMayEdit}
+            />
+            <TextField
+              key={`${row.id}singular_label`}
+              name="singular_label"
+              label="Einzahl der Beschriftung (um einzelne Datensätze zu beschriften)"
+              value={row.singular_label}
+              onBlur={onBlur}
+              error={errors?.table?.singular_label}
+              disabled={!userMayEdit}
+            />
+          </>
         )}
         <RadioButtonGroup
           key={`${row?.id}type`}
