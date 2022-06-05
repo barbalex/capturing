@@ -281,6 +281,7 @@ CREATE TABLE tables (
   rel_type table_rel_types_enum DEFAULT 'n',
   name text DEFAULT NULL,
   label text DEFAULT NULL,
+  singular_label text default null,
   row_label jsonb DEFAULT NULL,
   sort smallint DEFAULT NULL,
   type table_types_enum DEFAULT 'standard',
@@ -289,6 +290,8 @@ CREATE TABLE tables (
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
 );
+
+alter table tables add column singular_label text default null;
 
 CREATE UNIQUE INDEX tables_project_name_idx ON tables (project_id, name)
 WHERE

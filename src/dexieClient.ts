@@ -1269,6 +1269,7 @@ export interface ITable {
   rel_type?: TableRelTypeEnum
   name?: string
   label?: string
+  singular_label?: string
   row_label?: string
   sort?: number
   type?: string
@@ -1287,6 +1288,7 @@ export class Table implements ITable {
   rel_type?: TableRelTypeEnum
   name?: string
   label?: string
+  singular_label?: string
   row_label?: string // stringified json
   sort?: number
   type?: string
@@ -1302,6 +1304,7 @@ export class Table implements ITable {
     rel_type?: TableRelTypeEnum,
     name?: string,
     label?: string,
+    singular_label?: string,
     row_label?: string,
     sort?: number,
     type?: TableTypeEnum,
@@ -1316,6 +1319,7 @@ export class Table implements ITable {
     this.rel_type = rel_type ?? 'n'
     if (name) this.name = name
     if (label) this.label = label
+    if (singular_label) this.singular_label = singular_label
     if (row_label) this.row_label = row_label
     if (sort !== undefined) this.sort = sort
     this.type ?? 'standard'
@@ -1591,7 +1595,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(43).stores({
+    this.version(44).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:

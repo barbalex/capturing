@@ -5,23 +5,7 @@ type InsertTableProps = {
 }
 
 const insertTable = async ({ projectId }: InsertTableProps) => {
-  const newTable = new Table(
-    undefined,
-    projectId,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-  )
+  const newTable = new Table(undefined, projectId)
   const update = new QueuedUpdate(
     undefined,
     undefined,
