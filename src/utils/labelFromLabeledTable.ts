@@ -6,9 +6,15 @@ type Props = {
   useLabels: integer
 }
 // works for any table with label and name that is not projects itself
-const labelFromLabeledTable = ({ object, useLabels = false }: Props): Obj =>
+const labelFromLabeledTable = ({
+  object,
+  useLabels = 0,
+  singular = false,
+}: Props): Obj =>
   useLabels === 1
-    ? object.label ?? object.name ?? '(unbenannt)'
+    ? singular
+      ? object.singular_label ?? 'Datensatz' // only used for rows of tables
+      : object.label ?? object.name ?? '(unbenannt)'
     : object.name ?? '(unbenannt)'
 
 export default labelFromLabeledTable

@@ -103,6 +103,7 @@ const RowsTitle = ({ rowsWithLabel }: Props) => {
     const tableLabel = labelFromLabeledTable({
       object: table,
       useLabels: project.use_labels,
+      singular: false
     })
 
     return {
@@ -123,7 +124,7 @@ const RowsTitle = ({ rowsWithLabel }: Props) => {
   const userMayEdit: boolean = data?.userMayEdit
   const tablesOfProject: Table[] = data?.tablesOfProject ?? []
   const tableLabel: string = data?.tableLabel ?? 'Datensätze'
-  const tableLabelToUse = editing ? 'Datensätze' : tableLabel
+  const tableLabelToUse = tableLabel
   // console.log('RowsTitle', { tableLabel })
 
   const add = useCallback(async () => {

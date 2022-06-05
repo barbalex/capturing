@@ -2,13 +2,9 @@ import { dexie } from '../../../../dexieClient'
 import buildRowNodes from './rowNodes'
 import buildFieldNodes from './fieldNodes'
 import isNodeOpen from '../../../../utils/isNodeOpen'
+import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 
-const tableFoldersEditingProject = async ({
-  project,
-  table,
-  rowId,
-  nodes,
-}) => {
+const tableFoldersEditingProject = async ({ project, table, rowId, nodes }) => {
   // return if parent does not exist (in nodes)
 
   if (
@@ -20,7 +16,10 @@ const tableFoldersEditingProject = async ({
   const tableFolderNodes = [
     {
       id: `${table.id}/rowsFolder`,
-      label: 'Datensätze',
+      label: labelFromLabeledTable({
+        object: table,
+        useLabels: project.use_labels,
+      }),
       type: 'rowsFolder',
       object: table,
       activeNodeArray: ['projects', project.id, 'tables', table.id, 'rows'],
@@ -46,7 +45,7 @@ const tableFoldersEditingProject = async ({
         nodes,
         url: ['projects', project.id, 'tables', table.id, 'fields'],
       }),
-      children: await buildFieldNodes({ project, table,  nodes }),
+      children: await buildFieldNodes({ project, table, nodes }),
       childrenCount: await dexie.fields
         .where({
           deleted: 0,

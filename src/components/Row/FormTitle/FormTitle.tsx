@@ -11,6 +11,7 @@ import FilterNumbers from '../../shared/FilterNumbers'
 import Menu from '../../shared/Menu'
 import HistoryButton from '../../shared/HistoryButton'
 import constants from '../../../utils/constants'
+import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
@@ -42,11 +43,19 @@ const RowFormTitle = ({
   width,
   showHistory,
   setShowHistory,
+  project,
+  table,
 }) => {
+  const title = labelFromLabeledTable({
+    object: table,
+    useLabels: project?.use_labels ?? 0,
+    singular: true,
+  })
+
   if (width < 520) {
     return (
       <TitleContainer>
-        <Title>Datensatz</Title>
+        <Title>{title}</Title>
         <TitleSymbols>
           <NavButtons />
           <AddButton />
@@ -73,7 +82,7 @@ const RowFormTitle = ({
 
   return (
     <TitleContainer>
-      <Title>Datensatz</Title>
+      <Title>{title}</Title>
       <TitleSymbols>
         <NavButtons />
         <AddButton />
