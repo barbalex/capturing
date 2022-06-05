@@ -95,7 +95,7 @@ const RichText = ({
     onBlur(fakeEvent)
   }, [name, onBlur, state])
 
-  console.log('RichText rendering', { state: state.current, value })
+  // console.log('RichText rendering', { state: state.current, value })
 
   // once schrink is set, need to manually control ist
   // schrink if value exists or schrinkLabel was passed
