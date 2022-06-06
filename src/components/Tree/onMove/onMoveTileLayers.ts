@@ -26,7 +26,7 @@ const onMoveTileLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
   const tileVectorLayersToUpdate = []
   for (const [index, res] of result.entries()) {
     const sort = index + 1
-    const tileVectorLayer = tileVectorLayers.find((ptl) => ptl.id === res.id)
+    const tileVectorLayer = tileVectorLayers.find((tl) => tl.id === res.id)
     if (tileVectorLayer.sort !== sort) {
       // update sort value
       const was = { ...tileVectorLayer }

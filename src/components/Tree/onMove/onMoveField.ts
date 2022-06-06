@@ -26,7 +26,7 @@ const onMoveField = async ({ idMoved, folderDroppedIn, endIndex }) => {
   const fieldsToUpdate = []
   for (const [index, res] of result.entries()) {
     const sort = index + 1
-    const field = fields.find((ptl) => ptl.id === res.id)
+    const field = fields.find((field) => field.id === res.id)
     if (field.sort !== sort) {
       // update sort value
       const was = { ...field }

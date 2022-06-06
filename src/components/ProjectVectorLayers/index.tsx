@@ -77,7 +77,7 @@ const ProjectVectorLayersComponent = () => {
       for (const [index, res] of result.entries()) {
         const sort = index + 1
         const projectVectorLayer = projectVectorLayers.find(
-          (ptl) => ptl.id === res.id,
+          (vl) => vl.id === res.id,
         )
         if (projectVectorLayer.sort !== sort) {
           // update sort value

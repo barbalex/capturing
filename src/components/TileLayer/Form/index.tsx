@@ -166,7 +166,7 @@ const TileLayerForm = () => {
 
   if (!row) return <Spinner />
 
-  // console.log('PTL Form rendering')
+  // console.log('TL Form rendering')
 
   return (
     <ErrorBoundary>

@@ -76,7 +76,7 @@ const TileLayersComponent = () => {
       const tileLayersToUpdate = []
       for (const [index, res] of result.entries()) {
         const sort = index + 1
-        const tileLayer = tileLayers.find((ptl) => ptl.id === res.id)
+        const tileLayer = tileLayers.find((tl) => tl.id === res.id)
         if (tileLayer.sort !== sort) {
           // update sort value
           const was = { ...tileLayer }
