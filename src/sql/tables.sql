@@ -679,9 +679,10 @@ CREATE TYPE fill_rule_enum AS enum (
 );
 
 CREATE TYPE tile_layer_type_enum AS enum (
-  'url_template',
+  'wmts',
   'wms'
 );
+
 
 CREATE TYPE wms_version_enum AS enum (
   '1.1.1',
@@ -698,7 +699,7 @@ CREATE TABLE project_tile_layers (
   sort smallint DEFAULT 0,
   active integer DEFAULT 0,
   project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
-  type tile_layer_type_enum DEFAULT 'url_template',
+  type tile_layer_type_enum DEFAULT 'wmts',
   url_template text DEFAULT NULL,
   subdomains text[] DEFAULT NULL,
   max_zoom decimal DEFAULT 19,

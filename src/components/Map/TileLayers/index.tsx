@@ -25,7 +25,7 @@ const TileLayers = () => {
    */
   const validTileLayers = tileLayers.filter((l) => {
     if (!l.type) return false
-    if (l.type === 'url_template') {
+    if (l.type === 'wmts') {
       if (!l.url_template) return false
     } else {
       if (!l.wms_base_url) return false

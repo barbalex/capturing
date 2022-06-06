@@ -213,7 +213,7 @@ const ProjectTileLayerForm = () => {
           label="Typ"
           error={errors?.project_tile_layer?.type}
         />
-        {row?.type === 'url_template' && (
+        {row?.type === 'wmts' && (
           <TextField
             key={`${row.id}url_template`}
             name="url_template"

@@ -16,7 +16,7 @@ type Props = {
   layer: TileLayerType
 }
 const TileLayerComponent = ({ layer }: Props) => {
-  if (layer.type === 'url_template') {
+  if (layer.type === 'wmts') {
     return (
       <StyledTileLayer
         url={layer.url_template}

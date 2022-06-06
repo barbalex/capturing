@@ -357,7 +357,7 @@ export enum TableRelTypeEnum {
 }
 
 export enum TileLayerTypeEnum {
-  url_template = 'url_template',
+  wmts = 'wmts',
   wms = 'wms',
 }
 
