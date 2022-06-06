@@ -33,13 +33,13 @@ const insertProjectVectorLayer = async ({ projectId }: Props) => {
   const update = new QueuedUpdate(
     undefined,
     undefined,
-    'project_vector_layers',
+    'vector_layers',
     JSON.stringify(newProjectVectorLayer),
     undefined,
     undefined,
   )
   await Promise.all([
-    dexie.project_vector_layers.put(newProjectVectorLayer),
+    dexie.vector_layers.put(newProjectVectorLayer),
     dexie.queued_updates.add(update),
   ])
   return newProjectVectorLayer.id

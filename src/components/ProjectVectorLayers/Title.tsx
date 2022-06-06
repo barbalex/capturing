@@ -46,10 +46,10 @@ const ProjectVectorLayersTitle = () => {
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount, projectUser] = await Promise.all([
-      dexie.project_vector_layers
+      dexie.vector_layers
         .where({ deleted: 0, project_id: projectId })
         .count(), // TODO: pass in filter
-      dexie.project_vector_layers
+      dexie.vector_layers
         .where({ deleted: 0, project_id: projectId })
         .count(),
       dexie.project_users.get({

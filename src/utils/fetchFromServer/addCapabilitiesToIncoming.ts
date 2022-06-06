@@ -30,7 +30,7 @@ const addCapabilitiesToIncoming = async ({ object, tableName }) => {
     })
   }
   if (
-    tableName === 'project_vector_layers' &&
+    tableName === 'vector_layers' &&
     // if url exists
     existing?.url &&
     // ...but no layerOptions

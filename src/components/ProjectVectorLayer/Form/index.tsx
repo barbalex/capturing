@@ -89,7 +89,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
   // const data = {}
   const data = useLiveQuery(async () => {
     const [row, projectUser] = await Promise.all([
-      dexie.project_vector_layers.get(projectVectorLayerId),
+      dexie.vector_layers.get(projectVectorLayerId),
       dexie.project_users.get({
         project_id: projectId,
         user_email: session?.user?.email,
@@ -177,7 +177,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
       // update rowState
       rowState.current = { ...row, ...{ [field]: newValue } }
       // update dexie
-      dexie.project_vector_layers.update(row.id, { [field]: newValue })
+      dexie.vector_layers.update(row.id, { [field]: newValue })
       if (field === 'type_name') {
         console.log('re-downloading data', { field, value })
         if (value?.length) {

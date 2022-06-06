@@ -17,7 +17,7 @@ const ProjectVectorLayerNavButtons = () => {
   const projectVectorLayerIds: string[] =
     useLiveQuery(async () => {
       const projectVectorLayers: ProjectVectorLayer[] =
-        await dexie.project_vector_layers
+        await dexie.vector_layers
           .where({ deleted: 0, project_id: projectId })
           .sortBy('sort')
 

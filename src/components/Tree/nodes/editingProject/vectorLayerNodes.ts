@@ -6,7 +6,7 @@ const vectorLayerNodesEditingProject = async ({ project, nodes }) => {
   if (!isNodeOpen({ nodes, url: ['projects', project.id, 'vector-layers'] }))
     return
 
-  const vectorLayers: ProjectVectorLayer[] = await dexie.project_vector_layers
+  const vectorLayers: ProjectVectorLayer[] = await dexie.vector_layers
     .where({
       deleted: 0,
       project_id: project.id,

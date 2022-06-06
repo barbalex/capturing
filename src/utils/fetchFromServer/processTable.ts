@@ -64,7 +64,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
     // console.log('processTable, got data for:', tableNameForDexie)
     // 4.1 keep values of local fields
     //     or fetch capabilities
-    if (['tile_layers', 'project_vector_layers'].includes(tableName)) {
+    if (['tile_layers', 'vector_layers'].includes(tableName)) {
       const incomings = []
       for (const object of data) {
         const incoming = await addCapabilitiesToIncoming({
@@ -100,14 +100,14 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
     }
     /**
      * 4.3 if:
-     * - project_vector_layers
+     * - vector_layers
      * - and: type 'wfs'
      * - and: no pvl_geoms yet
      * download the data from the wfs service and populate dexie!
      * Reason: wfs data itself is not synced via the server,
      * Only it's layer data. Reduce server storage!
      */
-    if (tableName === 'project_vector_layers') {
+    if (tableName === 'vector_layers') {
       for (const pvl of data) {
         if (
           pvl.type === 'wfs' &&

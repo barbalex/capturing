@@ -51,7 +51,7 @@ const ProjectVectorLayersComponent = () => {
 
   const projectVectorLayers: ProjectVectorLayer[] = useLiveQuery(
     async () =>
-      await dexie.project_vector_layers
+      await dexie.vector_layers
         .where({ deleted: 0, project_id: projectId })
         .sortBy('sort'),
     [projectId],
@@ -92,7 +92,7 @@ const ProjectVectorLayersComponent = () => {
         }
       }
       // push in bulk to reduce re-renders via liveQuery
-      await dexie.project_vector_layers.bulkPut(projectVectorLayersToUpdate)
+      await dexie.vector_layers.bulkPut(projectVectorLayersToUpdate)
       setVectorLayerSorter(
         projectVectorLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
       )

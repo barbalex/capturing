@@ -11,7 +11,7 @@ const onMoveVectorLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
 
   // 1. get list
   const projectVectorLayers: ProjectVectorLayer[] =
-    await dexie.project_vector_layers
+    await dexie.vector_layers
       .where({ deleted: 0, project_id: projectId })
       .sortBy('sort')
   // 2. get index of dragged pvl
@@ -43,7 +43,7 @@ const onMoveVectorLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
     }
   }
   // push in bulk to reduce re-renders via liveQuery
-  await dexie.project_vector_layers.bulkPut(projectVectorLayersToUpdate)
+  await dexie.vector_layers.bulkPut(projectVectorLayersToUpdate)
   return
 }
 

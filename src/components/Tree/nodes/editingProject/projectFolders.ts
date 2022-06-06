@@ -67,7 +67,7 @@ const projectFoldersEditingProject = async ({
         project,
         nodes,
       }),
-      childrenCount: await dexie.project_vector_layers
+      childrenCount: await dexie.vector_layers
         .where({
           deleted: 0,
           project_id: project.id,

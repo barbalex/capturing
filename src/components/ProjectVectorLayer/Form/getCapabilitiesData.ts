@@ -109,7 +109,7 @@ const getCapabilitiesDataForVectorLayer = async ({
   // enable updating in a single operation
   if (returnValue) return values
 
-  return dexie.project_vector_layers.update(row.id, values)
+  return dexie.vector_layers.update(row.id, values)
 }
 
 export default getCapabilitiesDataForVectorLayer

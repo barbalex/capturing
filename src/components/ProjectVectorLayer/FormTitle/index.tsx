@@ -12,7 +12,7 @@ const ProjectVectorLayerFormTitleChooser = () => {
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount] = await Promise.all([
-      dexie.project_vector_layers
+      dexie.vector_layers
         .where({ deleted: 0, project_id: projectId })
         .count(), // TODO: pass in filter
       dexie.tile_layers
@@ -29,7 +29,7 @@ const ProjectVectorLayerFormTitleChooser = () => {
     return (
       <FilterTitle
         title="Vektor-Karte"
-        table="project_vector_layers"
+        table="vector_layers"
         totalCount={totalCount}
         filteredCount={filteredCount}
       />

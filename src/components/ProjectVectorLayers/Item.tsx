@@ -54,7 +54,7 @@ const ProjectVectorLayerItem = ({ item, provided, isDragging }: Props) => {
       e.stopPropagation()
       const was = { ...item }
       const active = item.active === 1 ? 0 : 1
-      await dexie.project_vector_layers.update(item.id, {
+      await dexie.vector_layers.update(item.id, {
         active,
       })
 

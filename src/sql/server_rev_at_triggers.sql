@@ -82,7 +82,7 @@ CREATE TRIGGER tile_layers_set_server_rev_at
 
 -- project_vector_layer
 CREATE TRIGGER project_vector_layers_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON project_vector_layers
+  BEFORE INSERT OR UPDATE ON vector_layers
   FOR EACH ROW
   EXECUTE PROCEDURE set_server_rev_at ();
 

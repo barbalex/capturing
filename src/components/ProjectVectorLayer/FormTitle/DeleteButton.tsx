@@ -36,7 +36,7 @@ const ProjectVectorLayerDeleteButton = ({ userMayEdit }) => {
   const session: Session = supabase.auth.session()
 
   const deleted: boolean = useLiveQuery(async () => {
-    const row: Row = await dexie.project_vector_layers.get(projectVectorLayerId)
+    const row: Row = await dexie.vector_layers.get(projectVectorLayerId)
     // only return needed values to minimize re-renders
     return row?.deleted
   }, [projectVectorLayerId])
@@ -51,7 +51,7 @@ const ProjectVectorLayerDeleteButton = ({ userMayEdit }) => {
     [],
   )
   const remove = useCallback(async () => {
-    const row: ProjectVectorLayer = await dexie.project_vector_layers.get(
+    const row: ProjectVectorLayer = await dexie.vector_layers.get(
       projectVectorLayerId,
     )
     row.deleteOnServerAndClient({ session })
