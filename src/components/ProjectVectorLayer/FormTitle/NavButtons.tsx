@@ -16,12 +16,12 @@ const ProjectVectorLayerNavButtons = () => {
 
   const projectVectorLayerIds: string[] =
     useLiveQuery(async () => {
-      const projectVectorLayers: ProjectVectorLayer[] =
+      const vectorLayers: ProjectVectorLayer[] =
         await dexie.vector_layers
           .where({ deleted: 0, project_id: projectId })
           .sortBy('sort')
 
-      const ids = projectVectorLayers.map((p) => p.id)
+      const ids = vectorLayers.map((p) => p.id)
       setHorizontalNavIds(ids)
 
       return ids

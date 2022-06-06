@@ -49,7 +49,7 @@ const ProjectVectorLayersComponent = () => {
   const store = useContext(storeContext)
   const { formHeight, setVectorLayerSorter, rebuildTree } = store
 
-  const projectVectorLayers: ProjectVectorLayer[] = useLiveQuery(
+  const vectorLayers: ProjectVectorLayer[] = useLiveQuery(
     async () =>
       await dexie.vector_layers
         .where({ deleted: 0, project_id: projectId })
@@ -59,9 +59,9 @@ const ProjectVectorLayersComponent = () => {
 
   const [items, setItems] = useState<ProjectVectorLayer[]>([])
   useEffect(() => {
-    if (!projectVectorLayers) return
-    setItems(projectVectorLayers)
-  }, [projectVectorLayers])
+    if (!vectorLayers) return
+    setItems(vectorLayers)
+  }, [vectorLayers])
 
   const reorder = useCallback(
     async (list, startIndex, endIndex) => {
@@ -76,7 +76,7 @@ const ProjectVectorLayersComponent = () => {
       const projectVectorLayersToUpdate = []
       for (const [index, res] of result.entries()) {
         const sort = index + 1
-        const projectVectorLayer = projectVectorLayers.find(
+        const projectVectorLayer = vectorLayers.find(
           (vl) => vl.id === res.id,
         )
         if (projectVectorLayer.sort !== sort) {
@@ -94,13 +94,13 @@ const ProjectVectorLayersComponent = () => {
       // push in bulk to reduce re-renders via liveQuery
       await dexie.vector_layers.bulkPut(projectVectorLayersToUpdate)
       setVectorLayerSorter(
-        projectVectorLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
+        vectorLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
       )
       rebuildTree()
 
       return result
     },
-    [projectVectorLayers, rebuildTree, session, setVectorLayerSorter],
+    [vectorLayers, rebuildTree, session, setVectorLayerSorter],
   )
 
   const onDragEnd = useCallback(
