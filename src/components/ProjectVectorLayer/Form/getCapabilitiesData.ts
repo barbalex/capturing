@@ -1,9 +1,14 @@
 import getCapabilities from '../../../utils/getCapabilities'
 import { dexie } from '../../../dexieClient'
 
-const getCapabilitiesDataForVectorLayer = async ({ row }) => {
+const getCapabilitiesDataForVectorLayer = async ({
+  row,
+  returnValue = false,
+}) => {
   // console.log('getCapabilitiesDataForVectorLayer, row:', row)
   if (!row) return
+  if (!row.url) return
+
   const values = {}
 
   const response = await getCapabilities({
@@ -100,11 +105,12 @@ const getCapabilitiesDataForVectorLayer = async ({ row }) => {
     values.active = 1
   }
 
-  await dexie.project_vector_layers.update(row.id, values)
-
   console.log('pvl, getCapabilitiesData, values:', values)
 
-  return
+  // enable updating in a single operation
+  if (returnValue) return values
+
+  return dexie.project_vector_layers.update(row.id, values)
 }
 
 export default getCapabilitiesDataForVectorLayer

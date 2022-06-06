@@ -5,9 +5,10 @@ import { dexie, ProjectTileLayer } from '../../../dexieClient'
 
 type Props = {
   row: ProjectTileLayer
+  returnValue: boolean
 }
 
-const getCapabilitiesData = async ({ row }: Props) => {
+const getCapabilitiesData = async ({ row, returnValue = false }: Props) => {
   if (!row?.wms_base_url) return undefined
 
   // console.log('getCapabilitiesData for row:', row.label)
@@ -138,9 +139,11 @@ const getCapabilitiesData = async ({ row }: Props) => {
       values.wms_info_format = preferedFormat
     }
   }
-  await dexie.project_tile_layers.update(row.id, values)
 
-  return
+  // enable updating in a single operation
+  if (returnValue) return values
+
+  return dexie.project_tile_layers.update(row.id, values)
 }
 
 export default getCapabilitiesData

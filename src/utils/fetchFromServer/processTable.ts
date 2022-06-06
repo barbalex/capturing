@@ -3,8 +3,7 @@ import { dexie, File } from '../../dexieClient'
 import hex2buf from '../hex2buf'
 import downloadWfs from '../downloadWfs'
 
-import getCapabilitiesDataForTileLayer from '../../components/ProjectTileLayer/Form/getCapabilitiesData'
-import getCapabilitiesDataForVectorLayer from '../../components/ProjectVectorLayer/Form/getCapabilitiesData'
+import addCapabilitiesToIncoming from './addCapabilitiesToIncoming'
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 
@@ -58,38 +57,23 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
       error,
     )
   }
-  // if (tableName === 'rows') {
-  //   console.log(
-  //     `ServerSubscriber, last ${tableName} fetched from supabase:`,
-  //     data,
-  //   )
-  // }
+
   // 4. update dexie with these changes
   //    Some tables have extra data - needs to be preserved
   if (data) {
     // console.log('processTable, got data for:', tableNameForDexie)
     // 4.1 keep values of local fields
-    if (
-      ['project_tile_layers', 'project_vector_layers'].includes(
-        tableNameForDexie,
-      )
-    ) {
-      for (const d of data) {
-        const existing = await dexie[tableNameForDexie].get(d.id)
-        // console.log('processTable, existing:', existing)
-        const localFields = Object.keys(existing).filter((key) =>
-          key.startsWith('_'),
-        )
-        // console.log('processTable, localFields:', localFields)
-        // if (!localFields.length) break
-        const incoming = {
-          ...d,
-        }
-        // console.log('processTable, incoming:', incoming)
-        localFields.forEach((f) => (incoming[f] = existing?.[f]))
-        // console.log('processTable, incoming with local fields:', incoming)
-        await dexie[tableNameForDexie].put(incoming)
+    //     or fetch capabilities
+    if (['project_tile_layers', 'project_vector_layers'].includes(tableName)) {
+      const incomings = []
+      for (const object of data) {
+        const incoming = await addCapabilitiesToIncoming({
+          object,
+          tableName,
+        })
+        incomings.push(incoming)
       }
+      await dexie.table(tableName).bulkPut(incomings)
     } else {
       try {
         await dexie.table(tableNameForDexie).bulkPut(data)
@@ -121,7 +105,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
      * - and: no pvl_geoms yet
      * download the data from the wfs service and populate dexie!
      * Reason: wfs data itself is not synced via the server,
-     * Only it's layer data. Reduce storage!
+     * Only it's layer data. Reduce server storage!
      */
     if (tableName === 'project_vector_layers') {
       for (const pvl of data) {
@@ -138,25 +122,6 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
             downloadWfs({ pvl, store })
           }
         }
-      }
-    }
-    /**
-     * 4.4
-     * if: project_tile_layers or project_vector_layers
-     * get capabilities for local fields if needed
-     */
-    if (tableName === 'project_tile_layers') {
-      for (const d of data) {
-        if (!d?.wms_base_url) break
-        if (d?._layerOptions?.length) break
-        getCapabilitiesDataForTileLayer({ row: d })
-      }
-    }
-    if (tableName === 'project_vector_layers') {
-      for (const d of data) {
-        if (!d?.url) break
-        if (d?._layerOptions?.length) break
-        getCapabilitiesDataForVectorLayer({ row: d })
       }
     }
   }

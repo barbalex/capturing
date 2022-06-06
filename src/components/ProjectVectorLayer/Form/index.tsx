@@ -211,9 +211,9 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
     // only set if not yet done
     if (row?.type_name) return
     setLoadingCapabilities(true)
-    getCapabilitiesDataForVectorLayer({ row }).then(() => {
+    getCapabilitiesDataForVectorLayer({ row }).then(() => 
       setLoadingCapabilities(false)
-    })
+    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [row?.url, row?.type_name, projectVectorLayerId])
 
