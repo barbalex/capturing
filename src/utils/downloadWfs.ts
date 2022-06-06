@@ -10,6 +10,7 @@ type Props = {
   pvl: ProjectVectorLayer
 }
 
+// TODO: do this in worker
 const downloadWfs = async ({ pvl, store }: Props) => {
   const { addNotification, removeNotificationById } = store
   if (

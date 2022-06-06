@@ -5,9 +5,10 @@ const getCapabilitiesDataForVectorLayer = async ({
   row,
   returnValue = false,
 }) => {
-  // console.log('getCapabilitiesDataForVectorLayer, row:', row)
   if (!row) return
   if (!row.url) return
+
+  console.log('getCapabilitiesDataForVectorLayer, row:', row)
 
   const values = {}
 
@@ -36,11 +37,9 @@ const getCapabilitiesDataForVectorLayer = async ({
       'OWS:VALUE'
     ] ?? []
   ).map((v) => v?.['#text'])
-  // TODO:
+
   // also accept gml
   // example: https://maps.zh.ch/wfs/VeloparkieranlagenZHWFS
-  // enable dealing with it...
-  // OR: do not allow to choose layers that do not allow json
   const acceptableOutputFormats = _outputFormats.filter(
     (v) =>
       v?.toLowerCase?.()?.includes('json') ||

@@ -23,7 +23,7 @@ import ToggleButtonGroup from '../../shared/ToggleButtonGroup'
 import MultiSelect from '../../shared/MultiSelect'
 import Select from '../../shared/Select'
 import Legends from './Legends'
-import getCapabilitiesData from './getCapabilitiesData'
+import getCapabilitiesDataForTileLayer from './getCapabilitiesData'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -152,7 +152,7 @@ const ProjectTileLayerForm = () => {
   useEffect(() => {
     if (!row?.wms_base_url) return
     if (row?._layerOptions?.length) return
-    getCapabilitiesData({ row })
+    getCapabilitiesDataForTileLayer({ row })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     projectTileLayerId,

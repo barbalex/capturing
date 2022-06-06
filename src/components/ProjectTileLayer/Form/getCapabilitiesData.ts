@@ -8,10 +8,13 @@ type Props = {
   returnValue: boolean
 }
 
-const getCapabilitiesData = async ({ row, returnValue = false }: Props) => {
+const getCapabilitiesDataForTileLayer = async ({
+  row,
+  returnValue = false,
+}: Props) => {
   if (!row?.wms_base_url) return undefined
 
-  // console.log('getCapabilitiesData for row:', row.label)
+  console.log('getCapabilitiesDataForTileLayer, label:', row.label)
 
   const values = {}
 
@@ -146,4 +149,4 @@ const getCapabilitiesData = async ({ row, returnValue = false }: Props) => {
   return dexie.project_tile_layers.update(row.id, values)
 }
 
-export default getCapabilitiesData
+export default getCapabilitiesDataForTileLayer
