@@ -803,7 +803,7 @@ DROP TABLE IF EXISTS layer_styles CASCADE;
 CREATE TABLE layer_styles (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   table_id uuid UNIQUE DEFAULT NULL REFERENCES tables (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  project_vector_layer_id uuid UNIQUE DEFAULT NULL REFERENCES vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  vector_layer_id uuid UNIQUE DEFAULT NULL REFERENCES vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
   marker_type marker_type_enum DEFAULT 'circle',
   circle_marker_radius integer DEFAULT 8,
   marker_symbol text DEFAULT NULL,
@@ -1759,7 +1759,7 @@ DROP POLICY IF EXISTS "Users can view layer styles" ON layer_styles;
 CREATE POLICY "Users can view layer styles" ON layer_styles
   FOR SELECT
     USING (is_project_user_by_table (auth.uid (), table_id)
-      OR is_project_user_by_project_vector_layer (auth.uid (), project_vector_layer_id));
+      OR is_project_user_by_project_vector_layer (auth.uid (), vector_layer_id));
 
 -- TODO: add OR is_project_user_by_project_vector_layer
 DROP POLICY IF EXISTS "Managers can insert layer styles" ON layer_styles;
@@ -1767,7 +1767,7 @@ DROP POLICY IF EXISTS "Managers can insert layer styles" ON layer_styles;
 CREATE POLICY "Managers can insert layer styles" ON layer_styles
   FOR INSERT
     WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id)
-    OR is_project_manager_by_project_vector_layer (auth.uid (), project_vector_layer_id));
+    OR is_project_manager_by_project_vector_layer (auth.uid (), vector_layer_id));
 
 -- TODO: add OR is_project_user_by_project_vector_layer
 DROP POLICY IF EXISTS "Managers can update insert layer styles" ON layer_styles;
@@ -1775,9 +1775,9 @@ DROP POLICY IF EXISTS "Managers can update insert layer styles" ON layer_styles;
 CREATE POLICY "Managers can update insert layer styles" ON layer_styles
   FOR UPDATE
     USING (is_project_user_by_table (auth.uid (), table_id)
-      OR is_project_user_by_project_vector_layer (auth.uid (), project_vector_layer_id))
+      OR is_project_user_by_project_vector_layer (auth.uid (), vector_layer_id))
       WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id)
-      OR is_project_manager_by_project_vector_layer (auth.uid (), project_vector_layer_id));
+      OR is_project_manager_by_project_vector_layer (auth.uid (), vector_layer_id));
 
 -- TODO: add OR is_project_user_by_project_vector_layer
 DROP POLICY IF EXISTS "Managers can delete layer styles" ON layer_styles;
@@ -1785,7 +1785,7 @@ DROP POLICY IF EXISTS "Managers can delete layer styles" ON layer_styles;
 CREATE POLICY "Managers can delete layer styles" ON layer_styles
   FOR DELETE
     USING (is_project_manager_by_project_by_table (auth.uid (), table_id)
-      OR is_project_manager_by_project_vector_layer (auth.uid (), project_vector_layer_id));
+      OR is_project_manager_by_project_vector_layer (auth.uid (), vector_layer_id));
 
 DROP POLICY IF EXISTS "Users can view field types" ON field_types;
 

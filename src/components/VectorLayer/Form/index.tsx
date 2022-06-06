@@ -83,7 +83,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
     [],
   ) // TODO: add errors, unsetError in store
   useEffect(() => {
-    unsetError('project_vector_layer')
+    unsetError('vector_layer')
   }, [vectorLayerId, unsetError])
 
   // const data = {}
@@ -166,7 +166,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
 
       if (showFilter) {
         return filter.setValue({
-          table: 'project_vector_layer',
+          table: 'vector_layer',
           key: field,
           value: newValue,
         })
@@ -217,7 +217,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [row?.url, row?.type_name, vectorLayerId])
 
-  // const showDeleted = filter?.project_vector_layer?.deleted !== false || row?.deleted
+  // const showDeleted = filter?.vector_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
   // console.log('VectorLayer rendering', {
@@ -249,7 +249,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
                 name="deleted"
                 value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.project_vector_layer?.deleted}
+                error={errors?.vector_layer?.deleted}
                 disabled={!userMayEdit}
               />
             ) : (
@@ -259,7 +259,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
                 name="deleted"
                 value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.project_vector_layer?.deleted}
+                error={errors?.vector_layer?.deleted}
                 disabled={!userMayEdit}
               />
             )}
@@ -286,7 +286,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
               label="URL"
               value={row.url}
               onBlur={onBlur}
-              error={errors?.project_vector_layer?.url}
+              error={errors?.vector_layer?.url}
               disabled={!userMayEdit}
               type="text"
             />
@@ -322,7 +322,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
                         label="Layer"
                         value={row.type_name}
                         onBlur={onBlur}
-                        error={errors?.project_vector_layer?.type_name}
+                        error={errors?.vector_layer?.type_name}
                         disabled={!userMayEdit}
                       />
                     )}
@@ -333,7 +333,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
                         label="WFS Version (z.B. 2.0.0)"
                         value={row.wfs_version}
                         onBlur={onBlur}
-                        error={errors?.project_vector_layer?.wfs_version}
+                        error={errors?.vector_layer?.wfs_version}
                         disabled={!userMayEdit}
                       />
                     )}
@@ -346,7 +346,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
                         label="Daten-Format"
                         options={row._outputFormatOptions}
                         saveToDb={onBlur}
-                        error={errors?.project_vector_layer?.output_format}
+                        error={errors?.vector_layer?.output_format}
                         disabled={!userMayEdit}
                         helperText="JSON-Formate sind optimal, gml-Formate funktionieren nur zum Teil"
                       />
@@ -360,7 +360,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
                         label="Daten-Format"
                         value={row.output_format}
                         onBlur={onBlur}
-                        error={errors?.project_vector_layer?.output_format}
+                        error={errors?.vector_layer?.output_format}
                         disabled={!userMayEdit}
                         type="text"
                       />
@@ -377,7 +377,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
                   label="Beschriftung"
                   value={row.label}
                   onBlur={onBlur}
-                  error={errors?.project_vector_layer?.label}
+                  error={errors?.vector_layer?.label}
                   disabled={!userMayEdit}
                 />
                 <Checkbox2States
@@ -395,7 +395,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
                   label="Sortierung"
                   value={row.sort}
                   onBlur={onBlur}
-                  error={errors?.project_vector_layer?.sort}
+                  error={errors?.vector_layer?.sort}
                   disabled={!userMayEdit}
                   type="number"
                 />
@@ -405,7 +405,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
                   label="Maximale Zoom-Stufe"
                   value={row.max_zoom}
                   onBlur={onBlur}
-                  error={errors?.project_vector_layer?.max_zoom}
+                  error={errors?.vector_layer?.max_zoom}
                   disabled={!userMayEdit}
                   type="number"
                 />
@@ -415,7 +415,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
                   label="Minimale Zoom-Stufe"
                   value={row.min_zoom}
                   onBlur={onBlur}
-                  error={errors?.project_vector_layer?.min_zoom}
+                  error={errors?.vector_layer?.min_zoom}
                   disabled={!userMayEdit}
                   type="number"
                 />
@@ -425,7 +425,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
                   label="Deckkraft / Opazität (0 - 1)"
                   value={row.opacity}
                   onBlur={onBlur}
-                  error={errors?.project_vector_layer?.opacity}
+                  error={errors?.vector_layer?.opacity}
                   disabled={!userMayEdit}
                   type="number"
                 />
@@ -435,7 +435,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
                   label="Maximale Anzahl darzustellender Features"
                   value={row.max_features}
                   onBlur={onBlur}
-                  error={errors?.project_vector_layer?.max_features}
+                  error={errors?.vector_layer?.max_features}
                   disabled={!userMayEdit}
                   type="number"
                   helperText="Das Laden zu vieler Features überlastet Ihr Gerät"

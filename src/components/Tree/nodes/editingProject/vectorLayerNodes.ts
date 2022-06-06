@@ -25,7 +25,7 @@ const vectorLayerNodesEditingProject = async ({ project, nodes }) => {
     const node = {
       id: vectorLayer.id,
       label: vectorLayer.label ?? '(ohne Beschriftung)',
-      type: 'project_vector_layer',
+      type: 'vector_layer',
       object: vectorLayer,
       activeNodeArray: ownActiveNodeArray,
       isOpen: isNodeOpen({

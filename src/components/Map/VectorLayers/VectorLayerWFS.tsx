@@ -131,7 +131,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
   const layerStyle: LayerStyle = useLiveQuery(
     async () =>
       await dexie.layer_styles.get({
-        project_vector_layer_id: layer.id,
+        vector_layer_id: layer.id,
       }),
   )
 

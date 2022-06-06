@@ -4,6 +4,7 @@ import getCapabilitiesDataForVectorLayer from '../../components/VectorLayer/Form
 
 const addCapabilitiesToIncoming = async ({ object, tableName }) => {
   const existing = await dexie[tableName].get(object.id)
+  if (!existing) return object
   let capabilities = {}
 
   // 1. use existing values (if they exist)

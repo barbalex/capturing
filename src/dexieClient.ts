@@ -738,7 +738,7 @@ export class VectorLayer implements IVectorLayer {
 
     // if layer_style exists, also delete
     const layerStyle = await dexie.layer_styles.get({
-      project_vector_layer_id: this.id,
+      vector_layer_id: this.id,
     })
     if (layerStyle) await layerStyle.deleteOnServerAndClient({ session })
     return
@@ -841,7 +841,7 @@ export enum MarkerTypeEnum {
 export interface ILayerStyle {
   id: string
   table_id?: string
-  project_vector_layer_id?: string
+  vector_layer_id?: string
   marker_type?: MarkerTypeEnum
   circle_marker_radius?: number
   marker_symbol?: string
@@ -873,7 +873,7 @@ type LayerStyleUpdateProps = {
 export class LayerStyle implements ILayerStyle {
   id: string
   table_id?: string
-  project_vector_layer_id?: string
+  vector_layer_id?: string
   marker_type?: MarkerTypeEnum
   circle_marker_radius?: number
   marker_symbol?: string
@@ -899,7 +899,7 @@ export class LayerStyle implements ILayerStyle {
   constructor(
     id: string,
     table_id?: string,
-    project_vector_layer_id?: string,
+    vector_layer_id?: string,
     marker_type?: MarkerTypeEnum,
     circle_marker_radius?: number,
     marker_symbol?: string,
@@ -924,8 +924,8 @@ export class LayerStyle implements ILayerStyle {
   ) {
     this.id = id ?? uuidv1()
     if (table_id) this.table_id = table_id
-    if (project_vector_layer_id)
-      this.project_vector_layer_id = project_vector_layer_id
+    if (vector_layer_id)
+      this.vector_layer_id = vector_layer_id
     this.marker_type = marker_type ?? 'circle'
     this.circle_marker_radius = circle_marker_radius ?? 8
     if (marker_symbol) this.marker_symbol = marker_symbol
@@ -1512,7 +1512,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(44).stores({
+    this.version(45).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
@@ -1530,7 +1530,7 @@ export class MySubClassedDexie extends Dexie {
       project_users:
         'id, user_email, [project_id+user_email], project_id, server_rev_at, deleted',
       layer_styles:
-        'id, &table_id, &project_vector_layer_id, server_rev_at, deleted',
+        'id, &table_id, &vector_layer_id, server_rev_at, deleted',
       projects:
         'id, label, name, server_rev_at, deleted, use_labels, [deleted+id]',
       rows: 'id, server_rev_at, deleted, [deleted+table_id], [deleted+parent_id]',

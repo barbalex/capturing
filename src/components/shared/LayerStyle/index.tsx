@@ -75,7 +75,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
       tableId
         ? { table_id: tableId }
         : vectorLayerId
-        ? { project_vector_layer_id: vectorLayerId }
+        ? { vector_layer_id: vectorLayerId }
         : 'none',
     [vectorLayerId, tableId],
   )
@@ -83,7 +83,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
     async () => {
       const _row: LayerStyle = await dexie.layer_styles.get(criteria)
 
-      // create layer_style for this table / project_vector_layer
+      // create layer_style for this table / vector_layer
       // IF it does not yet exist
       // if (!_row) {
       //   _row = await insertLayerStyle({
@@ -94,7 +94,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
       //    * somehow this is FUCKED UP
       //    * first call returns undefined
       //    * second: already exists...
-      //    * Unable to add key to index 'project_vector_layer_id': at least one key does not satisfy the uniqueness requirements
+      //    * Unable to add key to index 'vector_layer_id': at least one key does not satisfy the uniqueness requirements
       //    */
       // }
 

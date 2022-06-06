@@ -71,9 +71,11 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
           object,
           tableName,
         })
-        incomings.push(incoming)
+        if (incoming) incomings.push(incoming)
       }
-      await dexie.table(tableName).bulkPut(incomings)
+      if (incomings.length) {
+        await dexie.table(tableName).bulkPut(incomings)
+      }
     } else {
       try {
         await dexie.table(tableNameForDexie).bulkPut(data)

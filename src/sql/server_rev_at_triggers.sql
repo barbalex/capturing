@@ -80,13 +80,13 @@ CREATE TRIGGER tile_layers_set_server_rev_at
   FOR EACH ROW
   EXECUTE PROCEDURE set_server_rev_at ();
 
--- project_vector_layer
+-- vector_layer
 CREATE TRIGGER vector_layers_set_server_rev_at
   BEFORE INSERT OR UPDATE ON vector_layers
   FOR EACH ROW
   EXECUTE PROCEDURE set_server_rev_at ();
 
--- project_vector_layer
+-- pvl_geoms
 CREATE TRIGGER pvl_geoms_set_server_rev_at
   BEFORE INSERT OR UPDATE ON pvl_geoms
   FOR EACH ROW

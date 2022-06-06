@@ -76,7 +76,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
       }))
       removeNotifs()
       const _layerStyle: LayerStyle = await dexie.layer_styles.get({
-        project_vector_layer_id: layer.id,
+        vector_layer_id: layer.id,
       })
       setData(data)
       setLayerStyle(_layerStyle)
