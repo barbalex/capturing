@@ -346,7 +346,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
                         label="Daten-Format"
                         options={row._outputFormatOptions}
                         saveToDb={onBlur}
-                        error={errors?.project_tile_layer?.output_format}
+                        error={errors?.project_vector_layer?.output_format}
                         disabled={!userMayEdit}
                         helperText="JSON-Formate sind optimal, gml-Formate funktionieren nur zum Teil"
                       />

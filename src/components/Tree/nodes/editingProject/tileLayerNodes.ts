@@ -25,7 +25,7 @@ const tileLayerNodesEditingProject = async ({ project, nodes }) => {
     const node = {
       id: tileLayer.id,
       label: tileLayer.label ?? '(ohne Beschriftung)',
-      type: 'project_tile_layer',
+      type: 'tile_layer',
       object: tileLayer,
       activeNodeArray: ownActiveNodeArray,
       isOpen: isNodeOpen({

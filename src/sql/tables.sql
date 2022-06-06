@@ -281,7 +281,7 @@ CREATE TABLE tables (
   rel_type table_rel_types_enum DEFAULT 'n',
   name text DEFAULT NULL,
   label text DEFAULT NULL,
-  singular_label text default null,
+  singular_label text DEFAULT NULL,
   row_label jsonb DEFAULT NULL,
   sort smallint DEFAULT NULL,
   type table_types_enum DEFAULT 'standard',
@@ -291,7 +291,8 @@ CREATE TABLE tables (
   deleted integer DEFAULT 0
 );
 
-alter table tables add column singular_label text default null;
+ALTER TABLE tables
+  ADD COLUMN singular_label text DEFAULT NULL;
 
 CREATE UNIQUE INDEX tables_project_name_idx ON tables (project_id, name)
 WHERE
@@ -683,7 +684,6 @@ CREATE TYPE tile_layer_type_enum AS enum (
   'wms'
 );
 
-
 CREATE TYPE wms_version_enum AS enum (
   '1.1.1',
   '1.3.0'
@@ -691,9 +691,9 @@ CREATE TYPE wms_version_enum AS enum (
 
 --
 --
-DROP TABLE IF EXISTS project_tile_layers CASCADE;
+DROP TABLE IF EXISTS tile_layers CASCADE;
 
-CREATE TABLE project_tile_layers (
+CREATE TABLE tile_layers (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   label text DEFAULT NULL,
   sort smallint DEFAULT 0,
@@ -721,18 +721,18 @@ CREATE TABLE project_tile_layers (
   deleted integer DEFAULT 0
 );
 
-CREATE INDEX ON project_tile_layers USING btree (id);
+CREATE INDEX ON tile_layers USING btree (id);
 
-CREATE INDEX ON project_tile_layers USING btree (sort);
+CREATE INDEX ON tile_layers USING btree (sort);
 
-CREATE INDEX ON project_tile_layers USING btree (deleted);
+CREATE INDEX ON tile_layers USING btree (deleted);
 
-COMMENT ON TABLE project_tile_layers IS 'Goal: Bring your own tile layers. Not versioned (not recorded and only added by manager).';
+COMMENT ON TABLE tile_layers IS 'Goal: Bring your own tile layers. Not versioned (not recorded and only added by manager).';
 
-ALTER TABLE project_tile_layers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE tile_layers ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE project_tile_layers;
+  ADD TABLE tile_layers;
 
 --
 CREATE TYPE vector_layer_type_enum AS enum (
@@ -795,6 +795,7 @@ CREATE TYPE marker_type_enum AS enum (
   'circle',
   'marker'
 );
+
 --
 DROP TABLE IF EXISTS layer_styles CASCADE;
 
@@ -804,9 +805,9 @@ CREATE TABLE layer_styles (
   project_vector_layer_id uuid UNIQUE DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
   marker_type marker_type_enum DEFAULT 'circle',
   circle_marker_radius integer DEFAULT 8,
-  marker_symbol text default null,
+  marker_symbol text DEFAULT NULL,
   marker_size integer DEFAULT 16,
-  marker_weight integer DEFAULT null,
+  marker_weight integer DEFAULT NULL,
   stroke integer DEFAULT 1,
   color text DEFAULT '#3388ff',
   weight integer DEFAULT 3,
@@ -825,7 +826,8 @@ CREATE TABLE layer_styles (
   deleted integer DEFAULT 0
 );
 
-alter table layer_styles add column marker_weight integer DEFAULT null;
+ALTER TABLE layer_styles
+  ADD COLUMN marker_weight integer DEFAULT NULL;
 
 CREATE INDEX ON layer_styles USING btree (id);
 
@@ -1293,7 +1295,7 @@ SECURITY DEFINER;
 
 -- Function is owned by postgres which bypasses RLS
 --
-CREATE OR REPLACE FUNCTION is_project_user_by_project_tile_layer (_auth_user_id uuid, _project_tile_layer_id uuid)
+CREATE OR REPLACE FUNCTION is_project_user_by_tile_layer (_auth_user_id uuid, _tile_layer_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -1304,16 +1306,16 @@ CREATE OR REPLACE FUNCTION is_project_user_by_project_tile_layer (_auth_user_id 
         auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
         INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN project_tile_layers ON project_tile_layers.project_id = projects.id
+        INNER JOIN tile_layers ON tile_layers.project_id = projects.id
       WHERE
-        project_tile_layers.id = _project_tile_layer_id
+        tile_layers.id = _tile_layer_id
         AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
 SECURITY DEFINER;
 
-CREATE OR REPLACE FUNCTION is_project_manager_by_project_tile_layer (_auth_user_id uuid, _project_tile_layer_id uuid)
+CREATE OR REPLACE FUNCTION is_project_manager_by_tile_layer (_auth_user_id uuid, _tile_layer_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -1324,15 +1326,16 @@ CREATE OR REPLACE FUNCTION is_project_manager_by_project_tile_layer (_auth_user_
         auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
         INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN project_tile_layers ON project_tile_layers.project_id = projects.id
+        INNER JOIN tile_layers ON tile_layers.project_id = projects.id
       WHERE
-        project_tile_layers.id = _project_tile_layer_id
+        tile_layers.id = _tile_layer_id
         AND project_users.role IN ('account_manager', 'project_manager')
         AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
 SECURITY DEFINER;
+
 
 --
 CREATE OR REPLACE FUNCTION is_project_user_by_project_vector_layer (_auth_user_id uuid, _project_vector_layer_id uuid)
@@ -1954,28 +1957,28 @@ CREATE POLICY "Users can view their own news delivery" ON news_delivery
   FOR SELECT
     USING (is_news_delivery_user (auth.uid ()));
 
-DROP POLICY IF EXISTS "project readers, editors and managers can view project_tile_layers" ON project_tile_layers;
+DROP POLICY IF EXISTS "project readers, editors and managers can view tile_layers" ON tile_layers;
 
-CREATE POLICY "project readers, editors and managers can view project_tile_layers" ON project_tile_layers
+CREATE POLICY "project readers, editors and managers can view tile_layers" ON tile_layers
   FOR SELECT
     USING (is_project_user_by_project (auth.uid (), project_id));
 
-DROP POLICY IF EXISTS "project managers can insert project_tile_layers" ON project_tile_layers;
+DROP POLICY IF EXISTS "project managers can insert tile_layers" ON tile_layers;
 
-CREATE POLICY "project managers can insert project_tile_layers" ON project_tile_layers
+CREATE POLICY "project managers can insert tile_layers" ON tile_layers
   FOR INSERT
     WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
-DROP POLICY IF EXISTS "project managers can update project_tile_layers" ON project_tile_layers;
+DROP POLICY IF EXISTS "project managers can update tile_layers" ON tile_layers;
 
-CREATE POLICY "project managers can update project_tile_layers" ON project_tile_layers
+CREATE POLICY "project managers can update tile_layers" ON tile_layers
   FOR UPDATE
     USING (is_project_user_by_project (auth.uid (), project_id))
     WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
-DROP POLICY IF EXISTS "project managers can delete project_tile_layers" ON project_tile_layers;
+DROP POLICY IF EXISTS "project managers can delete tile_layers" ON tile_layers;
 
-CREATE POLICY "project managers can delete project_tile_layers" ON project_tile_layers
+CREATE POLICY "project managers can delete tile_layers" ON tile_layers
   FOR DELETE
     USING (is_project_manager_by_project (auth.uid (), project_id));
 
@@ -2010,26 +2013,26 @@ DROP POLICY IF EXISTS "project readers, editors and managers can view project_ve
 
 CREATE POLICY "project readers, editors and managers can view project_vector_layers geometries" ON pvl_geoms
   FOR SELECT
-    USING (is_project_user_by_project_tile_layer (auth.uid (), pvl_id));
+    USING (is_project_user_by_tile_layer (auth.uid (), pvl_id));
 
 DROP POLICY IF EXISTS "project managers can insert project_vector_layers geometries" ON pvl_geoms;
 
 CREATE POLICY "project managers can insert project_vector_layers geometries" ON pvl_geoms
   FOR INSERT
-    WITH CHECK (is_project_manager_by_project_tile_layer (auth.uid (), pvl_id));
+    WITH CHECK (is_project_manager_by_tile_layer (auth.uid (), pvl_id));
 
 DROP POLICY IF EXISTS "project managers can update project_vector_layers geometries" ON pvl_geoms;
 
 CREATE POLICY "project managers can update project_vector_layers geometries" ON pvl_geoms
   FOR UPDATE
-    USING (is_project_user_by_project_tile_layer (auth.uid (), pvl_id))
-    WITH CHECK (is_project_manager_by_project_tile_layer (auth.uid (), pvl_id));
+    USING (is_project_user_by_tile_layer (auth.uid (), pvl_id))
+    WITH CHECK (is_project_manager_by_tile_layer (auth.uid (), pvl_id));
 
 DROP POLICY IF EXISTS "project managers can delete project_vector_layers geometries" ON pvl_geoms;
 
 CREATE POLICY "project managers can delete project_vector_layers geometries" ON pvl_geoms
   FOR DELETE
-    USING (is_project_manager_by_project_tile_layer (auth.uid (), pvl_id));
+    USING (is_project_manager_by_tile_layer (auth.uid (), pvl_id));
 
 COMMIT TRANSACTION;
 

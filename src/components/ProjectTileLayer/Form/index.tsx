@@ -47,7 +47,7 @@ const ProjectTileLayerForm = () => {
     [],
   ) // TODO: add errors, unsetError in store
   useEffect(() => {
-    unsetError('project_tile_layer')
+    unsetError('tile_layer')
   }, [projectTileLayerId, unsetError])
 
   const data = useLiveQuery(async () => {
@@ -135,7 +135,7 @@ const ProjectTileLayerForm = () => {
 
       // if (showFilter) {
       //   return filter.setValue({
-      //     table: 'project_tile_layer',
+      //     table: 'tile_layer',
       //     key: field,
       //     value: newValue,
       //   })
@@ -161,7 +161,7 @@ const ProjectTileLayerForm = () => {
     row?.wms_layers,
   ])
 
-  // const showDeleted = filter?.project_tile_layer?.deleted !== false || row?.deleted
+  // const showDeleted = filter?.tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
   if (!row) return <Spinner />
@@ -188,7 +188,7 @@ const ProjectTileLayerForm = () => {
                 name="deleted"
                 value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.project_tile_layer?.deleted}
+                error={errors?.tile_layer?.deleted}
                 disabled={!userMayEdit}
               />
             ) : (
@@ -198,7 +198,7 @@ const ProjectTileLayerForm = () => {
                 name="deleted"
                 value={row.deleted}
                 onBlur={onBlur}
-                error={errors?.project_tile_layer?.deleted}
+                error={errors?.tile_layer?.deleted}
                 disabled={!userMayEdit}
               />
             )}
@@ -211,7 +211,7 @@ const ProjectTileLayerForm = () => {
           dataSource={tileLayerTypeValues}
           onBlur={onBlur}
           label="Typ"
-          error={errors?.project_tile_layer?.type}
+          error={errors?.tile_layer?.type}
         />
         {row?.type === 'wmts' && (
           <TextField
@@ -220,7 +220,7 @@ const ProjectTileLayerForm = () => {
             label="URL-Vorlage"
             value={row.url_template}
             onBlur={onBlur}
-            error={errors?.project_tile_layer?.url_template}
+            error={errors?.tile_layer?.url_template}
             disabled={!userMayEdit}
             type="text"
           />
@@ -233,7 +233,7 @@ const ProjectTileLayerForm = () => {
               label="Basis-URL"
               value={row.wms_base_url}
               onBlur={onBlur}
-              error={errors?.project_tile_layer?.wms_base_url}
+              error={errors?.tile_layer?.wms_base_url}
               disabled={!userMayEdit}
               type="text"
             />
@@ -263,7 +263,7 @@ const ProjectTileLayerForm = () => {
                     label="Layer (wenn mehrere: mit Komma trennen. Beispiel: 'layer1,layer2')"
                     value={row.wms_layers}
                     onBlur={onBlur}
-                    error={errors?.project_tile_layer?.wms_layers}
+                    error={errors?.tile_layer?.wms_layers}
                     disabled={!userMayEdit}
                     multiLine
                   />
@@ -277,7 +277,7 @@ const ProjectTileLayerForm = () => {
                     label="(Bild-)Format"
                     options={row._wmsFormatOptions}
                     saveToDb={onBlur}
-                    error={errors?.project_tile_layer?.wms_format}
+                    error={errors?.tile_layer?.wms_format}
                     disabled={!userMayEdit}
                     helperText={
                       row.wms_format === 'image/png'
@@ -293,7 +293,7 @@ const ProjectTileLayerForm = () => {
                     label="(Bild-)Format"
                     value={row.wms_format}
                     onBlur={onBlur}
-                    error={errors?.project_tile_layer?.wms_format}
+                    error={errors?.tile_layer?.wms_format}
                     disabled={!userMayEdit}
                   />
                 )}
@@ -306,7 +306,7 @@ const ProjectTileLayerForm = () => {
                     label="Format der Informationen"
                     options={row._infoFormatOptions}
                     saveToDb={onBlur}
-                    error={errors?.project_tile_layer?.wms_info_format}
+                    error={errors?.tile_layer?.wms_info_format}
                     disabled={!userMayEdit}
                     helperText={
                       row.wms_info_format === 'application/vnd.ogc.gml'
@@ -322,7 +322,7 @@ const ProjectTileLayerForm = () => {
                     label="Format der Informationen"
                     value={row.wms_info_format}
                     onBlur={onBlur}
-                    error={errors?.project_tile_layer?.wms_info_format}
+                    error={errors?.tile_layer?.wms_info_format}
                     disabled={!userMayEdit}
                   />
                 )}
@@ -342,7 +342,7 @@ const ProjectTileLayerForm = () => {
                     label="WMS-Version (wird automatisch ausgelesen)"
                     value={row.wms_version}
                     onBlur={onBlur}
-                    error={errors?.project_tile_layer?.wms_version}
+                    error={errors?.tile_layer?.wms_version}
                     disabled={true}
                   />
                 )}
@@ -356,7 +356,7 @@ const ProjectTileLayerForm = () => {
           label="Beschriftung"
           value={row.label}
           onBlur={onBlur}
-          error={errors?.project_tile_layer?.label}
+          error={errors?.tile_layer?.label}
           disabled={!userMayEdit}
         />
         <Checkbox2States
@@ -374,7 +374,7 @@ const ProjectTileLayerForm = () => {
           label="Sortierung"
           value={row.sort}
           onBlur={onBlur}
-          error={errors?.project_tile_layer?.sort}
+          error={errors?.tile_layer?.sort}
           disabled={!userMayEdit}
           type="number"
         />
@@ -384,7 +384,7 @@ const ProjectTileLayerForm = () => {
           label="Maximale Zoom-Stufe"
           value={row.max_zoom}
           onBlur={onBlur}
-          error={errors?.project_tile_layer?.max_zoom}
+          error={errors?.tile_layer?.max_zoom}
           disabled={!userMayEdit}
           type="number"
         />
@@ -394,7 +394,7 @@ const ProjectTileLayerForm = () => {
           label="Minimale Zoom-Stufe"
           value={row.min_zoom}
           onBlur={onBlur}
-          error={errors?.project_tile_layer?.min_zoom}
+          error={errors?.tile_layer?.min_zoom}
           disabled={!userMayEdit}
           type="number"
         />
@@ -404,7 +404,7 @@ const ProjectTileLayerForm = () => {
           label="Deckkraft / Opazität (0 - 1)"
           value={row.opacity}
           onBlur={onBlur}
-          error={errors?.project_tile_layer?.opacity}
+          error={errors?.tile_layer?.opacity}
           disabled={!userMayEdit}
           type="number"
         />

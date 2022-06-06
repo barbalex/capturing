@@ -75,8 +75,8 @@ CREATE TRIGGER news_delivery_set_server_rev_at
   EXECUTE PROCEDURE set_server_rev_at ();
 
 -- project_tile_layer
-CREATE TRIGGER project_tile_layers_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON project_tile_layers
+CREATE TRIGGER tile_layers_set_server_rev_at
+  BEFORE INSERT OR UPDATE ON tile_layers
   FOR EACH ROW
   EXECUTE PROCEDURE set_server_rev_at ();
 
