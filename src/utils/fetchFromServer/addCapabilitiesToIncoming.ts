@@ -1,5 +1,5 @@
 import { dexie } from '../../dexieClient'
-import getCapabilitiesDataForTileLayer from '../../components/ProjectTileLayer/Form/getCapabilitiesData'
+import getCapabilitiesDataForTileLayer from '../../components/TileLayer/Form/getCapabilitiesData'
 import getCapabilitiesDataForVectorLayer from '../../components/ProjectVectorLayer/Form/getCapabilitiesData'
 
 const addCapabilitiesToIncoming = async ({ object, tableName }) => {
