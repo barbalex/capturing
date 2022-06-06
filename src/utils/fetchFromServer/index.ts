@@ -50,7 +50,6 @@ const startStream = async (store) => {
   processTable({ table: 'project_users', store, hiddenError })
   processTable({ table: 'rows', store, hiddenError })
   processTable({ table: 'tables', store, hiddenError })
-  processTable({ table: 'tile_layers', store, hiddenError })
   processTable({ table: 'layer_styles', store, hiddenError })
   processTable({ table: 'users', store, hiddenError })
   processTable({ table: 'version_types', store, hiddenError })

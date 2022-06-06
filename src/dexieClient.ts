@@ -1355,88 +1355,6 @@ export class Table implements ITable {
   }
 }
 
-export interface ITileLayer {
-  id: string
-  label?: string
-  url_template?: string
-  subdomains?: string[]
-  max_zoom?: number
-  min_zoom?: number
-  opacity?: number
-  wms_base_url?: string
-  wms_format?: string
-  wms_layers?: string
-  wms_parameters?: string
-  wms_styles?: string[]
-  wms_transparent?: number
-  wms_version?: WmsVersionEnum
-  client_rev_at?: Date
-  client_rev_by?: string
-  server_rev_at?: Date
-  deleted: number
-}
-
-export class TileLayer implements ITileLayer {
-  id: string
-  label?: string
-  url_template?: string
-  subdomains?: string[]
-  max_zoom?: number
-  min_zoom?: number
-  opacity?: number
-  wms_base_url?: string
-  wms_format?: string
-  wms_layers?: string
-  wms_parameters?: string
-  wms_styles?: string[]
-  wms_transparent?: number
-  wms_version?: WmsVersionEnum
-  client_rev_at?: Date
-  client_rev_by?: string
-  server_rev_at?: Date
-  deleted: number
-
-  constructor(
-    id?: string,
-    label?: string,
-    url_template?: string,
-    subdomains?: string[],
-    max_zoom?: number,
-    min_zoom?: number,
-    opacity?: number,
-    wms_base_url?: string,
-    wms_format?: string,
-    wms_layers?: string,
-    wms_parameters?: string,
-    wms_styles?: string[],
-    wms_transparent?: number,
-    wms_version?: WmsVersionEnum,
-    client_rev_at?: Date,
-    client_rev_by?: string,
-    server_rev_at?: Date,
-    deleted: number,
-  ) {
-    this.id = id ?? uuidv1()
-    if (label) this.label = label
-    if (url_template) this.url_template = url_template
-    if (subdomains) this.subdomains = subdomains
-    if (max_zoom !== undefined) this.max_zoom = max_zoom
-    if (min_zoom !== undefined) this.min_zoom = min_zoom
-    if (opacity !== undefined) this.opacity = opacity
-    if (wms_base_url) this.wms_base_url = wms_base_url
-    if (wms_format) this.wms_format = wms_format
-    if (wms_layers) this.wms_layers = wms_layers
-    if (wms_parameters) this.wms_parameters = wms_parameters
-    if (wms_styles) this.wms_styles = wms_styles
-    if (wms_transparent !== undefined) this.wms_transparent = wms_transparent
-    if (wms_version) this.wms_version = wms_version
-    this.client_rev_at = new window.Date().toISOString()
-    if (client_rev_by) this.client_rev_by = client_rev_by
-    if (server_rev_at) this.server_rev_at = server_rev_at
-    this.deleted = deleted ?? 0
-  }
-}
-
 export interface IUser {
   id: string
   name?: string
@@ -1585,7 +1503,6 @@ export class MySubClassedDexie extends Dexie {
   projects!: DexieTable<Project, string>
   rows!: DexieTable<Row, string>
   ttables!: DexieTable<Table, string>
-  tile_layers!: DexieTable<TileLayer, string>
   users!: DexieTable<User, string>
   version_types!: DexieTable<IVersionType, string>
   widget_types!: DexieTable<IWidgetType, string>
@@ -1620,7 +1537,6 @@ export class MySubClassedDexie extends Dexie {
       // name tables causes error because used internally, see: https://github.com/dexie/Dexie.js/issues/1537
       ttables:
         'id, label, name, sort, project_id, parent_id, rel_type, type, server_rev_at, deleted, [deleted+project_id], [deleted+project_id+type], [deleted+parent_id]',
-      tile_layers: 'id, label, server_rev_at, deleted',
       users: 'id, name, &email, auth_user_id, server_rev_at, deleted',
       version_types: 'id, &value, sort, server_rev_at, deleted',
       widget_types: 'id, &value, sort, server_rev_at, deleted',
@@ -1643,7 +1559,6 @@ export class MySubClassedDexie extends Dexie {
     this.layer_styles.mapToClass(LayerStyle)
     this.rows.mapToClass(Row)
     this.ttables.mapToClass(Table)
-    this.tile_layers.mapToClass(TileLayer)
     this.users.mapToClass(User)
     this.widgets_for_fields.mapToClass(WidgetForField)
   }

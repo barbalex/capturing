@@ -1106,42 +1106,6 @@ ALTER publication supabase_realtime
   ADD TABLE news_delivery;
 
 --
---
-DROP TABLE IF EXISTS tile_layers CASCADE;
-
-CREATE TABLE tile_layers (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  label text DEFAULT NULL,
-  url_template text DEFAULT NULL,
-  subdomains text[] DEFAULT NULL, -- https://leafletjs.com/reference.html#tilelayer-wms-subdomains
-  max_zoom decimal DEFAULT 19,
-  min_zoom decimal DEFAULT 0,
-  opacity decimal DEFAULT 1,
-  wms_base_url text DEFAULT NULL, -- url of WMS service. Ex.: 'http://ows.mundialis.de/services/service?'
-  wms_format text DEFAULT NULL, -- WMS image format ('image/jpeg'. Use 'image/png' for layers with transparency). The list of output formats supported by a GeoServer instance can be found by a WMS GetCapabilities request
-  wms_layers text DEFAULT NULL, -- list of WMS layers to show
-  wms_parameters jsonb DEFAULT NULL, -- other request parameters
-  wms_styles text[] DEFAULT NULL, -- wouldn't that be sld i.e. xml? https://leafletjs.com/reference.html#tilelayer-wms-styles
-  wms_transparent integer DEFAULT 0,
-  wms_version wms_version_enum DEFAULT NULL,
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
-);
-
-CREATE INDEX ON tile_layers USING btree (id);
-
-CREATE INDEX ON tile_layers USING btree (deleted);
-
-COMMENT ON TABLE tile_layers IS 'Goal: Layers that can be added to new projects. Not versioned (not recorded and only added by manager).';
-
-ALTER TABLE tile_layers ENABLE ROW LEVEL SECURITY;
-
-ALTER publication supabase_realtime
-  ADD TABLE tile_layers;
-
---
 -- seperate from project_vector_layers because pvl : pvl_geoms = 1 : n
 -- this way bbox can be used to load only what is in view
 DROP TABLE IF EXISTS pvl_geoms CASCADE;
@@ -1989,33 +1953,6 @@ DROP POLICY IF EXISTS "Users can view their own news delivery" ON news_delivery;
 CREATE POLICY "Users can view their own news delivery" ON news_delivery
   FOR SELECT
     USING (is_news_delivery_user (auth.uid ()));
-
-DROP POLICY IF EXISTS "authenticated users can view tile_layers" ON tile_layers;
-
-CREATE POLICY "authenticated users can view tile_layers" ON tile_layers
-  FOR SELECT
-    USING (auth.role () = 'authenticated');
-
-DROP POLICY IF EXISTS "project_managers can insert tile_layers" ON tile_layers;
-
--- inserting possible BUT: revision trigger will fail depending on rls on files table
-CREATE POLICY "project_managers can insert tile_layers" ON tile_layers
-  FOR INSERT
-    WITH CHECK (is_project_manager (auth.uid ()));
-
-DROP POLICY IF EXISTS "project_managers can update tile_layers" ON tile_layers;
-
-CREATE POLICY "project_managers can update tile_layers" ON tile_layers
-  FOR UPDATE
-    USING (auth.role () = 'authenticated')
-    WITH CHECK (is_project_manager (auth.uid ()));
-
-DROP POLICY IF EXISTS "project_managers can delete tile_layers" ON tile_layers;
-
--- but: deletion restricted by reference in project_tile_layers
-CREATE POLICY "project_managers can delete tile_layers" ON tile_layers
-  FOR DELETE
-    USING (is_project_manager (auth.uid ()));
 
 DROP POLICY IF EXISTS "project readers, editors and managers can view project_tile_layers" ON project_tile_layers;
 
