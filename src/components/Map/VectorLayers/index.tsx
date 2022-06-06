@@ -17,7 +17,7 @@ const VectorLayers = () => {
   const vectorLayers: VectorLayerType[] =
     useLiveQuery(
       async () =>
-        await dexie.project_vector_layers.where(where).reverse().sortBy('sort'),
+        await dexie.vector_layers.where(where).reverse().sortBy('sort'),
       [projectId],
     ) ?? []
 

@@ -740,9 +740,9 @@ CREATE TYPE vector_layer_type_enum AS enum (
   'upload'
 );
 
-DROP TABLE IF EXISTS project_vector_layers CASCADE;
+DROP TABLE IF EXISTS vector_layers CASCADE;
 
-CREATE TABLE project_vector_layers (
+CREATE TABLE vector_layers (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   label text DEFAULT NULL,
   sort smallint DEFAULT 0,
@@ -767,28 +767,29 @@ CREATE TABLE project_vector_layers (
   deleted integer DEFAULT 0
 );
 
-CREATE INDEX ON project_vector_layers USING btree (id);
+CREATE INDEX ON vector_layers USING btree (id);
 
-CREATE INDEX ON project_vector_layers USING btree (sort);
+CREATE INDEX ON vector_layers USING btree (sort);
 
-CREATE INDEX ON project_vector_layers USING btree (deleted);
+CREATE INDEX ON vector_layers USING btree (deleted);
 
-COMMENT ON TABLE project_vector_layers IS 'Goal: Bring your own tile layers. Either from wfs or importing GeoJSON. Not versioned (not recorded and only added by manager).';
+COMMENT ON TABLE vector_layers IS 'Goal: Bring your own tile layers. Either from wfs or importing GeoJSON. Not versioned (not recorded and only added by manager).';
 
-COMMENT ON COLUMN project_vector_layers.max_features IS 'maximum number of features to be loaded into a map';
+COMMENT ON COLUMN vector_layers.max_features IS 'maximum number of features to be loaded into a map';
 
-COMMENT ON COLUMN project_vector_layers.feature_count IS 'Number of features. Set when downloaded features';
+COMMENT ON COLUMN vector_layers.feature_count IS 'Number of features. Set when downloaded features';
 
-COMMENT ON COLUMN project_vector_layers.point_count IS 'Number of point features. Used to show styling for points - or not. Set when downloaded features';
+COMMENT ON COLUMN vector_layers.point_count IS 'Number of point features. Used to show styling for points - or not. Set when downloaded features';
 
-COMMENT ON COLUMN project_vector_layers.line_count IS 'Number of line features. Used to show styling for lines - or not. Set when downloaded features';
+COMMENT ON COLUMN vector_layers.line_count IS 'Number of line features. Used to show styling for lines - or not. Set when downloaded features';
 
-COMMENT ON COLUMN project_vector_layers.polygon_count IS 'Number of polygon features. Used to show styling for polygons - or not. Set when downloaded features';
+COMMENT ON COLUMN vector_layers.polygon_count IS 'Number of polygon features. Used to show styling for polygons - or not. Set when downloaded features';
 
-ALTER TABLE project_vector_layers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE vector_layers ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE project_vector_layers;
+  ADD TABLE vector_layers;
+
 
 --
 CREATE TYPE marker_type_enum AS enum (
@@ -802,7 +803,7 @@ DROP TABLE IF EXISTS layer_styles CASCADE;
 CREATE TABLE layer_styles (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   table_id uuid UNIQUE DEFAULT NULL REFERENCES tables (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  project_vector_layer_id uuid UNIQUE DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  project_vector_layer_id uuid UNIQUE DEFAULT NULL REFERENCES vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
   marker_type marker_type_enum DEFAULT 'circle',
   circle_marker_radius integer DEFAULT 8,
   marker_symbol text DEFAULT NULL,
@@ -1108,13 +1109,13 @@ ALTER publication supabase_realtime
   ADD TABLE news_delivery;
 
 --
--- seperate from project_vector_layers because pvl : pvl_geoms = 1 : n
+-- seperate from vector_layers because pvl : pvl_geoms = 1 : n
 -- this way bbox can be used to load only what is in view
 DROP TABLE IF EXISTS pvl_geoms CASCADE;
 
 CREATE TABLE pvl_geoms (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  pvl_id uuid DEFAULT NULL REFERENCES project_vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  pvl_id uuid DEFAULT NULL REFERENCES vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
   geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
   properties jsonb DEFAULT NULL,
   bbox_sw_lng real DEFAULT NULL,
@@ -1133,7 +1134,7 @@ CREATE INDEX ON pvl_geoms USING btree (pvl_id);
 
 COMMENT ON TABLE pvl_geoms IS 'Goal: Save vector layers client side for 1. offline usage 2. better filtering (to viewport). Data is downloaded when manager configures vector layer. Not versioned (not recorded and only added by manager).';
 
-COMMENT ON COLUMN pvl_geoms.pvl_id IS 'related project_vector_layers row';
+COMMENT ON COLUMN pvl_geoms.pvl_id IS 'related vector_layers row';
 
 COMMENT ON COLUMN pvl_geoms.geometry IS 'geometry-collection of this row';
 
@@ -1349,9 +1350,9 @@ CREATE OR REPLACE FUNCTION is_project_user_by_project_vector_layer (_auth_user_i
         auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
         INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN project_vector_layers ON project_vector_layers.project_id = projects.id
+        INNER JOIN vector_layers ON vector_layers.project_id = projects.id
       WHERE
-        project_vector_layers.id = _project_vector_layer_id
+        vector_layers.id = _project_vector_layer_id
         AND users.id = _auth_user_id);
 
 $$
@@ -1369,9 +1370,9 @@ CREATE OR REPLACE FUNCTION is_project_manager_by_project_vector_layer (_auth_use
         auth.users users
         INNER JOIN project_users ON users.email = project_users.user_email
         INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN project_vector_layers ON project_vector_layers.project_id = projects.id
+        INNER JOIN vector_layers ON vector_layers.project_id = projects.id
       WHERE
-        project_vector_layers.id = _project_vector_layer_id
+        vector_layers.id = _project_vector_layer_id
         AND project_users.role IN ('account_manager', 'project_manager')
         AND users.id = _auth_user_id);
 
@@ -1983,54 +1984,54 @@ CREATE POLICY "project managers can delete tile_layers" ON tile_layers
     USING (is_project_manager_by_project (auth.uid (), project_id));
 
 --
-DROP POLICY IF EXISTS "project readers, editors and managers can view project_vector_layers" ON project_vector_layers;
+DROP POLICY IF EXISTS "project readers, editors and managers can view vector_layers" ON vector_layers;
 
-CREATE POLICY "project readers, editors and managers can view project_vector_layers" ON project_vector_layers
+CREATE POLICY "project readers, editors and managers can view vector_layers" ON vector_layers
   FOR SELECT
     USING (is_project_user_by_project (auth.uid (), project_id));
 
-DROP POLICY IF EXISTS "project managers can insert project_vector_layers" ON project_vector_layers;
+DROP POLICY IF EXISTS "project managers can insert vector_layers" ON vector_layers;
 
-CREATE POLICY "project managers can insert project_vector_layers" ON project_vector_layers
+CREATE POLICY "project managers can insert vector_layers" ON vector_layers
   FOR INSERT
     WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
-DROP POLICY IF EXISTS "project managers can update project_vector_layers" ON project_vector_layers;
+DROP POLICY IF EXISTS "project managers can update vector_layers" ON vector_layers;
 
-CREATE POLICY "project managers can update project_vector_layers" ON project_vector_layers
+CREATE POLICY "project managers can update vector_layers" ON vector_layers
   FOR UPDATE
     USING (is_project_user_by_project (auth.uid (), project_id))
     WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
-DROP POLICY IF EXISTS "project managers can delete project_vector_layers" ON project_vector_layers;
+DROP POLICY IF EXISTS "project managers can delete vector_layers" ON vector_layers;
 
-CREATE POLICY "project managers can delete project_vector_layers" ON project_vector_layers
+CREATE POLICY "project managers can delete vector_layers" ON vector_layers
   FOR DELETE
     USING (is_project_manager_by_project (auth.uid (), project_id));
 
 --
-DROP POLICY IF EXISTS "project readers, editors and managers can view project_vector_layers geometries" ON pvl_geoms;
+DROP POLICY IF EXISTS "project readers, editors and managers can view vector_layers geometries" ON pvl_geoms;
 
-CREATE POLICY "project readers, editors and managers can view project_vector_layers geometries" ON pvl_geoms
+CREATE POLICY "project readers, editors and managers can view vector_layers geometries" ON pvl_geoms
   FOR SELECT
     USING (is_project_user_by_tile_layer (auth.uid (), pvl_id));
 
-DROP POLICY IF EXISTS "project managers can insert project_vector_layers geometries" ON pvl_geoms;
+DROP POLICY IF EXISTS "project managers can insert vector_layers geometries" ON pvl_geoms;
 
-CREATE POLICY "project managers can insert project_vector_layers geometries" ON pvl_geoms
+CREATE POLICY "project managers can insert vector_layers geometries" ON pvl_geoms
   FOR INSERT
     WITH CHECK (is_project_manager_by_tile_layer (auth.uid (), pvl_id));
 
-DROP POLICY IF EXISTS "project managers can update project_vector_layers geometries" ON pvl_geoms;
+DROP POLICY IF EXISTS "project managers can update vector_layers geometries" ON pvl_geoms;
 
-CREATE POLICY "project managers can update project_vector_layers geometries" ON pvl_geoms
+CREATE POLICY "project managers can update vector_layers geometries" ON pvl_geoms
   FOR UPDATE
     USING (is_project_user_by_tile_layer (auth.uid (), pvl_id))
     WITH CHECK (is_project_manager_by_tile_layer (auth.uid (), pvl_id));
 
-DROP POLICY IF EXISTS "project managers can delete project_vector_layers geometries" ON pvl_geoms;
+DROP POLICY IF EXISTS "project managers can delete vector_layers geometries" ON pvl_geoms;
 
-CREATE POLICY "project managers can delete project_vector_layers geometries" ON pvl_geoms
+CREATE POLICY "project managers can delete vector_layers geometries" ON pvl_geoms
   FOR DELETE
     USING (is_project_manager_by_tile_layer (auth.uid (), pvl_id));
 
