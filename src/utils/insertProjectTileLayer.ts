@@ -32,13 +32,13 @@ const insertProjectTileLayer = async ({ projectId }: Props) => {
   const update = new QueuedUpdate(
     undefined,
     undefined,
-    'project_tile_layers',
+    'tile_layers',
     JSON.stringify(newProjectTileLayer),
     undefined,
     undefined,
   )
   await Promise.all([
-    dexie.project_tile_layers.put(newProjectTileLayer),
+    dexie.tile_layers.put(newProjectTileLayer),
     dexie.queued_updates.add(update),
   ])
   return newProjectTileLayer.id

@@ -16,7 +16,7 @@ const ProjectTileLayerNavButtons = () => {
 
   const projectTileLayerIds: string[] =
     useLiveQuery(async () => {
-      const projectTileLayers = await dexie.project_tile_layers
+      const projectTileLayers = await dexie.tile_layers
         .where({ deleted: 0, project_id: projectId })
         .sortBy('sort')
 

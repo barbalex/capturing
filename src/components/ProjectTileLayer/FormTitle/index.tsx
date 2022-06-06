@@ -14,10 +14,10 @@ const ProjectTileLayerFormTitleChooser = () => {
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount] = await Promise.all([
-      dexie.project_tile_layers
+      dexie.tile_layers
         .where({ deleted: 0, project_id: projectId })
         .count(), // TODO: pass in filter
-      dexie.project_tile_layers
+      dexie.tile_layers
         .where({ deleted: 0, project_id: projectId })
         .count(),
     ])
@@ -31,7 +31,7 @@ const ProjectTileLayerFormTitleChooser = () => {
     return (
       <FilterTitle
         title="Bild-Karte"
-        table="project_tile_layers"
+        table="tile_layers"
         totalCount={totalCount}
         filteredCount={filteredCount}
       />

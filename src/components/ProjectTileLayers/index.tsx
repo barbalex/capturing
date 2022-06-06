@@ -51,7 +51,7 @@ const ProjectTileLayersComponent = () => {
 
   const projectTileLayers: ProjectTileLayer[] = useLiveQuery(
     async () =>
-      await dexie.project_tile_layers
+      await dexie.tile_layers
         .where({ deleted: 0, project_id: projectId })
         .sortBy('sort'),
     [projectId],
@@ -92,7 +92,7 @@ const ProjectTileLayersComponent = () => {
         }
       }
       // push in bulk to reduce re-renders via liveQuery
-      await dexie.project_tile_layers.bulkPut(projectTileLayersToUpdate)
+      await dexie.tile_layers.bulkPut(projectTileLayersToUpdate)
       setTileLayerSorter(
         projectTileLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
       )

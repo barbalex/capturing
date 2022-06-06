@@ -6,7 +6,7 @@ const tileLayerNodesEditingProject = async ({ project, nodes }) => {
   if (!isNodeOpen({ nodes, url: ['projects', project.id, 'tile-layers'] }))
     return
 
-  const tileLayers: ProjectTileLayer[] = await dexie.project_tile_layers
+  const tileLayers: ProjectTileLayer[] = await dexie.tile_layers
     .where({
       deleted: 0,
       project_id: project.id,

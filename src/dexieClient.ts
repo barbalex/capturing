@@ -582,7 +582,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
     const update = new QueuedUpdate(
       undefined,
       undefined,
-      'project_tile_layers',
+      'tile_layers',
       JSON.stringify(isReved),
       undefined,
       this.id,
@@ -594,7 +594,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {
     const was = { ...this }
     this.deleted = 1
-    dexie.project_tile_layers.update(this.id, { deleted: 1 })
+    dexie.tile_layers.update(this.id, { deleted: 1 })
     return this.updateOnServer({ was, is: this, session })
   }
 }
@@ -1495,7 +1495,7 @@ export class MySubClassedDexie extends Dexie {
   files!: DexieTable<File, string>
   news!: DexieTable<New, string>
   news_delivery!: DexieTable<NewsDelivery, string>
-  project_tile_layers!: DexieTable<ProjectTileLayer, string>
+  tile_layers!: DexieTable<ProjectTileLayer, string>
   project_vector_layers!: DexieTable<ProjectVectorLayer, string>
   pvl_geoms!: DexieTable<PVLGeom, string>
   project_users!: DexieTable<ProjectUser, string>
@@ -1523,7 +1523,7 @@ export class MySubClassedDexie extends Dexie {
       files: 'id',
       news: 'id, time, server_rev_at, deleted',
       news_delivery: 'id, server_rev_at, deleted',
-      project_tile_layers: 'id, label, sort, active, server_rev_at, deleted',
+      tile_layers: 'id, label, sort, active, server_rev_at, deleted',
       project_vector_layers: 'id, label, sort, active, server_rev_at, deleted',
       pvl_geoms:
         'id, pvl_id, bbox_sw_lng, bbox_sw_lat, bbox_ne_lng, bbox_ne_lat, server_rev_at, deleted',
@@ -1551,7 +1551,7 @@ export class MySubClassedDexie extends Dexie {
     this.files.mapToClass(File)
     this.news.mapToClass(New)
     this.news_delivery.mapToClass(NewsDelivery)
-    this.project_tile_layers.mapToClass(ProjectTileLayer)
+    this.tile_layers.mapToClass(ProjectTileLayer)
     this.project_vector_layers.mapToClass(ProjectVectorLayer)
     this.pvl_geoms.mapToClass(PVLGeom)
     this.projects.mapToClass(Project)

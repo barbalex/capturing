@@ -36,7 +36,7 @@ const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
   const session: Session = supabase.auth.session()
 
   const deleted: boolean = useLiveQuery(async () => {
-    const row: Row = await dexie.project_tile_layers.get(projectTileLayerId)
+    const row: Row = await dexie.tile_layers.get(projectTileLayerId)
     // only return needed values to minimize re-renders
     return row?.deleted
   }, [projectTileLayerId])
@@ -51,7 +51,7 @@ const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
     [],
   )
   const remove = useCallback(async () => {
-    const row: ProjectTileLayer = await dexie.project_tile_layers.get(
+    const row: ProjectTileLayer = await dexie.tile_layers.get(
       projectTileLayerId,
     )
     row.deleteOnServerAndClient({ session })

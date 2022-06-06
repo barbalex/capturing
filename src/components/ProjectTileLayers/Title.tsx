@@ -46,10 +46,10 @@ const ProjectTileLayersTitle = () => {
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount, projectUser] = await Promise.all([
-      dexie.project_tile_layers
+      dexie.tile_layers
         .where({ deleted: 0, project_id: projectId })
         .count(), // TODO: pass in filter
-      dexie.project_tile_layers
+      dexie.tile_layers
         .where({ deleted: 0, project_id: projectId })
         .count(),
       dexie.project_users.get({

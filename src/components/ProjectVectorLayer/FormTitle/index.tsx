@@ -15,7 +15,7 @@ const ProjectVectorLayerFormTitleChooser = () => {
       dexie.project_vector_layers
         .where({ deleted: 0, project_id: projectId })
         .count(), // TODO: pass in filter
-      dexie.project_tile_layers
+      dexie.tile_layers
         .where({ deleted: 0, project_id: projectId })
         .count(),
     ])

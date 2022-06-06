@@ -49,7 +49,7 @@ const MapLegends = () => {
   const tileLayers: TileLayerType[] =
     useLiveQuery(
       async () =>
-        await dexie.project_tile_layers.where(where).reverse().sortBy('sort'),
+        await dexie.tile_layers.where(where).reverse().sortBy('sort'),
       [projectId],
     ) ?? []
   /**

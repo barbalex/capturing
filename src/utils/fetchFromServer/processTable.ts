@@ -64,7 +64,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
     // console.log('processTable, got data for:', tableNameForDexie)
     // 4.1 keep values of local fields
     //     or fetch capabilities
-    if (['project_tile_layers', 'project_vector_layers'].includes(tableName)) {
+    if (['tile_layers', 'project_vector_layers'].includes(tableName)) {
       const incomings = []
       for (const object of data) {
         const incoming = await addCapabilitiesToIncoming({

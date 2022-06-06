@@ -17,7 +17,7 @@ const addCapabilitiesToIncoming = async ({ object, tableName }) => {
 
   // 2. get capabilities if needed
   if (
-    tableName === 'project_tile_layers' &&
+    tableName === 'tile_layers' &&
     // if url exists
     existing?.wms_base_url &&
     // ...but no layerOptions

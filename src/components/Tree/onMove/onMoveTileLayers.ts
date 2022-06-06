@@ -10,7 +10,7 @@ const onMoveTileLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
   const projectId = urlArray[0]
 
   // 1. get list
-  const tileVectorLayers: TileVectorLayer[] = await dexie.project_tile_layers
+  const tileVectorLayers: TileVectorLayer[] = await dexie.tile_layers
     .where({ deleted: 0, project_id: projectId })
     .sortBy('sort')
   // 2. get index of dragged pvl
@@ -40,7 +40,7 @@ const onMoveTileLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
     }
   }
   // push in bulk to reduce re-renders via liveQuery
-  await dexie.project_tile_layers.bulkPut(tileVectorLayersToUpdate)
+  await dexie.tile_layers.bulkPut(tileVectorLayersToUpdate)
   return
 }
 

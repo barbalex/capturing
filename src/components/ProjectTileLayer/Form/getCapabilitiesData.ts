@@ -146,7 +146,7 @@ const getCapabilitiesDataForTileLayer = async ({
   // enable updating in a single operation
   if (returnValue) return values
 
-  return dexie.project_tile_layers.update(row.id, values)
+  return dexie.tile_layers.update(row.id, values)
 }
 
 export default getCapabilitiesDataForTileLayer

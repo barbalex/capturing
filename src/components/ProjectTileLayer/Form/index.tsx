@@ -52,7 +52,7 @@ const ProjectTileLayerForm = () => {
 
   const data = useLiveQuery(async () => {
     const [row, projectUser] = await Promise.all([
-      dexie.project_tile_layers.get(projectTileLayerId),
+      dexie.tile_layers.get(projectTileLayerId),
       dexie.project_users.get({
         project_id: projectId,
         user_email: session?.user?.email,
@@ -144,7 +144,7 @@ const ProjectTileLayerForm = () => {
       // update rowState
       rowState.current = { ...row, ...{ [field]: newValue } }
       // update dexie
-      dexie.project_tile_layers.update(row.id, { [field]: newValue })
+      dexie.tile_layers.update(row.id, { [field]: newValue })
     },
     [row],
   )
