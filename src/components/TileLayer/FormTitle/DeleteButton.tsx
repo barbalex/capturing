@@ -27,7 +27,7 @@ const Title = styled.div`
   user-select: none;
 `
 
-const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
+const TileLayerDeleteButton = ({ userMayEdit }) => {
   const navigate = useNavigate()
   const { tileLayerId } = useParams()
   const store = useContext(StoreContext)
@@ -89,4 +89,4 @@ const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
   )
 }
 
-export default observer(ProjectTileLayerDeleteButton)
+export default observer(TileLayerDeleteButton)

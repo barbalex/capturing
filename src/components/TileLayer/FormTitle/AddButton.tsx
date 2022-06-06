@@ -4,14 +4,14 @@ import IconButton from '@mui/material/IconButton'
 import { useParams, useNavigate, resolvePath } from 'react-router-dom'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
-import insertProjectTileLayer from '../../../utils/insertTileLayer'
+import insertTileLayer from '../../../utils/insertTileLayer'
 
-const ProjectTileLayerAddButton = ({ userMayEdit }) => {
+const TileLayerAddButton = ({ userMayEdit }) => {
   const { projectId } = useParams()
   const navigate = useNavigate()
 
   const onClick = useCallback(async () => {
-    const newId = await insertProjectTileLayer({
+    const newId = await insertTileLayer({
       projectId,
     })
     navigate(resolvePath(`../${newId}`, window.location.pathname))
@@ -32,4 +32,4 @@ const ProjectTileLayerAddButton = ({ userMayEdit }) => {
   )
 }
 
-export default ProjectTileLayerAddButton
+export default TileLayerAddButton

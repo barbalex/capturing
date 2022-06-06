@@ -42,7 +42,7 @@ window.addEventListener('error', (e) => {
   }
 })
 
-const ProjectTileLayersComponent = () => {
+const TileLayersComponent = () => {
   const session: Session = supabase.auth.session()
   const { projectId } = useParams()
 
@@ -172,4 +172,4 @@ const ProjectTileLayersComponent = () => {
   )
 }
 
-export default observer(ProjectTileLayersComponent)
+export default observer(TileLayersComponent)

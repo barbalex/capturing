@@ -7,7 +7,7 @@ import FilterTitle from '../../shared/FilterTitle'
 import FormTitle from './FormTitle'
 import { dexie } from '../../../dexieClient'
 
-const ProjectTileLayerFormTitleChooser = () => {
+const TileLayerFormTitleChooser = () => {
   const { projectId } = useParams()
   // const store = useContext(StoreContext)
   const showFilter = false // TODO:
@@ -41,4 +41,4 @@ const ProjectTileLayerFormTitleChooser = () => {
   return <FormTitle totalCount={totalCount} filteredCount={filteredCount} />
 }
 
-export default observer(ProjectTileLayerFormTitleChooser)
+export default observer(TileLayerFormTitleChooser)

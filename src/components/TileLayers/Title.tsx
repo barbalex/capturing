@@ -10,7 +10,7 @@ import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
 import { dexie } from '../../dexieClient'
-import insertProjectTileLayer from '../../utils/insertTileLayer'
+import insertTileLayer from '../../utils/insertTileLayer'
 import FilterNumbers from '../shared/FilterNumbers'
 import { supabase } from '../../supabaseClient'
 
@@ -36,7 +36,7 @@ const TitleSymbols = styled.div`
   margin-bottom: auto;
 `
 
-const ProjectTileLayersTitle = () => {
+const TileLayersTitle = () => {
   const session = supabase.auth.session()
   const { projectId } = useParams()
   const navigate = useNavigate()
@@ -73,7 +73,7 @@ const ProjectTileLayersTitle = () => {
   const userMayEdit: boolean = data?.userMayEdit
 
   const add = useCallback(async () => {
-    const newId = await insertProjectTileLayer({ projectId })
+    const newId = await insertTileLayer({ projectId })
     navigate(newId)
   }, [navigate, projectId])
 
@@ -114,4 +114,4 @@ const ProjectTileLayersTitle = () => {
   )
 }
 
-export default observer(ProjectTileLayersTitle)
+export default observer(TileLayersTitle)

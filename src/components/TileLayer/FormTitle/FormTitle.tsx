@@ -45,7 +45,7 @@ const TitleSymbols = styled.div`
   flex-wrap: wrap;
 `
 
-const ProjectTileLayerFormTitle = ({ totalCount, filteredCount, width }) => {
+const TileLayerFormTitle = ({ totalCount, filteredCount, width }) => {
   const { projectId } = useParams()
   const session: Session = supabase.auth.session()
 
@@ -97,4 +97,4 @@ const ProjectTileLayerFormTitle = ({ totalCount, filteredCount, width }) => {
   )
 }
 
-export default withResizeDetector(observer(ProjectTileLayerFormTitle))
+export default withResizeDetector(observer(TileLayerFormTitle))
