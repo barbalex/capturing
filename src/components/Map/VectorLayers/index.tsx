@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 
 import {
   dexie,
-  ProjectVectorLayer as VectorLayerType,
+  VectorLayer as VectorLayerType,
 } from '../../../dexieClient'
 import VectorLayerChooser from './VectorLayerChooser'
 

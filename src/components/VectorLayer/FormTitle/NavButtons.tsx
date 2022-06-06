@@ -7,16 +7,16 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
-import { dexie, ProjectVectorLayer } from '../../../dexieClient'
+import { dexie, VectorLayer } from '../../../dexieClient'
 
-const ProjectVectorLayerNavButtons = () => {
+const VectorLayerNavButtons = () => {
   const { projectId, projectVectorLayerId } = useParams()
   const store = useContext(StoreContext)
   const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 
   const projectVectorLayerIds: string[] =
     useLiveQuery(async () => {
-      const vectorLayers: ProjectVectorLayer[] =
+      const vectorLayers: VectorLayer[] =
         await dexie.vector_layers
           .where({ deleted: 0, project_id: projectId })
           .sortBy('sort')
@@ -75,4 +75,4 @@ const ProjectVectorLayerNavButtons = () => {
   )
 }
 
-export default observer(ProjectVectorLayerNavButtons)
+export default observer(VectorLayerNavButtons)

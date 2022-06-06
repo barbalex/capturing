@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useCallback,
-  useRef,
-  useEffect,
-  useContext,
-} from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -14,7 +8,7 @@ import styled from 'styled-components'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import Label from '../../shared/Label'
-import { dexie, ProjectVectorLayer } from '../../../dexieClient'
+import { dexie, VectorLayer } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import downloadWfs from '../../../utils/downloadWfs'
 import storeContext from '../../../storeContext'
@@ -47,11 +41,11 @@ const UL = styled.ul`
 const LI = styled.li``
 
 type Props = {
-  row: ProjectVectorLayer
+  row: VectorLayer
 }
 
 // = '99999999-9999-9999-9999-999999999999'
-const ProjectVectorLayerDownload = ({ row }: Props) => {
+const VectorLayerDownload = ({ row }: Props) => {
   const store = useContext(storeContext)
   const { projectVectorLayerId, projectId } = useParams()
 
@@ -162,4 +156,4 @@ const ProjectVectorLayerDownload = ({ row }: Props) => {
   )
 }
 
-export default observer(ProjectVectorLayerDownload)
+export default observer(VectorLayerDownload)

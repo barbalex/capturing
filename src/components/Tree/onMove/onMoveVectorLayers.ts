@@ -1,6 +1,6 @@
 import { Session } from '@supabase/supabase-js'
 
-import { dexie, ProjectVectorLayer } from '../../../dexieClient'
+import { dexie, VectorLayer } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 
 const onMoveVectorLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
@@ -10,7 +10,7 @@ const onMoveVectorLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
   const projectId = urlArray[0]
 
   // 1. get list
-  const vectorLayers: ProjectVectorLayer[] =
+  const vectorLayers: VectorLayer[] =
     await dexie.vector_layers
       .where({ deleted: 0, project_id: projectId })
       .sortBy('sort')
@@ -24,18 +24,18 @@ const onMoveVectorLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
   result.splice(endIndex, 0, removed)
 
   // 5. set sort value according to index in list if it has changed
-  const projectVectorLayersToUpdate = []
+  const vectorLayersToUpdate = []
   for (const [index, res] of result.entries()) {
     const sort = index + 1
-    const projectVectorLayer = vectorLayers.find(
+    const vectorLayer = vectorLayers.find(
       (vl) => vl.id === res.id,
     )
-    if (projectVectorLayer.sort !== sort) {
+    if (vectorLayer.sort !== sort) {
       // update sort value
-      const was = { ...projectVectorLayer }
-      const is = { ...projectVectorLayer, sort }
-      projectVectorLayersToUpdate.push(is)
-      projectVectorLayer.updateOnServer({
+      const was = { ...vectorLayer }
+      const is = { ...vectorLayer, sort }
+      vectorLayersToUpdate.push(is)
+      vectorLayer.updateOnServer({
         was,
         is,
         session,
@@ -43,7 +43,7 @@ const onMoveVectorLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
     }
   }
   // push in bulk to reduce re-renders via liveQuery
-  await dexie.vector_layers.bulkPut(projectVectorLayersToUpdate)
+  await dexie.vector_layers.bulkPut(vectorLayersToUpdate)
   return
 }
 

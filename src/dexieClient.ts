@@ -603,7 +603,7 @@ export enum VectorLayerTypeEnum {
   wfs = 'wfs',
   upload = 'upload',
 }
-export interface IProjectVectorLayer {
+export interface IVectorLayer {
   id: string
   label?: string
   sort?: number
@@ -630,11 +630,11 @@ export interface IProjectVectorLayer {
   deleted: number
 }
 
-type ProjectVectorLayerUpdateProps = {
-  row: IProjectVectorLayer
+type VectorLayerUpdateProps = {
+  row: IVectorLayer
   session: Session
 }
-export class ProjectVectorLayer implements IProjectVectorLayer {
+export class VectorLayer implements IVectorLayer {
   id: string
   label?: string
   sort?: number
@@ -712,7 +712,7 @@ export class ProjectVectorLayer implements IProjectVectorLayer {
     this.deleted = deleted ?? 0
   }
 
-  async updateOnServer({ was, is, session }: ProjectVectorLayerUpdateProps) {
+  async updateOnServer({ was, is, session }: VectorLayerUpdateProps) {
     const isReved = {
       ...is,
       client_rev_at: new window.Date().toISOString(),
@@ -1496,7 +1496,7 @@ export class MySubClassedDexie extends Dexie {
   news!: DexieTable<New, string>
   news_delivery!: DexieTable<NewsDelivery, string>
   tile_layers!: DexieTable<TileLayer, string>
-  vector_layers!: DexieTable<ProjectVectorLayer, string>
+  vector_layers!: DexieTable<VectorLayer, string>
   pvl_geoms!: DexieTable<PVLGeom, string>
   project_users!: DexieTable<ProjectUser, string>
   layer_styles!: DexieTable<LayerStyle, string>
@@ -1552,7 +1552,7 @@ export class MySubClassedDexie extends Dexie {
     this.news.mapToClass(New)
     this.news_delivery.mapToClass(NewsDelivery)
     this.tile_layers.mapToClass(TileLayer)
-    this.vector_layers.mapToClass(ProjectVectorLayer)
+    this.vector_layers.mapToClass(VectorLayer)
     this.pvl_geoms.mapToClass(PVLGeom)
     this.projects.mapToClass(Project)
     this.project_users.mapToClass(ProjectUser)

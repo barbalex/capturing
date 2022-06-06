@@ -18,8 +18,8 @@ import JesNo from '../../shared/JesNo'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import {
   dexie,
-  IProjectVectorLayer,
-  ProjectVectorLayer,
+  IVectorLayer,
+  VectorLayer,
   VectorLayerTypeEnum,
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
@@ -68,7 +68,7 @@ type Props = {
 }
 
 // = '99999999-9999-9999-9999-999999999999'
-const ProjectVectorLayerForm = ({ showFilter }: Props) => {
+const VectorLayerForm = ({ showFilter }: Props) => {
   const { projectId, projectVectorLayerId } = useParams()
 
   const store = useContext(StoreContext)
@@ -107,15 +107,15 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
     }
   }, [projectId, projectVectorLayerId, session?.user?.email])
 
-  const row: ProjectVectorLayer = data?.row
+  const row: VectorLayer = data?.row
   const userMayEdit: boolean = data?.userMayEdit
 
   // need original row to be able to roll back optimistic ui updates
-  const originalRow = useRef<IProjectVectorLayer>()
+  const originalRow = useRef<IVectorLayer>()
   // need to update rowState on blur because of
   // when user directly closes app after last update in field
   // seems that waiting for dexie update goes too long
-  const rowState = useRef<IProjectVectorLayer>()
+  const rowState = useRef<IVectorLayer>()
   useEffect(() => {
     rowState.current = row
     // update originalRow only initially, once row has arrived
@@ -172,7 +172,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
         })
       }
 
-      // console.log('ProjectVectorLayer, onBlur', { field, value, newValue })
+      // console.log('VectorLayer, onBlur', { field, value, newValue })
 
       // update rowState
       rowState.current = { ...row, ...{ [field]: newValue } }
@@ -220,7 +220,7 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
   // const showDeleted = filter?.project_vector_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
-  // console.log('ProjectVectorLayer rendering', {
+  // console.log('VectorLayer rendering', {
   //   row,
   //   loadingCapabilities,
   //   type_name: row?.type_name,
@@ -451,4 +451,4 @@ const ProjectVectorLayerForm = ({ showFilter }: Props) => {
   )
 }
 
-export default observer(ProjectVectorLayerForm)
+export default observer(VectorLayerForm)

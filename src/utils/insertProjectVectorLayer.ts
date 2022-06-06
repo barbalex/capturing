@@ -1,11 +1,11 @@
-import { dexie, ProjectVectorLayer, QueuedUpdate } from '../dexieClient'
+import { dexie, VectorLayer, QueuedUpdate } from '../dexieClient'
 
 type Props = {
   projectId: string
 }
 
-const insertProjectVectorLayer = async ({ projectId }: Props) => {
-  const newProjectVectorLayer = new ProjectVectorLayer(
+const insertVectorLayer = async ({ projectId }: Props) => {
+  const newVectorLayer = new VectorLayer(
     undefined,
     undefined,
     0,
@@ -34,15 +34,15 @@ const insertProjectVectorLayer = async ({ projectId }: Props) => {
     undefined,
     undefined,
     'vector_layers',
-    JSON.stringify(newProjectVectorLayer),
+    JSON.stringify(newVectorLayer),
     undefined,
     undefined,
   )
   await Promise.all([
-    dexie.vector_layers.put(newProjectVectorLayer),
+    dexie.vector_layers.put(newVectorLayer),
     dexie.queued_updates.add(update),
   ])
-  return newProjectVectorLayer.id
+  return newVectorLayer.id
 }
 
-export default insertProjectVectorLayer
+export default insertVectorLayer

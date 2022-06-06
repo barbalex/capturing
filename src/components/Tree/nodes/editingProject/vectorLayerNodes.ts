@@ -1,4 +1,4 @@
-import { dexie, ProjectVectorLayer } from '../../../../dexieClient'
+import { dexie, VectorLayer } from '../../../../dexieClient'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 
 const vectorLayerNodesEditingProject = async ({ project, nodes }) => {
@@ -6,7 +6,7 @@ const vectorLayerNodesEditingProject = async ({ project, nodes }) => {
   if (!isNodeOpen({ nodes, url: ['projects', project.id, 'vector-layers'] }))
     return
 
-  const vectorLayers: ProjectVectorLayer[] = await dexie.vector_layers
+  const vectorLayers: VectorLayer[] = await dexie.vector_layers
     .where({
       deleted: 0,
       project_id: project.id,

@@ -2,12 +2,12 @@ import axios from 'redaxios'
 import countBy from 'lodash/countBy'
 import sumBy from 'lodash/sumBy'
 
-import { dexie, PVLGeom, ProjectVectorLayer } from '../dexieClient'
+import { dexie, PVLGeom, VectorLayer } from '../dexieClient'
 import xmlToJson from './xmlToJson'
 import featureFromWfsGml from './featureFromWfsGml'
 
 type Props = {
-  pvl: ProjectVectorLayer
+  pvl: VectorLayer
 }
 
 // TODO: do this in worker

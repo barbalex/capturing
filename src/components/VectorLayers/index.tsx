@@ -10,7 +10,7 @@ import { Session } from '@supabase/supabase-js'
 import storeContext from '../../storeContext'
 import Item from './Item'
 import ErrorBoundary from '../shared/ErrorBoundary'
-import { dexie, ProjectVectorLayer } from '../../dexieClient'
+import { dexie, VectorLayer } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 import Title from './Title'
 import HeightPreservingItem from '../shared/HeightPreservingItem'
@@ -42,14 +42,14 @@ window.addEventListener('error', (e) => {
   }
 })
 
-const ProjectVectorLayersComponent = () => {
+const VectorLayersComponent = () => {
   const session: Session = supabase.auth.session()
   const { projectId } = useParams()
 
   const store = useContext(storeContext)
   const { formHeight, setVectorLayerSorter, rebuildTree } = store
 
-  const vectorLayers: ProjectVectorLayer[] = useLiveQuery(
+  const vectorLayers: VectorLayer[] = useLiveQuery(
     async () =>
       await dexie.vector_layers
         .where({ deleted: 0, project_id: projectId })
@@ -57,7 +57,7 @@ const ProjectVectorLayersComponent = () => {
     [projectId],
   )
 
-  const [items, setItems] = useState<ProjectVectorLayer[]>([])
+  const [items, setItems] = useState<VectorLayer[]>([])
   useEffect(() => {
     if (!vectorLayers) return
     setItems(vectorLayers)
@@ -73,18 +73,18 @@ const ProjectVectorLayersComponent = () => {
        * set sort value according to index in list
        * if it has changed
        */
-      const projectVectorLayersToUpdate = []
+      const vectorLayersToUpdate = []
       for (const [index, res] of result.entries()) {
         const sort = index + 1
-        const projectVectorLayer = vectorLayers.find(
+        const vectorLayer = vectorLayers.find(
           (vl) => vl.id === res.id,
         )
-        if (projectVectorLayer.sort !== sort) {
+        if (vectorLayer.sort !== sort) {
           // update sort value
-          const was = { ...projectVectorLayer }
-          const is = { ...projectVectorLayer, sort }
-          projectVectorLayersToUpdate.push(is)
-          projectVectorLayer.updateOnServer({
+          const was = { ...vectorLayer }
+          const is = { ...vectorLayer, sort }
+          vectorLayersToUpdate.push(is)
+          vectorLayer.updateOnServer({
             was,
             is,
             session,
@@ -92,7 +92,7 @@ const ProjectVectorLayersComponent = () => {
         }
       }
       // push in bulk to reduce re-renders via liveQuery
-      await dexie.vector_layers.bulkPut(projectVectorLayersToUpdate)
+      await dexie.vector_layers.bulkPut(vectorLayersToUpdate)
       setVectorLayerSorter(
         vectorLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
       )
@@ -174,4 +174,4 @@ const ProjectVectorLayersComponent = () => {
   )
 }
 
-export default observer(ProjectVectorLayersComponent)
+export default observer(VectorLayersComponent)

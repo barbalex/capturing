@@ -12,7 +12,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import { supabase } from '../../../supabaseClient'
-import { dexie, ProjectVectorLayer } from '../../../dexieClient'
+import { dexie, VectorLayer } from '../../../dexieClient'
 
 const TitleRow = styled.div`
   display: flex;
@@ -27,7 +27,7 @@ const Title = styled.div`
   user-select: none;
 `
 
-const ProjectVectorLayerDeleteButton = ({ userMayEdit }) => {
+const VectorLayerDeleteButton = ({ userMayEdit }) => {
   const navigate = useNavigate()
   const { projectVectorLayerId } = useParams()
   const store = useContext(StoreContext)
@@ -51,7 +51,7 @@ const ProjectVectorLayerDeleteButton = ({ userMayEdit }) => {
     [],
   )
   const remove = useCallback(async () => {
-    const row: ProjectVectorLayer = await dexie.vector_layers.get(
+    const row: VectorLayer = await dexie.vector_layers.get(
       projectVectorLayerId,
     )
     row.deleteOnServerAndClient({ session })
@@ -97,4 +97,4 @@ const ProjectVectorLayerDeleteButton = ({ userMayEdit }) => {
   )
 }
 
-export default observer(ProjectVectorLayerDeleteButton)
+export default observer(VectorLayerDeleteButton)

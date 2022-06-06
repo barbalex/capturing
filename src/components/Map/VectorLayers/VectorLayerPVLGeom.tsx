@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import {
   dexie,
   LayerStyle,
-  ProjectVectorLayer,
+  VectorLayer,
   PVLGeom,
 } from '../../../dexieClient'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
@@ -19,7 +19,7 @@ import MapErrorBoundary from '../../../components/shared/MapErrorBoundary'
 // const bboxBuffer = 0.01
 
 type Props = {
-  layer: ProjectVectorLayer
+  layer: VectorLayer
 }
 const VectorLayerComponent = ({ layer }: Props) => {
   const [data, setData] = useState()
