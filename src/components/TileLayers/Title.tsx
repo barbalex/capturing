@@ -10,7 +10,7 @@ import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
 import { dexie } from '../../dexieClient'
-import insertProjectTileLayer from '../../utils/insertProjectTileLayer'
+import insertProjectTileLayer from '../../utils/insertTileLayer'
 import FilterNumbers from '../shared/FilterNumbers'
 import { supabase } from '../../supabaseClient'
 

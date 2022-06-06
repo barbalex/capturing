@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton'
 import { useParams, useNavigate, resolvePath } from 'react-router-dom'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
-import insertProjectTileLayer from '../../../utils/insertProjectTileLayer'
+import insertProjectTileLayer from '../../../utils/insertTileLayer'
 
 const ProjectTileLayerAddButton = ({ userMayEdit }) => {
   const { projectId } = useParams()
