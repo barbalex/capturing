@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
-import { dexie, ProjectTileLayer as TileLayerType } from '../../../dexieClient' 
+import { dexie, TileLayer as TileLayerType } from '../../../dexieClient' 
 import TileLayer from './TileLayer'
 import OsmColor from '../layers/OsmColor'
 

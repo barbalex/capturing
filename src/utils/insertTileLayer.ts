@@ -1,11 +1,11 @@
-import { dexie, ProjectTileLayer, QueuedUpdate } from '../dexieClient'
+import { dexie, TileLayer, QueuedUpdate } from '../dexieClient'
 
 type Props = {
   projectId: string
 }
 
-const insertProjectTileLayer = async ({ projectId }: Props) => {
-  const newProjectTileLayer = new ProjectTileLayer(
+const insertTileLayer = async ({ projectId }: Props) => {
+  const newTileLayer = new TileLayer(
     undefined,
     undefined,
     0,
@@ -33,15 +33,15 @@ const insertProjectTileLayer = async ({ projectId }: Props) => {
     undefined,
     undefined,
     'tile_layers',
-    JSON.stringify(newProjectTileLayer),
+    JSON.stringify(newTileLayer),
     undefined,
     undefined,
   )
   await Promise.all([
-    dexie.tile_layers.put(newProjectTileLayer),
+    dexie.tile_layers.put(newTileLayer),
     dexie.queued_updates.add(update),
   ])
-  return newProjectTileLayer.id
+  return newTileLayer.id
 }
 
-export default insertProjectTileLayer
+export default insertTileLayer

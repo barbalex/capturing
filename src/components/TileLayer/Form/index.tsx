@@ -13,8 +13,8 @@ import ErrorBoundary from '../../shared/ErrorBoundary'
 import {
   dexie,
   TileLayerTypeEnum,
-  IProjectTileLayer,
-  ProjectTileLayer,
+  ITileLayer,
+  TileLayer,
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
@@ -32,7 +32,7 @@ const FieldsContainer = styled.div`
 `
 
 // = '99999999-9999-9999-9999-999999999999'
-const ProjectTileLayerForm = () => {
+const TileLayerForm = () => {
   const { projectId, tileLayerId } = useParams()
 
   const store = useContext(StoreContext)
@@ -70,7 +70,7 @@ const ProjectTileLayerForm = () => {
     }
   }, [projectId, tileLayerId, session?.user?.email])
 
-  const row: ProjectTileLayer = data?.row
+  const row: TileLayer = data?.row
   const userMayEdit: boolean = data?.userMayEdit
 
   const tileLayerTypeValues = Object.values(TileLayerTypeEnum).map((v) => ({
@@ -79,11 +79,11 @@ const ProjectTileLayerForm = () => {
   }))
 
   // need original row to be able to roll back optimistic ui updates
-  const originalRow = useRef<IProjectTileLayer>()
+  const originalRow = useRef<ITileLayer>()
   // need to update rowState on blur because of
   // when user directly closes app after last update in field
   // seems that waiting for dexie update goes too long
-  const rowState = useRef<IProjectTileLayer>()
+  const rowState = useRef<ITileLayer>()
   useEffect(() => {
     rowState.current = row
     // update originalRow only initially, once row has arrived
@@ -127,7 +127,7 @@ const ProjectTileLayerForm = () => {
       if (type === 'array' && field === 'wms_layers') {
         newValue = value.join(',')
       }
-      // console.log('ProjectTileLayer Form onBlur', { newValue, type, field })
+      // console.log('TileLayer Form onBlur', { newValue, type, field })
 
       // return if value has not changed
       const previousValue = rowState.current[field]
@@ -423,4 +423,4 @@ const ProjectTileLayerForm = () => {
   )
 }
 
-export default observer(ProjectTileLayerForm)
+export default observer(TileLayerForm)

@@ -407,7 +407,7 @@ export interface IProjectReader {
   deleted: number
 }
 
-export interface IProjectTileLayer {
+export interface ITileLayer {
   id: string
   label?: string
   sort?: number
@@ -474,8 +474,8 @@ type legendUrlList = {
   name: string
 }
 
-type ProjectTileLayerUpdateProps = { row: IProjectTileLayer; session: Session }
-export class ProjectTileLayer implements IProjectTileLayer {
+type TileLayerUpdateProps = { row: ITileLayer; session: Session }
+export class TileLayer implements ITileLayer {
   id: string
   label?: string
   sort?: number
@@ -571,7 +571,7 @@ export class ProjectTileLayer implements IProjectTileLayer {
     this.deleted = deleted ?? 0
   }
 
-  async updateOnServer({ was, is, session }: ProjectTileLayerUpdateProps) {
+  async updateOnServer({ was, is, session }: TileLayerUpdateProps) {
     const isReved = {
       ...is,
       client_rev_at: new window.Date().toISOString(),
@@ -1495,7 +1495,7 @@ export class MySubClassedDexie extends Dexie {
   files!: DexieTable<File, string>
   news!: DexieTable<New, string>
   news_delivery!: DexieTable<NewsDelivery, string>
-  tile_layers!: DexieTable<ProjectTileLayer, string>
+  tile_layers!: DexieTable<TileLayer, string>
   project_vector_layers!: DexieTable<ProjectVectorLayer, string>
   pvl_geoms!: DexieTable<PVLGeom, string>
   project_users!: DexieTable<ProjectUser, string>
@@ -1551,7 +1551,7 @@ export class MySubClassedDexie extends Dexie {
     this.files.mapToClass(File)
     this.news.mapToClass(New)
     this.news_delivery.mapToClass(NewsDelivery)
-    this.tile_layers.mapToClass(ProjectTileLayer)
+    this.tile_layers.mapToClass(TileLayer)
     this.project_vector_layers.mapToClass(ProjectVectorLayer)
     this.pvl_geoms.mapToClass(PVLGeom)
     this.projects.mapToClass(Project)

@@ -8,7 +8,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import StoreContext from '../../../storeContext'
 import { dexie } from '../../../dexieClient'
 
-const ProjectTileLayerNavButtons = () => {
+const TileLayerNavButtons = () => {
   const { projectId, tileLayerId } = useParams()
 
   const store = useContext(StoreContext)
@@ -74,4 +74,4 @@ const ProjectTileLayerNavButtons = () => {
   )
 }
 
-export default observer(ProjectTileLayerNavButtons)
+export default observer(TileLayerNavButtons)

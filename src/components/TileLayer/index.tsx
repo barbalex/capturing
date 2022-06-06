@@ -11,7 +11,7 @@ const Container = styled.div`
   background-color: ${(props) => (props.showfilter ? '#fff3e0' : 'unset')};
 `
 
-const ProjectTileLayerComponent = ({ filter: showFilter }) => {
+const TileLayerComponent = ({ filter: showFilter }) => {
   const filter = 'TODO: was in store'
 
   if (!showFilter && filter.show) return null
@@ -24,4 +24,4 @@ const ProjectTileLayerComponent = ({ filter: showFilter }) => {
   )
 }
 
-export default observer(ProjectTileLayerComponent)
+export default observer(TileLayerComponent)

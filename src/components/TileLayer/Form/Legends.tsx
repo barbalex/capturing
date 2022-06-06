@@ -36,7 +36,7 @@ const LegendsContainer = styled.div`
 `
 
 // = '99999999-9999-9999-9999-999999999999'
-const ProjectTileLayerFormLegends = ({ row }) => {
+const TileLayerFormLegends = ({ row }) => {
   const [legends, setLegends] = useState()
   useEffect(() => {
     // get legends from row
@@ -82,4 +82,4 @@ const ProjectTileLayerFormLegends = ({ row }) => {
   )
 }
 
-export default ProjectTileLayerFormLegends
+export default TileLayerFormLegends

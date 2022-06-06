@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import { useMap } from 'react-leaflet'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
-import { dexie, ProjectTileLayer } from '../../../dexieClient'
+import { dexie, TileLayer } from '../../../dexieClient'
 
 const LegendsContainer = styled.div`
   max-height: ${(props) => `${props.maxheight}px`};
@@ -76,7 +76,7 @@ const MapLegends = () => {
     // TODO:
     // add legends of tables
     // add legends of vector layers
-    for (const row: ProjectTileLayer of validTileLayers) {
+    for (const row: TileLayer of validTileLayers) {
       for (const legend of row?._wmsLegends ?? []) {
         let objectUrl
         try {

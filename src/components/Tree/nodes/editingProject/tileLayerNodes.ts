@@ -1,4 +1,4 @@
-import { dexie, ProjectTileLayer } from '../../../../dexieClient'
+import { dexie, TileLayer } from '../../../../dexieClient'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 
 const tileLayerNodesEditingProject = async ({ project, nodes }) => {
@@ -6,7 +6,7 @@ const tileLayerNodesEditingProject = async ({ project, nodes }) => {
   if (!isNodeOpen({ nodes, url: ['projects', project.id, 'tile-layers'] }))
     return
 
-  const tileLayers: ProjectTileLayer[] = await dexie.tile_layers
+  const tileLayers: TileLayer[] = await dexie.tile_layers
     .where({
       deleted: 0,
       project_id: project.id,

@@ -1,10 +1,10 @@
 import axios from 'redaxios'
 
 import fetchCapabilities from '../../../utils/getCapabilities'
-import { dexie, ProjectTileLayer } from '../../../dexieClient'
+import { dexie, TileLayer } from '../../../dexieClient'
 
 type Props = {
-  row: ProjectTileLayer
+  row: TileLayer
   returnValue: boolean
 }
 
@@ -81,7 +81,7 @@ const getCapabilitiesDataForTileLayer = async ({
     label: l,
     value: l,
   }))
-  // console.log('ProjectTileLayerForm, cbData:', cbData)
+  // console.log('TileLayerForm, cbData:', cbData)
 
   // if wms_format is not yet set, set version with png or jpg
   if (!row?.wms_format) {

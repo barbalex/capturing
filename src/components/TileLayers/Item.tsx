@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Session } from '@supabase/supabase-js'
 
 import constants from '../../utils/constants'
-import { dexie, ProjectTileLayer } from '../../dexieClient'
+import { dexie, TileLayer } from '../../dexieClient'
 import { supabase } from '../../supabaseClient'
 
 // TODO: alter css on isdragging
@@ -41,7 +41,7 @@ const RowLink = styled.div`
   justify-content: center;
 `
 type Props = {
-  row: ProjectTileLayer
+  row: TileLayer
 }
 
 const ProjectTilelayerItem = ({ item, provided, isDragging }: Props) => {
