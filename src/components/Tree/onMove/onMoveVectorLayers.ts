@@ -10,16 +10,16 @@ const onMoveVectorLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
   const projectId = urlArray[0]
 
   // 1. get list
-  const projectVectorLayers: ProjectVectorLayer[] =
+  const vectorLayers: ProjectVectorLayer[] =
     await dexie.vector_layers
       .where({ deleted: 0, project_id: projectId })
       .sortBy('sort')
   // 2. get index of dragged pvl
-  const startIndex = projectVectorLayers.findIndex((pvl) => pvl.id === idMoved)
+  const startIndex = vectorLayers.findIndex((pvl) => pvl.id === idMoved)
   // 3. return if moved node was not pvl
   if (startIndex === undefined) return
   // 4. re-order array
-  const result = Array.from(projectVectorLayers)
+  const result = Array.from(vectorLayers)
   const [removed] = result.splice(startIndex, 1)
   result.splice(endIndex, 0, removed)
 
@@ -27,7 +27,7 @@ const onMoveVectorLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
   const projectVectorLayersToUpdate = []
   for (const [index, res] of result.entries()) {
     const sort = index + 1
-    const projectVectorLayer = projectVectorLayers.find(
+    const projectVectorLayer = vectorLayers.find(
       (vl) => vl.id === res.id,
     )
     if (projectVectorLayer.sort !== sort) {
