@@ -12,7 +12,7 @@ const Container = styled.div`
   background-color: ${(props) => (props.showfilter ? '#fff3e0' : 'unset')};
 `
 
-const ProjectVectorLayerComponent = ({ filter: showFilter }) => {
+const VectorLayerComponent = ({ filter: showFilter }) => {
   const filter = 'TODO: was in store'
 
   if (!showFilter && filter.show) return null
@@ -27,4 +27,4 @@ const ProjectVectorLayerComponent = ({ filter: showFilter }) => {
   )
 }
 
-export default observer(ProjectVectorLayerComponent)
+export default observer(VectorLayerComponent)

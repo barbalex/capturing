@@ -10,7 +10,7 @@ import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
 import { dexie } from '../../dexieClient'
-import insertProjectVectorLayer from '../../utils/insertProjectVectorLayer'
+import insertVectorLayer from '../../utils/insertVectorLayer'
 import FilterNumbers from '../shared/FilterNumbers'
 import { supabase } from '../../supabaseClient'
 
@@ -36,7 +36,7 @@ const TitleSymbols = styled.div`
   margin-bottom: auto;
 `
 
-const ProjectVectorLayersTitle = () => {
+const VectorLayersTitle = () => {
   const session = supabase.auth.session()
   const { projectId } = useParams()
   const navigate = useNavigate()
@@ -73,7 +73,7 @@ const ProjectVectorLayersTitle = () => {
   const userMayEdit: boolean = data?.userMayEdit
 
   const add = useCallback(async () => {
-    const newId = await insertProjectVectorLayer({ projectId })
+    const newId = await insertVectorLayer({ projectId })
     navigate(newId)
   }, [navigate, projectId])
 
@@ -114,4 +114,4 @@ const ProjectVectorLayersTitle = () => {
   )
 }
 
-export default observer(ProjectVectorLayersTitle)
+export default observer(VectorLayersTitle)

@@ -6,7 +6,7 @@ import FilterTitle from '../../shared/FilterTitle'
 import FormTitle from './FormTitle'
 import { dexie } from '../../../dexieClient'
 
-const ProjectVectorLayerFormTitleChooser = () => {
+const VectorLayerFormTitleChooser = () => {
   const { projectId } = useParams()
   const showFilter = false // TODO:
 
@@ -39,4 +39,4 @@ const ProjectVectorLayerFormTitleChooser = () => {
   return <FormTitle totalCount={totalCount} filteredCount={filteredCount} />
 }
 
-export default observer(ProjectVectorLayerFormTitleChooser)
+export default observer(VectorLayerFormTitleChooser)

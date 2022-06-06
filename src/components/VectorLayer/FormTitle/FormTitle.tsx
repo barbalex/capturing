@@ -45,7 +45,7 @@ const TitleSymbols = styled.div`
   flex-wrap: wrap;
 `
 
-const ProjectVectorLayerFormTitle = ({ totalCount, filteredCount, width }) => {
+const VectorLayerFormTitle = ({ totalCount, filteredCount, width }) => {
   const { projectId } = useParams()
   const session: Session = supabase.auth.session()
 
@@ -97,4 +97,4 @@ const ProjectVectorLayerFormTitle = ({ totalCount, filteredCount, width }) => {
   )
 }
 
-export default withResizeDetector(observer(ProjectVectorLayerFormTitle))
+export default withResizeDetector(observer(VectorLayerFormTitle))

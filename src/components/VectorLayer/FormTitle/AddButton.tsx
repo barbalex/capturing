@@ -4,14 +4,14 @@ import IconButton from '@mui/material/IconButton'
 import { useParams, useNavigate, resolvePath } from 'react-router-dom'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
-import insertProjectVectorLayer from '../../../utils/insertProjectVectorLayer'
+import insertVectorLayer from '../../../utils/insertVectorLayer'
 
-const ProjectVectorLayerAddButton = ({ userMayEdit }) => {
+const VectorLayerAddButton = ({ userMayEdit }) => {
   const { projectId } = useParams()
   const navigate = useNavigate()
 
   const onClick = useCallback(async () => {
-    const newId = await insertProjectVectorLayer({
+    const newId = await insertVectorLayer({
       projectId,
     })
     navigate(resolvePath(`../${newId}`, window.location.pathname))
@@ -32,4 +32,4 @@ const ProjectVectorLayerAddButton = ({ userMayEdit }) => {
   )
 }
 
-export default ProjectVectorLayerAddButton
+export default VectorLayerAddButton
