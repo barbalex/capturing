@@ -44,7 +44,7 @@ type Props = {
   row: TileLayer
 }
 
-const ProjectTilelayerItem = ({ item, provided, isDragging }: Props) => {
+const TileLayerItem = ({ item, provided, isDragging }: Props) => {
   const navigate = useNavigate()
   const session: Session = supabase.auth.session()
 
@@ -88,4 +88,4 @@ const ProjectTilelayerItem = ({ item, provided, isDragging }: Props) => {
   )
 }
 
-export default ProjectTilelayerItem
+export default TileLayerItem
