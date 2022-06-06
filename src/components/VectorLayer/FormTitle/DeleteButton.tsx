@@ -29,17 +29,17 @@ const Title = styled.div`
 
 const VectorLayerDeleteButton = ({ userMayEdit }) => {
   const navigate = useNavigate()
-  const { projectVectorLayerId } = useParams()
+  const { vectorLayerId } = useParams()
   const store = useContext(StoreContext)
   const { activeNodeArray, removeNodeWithChildren } = store
   // const filter = { todo: 'TODO: was in store' }
   const session: Session = supabase.auth.session()
 
   const deleted: boolean = useLiveQuery(async () => {
-    const row: Row = await dexie.vector_layers.get(projectVectorLayerId)
+    const row: Row = await dexie.vector_layers.get(vectorLayerId)
     // only return needed values to minimize re-renders
     return row?.deleted
-  }, [projectVectorLayerId])
+  }, [vectorLayerId])
 
   const [anchorEl, setAnchorEl] = useState(null)
   const closeMenu = useCallback(() => {
@@ -52,7 +52,7 @@ const VectorLayerDeleteButton = ({ userMayEdit }) => {
   )
   const remove = useCallback(async () => {
     const row: VectorLayer = await dexie.vector_layers.get(
-      projectVectorLayerId,
+      vectorLayerId,
     )
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
@@ -64,7 +64,7 @@ const VectorLayerDeleteButton = ({ userMayEdit }) => {
     navigate,
     removeNodeWithChildren,
     session,
-    projectVectorLayerId,
+    vectorLayerId,
   ])
 
   return (

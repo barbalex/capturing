@@ -69,7 +69,7 @@ type Props = {
 
 // = '99999999-9999-9999-9999-999999999999'
 const VectorLayerForm = ({ showFilter }: Props) => {
-  const { projectId, projectVectorLayerId } = useParams()
+  const { projectId, vectorLayerId } = useParams()
 
   const store = useContext(StoreContext)
   const { filter, errors } = store
@@ -84,12 +84,12 @@ const VectorLayerForm = ({ showFilter }: Props) => {
   ) // TODO: add errors, unsetError in store
   useEffect(() => {
     unsetError('project_vector_layer')
-  }, [projectVectorLayerId, unsetError])
+  }, [vectorLayerId, unsetError])
 
   // const data = {}
   const data = useLiveQuery(async () => {
     const [row, projectUser] = await Promise.all([
-      dexie.vector_layers.get(projectVectorLayerId),
+      dexie.vector_layers.get(vectorLayerId),
       dexie.project_users.get({
         project_id: projectId,
         user_email: session?.user?.email,
@@ -105,7 +105,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
       row,
       userMayEdit,
     }
-  }, [projectId, projectVectorLayerId, session?.user?.email])
+  }, [projectId, vectorLayerId, session?.user?.email])
 
   const row: VectorLayer = data?.row
   const userMayEdit: boolean = data?.userMayEdit
@@ -215,7 +215,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
       setLoadingCapabilities(false)
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [row?.url, row?.type_name, projectVectorLayerId])
+  }, [row?.url, row?.type_name, vectorLayerId])
 
   // const showDeleted = filter?.project_vector_layer?.deleted !== false || row?.deleted
   const showDeleted = false

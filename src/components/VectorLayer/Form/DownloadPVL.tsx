@@ -47,7 +47,7 @@ type Props = {
 // = '99999999-9999-9999-9999-999999999999'
 const VectorLayerDownload = ({ row }: Props) => {
   const store = useContext(storeContext)
-  const { projectVectorLayerId, projectId } = useParams()
+  const { vectorLayerId, projectId } = useParams()
 
   const session: Session = supabase.auth.session()
 
@@ -55,7 +55,7 @@ const VectorLayerDownload = ({ row }: Props) => {
   const data = useLiveQuery(async () => {
     const [pvlGeomsCount, projectUser] = await Promise.all([
       dexie.pvl_geoms
-        .where({ deleted: 0, pvl_id: projectVectorLayerId })
+        .where({ deleted: 0, pvl_id: vectorLayerId })
         .count(),
       dexie.project_users.get({
         project_id: projectId,
@@ -72,7 +72,7 @@ const VectorLayerDownload = ({ row }: Props) => {
       pvlGeomsCount,
       userMayEdit,
     }
-  }, [projectId, projectVectorLayerId, session?.user?.email])
+  }, [projectId, vectorLayerId, session?.user?.email])
 
   const userMayEdit: boolean = data?.userMayEdit
   const pvlGeomsCount: number = data?.pvlGeomsCount
@@ -91,10 +91,10 @@ const VectorLayerDownload = ({ row }: Props) => {
   const onClickDelete = useCallback(async () => {
     setRemoving(true)
     await dexie.pvl_geoms
-      .where({ deleted: 0, pvl_id: projectVectorLayerId })
+      .where({ deleted: 0, pvl_id: vectorLayerId })
       .delete()
     setRemoving(false)
-  }, [projectVectorLayerId])
+  }, [vectorLayerId])
 
   const offlineReadyText = pvlGeomsCount
     ? 'Die Daten sind offline verfügbar:'

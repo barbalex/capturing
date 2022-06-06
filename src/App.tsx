@@ -138,7 +138,7 @@ function App() {
                     element={<VectorLayersComponent />}
                   />
                   <Route
-                    path=":projectId/vector-layers/:projectVectorLayerId"
+                    path=":projectId/vector-layers/:vectorLayerId"
                     element={<VectorLayerComponent />}
                   />
                   <Route

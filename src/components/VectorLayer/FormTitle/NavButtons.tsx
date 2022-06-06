@@ -10,11 +10,11 @@ import StoreContext from '../../../storeContext'
 import { dexie, VectorLayer } from '../../../dexieClient'
 
 const VectorLayerNavButtons = () => {
-  const { projectId, projectVectorLayerId } = useParams()
+  const { projectId, vectorLayerId } = useParams()
   const store = useContext(StoreContext)
   const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 
-  const projectVectorLayerIds: string[] =
+  const vectorLayerIds: string[] =
     useLiveQuery(async () => {
       const vectorLayers: VectorLayer[] =
         await dexie.vector_layers
@@ -28,14 +28,14 @@ const VectorLayerNavButtons = () => {
     }, [projectId]) ?? []
 
   const parentPath = resolvePath(`..`, window.location.pathname)?.pathname
-  const activeIndex = projectVectorLayerIds.indexOf(projectVectorLayerId)
+  const activeIndex = vectorLayerIds.indexOf(vectorLayerId)
   const previousId =
-    activeIndex > 0 ? projectVectorLayerIds[activeIndex - 1] : activeIndex
+    activeIndex > 0 ? vectorLayerIds[activeIndex - 1] : activeIndex
   const previousPath = `${parentPath}/${previousId}`
   const nextId =
-    activeIndex === projectVectorLayerIds.length - 1
-      ? projectVectorLayerIds[activeIndex]
-      : projectVectorLayerIds[activeIndex + 1]
+    activeIndex === vectorLayerIds.length - 1
+      ? vectorLayerIds[activeIndex]
+      : vectorLayerIds[activeIndex + 1]
   const nextPath = `${parentPath}/${nextId}`
 
   const onClickUp = useCallback(() => {
@@ -67,7 +67,7 @@ const VectorLayerNavButtons = () => {
         component={Link}
         to={nextPath}
         size="large"
-        disabled={activeIndex === projectVectorLayerIds.length - 1}
+        disabled={activeIndex === vectorLayerIds.length - 1}
       >
         <FaArrowRight />
       </IconButton>

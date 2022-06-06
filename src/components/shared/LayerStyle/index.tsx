@@ -62,7 +62,7 @@ const FieldsContainer = styled.div`
 
 const LayerStyleForm = ({ userMayEdit, row: layer }) => {
   const session: Session = supabase.auth.session()
-  const { projectVectorLayerId, tableId } = useParams()
+  const { vectorLayerId, tableId } = useParams()
 
   // Get these numbers for tables?
   // No: Manager should be able to set styling before features exist
@@ -74,10 +74,10 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
     () =>
       tableId
         ? { table_id: tableId }
-        : projectVectorLayerId
-        ? { project_vector_layer_id: projectVectorLayerId }
+        : vectorLayerId
+        ? { project_vector_layer_id: vectorLayerId }
         : 'none',
-    [projectVectorLayerId, tableId],
+    [vectorLayerId, tableId],
   )
   const row: LayerStyle = useLiveQuery(
     async () => {
@@ -88,7 +88,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
       // if (!_row) {
       //   _row = await insertLayerStyle({
       //     tableId,
-      //     projectVectorLayerId,
+      //     vectorLayerId,
       //   })
       //   /**
       //    * somehow this is FUCKED UP
@@ -100,7 +100,7 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
 
       return _row
     },
-    [projectVectorLayerId, tableId],
+    [vectorLayerId, tableId],
     // pass value to be used on first render
     null,
   )
@@ -114,13 +114,13 @@ const LayerStyleForm = ({ userMayEdit, row: layer }) => {
           console.log('inserting new layer_style')
           insertLayerStyle({
             tableId,
-            projectVectorLayerId,
+            vectorLayerId,
           })
         }
       }
     }
     run()
-  }, [criteria, projectVectorLayerId, row, tableId])
+  }, [criteria, vectorLayerId, row, tableId])
 
   const originalRow = useRef<LayerStyle>()
   const rowState = useRef<LayerStyle>()
