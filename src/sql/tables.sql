@@ -1339,7 +1339,7 @@ SECURITY DEFINER;
 
 
 --
-CREATE OR REPLACE FUNCTION is_project_user_by_project_vector_layer (_auth_user_id uuid, _project_vector_layer_id uuid)
+CREATE OR REPLACE FUNCTION is_project_user_by_vector_layer (_auth_user_id uuid, _vector_layer_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -1352,14 +1352,16 @@ CREATE OR REPLACE FUNCTION is_project_user_by_project_vector_layer (_auth_user_i
         INNER JOIN projects ON projects.id = project_users.project_id
         INNER JOIN vector_layers ON vector_layers.project_id = projects.id
       WHERE
-        vector_layers.id = _project_vector_layer_id
+        vector_layers.id = _vector_layer_id
         AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
 SECURITY DEFINER;
 
-CREATE OR REPLACE FUNCTION is_project_manager_by_project_vector_layer (_auth_user_id uuid, _project_vector_layer_id uuid)
+alter function is_project_user_by_vector_layer rename to is_project_user_by_vector_layer;
+
+CREATE OR REPLACE FUNCTION is_project_manager_by_vector_layer (_auth_user_id uuid, _vector_layer_id uuid)
   RETURNS bool
   AS $$
   SELECT
@@ -1372,13 +1374,14 @@ CREATE OR REPLACE FUNCTION is_project_manager_by_project_vector_layer (_auth_use
         INNER JOIN projects ON projects.id = project_users.project_id
         INNER JOIN vector_layers ON vector_layers.project_id = projects.id
       WHERE
-        vector_layers.id = _project_vector_layer_id
+        vector_layers.id = _vector_layer_id
         AND project_users.role IN ('account_manager', 'project_manager')
         AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
 SECURITY DEFINER;
+
 
 --
 -- is_project_user_by_row is in tables to guarantee correct series of events when creating policies
@@ -1755,37 +1758,37 @@ CREATE POLICY "Users cant delete accounts" ON accounts
 
 DROP POLICY IF EXISTS "Users can view layer styles" ON layer_styles;
 
--- TODO: add OR is_project_user_by_project_vector_layer
+-- TODO: add OR is_project_user_by_vector_layer
 CREATE POLICY "Users can view layer styles" ON layer_styles
   FOR SELECT
     USING (is_project_user_by_table (auth.uid (), table_id)
-      OR is_project_user_by_project_vector_layer (auth.uid (), vector_layer_id));
+      OR is_project_user_by_vector_layer (auth.uid (), vector_layer_id));
 
--- TODO: add OR is_project_user_by_project_vector_layer
+-- TODO: add OR is_project_user_by_vector_layer
 DROP POLICY IF EXISTS "Managers can insert layer styles" ON layer_styles;
 
 CREATE POLICY "Managers can insert layer styles" ON layer_styles
   FOR INSERT
     WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id)
-    OR is_project_manager_by_project_vector_layer (auth.uid (), vector_layer_id));
+    OR is_project_manager_by_vector_layer (auth.uid (), vector_layer_id));
 
--- TODO: add OR is_project_user_by_project_vector_layer
+-- TODO: add OR is_project_user_by_vector_layer
 DROP POLICY IF EXISTS "Managers can update insert layer styles" ON layer_styles;
 
 CREATE POLICY "Managers can update insert layer styles" ON layer_styles
   FOR UPDATE
     USING (is_project_user_by_table (auth.uid (), table_id)
-      OR is_project_user_by_project_vector_layer (auth.uid (), vector_layer_id))
+      OR is_project_user_by_vector_layer (auth.uid (), vector_layer_id))
       WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id)
-      OR is_project_manager_by_project_vector_layer (auth.uid (), vector_layer_id));
+      OR is_project_manager_by_vector_layer (auth.uid (), vector_layer_id));
 
--- TODO: add OR is_project_user_by_project_vector_layer
+-- TODO: add OR is_project_user_by_vector_layer
 DROP POLICY IF EXISTS "Managers can delete layer styles" ON layer_styles;
 
 CREATE POLICY "Managers can delete layer styles" ON layer_styles
   FOR DELETE
     USING (is_project_manager_by_project_by_table (auth.uid (), table_id)
-      OR is_project_manager_by_project_vector_layer (auth.uid (), vector_layer_id));
+      OR is_project_manager_by_vector_layer (auth.uid (), vector_layer_id));
 
 DROP POLICY IF EXISTS "Users can view field types" ON field_types;
 
