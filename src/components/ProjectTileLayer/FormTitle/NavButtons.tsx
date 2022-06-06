@@ -9,32 +9,32 @@ import StoreContext from '../../../storeContext'
 import { dexie } from '../../../dexieClient'
 
 const ProjectTileLayerNavButtons = () => {
-  const { projectId, projectTileLayerId } = useParams()
+  const { projectId, tileLayerId } = useParams()
 
   const store = useContext(StoreContext)
   const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 
-  const projectTileLayerIds: string[] =
+  const tileLayerIds: string[] =
     useLiveQuery(async () => {
-      const projectTileLayers = await dexie.tile_layers
+      const tileLayers = await dexie.tile_layers
         .where({ deleted: 0, project_id: projectId })
         .sortBy('sort')
 
-      const ids = projectTileLayers.map((p) => p.id)
+      const ids = tileLayers.map((p) => p.id)
       setHorizontalNavIds(ids)
 
       return ids
     }, [projectId]) ?? []
 
   const parentPath = resolvePath(`..`, window.location.pathname)?.pathname
-  const activeIndex = projectTileLayerIds.indexOf(projectTileLayerId)
+  const activeIndex = tileLayerIds.indexOf(tileLayerId)
   const previousId =
-    activeIndex > 0 ? projectTileLayerIds[activeIndex - 1] : activeIndex
+    activeIndex > 0 ? tileLayerIds[activeIndex - 1] : activeIndex
   const previousPath = `${parentPath}/${previousId}`
   const nextId =
-    activeIndex === projectTileLayerIds.length - 1
-      ? projectTileLayerIds[activeIndex]
-      : projectTileLayerIds[activeIndex + 1]
+    activeIndex === tileLayerIds.length - 1
+      ? tileLayerIds[activeIndex]
+      : tileLayerIds[activeIndex + 1]
   const nextPath = `${parentPath}/${nextId}`
 
   const onClickUp = useCallback(() => {
@@ -66,7 +66,7 @@ const ProjectTileLayerNavButtons = () => {
         component={Link}
         to={nextPath}
         size="large"
-        disabled={activeIndex === projectTileLayerIds.length - 1}
+        disabled={activeIndex === tileLayerIds.length - 1}
       >
         <FaArrowRight />
       </IconButton>

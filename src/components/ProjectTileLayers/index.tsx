@@ -49,7 +49,7 @@ const ProjectTileLayersComponent = () => {
   const store = useContext(storeContext)
   const { formHeight, setTileLayerSorter, rebuildTree } = store
 
-  const projectTileLayers: ProjectTileLayer[] = useLiveQuery(
+  const tileLayers: ProjectTileLayer[] = useLiveQuery(
     async () =>
       await dexie.tile_layers
         .where({ deleted: 0, project_id: projectId })
@@ -59,9 +59,9 @@ const ProjectTileLayersComponent = () => {
 
   const [items, setItems] = useState<ProjectTileLayer[]>([])
   useEffect(() => {
-    if (!projectTileLayers) return
-    setItems(projectTileLayers)
-  }, [projectTileLayers])
+    if (!tileLayers) return
+    setItems(tileLayers)
+  }, [tileLayers])
 
   const reorder = useCallback(
     async (list, startIndex, endIndex) => {
@@ -73,18 +73,16 @@ const ProjectTileLayersComponent = () => {
        * set sort value according to index in list
        * if it has changed
        */
-      const projectTileLayersToUpdate = []
+      const tileLayersToUpdate = []
       for (const [index, res] of result.entries()) {
         const sort = index + 1
-        const projectTileLayer = projectTileLayers.find(
-          (ptl) => ptl.id === res.id,
-        )
-        if (projectTileLayer.sort !== sort) {
+        const tileLayer = tileLayers.find((ptl) => ptl.id === res.id)
+        if (tileLayer.sort !== sort) {
           // update sort value
-          const was = { ...projectTileLayer }
-          const is = { ...projectTileLayer, sort }
-          projectTileLayersToUpdate.push(is)
-          projectTileLayer.updateOnServer({
+          const was = { ...tileLayer }
+          const is = { ...tileLayer, sort }
+          tileLayersToUpdate.push(is)
+          tileLayer.updateOnServer({
             was,
             is,
             session,
@@ -92,15 +90,13 @@ const ProjectTileLayersComponent = () => {
         }
       }
       // push in bulk to reduce re-renders via liveQuery
-      await dexie.tile_layers.bulkPut(projectTileLayersToUpdate)
-      setTileLayerSorter(
-        projectTileLayers.map((e) => `${e.sort}-${e.id}`).join('/'),
-      )
+      await dexie.tile_layers.bulkPut(tileLayersToUpdate)
+      setTileLayerSorter(tileLayers.map((e) => `${e.sort}-${e.id}`).join('/'))
       rebuildTree()
 
       return result
     },
-    [projectTileLayers, rebuildTree, session, setTileLayerSorter],
+    [tileLayers, rebuildTree, session, setTileLayerSorter],
   )
 
   const onDragEnd = useCallback(

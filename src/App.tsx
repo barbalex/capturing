@@ -130,7 +130,7 @@ function App() {
                     element={<ProjectTileLayersComponent />}
                   />
                   <Route
-                    path=":projectId/tile-layers/:projectTileLayerId"
+                    path=":projectId/tile-layers/:tileLayerId"
                     element={<ProjectTileLayerComponent />}
                   />
                   <Route

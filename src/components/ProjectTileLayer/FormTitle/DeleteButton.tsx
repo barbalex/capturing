@@ -29,17 +29,17 @@ const Title = styled.div`
 
 const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
   const navigate = useNavigate()
-  const { projectTileLayerId } = useParams()
+  const { tileLayerId } = useParams()
   const store = useContext(StoreContext)
   const { activeNodeArray, removeNodeWithChildren } = store
   // const filter = { todo: 'TODO: was in store' }
   const session: Session = supabase.auth.session()
 
   const deleted: boolean = useLiveQuery(async () => {
-    const row: Row = await dexie.tile_layers.get(projectTileLayerId)
+    const row: Row = await dexie.tile_layers.get(tileLayerId)
     // only return needed values to minimize re-renders
     return row?.deleted
-  }, [projectTileLayerId])
+  }, [tileLayerId])
 
   const [anchorEl, setAnchorEl] = useState(null)
   const closeMenu = useCallback(() => {
@@ -52,7 +52,7 @@ const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
   )
   const remove = useCallback(async () => {
     const row: ProjectTileLayer = await dexie.tile_layers.get(
-      projectTileLayerId,
+      tileLayerId,
     )
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
@@ -64,7 +64,7 @@ const ProjectTileLayerDeleteButton = ({ userMayEdit }) => {
     navigate,
     removeNodeWithChildren,
     session,
-    projectTileLayerId,
+    tileLayerId,
   ])
 
   return (

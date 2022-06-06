@@ -33,7 +33,7 @@ const FieldsContainer = styled.div`
 
 // = '99999999-9999-9999-9999-999999999999'
 const ProjectTileLayerForm = () => {
-  const { projectId, projectTileLayerId } = useParams()
+  const { projectId, tileLayerId } = useParams()
 
   const store = useContext(StoreContext)
   const { errors } = store
@@ -48,11 +48,11 @@ const ProjectTileLayerForm = () => {
   ) // TODO: add errors, unsetError in store
   useEffect(() => {
     unsetError('tile_layer')
-  }, [projectTileLayerId, unsetError])
+  }, [tileLayerId, unsetError])
 
   const data = useLiveQuery(async () => {
     const [row, projectUser] = await Promise.all([
-      dexie.tile_layers.get(projectTileLayerId),
+      dexie.tile_layers.get(tileLayerId),
       dexie.project_users.get({
         project_id: projectId,
         user_email: session?.user?.email,
@@ -68,7 +68,7 @@ const ProjectTileLayerForm = () => {
       row,
       userMayEdit,
     }
-  }, [projectId, projectTileLayerId, session?.user?.email])
+  }, [projectId, tileLayerId, session?.user?.email])
 
   const row: ProjectTileLayer = data?.row
   const userMayEdit: boolean = data?.userMayEdit
@@ -155,7 +155,7 @@ const ProjectTileLayerForm = () => {
     getCapabilitiesDataForTileLayer({ row })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    projectTileLayerId,
+    tileLayerId,
     row?.wms_base_url,
     row?._layerOptions?.length,
     row?.wms_layers,
