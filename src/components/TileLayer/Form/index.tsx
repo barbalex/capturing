@@ -215,12 +215,12 @@ const TileLayerForm = () => {
         />
         {row?.type === 'wmts' && (
           <TextField
-            key={`${row.id}url_template`}
-            name="url_template"
+            key={`${row.id}wmts_url_template`}
+            name="wmts_url_template"
             label="URL-Vorlage"
-            value={row.url_template}
+            value={row.wmts_url_template}
             onBlur={onBlur}
-            error={errors?.tile_layer?.url_template}
+            error={errors?.tile_layer?.wmts_url_template}
             disabled={!userMayEdit}
             type="text"
           />
