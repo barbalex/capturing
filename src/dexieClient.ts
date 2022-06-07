@@ -357,8 +357,9 @@ export enum TableRelTypeEnum {
 }
 
 export enum TileLayerTypeEnum {
-  wmts = 'wmts',
   wms = 'wms',
+  wmts = 'wmts',
+  tms = 'tms',
 }
 
 export enum TableTypeEnum {
@@ -924,8 +925,7 @@ export class LayerStyle implements ILayerStyle {
   ) {
     this.id = id ?? uuidv1()
     if (table_id) this.table_id = table_id
-    if (vector_layer_id)
-      this.vector_layer_id = vector_layer_id
+    if (vector_layer_id) this.vector_layer_id = vector_layer_id
     this.marker_type = marker_type ?? 'circle'
     this.circle_marker_radius = circle_marker_radius ?? 8
     if (marker_symbol) this.marker_symbol = marker_symbol
@@ -1529,8 +1529,7 @@ export class MySubClassedDexie extends Dexie {
         'id, pvl_id, bbox_sw_lng, bbox_sw_lat, bbox_ne_lng, bbox_ne_lat, server_rev_at, deleted',
       project_users:
         'id, user_email, [project_id+user_email], project_id, server_rev_at, deleted',
-      layer_styles:
-        'id, &table_id, &vector_layer_id, server_rev_at, deleted',
+      layer_styles: 'id, &table_id, &vector_layer_id, server_rev_at, deleted',
       projects:
         'id, label, name, server_rev_at, deleted, use_labels, [deleted+id]',
       rows: 'id, server_rev_at, deleted, [deleted+table_id], [deleted+parent_id]',
