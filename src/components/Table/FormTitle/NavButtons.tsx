@@ -17,6 +17,7 @@ import { dexie } from '../../../dexieClient'
 import sortByLabelName from '../../../utils/sortByLabelName'
 
 export const MenuChildrenButton = styled(Button)`
+  font-size: 0.75rem;
   .MuiButton-endIcon {
     margin-left: 4px;
   }

@@ -65,7 +65,7 @@ const TableFormTitle = ({ totalCount, filteredCount, width }) => {
     return userMayEdit
   }, [projectId, session?.user?.email])
 
-  if (width < 490) {
+  if (width < 600) {
     return (
       <TitleContainer>
         <Title>Tabelle</Title>
@@ -86,7 +86,7 @@ const TableFormTitle = ({ totalCount, filteredCount, width }) => {
     )
   }
 
-  if (width < 540) {
+  if (width < 650) {
     return (
       <TitleContainer>
         <Title>Tabelle</Title>
