@@ -1,9 +1,10 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
-import { dexie, Table, Row, LayerStyle } from '../../../dexieClient'
+import { dexie, Table, Row, LayerStyle, Field } from '../../../dexieClient'
 import TableLayer from './TableLayer'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
+import dataToProperties from './dataToProperties'
 
 const getStyle = (feature) => ({
   ...(feature.properties?.style ?? {}),
@@ -13,11 +14,11 @@ const TableLayers = () => {
   const { projectId, rowId } = useParams()
 
   const layers = useLiveQuery(async () => {
-    const where = projectId
+    const conditions = projectId
       ? // Beware: projectId can be undefined and dexie does not like that
         { deleted: 0, project_id: projectId }
       : { deleted: 0 }
-    const tables: Table[] = await dexie.ttables.where(where).toArray()
+    const tables: Table[] = await dexie.ttables.where(conditions).toArray()
 
     const _layers = []
     for (const table of tables) {
@@ -31,6 +32,14 @@ const TableLayers = () => {
       const layerStyle: LayerStyle = await dexie.layer_styles.get({
         table_id: table.id,
       })
+      const richTextFields: Field[] = await dexie.fields
+        .where({
+          table_id: table.id,
+          widget_type: 'rich-text',
+        })
+        .toArray()
+
+      console.log('TableLayers', { table, layerStyle, richTextFields })
       // convert geometry collection into feature collection to add properties (color)
 
       if (rows.length) {
@@ -44,7 +53,8 @@ const TableLayers = () => {
                 layerStyle,
                 extraProps: row.id === rowId ? { color: 'red' } : {},
               }),
-              ...row.data,
+              // TODO: rtf-field needs to be stringified
+              ...dataToProperties({ row, richTextFields }),
             },
           })),
         }
@@ -56,6 +66,7 @@ const TableLayers = () => {
             table={table}
             style={getStyle}
             layerStyle={layerStyle}
+            richTextFields={richTextFields}
           />,
         )
       }

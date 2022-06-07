@@ -5,7 +5,7 @@ import * as icons from 'react-icons/md'
 import styled from 'styled-components'
 
 import Popup from '../Popup'
-import { LayerStyle, Table } from '../../../dexieClient'
+import { LayerStyle, Table, Field } from '../../../dexieClient'
 
 /**
  * ref is to ensure layer is updated when data changes
@@ -16,9 +16,10 @@ type Props = {
   style: any
   table: Table
   layerStyle: LayerStyle
+  richTextFields:Field[]
 }
 
-const TableLayer = ({ data, style, table, layerStyle }: Props) => {
+const TableLayer = ({ data, style, table, layerStyle,richTextFields }: Props) => {
   const map = useMap()
   const mapSize = map.getSize()
 
@@ -31,7 +32,15 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
 
   if (!data) return []
 
-  console.log('TableLayer', { data, layerStyle })
+  // console.log('TableLayer', {
+  //   data,
+  //   layerStyle,
+  //   key: `${table.id}/${layerStyle?.marker_symbol ?? ''}/${
+  //     layerStyle?.marker_size ?? ''
+  //   }/${layerStyle?.color ?? ''}/${layerStyle?.opacity ?? ''}/${
+  //     layerStyle?.marker_weight ?? ''
+  //   }`,
+  // })
 
   return (
     <GeoJSON
@@ -53,7 +62,7 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
           },
         ]
         const popupContent = ReactDOMServer.renderToString(
-          <Popup layersData={layersData} mapSize={mapSize} />,
+          <Popup layersData={layersData} mapSize={mapSize} richTextFields={richTextFields} />,
         )
         _layer.bindPopup(popupContent)
       }}
