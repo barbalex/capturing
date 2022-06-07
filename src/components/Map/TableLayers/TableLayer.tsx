@@ -31,9 +31,15 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
 
   if (!data) return []
 
+  console.log('TableLayer', { data, layerStyle })
+
   return (
     <GeoJSON
-      key={`${table.id}/${layerStyle.marker_symbol}/${layerStyle?.marker_size}/${layerStyle?.color}/${layerStyle?.opacity}/${layerStyle?.marker_weight}`}
+      key={`${table.id}/${layerStyle?.marker_symbol ?? ''}/${
+        layerStyle?.marker_size ?? ''
+      }/${layerStyle?.color ?? ''}/${layerStyle?.opacity ?? ''}/${
+        layerStyle?.marker_weight ?? ''
+      }`}
       data={data}
       style={style}
       ref={ref}
@@ -53,17 +59,17 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
       }}
       pointToLayer={(geoJsonPoint, latlng) => {
         // TODO: add font-weight setting
-        if (layerStyle.marker_type === 'circle') {
+        if (layerStyle?.marker_type === 'circle') {
           return L.circleMarker(latlng, {
             ...style,
-            radius: layerStyle.circle_marker_radius ?? 8,
+            radius: layerStyle?.circle_marker_radius ?? 8,
           })
         }
-        let Component = icons[layerStyle.marker_symbol] ?? icons.MdPlace
-        if (layerStyle.marker_weight) {
+        let Component = icons[layerStyle?.marker_symbol] ?? icons.MdPlace
+        if (layerStyle?.marker_weight) {
           Component = styled(Component)`
             path:nth-of-type(2) {
-              stroke-width: ${layerStyle.marker_weight};
+              stroke-width: ${layerStyle?.marker_weight};
             }
           `
         }
@@ -78,7 +84,7 @@ const TableLayer = ({ data, style, table, layerStyle }: Props) => {
               />,
             ),
           }),
-          opacity: layerStyle.opacity,
+          opacity: layerStyle?.opacity,
         })
       }}
     />
