@@ -9,6 +9,7 @@ import materialTheme from './utils/materialTheme'
 import { Provider as MobxProvider } from './storeContext'
 import Home from './routes/Home'
 import Docs from './routes/Docs'
+import ImageLayerTypes from './components/Docs/ImageLayerTypes'
 import ProjectsPage from './routes/Projects'
 import Account from './routes/Account'
 import FourOhFour from './routes/404'
@@ -109,13 +110,15 @@ function App() {
             <Layout>
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="docs" element={<Docs />} />
+                <Route path="docs/*" element={<Docs />}>
+                  <Route
+                    path="image-layer-types"
+                    element={<ImageLayerTypes />}
+                  />
+                </Route>
                 <Route path="projects/*" element={<ProjectsPage />}>
                   <Route index element={<ProjectsComponent />} />
-                  <Route
-                    path=":projectId"
-                    element={<ProjectComponent />}
-                  ></Route>
+                  <Route path=":projectId" element={<ProjectComponent />} />
                   <Route
                     path=":projectId/tables/*"
                     element={<TablesComponent />}
