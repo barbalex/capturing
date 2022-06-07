@@ -703,7 +703,7 @@ CREATE TABLE tile_layers (
   active integer DEFAULT 0,
   project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
   type tile_layer_type_enum DEFAULT 'wmts',
-  url_template text DEFAULT NULL,
+  wmts_url_template text DEFAULT NULL,
   subdomains text[] DEFAULT NULL,
   max_zoom decimal DEFAULT 19,
   min_zoom decimal DEFAULT 0,

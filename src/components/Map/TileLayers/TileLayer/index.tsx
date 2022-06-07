@@ -19,7 +19,7 @@ const TileLayerComponent = ({ layer }: Props) => {
   if (layer.type === 'wmts') {
     return (
       <StyledTileLayer
-        url={layer.url_template}
+        url={layer.wmts_url_template}
         maxNativeZoom={19}
         minZoom={layer.min_zoom}
         maxZoom={layer.max_zoom}

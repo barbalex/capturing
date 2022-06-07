@@ -20,13 +20,13 @@ const TileLayers = () => {
     ) ?? []
   /**
    * Ensure needed data exists:
-   * - url_template has template
+   * - wmts_url_template has template
    * - wms has base-url and layers
    */
   const validTileLayers = tileLayers.filter((l) => {
     if (!l.type) return false
     if (l.type === 'wmts') {
-      if (!l.url_template) return false
+      if (!l.wmts_url_template) return false
     } else {
       if (!l.wms_base_url) return false
       if (!l.wms_layers) return false
@@ -53,7 +53,7 @@ const TileLayers = () => {
 
   return validTileLayers.map((layer: TileLayerType) => {
     const partsToRedrawOn = {
-      url_template: layer.url_template,
+      wmts_url_template: layer.wmts_url_template,
       max_zoom: layer.max_zoom,
       min_zoom: layer.min_zoom,
       opacity: layer.opacity,
