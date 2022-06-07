@@ -680,8 +680,9 @@ CREATE TYPE fill_rule_enum AS enum (
 );
 
 CREATE TYPE tile_layer_type_enum AS enum (
+  'wms',
   'wmts',
-  'wms'
+  'tms'
 );
 
 CREATE TYPE wms_version_enum AS enum (
@@ -789,7 +790,6 @@ ALTER TABLE vector_layers ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
   ADD TABLE vector_layers;
-
 
 --
 CREATE TYPE marker_type_enum AS enum (
@@ -1334,7 +1334,6 @@ $$
 LANGUAGE sql
 SECURITY DEFINER;
 
-
 --
 CREATE OR REPLACE FUNCTION is_project_user_by_vector_layer (_auth_user_id uuid, _vector_layer_id uuid)
   RETURNS bool
@@ -1356,7 +1355,7 @@ $$
 LANGUAGE sql
 SECURITY DEFINER;
 
-alter function is_project_user_by_vector_layer rename to is_project_user_by_vector_layer;
+ALTER FUNCTION is_project_user_by_vector_layer RENAME TO is_project_user_by_vector_layer;
 
 CREATE OR REPLACE FUNCTION is_project_manager_by_vector_layer (_auth_user_id uuid, _vector_layer_id uuid)
   RETURNS bool
@@ -1378,7 +1377,6 @@ CREATE OR REPLACE FUNCTION is_project_manager_by_vector_layer (_auth_user_id uui
 $$
 LANGUAGE sql
 SECURITY DEFINER;
-
 
 --
 -- is_project_user_by_row is in tables to guarantee correct series of events when creating policies
