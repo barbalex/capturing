@@ -359,7 +359,7 @@ export enum TableRelTypeEnum {
 export enum TileLayerTypeEnum {
   wms = 'wms',
   wmts = 'wmts',
-  tms = 'tms',
+  // tms = 'tms',
 }
 
 export enum TableTypeEnum {
