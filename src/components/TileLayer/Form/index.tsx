@@ -223,6 +223,7 @@ const TileLayerForm = () => {
             error={errors?.tile_layer?.wmts_url_template}
             disabled={!userMayEdit}
             type="text"
+            multiLine={true}
           />
         )}
         {row?.type === 'wms' && (

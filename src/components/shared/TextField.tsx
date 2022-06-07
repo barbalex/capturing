@@ -68,6 +68,8 @@ const MyTextField = ({
   // schrink if value exists or schrinkLabel was passed
   const schrink = schrinkLabel || !!value || value === 0
 
+  // console.log('TextField', { label, multiLine })
+
   return (
     <StyledFormControl
       fullWidth
