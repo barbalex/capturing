@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
-import { dexie, Table, Row } from '../../../dexieClient'
+import { dexie, Table } from '../../../dexieClient'
 import TableLayer from './TableLayer'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 import dataToProperties from './dataToProperties'
