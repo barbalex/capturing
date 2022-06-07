@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
-import { dexie, Table, Row, LayerStyle, Field } from '../../../dexieClient'
+import { dexie, Table, Row } from '../../../dexieClient'
 import TableLayer from './TableLayer'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 import dataToProperties from './dataToProperties'
@@ -22,26 +22,26 @@ const TableLayers = () => {
 
     const _layers = []
     for (const table of tables) {
-      const rows: Row[] =
-        (await dexie.rows
+      const [rows, layerStyle, richTextFields] = await Promise.all([
+        dexie.rows
           .filter(
-            (row: Row) =>
+            (row) =>
               row.deleted === 0 && row.table_id === table.id && !!row.geometry,
           )
-          .toArray()) ?? []
-      const layerStyle: LayerStyle = await dexie.layer_styles.get({
-        table_id: table.id,
-      })
-      const richTextFields: Field[] = await dexie.fields
-        .where({
+          .toArray(),
+        dexie.layer_styles.get({
           table_id: table.id,
-          widget_type: 'rich-text',
-        })
-        .toArray()
+        }),
+        dexie.fields
+          .where({
+            table_id: table.id,
+            widget_type: 'rich-text',
+          })
+          .toArray(),
+      ])
 
       // console.log('TableLayers', { table, layerStyle, richTextFields })
-      // convert geometry collection into feature collection to add properties (color)
-
+      // convert geometry collection into feature collection to add properties (style and data)
       if (rows.length) {
         const data = {
           type: 'FeatureCollection',
@@ -53,7 +53,6 @@ const TableLayers = () => {
                 layerStyle,
                 extraProps: row.id === rowId ? { color: 'red' } : {},
               }),
-              // TODO: rtf-field needs to be stringified
               ...dataToProperties({ row, richTextFields }),
             },
           })),
