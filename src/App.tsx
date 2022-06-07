@@ -123,7 +123,6 @@ function App() {
                     path=":projectId/tables/*"
                     element={<TablesComponent />}
                   />
-                  {/* TODO: when not editing, should forward :projectId/tables/:tableId to :projectId/tables/:tableId/rows */}
                   <Route
                     path=":projectId/tables/:tableId"
                     element={<TableComponent />}
