@@ -12,7 +12,7 @@ import Tree from '../components/Tree'
 import { supabase } from '../supabaseClient'
 import MapComponent from '../components/Map'
 
-const StyledSplitPane = styled(SplitPane)`
+export const StyledSplitPane = styled(SplitPane)`
   .Resizer {
     background: rgba(74, 20, 140, 0.1);
     opacity: 1;
@@ -47,6 +47,7 @@ const StyledMotionDiv = styled(motion.div)`
 `
 
 const standardWidth = 500
+export const resizerWidth = 5
 
 const PageLayout = ({ children }) => children
 
@@ -159,7 +160,6 @@ const ProjectsPage = () => {
     window.innerWidth ||
     document.documentElement.clientWidth ||
     document.body.clientWidth
-  const resizerWidth = 5
   // let treePaneSize = '33%'
   let treePaneSize = (width - (tabsLength - 1) * resizerWidth) / 3
   let treeResizerWidth = resizerWidth
