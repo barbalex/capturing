@@ -26,7 +26,7 @@ const addCapabilitiesToIncoming = async ({ object, tableName }) => {
   ) {
     // get capabilities
     capabilities = await getCapabilitiesDataForTileLayer({
-      row: d,
+      row: object,
       returnValue: true,
     })
   }
@@ -39,7 +39,7 @@ const addCapabilitiesToIncoming = async ({ object, tableName }) => {
   ) {
     // get capabilities
     capabilities = await getCapabilitiesDataForVectorLayer({
-      row: d,
+      row: object,
       returnValue: true,
     })
   }
