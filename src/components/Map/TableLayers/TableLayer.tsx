@@ -5,7 +5,7 @@ import * as icons from 'react-icons/md'
 import styled from 'styled-components'
 
 import Popup from '../Popup'
-import { LayerStyle, Table, Field } from '../../../dexieClient'
+import { LayerStyle, Table,  } from '../../../dexieClient'
 
 /**
  * ref is to ensure layer is updated when data changes
@@ -16,10 +16,14 @@ type Props = {
   style: any
   table: Table
   layerStyle: LayerStyle
-  richTextFields:Field[]
 }
 
-const TableLayer = ({ data, style, table, layerStyle,richTextFields }: Props) => {
+const TableLayer = ({
+  data,
+  style,
+  table,
+  layerStyle,
+}: Props) => {
   const map = useMap()
   const mapSize = map.getSize()
 
@@ -62,7 +66,10 @@ const TableLayer = ({ data, style, table, layerStyle,richTextFields }: Props) =>
           },
         ]
         const popupContent = ReactDOMServer.renderToString(
-          <Popup layersData={layersData} mapSize={mapSize} richTextFields={richTextFields} />,
+          <Popup
+            layersData={layersData}
+            mapSize={mapSize}
+          />,
         )
         _layer.bindPopup(popupContent)
       }}

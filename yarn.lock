@@ -1765,7 +1765,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lexical/html@npm:0.3.2, @lexical/html@npm:^0.3.2":
+"@lexical/html@npm:0.3.2":
   version: 0.3.2
   resolution: "@lexical/html@npm:0.3.2"
   peerDependencies:
@@ -3291,7 +3291,6 @@ __metadata:
   resolution: "capturing@workspace:."
   dependencies:
     "@fontsource/roboto": 4.5.7
-    "@lexical/html": ^0.3.2
     "@lexical/react": 0.3.2
     "@mui/material": 5.8.2
     "@mui/styled-engine": 5.8.0

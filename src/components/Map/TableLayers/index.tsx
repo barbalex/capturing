@@ -66,7 +66,6 @@ const TableLayers = () => {
             table={table}
             style={getStyle}
             layerStyle={layerStyle}
-            richTextFields={richTextFields}
           />,
         )
       }

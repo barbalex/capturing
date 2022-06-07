@@ -5,12 +5,7 @@ import { useDebouncedCallback } from 'use-debounce'
 import * as icons from 'react-icons/md'
 import styled from 'styled-components'
 
-import {
-  dexie,
-  LayerStyle,
-  VectorLayer,
-  PVLGeom,
-} from '../../../dexieClient'
+import { dexie, LayerStyle, VectorLayer, PVLGeom } from '../../../dexieClient'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 import Popup from '../Popup'
 import storeContext from '../../../storeContext'

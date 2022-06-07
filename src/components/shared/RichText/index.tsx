@@ -3,7 +3,6 @@ import FormHelperText from '@mui/material/FormHelperText'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import styled from 'styled-components'
-import { observer } from 'mobx-react-lite'
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
@@ -157,4 +156,4 @@ const RichText = ({
   )
 }
 
-export default observer(RichText)
+export default RichText

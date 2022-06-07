@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@fontsource/roboto": "4.5.7",
-    "@lexical/html": "^0.3.2",
     "@lexical/react": "0.3.2",
     "@mui/material": "5.8.2",
     "@mui/styled-engine": "5.8.0",
