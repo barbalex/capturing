@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { Outlet } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { Outlet, Link, useParams } from 'react-router-dom'
 
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -22,12 +21,16 @@ const StyledListItem = styled(ListItem)`
   border-collapse: collapse;
   margin: -1px 0;
   padding: 10px;
+  ${(props) =>
+    props['data-active'] && `background-color: rgba(74, 20, 140, 0.03);`}
   &:hover {
     background-color: rgba(74, 20, 140, 0.03);
   }
 `
 
 const Docs = () => {
+  const params = useParams()
+
   useEffect(() => {
     document.title = 'Erfassen: Doku'
   }, [])
@@ -41,7 +44,11 @@ const Docs = () => {
     >
       <nav aria-label="docs">
         <StyledList>
-          <StyledListItem component={Link} to="image-layer-types">
+          <StyledListItem
+            component={Link}
+            to="image-layer-types"
+            data-active={params['*'] === 'image-layer-types'}
+          >
             <ListItemText>Image-Layer types</ListItemText>
           </StyledListItem>
         </StyledList>

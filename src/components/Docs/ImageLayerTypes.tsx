@@ -50,14 +50,17 @@ const ImageLayerTypes = () => {
 
       <h3>3. TMS: Tiled Map Service</h3>
       <p>
-        TMS is not an official standard. It existed before WMTS and may still be
+        TMS is not an official standard. It existed before WMTS and is still
         used by some map servers.
       </p>
       <p>
         TMS is similar to WMTS in that it returns (image-)tiles for the
         requested region.
       </p>
-      <p>Unlike WMTS it can not query capabilites, legends or feature-info.</p>
+      <p>
+        Unlike WMTS it can not query capabilites, legends or feature-info. Thus
+        configuring a TMS-Layer can not be automated.
+      </p>
     </Container>
   )
 }
