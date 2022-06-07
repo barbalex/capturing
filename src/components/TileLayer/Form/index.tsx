@@ -224,6 +224,7 @@ const TileLayerForm = () => {
             disabled={!userMayEdit}
             type="text"
             multiLine={true}
+            helperText="Projektion muss 3857 oder 4326 sein. Beispiel (Server-abhängig): https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg"
           />
         )}
         {row?.type === 'wms' && (
