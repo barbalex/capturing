@@ -11,7 +11,7 @@ const ImageLayerTypes = () => {
 
       <p>
         Web map servers use different technologies to deliver maps. The
-        following are most common and can be used in erfassen:
+        following are most common:
       </p>
 
       <h3>1. WMS: Web Map Service</h3>
@@ -50,7 +50,7 @@ const ImageLayerTypes = () => {
 
       <h3>3. TMS: Tiled Map Service</h3>
       <p>
-        TMS is not an official standard. It existed before WMTS and is still
+        TMS is not an official standard. It existed before WMTS and may still be
         used by some map servers.
       </p>
       <p>
@@ -60,6 +60,10 @@ const ImageLayerTypes = () => {
       <p>
         Unlike WMTS it can not query capabilites, legends or feature-info. Thus
         configuring a TMS-Layer can not be automated.
+      </p>
+      <p>
+        TMS is not implemented in erfassen but could be added. Please tell us if
+        you need it.
       </p>
     </Container>
   )
