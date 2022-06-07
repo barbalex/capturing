@@ -681,9 +681,11 @@ CREATE TYPE fill_rule_enum AS enum (
 
 CREATE TYPE tile_layer_type_enum AS enum (
   'wms',
-  'wmts',
-  'tms'
+  'wmts'
+  -- 'tms'
 );
+
+alter type tile_layer_type_enum remove value 'tms';
 
 CREATE TYPE wms_version_enum AS enum (
   '1.1.1',
