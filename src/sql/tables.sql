@@ -827,9 +827,6 @@ CREATE TABLE layer_styles (
   deleted integer DEFAULT 0
 );
 
-ALTER TABLE layer_styles
-  ADD COLUMN marker_weight integer DEFAULT NULL;
-
 CREATE INDEX ON layer_styles USING btree (id);
 
 CREATE INDEX ON layer_styles USING btree (table_id);

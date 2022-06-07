@@ -46,6 +46,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
         }
       }
     })
+  console.log(`processTable:`, { tableName, tableNameForDexie })
   // 3. fetch all with newer last_updated_at
   const { data, error: error } = await supabase
     .from(tableName)
