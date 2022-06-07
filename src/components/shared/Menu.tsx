@@ -5,6 +5,12 @@ import Menu from '@mui/material/Menu'
 import { FaBars } from 'react-icons/fa'
 import styled from 'styled-components'
 
+const StyledMenu = styled(Menu)`
+  ul {
+    display: flex;
+    flex-direction: column;
+  }
+`
 const MenuButton = styled(IconButton)`
   ${(props) => props['data-white'] && 'color: white !important;'}
 `
@@ -31,7 +37,7 @@ const HeaderMenu = ({ children, title = 'Menu', white = true }) => {
       >
         <FaBars />
       </MenuButton>
-      <Menu
+      <StyledMenu
         id="menu"
         anchorEl={anchorEl}
         keepMounted
@@ -39,7 +45,7 @@ const HeaderMenu = ({ children, title = 'Menu', white = true }) => {
         onClose={closeMenu}
       >
         {children}
-      </Menu>
+      </StyledMenu>
     </>
   )
 }

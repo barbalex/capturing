@@ -57,7 +57,32 @@ const ProjectFormTitle = ({ totalCount, filteredCount, width }) => {
     return ['account_manager', 'project_manager'].includes(projectUser?.role)
   })
 
-  if (width < 520) {
+  if (width < 760) {
+    return (
+      <TitleContainer>
+        <Title>Projekt</Title>
+        <TitleSymbols>
+          <NavButtons />
+          <Menu white={false}>
+            {userMayEdit && (
+              <>
+                <EditButton />
+                <AddButton />
+                <DeleteButton />
+              </>
+            )}
+            <FilterNumbers
+              filteredCount={filteredCount}
+              totalCount={totalCount}
+              asMenu
+            />
+          </Menu>
+        </TitleSymbols>
+      </TitleContainer>
+    )
+  }
+
+  if (width < 775) {
     return (
       <TitleContainer>
         <Title>Projekt</Title>
