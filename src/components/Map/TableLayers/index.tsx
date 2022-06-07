@@ -39,7 +39,7 @@ const TableLayers = () => {
         })
         .toArray()
 
-      console.log('TableLayers', { table, layerStyle, richTextFields })
+      // console.log('TableLayers', { table, layerStyle, richTextFields })
       // convert geometry collection into feature collection to add properties (color)
 
       if (rows.length) {
