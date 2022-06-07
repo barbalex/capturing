@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@fontsource/roboto": "4.5.7",
-    "@lexical/react": "0.3.1",
+    "@lexical/html": "^0.3.2",
+    "@lexical/react": "0.3.2",
     "@mui/material": "5.8.2",
     "@mui/styled-engine": "5.8.0",
     "@mui/styled-engine-sc": "5.8.0",
@@ -29,7 +30,7 @@
     "is-uuid": "1.0.2",
     "leaflet": "1.8.0",
     "leaflet-draw": "1.0.4",
-    "lexical": "0.3.1",
+    "lexical": "0.3.2",
     "localforage": "1.10.0",
     "lodash": "4.17.21",
     "mobx": "6.6.0",
