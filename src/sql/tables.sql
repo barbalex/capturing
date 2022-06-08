@@ -2031,11 +2031,6 @@ CREATE POLICY "project managers can delete vector_layers geometries" ON pvl_geom
 COMMIT TRANSACTION;
 
 -- TODO: run triggers.sql
-CREATE TRIGGER projects_set_project_user
-  AFTER INSERT ON projects
-  FOR EACH ROW
-  EXECUTE PROCEDURE projects_set_project_user ();
-
 CREATE FUNCTION projects_set_project_user ()
   RETURNS TRIGGER
   AS $$
@@ -2054,6 +2049,11 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
+
+CREATE TRIGGER projects_set_project_user
+  AFTER INSERT ON projects
+  FOR EACH ROW
+  EXECUTE PROCEDURE projects_set_project_user ();
 
 -- add test-data
 -- 1. create new user with email alex.barbalex@gmail.com
