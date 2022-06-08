@@ -50,7 +50,7 @@ const FieldsContainer = styled.div`
 const Projects = () => {
   const navigate = useNavigate()
   const store = useContext(storeContext)
-  const { formHeight } = store
+  const { formHeight, setProjectEditing } = store
 
   const data = useLiveQuery(async () => {
     const [projects, account, filteredCount, totalCount] = await Promise.all([
@@ -75,7 +75,11 @@ const Projects = () => {
   const add = useCallback(async () => {
     const newId = await insertProject({ account })
     navigate(newId)
-  }, [account, navigate])
+    setProjectEditing({
+      id: newId,
+      editing: true,
+    })
+  }, [account, navigate, setProjectEditing])
 
   // console.log('ProjectsList rendering')
 
