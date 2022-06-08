@@ -64,13 +64,11 @@ const ProjectFormTitle = ({ totalCount, filteredCount, width }) => {
         <TitleSymbols>
           <NavButtons />
           <Menu white={false}>
-            {userMayEdit && (
-              <>
-                <EditButton />
-                <AddButton />
-                <DeleteButton />
-              </>
-            )}
+            {userMayEdit && [
+              <EditButton key="EditButton" />,
+              <AddButton key="AddButton" />,
+              <DeleteButton key="DeleteButton" />,
+            ]}
             <FilterNumbers
               filteredCount={filteredCount}
               totalCount={totalCount}
@@ -88,13 +86,11 @@ const ProjectFormTitle = ({ totalCount, filteredCount, width }) => {
         <Title>Projekt</Title>
         <TitleSymbols>
           <NavButtons />
-          {userMayEdit && (
-            <>
-              <EditButton />
-              <AddButton />
-              <DeleteButton />
-            </>
-          )}
+          {userMayEdit && [
+            <EditButton key="EditButton" />,
+            <AddButton key="AddButton" />,
+            <DeleteButton key="DeleteButton" />,
+          ]}
           <Menu white={false}>
             <FilterNumbers
               filteredCount={filteredCount}
