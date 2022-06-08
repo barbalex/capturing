@@ -291,9 +291,6 @@ CREATE TABLE tables (
   deleted integer DEFAULT 0
 );
 
-ALTER TABLE tables
-  ADD COLUMN singular_label text DEFAULT NULL;
-
 CREATE UNIQUE INDEX tables_project_name_idx ON tables (project_id, name)
 WHERE
   deleted = 0;
@@ -684,8 +681,6 @@ CREATE TYPE tile_layer_type_enum AS enum (
   'wmts'
   -- 'tms'
 );
-
-alter type tile_layer_type_enum remove value 'tms';
 
 CREATE TYPE wms_version_enum AS enum (
   '1.1.1',
@@ -1356,8 +1351,6 @@ CREATE OR REPLACE FUNCTION is_project_user_by_vector_layer (_auth_user_id uuid, 
 $$
 LANGUAGE sql
 SECURITY DEFINER;
-
-ALTER FUNCTION is_project_user_by_vector_layer RENAME TO is_project_user_by_vector_layer;
 
 CREATE OR REPLACE FUNCTION is_project_manager_by_vector_layer (_auth_user_id uuid, _vector_layer_id uuid)
   RETURNS bool
@@ -2037,6 +2030,31 @@ CREATE POLICY "project managers can delete vector_layers geometries" ON pvl_geom
 
 COMMIT TRANSACTION;
 
+-- TODO: run triggers.sql
+CREATE TRIGGER projects_set_project_user
+  AFTER INSERT ON projects
+  FOR EACH ROW
+  EXECUTE PROCEDURE projects_set_project_user ();
+
+CREATE FUNCTION projects_set_project_user ()
+  RETURNS TRIGGER
+  AS $$
+BEGIN
+  INSERT INTO project_users (project_id, user_email, ROLE)
+  SELECT
+    NEW.id AS project_id,
+    users.email AS user_email,
+    'account_manager' AS role
+  FROM
+    accounts
+    INNER JOIN users ON accounts.id = users.account_id
+  WHERE
+    accounts.id = NEW.account_id;
+  RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
 -- add test-data
 -- 1. create new user with email alex.barbalex@gmail.com
 INSERT INTO accounts (service_id)
@@ -2066,46 +2084,41 @@ INSERT INTO projects (name, label, account_id)
       WHERE
         service_id = 'test'));
 
-INSERT INTO project_users (project_id, user_email, ROLE)
-  VALUES ((
-      SELECT
-        id
-      FROM
-        projects
-      WHERE
-        name = 'test-project'), 'alex.barbalex@gmail.com', 'account_manager');
-
+-- INSERT INTO project_users (project_id, user_email, ROLE)
+--   VALUES ((
+--       SELECT
+--         id
+--       FROM
+--         projects
+--       WHERE
+--         name = 'test-project'), 'alex.barbalex@gmail.com', 'account_manager');
 --- test project policies
-SELECT
-  is_project_user_by_project ((
-    SELECT
-      id
-    FROM auth.users
-    WHERE
-      email = 'alex.barbalex@gmail.com'), (
-    SELECT
-      id
-    FROM projects
-    WHERE
-      name = 'test-project'));
-
-SELECT
-  is_project_user_by_project ('d4f6a987-6306-4da0-8ca6-3073ee5384aa', '20311e3f-791c-4e75-81ab-a55b309e85d7');
-
+-- SELECT
+--   is_project_user_by_project ((
+--     SELECT
+--       id
+--     FROM auth.users
+--     WHERE
+--       email = 'alex.barbalex@gmail.com'), (
+--     SELECT
+--       id
+--     FROM projects
+--     WHERE
+--       name = 'test-project'));
+-- SELECT
+--   is_project_user_by_project ('d4f6a987-6306-4da0-8ca6-3073ee5384aa', '20311e3f-791c-4e75-81ab-a55b309e85d7');
 -- true
-SELECT
-  is_own_account ((
-    SELECT
-      id
-    FROM auth.users
-    WHERE
-      email = 'alex.barbalex@gmail.com'), (
-    SELECT
-      id
-    FROM accounts
-    WHERE
-      service_id = 'test'));
-
-SELECT
-  is_own_account ('d4f6a987-6306-4da0-8ca6-3073ee5384aa', '22e0f582-9095-4469-a872-cf86ceaa7514');
-
+-- SELECT
+--   is_own_account ((
+--     SELECT
+--       id
+--     FROM auth.users
+--     WHERE
+--       email = 'alex.barbalex@gmail.com'), (
+--     SELECT
+--       id
+--     FROM accounts
+--     WHERE
+--       service_id = 'test'));
+-- SELECT
+--   is_own_account ('d4f6a987-6306-4da0-8ca6-3073ee5384aa', '22e0f582-9095-4469-a872-cf86ceaa7514');
