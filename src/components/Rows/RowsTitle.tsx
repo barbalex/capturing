@@ -57,10 +57,12 @@ const RowsTitle = ({ rowsWithLabel }: Props) => {
   const [bbox, bboxIsInfinite] = useMemo(() => {
     const fc = {
       type: 'FeatureCollection',
-      features: rowsWithLabel.map((e) => ({
-        geometry: e.geometry,
-        type: 'Feature',
-      })),
+      features: rowsWithLabel
+        .filter((r) => !!r.geometry)
+        .map((e) => ({
+          geometry: e.geometry,
+          type: 'Feature',
+        })),
     }
     const bbox = getBbox(fc)
     const bboxIsInfinite = isEqual(bbox, [
@@ -103,7 +105,7 @@ const RowsTitle = ({ rowsWithLabel }: Props) => {
     const tableLabel = labelFromLabeledTable({
       object: table,
       useLabels: project.use_labels,
-      singular: false
+      singular: false,
     })
 
     return {
