@@ -1,5 +1,3 @@
-import { getSnapshot } from 'mobx-state-tree'
-
 import { dexie, Project } from '../../../dexieClient'
 import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
