@@ -97,7 +97,7 @@ const RowForm = ({
       'project_editor',
     ].includes(projectUser.role)
 
-    const labelFields = table.row_label
+    const labelFields = (table.row_label ?? [])
       .filter((l) => !!l.field)
       .map((l) => l.field)
     const fieldsofLabelFields = await dexie.fields.bulkGet(labelFields)
@@ -106,7 +106,7 @@ const RowForm = ({
     return {
       fields,
       userMayEdit,
-      labelFieldNames: labelFieldNames,
+      labelFieldNames,
     }
   }, [projectId, tableId, session?.user?.email])
 
