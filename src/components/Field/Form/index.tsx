@@ -47,9 +47,9 @@ type valueType = {
 
 // = '99999999-9999-9999-9999-999999999999'
 const FieldForm = ({ showFilter }: FieldFormProps) => {
-  const { projectId, tableId, fieldId } = useParams()
+  const { projectId, fieldId } = useParams()
   const store = useContext(StoreContext)
-  const { filter, errors } = store
+  const { filter, errors, rebuildTree } = store
   const session: Session = supabase.auth.session()
 
   const unsetError = useCallback(
@@ -213,8 +213,9 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
 
       rowState.current = { ...row, ...{ [field]: newValue } }
       dexie.fields.update(row.id, { [field]: newValue })
+      if (['name', 'label'].includes(field)) rebuildTree()
     },
-    [filter, row, showFilter],
+    [filter, rebuildTree, row, showFilter],
   )
 
   // const showDeleted = filter?.table?.deleted !== false || row?.deleted

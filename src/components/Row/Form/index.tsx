@@ -58,7 +58,7 @@ const RowForm = ({
 }: RowFormProps) => {
   const { tableId, projectId } = useParams()
   const store = useContext(StoreContext)
-  const { filter, online, errors } = store
+  const { filter, online, errors, rebuildTree } = store
   const session: Session = supabase.auth.session()
 
   const unsetError = useCallback(
@@ -83,12 +83,13 @@ const RowForm = ({
   // console.log('RowForm rendering')
   // TODO: build right queries
   const data = useLiveQuery(async () => {
-    const [fields, projectUser] = await Promise.all([
+    const [fields, projectUser, table] = await Promise.all([
       dexie.fields.where({ deleted: 0, table_id: tableId }).sortBy('sort'),
       dexie.project_users.get({
         project_id: projectId,
         user_email: session?.user?.email,
       }),
+      dexie.ttables.get(tableId),
     ])
     const userMayEdit = [
       'account_manager',
@@ -96,14 +97,22 @@ const RowForm = ({
       'project_editor',
     ].includes(projectUser.role)
 
+    const labelFields = table.row_label
+      .filter((l) => !!l.field)
+      .map((l) => l.field)
+    const fieldsofLabelFields = await dexie.fields.bulkGet(labelFields)
+    const labelFieldNames = fieldsofLabelFields.map((f) => f.name)
+
     return {
       fields,
       userMayEdit,
+      labelFieldNames: labelFieldNames,
     }
   }, [projectId, tableId, session?.user?.email])
 
   const fields: Field[] = data?.fields ?? []
   const userMayEdit: boolean = data?.userMayEdit
+  const labelFieldNames = data?.labelFieldNames
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
@@ -159,8 +168,10 @@ const RowForm = ({
       rowState.current = newRow
       // console.log('RowForm, onBlur, newData:', newData)
       dexie.rows.update(row.id, { data: newData })
+      // rebuildTree if field is part of label
+      if (labelFieldNames.includes(field)) rebuildTree()
     },
-    [filter, row, showFilter],
+    [filter, labelFieldNames, rebuildTree, row, showFilter],
   )
 
   // const showDeleted = filter?.row?.deleted !== false || row?.deleted

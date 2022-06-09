@@ -60,7 +60,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
   const { projectId, tableId } = useParams()
 
   const store = useContext(StoreContext)
-  const { filter, errors } = store
+  const { filter, errors, rebuildTree } = store
 
   const session: Session = supabase.auth.session()
 
@@ -196,8 +196,9 @@ const TableForm = ({ showFilter }: TableFormProps) => {
       rowState.current = { ...row, ...{ [field]: newValue } }
       // update dexie
       dexie.ttables.update(row.id, { [field]: newValue })
+      if (['name', 'label'].includes(field)) rebuildTree()
     },
-    [filter, row, showFilter],
+    [filter, rebuildTree, row, showFilter],
   )
 
   // const showDeleted = filter?.table?.deleted !== false || row?.deleted
