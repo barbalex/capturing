@@ -91,7 +91,7 @@ const TimeField = ({
         id={name}
         selected={selected}
         onChange={onChange}
-        dateFormat={'HH:mm'}
+        dateFormat="HH:mm"
         showTimeSelect
         showTimeSelectOnly
         timeCaption="Zeit"
