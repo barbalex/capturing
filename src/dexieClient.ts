@@ -797,7 +797,7 @@ export class PVLGeom implements IPVLGeom {
     this.pvl_id = pvl_id
     this.geometry = geometry
     if (properties) this.properties = properties
-    const bbox = getBbox(geometry)
+    const bbox = geometry ? getBbox(geometry) : []
     this.bbox_sw_lng = bbox[0]
     this.bbox_sw_lat = bbox[1]
     this.bbox_ne_lng = bbox[2]

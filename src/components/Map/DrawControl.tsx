@@ -22,7 +22,9 @@ const DrawControl = () => {
       if (!rowId) return console.log('no row edited due to missing rowId')
       const geometry = {
         type: 'GeometryCollection',
-        geometries: featureCollection.features.map((f) => f.geometry),
+        geometries: featureCollection.features
+          .filter((f) => !!f.geometry)
+          .map((f) => f.geometry),
       }
       const bbox = getBbox(geometry)
       const row: Row = await dexie.rows.get(rowId)
