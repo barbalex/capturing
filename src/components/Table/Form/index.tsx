@@ -34,6 +34,11 @@ const FieldsContainer = styled.div`
   height: 100%;
   overflow-y: auto;
 `
+const Comment = styled.p`
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 400;
+  font-size: 0.8rem;
+`
 
 const relTypeDataSource = Object.values(TableRelTypeEnum).map((v) => ({
   value: v?.toString(),
@@ -335,9 +340,9 @@ const TableForm = ({ showFilter }: TableFormProps) => {
             />
           </>
         ) : (
-          <p>
-            Werte-Listen werden automatisch mit den Werten selbst beschriftet
-          </p>
+          <Comment>
+            Werte-Listen werden automatisch mit den Werten selbst beschriftet.
+          </Comment>
         )}
       </FieldsContainer>
     </ErrorBoundary>
