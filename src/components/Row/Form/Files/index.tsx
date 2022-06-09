@@ -48,11 +48,12 @@ const DropzoneInnerDiv = styled.div`
   border-radius: 5px;
   padding: 5px;
   font-size: small;
-  color: rgb(0, 0, 0, 0.54);
+  color: rgb(0, 0, 0, 0.8);
 `
 const StyledFormLabel = styled(FormLabel)`
   padding-top: 1px !important;
-  font-size: 12px !important;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.8);
   cursor: text;
   user-select: none;
   pointer-events: none;

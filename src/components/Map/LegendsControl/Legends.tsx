@@ -19,17 +19,17 @@ const Legend = styled.div`
 `
 const Label = styled.div`
   cursor: text;
-  font-size: 12px;
+  font-size: 0.8rem;
   font-weight: bold;
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.8);
   pointer-events: none;
   user-select: none;
 `
 const Title = styled.div`
   margin-top: 2px;
   cursor: text;
-  font-size: 12px;
-  color: rgba(0, 0, 0, 0.5);
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.8);
   pointer-events: none;
   user-select: none;
   padding-bottom: 8px;
@@ -48,8 +48,7 @@ const MapLegends = () => {
 
   const tileLayers: TileLayerType[] =
     useLiveQuery(
-      async () =>
-        await dexie.tile_layers.where(where).reverse().sortBy('sort'),
+      async () => await dexie.tile_layers.where(where).reverse().sortBy('sort'),
       [projectId],
     ) ?? []
   /**

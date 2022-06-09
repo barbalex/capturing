@@ -8,7 +8,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import styled from 'styled-components'
 import { observer } from 'mobx-react-lite'
 
-import toStringIfPossible from '../../utils/toStringIfPossible' 
+import toStringIfPossible from '../../utils/toStringIfPossible'
 
 // without slight padding radio is slightly cut off!
 const StyledFormControl = styled(FormControl)`
@@ -18,7 +18,8 @@ const StyledFormControl = styled(FormControl)`
 `
 const StyledFormLabel = styled(FormLabel)`
   padding-top: 1px !important;
-  font-size: 12px !important;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.8);
   cursor: text;
   user-select: none;
   pointer-events: none;

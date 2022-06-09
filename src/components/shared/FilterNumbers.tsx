@@ -23,11 +23,11 @@ const Filtered = styled.div`
   text-align: center;
 `
 const Total = styled.div`
-  border-top: 1px solid rgba(0, 0, 0, 0.54);
+  border-top: 1px solid rgba(0, 0, 0, 0.8);
   text-align: center;
 `
 const StyledMenuItem = styled(MenuItem)`
-  color: rgba(0, 0, 0, 0.54) !important;
+  color: rgba(0, 0, 0, 0.8) !important;
 `
 
 const FilterNumbers = ({ filteredCount, totalCount, asMenu }) => {

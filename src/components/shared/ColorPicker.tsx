@@ -10,7 +10,8 @@ const InputRow = styled.div`
   display: flex;
 `
 const InputLabel = styled.div`
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 0.8rem;
   padding-right: 8px;
   align-self: center;
 `

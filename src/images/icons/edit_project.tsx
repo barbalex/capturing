@@ -1,6 +1,6 @@
 const Icon = (props) => (
   <svg
-    style={{ height: 28, width: 28, fill: props?.fill ?? 'rgba(0,0,0,0.54)' }}
+    style={{ height: 28, width: 28, fill: props?.fill ?? 'rgba(0,0,0,0.8)' }}
     viewBox="0 0 576 512"
   >
     <path

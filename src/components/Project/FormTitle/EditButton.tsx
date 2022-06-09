@@ -13,7 +13,7 @@ const ProjectEditButton = () => {
   const store = useContext(storeContext)
   const { editingProjects, setProjectEditing } = store
   const editing = editingProjects.get(projectId)?.editing ?? false
- 
+
   const onClick = useCallback(
     async () =>
       setProjectEditing({
@@ -35,7 +35,7 @@ const ProjectEditButton = () => {
         onClick={onClick}
         size="large"
       >
-        <EditIcon fill={editing ? orange[900] : 'rgba(0, 0, 0, 0.54)'} />
+        <EditIcon fill={editing ? orange[900] : 'rgba(0, 0, 0, 0.8)'} />
       </IconButton>
     </ErrorBoundary>
   )

@@ -20,7 +20,8 @@ const StyledFormControl = styled(FormControl)`
 `
 const StyledFormLabel = styled(FormLabel)`
   padding-top: 1px !important;
-  font-size: 12px !important;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.8);
   cursor: text;
   user-select: none;
   pointer-events: none;

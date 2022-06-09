@@ -21,8 +21,8 @@ const StyledFormControl = styled(FormControl)`
   }
 `
 const Label = styled(InputLabel)`
-  font-size: 12px !important;
-  color: rgb(0, 0, 0, 0.54);
+  font-size: 0.8rem;
+  color: rgb(0, 0, 0, 0.8);
   position: relative !important;
   transform: none !important;
 `

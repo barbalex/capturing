@@ -5,13 +5,14 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 import styled from 'styled-components'
 
-const StyledFormControl = styled(FormControl)` 
+const StyledFormControl = styled(FormControl)`
   padding-bottom: 19px;
 `
 const StyledFormLabel = styled(FormLabel)`
   padding-top: 10px !important;
   padding-bottom: 8px !important;
-  font-size: 12px !important;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.8);
   cursor: text;
   user-select: none;
   pointer-events: none;

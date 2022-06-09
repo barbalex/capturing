@@ -24,7 +24,7 @@ const TitleContainer = styled.div`
   justify-content: space-between;
   padding 0 10px;
   svg, a, div {
-    color: rgba(0,0,0,0.7) !important;
+    color: rgba(0,0,0,0.8) !important;
   }
   @media print {
     display: none !important;

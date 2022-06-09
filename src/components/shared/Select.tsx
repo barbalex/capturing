@@ -9,9 +9,9 @@ const Container = styled.div`
   margin-bottom: 19px;
 `
 const Label = styled.div`
-  font-size: 12px;
-  height: 12px !important;
-  color: rgb(0, 0, 0, 0.54);
+  font-size: 0.8rem;
+  height: 0.8rem !important;
+  color: rgb(0, 0, 0, 0.8);
 `
 const Error = styled.div`
   font-size: 12px;

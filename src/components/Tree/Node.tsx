@@ -39,7 +39,7 @@ const Label = styled.div`
 `
 const NoChildren = styled.div`
   width: 18px;
-  color: rgba(0, 0, 0, 0.54) !important;
+  color: rgba(0, 0, 0, 0.8) !important;
 `
 const ProjectEditIconButton = styled(IconButton)`
   svg {
@@ -233,7 +233,7 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
               fill={
                 editingProjects.get(data.id)?.editing
                   ? orange[900]
-                  : 'rgba(0, 0, 0, 0.54)'
+                  : 'rgba(0, 0, 0, 0.8)'
               }
             />
           </ProjectEditIconButton>
