@@ -1,5 +1,5 @@
 import { types, onAction } from 'mobx-state-tree'
-import { autorun } from 'mobx'
+// import { autorun } from 'mobx'
 import { v1 as uuidv1 } from 'uuid'
 import isEqual from 'lodash/isEqual'
 
