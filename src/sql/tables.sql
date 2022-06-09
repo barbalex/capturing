@@ -1049,7 +1049,7 @@ CREATE INDEX ON news USING btree (version_type);
 
 CREATE INDEX ON news USING btree (deleted);
 
-COMMENT ON TABLE project_users IS 'Goal: Inform users about changes to the app. Not versioned';
+COMMENT ON TABLE news IS 'Goal: Inform users about changes to the app. Not versioned';
 
 COMMENT ON COLUMN news.id IS 'primary key';
 
@@ -1087,7 +1087,7 @@ CREATE INDEX ON news_delivery USING btree (user_id);
 
 CREATE INDEX ON news_delivery USING btree (deleted);
 
-COMMENT ON TABLE project_users IS 'Goal: Show new messages only once. Not versioned';
+COMMENT ON TABLE news_delivery IS 'Goal: Show new messages only once. Not versioned';
 
 COMMENT ON COLUMN news_delivery.id IS 'primary key';
 
@@ -1607,9 +1607,12 @@ CREATE POLICY "Restricted insert" ON storage.objects
     WITH CHECK (auth.role () = 'authenticated');
 
 --
+-- TODO: remove after next new creation
 DROP POLICY IF EXISTS "project owners and same user can view project_users" ON project_users;
 
-CREATE POLICY "project owners and same user can view project_users" ON project_users
+DROP POLICY IF EXISTS "account owners and same user can view project_users" ON project_users;
+
+CREATE POLICY "account owners and same user can view project_users" ON project_users
   FOR SELECT
     USING (is_account_owner_by_project_user (auth.uid (), project_id)
       OR auth.uid () IN (
@@ -1619,9 +1622,12 @@ CREATE POLICY "project owners and same user can view project_users" ON project_u
           WHERE
             email = user_email));
 
+-- TODO: remove after next new creation
 DROP POLICY IF EXISTS "project owners can insert project_users" ON project_users;
 
-CREATE POLICY "project owners can insert project_users" ON project_users
+DROP POLICY IF EXISTS "account owners can insert project_users" ON project_users;
+
+CREATE POLICY "account owners can insert project_users" ON project_users
   FOR INSERT
     WITH CHECK (is_account_owner_by_project_user (auth.uid (), project_id));
 
@@ -2032,7 +2038,7 @@ COMMIT TRANSACTION;
 
 -- add some triggers
 -- ensure a project's owner is set as it's user
-CREATE FUNCTION projects_set_project_user ()
+CREATE or replace FUNCTION projects_set_project_user ()
   RETURNS TRIGGER
   AS $$
 BEGIN
@@ -2049,7 +2055,8 @@ BEGIN
   RETURN NEW;
 END;
 $$
-LANGUAGE plpgsql;
+LANGUAGE plpgsql
+SECURITY DEFINER;
 
 CREATE TRIGGER projects_set_project_user
   AFTER INSERT ON projects
@@ -2057,7 +2064,7 @@ CREATE TRIGGER projects_set_project_user
   EXECUTE PROCEDURE projects_set_project_user ();
 
 -- ensure user has auth_user_id set
-CREATE or replace FUNCTION users_set_auth_user_id ()
+CREATE OR REPLACE FUNCTION users_set_auth_user_id ()
   RETURNS TRIGGER
   AS $$
 BEGIN

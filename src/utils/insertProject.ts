@@ -4,7 +4,7 @@ type InsertProjectProps = {
   account: IAccount
 }
 
-const insertProject = async ({ account }: InsertProjectProps) => { 
+const insertProject = async ({ account }: InsertProjectProps) => {  
   const newProject = new Project(
     undefined,
     account?.id,
