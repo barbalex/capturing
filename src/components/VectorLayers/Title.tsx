@@ -24,6 +24,9 @@ const TitleContainer = styled.div`
   height: ${constants.titleRowHeight}px;
   justify-content: space-between;
   padding 0 10px;
+  svg, a, div {
+    color: rgba(0,0,0,0.7) !important;
+  }
 `
 const Title = styled.div`
   font-weight: bold;
@@ -46,12 +49,8 @@ const VectorLayersTitle = () => {
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount, projectUser] = await Promise.all([
-      dexie.vector_layers
-        .where({ deleted: 0, project_id: projectId })
-        .count(), // TODO: pass in filter
-      dexie.vector_layers
-        .where({ deleted: 0, project_id: projectId })
-        .count(),
+      dexie.vector_layers.where({ deleted: 0, project_id: projectId }).count(), // TODO: pass in filter
+      dexie.vector_layers.where({ deleted: 0, project_id: projectId }).count(),
       dexie.project_users.get({
         project_id: projectId,
         user_email: session?.user?.email,

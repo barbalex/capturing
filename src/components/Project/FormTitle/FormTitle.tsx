@@ -21,6 +21,9 @@ const TitleContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   padding 0 10px;
+  svg, a, div {
+    color: rgba(0,0,0,0.7) !important;
+  }
   @media print {
     display: none !important;
   }

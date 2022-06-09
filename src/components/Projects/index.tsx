@@ -21,6 +21,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${(props) => (props.showfilter ? '#fff3e0' : 'unset')};
+  svg,
+  a,
+  div {
+    color: rgba(0, 0, 0, 0.7) !important;
+  }
 `
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
