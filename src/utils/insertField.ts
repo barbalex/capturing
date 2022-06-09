@@ -4,22 +4,10 @@ type InsertFieldProps = {
   tableId: string
 }
 
-const insertField = async ({ tableId }: InsertFieldProps) => {
+const insertField = async ({ tableId }: InsertFieldProps) => { 
   const newField = new Field(
     undefined,
     tableId,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
   )
   const update = new QueuedUpdate(
     undefined,
