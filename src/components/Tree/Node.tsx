@@ -73,7 +73,7 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   // when not editing, other nodes in activeNodeArray may be active:
   if (
     data.type === 'project' &&
-    !editing &&
+    !editingProjects.get(data.id)?.editing &&
     isInActiveNodeArray &&
     activeNodeArray.length < 4
   ) {
@@ -81,7 +81,7 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   }
   if (
     data.type === 'table' &&
-    !editing &&
+    !editingProjects.get(data.object.project_id)?.editing &&
     isInActiveNodeArray &&
     activeNodeArray.length === 5
   ) {
@@ -91,9 +91,6 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   // console.log('Node', {
   //   data,
   //   editing,
-  //   isActive,
-  //   activeNodeArray: activeNodeArray.slice(),
-  //   isInActiveNodeArray,
   // })
 
   const userMayEditStructure: boolean = useLiveQuery(async () => {
@@ -113,7 +110,11 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     //   activeNodeArray: activeNodeArray.slice(),
     //   isInActiveNodeArray,
     // })
-    if (data.type === 'project' && !editing && isActive) {
+    if (
+      data.type === 'project' &&
+      !editingProjects.get(data.id)?.editing &&
+      isActive
+    ) {
       // if exists only one standard table, go directly to it's rows
       const tables = await dexie.ttables
         .where({
@@ -141,7 +142,10 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
         return
       }
     }
-    if (data.type === 'table' && !editing) {
+    if (
+      data.type === 'table' &&
+      !editingProjects.get(data.object.project_id)?.editing
+    ) {
       // if editing data leave out table (nothing to edit)
       const newANA = [...data.activeNodeArray, 'rows']
       addNode(data.activeNodeArray)
@@ -152,11 +156,12 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     addNode(data.activeNodeArray)
     navigate(`/${data.activeNodeArray.join('/')}`)
   }, [
-    data,
-    editing,
+    data.type,
+    data.id,
+    data.object.project_id,
+    data.activeNodeArray,
+    editingProjects,
     isActive,
-    activeNodeArray,
-    isInActiveNodeArray,
     addNode,
     navigate,
     setActiveNodeArray,
@@ -189,12 +194,11 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     [addNode, data, handlers, removeNodeWithChildren, state],
   )
 
-  const projectEditLabel = editing
-    ? `Projekt-Struktur für "${data.label}" nicht bearbeiten`
-    : `Projekt-Struktur für "${data.label}" bearbeiten`
-
   // if node is project and user is manager, show structure editing IconButton
   const showProjectEditIcon = userMayEditStructure && data.type === 'project'
+  const projectEditLabel = editingProjects.get(data.id)?.editing
+    ? `Projekt-Struktur für "${data.label}" nicht bearbeiten`
+    : `Projekt-Struktur für "${data.label}" bearbeiten`
 
   return (
     <Container ref={innerRef} style={styles.row}>
@@ -227,7 +231,13 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
             onClick={onClickProjectEdit}
             size="small"
           >
-            <EditIcon fill={editing ? orange[900] : 'rgba(0, 0, 0, 0.54)'} />
+            <EditIcon
+              fill={
+                editingProjects.get(data.id)?.editing
+                  ? orange[900]
+                  : 'rgba(0, 0, 0, 0.54)'
+              }
+            />
           </ProjectEditIconButton>
         )}
       </Indent>
