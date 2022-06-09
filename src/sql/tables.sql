@@ -413,7 +413,7 @@ COMMENT ON COLUMN widget_types.sort IS 'enables sorting at will';
 COMMENT ON COLUMN widget_types.server_rev_at IS 'time of last edit on server';
 
 INSERT INTO widget_types (value, needs_list, sort, comment)
-  VALUES ('text', 0, 1, 'Short field accepting text'), ('textarea', 0, 2, 'Field accepting text, lines can break'), ('markdown', 0, 3, 'Field accepting text, expressing markdown'), ('options-2', 0, 4, 'single boolean field showing one option for true (active) and false (not active)'), ('options-3', 0, 5, 'single boolean field showing true, false and null'), ('options-few', 1, 7, 'short list, showing every entry'), ('options-many', 1, 8, 'long dropdown-list'), ('datepicker', 0, 9, 'enables choosing a date'), ('filepicker', 0, 10, 'enables choosing a file'), ('jes-no', 0, 6, 'boolean field presenting one option for true and false each'), ('datetimepicker', 0, 10, 'enables choosing a date-time'), ('rich-text', 0, 11, 'enables rich formatting of text')
+  VALUES ('text', 0, 1, 'Short field accepting text'), ('textarea', 0, 2, 'Field accepting text, lines can break'), ('markdown', 0, 3, 'Field accepting text, expressing markdown'), ('options-2', 0, 4, 'single boolean field showing one option for true (active) and false (not active)'), ('options-3', 0, 5, 'single boolean field showing true, false and null'), ('options-few', 1, 7, 'short list, showing every entry'), ('options-many', 1, 8, 'long dropdown-list'), ('datepicker', 0, 9, 'enables choosing a date'), ('filepicker', 0, 10, 'enables choosing a file'), ('jes-no', 0, 6, 'boolean field presenting one option for true and false each'), ('datetimepicker', 0, 10, 'enables choosing a date-time'), ('timepicker', 0, 11, 'enables choosing time of day'), ('rich-text', 0, 12, 'enables rich formatting of text')
 ON CONFLICT ON CONSTRAINT widget_types_value_key
   DO UPDATE SET
     comment = excluded.comment, sort = excluded.sort, needs_list = excluded.needs_list;
@@ -448,7 +448,7 @@ COMMENT ON TABLE widgets_for_fields IS 'Goal: know what widgets can be choosen f
 COMMENT ON COLUMN widgets_for_fields.server_rev_at IS 'time of last edit on server';
 
 INSERT INTO field_types (value, sort, comment)
-  VALUES ('text', 1, 'Example: text'), ('boolean', 2, 'true or false'), ('integer', 3, 'Example: 1'), ('decimal', 4, 'Example: 1.1'), ('date', 5, 'Example: 2021-03-08'), ('date-time', 6, 'Timestamp with time zone. Example: 2021-03-08 10:23:54+01'), ('file-reference', 7, 'the id of the file')
+  VALUES ('text', 1, 'Example: text'), ('boolean', 2, 'true or false'), ('integer', 3, 'Example: 1'), ('decimal', 4, 'Example: 1.1'), ('date', 5, 'Example: 2021-03-08'), ('date-time', 6, 'Timestamp with time zone. Example: 2021-03-08 10:23:54+01'), ('time', 7, 'Time of day. Example: 10:23'), ('file-reference', 8, 'the id of the file')
 ON CONFLICT ON CONSTRAINT field_types_pkey
   DO UPDATE SET
     comment = excluded.comment;
@@ -459,7 +459,7 @@ ALTER publication supabase_realtime
   ADD TABLE widgets_for_fields;
 
 INSERT INTO widgets_for_fields (field_value, widget_value)
-  VALUES ('text', 'text'), ('text', 'markdown'), ('boolean', 'options-2'), ('boolean', 'options-3'), ('integer', 'text'), ('decimal', 'text'), ('decimal', 'options-few'), ('decimal', 'options-many'), ('text', 'options-many'), ('integer', 'options-many'), ('text', 'options-few'), ('integer', 'options-few'), ('date', 'datepicker'), ('text', 'textarea'), ('file-reference', 'filepicker'), ('boolean', 'jes-no'), ('date-time', 'datetimepicker'), ('text', 'rich-text')
+  VALUES ('text', 'text'), ('text', 'markdown'), ('boolean', 'options-2'), ('boolean', 'options-3'), ('integer', 'text'), ('decimal', 'text'), ('decimal', 'options-few'), ('decimal', 'options-many'), ('text', 'options-many'), ('integer', 'options-many'), ('text', 'options-few'), ('integer', 'options-few'), ('date', 'datepicker'), ('text', 'textarea'), ('file-reference', 'filepicker'), ('boolean', 'jes-no'), ('date-time', 'datetimepicker'), ('time', 'timepicker'), ('text', 'rich-text')
 ON CONFLICT ON CONSTRAINT widgets_for_fields_field_value_widget_value_key
   DO NOTHING;
 

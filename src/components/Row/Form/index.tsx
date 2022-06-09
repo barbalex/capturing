@@ -13,6 +13,7 @@ import { dexie, Row, IRow, Field } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Date from '../../shared/Date'
+import Time from '../../shared/Time'
 import Checkbox2States from '../../shared/Checkbox2States'
 import JesNo from '../../shared/JesNo'
 import JesNoNull from '../../shared/JesNoNull'
@@ -262,6 +263,18 @@ const RowForm = ({
                   saveToDb={onBlur}
                   error={errors?.row?.[f.name]}
                   showTimeSelect={true}
+                />
+              )
+              break
+            case 'timepicker':
+              return (
+                <Time
+                  key={`${row.id}/${f.id}/timepicker`}
+                  value={rowState.current.data?.[f.name] ?? ''}
+                  label={f.label ?? f.name}
+                  name={f.name}
+                  saveToDb={onBlur}
+                  error={errors?.row?.[f.name]}
                 />
               )
               break
