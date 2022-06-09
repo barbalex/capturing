@@ -25,10 +25,12 @@ import JesNo from '../../shared/JesNo'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import {
   dexie,
+  Field,
   ITable,
   Table,
   TableTypeEnum,
   TableRelTypeEnum,
+  QueuedUpdate,
 } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
@@ -190,11 +192,60 @@ const TableForm = ({ showFilter }: TableFormProps) => {
   }, [updateOnServer])
 
   const [purgeFieldsDialogOpen, setPurgeFieldsDialogOpen] = useState(false)
-  const onClosePurgeFieldsDialog = useCallback(
-    () => setPurgeFieldsDialogOpen(false),
-    [],
-  )
-  const onPurgeFields = useCallback(() => {
+  const onClosePurgeFieldsDialog = useCallback(() => {
+    onBlur({ target: { name: 'type', value: 'standard' } })
+    setPurgeFieldsDialogOpen(false)
+  }, [])
+  const createValueListFields = useCallback(async () => {
+    const newField = new Field(
+      undefined,
+      tableId,
+      'value',
+      undefined,
+      undefined,
+      undefined,
+      'text',
+      'text',
+    )
+    const update = new QueuedUpdate(
+      undefined,
+      undefined,
+      'fields',
+      JSON.stringify(newField),
+      undefined,
+      undefined,
+    )
+    await Promise.all([
+      dexie.fields.put(newField),
+      dexie.queued_updates.add(update),
+    ])
+    if (rowState.current.type === 'id_value_list') {
+      const newField = new Field(
+        undefined,
+        tableId,
+        'id',
+        undefined,
+        undefined,
+        undefined,
+        'text',
+        'text',
+      )
+      const update = new QueuedUpdate(
+        undefined,
+        undefined,
+        'fields',
+        JSON.stringify(newField),
+        undefined,
+        undefined,
+      )
+      await Promise.all([
+        dexie.fields.put(newField),
+        dexie.queued_updates.add(update),
+      ])
+    }
+    rebuildTree()
+  }, [])
+  const onPurgeFields = useCallback(async () => {
     // delete this table's fields
     const fields = await dexie.fields
       .where({ table_id: tableId, deleted: 0 })
@@ -203,17 +254,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
     setPurgeFieldsDialogOpen(false)
     createValueListFields()
   }, [createValueListFields, tableId])
-  const createValueListFields = useCallback(() => {
-    // TODO
-    if (rowState.current.type === 'value_list') {
-      // TODO:
-      return
-    }
-    // TODO:
-  }, [])
-  const createIdValueListFields = useCallback(() => {
-    // TODO 'id_value_list'
-  }, [])
 
   const onBlur = useCallback(
     async (event) => {
@@ -398,18 +438,18 @@ const TableForm = ({ showFilter }: TableFormProps) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
+          {'Bestehende Felder löschen?'}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
+            Die Tabelle enthält bereits Felder. Um sie in eine Werte-Liste
+            umzuwandeln, müssen diese entfernt werden.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClosePurgeFieldsDialog}>Disagree</Button>
+          <Button onClick={onClosePurgeFieldsDialog}>Abbrechen</Button>
           <Button onClick={onPurgeFields} autoFocus>
-            Agree
+            Ja, bestehende Felder entfernen
           </Button>
         </DialogActions>
       </Dialog>
