@@ -1,7 +1,20 @@
-import React, { useContext, useEffect, useCallback, useRef } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {
+  useContext,
+  useEffect,
+  useCallback,
+  useRef,
+  useState,
+} from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import Button from '@mui/material/Button'
 import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
@@ -163,9 +176,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
     })
     // ensure originalRow is reset too
     originalRow.current = rowState.current
-    // TODO: if type changed
-    // 1. remove all fields. But first ask user if is o.k.
-    // 2. create new if value_list or id_value_list
   }, [row, session])
 
   useEffect(() => {
@@ -178,6 +188,32 @@ const TableForm = ({ showFilter }: TableFormProps) => {
       // do not return - otherwise user is dialogued, and that does not help the saving
     }
   }, [updateOnServer])
+
+  const [purgeFieldsDialogOpen, setPurgeFieldsDialogOpen] = useState(false)
+  const onClosePurgeFieldsDialog = useCallback(
+    () => setPurgeFieldsDialogOpen(false),
+    [],
+  )
+  const onPurgeFields = useCallback(() => {
+    // delete this table's fields
+    const fields = await dexie.fields
+      .where({ table_id: tableId, deleted: 0 })
+      .toArray()
+    await dexie.fields.bulkDelete(fields.map((f) => f.id))
+    setPurgeFieldsDialogOpen(false)
+    createValueListFields()
+  }, [createValueListFields, tableId])
+  const createValueListFields = useCallback(() => {
+    // TODO
+    if (rowState.current.type === 'value_list') {
+      // TODO:
+      return
+    }
+    // TODO:
+  }, [])
+  const createIdValueListFields = useCallback(() => {
+    // TODO 'id_value_list'
+  }, [])
 
   const onBlur = useCallback(
     async (event) => {
@@ -201,9 +237,19 @@ const TableForm = ({ showFilter }: TableFormProps) => {
       rowState.current = { ...row, ...{ [field]: newValue } }
       // update dexie
       dexie.ttables.update(row.id, { [field]: newValue })
+      // rebuild tree if needed
       if (['name', 'label'].includes(field)) rebuildTree()
+      // create fields for dropdown tables
+      if (field === 'type' && newValue !== 'standard') {
+        // if fields already exist: ask user if they shall be replaced
+        const fields = await dexie.fields
+          .where({ table_id: tableId, deleted: 0 })
+          .toArray()
+        if (fields.length) return setPurgeFieldsDialogOpen(true)
+        createValueListFields()
+      }
     },
-    [filter, rebuildTree, row, showFilter],
+    [createValueListFields, filter, rebuildTree, row, showFilter, tableId],
   )
 
   // const showDeleted = filter?.table?.deleted !== false || row?.deleted
@@ -345,6 +391,28 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           </Comment>
         )}
       </FieldsContainer>
+      <Dialog
+        open={purgeFieldsDialogOpen}
+        onClose={onClosePurgeFieldsDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Use Google's location service?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Let Google help apps determine location. This means sending
+            anonymous location data to Google, even when no apps are running.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClosePurgeFieldsDialog}>Disagree</Button>
+          <Button onClick={onPurgeFields} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
     </ErrorBoundary>
   )
 }
