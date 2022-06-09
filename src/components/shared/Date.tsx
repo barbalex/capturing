@@ -30,6 +30,7 @@ const StyledDatePicker = styled(DatePicker)`
   width: 100%;
   padding: 0.25rem 0;
   color: #495057;
+  font-size: 1em;
   background-color: #fff;
   background-clip: padding-box;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
