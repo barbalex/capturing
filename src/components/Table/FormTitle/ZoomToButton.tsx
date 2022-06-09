@@ -14,13 +14,14 @@ const ZoomToButtonComponent = () => {
     const rows: Row[] = await dexie.rows
       .where({ table_id: tableId, deleted: 0 })
       .toArray()
-    const rowsWithGeometry = rows.filter((r) => !!r.geometry)
     const fc = {
       type: 'FeatureCollection',
-      features: rowsWithGeometry.map((e) => ({
-        geometry: e.geometry,
-        type: 'Feature',
-      })),
+      features: rows
+        .filter((r) => !!r.geometry)
+        .map((e) => ({
+          geometry: e.geometry,
+          type: 'Feature',
+        })),
     }
     const bbox = getBbox(fc)
     const bboxIsInfinite = isEqual(bbox, [
