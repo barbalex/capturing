@@ -36,7 +36,7 @@ const TileLayerForm = () => {
   const { projectId, tileLayerId } = useParams()
 
   const store = useContext(StoreContext)
-  const { errors } = store
+  const { errors, rebuildTree } = store
 
   const session: Session = supabase.auth.session()
 
@@ -145,14 +145,15 @@ const TileLayerForm = () => {
       rowState.current = { ...row, ...{ [field]: newValue } }
       // update dexie
       dexie.tile_layers.update(row.id, { [field]: newValue })
+      if (['label'].includes(field)) rebuildTree()
     },
-    [row],
+    [rebuildTree, row],
   )
 
   useEffect(() => {
     if (!row?.wms_base_url) return
     if (row?._layerOptions?.length) return
-    getCapabilitiesDataForTileLayer({ row })
+    getCapabilitiesDataForTileLayer({ row, rebuildTree })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     tileLayerId,

@@ -72,7 +72,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
   const { projectId, vectorLayerId } = useParams()
 
   const store = useContext(StoreContext)
-  const { filter, errors } = store
+  const { filter, errors, rebuildTree } = store
 
   const session: Session = supabase.auth.session()
 
@@ -186,8 +186,9 @@ const VectorLayerForm = ({ showFilter }: Props) => {
           dexie.pvl_geoms.where({ deleted: 0, pvl_id: row.id }).delete()
         }
       }
+      if (['label'].includes(field)) rebuildTree()
     },
-    [filter, row, showFilter, store],
+    [filter, rebuildTree, row, showFilter, store],
   )
 
   const typeValues = Object.values(VectorLayerTypeEnum).map((v) => {
@@ -211,8 +212,8 @@ const VectorLayerForm = ({ showFilter }: Props) => {
     // only set if not yet done
     if (row?.type_name) return
     setLoadingCapabilities(true)
-    getCapabilitiesDataForVectorLayer({ row }).then(() => 
-      setLoadingCapabilities(false)
+    getCapabilitiesDataForVectorLayer({ row }).then(() =>
+      setLoadingCapabilities(false),
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [row?.url, row?.type_name, vectorLayerId])

@@ -32,7 +32,7 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
   const session: Session = supabase.auth.session()
   const { projectId } = useParams()
   const store = useContext(StoreContext)
-  const { filter, errors } = store
+  const { filter, errors, rebuildTree } = store
 
   // console.log('ProjectForm rendering')
 
@@ -104,8 +104,9 @@ const ProjectForm = ({ showFilter }: ProjectFormProps) => {
       rowState.current = { ...row, ...{ [field]: newValue } }
       // update dexie
       dexie.projects.update(row.id, { [field]: newValue })
+      if (['name', 'label'].includes(field)) rebuildTree()
     },
-    [filter, row, showFilter],
+    [filter, rebuildTree, row, showFilter],
   )
 
   // const showDeleted = filter?.project?.deleted !== false || row?.deleted

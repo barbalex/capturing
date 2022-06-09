@@ -11,6 +11,7 @@ type Props = {
 const getCapabilitiesDataForTileLayer = async ({
   row,
   returnValue = false,
+  rebuildTree,
 }: Props) => {
   if (!row?.wms_base_url) return undefined
 
@@ -146,6 +147,7 @@ const getCapabilitiesDataForTileLayer = async ({
   // enable updating in a single operation
   if (returnValue) return values
 
+  if (values.label && rebuildTree?.()) rebuildTree()
   return dexie.tile_layers.update(row.id, values)
 }
 
