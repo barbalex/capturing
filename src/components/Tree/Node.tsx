@@ -6,7 +6,7 @@ import {
 import IconButton from '@mui/material/IconButton'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Session } from '@supabase/supabase-js'
@@ -52,7 +52,6 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   // console.log('Node', { data, state, tree, handlers })
   const session: Session = supabase.auth.session()
   const navigate = useNavigate()
-  const { projectId } = useParams()
 
   const store = useContext(storeContext)
   const {
@@ -64,7 +63,6 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     removeNodeWithChildren,
   } = store
   const activeNodeArray = aNARaw.slice()
-  const editing = editingProjects.get(projectId)?.editing ?? false
   const isInActiveNodeArray = isEqual(
     activeNodeArray.slice(0, data.activeNodeArray.length),
     data.activeNodeArray,
@@ -173,10 +171,10 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
       e.stopPropagation()
       setProjectEditing({
         id: data.id,
-        editing: !editing,
+        editing: !editingProjects.get(data.id)?.editing,
       })
     },
-    [data.id, editing, setProjectEditing],
+    [data.id, editingProjects, setProjectEditing],
   )
   const onClickToggle = useCallback(
     (e) => {
