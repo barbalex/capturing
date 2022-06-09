@@ -12,10 +12,10 @@ const StyledFormControl = styled(FormControl)`
     border-bottom-color: rgba(0, 0, 0, 0.1) !important;
   }
 `
+// no idea why but this font-size is shrunken!
 const StyledInputLabel = styled(InputLabel)`
   font-weight: ${(props) => props['data-weight']} !important;
   color: rgba(0, 0, 0, 0.8);
-  /* font-size: 12.8px; */
   font-size: 1rem;
 `
 
