@@ -1,6 +1,6 @@
 import { TileLayer } from '../../../../dexieClient'
 import WMS from './WMS'
-import WMTS from './WMTS'
+import WMTS from './WMTSOffline'
 
 type Props = {
   layer: TileLayer
