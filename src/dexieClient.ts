@@ -5,6 +5,8 @@ import { Session } from '@supabase/supabase-js'
 import sortBy from 'lodash/sortBy'
 import getBbox from '@turf/bbox'
 
+window.Dexie = Dexie
+
 export interface IAccount {
   id: string
   service_id?: string
