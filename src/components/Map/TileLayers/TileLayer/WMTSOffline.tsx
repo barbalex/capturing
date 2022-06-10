@@ -45,6 +45,7 @@ const WMTSOffline = ({ layer }: Props) => {
       control.deleteTable(control.dtable.name)
     }
     wmtsLayer.on('loadend', (e) => {
+      console.log('loadend')
       // all tiles just saved
       control.putItem('mapSize', e.mapSize)
       control
@@ -53,6 +54,8 @@ const WMTSOffline = ({ layer }: Props) => {
           alert(`size of map '${control.dtable.name}' is ${msize} bytes`),
         )
     })
+
+    setTimeout(() => savem(), 1000)
 
     return () => {
       map.removeLayer(wmtsLayer)
