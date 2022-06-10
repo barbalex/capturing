@@ -20,17 +20,10 @@ import TableLayers from './TableLayers'
 import TileLayers from './TileLayers'
 import VectorLayers from './VectorLayers'
 // import ZhUepWfs from './layers/zh_uep_wfs'
-import BetterWmsAdder from './BetterWmsAdder'
 import Control from './Control'
 import OwnControls from './OwnControls'
 
-// window.Dexie = dexie
 import '../../utils/leaflet.dexie.min.js'
-
-console.log('Map', {
-  windowDexie: window.Dexie,
-  tileLayerOffline: L.tileLayer.offline,
-})
 
 const Container = styled.div`
   height: 100%;
@@ -114,7 +107,6 @@ const MapComponent = () => {
         >
           {/* <ZhUepWfs /> */}
           <LocationMarker />
-          <BetterWmsAdder />
           <MapFetcher />
           {!!rowId && <DrawControl />}
           <TableLayers />
