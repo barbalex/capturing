@@ -12,6 +12,8 @@ const WMTSOffline = ({ layer }: Props) => {
   const map = useMap()
   const store = useContext(storeContext)
 
+  console.log('WMTSOffline, Dexie:', window.Dexie)
+
   useEffect(() => {
     const wmtsLayer = L.tileLayer(layer.wmts_url_template, {
       maxNativeZoom: 19,
