@@ -46,6 +46,10 @@ const StyledMapContainer = styled(MapContainer)`
     border: none;
   }
 
+  .grayscale {
+    filter: grayscale(1);
+  }
+
   @media print {
     height: 100%;
     width: 100%;
