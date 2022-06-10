@@ -14,6 +14,7 @@ const StyledTileLayer = styled(TileLayer)`
 type Props = {
   layer: TileLayerType
 }
+
 const WMTS = ({ layer }: Props) => {
   return (
     <StyledTileLayer
