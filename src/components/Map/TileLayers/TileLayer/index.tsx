@@ -1,32 +1,13 @@
-import { TileLayer } from 'react-leaflet'
-import styled from 'styled-components'
-
-import { TileLayer as TileLayerType } from '../../../../dexieClient'
-import WMS from './WMSOffline'
-
-const StyledTileLayer = styled(TileLayer)`
-  ${(props) =>
-    props.greyscale == 1 &&
-    `.leaflet-tile-container {
-    filter: grayscale(100%) !important;
-  }`}
-`
+import { TileLayer } from '../../../../dexieClient'
+import WMS from './WMS'
+import WMTS from './WMTS'
 
 type Props = {
-  layer: TileLayerType
+  layer: TileLayer
 }
 const TileLayerComponent = ({ layer }: Props) => {
   if (layer.type === 'wmts') {
-    return (
-      <StyledTileLayer
-        url={layer.wmts_url_template}
-        maxNativeZoom={19}
-        minZoom={layer.min_zoom}
-        maxZoom={layer.max_zoom}
-        greyscale={layer.greyscale}
-        opacity={layer.opacity}
-      />
-    )
+    return <WMTS layer={layer} />
   } else {
     return <WMS layer={layer} />
   }

@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { useMap, WMSTileLayer, useMapEvent } from 'react-leaflet'
 import styled from 'styled-components'
 import axios from 'redaxios'
@@ -161,6 +161,14 @@ const WMS = ({ layer }) => {
     onTileError.bind(this, store, map, layer),
     600,
   )
+
+  
+
+  useEffect(()=>{
+    // TODO: 
+    // add layer to map
+    // remove on return
+  },[])
 
   // TODO:
   // leaflet calls server internally
