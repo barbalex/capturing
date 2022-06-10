@@ -2,7 +2,7 @@ import { TileLayer } from 'react-leaflet'
 import styled from 'styled-components'
 
 import { TileLayer as TileLayerType } from '../../../../dexieClient'
-import WMS from './WMS'
+import WMS from './WMSOffline'
 
 const StyledTileLayer = styled(TileLayer)`
   ${(props) =>
