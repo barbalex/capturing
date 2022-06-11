@@ -54,6 +54,7 @@ export const MobxStore = types
   .volatile(() => ({
     navigate: undefined,
     map: undefined,
+    localMaps: {}, // map of: {id,label,save,delete}
   }))
   .actions((self) => {
     // autorun(() => {
@@ -73,6 +74,9 @@ export const MobxStore = types
     })
 
     return {
+      setLocalMap(val) {
+        self.localMaps[val.id] = val
+      },
       flyToMapBounds(bounds) {
         // this exists because:
         // zoom to row can be clicked BEFORE map was instantiated

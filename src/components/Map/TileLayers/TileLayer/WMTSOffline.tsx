@@ -11,6 +11,7 @@ type Props = {
 const WMTSOffline = ({ layer }: Props) => {
   const map = useMap()
   const store = useContext(storeContext)
+  const { setLocalMap } = store
 
   console.log('WMTSOffline, Dexie:', window.Dexie)
 
@@ -30,13 +31,14 @@ const WMTSOffline = ({ layer }: Props) => {
     control.addTo(map)
     control.openDB()
 
-    const savem = () => {
+    const save = () => {
       control.setBounds(map.getBounds())
       control.saveMap()
     }
-    const delm = () => {
+    const del = () => {
       control.deleteTable(control.dtable.name)
     }
+    setLocalMap({ id: layer.id, label: layer.label, save, delete: del })
     wmtsLayer.on('loadend', (e) => {
       console.log('loadend')
       // all tiles just saved
@@ -57,11 +59,13 @@ const WMTSOffline = ({ layer }: Props) => {
   }, [
     layer.greyscale,
     layer.id,
+    layer.label,
     layer.max_zoom,
     layer.min_zoom,
     layer.opacity,
     layer.wmts_url_template,
     map,
+    setLocalMap,
   ])
 
   return null
