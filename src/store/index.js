@@ -4,11 +4,7 @@ import { v1 as uuidv1 } from 'uuid'
 import isEqual from 'lodash/isEqual'
 
 import NotificationType from './Notification'
-
-const EditingProject = types.model('EditingProject', {
-  id: types.identifier,
-  editing: types.boolean,
-})
+import EditingProjectType from './EditingProject'
 
 // Idea: build tree with object / Nodes type containing only id/folderName?
 // const Nodes = types.model({
@@ -18,7 +14,7 @@ const EditingProject = types.model('EditingProject', {
 
 export const MobxStore = types
   .model({
-    editingProjects: types.map(EditingProject),
+    editingProjects: types.map(EditingProjectType),
     activeNodeArray: types.optional(
       types.array(types.union(types.string, types.number)),
       [],

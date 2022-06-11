@@ -15,7 +15,7 @@ const WMTSOffline = ({ layer }: Props) => {
   console.log('WMTSOffline, Dexie:', window.Dexie)
 
   useEffect(() => {
-    const wmtsLayer = L.tileLayer(layer.wmts_url_template, {
+    const wmtsLayer = L.tileLayer.offline(layer.wmts_url_template, {
       maxNativeZoom: 19,
       minZoom: layer.min_zoom,
       maxZoom: layer.max_zoom,
@@ -25,14 +25,7 @@ const WMTSOffline = ({ layer }: Props) => {
     })
     wmtsLayer.addTo(map)
     const control = L.control.savetiles(wmtsLayer, {
-      confirmSave: function (status, saveCallback) {
-        const newTname = prompt(
-          `Please enter map name (${status._tilesforSave.length} tiles):`,
-          '',
-        )
-        if (!newTname) return // user cancelled the prompt
-        saveCallback(newTname)
-      },
+      confirmSave: (status, saveCallback) => saveCallback(layer.id),
     })
     control.addTo(map)
     control.openDB()
@@ -55,7 +48,7 @@ const WMTSOffline = ({ layer }: Props) => {
         )
     })
 
-    setTimeout(() => savem(), 1000)
+    // setTimeout(() => savem(), 1000)
 
     return () => {
       map.removeLayer(wmtsLayer)
@@ -63,6 +56,7 @@ const WMTSOffline = ({ layer }: Props) => {
     }
   }, [
     layer.greyscale,
+    layer.id,
     layer.max_zoom,
     layer.min_zoom,
     layer.opacity,
