@@ -78,7 +78,10 @@ export const MobxStore = types
         self.localMaps[val.id] = val
       },
       setLocalMapSize({ id, size }) {
-        self.localMaps[id]?.size = size
+        self.localMaps[id] = {
+          ...self.localMaps[id],
+          size,
+        }
       },
       flyToMapBounds(bounds) {
         // this exists because:

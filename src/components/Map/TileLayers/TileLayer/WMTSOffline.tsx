@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react'
+import { useEffect, useContext, useRef } from 'react'
 import { useMap } from 'react-leaflet'
 
 import { TileLayer as TileLayerType } from '../../../../dexieClient'
@@ -12,6 +12,8 @@ const WMTSOffline = ({ layer }: Props) => {
   const map = useMap()
   const store = useContext(storeContext)
   const { setLocalMap, setLocalMapSize } = store
+
+  const boundsRef = useRef()
 
   console.log('WMTSOffline, Dexie:', window.Dexie)
 
@@ -32,7 +34,8 @@ const WMTSOffline = ({ layer }: Props) => {
     control.openDB()
 
     const save = () => {
-      control.setBounds(map.getBounds())
+      const bounds = map.getBounds()
+      boundsRef.current = bounds
       control.saveMap()
     }
     const del = () => {
@@ -40,9 +43,10 @@ const WMTSOffline = ({ layer }: Props) => {
     }
     setLocalMap({ id: layer.id, label: layer.label, save, delete: del })
     wmtsLayer.on('loadend', (e) => {
-      console.log('loadend')
+      console.log('loadend', { mapSize: e.mapSize, bounds: boundsRef.current })
       // all tiles just saved
       control.putItem('mapSize', e.mapSize)
+      control.putItem('bounds', boundsRef.current)
       control
         .getItem('mapSize')
         .then((msize) =>
