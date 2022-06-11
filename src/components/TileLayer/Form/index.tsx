@@ -163,6 +163,16 @@ const TileLayerForm = () => {
     row?.wms_layers,
   ])
 
+  /**
+   * TODO: local maps
+   * 1. get size from dexie
+   * 2. show it
+   * 3. save bounds
+   * 4. enable showing bounds on map
+   * 5. enable choosing what zooms to save?
+   * 6. enable syncing local maps?
+   */
+
   const onClickSaveWmts = useCallback(() => {
     localMaps?.[row?.id ?? '']?.save?.()
   }, [localMaps, row?.id])

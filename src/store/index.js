@@ -77,6 +77,9 @@ export const MobxStore = types
       setLocalMap(val) {
         self.localMaps[val.id] = val
       },
+      setLocalMapSize({ id, size }) {
+        self.localMaps[id]?.size = size
+      },
       flyToMapBounds(bounds) {
         // this exists because:
         // zoom to row can be clicked BEFORE map was instantiated

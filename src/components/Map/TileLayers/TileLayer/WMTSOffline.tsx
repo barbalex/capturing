@@ -11,7 +11,7 @@ type Props = {
 const WMTSOffline = ({ layer }: Props) => {
   const map = useMap()
   const store = useContext(storeContext)
-  const { setLocalMap } = store
+  const { setLocalMap, setLocalMapSize } = store
 
   console.log('WMTSOffline, Dexie:', window.Dexie)
 
@@ -48,11 +48,8 @@ const WMTSOffline = ({ layer }: Props) => {
         .then((msize) =>
           alert(`size of map '${control.dtable.name}' is ${msize} bytes`),
         )
-      setLocalMap({
+      setLocalMapSize({
         id: layer.id,
-        label: layer.label,
-        save,
-        delete: del,
         size: e.mapSize,
       })
     })
@@ -71,6 +68,7 @@ const WMTSOffline = ({ layer }: Props) => {
     layer.wmts_url_template,
     map,
     setLocalMap,
+    setLocalMapSize,
   ])
 
   return null
