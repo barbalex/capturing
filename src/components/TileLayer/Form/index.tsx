@@ -167,6 +167,10 @@ const TileLayerForm = () => {
     localMaps?.[row?.id ?? '']?.save?.()
   }, [localMaps, row?.id])
 
+  const onClickDeleteWmts = useCallback(() => {
+    localMaps?.[row?.id ?? '']?.delete?.()
+  }, [localMaps, row?.id])
+
   // const showDeleted = filter?.tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
@@ -234,9 +238,14 @@ const TileLayerForm = () => {
               helperText="Projektion muss 3857 oder 4326 sein. Beispiel (Server-abhängig): https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg"
             />
             {showMap && (
-              <Button variant="outlined" onClick={onClickSaveWmts}>
-                Aktuellen Ausschnitt speichern
-              </Button>
+              <>
+                <Button variant="outlined" onClick={onClickSaveWmts}>
+                  Aktuellen Ausschnitt speichern
+                </Button>
+                <Button variant="outlined" onClick={onClickDeleteWmts}>
+                  Lokal gespeicherte Kartenausschnitte löschen
+                </Button>
+              </>
             )}
           </>
         )}

@@ -54,7 +54,7 @@ export const MobxStore = types
   .volatile(() => ({
     navigate: undefined,
     map: undefined,
-    localMaps: {}, // map of: {id,label,save,delete}
+    localMaps: {}, // map of: {id,label,save,delete,size}
   }))
   .actions((self) => {
     // autorun(() => {

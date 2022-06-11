@@ -48,9 +48,14 @@ const WMTSOffline = ({ layer }: Props) => {
         .then((msize) =>
           alert(`size of map '${control.dtable.name}' is ${msize} bytes`),
         )
+      setLocalMap({
+        id: layer.id,
+        label: layer.label,
+        save,
+        delete: del,
+        size: e.mapSize,
+      })
     })
-
-    // setTimeout(() => savem(), 1000)
 
     return () => {
       map.removeLayer(wmtsLayer)
