@@ -15,8 +15,6 @@ const WMTSOffline = ({ layer }: Props) => {
 
   const boundsRef = useRef()
 
-  console.log('WMTSOffline, Dexie:', window.Dexie)
-
   useEffect(() => {
     const wmtsLayer = L.tileLayer.offline(layer.wmts_url_template, {
       maxNativeZoom: 19,
@@ -36,7 +34,14 @@ const WMTSOffline = ({ layer }: Props) => {
     const save = () => {
       const bounds = map.getBounds()
       boundsRef.current = bounds
-      control.saveMap()
+      try {
+        control.saveMap()
+      } catch (error) {
+        store.addNotification({
+          title: `Fehler beim Laden der Karten für ${layer.label}`,
+          message: error.message,
+        })
+      }
     }
     const del = () => {
       control.deleteTable(control.dtable.name)

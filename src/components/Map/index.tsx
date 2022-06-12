@@ -23,7 +23,7 @@ import VectorLayers from './VectorLayers'
 import Control from './Control'
 import OwnControls from './OwnControls'
 
-import '../../utils/leaflet.dexie.min.js'
+import '../../utils/leaflet.dexie/index.ts'
 
 const Container = styled.div`
   height: 100%;
