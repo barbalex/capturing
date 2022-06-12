@@ -35,7 +35,7 @@ const WMTSOffline = ({ layer }: Props) => {
       const bounds = map.getBounds()
       boundsRef.current = bounds
       try {
-        control.saveMap()
+        control.saveMap(store)
       } catch (error) {
         store.addNotification({
           title: `Fehler beim Laden der Karten für ${layer.label}`,

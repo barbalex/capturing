@@ -1,4 +1,6 @@
 import L from 'leaflet'
+import countBy from 'lodash/countBy'
+import groupBy from 'lodash/groupBy'
 
 /**
  * Status of ControlSaveTiles, keeps info about process during downloading and saving tiles. Used internal and as object for events.
@@ -207,7 +209,7 @@ const ControlSaveTiles = L.Control.extend({
    * Prepare zoom levels to download and activate callback function to
    * save(async) all map tiles on table name confirmation. Fires event 'savestart'.
    */
-  saveMap: function () {
+  saveMap: function (store) {
     let zoomlevels = []
     if (this.options.zoomlevels) {
       // zoomlevels have higher priority than maxZoom
@@ -261,7 +263,6 @@ const ControlSaveTiles = L.Control.extend({
       }
       this.setTable(tblName)
 
-      // TODO: break after first error? use allSettled?
       const results = await Promise.allSettled(
         tiles.map(async (tile) => {
           // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -278,7 +279,11 @@ const ControlSaveTiles = L.Control.extend({
           })
         }),
       )
-      console.log('ControlSaveTiles, saveMap, results:', results)
+      // TODO: set this in store / tile_layer?
+      console.log(
+        'ControlSaveTiles, saveMap, results count:',
+        countBy(results, 'status'),
+      )
     }
 
     if (this.options.confirmSave) {
@@ -288,13 +293,7 @@ const ControlSaveTiles = L.Control.extend({
 
   _downloadTile: async (tileUrl) => {
     // download one tile by url
-    let response
-    // try {
-    response = await fetch(tileUrl)
-    // } catch (error) {
-    //   // TODO: only surface last error, happens hundres of times...
-    //   console.log(error)
-    // }
+    const response = await fetch(tileUrl)
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.statusText}`)
     }

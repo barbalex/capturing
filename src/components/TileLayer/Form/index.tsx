@@ -31,6 +31,12 @@ const FieldsContainer = styled.div`
   height: 100%;
   overflow-y: auto;
 `
+const WmtsButtonsContainer = styled.div`
+  margin-bottom: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`
 
 // = '99999999-9999-9999-9999-999999999999'
 const TileLayerForm = () => {
@@ -248,14 +254,14 @@ const TileLayerForm = () => {
               helperText="Projektion muss 3857 oder 4326 sein. Beispiel (Server-abhängig): https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg"
             />
             {showMap && (
-              <>
+              <WmtsButtonsContainer>
                 <Button variant="outlined" onClick={onClickSaveWmts}>
-                  Aktuellen Ausschnitt speichern
+                  Aktuellen Ausschnitt (zusätzlich) speichern
                 </Button>
                 <Button variant="outlined" onClick={onClickDeleteWmts}>
                   Lokal gespeicherte Kartenausschnitte löschen
                 </Button>
-              </>
+              </WmtsButtonsContainer>
             )}
           </>
         )}
