@@ -287,6 +287,7 @@ const ControlSaveTiles = L.Control.extend({
         }),
       )
       setLocalMapLoadingFraction(1)
+      setTimeout(() => setLocalMapLoadingFraction(0), 3000)
       // set this in store / tile_layer?
       const res = countBy(results, 'status')
       const mapValues = {
