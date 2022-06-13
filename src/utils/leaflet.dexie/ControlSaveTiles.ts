@@ -212,6 +212,12 @@ const ControlSaveTiles = L.Control.extend({
    * save(async) all map tiles on table name confirmation'.
    */
   saveMap: function ({ store, layer }) {
+    const {
+      setLocalMapValues,
+      setLocalMapLoadingFraction,
+      setLocalMapLoading,
+    } = store
+    setLocalMapLoadingFraction(0)
     let zoomlevels = []
     if (this.options.zoomlevels) {
       // zoomlevels have higher priority than maxZoom
@@ -248,6 +254,10 @@ const ControlSaveTiles = L.Control.extend({
     }
     this._resetStatus(tiles)
     this.status.currMinZoom = zoomlevels[0]
+    setLocalMapValues({
+      id: layer.id,
+      tilesCount: tiles.length,
+    })
 
     const saveCallback = async (tblName = layer.id) => {
       if (this.status.tnames.indexOf(tblName) < 0) {
@@ -262,29 +272,35 @@ const ControlSaveTiles = L.Control.extend({
       }
       this.setTable(tblName)
 
+      const tilesLength = tiles.length
+      setLocalMapLoadingFraction(0)
       const results = await Promise.allSettled(
-        tiles.map(async (tile) => {
+        tiles.map(async (tile, index) => {
           // eslint-disable-next-line @typescript-eslint/no-this-alias
           const self = this
           await self._downloadTile(tile.url).then((blob) => {
             self._saveTile(tile.key, blob)
             self.status.mapSize += blob.size
             self.status.lengthLoaded += 1
+            setLocalMapLoadingFraction((index + 1) / tilesLength)
           })
         }),
       )
-      // TODO: set this in store / tile_layer?
+      setLocalMapLoadingFraction(1)
+      // set this in store / tile_layer?
       const res = countBy(results, 'status')
       const mapValues = {
         id: layer.id,
-        tilesCount: tiles.length,
         fulfilled: res.fulfilled ?? 0,
         rejected: res.rejected ?? 0,
         size: this.status.mapSize,
       }
-      store.setLocalMapValues(mapValues)
-      console.log('ControlSaveTiles, set map values:', mapValues)
-      // TODO: set bnds and update size in dexie
+      setLocalMapLoading({
+        fulfilled: res.fulfilled ?? 0,
+        rejected: res.rejected ?? 0,
+      })
+      setLocalMapValues(mapValues)
+      // set bounds and update size in dexie
       const tileLayer = await dexie.tile_layers.get(layer.id)
       const was = { ...tileLayer }
       const update = {
@@ -296,7 +312,6 @@ const ControlSaveTiles = L.Control.extend({
       }
       dexie.tile_layers.update(layer.id, update)
       const is = await dexie.tile_layers.get(layer.id)
-      console.log('ControlSaveTiles, updating tileLayer:', { was, update, is })
       const session = supabase.auth.session()
       tileLayer.updateOnServer({ was, is, session })
     }

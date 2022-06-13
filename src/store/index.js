@@ -50,11 +50,14 @@ export const MobxStore = types
     treeRebuildCount: types.optional(types.number, 0),
     // needed to create animations when horizontally navigating
     horizontalNavIds: types.optional(types.array(types.string), []),
+    localMapLoadingFraction: types.optional(types.number, 0),
+    localMapLoadingFulfilled: types.optional(types.number, 0),
+    localMapLoadingRejected: types.optional(types.number, 0),
   })
   .volatile(() => ({
     navigate: undefined,
     map: undefined,
-    localMaps: {}, // map of: {id,save,delete,size,tilesCount,fulfilled,rejected}
+    localMaps: {}, // map of: {id,save,delete,size,fulfilled,rejected}
   }))
   .actions((self) => {
     // autorun(() => {
@@ -74,10 +77,25 @@ export const MobxStore = types
     })
 
     return {
+      setLocalMapLoading({ fulfilled, rejected }) {
+        self.localMapLoadingFulfilled = fulfilled
+        self.localMapLoadingRejected = rejected
+      },
+      setLocalMapLoadingFraction(val) {
+        self.localMapLoadingFraction = val
+      },
       setLocalMap(val) {
         self.localMaps[val.id] = val
       },
-      setLocalMapValues({ id, save, del, size, fulfilled, rejected }) {
+      setLocalMapValues({
+        id,
+        save,
+        del,
+        size,
+        fulfilled,
+        rejected,
+        tilesCount,
+      }) {
         self.localMaps[id] = {
           ...self.localMaps[id],
           ...(save ? { save } : {}),
@@ -85,6 +103,7 @@ export const MobxStore = types
           ...(size ? { size } : {}),
           ...(fulfilled ? { fulfilled } : {}),
           ...(rejected ? { rejected } : {}),
+          ...(tilesCount ? { tilesCount } : {}),
         }
       },
       flyToMapBounds(bounds) {

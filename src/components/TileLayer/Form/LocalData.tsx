@@ -1,10 +1,14 @@
-import { useCallback, useContext } from 'react'
+import { useCallback, useContext, useState, useEffect } from 'react'
 import Button from '@mui/material/Button'
+import LinearProgress from '@mui/material/LinearProgress'
 import styled from 'styled-components'
+import { observer } from 'mobx-react-lite'
 
 import storeContext from '../../../storeContext'
 import Label from '../../shared/Label'
 import { Comment } from '../../Table/Form'
+import { dexie, TileLayer } from '../../../dexieClient'
+import { supabase } from '../../../supabaseClient'
 
 const WmtsButtonsContainer = styled.div`
   margin-bottom: 18px;
@@ -14,8 +18,15 @@ const WmtsButtonsContainer = styled.div`
 `
 
 const LocalData = ({ userMayEdit, row }) => {
+  const session = supabase.auth.session()
   const store = useContext(storeContext)
-  const { localMaps, showMap } = store
+  const {
+    localMaps,
+    showMap,
+    localMapLoadingFraction,
+    localMapLoadingFulfilled,
+    localMapLoadingRejected,
+  } = store
 
   /**
    * TODO: local maps
@@ -27,24 +38,52 @@ const LocalData = ({ userMayEdit, row }) => {
    * 6. enable syncing local maps?
    */
 
-  const onClickSaveWmts = useCallback(() => {
-    localMaps?.[row.id]?.save?.()
-  }, [localMaps, row.id])
+  const localMap = localMaps?.[row.id]
+  const [showProgress, setShowProgress] = useState(false)
+  useEffect(() => {
+    let timeoutID
+    if (localMapLoadingFraction === 1) {
+      timeoutID = setTimeout(() => setShowProgress(false), 3000)
+    }
 
-  const onClickDeleteWmts = useCallback(() => {
-    localMaps?.[row.id]?.del?.()
-  }, [localMaps, row.id])
+    return () => {
+      if (timeoutID) clearTimeout(timeoutID)
+    }
+  }, [localMapLoadingFraction])
+
+  const onClickSaveWmts = useCallback(() => {
+    setShowProgress(true)
+    localMap?.save?.()
+  }, [localMap])
+
+  const onClickDeleteWmts = useCallback(async () => {
+    localMap?.del?.()
+    const was = { ...row }
+    await dexie.tile_layers.update(row.id, {
+      local_data_size: null,
+      local_data_bounds: null,
+    })
+    const is: TileLayer = dexie.tile_layers.get(row.id)
+    row.updateOnServer({ was, is, session })
+  }, [localMap, row, session])
 
   if (showMap && userMayEdit) {
-    let mb = 0
-    if (row.local_data_size) {
-      mb = (row.local_data_size / 1000000)?.toLocaleString?.('de-CH')
-    }
+    const mb = row.local_data_size
+      ? (+(row.local_data_size / 1000000)).toFixed(1)?.toLocaleString?.('de-CH')
+      : 0
+
+    console.log('localData', { localMap, localMapLoadingFraction })
 
     return (
       <>
         <Label label="Offline-Daten" />
-        <Comment>{`Aktuell: ${mb} Megabytes`}</Comment>
+        {showProgress && (
+          <LinearProgress
+            variant="determinate"
+            value={localMapLoadingFraction * 100}
+          />
+        )}
+        <Comment>{`Aktuell: ${mb} Megabyte`}</Comment>
         <WmtsButtonsContainer>
           <Button variant="outlined" onClick={onClickSaveWmts}>
             Aktuellen Ausschnitt (zusätzlich) speichern
@@ -58,4 +97,4 @@ const LocalData = ({ userMayEdit, row }) => {
   }
 }
 
-export default LocalData
+export default observer(LocalData)
