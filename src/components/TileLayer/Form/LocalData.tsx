@@ -75,8 +75,6 @@ const LocalData = ({ userMayEdit, row }) => {
       ? 'Aktuellen Ausschnitt (zusätzlich) speichern'
       : 'Aktuellen Ausschnitt speichern'
 
-    console.log('localData', { localMap, localMapLoadingFraction })
-
     return (
       <>
         <Label label="Offline-Daten" />

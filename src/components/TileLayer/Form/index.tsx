@@ -168,7 +168,7 @@ const TileLayerForm = () => {
 
   if (!row) return <Spinner />
 
-  console.log('TL Form rendering, localMaps:', localMaps)
+  // console.log('TL Form rendering, localMaps:', localMaps)
 
   return (
     <ErrorBoundary>
