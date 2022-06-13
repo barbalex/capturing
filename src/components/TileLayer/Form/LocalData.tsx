@@ -71,6 +71,9 @@ const LocalData = ({ userMayEdit, row }) => {
     const mb = row.local_data_size
       ? (+(row.local_data_size / 1000000)).toFixed(1)?.toLocaleString?.('de-CH')
       : 0
+    const saveText = mb
+      ? 'Aktuellen Ausschnitt (zusätzlich) speichern'
+      : 'Aktuellen Ausschnitt speichern'
 
     console.log('localData', { localMap, localMapLoadingFraction })
 
@@ -86,9 +89,9 @@ const LocalData = ({ userMayEdit, row }) => {
         <Comment>{`Aktuell: ${mb} Megabyte`}</Comment>
         <WmtsButtonsContainer>
           <Button variant="outlined" onClick={onClickSaveWmts}>
-            Aktuellen Ausschnitt (zusätzlich) speichern
+            {saveText}
           </Button>
-          <Button variant="outlined" onClick={onClickDeleteWmts}>
+          <Button variant="outlined" onClick={onClickDeleteWmts} disabled={!mb}>
             Lokal gespeicherte Kartenausschnitte löschen
           </Button>
         </WmtsButtonsContainer>
