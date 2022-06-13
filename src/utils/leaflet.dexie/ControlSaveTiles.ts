@@ -1,6 +1,8 @@
 import L from 'leaflet'
 import countBy from 'lodash/countBy'
-import groupBy from 'lodash/groupBy'
+
+import { dexie } from '../../dexieClient'
+import { supabase } from '../../supabaseClient'
 
 /**
  * Status of ControlSaveTiles, keeps info about process during downloading and saving tiles. Used internal and as object for events.
@@ -74,15 +76,15 @@ const ControlSaveTiles = L.Control.extend({
       .open()
       .then(function () {
         // init all
-        console.log(
-          'Found database: ' + self._db.name + ' version: ' + self._db.verno,
-        )
+        // console.log(
+        //   'Found database: ' + self._db.name + ' version: ' + self._db.verno,
+        // )
         self._dbversion = self._db.verno
         self.status.tnames = []
         self._db.tables.forEach(function (table) {
           self.status.tnames.push(table.name)
         })
-        console.log(self._db.name + ' tables: ' + self.status.tnames.join(' '))
+        // console.log(self._db.name + ' tables: ' + self.status.tnames.join(' '))
         self.baseLayer.fire('tblevent', self.status)
         return true
       })
@@ -207,7 +209,7 @@ const ControlSaveTiles = L.Control.extend({
 
   /**
    * Prepare zoom levels to download and activate callback function to
-   * save(async) all map tiles on table name confirmation. Fires event 'savestart'.
+   * save(async) all map tiles on table name confirmation'.
    */
   saveMap: function ({ store, layer }) {
     let zoomlevels = []
@@ -246,12 +248,8 @@ const ControlSaveTiles = L.Control.extend({
     }
     this._resetStatus(tiles)
     this.status.currMinZoom = zoomlevels[0]
-    console.log('ControlSaveTiles, tiles:', tiles)
 
-    const saveCallback = async (tblName) => {
-      // user confirmed 'Save table?'
-      this.baseLayer.fire('savestart', this.status)
-
+    const saveCallback = async (tblName = layer.id) => {
       if (this.status.tnames.indexOf(tblName) < 0) {
         // create new table on 1st tile and save all tiles into it
         await this._extendSchema('+' + tblName).catch((err) => console.log(err))
@@ -272,18 +270,35 @@ const ControlSaveTiles = L.Control.extend({
             self._saveTile(tile.key, blob)
             self.status.mapSize += blob.size
             self.status.lengthLoaded += 1
-            //self.baseLayer.fire('loadtileend', self.status);
-            if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
-              console.log('New table ' + self.dtable.name)
-              self.baseLayer.fire('loadend', self.status)
-            }
           })
         }),
       )
       // TODO: set this in store / tile_layer?
       const res = countBy(results, 'status')
-      store.setLocalMapValues({ id: layer.id, ...res })
-      console.log('ControlSaveTiles, saveMap, results count:', res)
+      const mapValues = {
+        id: layer.id,
+        tilesCount: tiles.length,
+        fulfilled: res.fulfilled ?? 0,
+        rejected: res.rejected ?? 0,
+        size: this.status.mapSize,
+      }
+      store.setLocalMapValues(mapValues)
+      console.log('ControlSaveTiles, set map values:', mapValues)
+      // TODO: set bnds and update size in dexie
+      const tileLayer = await dexie.tile_layers.get(layer.id)
+      const was = { ...tileLayer }
+      const update = {
+        local_data_size: (tileLayer.local_data_size ?? 0) + this.status.mapSize,
+        local_data_bounds: [
+          ...(tileLayer.local_data_bounds ?? []),
+          latlngBounds,
+        ],
+      }
+      dexie.tile_layers.update(layer.id, update)
+      const is = await dexie.tile_layers.get(layer.id)
+      console.log('ControlSaveTiles, updating tileLayer:', { was, update, is })
+      const session = supabase.auth.session()
+      tileLayer.updateOnServer({ was, is, session })
     }
 
     if (this.options.confirmSave) {

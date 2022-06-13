@@ -1,4 +1,4 @@
-import { useEffect, useContext, useRef } from 'react'
+import { useEffect, useContext } from 'react'
 import { useMap } from 'react-leaflet'
 
 import { TileLayer as TileLayerType } from '../../../../dexieClient'
@@ -11,9 +11,7 @@ type Props = {
 const WMTSOffline = ({ layer }: Props) => {
   const map = useMap()
   const store = useContext(storeContext)
-  const { setLocalMap, setLocalMapValues } = store
-
-  const boundsRef = useRef()
+  const { setLocalMapValues } = store
 
   useEffect(() => {
     const wmtsLayer = L.tileLayer.offline(layer.wmts_url_template, {
@@ -32,8 +30,6 @@ const WMTSOffline = ({ layer }: Props) => {
     control.openDB()
 
     const save = () => {
-      const bounds = map.getBounds()
-      boundsRef.current = bounds
       try {
         control.saveMap({ layer, store })
       } catch (error) {
@@ -43,26 +39,9 @@ const WMTSOffline = ({ layer }: Props) => {
         })
       }
     }
-    const del = () => {
-      control.deleteTable(control.dtable.name)
-    }
-    setLocalMap({ id: layer.id, save, delete: del })
-    wmtsLayer.on('loadend', (e) => {
-      console.log('loadend', { mapSize: e.mapSize, bounds: boundsRef.current })
-      // TODO: if may edit, add bounds to tile_layer.local_data_bounds and update local_data_size
-      // all tiles just saved
-      control.putItem('mapSize', e.mapSize)
-      control.putItem('bounds', boundsRef.current)
-      control
-        .getItem('mapSize')
-        .then((msize) =>
-          alert(`size of map '${control.dtable.name}' is ${msize} bytes`),
-        )
-      setLocalMapValues({
-        id: layer.id,
-        size: e.mapSize,
-      })
-    })
+    const del = () => control.deleteTable(layer.id)
+
+    setLocalMapValues({ id: layer.id, save, del })
 
     return () => {
       map.removeLayer(wmtsLayer)
@@ -78,7 +57,6 @@ const WMTSOffline = ({ layer }: Props) => {
     layer.opacity,
     layer.wmts_url_template,
     map,
-    setLocalMap,
     setLocalMapValues,
     store,
   ])

@@ -180,11 +180,11 @@ const TileLayerForm = () => {
    */
 
   const onClickSaveWmts = useCallback(() => {
-    localMaps?.[row?.id ?? '']?.save?.()
+    localMaps?.[row?.id]?.save?.()
   }, [localMaps, row?.id])
 
   const onClickDeleteWmts = useCallback(() => {
-    localMaps?.[row?.id ?? '']?.delete?.()
+    localMaps?.[row?.id]?.del?.()
   }, [localMaps, row?.id])
 
   // const showDeleted = filter?.tile_layer?.deleted !== false || row?.deleted

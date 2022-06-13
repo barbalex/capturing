@@ -81,7 +81,7 @@ export const MobxStore = types
         self.localMaps[id] = {
           ...self.localMaps[id],
           ...(save ? { save } : {}),
-          ...(del ? { delete: del } : {}),
+          ...(del ? { del } : {}),
           ...(size ? { size } : {}),
           ...(fulfilled ? { fulfilled } : {}),
           ...(rejected ? { rejected } : {}),
