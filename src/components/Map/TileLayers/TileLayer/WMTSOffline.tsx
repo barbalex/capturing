@@ -11,7 +11,7 @@ type Props = {
 const WMTSOffline = ({ layer }: Props) => {
   const map = useMap()
   const store = useContext(storeContext)
-  const { setLocalMap, setLocalMapSize } = store
+  const { setLocalMap, setLocalMapValues } = store
 
   const boundsRef = useRef()
 
@@ -35,7 +35,7 @@ const WMTSOffline = ({ layer }: Props) => {
       const bounds = map.getBounds()
       boundsRef.current = bounds
       try {
-        control.saveMap(store)
+        control.saveMap({ layer, store })
       } catch (error) {
         store.addNotification({
           title: `Fehler beim Laden der Karten für ${layer.label}`,
@@ -49,6 +49,7 @@ const WMTSOffline = ({ layer }: Props) => {
     setLocalMap({ id: layer.id, save, delete: del })
     wmtsLayer.on('loadend', (e) => {
       console.log('loadend', { mapSize: e.mapSize, bounds: boundsRef.current })
+      // TODO: if may edit, add bounds to tile_layer.local_data_bounds and update local_data_size
       // all tiles just saved
       control.putItem('mapSize', e.mapSize)
       control.putItem('bounds', boundsRef.current)
@@ -57,7 +58,7 @@ const WMTSOffline = ({ layer }: Props) => {
         .then((msize) =>
           alert(`size of map '${control.dtable.name}' is ${msize} bytes`),
         )
-      setLocalMapSize({
+      setLocalMapValues({
         id: layer.id,
         size: e.mapSize,
       })
@@ -68,6 +69,7 @@ const WMTSOffline = ({ layer }: Props) => {
       map.removeControl(control)
     }
   }, [
+    layer,
     layer.greyscale,
     layer.id,
     layer.label,
@@ -77,7 +79,7 @@ const WMTSOffline = ({ layer }: Props) => {
     layer.wmts_url_template,
     map,
     setLocalMap,
-    setLocalMapSize,
+    setLocalMapValues,
     store,
   ])
 

@@ -54,7 +54,7 @@ export const MobxStore = types
   .volatile(() => ({
     navigate: undefined,
     map: undefined,
-    localMaps: {}, // map of: {id,save,delete,size,fulfilled,rejected}
+    localMaps: {}, // map of: {id,save,delete,size,tilesCount,fulfilled,rejected}
   }))
   .actions((self) => {
     // autorun(() => {
@@ -77,10 +77,14 @@ export const MobxStore = types
       setLocalMap(val) {
         self.localMaps[val.id] = val
       },
-      setLocalMapSize({ id, size }) {
+      setLocalMapValues({ id, save, del, size, fulfilled, rejected }) {
         self.localMaps[id] = {
           ...self.localMaps[id],
-          size,
+          ...(save ? { save } : {}),
+          ...(del ? { delete: del } : {}),
+          ...(size ? { size } : {}),
+          ...(fulfilled ? { fulfilled } : {}),
+          ...(rejected ? { rejected } : {}),
         }
       },
       flyToMapBounds(bounds) {

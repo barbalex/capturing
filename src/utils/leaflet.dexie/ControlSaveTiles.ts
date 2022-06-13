@@ -209,7 +209,7 @@ const ControlSaveTiles = L.Control.extend({
    * Prepare zoom levels to download and activate callback function to
    * save(async) all map tiles on table name confirmation. Fires event 'savestart'.
    */
-  saveMap: function (store) {
+  saveMap: function ({ store, layer }) {
     let zoomlevels = []
     if (this.options.zoomlevels) {
       // zoomlevels have higher priority than maxZoom
@@ -246,6 +246,7 @@ const ControlSaveTiles = L.Control.extend({
     }
     this._resetStatus(tiles)
     this.status.currMinZoom = zoomlevels[0]
+    console.log('ControlSaveTiles, tiles:', tiles)
 
     const saveCallback = async (tblName) => {
       // user confirmed 'Save table?'
@@ -280,10 +281,9 @@ const ControlSaveTiles = L.Control.extend({
         }),
       )
       // TODO: set this in store / tile_layer?
-      console.log(
-        'ControlSaveTiles, saveMap, results count:',
-        countBy(results, 'status'),
-      )
+      const res = countBy(results, 'status')
+      store.setLocalMapValues({ id: layer.id, ...res })
+      console.log('ControlSaveTiles, saveMap, results count:', res)
     }
 
     if (this.options.confirmSave) {
