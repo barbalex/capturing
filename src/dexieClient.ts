@@ -418,7 +418,7 @@ export interface ITileLayer {
   project_id?: string
   type?: TileLayerTypeEnum
   wmts_url_template?: string
-  subdomains?: string[]
+  wmts_subdomains?: string[]
   max_zoom?: number
   min_zoom?: number
   opacity?: number
@@ -486,7 +486,7 @@ export class TileLayer implements ITileLayer {
   project_id?: string
   type?: TileLayerTypeEnum
   wmts_url_template?: string
-  subdomains?: string[]
+  wmts_subdomains?: string[]
   max_zoom?: number
   min_zoom?: number
   opacity?: number
@@ -518,7 +518,7 @@ export class TileLayer implements ITileLayer {
     project_id?: string,
     type?: TileLayerTypeEnum,
     wmts_url_template?: string,
-    subdomains?: string[],
+    wmts_subdomains?: string[],
     max_zoom?: number,
     min_zoom?: number,
     opacity?: number,
@@ -549,7 +549,7 @@ export class TileLayer implements ITileLayer {
     if (project_id) this.project_id = project_id
     this.type = type ?? 'wms'
     if (wmts_url_template) this.wmts_url_template = wmts_url_template
-    if (subdomains) this.subdomains = subdomains
+    if (wmts_subdomains) this.wmts_subdomains = wmts_subdomains
     if (max_zoom !== undefined) this.max_zoom = max_zoom
     if (min_zoom !== undefined) this.min_zoom = min_zoom
     this.opacity = opacity ?? 1

@@ -699,7 +699,7 @@ CREATE TABLE tile_layers (
   project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
   type tile_layer_type_enum DEFAULT 'wmts',
   wmts_url_template text DEFAULT NULL,
-  subdomains text[] DEFAULT NULL,
+  wmts_subdomains text[] DEFAULT NULL,
   max_zoom decimal DEFAULT 19,
   min_zoom decimal DEFAULT 0,
   opacity decimal DEFAULT 1,
@@ -718,6 +718,9 @@ CREATE TABLE tile_layers (
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
 );
+
+alter table tile_layers add column size integer default null;
+alter table tile_layers add column bounds jsonb default null;
 
 CREATE INDEX ON tile_layers USING btree (id);
 
