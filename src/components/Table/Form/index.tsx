@@ -49,7 +49,7 @@ const FieldsContainer = styled.div`
   height: 100%;
   overflow-y: auto;
 `
-const Comment = styled.p`
+export const Comment = styled.p`
   color: rgba(0, 0, 0, 0.6);
   font-weight: 400;
   font-size: 0.8rem;

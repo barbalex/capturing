@@ -5,9 +5,8 @@ import isEqual from 'lodash/isEqual'
 import { Session } from '@supabase/supabase-js'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
-import Button from '@mui/material/Button'
 
-import StoreContext from '../../../storeContext'
+import storeContext from '../../../storeContext'
 import Checkbox2States from '../../shared/Checkbox2States'
 import JesNo from '../../shared/JesNo'
 import ErrorBoundary from '../../shared/ErrorBoundary'
@@ -25,24 +24,19 @@ import MultiSelect from '../../shared/MultiSelect'
 import Select from '../../shared/Select'
 import Legends from './Legends'
 import getCapabilitiesDataForTileLayer from './getCapabilitiesData'
+import LocalData from './LocalData'
 
 const FieldsContainer = styled.div`
   padding: 10px;
   height: 100%;
   overflow-y: auto;
 `
-const WmtsButtonsContainer = styled.div`
-  margin-bottom: 18px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-`
 
 // = '99999999-9999-9999-9999-999999999999'
 const TileLayerForm = () => {
   const { projectId, tileLayerId } = useParams()
 
-  const store = useContext(StoreContext)
+  const store = useContext(storeContext)
   const { errors, rebuildTree, localMaps, showMap } = store
 
   const session: Session = supabase.auth.session()
@@ -169,24 +163,6 @@ const TileLayerForm = () => {
     row?.wms_layers,
   ])
 
-  /**
-   * TODO: local maps
-   * 1. get size from dexie
-   * 2. show it
-   * 3. save bounds
-   * 4. enable showing bounds on map
-   * 5. enable choosing what zooms to save?
-   * 6. enable syncing local maps?
-   */
-
-  const onClickSaveWmts = useCallback(() => {
-    localMaps?.[row?.id]?.save?.()
-  }, [localMaps, row?.id])
-
-  const onClickDeleteWmts = useCallback(() => {
-    localMaps?.[row?.id]?.del?.()
-  }, [localMaps, row?.id])
-
   // const showDeleted = filter?.tile_layer?.deleted !== false || row?.deleted
   const showDeleted = false
 
@@ -253,16 +229,7 @@ const TileLayerForm = () => {
               multiLine={true}
               helperText="Projektion muss 3857 oder 4326 sein. Beispiel (Server-abhängig): https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg"
             />
-            {showMap && userMayEdit && (
-              <WmtsButtonsContainer>
-                <Button variant="outlined" onClick={onClickSaveWmts}>
-                  Aktuellen Ausschnitt (zusätzlich) speichern
-                </Button>
-                <Button variant="outlined" onClick={onClickDeleteWmts}>
-                  Lokal gespeicherte Kartenausschnitte löschen
-                </Button>
-              </WmtsButtonsContainer>
-            )}
+            <LocalData row={row} userMayEdit={userMayEdit} />
           </>
         )}
         {row?.type === 'wms' && (
