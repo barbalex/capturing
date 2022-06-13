@@ -46,7 +46,7 @@ const WMTSOffline = ({ layer }: Props) => {
     const del = () => {
       control.deleteTable(control.dtable.name)
     }
-    setLocalMap({ id: layer.id, label: layer.label, save, delete: del })
+    setLocalMap({ id: layer.id, save, delete: del })
     wmtsLayer.on('loadend', (e) => {
       console.log('loadend', { mapSize: e.mapSize, bounds: boundsRef.current })
       // all tiles just saved
@@ -78,6 +78,7 @@ const WMTSOffline = ({ layer }: Props) => {
     map,
     setLocalMap,
     setLocalMapSize,
+    store,
   ])
 
   return null
