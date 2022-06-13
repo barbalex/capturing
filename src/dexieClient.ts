@@ -410,6 +410,10 @@ export interface IProjectReader {
   deleted: number
 }
 
+type dataBounds = {
+  size: number
+  bounds: string
+}
 export interface ITileLayer {
   id: string
   label?: string
@@ -437,6 +441,8 @@ export interface ITileLayer {
   _legendUrls?: legendUrlList[] // local
   _infoFormatOptions?: optionsList[] // local
   greyscale?: number
+  local_data_size?: number
+  local_data_bounds?: dataBounds[]
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -505,6 +511,8 @@ export class TileLayer implements ITileLayer {
   _legendUrls?: legendUrlList[] // local
   _infoFormatOptions?: optionsList[] // local
   greyscale?: number
+  local_data_size?: number
+  local_data_bounds?: dataBounds[]
   client_rev_at?: Date
   client_rev_by?: string
   server_rev_at?: Date
@@ -537,6 +545,8 @@ export class TileLayer implements ITileLayer {
     _legendUrls?: legendUrlList[],
     _infoFormatOptions?: optionsList[],
     greyscale?: number,
+    local_data_size?: number,
+    local_data_bounds?: dataBounds[],
     client_rev_at?: Date,
     client_rev_by?: string,
     server_rev_at?: Date,
@@ -568,6 +578,8 @@ export class TileLayer implements ITileLayer {
     if (_legendUrls) this._legendUrls = _legendUrls
     if (_infoFormatOptions) this._infoFormatOptions = _infoFormatOptions
     this.greyscale = greyscale ?? 0
+    if (local_data_size) this.local_data_size = local_data_size
+    if (local_data_bounds) this.local_data_bounds = local_data_bounds
     this.client_rev_at = new window.Date().toISOString()
     if (client_rev_by) this.client_rev_by = client_rev_by
     if (server_rev_at) this.server_rev_at = server_rev_at

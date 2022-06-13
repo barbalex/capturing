@@ -713,14 +713,19 @@ CREATE TABLE tile_layers (
   wms_info_format text DEFAULT NULL,
   wms_queryable integer DEFAULT NULL,
   greyscale integer DEFAULT 0,
+  local_data_size integer DEFAULT NULL,
+  local_data_bounds jsonb DEFAULT NULL,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
 );
 
-alter table tile_layers add column size integer default null;
-alter table tile_layers add column bounds jsonb default null;
+ALTER TABLE tile_layers
+  ADD COLUMN local_data_size integer DEFAULT NULL;
+
+ALTER TABLE tile_layers
+  ADD COLUMN local_data_bounds jsonb DEFAULT NULL;
 
 CREATE INDEX ON tile_layers USING btree (id);
 
@@ -729,6 +734,10 @@ CREATE INDEX ON tile_layers USING btree (sort);
 CREATE INDEX ON tile_layers USING btree (deleted);
 
 COMMENT ON TABLE tile_layers IS 'Goal: Bring your own tile layers. Not versioned (not recorded and only added by manager).';
+
+COMMENT ON COLUMN tile_layers.local_data_size IS 'Size of locally saved image data';
+
+COMMENT ON COLUMN tile_layers.local_data_bounds IS 'Array of bounds and their size of locally saved image data';
 
 ALTER TABLE tile_layers ENABLE ROW LEVEL SECURITY;
 
@@ -2041,7 +2050,7 @@ COMMIT TRANSACTION;
 
 -- add some triggers
 -- ensure a project's owner is set as it's user
-CREATE or replace FUNCTION projects_set_project_user ()
+CREATE OR REPLACE FUNCTION projects_set_project_user ()
   RETURNS TRIGGER
   AS $$
 BEGIN
