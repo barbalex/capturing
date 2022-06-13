@@ -36,6 +36,7 @@ const TableLayers = () => {
           .where({
             table_id: table.id,
             widget_type: 'rich-text',
+            deleted: 0,
           })
           .toArray(),
       ])

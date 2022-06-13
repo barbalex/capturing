@@ -1514,19 +1514,21 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(45).stores({
+    this.version(50).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
-        'id, table_id, label, name, field_type, widget_type, options_table, sort, server_rev_at, deleted, [deleted+table_id]',
+        'id, table_id, label, name, field_type, widget_type, options_table, sort, server_rev_at, deleted, [deleted+table_id], [deleted+table_id+widget_type]',
       // files:
       //   'id, field_id, row_id, [row_id+field_id+deleted+name], [row_id+field_id+deleted], name, server_rev_at, deleted',
       files_meta: 'id, [row_id+field_id+deleted], server_rev_at',
       files: 'id',
       news: 'id, time, server_rev_at, deleted',
       news_delivery: 'id, server_rev_at, deleted',
-      tile_layers: 'id, label, sort, active, server_rev_at, deleted',
-      vector_layers: 'id, label, sort, active, server_rev_at, deleted',
+      tile_layers:
+        'id, label, sort, active, server_rev_at, deleted, [deleted+project_id], [deleted+project_id+active], [deleted+active]',
+      vector_layers:
+        'id, label, sort, active, server_rev_at, deleted, [deleted+project_id], [deleted+active]',
       pvl_geoms:
         'id, pvl_id, bbox_sw_lng, bbox_sw_lat, bbox_ne_lng, bbox_ne_lat, server_rev_at, deleted',
       project_users:
