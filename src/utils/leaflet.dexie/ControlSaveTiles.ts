@@ -211,7 +211,8 @@ const ControlSaveTiles = L.Control.extend({
    * Prepare zoom levels to download and activate callback function to
    * save(async) all map tiles on table name confirmation'.
    */
-  saveMap: function ({ store, layer }) {
+  // need to pass in map reference as this._map tended to be null on first try
+  saveMap: function ({ store, layer, map }) {
     const {
       setLocalMapValues,
       setLocalMapLoadingFraction,
@@ -223,7 +224,16 @@ const ControlSaveTiles = L.Control.extend({
       // zoomlevels have higher priority than maxZoom
       zoomlevels = this.options.zoomlevels
     } else {
-      const currentZoom = this._map.getZoom()
+      // TODO: the following line seems to error rather often on first try as this._map is undefined?
+      // message: Cannot read properties of null (reading 'getZoom')
+      console.log('saveMap', {
+        self: this,
+        map: this._map,
+        mapPassed: map,
+      })
+      // const currentZoom = this._map.getZoom()
+      const currentZoom = map.getZoom()
+      console.log('saveMap, got currentZoom:', currentZoom)
       if (currentZoom < this.options.minimalZoom) {
         throw new Error(
           'Not allowed to save with zoom level below ' +
@@ -232,7 +242,8 @@ const ControlSaveTiles = L.Control.extend({
       }
       const maxZoom =
         this.baseLayer.options.maxZoom ||
-        this._map.options.maxZoom ||
+        // this._map.options.maxZoom ||
+        map.options.maxZoom ||
         this.options.maxZoom ||
         currentZoom
       for (let zoom = currentZoom; zoom <= maxZoom; zoom++) {
@@ -240,15 +251,15 @@ const ControlSaveTiles = L.Control.extend({
       }
     }
 
-    const latlngBounds = this.options.bounds || this._map.getBounds()
+    const latlngBounds = this.options.bounds || map.getBounds()
 
     let bnds
     let tiles = []
     for (let i = 0; i < zoomlevels.length; i++) {
       if (zoomlevels[i] < this.options.minimalZoom) continue
       bnds = L.bounds(
-        this._map.project(latlngBounds.getNorthWest(), zoomlevels[i]),
-        this._map.project(latlngBounds.getSouthEast(), zoomlevels[i]),
+        map.project(latlngBounds.getNorthWest(), zoomlevels[i]),
+        map.project(latlngBounds.getSouthEast(), zoomlevels[i]),
       )
       tiles = tiles.concat(this.baseLayer.getTileUrls(bnds, zoomlevels[i]))
     }

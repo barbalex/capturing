@@ -31,7 +31,7 @@ const WMTSOffline = ({ layer }: Props) => {
 
     const save = () => {
       try {
-        control.saveMap({ layer, store })
+        control.saveMap({ layer, store, map })
       } catch (error) {
         store.addNotification({
           title: `Fehler beim Laden der Karten für ${layer.label}`,
