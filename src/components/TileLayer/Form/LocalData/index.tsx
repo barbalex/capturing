@@ -2,6 +2,9 @@ import { useCallback, useContext, useState, useEffect } from 'react'
 import Button from '@mui/material/Button'
 import styled from 'styled-components'
 import { observer } from 'mobx-react-lite'
+import FormGroup from '@mui/material/FormGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
 
 import storeContext from '../../../../storeContext'
 import { Comment } from '../../../Table/Form'
@@ -53,6 +56,9 @@ const Warning = styled.p`
   font-size: 0.75rem;
   color: #ff7700;
   text-shadow: 0.1px 0.1px 0.1px black;
+`
+const StyledFormGroup = styled(FormGroup)`
+  margin-bottom: 10px;
 `
 
 const LocalData = ({ userMayEdit, row }) => {
@@ -129,6 +135,12 @@ const LocalData = ({ userMayEdit, row }) => {
               ℹ Sie müssen vermutlich näher zoomen, damit der Download gelingt.
             </Warning>
           )}
+          <StyledFormGroup>
+            <FormControlLabel
+              control={<Checkbox checked={true} />}
+              label="Offline verfügbare Bereiche in der Karte anzeigen"
+            />
+          </StyledFormGroup>
           <WmtsButtonsContainer>
             <Button
               variant="outlined"
