@@ -303,8 +303,6 @@ const ControlSaveTiles = L.Control.extend({
       const res = countBy(results, 'status')
       const mapValues = {
         id: layer.id,
-        fulfilled: res.fulfilled ?? 0,
-        rejected: res.rejected ?? 0,
         size: this.status.mapSize,
       }
       setLocalMapLoading({
