@@ -125,6 +125,12 @@ const LocalData = ({ userMayEdit, row }) => {
           />
           <Rejections />
           <Comment>{`Aktuell: ${mb} Megabyte`}</Comment>
+          <StyledFormGroup>
+            <FormControlLabel
+              control={<Checkbox checked={true} />}
+              label="Offline verfügbare Bereiche in der Karte anzeigen"
+            />
+          </StyledFormGroup>
           {mapZoom < 14 && (
             <Error>
               ❗Sie müssen näher zoomen, damit der Download gelingt.
@@ -135,12 +141,6 @@ const LocalData = ({ userMayEdit, row }) => {
               ℹ Sie müssen vermutlich näher zoomen, damit der Download gelingt.
             </Warning>
           )}
-          <StyledFormGroup>
-            <FormControlLabel
-              control={<Checkbox checked={true} />}
-              label="Offline verfügbare Bereiche in der Karte anzeigen"
-            />
-          </StyledFormGroup>
           <WmtsButtonsContainer>
             <Button
               variant="outlined"
