@@ -224,16 +224,10 @@ const ControlSaveTiles = L.Control.extend({
       // zoomlevels have higher priority than maxZoom
       zoomlevels = this.options.zoomlevels
     } else {
-      // TODO: the following line seems to error rather often on first try as this._map is undefined?
+      // the following line seems to error rather often on first try as this._map is undefined?
       // message: Cannot read properties of null (reading 'getZoom')
-      console.log('saveMap', {
-        self: this,
-        map: this._map,
-        mapPassed: map,
-      })
       // const currentZoom = this._map.getZoom()
       const currentZoom = map.getZoom()
-      console.log('saveMap, got currentZoom:', currentZoom)
       if (currentZoom < this.options.minimalZoom) {
         throw new Error(
           'Not allowed to save with zoom level below ' +
