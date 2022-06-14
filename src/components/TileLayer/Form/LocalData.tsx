@@ -1,6 +1,8 @@
 import { useCallback, useContext, useState, useEffect } from 'react'
 import Button from '@mui/material/Button'
 import LinearProgress from '@mui/material/LinearProgress'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import styled from 'styled-components'
 import { observer } from 'mobx-react-lite'
 
@@ -15,6 +17,10 @@ const WmtsButtonsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+`
+const NotDownloadedWarning = styled.p`
+  font-size: 0.75rem;
+  color: #ff0000;
 `
 
 const LocalData = ({ userMayEdit, row }) => {
@@ -40,9 +46,11 @@ const LocalData = ({ userMayEdit, row }) => {
 
   const localMap = localMaps?.[row.id]
   const [showProgress, setShowProgress] = useState(false)
+  const [downloading, setDownloading] = useState(false)
   useEffect(() => {
     let timeoutID
     if (localMapLoadingFraction === 1) {
+      setDownloading(false)
       timeoutID = setTimeout(() => setShowProgress(false), 3000)
     }
 
@@ -52,6 +60,7 @@ const LocalData = ({ userMayEdit, row }) => {
   }, [localMapLoadingFraction])
 
   const onClickSaveWmts = useCallback(() => {
+    setDownloading(true)
     setShowProgress(true)
     localMap?.save?.()
   }, [localMap])
@@ -71,20 +80,36 @@ const LocalData = ({ userMayEdit, row }) => {
     const mb = row.local_data_size
       ? (+(row.local_data_size / 1000000)).toFixed(1)?.toLocaleString?.('de-CH')
       : 0
-    const saveText = mb
+    const saveText = downloading
+      ? 'Aktueller Ausschnitt wird gespeichert...'
+      : mb
       ? 'Aktuellen Ausschnitt (zusätzlich) speichern'
       : 'Aktuellen Ausschnitt speichern'
-
-    // TODO: if localMapLoadingRejected > 0, show
 
     return (
       <>
         <Label label="Offline-Daten" />
         {showProgress && (
-          <LinearProgress
-            variant="determinate"
-            value={localMapLoadingFraction * 100}
-          />
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ width: '100%', mr: 1 }}>
+              <LinearProgress
+                variant="determinate"
+                value={localMapLoadingFraction * 100}
+              />
+            </Box>
+            <Box sx={{ minWidth: 35 }}>
+              <Typography variant="body2" color="text.secondary">{`${Math.round(
+                localMapLoadingFraction * 100,
+              )}%`}</Typography>
+            </Box>
+          </Box>
+        )}
+        {localMapLoadingRejected > 0 && (
+          <NotDownloadedWarning>{`${localMapLoadingFulfilled?.toLocaleString(
+            'de-CH',
+          )} Kacheln wurden geladen. ${localMapLoadingRejected?.toLocaleString(
+            'de-CH',
+          )} konnten nicht geladen werden. Möchten Sie den Vorgang wiederholen?`}</NotDownloadedWarning>
         )}
         <Comment>{`Aktuell: ${mb} Megabyte`}</Comment>
         <WmtsButtonsContainer>

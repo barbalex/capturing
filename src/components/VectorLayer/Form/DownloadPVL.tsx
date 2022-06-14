@@ -13,7 +13,7 @@ import { supabase } from '../../../supabaseClient'
 import downloadWfs from '../../../utils/downloadWfs'
 import storeContext from '../../../storeContext'
 
-export const DownloadingText = styled.span`
+export const DownloadingText = styled.span` 
   ${(props) =>
     props['data-loading'] &&
     `font-style: italic;
