@@ -52,7 +52,8 @@ const Error = styled.p`
 `
 const Warning = styled.p`
   font-size: 0.75rem;
-  color: #ff8c00;
+  color: #ff7700;
+  text-shadow: 0.1px 0.1px 0.1px black;
 `
 const Tip = styled.p`
   font-size: 0.75rem;
@@ -176,9 +177,14 @@ const LocalData = ({ userMayEdit, row }) => {
             </>
           )}
           <Comment>{`Aktuell: ${mb} Megabyte`}</Comment>
-          {mapZoom < 16 && (
+          {mapZoom < 14 && (
+            <Error>
+              ❗Sie müssen näher zoomen, damit der Download gelingt.
+            </Error>
+          )}
+          {mapZoom < 16 && mapZoom >= 14 && (
             <Warning>
-              Sie müssen vermutlich näher zoomen, damit der Download gelingt.
+              ℹ Sie müssen vermutlich näher zoomen, damit der Download gelingt.
             </Warning>
           )}
           <WmtsButtonsContainer>
