@@ -1,17 +1,16 @@
 import { useCallback, useContext, useState, useEffect } from 'react'
 import Button from '@mui/material/Button'
-import LinearProgress from '@mui/material/LinearProgress'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import styled from 'styled-components'
 import { observer } from 'mobx-react-lite'
 
-import storeContext from '../../../storeContext'
-import { Comment } from '../../Table/Form'
-import { dexie, TileLayer } from '../../../dexieClient'
-import { supabase } from '../../../supabaseClient'
-import { ProcessingText } from '../../VectorLayer/Form/DownloadPVL'
-import constants from '../../../utils/constants'
+import storeContext from '../../../../storeContext'
+import { Comment } from '../../../Table/Form'
+import { dexie, TileLayer } from '../../../../dexieClient'
+import { supabase } from '../../../../supabaseClient'
+import { ProcessingText } from '../../../VectorLayer/Form/DownloadPVL'
+import constants from '../../../../utils/constants'
+import Rejections from './Rejections'
+import Progress from './Progress'
 
 const Container = styled.div`
   margin: 25px -10px 0 -10px;
@@ -55,22 +54,11 @@ const Warning = styled.p`
   color: #ff7700;
   text-shadow: 0.1px 0.1px 0.1px black;
 `
-const Tip = styled.p`
-  font-size: 0.75rem;
-`
 
 const LocalData = ({ userMayEdit, row }) => {
   const session = supabase.auth.session()
   const store = useContext(storeContext)
-  const {
-    localMaps,
-    showMap,
-    localMapLoadingFraction,
-    localMapLoadingFulfilled,
-    localMapLoadingRejected,
-    setLocalMapLoading,
-    mapZoom,
-  } = store
+  const { localMaps, showMap, setLocalMapLoading, mapZoom } = store
 
   useEffect(() => setLocalMapLoading(), [setLocalMapLoading])
 
@@ -86,17 +74,6 @@ const LocalData = ({ userMayEdit, row }) => {
   const localMap = localMaps?.[row.id]
   const [showProgress, setShowProgress] = useState(false)
   const [downloading, setDownloading] = useState(false)
-  useEffect(() => {
-    let timeoutID
-    if (localMapLoadingFraction === 1) {
-      setDownloading(false)
-      timeoutID = setTimeout(() => setShowProgress(false), 3000)
-    }
-
-    return () => {
-      if (timeoutID) clearTimeout(timeoutID)
-    }
-  }, [localMapLoadingFraction])
 
   const onClickSaveWmts = useCallback(() => {
     setLocalMapLoading()
@@ -129,53 +106,18 @@ const LocalData = ({ userMayEdit, row }) => {
       ? 'Aktuellen Ausschnitt (zusätzlich) speichern'
       : 'Aktuellen Ausschnitt speichern'
 
-    console.log('LocalData, map zoom:', mapZoom)
-
     return (
       <Container>
         <TitleRow>
           <Title>Offline-Daten</Title>
         </TitleRow>
         <FieldsContainer>
-          {showProgress && (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ width: '100%', mr: 1 }}>
-                <LinearProgress
-                  variant="determinate"
-                  value={localMapLoadingFraction * 100}
-                />
-              </Box>
-              <Box sx={{ minWidth: 35 }}>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                >{`${Math.round(localMapLoadingFraction * 100)}%`}</Typography>
-              </Box>
-            </Box>
-          )}
-          {localMapLoadingRejected > 0 && (
-            <>
-              <Error>{`${localMapLoadingFulfilled?.toLocaleString(
-                'de-CH',
-              )} Kacheln wurden geladen. ${localMapLoadingRejected?.toLocaleString(
-                'de-CH',
-              )} konnten nicht geladen werden.`}</Error>
-              <Tip>
-                👉 Möchten Sie den Vorgang wiederholen? Wenn es knapp war,
-                könnte es das nächste mal gelingen.
-              </Tip>
-              <Tip>
-                ℹ Je grösser der von Ihnen gewählte Ausschnitt ist, desto länger
-                dauert der Download und um so wahrscheinlicher gibt es Probleme.
-                Es gibt Grenzen beim Karten-Server, Ihrer Internet-Verbindung,
-                Ihrem Gerät und Ihrer Geduld.
-              </Tip>
-              <Tip>
-                👉 Manchmal lohnt es sich, statt einem grossen, mehrere kleinere
-                Ausschnitte zu wählen.
-              </Tip>
-            </>
-          )}
+          <Progress
+            showProgress={showProgress}
+            setShowProgress={setShowProgress}
+            setDownloading={setDownloading}
+          />
+          <Rejections />
           <Comment>{`Aktuell: ${mb} Megabyte`}</Comment>
           {mapZoom < 14 && (
             <Error>
@@ -188,7 +130,11 @@ const LocalData = ({ userMayEdit, row }) => {
             </Warning>
           )}
           <WmtsButtonsContainer>
-            <Button variant="outlined" onClick={onClickSaveWmts}>
+            <Button
+              variant="outlined"
+              onClick={onClickSaveWmts}
+              disabled={mapZoom < 14}
+            >
               <ProcessingText data-loading={downloading}>
                 {saveText}
               </ProcessingText>
