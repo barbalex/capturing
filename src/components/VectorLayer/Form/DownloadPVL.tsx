@@ -13,7 +13,7 @@ import { supabase } from '../../../supabaseClient'
 import downloadWfs from '../../../utils/downloadWfs'
 import storeContext from '../../../storeContext'
 
-export const DownloadingText = styled.span` 
+export const ProcessingText = styled.span`
   ${(props) =>
     props['data-loading'] &&
     `font-style: italic;
@@ -54,9 +54,7 @@ const VectorLayerDownload = ({ row }: Props) => {
   // fetch pvl_geoms to see if data exists
   const data = useLiveQuery(async () => {
     const [pvlGeomsCount, projectUser] = await Promise.all([
-      dexie.pvl_geoms
-        .where({ deleted: 0, pvl_id: vectorLayerId })
-        .count(),
+      dexie.pvl_geoms.where({ deleted: 0, pvl_id: vectorLayerId }).count(),
       dexie.project_users.get({
         project_id: projectId,
         user_email: session?.user?.email,
@@ -90,9 +88,7 @@ const VectorLayerDownload = ({ row }: Props) => {
 
   const onClickDelete = useCallback(async () => {
     setRemoving(true)
-    await dexie.pvl_geoms
-      .where({ deleted: 0, pvl_id: vectorLayerId })
-      .delete()
+    await dexie.pvl_geoms.where({ deleted: 0, pvl_id: vectorLayerId }).delete()
     setRemoving(false)
   }, [vectorLayerId])
 
@@ -134,22 +130,20 @@ const VectorLayerDownload = ({ row }: Props) => {
             )
           }
         >
-          <DownloadingText data-loading={downloading}>
+          <ProcessingText data-loading={downloading}>
             {downloading
               ? 'Daten werden heruntergeladen...'
               : pvlGeomsCount
               ? 'Daten erneut herunterladen (aktualisieren)'
               : 'Daten für Offline-Nutzung herunterladen'}
-          </DownloadingText>
+          </ProcessingText>
         </Button>
         <Button
           variant="outlined"
           onClick={onClickDelete}
           disabled={!pvlGeomsCount}
         >
-          <DownloadingText data-loading={removing}>
-            {removeText}
-          </DownloadingText>
+          <ProcessingText data-loading={removing}>{removeText}</ProcessingText>
         </Button>
       </ButtonRow>
     </ErrorBoundary>

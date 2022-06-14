@@ -77,9 +77,9 @@ export const MobxStore = types
     })
 
     return {
-      setLocalMapLoading({ fulfilled, rejected }) {
-        self.localMapLoadingFulfilled = fulfilled
-        self.localMapLoadingRejected = rejected
+      setLocalMapLoading(val) {
+        self.localMapLoadingFulfilled = val?.fulfilled
+        self.localMapLoadingRejected = val?.rejected
       },
       setLocalMapLoadingFraction(val) {
         self.localMapLoadingFraction = val

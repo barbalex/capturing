@@ -11,6 +11,7 @@ import Label from '../../shared/Label'
 import { Comment } from '../../Table/Form'
 import { dexie, TileLayer } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
+import { ProcessingText } from '../../VectorLayer/Form/DownloadPVL'
 
 const WmtsButtonsContainer = styled.div`
   margin-bottom: 18px;
@@ -22,6 +23,9 @@ const NotDownloadedWarning = styled.p`
   font-size: 0.75rem;
   color: #ff0000;
 `
+const Tip = styled.p`
+  font-size: 0.75rem;
+`
 
 const LocalData = ({ userMayEdit, row }) => {
   const session = supabase.auth.session()
@@ -32,6 +36,7 @@ const LocalData = ({ userMayEdit, row }) => {
     localMapLoadingFraction,
     localMapLoadingFulfilled,
     localMapLoadingRejected,
+    setLocalMapLoading,
   } = store
 
   /**
@@ -60,10 +65,11 @@ const LocalData = ({ userMayEdit, row }) => {
   }, [localMapLoadingFraction])
 
   const onClickSaveWmts = useCallback(() => {
+    setLocalMapLoading()
     setDownloading(true)
     setShowProgress(true)
     localMap?.save?.()
-  }, [localMap])
+  }, [localMap, setLocalMapLoading])
 
   const onClickDeleteWmts = useCallback(async () => {
     localMap?.del?.()
@@ -74,7 +80,8 @@ const LocalData = ({ userMayEdit, row }) => {
     })
     const is: TileLayer = dexie.tile_layers.get(row.id)
     row.updateOnServer({ was, is, session })
-  }, [localMap, row, session])
+    setLocalMapLoading()
+  }, [localMap, row, session, setLocalMapLoading])
 
   if (showMap && userMayEdit) {
     const mb = row.local_data_size
@@ -105,16 +112,34 @@ const LocalData = ({ userMayEdit, row }) => {
           </Box>
         )}
         {localMapLoadingRejected > 0 && (
-          <NotDownloadedWarning>{`${localMapLoadingFulfilled?.toLocaleString(
-            'de-CH',
-          )} Kacheln wurden geladen. ${localMapLoadingRejected?.toLocaleString(
-            'de-CH',
-          )} konnten nicht geladen werden. Möchten Sie den Vorgang wiederholen?`}</NotDownloadedWarning>
+          <>
+            <NotDownloadedWarning>{`${localMapLoadingFulfilled?.toLocaleString(
+              'de-CH',
+            )} Kacheln wurden geladen. ${localMapLoadingRejected?.toLocaleString(
+              'de-CH',
+            )} konnten nicht geladen werden.`}</NotDownloadedWarning>
+            <Tip>
+              👉 Möchten Sie den Vorgang wiederholen? Wenn es knapp war, könnte
+              es das nächste mal gelingen.
+            </Tip>
+            <Tip>
+              ℹ Je grösser der von Ihnen gewählte Ausschnitt ist, desto länger
+              dauert der Download und desto wahrscheinlicher gibt es Probleme.
+              Es gibt Grenzen beim Karten-Server, Ihrer Internet-Verbindung,
+              Ihrem Gerät und Ihrer Geduld.
+            </Tip>
+            <Tip>
+              👉 Manchmal lohnt es sich, statt einem grossen, mehrere kleinere
+              Ausschnitte zu wählen.
+            </Tip>
+          </>
         )}
         <Comment>{`Aktuell: ${mb} Megabyte`}</Comment>
         <WmtsButtonsContainer>
           <Button variant="outlined" onClick={onClickSaveWmts}>
-            {saveText}
+            <ProcessingText data-loading={downloading}>
+              {saveText}
+            </ProcessingText>
           </Button>
           <Button variant="outlined" onClick={onClickDeleteWmts} disabled={!mb}>
             Lokal gespeicherte Kartenausschnitte löschen
