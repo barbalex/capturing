@@ -101,10 +101,10 @@ const LocalData = ({ userMayEdit, row }) => {
       ? (+(row.local_data_size / 1000000)).toFixed(1)?.toLocaleString?.('de-CH')
       : 0
     const saveText = downloading
-      ? 'Aktueller Ausschnitt wird gespeichert...'
+      ? 'Aktueller Ausschnitt wird heruntergeladen...'
       : mb
-      ? 'Aktuellen Ausschnitt (zusätzlich) speichern'
-      : 'Aktuellen Ausschnitt speichern'
+      ? 'Aktuellen Ausschnitt (zusätzlich) offline verfügbar machen'
+      : 'Aktuellen Ausschnitt offline verfügbar machen'
 
     return (
       <Container>
