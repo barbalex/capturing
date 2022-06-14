@@ -75,12 +75,11 @@ const LocalData = ({ userMayEdit, row }) => {
 
   /**
    * TODO: local maps
-   * 1. get size from dexie
-   * 2. show it
-   * 3. save bounds
+   * 1. get size from dexie ✔
+   * 2. show it ✔
+   * 3. save bounds ✔
    * 4. enable showing bounds on map
-   * 5. enable choosing what zooms to save?
-   * 6. enable syncing local maps?
+   * 5. enable syncing local maps?
    */
 
   const localMap = localMaps?.[row.id]
