@@ -37,7 +37,7 @@ const TileLayerForm = () => {
   const { projectId, tileLayerId } = useParams()
 
   const store = useContext(storeContext)
-  const { errors, rebuildTree, localMaps, showMap } = store
+  const { errors, rebuildTree } = store
 
   const session: Session = supabase.auth.session()
 
@@ -216,21 +216,18 @@ const TileLayerForm = () => {
           error={errors?.tile_layer?.type}
         />
         {row?.type === 'wmts' && (
-          <>
-            <TextField
-              key={`${row.id}wmts_url_template`}
-              name="wmts_url_template"
-              label="URL-Vorlage"
-              value={row.wmts_url_template}
-              onBlur={onBlur}
-              error={errors?.tile_layer?.wmts_url_template}
-              disabled={!userMayEdit}
-              type="text"
-              multiLine={true}
-              helperText="ℹ Projektion muss 3857 oder 4326 sein. Beispiel (Server-abhängig): https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg"
-            />
-            <LocalData row={row} userMayEdit={userMayEdit} />
-          </>
+          <TextField
+            key={`${row.id}wmts_url_template`}
+            name="wmts_url_template"
+            label="URL-Vorlage"
+            value={row.wmts_url_template}
+            onBlur={onBlur}
+            error={errors?.tile_layer?.wmts_url_template}
+            disabled={!userMayEdit}
+            type="text"
+            multiLine={true}
+            helperText="ℹ Projektion muss 3857 oder 4326 sein. Beispiel (Server-abhängig): https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg"
+          />
         )}
         {row?.type === 'wms' && (
           <>
@@ -424,6 +421,9 @@ const TileLayerForm = () => {
           error={errors?.field?.greyscale}
           disabled={!userMayEdit}
         />
+        {row?.type === 'wmts' && (
+          <LocalData row={row} userMayEdit={userMayEdit} />
+        )}
         <Legends row={row} />
       </FieldsContainer>
     </ErrorBoundary>

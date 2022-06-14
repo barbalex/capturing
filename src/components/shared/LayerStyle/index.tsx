@@ -20,7 +20,6 @@ import {
 import { supabase } from '../../../supabaseClient'
 import TextField from '../TextField'
 import RadioButtonGroup from '../RadioButtonGroup'
-import Select from '../Select'
 import Slider from '../Slider'
 import insertLayerStyle from '../../../utils/insertLayerStyle'
 import MarkerSymbolPicker from './MarkerSymbolPicker'

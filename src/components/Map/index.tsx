@@ -15,6 +15,7 @@ import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import LocationMarker from './LocationMarker'
 import MapFetcher from './MapFetcher'
+import MapZoomFetcher from './MapZoomFetcher'
 import DrawControl from './DrawControl'
 import TableLayers from './TableLayers'
 import TileLayers from './TileLayers'
@@ -108,6 +109,7 @@ const MapComponent = () => {
           {/* <ZhUepWfs /> */}
           <LocationMarker />
           <MapFetcher />
+          <MapZoomFetcher />
           {!!rowId && <DrawControl />}
           <TableLayers />
           <VectorLayers key={`${vectorLayerSorter}/vectorLayers`} />

@@ -31,6 +31,7 @@ export const MobxStore = types
     showTree: types.optional(types.boolean, true),
     showForm: types.optional(types.boolean, true),
     showMap: types.optional(types.boolean, false),
+    mapZoom: types.optional(types.number, 0),
     mapInitiated: types.optional(types.boolean, false),
     singleColumnView: types.optional(types.boolean, false),
     showTreeInSingleColumnView: types.optional(types.boolean, false),
@@ -77,6 +78,9 @@ export const MobxStore = types
     })
 
     return {
+      setMapZoom(val) {
+        self.mapZoom = val
+      },
       setLocalMapLoading(val) {
         self.localMapLoadingFulfilled = val?.fulfilled
         self.localMapLoadingRejected = val?.rejected
