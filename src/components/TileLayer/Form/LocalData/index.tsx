@@ -37,7 +37,7 @@ const Title = styled.div`
   margin-bottom: auto;
 `
 const FieldsContainer = styled.div`
-  padding: 15px 10px 10px 10px;
+  padding: 2px 10px 10px 10px;
 `
 const WmtsButtonsContainer = styled.div`
   margin-bottom: 18px;

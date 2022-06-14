@@ -24,7 +24,7 @@ const Progress = ({ showProgress, setShowProgress, setDownloading }) => {
 
   if (showProgress)
     return (
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', marginTop: '13px' }}>
         <Box sx={{ width: '100%', mr: 1 }}>
           <LinearProgress
             variant="determinate"
