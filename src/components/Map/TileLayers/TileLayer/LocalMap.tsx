@@ -13,7 +13,6 @@ const LocalMapComponent = ({ layer }: Props) => {
     L.latLngBounds(b._southWest, b._northEast),
   )
 
-  // TODO: add popup or tooltip
   return (
     <MapErrorBoundary layer={layer}>
       {bounds.map((b, index) => (
