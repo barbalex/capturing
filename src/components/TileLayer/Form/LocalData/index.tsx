@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
-import { getSnapshot } from 'mobx-state-tree'
+// import { getSnapshot } from 'mobx-state-tree'
 
 import storeContext from '../../../../storeContext'
 import { Comment } from '../../../Table/Form'
@@ -131,7 +131,7 @@ const LocalData = ({ userMayEdit, row }) => {
       ? 'Aktuellen Ausschnitt (zusätzlich) offline verfügbar machen'
       : 'Aktuellen Ausschnitt offline verfügbar machen'
 
-    console.log('TileLayer, localMapShow:', getSnapshot(localMapShow))
+    // console.log('TileLayer, localMapShow:', getSnapshot(localMapShow))
 
     return (
       <Container>
