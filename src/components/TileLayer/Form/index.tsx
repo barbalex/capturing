@@ -215,6 +215,7 @@ const TileLayerForm = () => {
           label="Typ"
           error={errors?.tile_layer?.type}
           infoLink="/docs/image-layer-types"
+          infoTitle="Infos zum Typ"
         />
         {row?.type === 'wmts' && (
           <TextField

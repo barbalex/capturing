@@ -40,7 +40,9 @@ const StyledFormHelperText = styled(FormHelperText)`
 `
 const Row = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
 `
 
 const ToggleButtonGroupComponent = ({
@@ -54,6 +56,7 @@ const ToggleButtonGroupComponent = ({
   noDataMessage = undefined,
   onBlur,
   infoLink,
+  infoTitle,
 }) => {
   const [stateValue, setStateValue] = useState(valuePassed)
   useEffect(() => {
@@ -150,7 +153,11 @@ const ToggleButtonGroupComponent = ({
           </ToggleButtonGroup>
           {infoLink && (
             <div>
-              <IconButton title="Information" component={Link} to={infoLink}>
+              <IconButton
+                title={infoTitle ?? 'Information'}
+                component={Link}
+                to={infoLink}
+              >
                 <InfoIcon />
               </IconButton>
             </div>
