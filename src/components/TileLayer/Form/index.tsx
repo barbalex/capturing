@@ -214,6 +214,7 @@ const TileLayerForm = () => {
           onBlur={onBlur}
           label="Typ"
           error={errors?.tile_layer?.type}
+          infoLink="/docs/image-layer-types"
         />
         {row?.type === 'wmts' && (
           <TextField

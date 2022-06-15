@@ -4,6 +4,9 @@ import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
+import IconButton from '@mui/material/IconButton'
+import { MdInfoOutline as InfoIcon } from 'react-icons/md'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { observer } from 'mobx-react-lite'
 
@@ -14,6 +17,7 @@ const StyledFormControl = styled(FormControl)`
   padding-left: 1px !important;
   padding-bottom: 19px !important;
   break-inside: avoid;
+  width: 100%;
   .Mui-selected {
     background-color: rgba(74, 20, 140, 0.1);
   }
@@ -34,6 +38,10 @@ const NoDataMessage = styled.div`
 const StyledFormHelperText = styled(FormHelperText)`
   line-height: 1.3em;
 `
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
 
 const ToggleButtonGroupComponent = ({
   value: valuePassed,
@@ -45,6 +53,7 @@ const ToggleButtonGroupComponent = ({
   dataSource = [],
   noDataMessage = undefined,
   onBlur,
+  infoLink,
 }) => {
   const [stateValue, setStateValue] = useState(valuePassed)
   useEffect(() => {
@@ -117,27 +126,36 @@ const ToggleButtonGroupComponent = ({
         <StyledFormLabel component="legend" labelsize={labelSize}>
           {label}
         </StyledFormLabel>
-        <ToggleButtonGroup
-          aria-label={label}
-          value={valueSelected}
-          onChange={onChangeGroup}
-        >
-          {dataSource.length ? (
-            dataSource.map((e, index) => (
-              <ToggleButton
-                key={index}
-                value={toStringIfPossible(e.value)}
-                // control={<StyledRadio color="primary" />}
-                // label={e.label}
-                onClick={onClickButton}
-              >
-                {e.label}
-              </ToggleButton>
-            ))
-          ) : (
-            <NoDataMessage>{noDataMessage}</NoDataMessage>
+        <Row>
+          <ToggleButtonGroup
+            aria-label={label}
+            value={valueSelected}
+            onChange={onChangeGroup}
+          >
+            {dataSource.length ? (
+              dataSource.map((e, index) => (
+                <ToggleButton
+                  key={index}
+                  value={toStringIfPossible(e.value)}
+                  // control={<StyledRadio color="primary" />}
+                  // label={e.label}
+                  onClick={onClickButton}
+                >
+                  {e.label}
+                </ToggleButton>
+              ))
+            ) : (
+              <NoDataMessage>{noDataMessage}</NoDataMessage>
+            )}
+          </ToggleButtonGroup>
+          {infoLink && (
+            <div>
+              <IconButton title="Information" component={Link} to={infoLink}>
+                <InfoIcon />
+              </IconButton>
+            </div>
           )}
-        </ToggleButtonGroup>
+        </Row>
         {!!error && (
           <StyledFormHelperText id={`${label}ErrorText`}>
             {error}
