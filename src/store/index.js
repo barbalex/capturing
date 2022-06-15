@@ -91,7 +91,9 @@ export const MobxStore = types
       setLocalMap(val) {
         self.localMaps[val.id] = val
       },
-      setLocalMapValues({ id, save, del, size,  }) {
+      // size is not being used now
+      // could be used to more accurately calculate downloaded size?
+      setLocalMapValues({ id, save, del, size }) {
         self.localMaps[id] = {
           ...self.localMaps[id],
           ...(save ? { save } : {}),
