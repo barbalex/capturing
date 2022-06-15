@@ -5,6 +5,7 @@ import { TileLayer } from '../../../../dexieClient'
 import WMS from './WMS'
 import WMTS from './WMTSOffline'
 import storeContext from '../../../../storeContext'
+import LocalMap from './LocalMap'
 
 type Props = {
   layer: TileLayer
@@ -14,12 +15,10 @@ const TileLayerComponent = ({ layer }: Props) => {
   const { localMapShow } = useContext(storeContext)
   const showLocalMap = localMapShow.get(layer.id)?.show ?? false
 
-  console.log('TileLayerChooser, showLocalMap:', showLocalMap)
-
   if (layer.type === 'wmts') {
     return (
       <>
-        {showLocalMap && <div>localMap</div>}
+        {showLocalMap && <LocalMap layer={layer} />}
         <WMTS layer={layer} />
       </>
     )
