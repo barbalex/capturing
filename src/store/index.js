@@ -5,6 +5,7 @@ import isEqual from 'lodash/isEqual'
 
 import NotificationType from './Notification'
 import EditingProjectType from './EditingProject'
+import ShowLocalMapsType from './ShowLocalMaps'
 
 // Idea: build tree with object / Nodes type containing only id/folderName?
 // const Nodes = types.model({
@@ -54,6 +55,7 @@ export const MobxStore = types
     localMapLoadingFraction: types.optional(types.number, 0),
     localMapLoadingFulfilled: types.optional(types.number, 0),
     localMapLoadingRejected: types.optional(types.number, 0),
+    localMapShow: types.map(ShowLocalMapsType),
   })
   .volatile(() => ({
     navigate: undefined,
@@ -150,6 +152,9 @@ export const MobxStore = types
       },
       setShowMap(val) {
         self.showMap = val
+      },
+      setLocalMapShow({ id, show }) {
+        self.localMapShow.set(id, { id, show })
       },
       setProjectEditing({ id, editing }) {
         self.editingProjects.set(id, { id, editing })

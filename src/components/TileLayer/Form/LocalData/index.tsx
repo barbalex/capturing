@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
+import { getSnapshot } from 'mobx-state-tree'
 
 import storeContext from '../../../../storeContext'
 import { Comment } from '../../../Table/Form'
@@ -59,12 +60,23 @@ const Warning = styled.p`
 `
 const StyledFormGroup = styled(FormGroup)`
   margin-bottom: 10px;
+  label .MuiFormControlLabel-label {
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.8);
+  }
 `
 
 const LocalData = ({ userMayEdit, row }) => {
   const session = supabase.auth.session()
   const store = useContext(storeContext)
-  const { localMaps, showMap, setLocalMapLoading, mapZoom } = store
+  const {
+    localMaps,
+    showMap,
+    setLocalMapLoading,
+    mapZoom,
+    setLocalMapShow,
+    localMapShow,
+  } = store
 
   useEffect(() => setLocalMapLoading(), [setLocalMapLoading])
 
@@ -102,6 +114,13 @@ const LocalData = ({ userMayEdit, row }) => {
     setDownloading(false)
   }, [localMap, row, session, setLocalMapLoading])
 
+  const onClickShow = useCallback(
+    (event) => {
+      setLocalMapShow({ id: row.id, show: event.target.checked })
+    },
+    [row.id, setLocalMapShow],
+  )
+
   if (showMap && userMayEdit) {
     const mb = row.local_data_size
       ? (+(row.local_data_size / 1000000)).toFixed(1)?.toLocaleString?.('de-CH')
@@ -111,6 +130,8 @@ const LocalData = ({ userMayEdit, row }) => {
       : mb
       ? 'Aktuellen Ausschnitt (zusätzlich) offline verfügbar machen'
       : 'Aktuellen Ausschnitt offline verfügbar machen'
+
+    console.log('TileLayer, localMapShow:', getSnapshot(localMapShow))
 
     return (
       <Container>
@@ -127,7 +148,12 @@ const LocalData = ({ userMayEdit, row }) => {
           <Comment>{`Aktuell: ${mb} Megabyte`}</Comment>
           <StyledFormGroup>
             <FormControlLabel
-              control={<Checkbox checked={true} />}
+              control={
+                <Checkbox
+                  checked={localMapShow.get(row.id)?.show ?? false}
+                  onClick={onClickShow}
+                />
+              }
               label="Offline verfügbare Bereiche in der Karte anzeigen"
             />
           </StyledFormGroup>
