@@ -91,13 +91,12 @@ export const MobxStore = types
       setLocalMap(val) {
         self.localMaps[val.id] = val
       },
-      setLocalMapValues({ id, save, del, size, tilesCount }) {
+      setLocalMapValues({ id, save, del, size,  }) {
         self.localMaps[id] = {
           ...self.localMaps[id],
           ...(save ? { save } : {}),
           ...(del ? { del } : {}),
           ...(size ? { size } : {}),
-          ...(tilesCount ? { tilesCount } : {}),
         }
       },
       flyToMapBounds(bounds) {

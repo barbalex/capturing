@@ -259,10 +259,6 @@ const ControlSaveTiles = L.Control.extend({
     }
     this._resetStatus(tiles)
     this.status.currMinZoom = zoomlevels[0]
-    setLocalMapValues({
-      id: layer.id,
-      tilesCount: tiles.length,
-    })
 
     const saveCallback = async (tblName = layer.id) => {
       if (this.status.tnames.indexOf(tblName) < 0) {
@@ -303,7 +299,7 @@ const ControlSaveTiles = L.Control.extend({
         fulfilled: res.fulfilled ?? 0,
         rejected: res.rejected ?? 0,
       })
-      setLocalMapValues(mapValues)
+      setLocalMapValues(mapValues) 
       // set bounds and update size in dexie
       const tileLayer = await dexie.tile_layers.get(layer.id)
       const was = { ...tileLayer }
