@@ -43,10 +43,13 @@ const ImageLayerTypes = () => {
       <p>
         A WMTS-Server returns multiple (image-)tiles for the requested region.
       </p>
-      <p>
-        This is advantageous in certain situations. For instance when a map is
-        panned.
-      </p>
+      <p>This is advantageous in certain situations. For instance:</p>
+      <ul>
+        <li>When a map is panned. Only the missing tiles need to be fetched</li>
+        <li>
+          Tiles can be cached and reloaded offline much better than WMS images
+        </li>
+      </ul>
 
       <h3>3. TMS: Tiled Map Service</h3>
       <p>
