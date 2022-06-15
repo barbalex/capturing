@@ -1,4 +1,5 @@
 import { Rectangle } from 'react-leaflet/Rectangle'
+import { Tooltip } from 'react-leaflet/Tooltip'
 
 import { TileLayer } from '../../../../dexieClient'
 import MapErrorBoundary from '../../../shared/MapErrorBoundary'
@@ -12,10 +13,13 @@ const LocalMapComponent = ({ layer }: Props) => {
     L.latLngBounds(b._southWest, b._northEast),
   )
 
+  // TODO: add popup or tooltip
   return (
     <MapErrorBoundary layer={layer}>
       {bounds.map((b, index) => (
-        <Rectangle key={index} bounds={b} />
+        <Rectangle key={index} bounds={b}>
+          <Tooltip>{layer.label}</Tooltip>
+        </Rectangle>
       ))}
     </MapErrorBoundary>
   )
