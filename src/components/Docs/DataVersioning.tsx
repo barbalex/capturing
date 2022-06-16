@@ -16,11 +16,11 @@ const DataVersioning = () => {
         <li>User A sits at the desk and edits a row (online).</li>
         <li>
           User A now remembers having edited this row last week in the field on
-          her mobile phone. So she opens the app on her phone and syncs the
-          data.
+          her mobile phone when she was offline. So she opens the app on her
+          phone and syncs the data.
         </li>
         <li>
-          User B edited the same row one week ago. But was offline and has not
+          User B edited the same row two weeks ago. But was offline and has not
           synced since. He will sync next week when returning to the office.
         </li>
       </ul>
@@ -31,8 +31,9 @@ const DataVersioning = () => {
       </p>
       <p>
         Arguably the best solution is: Users A and B should realize that
-        conflicts exist and what was edited when by whom. This should enable
-        them to choose the correct state.
+        conflicts exist and what was edited when and by whom. This should enable
+        them to choose the correct state according to their specific business
+        logic.
       </p>
 
       <h3>2. Requirements</h3>
