@@ -15,11 +15,10 @@ const DataVersioning = () => {
       <h3>1. The problem</h3>
       <p>Let&apos;s assume an app lets users edit offline:</p>
       <ul>
-        <li>User A sits at the desk and edits a row (online).</li>
+        <li>User A sits at the desk and edits a row online on her PC.</li>
         <li>
-          Then user A remembers having edited this row last week in the field on
-          her mobile phone when she was offline. So she opens the app on her
-          phone and syncs the data.
+          User A remembers having edited this row last week in the field when
+          she was offline. So she opens the app on her phone and syncs the data.
         </li>
         <li>
           User B edited the same row two weeks ago. But was offline and has not
@@ -27,14 +26,14 @@ const DataVersioning = () => {
         </li>
       </ul>
       <p>
-        We&apos;ll call this: A and B worked _concurrently_ on the same row.
+        We&apos;ll call this: A and B worked concurrently on the same row. A
+        even worked concurrently on two different devices.
       </p>
 
       <h3>2. Requirements</h3>
 
       <p>
-        No algorithm can decide what is the _true_ state of this row&apos;s
-        data.
+        No algorithm can decide what is the true state of this row&apos;s data.
       </p>
       <p>
         Arguably the best solution is: Users A and B realize that conflicts
