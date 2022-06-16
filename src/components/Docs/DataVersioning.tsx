@@ -13,7 +13,7 @@ const DataVersioning = () => {
       </p>
 
       <h3>1. The problem</h3>
-      <p>Let&apos;s assume an app that lets users edit offline:</p>
+      <p>Let&apos;s assume an app lets users edit offline:</p>
       <ul>
         <li>User A sits at the desk and edits a row (online).</li>
         <li>
@@ -42,20 +42,19 @@ const DataVersioning = () => {
         the correct state according to their specific business logic.
       </p>
 
-      <p>There needs to be a method to:</p>
+      <p>There needs to be a way to:</p>
       <ul>
         <li>See all changes made to a row, when and by whom</li>
         <li>Automatically detect the existence of conflicts</li>
-        <li>Automatically choose a winning version, while...</li>
-        <li>...alerting the users to the existence of conflicts</li>
-        <li>...and enabling them to set the correct state in a simple way</li>
+        <li>Automatically choose a winning version</li>
+        <li>Alert users to the existence of conflicts</li>
+        <li>Enable users to easily choose/set the correct state</li>
         <li>This should work for deletions as well</li>
       </ul>
 
       <p>
         Apps can function offline without these requirements. But when users
-        work concurrently, edits will be lost. And it is possible that nobody
-        notices.
+        work concurrently, edits will be lost. And nobody may notice...
       </p>
 
       <h3>3. Basic idea</h3>
