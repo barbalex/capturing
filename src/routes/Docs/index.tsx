@@ -38,7 +38,7 @@ const Docs = () => {
   return (
     <StyledSplitPane
       split="vertical"
-      size="33%"
+      size="min(33%, 250px)"
       maxSize={-10}
       resizerStyle={{ width: resizerWidth }}
     >
