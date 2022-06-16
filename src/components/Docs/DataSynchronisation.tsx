@@ -72,7 +72,10 @@ const DataSynchronisation = () => {
           WMTS image data: TODO: Image data is (not) automatically fetched from
           the wmts service?
         </li>
-        <li>WMS maps are only available online</li>
+        <li>
+          WMS maps are (currently){' '}
+          <Link to="/docs/offline-maps">only available online</Link>
+        </li>
       </ul>
 
       <h3>4. How things are synchronized</h3>
@@ -93,6 +96,10 @@ const DataSynchronisation = () => {
           <li>WFS vector data</li>
           <li>TODO: WMTS image data in areas marked for download?</li>
         </ul>
+        <li>
+          Core user data is managed in a special way to enable dealing with
+          conflicts.
+        </li>
       </ul>
     </Container>
   )
