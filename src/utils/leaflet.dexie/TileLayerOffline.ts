@@ -35,6 +35,7 @@ const TileLayerOffline = L.TileLayer.extend({
         if (self.offtest) url = self.options.offUrl // show local PNG if testing offline
         tile.src = url
       })
+    // note: change of src is not awaited
     return tile
   },
   /**

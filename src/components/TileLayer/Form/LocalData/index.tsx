@@ -15,6 +15,7 @@ import { ProcessingText } from '../../../VectorLayer/Form/DownloadPVL'
 import constants from '../../../../utils/constants'
 import Rejections from './Rejections'
 import Progress from './Progress'
+import { layerGroup } from 'leaflet'
 
 const Container = styled.div`
   margin: 25px -10px 0 -10px;
@@ -66,7 +67,12 @@ const StyledFormGroup = styled(FormGroup)`
   }
 `
 
-const LocalData = ({ userMayEdit, row }) => {
+type Props = {
+  userMayEdit: boolean
+  row: TileLayer
+}
+
+const LocalData = ({ userMayEdit, row }: Props) => {
   const session = supabase.auth.session()
   const store = useContext(storeContext)
   const {
@@ -167,11 +173,16 @@ const LocalData = ({ userMayEdit, row }) => {
               ℹ Sie müssen vermutlich näher zoomen, damit der Download gelingt.
             </Warning>
           )}
+          {!row.active && (
+            <Warning>
+              ℹ Sie müssen den Layer aktivieren, um ihn herunterladen zu können.
+            </Warning>
+          )}
           <WmtsButtonsContainer>
             <Button
               variant="outlined"
               onClick={onClickSaveWmts}
-              disabled={mapZoom < 14}
+              disabled={mapZoom < 14 || !row.active}
             >
               <ProcessingText data-loading={downloading}>
                 {saveText}
