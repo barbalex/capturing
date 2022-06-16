@@ -12,6 +12,7 @@ import Docs from './routes/Docs'
 import ImageLayerTypes from './components/Docs/ImageLayerTypes'
 import OfflineMaps from './components/Docs/OfflineMaps'
 import DataSynchronisation from './components/Docs/DataSynchronisation'
+import DataVersioning from './components/Docs/DataVersioning'
 import ProjectsPage from './routes/Projects'
 import Account from './routes/Account'
 import FourOhFour from './routes/404'
@@ -118,7 +119,11 @@ function App() {
                     element={<ImageLayerTypes />}
                   />
                   <Route path="offline-maps" element={<OfflineMaps />} />
-                  <Route path="data-synchronization" element={<DataSynchronisation />} />
+                  <Route
+                    path="data-synchronization"
+                    element={<DataSynchronisation />}
+                  />
+                  <Route path="data-versioning" element={<DataVersioning />} />
                 </Route>
                 <Route path="projects/*" element={<ProjectsPage />}>
                   <Route index element={<ProjectsComponent />} />

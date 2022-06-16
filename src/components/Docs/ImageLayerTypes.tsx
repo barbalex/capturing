@@ -1,7 +1,11 @@
 import styled from 'styled-components'
 
+import constants from '../../utils/constants'
+
 export const Container = styled.div`
   padding: 0 8px 8px 8px;
+  overflow: auto;
+  height: calc(100vh - ${constants.appBarHeight}px);
 `
 
 const ImageLayerTypes = () => {

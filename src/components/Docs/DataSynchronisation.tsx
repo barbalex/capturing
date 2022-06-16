@@ -79,7 +79,10 @@ const DataSynchronisation = () => {
       </ul>
 
       <h3>4. How things are synchronized</h3>
-      <p>This is becoming more technical. You have been warned 😉</p>
+      <p>
+        This is just a simple and incomplete overview. For more details, see
+        TODO:
+      </p>
       <ul>
         <li>
           Configuration data is simply downloaded, overwriting the local
@@ -97,10 +100,17 @@ const DataSynchronisation = () => {
           <li>TODO: WMTS image data in areas marked for download?</li>
         </ul>
         <li>
-          Core user data is managed in a special way to enable dealing with
-          conflicts.
+          Core user data <Link to="/docs/data-versioning">is versioned</Link> to
+          enable dealing with conflicts
         </li>
       </ul>
+
+      <h3>5. Edits are queued</h3>
+      <p>
+        Edits are sent into a queue. When online they are immediately sent to
+        the server. When offline they are persisted and sent to the server, as
+        soon as internet is available.
+      </p>
     </Container>
   )
 }
