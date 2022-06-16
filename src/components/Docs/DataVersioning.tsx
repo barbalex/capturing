@@ -53,20 +53,25 @@ const DataVersioning = () => {
       </ul>
 
       <p>
-        Apps can _work_ offline without these requirements. But when users work
-        concurrently, edits will be lost.
+        Apps can function offline without these requirements. But when users
+        work concurrently, edits will be lost. And it is possible that nobody
+        notices.
       </p>
 
       <h3>3. Basic idea</h3>
 
       <ul>
         <li>
-          Rows are never edited. Instead: Every edit creates a new version
+          Rows are never edited. Instead, every edit leads to a new version
         </li>
         <li>Rows keep a list of their ancestors (preceding versions)</li>
         <li>
           When a row is edited by several users concurrently, the ancestry (tree
           of versions) forks. Following versions create &#34;branches&#34;
+        </li>
+        <li>
+          Deletions are treated like any other edit: &#34;deleted&#34; is just
+          another attribute
         </li>
         <li>
           If branches end with a non-deleted version, this version is a conflict
@@ -119,10 +124,6 @@ const DataVersioning = () => {
             table with the information of this version
           </li>
         </ul>
-        <li>
-          Deletions are treated like updates: All rows have a field
-          &apos;deleted&apos; that is set to true.
-        </li>
         <li>
           Changes in a winning tables are immediately synced when the app is
           active and online. Or as soon as that happens
