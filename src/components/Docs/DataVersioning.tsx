@@ -82,7 +82,7 @@ const DataVersioning = () => {
 
       <h3>4. Implementation</h3>
       <p>This is a bit more technical 🤔.</p>
-      <p>Still reading? Great 😁.</p>
+      <p>Still reading? Great 🤗.</p>
       <ul>
         <li>When the user updates or creates a row:</li>
         <ul>
