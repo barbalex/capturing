@@ -11,13 +11,6 @@ import Popup from '../../Popup'
 import onTileError from './onTileError'
 import storeContext from '../../../../storeContext'
 
-const StyledWMSTileLayer = styled(WMSTileLayer)`
-  ${(props) =>
-    props.greyscale == 1 &&
-    `.leaflet-tile-container {
-    filter: grayscale(100%) !important;
-  }`}
-`
 const StyledPopupContent = styled.div`
   white-space: pre;
 `
@@ -168,14 +161,14 @@ const WMS = ({ layer }) => {
   // BUT: if call errors, leaflet does not surface the error
   // instead ALL WMS LAYERS FAIL!!!!!!!!
   return (
-    <StyledWMSTileLayer
+    <WMSTileLayer
       url={layer.wms_base_url}
       layers={layer.wms_layers}
       version={layer.wms_version}
       format={layer.wms_format}
       minZoom={layer.min_zoom}
       maxZoom={layer.max_zoom}
-      greyscale={layer.greyscale}
+      className={layer.grayscale ? 'grayscale' : ''}
       opacity={layer.opacity}
       transparent={layer.wms_transparent === 1}
       // exceptions="inimage"

@@ -20,7 +20,7 @@ const WMTSOffline = ({ layer }: Props) => {
       maxNativeZoom: 19,
       minZoom: layer.min_zoom,
       maxZoom: layer.max_zoom,
-      className: layer.greyscale ? 'grayscale' : '',
+      className: layer.grayscale ? 'grayscale' : '',
       opacity: layer.opacity,
     })
     wmtsLayer.addTo(map)
@@ -50,7 +50,7 @@ const WMTSOffline = ({ layer }: Props) => {
     }
   }, [
     layer,
-    layer.greyscale,
+    layer.grayscale,
     layer.id,
     layer.label,
     layer.max_zoom,

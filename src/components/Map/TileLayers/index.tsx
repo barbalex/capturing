@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
-import { dexie, TileLayer as TileLayerType } from '../../../dexieClient' 
+import { dexie, TileLayer as TileLayerType } from '../../../dexieClient'
 import TileLayer from './TileLayer'
 import OsmColor from '../layers/OsmColor'
 
@@ -14,8 +14,7 @@ const TileLayers = () => {
 
   const tileLayers: TileLayerType[] =
     useLiveQuery(
-      async () =>
-        await dexie.tile_layers.where(where).reverse().sortBy('sort'), 
+      async () => await dexie.tile_layers.where(where).reverse().sortBy('sort'),
       [projectId],
     ) ?? []
   /**
@@ -42,7 +41,7 @@ const TileLayers = () => {
   //   'Map, TileLayers, validTileLayers:',
   //   validTileLayers.map((t) => t.label),
   // )
-  
+
   /**
    * TODO:
    * Profit from server combining wms in single image
@@ -64,7 +63,7 @@ const TileLayers = () => {
       wms_styles: layer.wms_styles,
       wms_transparent: layer.wms_transparent,
       wms_version: layer.wms_version,
-      greyscale: layer.greyscale,
+      grayscale: layer.grayscale,
     }
 
     return <TileLayer key={JSON.stringify(partsToRedrawOn)} layer={layer} />

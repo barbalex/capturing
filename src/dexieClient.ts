@@ -440,7 +440,7 @@ export interface ITileLayer {
   _layerOptions?: optionsList[] // local
   _legendUrls?: legendUrlList[] // local
   _infoFormatOptions?: optionsList[] // local
-  greyscale?: number
+  grayscale?: number
   local_data_size?: number
   local_data_bounds?: dataBounds[]
   client_rev_at?: Date
@@ -510,7 +510,7 @@ export class TileLayer implements ITileLayer {
   _layerOptions?: optionsList[] // local
   _legendUrls?: legendUrlList[] // local
   _infoFormatOptions?: optionsList[] // local
-  greyscale?: number
+  grayscale?: number
   local_data_size?: number
   local_data_bounds?: dataBounds[]
   client_rev_at?: Date
@@ -544,7 +544,7 @@ export class TileLayer implements ITileLayer {
     _layerOptions?: optionsList[],
     _legendUrls?: legendUrlList[],
     _infoFormatOptions?: optionsList[],
-    greyscale?: number,
+    grayscale?: number,
     local_data_size?: number,
     local_data_bounds?: dataBounds[],
     client_rev_at?: Date,
@@ -577,7 +577,7 @@ export class TileLayer implements ITileLayer {
     if (_layerOptions) this._layerOptions = _layerOptions
     if (_legendUrls) this._legendUrls = _legendUrls
     if (_infoFormatOptions) this._infoFormatOptions = _infoFormatOptions
-    this.greyscale = greyscale ?? 0
+    this.grayscale = grayscale ?? 0
     if (local_data_size) this.local_data_size = local_data_size
     if (local_data_bounds) this.local_data_bounds = local_data_bounds
     this.client_rev_at = new window.Date().toISOString()
@@ -1526,7 +1526,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(52).stores({
+    this.version(53).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:

@@ -415,12 +415,12 @@ const TileLayerForm = () => {
           type="number"
         />
         <Checkbox2States
-          key={`${row.id}greyscale`}
+          key={`${row.id}grayscale`}
           label="Grautöne statt Farben"
-          name="greyscale"
-          value={row.greyscale}
+          name="grayscale"
+          value={row.grayscale}
           onBlur={onBlur}
-          error={errors?.field?.greyscale}
+          error={errors?.field?.grayscale}
           disabled={!userMayEdit}
         />
         {row?.type === 'wmts' && (

@@ -712,7 +712,7 @@ CREATE TABLE tile_layers (
   wms_version wms_version_enum DEFAULT NULL,
   wms_info_format text DEFAULT NULL,
   wms_queryable integer DEFAULT NULL,
-  greyscale integer DEFAULT 0,
+  grayscale integer DEFAULT 0,
   local_data_size integer DEFAULT NULL,
   local_data_bounds jsonb DEFAULT NULL,
   client_rev_at timestamp with time zone DEFAULT now(),
