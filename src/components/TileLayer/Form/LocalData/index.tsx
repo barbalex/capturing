@@ -175,7 +175,7 @@ const LocalData = ({ userMayEdit, row }: Props) => {
           )}
           {!row?.active && (
             <Warning>
-              ℹ Sie müssen den Layer aktivieren, um ihn herunterladen zu können.
+              ℹ Sie müssen den Layer aktivieren, um ihn herunterzuladen.
             </Warning>
           )}
           <WmtsButtonsContainer>
