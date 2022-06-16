@@ -10,6 +10,8 @@ import { Provider as MobxProvider } from './storeContext'
 import Home from './routes/Home'
 import Docs from './routes/Docs'
 import ImageLayerTypes from './components/Docs/ImageLayerTypes'
+import OfflineMaps from './components/Docs/OfflineMaps'
+import DataSynchronisation from './components/Docs/DataSynchronisation'
 import ProjectsPage from './routes/Projects'
 import Account from './routes/Account'
 import FourOhFour from './routes/404'
@@ -115,6 +117,8 @@ function App() {
                     path="image-layer-types"
                     element={<ImageLayerTypes />}
                   />
+                  <Route path="offline-maps" element={<OfflineMaps />} />
+                  <Route path="data-synchronization" element={<DataSynchronisation />} />
                 </Route>
                 <Route path="projects/*" element={<ProjectsPage />}>
                   <Route index element={<ProjectsComponent />} />

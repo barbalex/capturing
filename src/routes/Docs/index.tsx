@@ -49,7 +49,21 @@ const Docs = () => {
             to="image-layer-types"
             data-active={params['*'] === 'image-layer-types'}
           >
-            <ListItemText>Image-Layer types</ListItemText>
+            <ListItemText>Image layer types</ListItemText>
+          </StyledListItem>
+          <StyledListItem
+            component={Link}
+            to="offline-maps"
+            data-active={params['*'] === 'offline-maps'}
+          >
+            <ListItemText>Offline maps</ListItemText>
+          </StyledListItem>
+          <StyledListItem
+            component={Link}
+            to="data-synchronization"
+            data-active={params['*'] === 'data-synchronization'}
+          >
+            <ListItemText>Data synchronization</ListItemText>
           </StyledListItem>
         </StyledList>
       </nav>
