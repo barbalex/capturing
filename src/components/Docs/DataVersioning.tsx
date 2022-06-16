@@ -111,10 +111,14 @@ const DataVersioning = () => {
         <li>When a new version arrives at the server, a trigger function:</li>
         <ul>
           <li>Chooses the version with the longest ancestry as winner</li>
-          <li>If conflicts exist: adds a list of conflicting rows</li>
+          <li>
+            Checks for conflicts. Conflicts are forks, whose last (most
+            descendant) version is not deleted - and thus a conflicting version
+          </li>
+          <li>If conflicts exist: adds a list of conflicting versions</li>
           <li>
             If the new version wins: updates or inserts the row in the winner
-            table
+            table with the information of this version
           </li>
         </ul>
         <li>
@@ -122,8 +126,8 @@ const DataVersioning = () => {
           &apos;deleted&apos; that is set to true.
         </li>
         <li>
-          Changes in a winning tables are synced live when the app is active and
-          online (or as soon as that happens)
+          Changes in a winning tables are immediately synced when the app is
+          active and online. Or as soon as that happens
         </li>
         <li>If conflicts exist, the app informs the user</li>
         <li>
@@ -132,12 +136,13 @@ const DataVersioning = () => {
         </li>
         <li>
           The app then appends this version to the ancestry of the previous
-          winner, to make it the new winner (due to the longest ancestry)
+          winner, thus making it the new winner (due to the longest ancestry)
         </li>
         <li>
           It also appends new versions of the previously conflicting versions
-          where &#34;deleted&#34; is set to true. This makes the server&apos;s
-          algorithm ignore them when choosing conflicts
+          where &#34;deleted&#34; is set to true to their respective branches.
+          This makes the server&apos;s algorithm ignore them when choosing
+          conflicts in the future
         </li>
       </ul>
     </Container>
