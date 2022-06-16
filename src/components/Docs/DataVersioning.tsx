@@ -63,20 +63,18 @@ const DataVersioning = () => {
         <li>
           Rows are never edited. Instead: Every edit creates a new version
         </li>
+        <li>Rows keep a list of their ancestors (preceding versions)</li>
         <li>
-          Rows keep a list of their ancestors (= preceding versions, aka
-          &quot;branch&quot;)
+          When a row is edited by several users concurrently, the ancestry (tree
+          of versions) forks. Following versions create &#34;branches&#34;
         </li>
         <li>
-          When a row ist edited by several users concurrently, the branch (list
-          of versions) forks
+          If branches end with a non-deleted version, this version is a conflict
         </li>
         <li>
-          Forks define conflicts (their branches represent conflicting versions)
-        </li>
-        <li>
-          Algorithms find forks, declare the longest branch a winner and give it
-          a list of it&apos;s conflicting versions
+          Algorithms search for the longest ancestral line ending in an
+          undeleted version. They declare this version the winner and give it a
+          list of conflicting versions (if existing)
         </li>
       </ul>
 
@@ -86,13 +84,13 @@ const DataVersioning = () => {
       <ul>
         <li>When the user updates or creates a row:</li>
         <ul>
-          <li>The app builds a new version with new or updated data</li>
-          <li>Documents time of change and user</li>
-          <li>Updates the row&apos;s list of ancestors</li>
-          <li>Inserts the new version into a queue...</li>
+          <li>The app builds a new version with new or updated data,</li>
+          <li>documents time of change and user,</li>
+          <li>updates the row&apos;s list of ancestors,</li>
+          <li>inserts the new version into a queue...</li>
           <li>
             ...that sends it to the server as soon as the internet connection
-            allows
+            allows.
           </li>
         </ul>
         <li>On the server two types of versioned tables exist:</li>
