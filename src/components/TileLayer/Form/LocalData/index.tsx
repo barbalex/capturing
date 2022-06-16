@@ -173,7 +173,7 @@ const LocalData = ({ userMayEdit, row }: Props) => {
               ℹ Sie müssen vermutlich näher zoomen, damit der Download gelingt.
             </Warning>
           )}
-          {!row.active && (
+          {!row?.active && (
             <Warning>
               ℹ Sie müssen den Layer aktivieren, um ihn herunterladen zu können.
             </Warning>
@@ -182,7 +182,7 @@ const LocalData = ({ userMayEdit, row }: Props) => {
             <Button
               variant="outlined"
               onClick={onClickSaveWmts}
-              disabled={mapZoom < 14 || !row.active}
+              disabled={mapZoom < 14 || !row?.active}
             >
               <ProcessingText data-loading={downloading}>
                 {saveText}
