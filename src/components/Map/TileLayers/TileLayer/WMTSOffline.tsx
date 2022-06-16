@@ -13,12 +13,13 @@ const WMTSOffline = ({ layer }: Props) => {
   const store = useContext(storeContext)
   const { setLocalMapValues } = store
 
+  console.log('WMTSOffline, layer:', layer)
+
   useEffect(() => {
     const wmtsLayer = L.tileLayer.offline(layer.wmts_url_template, {
       maxNativeZoom: 19,
       minZoom: layer.min_zoom,
       maxZoom: layer.max_zoom,
-      greyscale: layer.greyscale,
       className: layer.greyscale ? 'grayscale' : '',
       opacity: layer.opacity,
     })
