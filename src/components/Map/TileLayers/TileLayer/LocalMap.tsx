@@ -9,7 +9,7 @@ type Props = {
 }
 
 const LocalMapComponent = ({ layer }: Props) => {
-  const bounds = layer.local_data_bounds.map((b) =>
+  const bounds = (layer.local_data_bounds ?? []).map((b) =>
     L.latLngBounds(b._southWest, b._northEast),
   )
 
