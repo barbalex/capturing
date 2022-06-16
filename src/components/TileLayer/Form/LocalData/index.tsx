@@ -15,7 +15,6 @@ import { ProcessingText } from '../../../VectorLayer/Form/DownloadPVL'
 import constants from '../../../../utils/constants'
 import Rejections from './Rejections'
 import Progress from './Progress'
-import { layerGroup } from 'leaflet'
 
 const Container = styled.div`
   margin: 25px -10px 0 -10px;
