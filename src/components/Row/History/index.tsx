@@ -36,10 +36,10 @@ const sliderSettings = {
   infinite: false,
 }
 
-const EventHistory = ({ row, historyTakeoverCallback }) => {
+const RowHistory = ({ row, historyTakeoverCallback }) => {
   const store = useContext(storeContext)
 
-  return null
+  return <div>History</div>
 }
 
-export default observer(EventHistory)
+export default observer(RowHistory)
