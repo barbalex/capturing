@@ -26,7 +26,7 @@ const processQueuedUpdate = async ({
   if (isRevTable) {
     const revTableName =
       queuedUpdate.table === 'rows' ? 'row_revs' : 'files_meta_revs'
-    // 1 create revision
+    // 1 create row_rev from row or file_rev from file
     const newRevision = {
       ...object,
     }

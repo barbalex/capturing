@@ -1252,8 +1252,8 @@ export class Row implements IRow {
   }
 
   async updateOnServer({ was, is, session }: RowUpdateProps) {
-    const client_rev_at= new window.Date().toISOString()
-    const client_rev_by= session.user?.email ?? session.user?.id
+    const client_rev_at = new window.Date().toISOString()
+    const client_rev_by = session.user?.email ?? session.user?.id
     const depth = is.depth + 1
     // TODO: need to revision here instead of in processQueuedUpdate!
     const revData = {
@@ -1272,10 +1272,12 @@ export class Row implements IRow {
     const isReved = {
       ...is,
       rev,
+      depth,
       revisions: [rev, ...(is.revisions ?? [])],
       client_rev_at,
       client_rev_by,
     }
+    console.log('dexie Row, updateOnServer', { is, isReved, row: this })
     const update = new QueuedUpdate(
       undefined,
       undefined,
