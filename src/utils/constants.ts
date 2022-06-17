@@ -14,7 +14,7 @@ const constants = {
     if (typeof window === 'undefined') return
     return window?.location?.hostname === 'localhost'
       ? `http://${window.location.hostname}:8000`
-      : 'https://vermehrung.ch'
+      : 'https://erfassen.app'
   },
   tree: {
     minimalWidth: 331,

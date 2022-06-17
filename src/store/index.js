@@ -56,6 +56,7 @@ export const MobxStore = types
     localMapLoadingFulfilled: types.optional(types.number, 0),
     localMapLoadingRejected: types.optional(types.number, 0),
     localMapShow: types.map(ShowLocalMapsType),
+    diffConflict: types.optional(types.boolean, true),
   })
   .volatile(() => ({
     navigate: undefined,
@@ -80,6 +81,9 @@ export const MobxStore = types
     })
 
     return {
+      setDiffConflict(val) {
+        self.diffConflict = val
+      },
       setMapZoom(val) {
         self.mapZoom = val
       },
