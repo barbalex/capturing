@@ -11,6 +11,7 @@ import ErrorBoundary from '../shared/ErrorBoundary'
 import Spinner from '../shared/Spinner'
 import FormTitle from './FormTitle'
 import Form from './Form'
+import History from './History'
 
 const Container = styled.div`
   height: 100%;
@@ -132,12 +133,10 @@ const RowComponent = ({ filter: showFilter }) => {
                       TODO: conflict
                     </div>
                   ) : showHistory ? (
-                    <div
+                    <History
                       row={row}
                       historyTakeoverCallback={historyTakeoverCallback}
-                    >
-                      TODO: history
-                    </div>
+                    />
                   ) : null}
                 </>
               )}

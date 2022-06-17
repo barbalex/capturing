@@ -36,7 +36,7 @@ const sliderSettings = {
   infinite: false,
 }
 
-const EventHistory = ({ row, rawRow, historyTakeoverCallback }) => {
+const EventHistory = ({ row, historyTakeoverCallback }) => {
   const store = useContext(storeContext)
 
   return null
