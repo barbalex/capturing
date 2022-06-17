@@ -45,7 +45,8 @@ const ImageLayerTypes = () => {
         , defined by the Open Geospatial Consortium.
       </p>
       <p>
-        A WMTS-Server returns multiple (image-)tiles for the requested region.
+        A WMTS-Server returns multiple (image-)tiles for the requested region
+        and depending on the map zoom.
       </p>
       <p>This is advantageous in certain situations. For instance:</p>
       <ul>

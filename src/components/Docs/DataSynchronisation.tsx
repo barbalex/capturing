@@ -9,7 +9,7 @@ const DataSynchronisation = () => {
 
       <p>
         Synchronisation will be used in the following sense: The act of making
-        data available locally i.e. offline.
+        data available locally (= offline).
       </p>
 
       <h3>1. Goal</h3>
@@ -31,12 +31,12 @@ const DataSynchronisation = () => {
         </li>
         <ul>
           <li>
-            {
-              "Configuration data: Project(s), tables and fields. Managed by the project's manager(s)"
-            }
+            Configuration data: Project(s), tables, fields and maps
+            configuration. Managed by the project&apos;s manager(s)
           </li>
           <li>
-            Core user data: table rows and their files. The actual data captured
+            Core user data: table rows and related files. The actual data
+            captured by most collaborators
           </li>
         </ul>
         <li>Vector maps</li>
@@ -47,18 +47,17 @@ const DataSynchronisation = () => {
       <h3>3. When things are synchronized</h3>
       <ul>
         <li>
-          {
-            'Core user data is constantly synced both ways (app <> server) while the app is active and internet is available.'
-          }
+          Core user data is constantly synced two ways (app &lt;&gt; server)
+          while the app is active and internet is available.
           <br />
-          {
-            "This enables concurrent data capturing by multiple users while keeping data conflicts at a minimum as every user immediately sees other user's inputs"
-          }
+          This enables concurrent data capturing by multiple users while keeping
+          data conflicts at a minimum as every user immediately sees other
+          user&apos;s inputs
         </li>
         <li>
-          Configuration data is synced both ways on every app start.
+          Configuration data is synced two ways on app start.
           <br />
-          This includes metadata (configuration) for vector, WMTS and WMS maps
+          This includes configuration for vector, WMTS and WMS maps
         </li>
         <li>
           Vector data: If it was uploaded to erfassen.app, it is directly
@@ -78,22 +77,17 @@ const DataSynchronisation = () => {
       </ul>
 
       <h3>4. How things are synchronized</h3>
-      <p>
-        This is just a simple and incomplete overview. For more details, see
-        TODO:
-      </p>
       <ul>
         <li>
-          Configuration data is simply downloaded, overwriting the local
-          version, if the server-side version is newer than the local version:
+          Data managed by the project&apos;s manager(s) is simply downloaded,
+          overwriting the local version, if the server-side version is newer
+          than the local version:
           <ul>
             <li>Configuration data</li>
             <li>Uploaded vector data</li>
           </ul>
         </li>
-        <li>
-          Data originating from web services is fetched from those services:
-        </li>
+        <li>Data originating from web services is fetched from those:</li>
         <ul>
           <li>WFS vector data</li>
           <li>TODO: WMTS image data in areas marked for download?</li>
