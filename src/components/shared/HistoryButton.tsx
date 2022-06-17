@@ -37,12 +37,12 @@ const HistoryButton = ({ asMenu, id, showHistory, setShowHistory, table }) => {
     !!row?.revisions?.length && row?.revisions?.length > 1
   const disabled = !online || !existMultipleRevisions
 
-  console.log('HistoryButton', {
-    row,
-    disabled,
-    existMultipleRevisions,
-    online,
-  })
+  // console.log('HistoryButton', {
+  //   row,
+  //   disabled,
+  //   existMultipleRevisions,
+  //   online,
+  // })
 
   const show = useCallback(() => {
     if (disabled) return
