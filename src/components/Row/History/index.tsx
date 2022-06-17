@@ -2,6 +2,7 @@ import { useMemo, useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import Slider from 'react-slick'
+import { supabase } from '../../supabaseClient'
 
 import checkForOnlineError from '../../../utils/checkForOnlineError'
 import Spinner from '../../shared/Spinner'
@@ -38,6 +39,8 @@ const sliderSettings = {
 
 const RowHistory = ({ row, historyTakeoverCallback }) => {
   const store = useContext(storeContext)
+  const priorRevisions = row?.revisions?.slice(1) ?? []
+  // const {data, error}=await 
 
   return <div>History</div>
 }

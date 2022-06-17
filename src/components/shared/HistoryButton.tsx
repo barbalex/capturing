@@ -4,7 +4,7 @@ import { FaHistory } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import MenuItem from '@mui/material/MenuItem'
 import styled from 'styled-components'
-import { useParams } from 'react-router-dom'
+import { useParams, Link, resolvePath } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../storeContext'
@@ -26,7 +26,10 @@ const StyledIconButton = styled(IconButton)`
 `
 
 const HistoryButton = ({ asMenu, id, showHistory, setShowHistory, table }) => {
-  const { rowId } = useParams()
+  const params = useParams()
+  const { rowId } = params
+  const url = params['*']
+  const isHistory = url?.endsWith('history')
   const store = useContext(StoreContext)
   const { online } = store
 
@@ -37,12 +40,12 @@ const HistoryButton = ({ asMenu, id, showHistory, setShowHistory, table }) => {
     !!row?.revisions?.length && row?.revisions?.length > 1
   const disabled = !online || !existMultipleRevisions
 
-  // console.log('HistoryButton', {
-  //   row,
-  //   disabled,
-  //   existMultipleRevisions,
-  //   online,
-  // })
+  console.log('HistoryButton', {
+    row,
+    params,
+    url,
+    isHistory,
+  })
 
   const show = useCallback(() => {
     if (disabled) return
@@ -69,6 +72,8 @@ const HistoryButton = ({ asMenu, id, showHistory, setShowHistory, table }) => {
         aria-label={title}
         title={title}
         onClick={show}
+        component={Link}
+        to={isHistory ? resolvePath('..', window.location.pathname) : 'history'}
         disabled={disabled}
         data-active={showHistory}
       >

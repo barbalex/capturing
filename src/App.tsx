@@ -170,6 +170,10 @@ function App() {
                     path=":projectId/tables/:tableId/rows/:rowId"
                     element={<RowComponent />}
                   />
+                  <Route
+                    path=":projectId/tables/:tableId/rows/:rowId/history"
+                    element={<RowComponent />}
+                  />
                 </Route>
                 <Route path="account" element={<Account />} />
                 <Route path="*" element={<FourOhFour />} />
