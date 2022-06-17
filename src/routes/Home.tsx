@@ -160,7 +160,7 @@ const Home = () => {
                 <p>Keine Installation: Anmelden und loslegen.</p>
               </Card>
               <Card>
-                <CardTitle>Einer für alle, alle für einen</CardTitle>
+                <CardTitle>Eine für alle, alle für eine</CardTitle>
                 <p>Eine Person konfiguriert.</p>
                 <p>Die übrigen können direkt erfassen.</p>
               </Card>
