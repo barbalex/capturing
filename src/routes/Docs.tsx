@@ -72,6 +72,13 @@ const Docs = () => {
           >
             <ListItemText>Data versioning</ListItemText>
           </StyledListItem>
+          <StyledListItem
+            component={Link}
+            to="data-history"
+            data-active={params['*'] === 'data-history'}
+          >
+            <ListItemText>Data history</ListItemText>
+          </StyledListItem>
         </StyledList>
       </nav>
       <Outlet />
