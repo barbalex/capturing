@@ -178,6 +178,8 @@ const RowForm = ({
   // const showDeleted = filter?.row?.deleted !== false || row?.deleted
   const showDeleted = false
 
+  console.log('RowForm, row:', row)
+
   return (
     <ErrorBoundary>
       <FieldsContainer
