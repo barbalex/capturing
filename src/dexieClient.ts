@@ -1255,7 +1255,7 @@ export class Row implements IRow {
     const client_rev_at = new window.Date().toISOString()
     const client_rev_by = session.user?.email ?? session.user?.id
     const depth = is.depth + 1
-    // TODO: need to revision here instead of in processQueuedUpdate!
+    // need to revision here instead of in processQueuedUpdate!
     const revData = {
       row_id: is.id,
       table_id: is.table_id,
@@ -1277,7 +1277,7 @@ export class Row implements IRow {
       client_rev_at,
       client_rev_by,
     }
-    console.log('dexie Row, updateOnServer', { is, isReved, row: this })
+    // console.log('dexie Row, updateOnServer', { is, isReved, row: this })
     const update = new QueuedUpdate(
       undefined,
       undefined,
@@ -1287,7 +1287,14 @@ export class Row implements IRow {
       was.id,
       JSON.stringify(was),
     )
-    return dexie.queued_updates.add(update)
+    dexie.queued_updates.add(update)
+    return dexie.rows.update(this.id, {
+      rev,
+      depth,
+      revisions: [rev, ...(is.revisions ?? [])],
+      client_rev_at,
+      client_rev_by,
+    })
   }
 
   async deleteOnServerAndClient({ session }: DeleteOnServerAndClientProps) {

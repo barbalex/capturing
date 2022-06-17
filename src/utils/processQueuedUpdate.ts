@@ -1,7 +1,5 @@
 import { supabase } from '../supabaseClient'
 import { dexie, QueuedUpdate } from '../dexieClient'
-import { v1 as uuidv1 } from 'uuid'
-import SparkMD5 from 'spark-md5'
 
 const revTables = ['rows', 'files_meta']
 
@@ -22,6 +20,7 @@ const processQueuedUpdate = async ({
   // remove all local fields
   const localFields = Object.keys(object).filter((k) => k.startsWith('_'))
   localFields.forEach((field) => delete object[field])
+  // TODO: do this separately for rows and files
   // insert _rev or upsert regular table
   if (isRevTable) {
     const revTableName =
