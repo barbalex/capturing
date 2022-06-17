@@ -3,6 +3,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import styled from 'styled-components'
+import isEqual from 'lodash/isEqual'
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
@@ -87,6 +88,14 @@ const RichText = ({
 
   const state = useRef()
   const onBlurContainer = useCallback(() => {
+    // console.log('RichText, bluring container, state:', {
+    //   currentState: state.current,
+    //   currentStateJsoned: state.current?.toJSON(),
+    //   value,
+    //   equal: isEqual(value, state.current?.toJSON()),
+    // })
+    const currentIsEqual = isEqual(value, state.current?.toJSON())
+    if (currentIsEqual) return
     const fakeEvent = {
       target: {
         value: state.current?.toJSON() ?? null,
@@ -94,9 +103,12 @@ const RichText = ({
       },
     }
     onBlur(fakeEvent)
-  }, [name, onBlur, state])
+  }, [name, onBlur, value])
 
-  // console.log('RichText rendering', { state: state.current, value })
+  console.log('RichText rendering', {
+    state: state.current,
+    value,
+  })
 
   // once schrink is set, need to manually control ist
   // schrink if value exists or schrinkLabel was passed
@@ -119,14 +131,18 @@ const RichText = ({
           {label}
         </StyledInputLabel>
         <Container onBlur={onBlurContainer}>
-          <LexicalComposer initialConfig={editorConfig}>
+          <LexicalComposer
+            initialConfig={editorConfig}
+            // initialEditorState={() =>
+            //   value ? JSON.stringify(value) : undefined
+            // }
+          >
             <div className="editor-container">
               <ToolbarPlugin />
               <div className="editor-inner">
                 <RichTextPlugin
                   contentEditable={<ContentEditable className="editor-input" />}
                   initialEditorState={value ? JSON.stringify(value) : undefined}
-                  // initialEditorState={undefined}
                 />
                 <HistoryPlugin />
                 <AutoFocusPlugin />
@@ -137,7 +153,10 @@ const RichText = ({
                 <CodeHighlightPlugin />
                 <MarkdownShortcutPlugin />
                 <OnChangePlugin
-                  onChange={(newState) => (state.current = newState)}
+                  onChange={(newState) => {
+                    console.log('RichText, newState:', newState)
+                    state.current = newState
+                  }}
                   ignoreSelectionChange={true}
                   ignoreInitialChange={true}
                 />
