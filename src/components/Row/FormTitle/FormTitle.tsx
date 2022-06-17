@@ -45,7 +45,7 @@ const RowFormTitle = ({
   filteredCount,
   width,
   showHistory,
-  setShowHistory,
+  setShowHistory, 
   project,
   table,
 }) => {

@@ -18,40 +18,29 @@ const processQueuedUpdate = async ({
   console.log('processQueuedUpdate', queuedUpdate)
 
   const isRevTable = revTables.includes(queuedUpdate.table)
-  const isInsert = !queuedUpdate.revert_id
-  const newObject = JSON.parse(queuedUpdate.value)
+  const object = JSON.parse(queuedUpdate.value)
   // remove all local fields
-  const localFields = Object.keys(newObject).filter((k) => k.startsWith('_'))
-  localFields.forEach((field) => delete newObject[field])
+  const localFields = Object.keys(object).filter((k) => k.startsWith('_'))
+  localFields.forEach((field) => delete object[field])
   // insert _rev or upsert regular table
   if (isRevTable) {
     const revTableName =
       queuedUpdate.table === 'rows' ? 'row_revs' : 'files_meta_revs'
     // 1 create revision
-    const id = newObject.id
-    const depth = isInsert ? 1 : newObject.depth + 1
-    delete newObject.id
-    delete newObject.conflicts
-    delete newObject.file
-    const newRevObject = {
-      ...newObject,
-      depth,
-      parent_rev: newObject?.revisions?.[0] ?? null,
+    const newRevision = {
+      ...object,
     }
-    if (queuedUpdate.table === 'rows') newRevObject[`row_id`] = id
-    const rev = `${depth}-${SparkMD5.hash(JSON.stringify(newRevObject))}`
-    newRevObject.rev = rev
-    newRevObject.id = uuidv1()
-    newRevObject.revisions = isInsert
-      ? [rev]
-      : [rev, ...(newObject.revisions ?? [])]
+    delete newRevision.id
+    delete newRevision.conflicts
+    delete newRevision.file
+    if (queuedUpdate.table === 'rows') newRevision[`row_id`] = object.id
 
-    // console.log('processQueuedUpdate, newRevObject:', {
-    //   newRevObject,
-    //   newObject: JSON.parse(queuedUpdate.value),
-    // })
+    console.log('processQueuedUpdate, newRevObject:', {
+      newRevision,
+      object: JSON.parse(queuedUpdate.value),
+    })
     // 2. send revision to server
-    const { error } = await supabase.from(revTableName).insert(newRevObject)
+    const { error } = await supabase.from(revTableName).insert(newRevision)
     if (error) {
       // 3. deal with errors
       // TODO: error when updating: "new row violates row-level security policy (USING expression) for table \"projects\""
@@ -74,13 +63,13 @@ const processQueuedUpdate = async ({
     console.log('processQueuedUpdate, should process file', { queuedUpdate })
     const { error } = await supabase.storage
       .from('files')
-      .upload(`files/${newObject.id}`, queuedUpdate.file)
+      .upload(`files/${object.id}`, queuedUpdate.file)
     if (error) return console.log(error)
   } else {
     // OPTION: with extra values property could upsert multiple values at once
     // would be good for: pvl_geom
     // upsert regular table
-    const { error } = await supabase.from(queuedUpdate.table).upsert(newObject)
+    const { error } = await supabase.from(queuedUpdate.table).upsert(object)
     if (error) {
       // 3. deal with errors
       console.log('processQueuedUpdate, regular table, error upserting:', error)

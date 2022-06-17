@@ -4,9 +4,12 @@ import { FaHistory } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import MenuItem from '@mui/material/MenuItem'
 import styled from 'styled-components'
+import { useParams } from 'react-router-dom'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../storeContext'
 import ErrorBoundary from './ErrorBoundary'
+import { dexie, Row } from '../../dexieClient'
 
 const StyledMenuItem = styled(MenuItem)`
   ${(props) =>
@@ -23,19 +26,23 @@ const StyledIconButton = styled(IconButton)`
 `
 
 const HistoryButton = ({ asMenu, id, showHistory, setShowHistory, table }) => {
+  const { rowId } = useParams()
   const store = useContext(StoreContext)
   const { online } = store
 
-  const [dataState, setDataState] = useState()
-  useEffect(() => {
-    // TODO: setDataState({ row })
-  }, [id])
-  // const { row } = dataState
-  const row = {}
+  const row: Row =
+    useLiveQuery(async () => await dexie.rows.get(rowId), [rowId]) ?? {}
 
   const existMultipleRevisions =
-    row?._revisions?.length && row?._revisions?.length > 1
+    !!row?.revisions?.length && row?.revisions?.length > 1
   const disabled = !online || !existMultipleRevisions
+
+  console.log('HistoryButton', {
+    row,
+    disabled,
+    existMultipleRevisions,
+    online,
+  })
 
   const show = useCallback(() => {
     if (disabled) return

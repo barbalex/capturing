@@ -3,19 +3,15 @@ import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
-// import StoreContext from '../../../storeContext'
+// import storeContext from '../../../storeContext'
 import FilterTitle from '../../shared/FilterTitle'
 import FormTitle from './FormTitle'
 import { dexie } from '../../../dexieClient'
 
-const RowFormTitleChooser = ({ row }) => {
+const RowFormTitleChooser = ({ row, showHistory, setShowHistory }) => {
   const { projectId, tableId } = useParams()
-  // const store = useContext(StoreContext)
+  // const store = useContext(storeContext)
   const showFilter = false // TODO:
-  const showHistory = false // TODO:
-  const setShowHistory = useCallback(() => {
-    // TODO:
-  }, [])
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount, project, table] = await Promise.all([

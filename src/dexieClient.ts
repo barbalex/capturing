@@ -4,6 +4,7 @@ import { v1 as uuidv1 } from 'uuid'
 import { Session } from '@supabase/supabase-js'
 import sortBy from 'lodash/sortBy'
 import getBbox from '@turf/bbox'
+import SparkMD5 from 'spark-md5'
 
 window.Dexie = Dexie
 
@@ -1251,10 +1252,29 @@ export class Row implements IRow {
   }
 
   async updateOnServer({ was, is, session }: RowUpdateProps) {
+    const client_rev_at= new window.Date().toISOString()
+    const client_rev_by= session.user?.email ?? session.user?.id
+    const depth = is.depth + 1
+    // TODO: need to revision here instead of in processQueuedUpdate!
+    const revData = {
+      row_id: is.id,
+      table_id: is.table_id,
+      parent_id: is.parent_id,
+      geometry: is.geometry,
+      data: is.data,
+      depth,
+      parent_rev: is.rev,
+      deleted: is.deleted,
+      client_rev_at,
+      client_rev_by,
+    }
+    const rev = `${depth}-${SparkMD5.hash(JSON.stringify(revData))}`
     const isReved = {
       ...is,
-      client_rev_at: new window.Date().toISOString(),
-      client_rev_by: session.user?.email ?? session.user?.id,
+      rev,
+      revisions: [rev, ...(is.revisions ?? [])],
+      client_rev_at,
+      client_rev_by,
     }
     const update = new QueuedUpdate(
       undefined,
