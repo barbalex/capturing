@@ -105,10 +105,14 @@ const RichText = ({
     onBlur(fakeEvent)
   }, [name, onBlur, value])
 
-  console.log('RichText rendering', {
-    state: state.current,
-    value,
-  })
+  const onChange = useCallback((newState) => {
+    state.current = newState
+  }, [])
+
+  // console.log('RichText rendering', {
+  //   state: state.current,
+  //   value,
+  // })
 
   // once schrink is set, need to manually control ist
   // schrink if value exists or schrinkLabel was passed
@@ -133,9 +137,9 @@ const RichText = ({
         <Container onBlur={onBlurContainer}>
           <LexicalComposer
             initialConfig={editorConfig}
-            // initialEditorState={() =>
-            //   value ? JSON.stringify(value) : undefined
-            // }
+            // TODO: this is expected since 0.3.4 but does not work
+            // see: https://github.com/facebook/lexical/issues/2461
+            // initialEditorState={value ? JSON.stringify(value) : undefined}
           >
             <div className="editor-container">
               <ToolbarPlugin />
@@ -153,10 +157,7 @@ const RichText = ({
                 <CodeHighlightPlugin />
                 <MarkdownShortcutPlugin />
                 <OnChangePlugin
-                  onChange={(newState) => {
-                    console.log('RichText, newState:', newState)
-                    state.current = newState
-                  }}
+                  onChange={onChange}
                   ignoreSelectionChange={true}
                   ignoreInitialChange={true}
                 />
