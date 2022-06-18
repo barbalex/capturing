@@ -21,7 +21,7 @@ const processQueuedUpdate = async ({
   const localFields = Object.keys(object).filter((k) => k.startsWith('_'))
   localFields.forEach((field) => delete object[field])
   // TODO: do this separately for rows and files
-  // insert _rev or upsert regular table
+  // insert rev or upsert regular table
   if (isRevTable) {
     const revTableName =
       queuedUpdate.table === 'rows' ? 'row_revs' : 'files_meta_revs'

@@ -194,7 +194,7 @@ const RowForm = ({
       >
         {(activeConflict || showHistory) && (
           <CaseConflictTitle>
-            Aktuelle Version<Rev>{row._rev}</Rev>
+            Aktuelle Version<Rev>{row.rev}</Rev>
           </CaseConflictTitle>
         )}
         {showDeleted && (

@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import { FaHistory } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
@@ -40,12 +40,12 @@ const HistoryButton = ({ asMenu }) => {
     !!row?.revisions?.length && row?.revisions?.length > 1
   const disabled = !online || !existMultipleRevisions
 
-  console.log('HistoryButton', {
-    row,
-    params,
-    url,
-    isHistory,
-  })
+  // console.log('HistoryButton', {
+  //   row,
+  //   params,
+  //   url,
+  //   isHistory,
+  // })
 
   const title = online
     ? isHistory
