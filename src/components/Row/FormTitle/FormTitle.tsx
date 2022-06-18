@@ -45,7 +45,6 @@ const RowFormTitle = ({
   filteredCount,
   width,
   showHistory,
-  setShowHistory, 
   project,
   table,
 }) => {
@@ -69,7 +68,6 @@ const RowFormTitle = ({
               table="rows"
               id={row.id}
               showHistory={showHistory}
-              setShowHistory={setShowHistory}
               asMenu
             />
             <FilterNumbers
@@ -95,7 +93,6 @@ const RowFormTitle = ({
           table="rows"
           id={row.id}
           showHistory={showHistory}
-          setShowHistory={setShowHistory}
         />
         <FilterNumbers filteredCount={filteredCount} totalCount={totalCount} />
       </TitleSymbols>

@@ -1,4 +1,4 @@
-const HistoryRow = ({ row, revRow, historyTakeoverCallback }) => {
+const HistoryRow = ({ row, revRow }) => {
   return <div>TODO:</div>
 }
 

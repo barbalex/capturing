@@ -51,7 +51,7 @@ const StyledSplitPane = styled(SplitPane)`
   }
 `
 
-const RowComponent = ({ filter: showFilter }) => {
+const RowComponent = ({ filter: showFilter, showHistory = false }) => {
   const { rowId } = useParams()
   const store = useContext(StoreContext)
   const { online } = store
@@ -62,7 +62,7 @@ const RowComponent = ({ filter: showFilter }) => {
     [rowId],
   )
 
-  // console.log('RowForm rendering, row:', row)
+  console.log('RowForm rendering', { row, showHistory })
 
   const [activeConflict, setActiveConflict] = useState(null)
   const conflictDisposalCallback = useCallback(
@@ -82,9 +82,6 @@ const RowComponent = ({ filter: showFilter }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowId])
 
-  const [showHistory, setShowHistory] = useState(null)
-  const historyTakeoverCallback = useCallback(() => setShowHistory(null), [])
-
   if (!row) return <Spinner />
   if (!showFilter && filter.show) return null
 
@@ -101,7 +98,6 @@ const RowComponent = ({ filter: showFilter }) => {
           row={row}
           showFilter={showFilter}
           showHistory={showHistory}
-          setShowHistory={setShowHistory}
         />
         <SplitPaneContainer>
           <StyledSplitPane
@@ -133,10 +129,7 @@ const RowComponent = ({ filter: showFilter }) => {
                       TODO: conflict
                     </div>
                   ) : showHistory ? (
-                    <History
-                      row={row}
-                      historyTakeoverCallback={historyTakeoverCallback}
-                    />
+                    <History row={row} />
                   ) : null}
                 </>
               )}

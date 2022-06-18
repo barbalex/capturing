@@ -7,7 +7,7 @@ import FilterTitle from '../../shared/FilterTitle'
 import FormTitle from './FormTitle'
 import { dexie } from '../../../dexieClient'
 
-const RowFormTitleChooser = ({ row, showHistory, setShowHistory }) => {
+const RowFormTitleChooser = ({ row, showHistory }) => {
   const { projectId, tableId } = useParams()
   // const store = useContext(storeContext)
   const showFilter = false // TODO:
@@ -47,7 +47,6 @@ const RowFormTitleChooser = ({ row, showHistory, setShowHistory }) => {
       totalCount={totalCount}
       filteredCount={filteredCount}
       showHistory={showHistory}
-      setShowHistory={setShowHistory}
       project={project}
       table={table}
     />

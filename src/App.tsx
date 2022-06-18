@@ -172,7 +172,7 @@ function App() {
                   />
                   <Route
                     path=":projectId/tables/:tableId/rows/:rowId/history"
-                    element={<RowComponent />}
+                    element={<RowComponent showHistory={true} />}
                   />
                 </Route>
                 <Route path="account" element={<Account />} />

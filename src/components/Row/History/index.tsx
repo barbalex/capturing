@@ -37,7 +37,7 @@ const sliderSettings = {
   infinite: false,
 }
 
-const RowHistory = ({ row, historyTakeoverCallback }) => {
+const RowHistory = ({ row }) => {
   const store = useContext(storeContext)
   const priorRevisions = row?.revisions?.slice(1) ?? []
   // const {data, error}=await 
