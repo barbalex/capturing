@@ -1,8 +1,8 @@
-import React, { useContext, useState, useEffect, useCallback } from 'react'
+import React, { useContext, useState, useEffect,  } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SplitPane from 'react-split-pane'
-import { useParams } from 'react-router-dom'
+import { useParams,  } from 'react-router-dom'
 import { dexie, Row } from '../../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
 
@@ -11,7 +11,7 @@ import ErrorBoundary from '../shared/ErrorBoundary'
 import Spinner from '../shared/Spinner'
 import FormTitle from './FormTitle'
 import Form from './Form'
-import History from './History'
+import RowAside from './RowAside'
 
 const Container = styled.div`
   height: 100%;
@@ -51,8 +51,11 @@ const StyledSplitPane = styled(SplitPane)`
   }
 `
 
-const RowComponent = ({ filter: showFilter, showHistory = false }) => {
-  const { rowId } = useParams()
+const RowComponent = ({ filter: showFilter }) => {
+  const params = useParams()
+  const { rowId } = params
+  const url = params['*']
+  const showHistory = url?.endsWith('history')
   const store = useContext(StoreContext)
   const { online } = store
   const filter = 'TODO: was in store'
@@ -65,14 +68,6 @@ const RowComponent = ({ filter: showFilter, showHistory = false }) => {
   // console.log('RowForm rendering', { row, showHistory })
 
   const [activeConflict, setActiveConflict] = useState(null)
-  const conflictDisposalCallback = useCallback(
-    () => setActiveConflict(null),
-    [],
-  )
-  const conflictSelectionCallback = useCallback(
-    () => setActiveConflict(null),
-    [],
-  )
   // ensure that activeConflict is reset
   // when changing dataset
   useEffect(() => {
@@ -109,26 +104,11 @@ const RowComponent = ({ filter: showFilter, showHistory = false }) => {
               activeConflict={activeConflict}
               setActiveConflict={setActiveConflict}
             />
-            <>
-              {online && (
-                <>
-                  {activeConflict ? (
-                    <div
-                      rev={activeConflict}
-                      id={rowId}
-                      row={row}
-                      conflictDisposalCallback={conflictDisposalCallback}
-                      conflictSelectionCallback={conflictSelectionCallback}
-                      setActiveConflict={setActiveConflict}
-                    >
-                      TODO: conflict
-                    </div>
-                  ) : showHistory ? (
-                    <History row={row} />
-                  ) : null}
-                </>
-              )}
-            </>
+            <RowAside
+              row={row}
+              activeConflict={activeConflict}
+              setActiveConflict={setActiveConflict}
+            />
           </StyledSplitPane>
         </SplitPaneContainer>
       </Container>

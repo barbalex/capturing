@@ -2,12 +2,18 @@ import { useMemo, useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import Slider from 'react-slick'
-import { supabase } from '../../supabaseClient'
+import { useLoaderData } from 'react-router-dom'
 
+import { supabase } from '../../supabaseClient'
 import checkForOnlineError from '../../../utils/checkForOnlineError'
 import Spinner from '../../shared/Spinner'
 import storeContext from '../../../storeContext'
 import Row from './Row'
+
+export async function loader() {
+  // TODO: fetch data
+  return ['test']
+}
 
 const Container = styled.div`
   overflow-y: auto;
@@ -38,9 +44,12 @@ const sliderSettings = {
 }
 
 const RowHistory = ({ row }) => {
-  const store = useContext(storeContext)
-  const priorRevisions = row?.revisions?.slice(1) ?? []
-  // const {data, error}=await 
+  // const store = useContext(storeContext)
+  // const priorRevisions = row?.revisions?.slice(1) ?? []
+  // const revisions = useLoaderData()
+  // console.log('RowHistory, revisions:', revisions)
+  // const {data, error}=await
+  console.log('RowHistory rendering')
 
   return <div>History</div>
 }

@@ -58,6 +58,7 @@ const initial = {
   previous: { x: '-100%', opacity: 1 },
   down: { y: '100%', opacity: 1 },
   up: { y: '-100%', opacity: 1 },
+  in: {},
 }
 const animate = {
   next: { x: 0, transition: transition2, opacity: 1 },
@@ -72,6 +73,27 @@ const animate = {
     transition: transition2,
     opacity: 1,
   },
+  in: {},
+  // in: { opacity: 1, transition: transition1 },
+}
+const exit = {
+  next: {
+    opacity: 0,
+    transition: transition1,
+  },
+  previous: {
+    opacity: 0,
+    transition: transition1,
+  },
+  down: {
+    opacity: 0,
+    transition: transition1,
+  },
+  up: {
+    opacity: 0,
+    transition: transition1,
+  },
+  in: {},
 }
 /**
  * exit animation is one behind when direction changes
@@ -190,19 +212,34 @@ const ProjectsPage = () => {
     formResizerWidth = 0
   }
 
-  const prevId = previousActiveNodeArray.at(-1)
-  const newId = activeNodeArray.at(-1)
+  const prevLastNode = previousActiveNodeArray.at(-1)
+  const newLastNode = activeNodeArray.at(-1)
 
+  const doNotNavigate = newLastNode === 'history' || prevLastNode === 'history'
   const navDirection =
-    previousActiveNodeArray.length > activeNodeArray.length
+    newLastNode === 'history'
+      ? 'in'
+      : prevLastNode === 'history'
+      ? 'in'
+      : previousActiveNodeArray.length > activeNodeArray.length
       ? 'up'
       : previousActiveNodeArray.length < activeNodeArray.length
       ? 'down'
-      : horizontalNavIds.indexOf(prevId) < horizontalNavIds.indexOf(newId)
+      : horizontalNavIds.indexOf(prevLastNode) <
+        horizontalNavIds.indexOf(newLastNode)
       ? 'next'
       : 'previous'
 
-  // console.log('Projects, navDirection:', navDirection)
+  const variants =
+    navDirection === 'in'
+      ? {}
+      : {
+          initial: initial[navDirection],
+          animate: animate[navDirection],
+          exit: exit[navDirection],
+        }
+
+  console.log('Projects, navDirection:', navDirection)
   // console.log('Projects', { initial, animate, exit })
 
   return (
@@ -224,14 +261,10 @@ const ProjectsPage = () => {
             {showForm ? (
               <PageLayout key={activeNodeArray.slice().join('/')}>
                 <StyledMotionDiv
-                  initial={initial[navDirection]}
-                  animate={animate[navDirection]}
-                  // exit sliding is one behind > hideous on direction change
-                  // exit={exit[navDirection]}
-                  exit={{
-                    opacity: 0,
-                    transition: transition1,
-                  }}
+                  // variants={variants}
+                  initial={doNotNavigate ? {} : initial[navDirection]}
+                  animate={doNotNavigate ? {} : animate[navDirection]}
+                  exit={doNotNavigate ? {} : exit[navDirection]}
                 >
                   <Outlet />
                 </StyledMotionDiv>
