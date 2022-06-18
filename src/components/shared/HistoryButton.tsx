@@ -25,7 +25,7 @@ const StyledIconButton = styled(IconButton)`
     'box-shadow:inset 0px 0px 0px 1px rgba(0, 0, 0, 0.04);'}
 `
 
-const HistoryButton = ({ asMenu, id, showHistory, table }) => {
+const HistoryButton = ({ asMenu }) => {
   const params = useParams()
   const { rowId } = params
   const url = params['*']
@@ -48,7 +48,7 @@ const HistoryButton = ({ asMenu, id, showHistory, table }) => {
   })
 
   const title = online
-    ? showHistory
+    ? isHistory
       ? 'Frühere Versionen ausblenden'
       : 'Frühere Versionen anzeigen'
     : 'Frühere Versionen sind nur online verfügbar'
@@ -69,7 +69,7 @@ const HistoryButton = ({ asMenu, id, showHistory, table }) => {
         component={Link}
         to={isHistory ? resolvePath('..', window.location.pathname) : 'history'}
         disabled={disabled}
-        data-active={showHistory}
+        data-active={isHistory}
       >
         <FaHistory />
       </StyledIconButton>

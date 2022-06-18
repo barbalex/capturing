@@ -62,7 +62,7 @@ const RowComponent = ({ filter: showFilter, showHistory = false }) => {
     [rowId],
   )
 
-  console.log('RowForm rendering', { row, showHistory })
+  // console.log('RowForm rendering', { row, showHistory })
 
   const [activeConflict, setActiveConflict] = useState(null)
   const conflictDisposalCallback = useCallback(
@@ -94,11 +94,7 @@ const RowComponent = ({ filter: showFilter, showHistory = false }) => {
   return (
     <ErrorBoundary>
       <Container showfilter={showFilter}>
-        <FormTitle
-          row={row}
-          showFilter={showFilter}
-          showHistory={showHistory}
-        />
+        <FormTitle row={row} showFilter={showFilter} />
         <SplitPaneContainer>
           <StyledSplitPane
             split="vertical"
@@ -112,7 +108,6 @@ const RowComponent = ({ filter: showFilter, showHistory = false }) => {
               row={row}
               activeConflict={activeConflict}
               setActiveConflict={setActiveConflict}
-              showHistory={showHistory}
             />
             <>
               {online && (

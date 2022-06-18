@@ -46,7 +46,6 @@ type RowFormProps = {
   row: Row
   setActiveConflict: (string) => void
   showFilter: (boolean) => void
-  showHistory: (boolean) => void
 }
 
 const RowForm = ({
@@ -55,9 +54,11 @@ const RowForm = ({
   row,
   setActiveConflict,
   showFilter,
-  showHistory,
 }: RowFormProps) => {
-  const { tableId, projectId } = useParams()
+  const params = useParams()
+  const { tableId, projectId } = params
+  const url = params['*']
+  const showHistory = url?.endsWith('history')
   const store = useContext(StoreContext)
   const { filter, online, errors, rebuildTree } = store
   const session: Session = supabase.auth.session()
@@ -178,7 +179,7 @@ const RowForm = ({
   // const showDeleted = filter?.row?.deleted !== false || row?.deleted
   const showDeleted = false
 
-  console.log('RowForm, row:', row)
+  // console.log('RowForm, row:', row)
 
   return (
     <ErrorBoundary>

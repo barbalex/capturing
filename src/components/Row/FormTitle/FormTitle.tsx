@@ -44,7 +44,6 @@ const RowFormTitle = ({
   totalCount,
   filteredCount,
   width,
-  showHistory,
   project,
   table,
 }) => {
@@ -67,7 +66,6 @@ const RowFormTitle = ({
             <HistoryButton
               table="rows"
               id={row.id}
-              showHistory={showHistory}
               asMenu
             />
             <FilterNumbers
@@ -89,11 +87,7 @@ const RowFormTitle = ({
         <AddButton />
         <DeleteButton row={row} />
         <ZoomToButton bbox={row.bbox} geometryExists={!!row.geometry} />
-        <HistoryButton
-          table="rows"
-          id={row.id}
-          showHistory={showHistory}
-        />
+        <HistoryButton  />
         <FilterNumbers filteredCount={filteredCount} totalCount={totalCount} />
       </TitleSymbols>
     </TitleContainer>
