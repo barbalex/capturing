@@ -217,11 +217,7 @@ const ProjectsPage = () => {
 
   const doNotNavigate = newLastNode === 'history' || prevLastNode === 'history'
   const navDirection =
-    newLastNode === 'history'
-      ? 'in'
-      : prevLastNode === 'history'
-      ? 'in'
-      : previousActiveNodeArray.length > activeNodeArray.length
+    previousActiveNodeArray.length > activeNodeArray.length
       ? 'up'
       : previousActiveNodeArray.length < activeNodeArray.length
       ? 'down'
@@ -230,16 +226,6 @@ const ProjectsPage = () => {
       ? 'next'
       : 'previous'
 
-  const variants =
-    navDirection === 'in'
-      ? {}
-      : {
-          initial: initial[navDirection],
-          animate: animate[navDirection],
-          exit: exit[navDirection],
-        }
-
-  console.log('Projects, navDirection:', navDirection)
   // console.log('Projects', { initial, animate, exit })
 
   return (
@@ -264,7 +250,7 @@ const ProjectsPage = () => {
                   // variants={variants}
                   initial={doNotNavigate ? {} : initial[navDirection]}
                   animate={doNotNavigate ? {} : animate[navDirection]}
-                  exit={doNotNavigate ? {} : exit[navDirection]}
+                  // exit={doNotNavigate ? {} : exit[navDirection]}
                 >
                   <Outlet />
                 </StyledMotionDiv>
