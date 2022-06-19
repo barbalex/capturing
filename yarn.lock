@@ -3372,11 +3372,11 @@ __metadata:
     react-is: 18.2.0
     react-leaflet: 4.0.0
     react-linkify: 1.0.0-alpha
-    react-query: ^3.39.1
+    react-query: 3.39.1
     react-resize-detector: 7.1.2
     react-router-dom: 6.3.0
     react-select: 5.3.2
-    react-slick: ^0.29.0
+    react-slick: 0.29.0
     react-split: 2.0.14
     react-split-pane: 0.1.92
     react-stylable-diff: 2.0.0
@@ -3384,6 +3384,7 @@ __metadata:
     react-virtuoso: 2.13.2
     react-xml-viewer: 1.3.0
     redaxios: 0.5.0
+    slick-carousel: ^1.8.1
     spark-md5: 3.0.2
     styled-components: 5.3.5
     tslint-config-prettier: 1.18.0
@@ -6493,7 +6494,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.39.1":
+"react-query@npm:3.39.1":
   version: 3.39.1
   resolution: "react-query@npm:3.39.1"
   dependencies:
@@ -6593,7 +6594,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-slick@npm:^0.29.0":
+"react-slick@npm:0.29.0":
   version: 0.29.0
   resolution: "react-slick@npm:0.29.0"
   dependencies:
@@ -7155,6 +7156,15 @@ __metadata:
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
   checksum: 94a93fff615f25a999ad4b83c9d5e257a7280c90a32a7cb8b4a87996e4babf322e469c42b7f649fd5796edd8687652f3fb452a86dc97a816f01113183393f11c
+  languageName: node
+  linkType: hard
+
+"slick-carousel@npm:^1.8.1":
+  version: 1.8.1
+  resolution: "slick-carousel@npm:1.8.1"
+  peerDependencies:
+    jquery: ">=1.8.0"
+  checksum: acaad391e4d8bc1c7fdb8d361faa1f1d60829b31d618b54bc38c0550a59b26de36537e0ab4bc0364176ec11d1a61d0cf11e99d8d5b1285d656673c9a1a719257
   languageName: node
   linkType: hard
 

@@ -3,6 +3,9 @@ import styled from 'styled-components'
 import Slider from 'react-slick'
 import { useQuery } from 'react-query'
 
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+
 import { supabase } from '../../../supabaseClient'
 import Spinner from '../../shared/Spinner'
 import checkForOnlineError from '../../../utils/checkForOnlineError'
@@ -32,8 +35,8 @@ const ErrorContainer = styled.div`
 `
 
 const sliderSettings = {
-  dots: false,
-  infinite: false,
+  dots: true,
+  infinite: true,
 }
 
 const RowHistory = ({ row, historyTakeoverCallback }) => {
