@@ -3,17 +3,10 @@ const constants = {
   appBarHeight: 64,
   titleRowHeight: 52,
   singleRowHeight: 48,
-  getHealthUri: () => {
-    if (typeof window === 'undefined') return
-    return window?.location?.hostname === 'localhost'
-      ? `http://${window.location.hostname}:3001/live`
-      : 'https://api.vermehrung.ch/healthz'
-  },
-  authUri: 'https://auth.vermehrung.ch',
   getAppUri: () => {
     if (typeof window === 'undefined') return
     return window?.location?.hostname === 'localhost'
-      ? `http://${window.location.hostname}:8000`
+      ? `http://${window.location.hostname}:3000`
       : 'https://erfassen.app'
   },
   tree: {
