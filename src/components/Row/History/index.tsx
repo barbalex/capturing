@@ -47,8 +47,18 @@ const RowHistory = ({ row }) => {
   const store = useContext(storeContext)
   const priorRevisions = row?.revisions?.slice(1) ?? []
 
-  const { isLoading, error, data } = useQuery('historyData', () =>
-    supabase.from('row_revs').select(),
+  const { isLoading, isError, error, data } = useQuery(
+    `${row.id}historyData`,
+    async () => {
+      const { error, data } = await supabase
+        .from('row_revs')
+        .select()
+        .in('rev', priorRevisions)
+
+      if (error) throw error
+
+      return data
+    },
   )
 
   console.log('RowHistory, results:', {
@@ -58,7 +68,10 @@ const RowHistory = ({ row }) => {
     isLoading,
   })
 
+  if (isLoading) return <Spinner />
+
   // console.log('RowHistory rendering')
+  if (isError) return <span>Fehler: {error.message}</span>
 
   return <div>History</div>
 }
