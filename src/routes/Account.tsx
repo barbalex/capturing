@@ -22,7 +22,7 @@ const Account = ({ session }) => {
       const user = supabase.auth.user()
 
       const { data, error, status } = await supabase
-        .from('users')
+        .from('users') 
         .select(`email`)
         .eq('auth_user_id', user.id)
         .single()

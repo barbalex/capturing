@@ -2,9 +2,9 @@ import { useMemo, useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import Slider from 'react-slick'
-import { useLoaderData } from 'react-router-dom'
+import { useQuery } from 'react-query'
 
-import { supabase } from '../../supabaseClient'
+import { supabase } from '../../../supabaseClient'
 import checkForOnlineError from '../../../utils/checkForOnlineError'
 import Spinner from '../../shared/Spinner'
 import storeContext from '../../../storeContext'
@@ -44,12 +44,21 @@ const sliderSettings = {
 }
 
 const RowHistory = ({ row }) => {
-  // const store = useContext(storeContext)
-  // const priorRevisions = row?.revisions?.slice(1) ?? []
-  // const revisions = useLoaderData()
-  // console.log('RowHistory, revisions:', revisions)
-  // const {data, error}=await
-  console.log('RowHistory rendering')
+  const store = useContext(storeContext)
+  const priorRevisions = row?.revisions?.slice(1) ?? []
+
+  const { isLoading, error, data } = useQuery('historyData', () =>
+    supabase.from('row_revs').select(),
+  )
+
+  console.log('RowHistory, results:', {
+    priorRevisions,
+    data,
+    error,
+    isLoading,
+  })
+
+  // console.log('RowHistory rendering')
 
   return <div>History</div>
 }
