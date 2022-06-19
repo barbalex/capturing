@@ -48,7 +48,7 @@ const RowHistory = ({ row }) => {
   const priorRevisions = row?.revisions?.slice(1) ?? []
 
   const { isLoading, isError, error, data } = useQuery(
-    `${row.id}historyData`,
+    ['row', row.id, priorRevisions, 'revisions'],
     async () => {
       const { error, data } = await supabase
         .from('row_revs')
