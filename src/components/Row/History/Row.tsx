@@ -7,13 +7,30 @@ import isEqual from 'lodash/isEqual'
 import History from '../../shared/History'
 import storeContext from '../../../storeContext'
 import checkForOnlineError from '../../../utils/checkForOnlineError'
+import createDataArrayForRevComparison from '../../../utils/createDataArrayForRevComparison'
 
-
+// TODO: what to do with rtf fields?
 const HistoryRow = ({ row, revRow, historyTakeoverCallback }) => {
-  const store = useContext(StoreContext)
-  const { user, addNotification,  } = store
+  const store = useContext(storeContext)
+  const { user, addNotification } = store
 
-  return <div>{JSON.stringify(revRow)}</div>
+  const dataArray = useMemo(
+    () => createDataArrayForRevComparison({ row, revRow }),
+    [revRow, row],
+  )
+  console.log('HistoryRow, dataArray:', dataArray)
+
+  const onClickWiderspruchUebernehmen = useCallback(() => {
+    console.log('TODO:')
+  }, [])
+
+  return (
+    <History
+      rev={revRow.rev}
+      dataArray={dataArray}
+      onClickWiderspruchUebernehmen={onClickWiderspruchUebernehmen}
+    />
+  )
 }
 
 export default HistoryRow
