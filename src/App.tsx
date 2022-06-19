@@ -3,6 +3,7 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { onSnapshot } from 'mobx-state-tree'
 import isEqual from 'lodash/isEqual'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 import { MobxStore } from './store'
 import materialTheme from './utils/materialTheme'
@@ -40,6 +41,8 @@ import FieldsComponent from './components/Fields'
 import FieldComponent from './components/Field'
 import RowsComponent from './components/Rows'
 import RowComponent from './components/Row'
+
+const queryClient = new QueryClient()
 
 // trying to persist indexedDB
 // https://dexie.org/docs/StorageManager#controlling-persistence
@@ -106,76 +109,81 @@ function App() {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={materialTheme}>
           <MobxProvider value={store}>
-            <NavigationSyncController />
-            <ColumnController />
-            <ResetPassword />
-            <QueuedUpdatesWriter />
-            <ApiDetector />
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="docs/*" element={<Docs />}>
-                  <Route
-                    path="image-layer-types"
-                    element={<ImageLayerTypes />}
-                  />
-                  <Route path="offline-maps" element={<OfflineMaps />} />
-                  <Route
-                    path="data-synchronization"
-                    element={<DataSynchronisation />}
-                  />
-                  <Route path="data-versioning" element={<DataVersioning />} />
-                  <Route path="data-history" element={<DataHistory />} />
-                </Route>
-                <Route path="projects/*" element={<ProjectsPage />}>
-                  <Route index element={<ProjectsComponent />} />
-                  <Route path=":projectId" element={<ProjectComponent />} />
-                  <Route
-                    path=":projectId/tables/*"
-                    element={<TablesComponent />}
-                  />
-                  <Route
-                    path=":projectId/tables/:tableId"
-                    element={<TableComponent />}
-                  />
-                  <Route
-                    path=":projectId/tile-layers/*"
-                    element={<TileLayersComponent />}
-                  />
-                  <Route
-                    path=":projectId/tile-layers/:tileLayerId"
-                    element={<TileLayerComponent />}
-                  />
-                  <Route
-                    path=":projectId/vector-layers/*"
-                    element={<VectorLayersComponent />}
-                  />
-                  <Route
-                    path=":projectId/vector-layers/:vectorLayerId"
-                    element={<VectorLayerComponent />}
-                  />
-                  <Route
-                    path=":projectId/tables/:tableId/fields/*"
-                    element={<FieldsComponent />}
-                  />
-                  <Route
-                    path=":projectId/tables/:tableId/fields/:fieldId"
-                    element={<FieldComponent />}
-                  />
-                  <Route
-                    path=":projectId/tables/:tableId/rows/*"
-                    element={<RowsComponent />}
-                  />
-                  <Route
-                    path=":projectId/tables/:tableId/rows/:rowId/*"
-                    element={<RowComponent />}
-                  />
-                </Route>
-                <Route path="account" element={<Account />} />
-                <Route path="*" element={<FourOhFour />} />
-              </Routes>
-            </Layout>
-            <Notifications />
+            <QueryClientProvider client={queryClient}>
+              <NavigationSyncController />
+              <ColumnController />
+              <ResetPassword />
+              <QueuedUpdatesWriter />
+              <ApiDetector />
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="docs/*" element={<Docs />}>
+                    <Route
+                      path="image-layer-types"
+                      element={<ImageLayerTypes />}
+                    />
+                    <Route path="offline-maps" element={<OfflineMaps />} />
+                    <Route
+                      path="data-synchronization"
+                      element={<DataSynchronisation />}
+                    />
+                    <Route
+                      path="data-versioning"
+                      element={<DataVersioning />}
+                    />
+                    <Route path="data-history" element={<DataHistory />} />
+                  </Route>
+                  <Route path="projects/*" element={<ProjectsPage />}>
+                    <Route index element={<ProjectsComponent />} />
+                    <Route path=":projectId" element={<ProjectComponent />} />
+                    <Route
+                      path=":projectId/tables/*"
+                      element={<TablesComponent />}
+                    />
+                    <Route
+                      path=":projectId/tables/:tableId"
+                      element={<TableComponent />}
+                    />
+                    <Route
+                      path=":projectId/tile-layers/*"
+                      element={<TileLayersComponent />}
+                    />
+                    <Route
+                      path=":projectId/tile-layers/:tileLayerId"
+                      element={<TileLayerComponent />}
+                    />
+                    <Route
+                      path=":projectId/vector-layers/*"
+                      element={<VectorLayersComponent />}
+                    />
+                    <Route
+                      path=":projectId/vector-layers/:vectorLayerId"
+                      element={<VectorLayerComponent />}
+                    />
+                    <Route
+                      path=":projectId/tables/:tableId/fields/*"
+                      element={<FieldsComponent />}
+                    />
+                    <Route
+                      path=":projectId/tables/:tableId/fields/:fieldId"
+                      element={<FieldComponent />}
+                    />
+                    <Route
+                      path=":projectId/tables/:tableId/rows/*"
+                      element={<RowsComponent />}
+                    />
+                    <Route
+                      path=":projectId/tables/:tableId/rows/:rowId/*"
+                      element={<RowComponent />}
+                    />
+                  </Route>
+                  <Route path="account" element={<Account />} />
+                  <Route path="*" element={<FourOhFour />} />
+                </Routes>
+              </Layout>
+              <Notifications />
+            </QueryClientProvider>
           </MobxProvider>
         </ThemeProvider>
       </StyledEngineProvider>
