@@ -5,12 +5,8 @@ import { useQuery } from 'react-query'
 
 import { supabase } from '../../../supabaseClient'
 import Spinner from '../../shared/Spinner'
+import checkForOnlineError from '../../../utils/checkForOnlineError'
 import Row from './Row'
-
-export async function loader() {
-  // TODO: fetch data
-  return ['test']
-}
 
 const Container = styled.div`
   overflow-y: auto;
@@ -50,6 +46,7 @@ const RowHistory = ({ row, historyTakeoverCallback }) => {
         .from('row_revs')
         .select()
         .in('rev', priorRevisions)
+        .order('depth', { ascending: false })
 
       if (error) throw error
 
@@ -63,6 +60,8 @@ const RowHistory = ({ row, historyTakeoverCallback }) => {
     error,
     isLoading,
   })
+
+  error && checkForOnlineError({ error, store })
 
   if (isLoading) return <Spinner message="lade Versionen" />
 
