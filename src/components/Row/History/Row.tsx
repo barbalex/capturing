@@ -18,7 +18,6 @@ const HistoryRow = ({ row, revRow, historyTakeoverCallback }) => {
     () => createDataArrayForRevComparison({ row, revRow }),
     [revRow, row],
   )
-  console.log('HistoryRow, dataArray:', dataArray)
 
   const onClickWiderspruchUebernehmen = useCallback(() => {
     console.log('TODO:')
