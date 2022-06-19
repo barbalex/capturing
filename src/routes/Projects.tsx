@@ -226,7 +226,7 @@ const ProjectsPage = () => {
       ? 'next'
       : 'previous'
 
-  // console.log('Projects', { initial, animate, exit })
+  console.log('Projects rendering', { initial, animate })
 
   return (
     <Container ref={containerEl}>
@@ -247,10 +247,8 @@ const ProjectsPage = () => {
             {showForm ? (
               <PageLayout key={activeNodeArray.slice().join('/')}>
                 <StyledMotionDiv
-                  // variants={variants}
                   initial={doNotNavigate ? {} : initial[navDirection]}
                   animate={doNotNavigate ? {} : animate[navDirection]}
-                  // exit={doNotNavigate ? {} : exit[navDirection]}
                 >
                   <Outlet />
                 </StyledMotionDiv>
