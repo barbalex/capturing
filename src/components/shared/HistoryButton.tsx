@@ -1,10 +1,10 @@
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import { FaHistory } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import MenuItem from '@mui/material/MenuItem'
 import styled from 'styled-components'
-import { useParams, Link, resolvePath } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../storeContext'
@@ -25,7 +25,7 @@ const StyledIconButton = styled(IconButton)`
     'box-shadow:inset 0px 0px 0px 1px rgba(0, 0, 0, 0.04);'}
 `
 
-const HistoryButton = ({ asMenu }) => {
+const HistoryButton = ({ asMenu, showHistory, setShowHistory }) => {
   const params = useParams()
   const { rowId } = params
   const url = params['*']
@@ -47,6 +47,10 @@ const HistoryButton = ({ asMenu }) => {
   //   isHistory,
   // })
 
+  const onClick = useCallback(() => {
+    setShowHistory(!showHistory)
+  }, [setShowHistory, showHistory])
+
   const title = online
     ? isHistory
       ? 'Frühere Versionen ausblenden'
@@ -66,8 +70,7 @@ const HistoryButton = ({ asMenu }) => {
       <StyledIconButton
         aria-label={title}
         title={title}
-        component={Link}
-        to={isHistory ? resolvePath('..', window.location.pathname) : 'history'}
+        onClick={onClick}
         disabled={disabled}
         data-active={isHistory}
       >

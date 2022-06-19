@@ -74,26 +74,6 @@ const animate = {
     opacity: 1,
   },
   in: {},
-  // in: { opacity: 1, transition: transition1 },
-}
-const exit = {
-  next: {
-    opacity: 0,
-    transition: transition1,
-  },
-  previous: {
-    opacity: 0,
-    transition: transition1,
-  },
-  down: {
-    opacity: 0,
-    transition: transition1,
-  },
-  up: {
-    opacity: 0,
-    transition: transition1,
-  },
-  in: {},
 }
 /**
  * exit animation is one behind when direction changes
@@ -215,7 +195,6 @@ const ProjectsPage = () => {
   const prevLastNode = previousActiveNodeArray.at(-1)
   const newLastNode = activeNodeArray.at(-1)
 
-  const doNotNavigate = newLastNode === 'history' || prevLastNode === 'history'
   const navDirection =
     previousActiveNodeArray.length > activeNodeArray.length
       ? 'up'
@@ -226,7 +205,7 @@ const ProjectsPage = () => {
       ? 'next'
       : 'previous'
 
-  console.log('Projects rendering', { initial, animate })
+  // console.log('Projects rendering', { initial, animate })
 
   return (
     <Container ref={containerEl}>
@@ -247,8 +226,8 @@ const ProjectsPage = () => {
             {showForm ? (
               <PageLayout key={activeNodeArray.slice().join('/')}>
                 <StyledMotionDiv
-                  initial={doNotNavigate ? {} : initial[navDirection]}
-                  animate={doNotNavigate ? {} : animate[navDirection]}
+                  initial={initial[navDirection]}
+                  animate={animate[navDirection]}
                 >
                   <Outlet />
                 </StyledMotionDiv>

@@ -1,8 +1,8 @@
-import React, { useContext, useState, useEffect,  } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import SplitPane from 'react-split-pane'
-import { useParams,  } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { dexie, Row } from '../../dexieClient'
 import { useLiveQuery } from 'dexie-react-hooks'
 
@@ -54,8 +54,8 @@ const StyledSplitPane = styled(SplitPane)`
 const RowComponent = ({ filter: showFilter }) => {
   const params = useParams()
   const { rowId } = params
-  const url = params['*']
-  const showHistory = url?.endsWith('history')
+  // const url = params['*']
+  // const showHistory = url?.endsWith('history')
   const store = useContext(StoreContext)
   const { online } = store
   const filter = 'TODO: was in store'
@@ -65,6 +65,7 @@ const RowComponent = ({ filter: showFilter }) => {
     [rowId],
   )
 
+  const [showHistory, setShowHistory] = useState(false)
   // console.log('RowForm rendering', { row, showHistory })
 
   const [activeConflict, setActiveConflict] = useState(null)
@@ -89,7 +90,12 @@ const RowComponent = ({ filter: showFilter }) => {
   return (
     <ErrorBoundary>
       <Container showfilter={showFilter}>
-        <FormTitle row={row} showFilter={showFilter} />
+        <FormTitle
+          row={row}
+          showFilter={showFilter}
+          showHistory={showHistory}
+          setShowHistory={setShowHistory}
+        />
         <SplitPaneContainer>
           <StyledSplitPane
             split="vertical"
@@ -108,6 +114,8 @@ const RowComponent = ({ filter: showFilter }) => {
               row={row}
               activeConflict={activeConflict}
               setActiveConflict={setActiveConflict}
+              showHistory={showHistory}
+              setShowHistory={setShowHistory}
             />
           </StyledSplitPane>
         </SplitPaneContainer>

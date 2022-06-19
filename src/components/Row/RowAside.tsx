@@ -1,13 +1,13 @@
 import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
-import { useParams, Outlet } from 'react-router-dom'
 
 import StoreContext from '../../storeContext'
+import History from './History'
 
-const RowAside = ({ row, activeConflict, setActiveConflict }) => {
-  const params = useParams()
-  const url = params['*']
-  const showHistory = url?.endsWith('history')
+const RowAside = ({ row, activeConflict, setActiveConflict, showHistory }) => {
+  // const params = useParams()
+  // const url = params['*']
+  // const showHistory = url?.endsWith('history')
   const store = useContext(StoreContext)
   const { online } = store
 
@@ -38,8 +38,7 @@ const RowAside = ({ row, activeConflict, setActiveConflict }) => {
               TODO: conflict
             </div>
           ) : showHistory ? (
-            // <History row={row} />
-            <Outlet />
+            <History row={row} />
           ) : null}
         </>
       )}

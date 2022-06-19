@@ -40,9 +40,6 @@ import FieldsComponent from './components/Fields'
 import FieldComponent from './components/Field'
 import RowsComponent from './components/Rows'
 import RowComponent from './components/Row'
-import RowHistoryComponent, {
-  loader as rowHistoryLoader,
-} from './components/Row/History'
 
 // trying to persist indexedDB
 // https://dexie.org/docs/StorageManager#controlling-persistence
@@ -172,13 +169,7 @@ function App() {
                   <Route
                     path=":projectId/tables/:tableId/rows/:rowId/*"
                     element={<RowComponent />}
-                  >
-                    <Route
-                      path="history"
-                      element={<RowHistoryComponent />}
-                      // loader={rowHistoryLoader}
-                    />
-                  </Route>
+                  />
                 </Route>
                 <Route path="account" element={<Account />} />
                 <Route path="*" element={<FourOhFour />} />

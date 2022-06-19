@@ -46,6 +46,8 @@ const RowFormTitle = ({
   width,
   project,
   table,
+  showHistory,
+  setShowHistory,
 }) => {
   const title = labelFromLabeledTable({
     object: table,
@@ -63,7 +65,13 @@ const RowFormTitle = ({
           <DeleteButton row={row} />
           <ZoomToButton bbox={row.bbox} geometryExists={!!row.geometry} />
           <Menu white={false}>
-            <HistoryButton table="rows" id={row.id} asMenu />
+            <HistoryButton
+              table="rows"
+              id={row.id}
+              asMenu
+              showHistory={showHistory}
+              setShowHistory={setShowHistory}
+            />
             <FilterNumbers
               filteredCount={filteredCount}
               totalCount={totalCount}
@@ -83,7 +91,10 @@ const RowFormTitle = ({
         <AddButton />
         <DeleteButton row={row} />
         <ZoomToButton bbox={row.bbox} geometryExists={!!row.geometry} />
-        <HistoryButton />
+        <HistoryButton
+          showHistory={showHistory}
+          setShowHistory={setShowHistory}
+        />
         <FilterNumbers filteredCount={filteredCount} totalCount={totalCount} />
       </TitleSymbols>
     </TitleContainer>
