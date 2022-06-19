@@ -15,7 +15,7 @@ const createDataArrayForRevComparison = ({ row, revRow }) => {
       valueInRev: revRow?.geometry,
       label: 'Geometrie',
     },
-    // TODO: map all data keys
+    // map all data keys
     ...uniqueDataKeys.map((k) => ({
       valueInRow: row.data?.[k],
       valueInRev: revRow.data?.[k],
