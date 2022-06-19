@@ -57,13 +57,6 @@ const RowHistory = ({ row, historyTakeoverCallback }) => {
     },
   )
 
-  console.log('RowHistory, results:', {
-    priorRevisions,
-    data,
-    error,
-    isLoading,
-  })
-
   error && checkForOnlineError({ error, store })
 
   if (isLoading) return <Spinner message="lade Versionen" />
