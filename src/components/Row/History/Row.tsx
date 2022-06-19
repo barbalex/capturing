@@ -1,5 +1,5 @@
 const HistoryRow = ({ row, revRow }) => {
-  return <div>TODO:</div>
+  return <div>{JSON.stringify(revRow)}</div>
 }
 
 export default HistoryRow

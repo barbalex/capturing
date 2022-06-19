@@ -1,13 +1,10 @@
-import { useMemo, useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import Slider from 'react-slick'
 import { useQuery } from 'react-query'
 
 import { supabase } from '../../../supabaseClient'
-import checkForOnlineError from '../../../utils/checkForOnlineError'
 import Spinner from '../../shared/Spinner'
-import storeContext from '../../../storeContext'
 import Row from './Row'
 
 export async function loader() {
@@ -43,8 +40,7 @@ const sliderSettings = {
   infinite: false,
 }
 
-const RowHistory = ({ row }) => {
-  const store = useContext(storeContext)
+const RowHistory = ({ row, historyTakeoverCallback }) => {
   const priorRevisions = row?.revisions?.slice(1) ?? []
 
   const { isLoading, isError, error, data } = useQuery(
@@ -68,12 +64,25 @@ const RowHistory = ({ row }) => {
     isLoading,
   })
 
-  if (isLoading) return <Spinner />
+  if (isLoading) return <Spinner message="lade Versionen" />
 
   // console.log('RowHistory rendering')
-  if (isError) return <span>Fehler: {error.message}</span>
+  if (isError) return <ErrorContainer>{error.message}</ErrorContainer>
 
-  return <div>History</div>
+  return (
+    <Container>
+      <Slider {...sliderSettings}>
+        {data.map((r) => (
+          <Row
+            key={row.rev}
+            revRow={r}
+            row={row}
+            historyTakeoverCallback={historyTakeoverCallback}
+          />
+        ))}
+      </Slider>
+    </Container>
+  )
 }
 
 export default observer(RowHistory)

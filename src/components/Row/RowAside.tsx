@@ -21,6 +21,7 @@ const RowAside = ({ row, activeConflict, setActiveConflict, showHistory }) => {
     () => setActiveConflict(null),
     [setActiveConflict],
   )
+  const historyTakeoverCallback = useCallback(() => setShowHistory(null), [])
 
   return (
     <>
@@ -38,7 +39,7 @@ const RowAside = ({ row, activeConflict, setActiveConflict, showHistory }) => {
               TODO: conflict
             </div>
           ) : showHistory ? (
-            <History row={row} />
+            <History row={row} historyTakeoverCallback={historyTakeoverCallback} />
           ) : null}
         </>
       )}
