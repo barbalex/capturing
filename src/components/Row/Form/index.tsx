@@ -74,12 +74,8 @@ const RowForm = ({
   }, [id, unsetError])
 
   const originalRow = useRef<IRow>()
-  const rowState = useRef<IRow>()
   useEffect(() => {
-    console.log('RowForm, row effect, row:', row)
-    rowState.current = row
     if (!originalRow.current && row) {
-      console.log('RowForm, row effect, re-setting originalRow')
       originalRow.current = row
     }
   }, [row])
@@ -119,14 +115,14 @@ const RowForm = ({
 
   const updateOnServer = useCallback(async () => {
     // only update if is changed
-    if (isEqual(originalRow.current.data, rowState.current.data)) return
+    if (isEqual(originalRow.current.data, row.data)) return
 
     row.updateOnServer({
       was: originalRow.current,
-      is: rowState.current,
+      is: row,
       session,
     })
-    originalRow.current = rowState.current
+    originalRow.current = row
   }, [row, session])
 
   useEffect(() => {
@@ -143,7 +139,7 @@ const RowForm = ({
       if ([undefined, '', NaN].includes(newValue)) newValue = null
 
       // only update if value has changed
-      const previousValue = rowState.current?.data?.[field]
+      const previousValue = row?.data?.[field]
       if (newValue === previousValue) return
 
       if (showFilter) {
@@ -167,8 +163,6 @@ const RowForm = ({
         newData = { ...oldData, [field]: newValue }
       }
 
-      const newRow = { ...row, data: newData }
-      rowState.current = newRow
       // console.log('RowForm, onBlur, newData:', newData)
       dexie.rows.update(row.id, { data: newData })
       // rebuildTree if field is part of label
@@ -179,7 +173,7 @@ const RowForm = ({
 
   // const showDeleted = filter?.row?.deleted !== false || row?.deleted
   const showDeleted = false
-  console.log('RowForm rendering, row:', { row, rowState: rowState.current })
+  // console.log('RowForm rendering, row:', { row })
 
   // console.log('RowForm, row:', row)
 
@@ -206,7 +200,7 @@ const RowForm = ({
                 key={`${row.id}deleted`}
                 label="gelöscht"
                 name="deleted"
-                value={rowState.current.data.deleted}
+                value={row.data.deleted}
                 onBlur={onBlur}
                 error={errors?.row?.deleted}
               />
@@ -215,7 +209,7 @@ const RowForm = ({
                 key={`${row.id}deleted`}
                 label="gelöscht"
                 name="deleted"
-                value={rowState.current.data.deleted}
+                value={row.data.deleted}
                 onBlur={onBlur}
                 error={errors?.row?.deleted}
               />
@@ -250,7 +244,7 @@ const RowForm = ({
               return (
                 <Date
                   key={`${row.id}/${f.id}/datepicker`}
-                  value={rowState.current.data?.[f.name] ?? ''}
+                  value={row.data?.[f.name] ?? ''}
                   label={f.label ?? f.name}
                   name={f.name}
                   saveToDb={onBlur}
@@ -262,7 +256,7 @@ const RowForm = ({
               return (
                 <Date
                   key={`${row.id}/${f.id}/datetimepicker`}
-                  value={rowState.current.data?.[f.name] ?? ''}
+                  value={row.data?.[f.name] ?? ''}
                   label={f.label ?? f.name}
                   name={f.name}
                   saveToDb={onBlur}
@@ -275,7 +269,7 @@ const RowForm = ({
               return (
                 <Time
                   key={`${row.id}/${f.id}/timepicker`}
-                  value={rowState.current.data?.[f.name] ?? ''}
+                  value={row.data?.[f.name] ?? ''}
                   label={f.label ?? f.name}
                   name={f.name}
                   saveToDb={onBlur}
@@ -299,7 +293,7 @@ const RowForm = ({
                   key={`${row.id}/${f.id}/options2`}
                   label={f.label ?? f.name}
                   name={f.name}
-                  value={rowState.current.data?.[f.name] ?? ''}
+                  value={row.data?.[f.name] ?? ''}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                 />
@@ -311,7 +305,7 @@ const RowForm = ({
                   key={`${row.id}/${f.id}/jesno`}
                   label={f.label ?? f.name}
                   name={f.name}
-                  value={rowState.current.data?.[f.name] ?? ''}
+                  value={row.data?.[f.name] ?? ''}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                 />
@@ -323,7 +317,7 @@ const RowForm = ({
                   key={`${row.id}/${f.id}/jesnonull`}
                   label={f.label ?? f.name}
                   name={f.name}
-                  value={rowState.current.data?.[f.name] ?? ''}
+                  value={row.data?.[f.name] ?? ''}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                 />
@@ -334,7 +328,7 @@ const RowForm = ({
                 <OptionsFew
                   key={`${row.id}/${f.id}/options-few`}
                   field={f}
-                  rowState={rowState.current}
+                  rowState={row}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                   disabled={!userMayEdit}
@@ -346,7 +340,7 @@ const RowForm = ({
                 <OptionsMany
                   key={`${row.id}/${f.id}/options-many`}
                   field={f}
-                  rowState={rowState.current}
+                  rowState={row}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                   disabled={!userMayEdit}
@@ -359,7 +353,7 @@ const RowForm = ({
                   key={`${row.id}/${f.id}/textarea`}
                   name={f.name}
                   label={f.label ?? f.name}
-                  value={rowState.current.data?.[f.name] ?? ''}
+                  value={row.data?.[f.name] ?? ''}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                   disabled={!userMayEdit}
@@ -374,7 +368,7 @@ const RowForm = ({
                   key={`${row.id}/${f.id}/text`}
                   name={f.name}
                   label={f.label ?? f.name}
-                  value={rowState.current.data?.[f.name] ?? ''}
+                  value={row.data?.[f.name] ?? ''}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                   disabled={!userMayEdit}
@@ -383,12 +377,15 @@ const RowForm = ({
               )
               break
             case 'rich-text':
+              console.log('RowForm, rich-text, value:', row.data?.[f.name])
               return (
                 <RichText
-                  key={`${row.id}/${f.id}/rich-text`}
+                  key={`${row.id}/${f.id}/rich-text/${
+                    row.data?.[f.name] ? JSON.stringify(row.data?.[f.name]) : ''
+                  }`}
                   name={f.name}
                   label={f.label ?? f.name}
-                  value={rowState.current.data?.[f.name] ?? ''}
+                  value={row.data?.[f.name] ?? ''}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                   disabled={!userMayEdit}
@@ -401,7 +398,7 @@ const RowForm = ({
                   key={`${row.id}/${f.id}/text`}
                   name={f.name}
                   label={f.label ?? f.name}
-                  value={rowState.current.data?.[f.name] ?? ''}
+                  value={row.data?.[f.name] ?? ''}
                   onBlur={onBlur}
                   error={errors?.row?.[f.name]}
                   disabled={!userMayEdit}
@@ -412,10 +409,10 @@ const RowForm = ({
           }
         })}
 
-        {online && !showFilter && row?._conflicts?.map && (
+        {online && !showFilter && row?.conflicts?.map && (
           <ConflictList
-            key={`${row.id}/_conflicts`}
-            conflicts={row._conflicts}
+            key={`${row.id}/conflicts`}
+            conflicts={row.conflicts}
             activeConflict={activeConflict}
             setActiveConflict={setActiveConflict}
           />
