@@ -13,7 +13,7 @@ const Row = styled.div`
   padding-bottom: 5px;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom: ${(props) =>
-    props['data-last'] ? '1px solid rgba(0, 0, 0, 0.1)' : 'none'};
+    props['data-last'] ? '1px solid rgba(0, 0, 0, 0.1)' : 'none'}; 
   .Difference > del {
     background-color: rgb(201, 238, 211);
     text-decoration: none;

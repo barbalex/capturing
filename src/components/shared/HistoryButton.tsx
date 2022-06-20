@@ -59,7 +59,7 @@ const HistoryButton = ({ asMenu, showHistory, setShowHistory }) => {
 
   if (asMenu) {
     return (
-      <StyledMenuItem onClick={show} data-disabled={disabled}>
+      <StyledMenuItem onClick={onClick} data-disabled={disabled}>
         {title}
       </StyledMenuItem>
     )
