@@ -27,10 +27,10 @@ const RowAside = ({
     () => setActiveConflict(null),
     [setActiveConflict],
   )
-  const restoreCallback = useCallback(
-    () => setShowHistory(null),
-    [setShowHistory],
-  )
+  const restoreCallback = useCallback(() => {
+    // TODO: need to get rich-text field to update
+    setShowHistory(null)
+  }, [setShowHistory])
 
   return (
     <>

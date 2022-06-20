@@ -1271,6 +1271,7 @@ export class Row implements IRow {
     const rev = `${depth}-${SparkMD5.hash(JSON.stringify(revData))}`
     const isReved = {
       ...is,
+      ...revData,
       rev,
       depth,
       revisions: [rev, ...(is.revisions ?? [])],

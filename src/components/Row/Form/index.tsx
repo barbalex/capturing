@@ -76,13 +76,14 @@ const RowForm = ({
   const originalRow = useRef<IRow>()
   const rowState = useRef<IRow>()
   useEffect(() => {
+    console.log('RowForm, row effect, row:', row)
     rowState.current = row
     if (!originalRow.current && row) {
+      console.log('RowForm, row effect, re-setting originalRow')
       originalRow.current = row
     }
   }, [row])
 
-  // console.log('RowForm rendering')
   // TODO: build right queries
   const data = useLiveQuery(async () => {
     const [fields, projectUser, table] = await Promise.all([
@@ -98,7 +99,7 @@ const RowForm = ({
       'project_manager',
       'project_editor',
     ].includes(projectUser.role)
- 
+
     const labelFields = (table.row_label ?? [])
       .filter((l) => !!l.field)
       .map((l) => l.field)
@@ -178,6 +179,7 @@ const RowForm = ({
 
   // const showDeleted = filter?.row?.deleted !== false || row?.deleted
   const showDeleted = false
+  console.log('RowForm rendering, row:', { row, rowState: rowState.current })
 
   // console.log('RowForm, row:', row)
 

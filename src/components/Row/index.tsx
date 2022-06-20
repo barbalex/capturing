@@ -66,7 +66,7 @@ const RowComponent = ({ filter: showFilter }) => {
   )
 
   const [showHistory, setShowHistory] = useState(false)
-  // console.log('RowForm rendering', { row, showHistory })
+  console.log('RowForm rendering, row:', row)
 
   const [activeConflict, setActiveConflict] = useState(null)
   // ensure that activeConflict is reset
@@ -109,6 +109,7 @@ const RowComponent = ({ filter: showFilter }) => {
               row={row}
               activeConflict={activeConflict}
               setActiveConflict={setActiveConflict}
+              // renderEnforcerOnDataChange={JSON.stringify(row.data)}
             />
             <RowAside
               row={row}
