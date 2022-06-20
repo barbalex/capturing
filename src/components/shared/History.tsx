@@ -45,7 +45,7 @@ const StyledButton = styled(Button)`
   }
 `
 
-const History = ({ rev, dataArray, onClickWiderspruchUebernehmen }) => {
+const History = ({ rev, dataArray, onClickRestore }) => {
   const store = useContext(StoreContext)
   const { diffConflict, setDiffConflict } = store
 
@@ -81,7 +81,7 @@ const History = ({ rev, dataArray, onClickWiderspruchUebernehmen }) => {
       <Data dataArray={dataArray} />
       <ButtonRow>
         <StyledButton
-          onClick={onClickWiderspruchUebernehmen}
+          onClick={onClickRestore}
           variant="outlined"
           title="Diese Version wiederherstellen"
           startIcon={<FaUndoAlt />}

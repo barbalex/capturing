@@ -39,7 +39,7 @@ const sliderSettings = {
   infinite: true,
 }
 
-const RowHistory = ({ row, historyTakeoverCallback }) => {
+const RowHistory = ({ row, restoreCallback }) => {
   const priorRevisions = row?.revisions?.slice(1) ?? []
 
   const { isLoading, isError, error, data } = useQuery(
@@ -72,7 +72,7 @@ const RowHistory = ({ row, historyTakeoverCallback }) => {
             key={row.rev}
             revRow={r}
             row={row}
-            historyTakeoverCallback={historyTakeoverCallback}
+            restoreCallback={restoreCallback}
           />
         ))}
       </Slider>

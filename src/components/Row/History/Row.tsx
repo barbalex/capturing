@@ -10,7 +10,7 @@ import checkForOnlineError from '../../../utils/checkForOnlineError'
 import createDataArrayForRevComparison from '../../../utils/createDataArrayForRevComparison'
 
 // TODO: what to do with rtf fields?
-const HistoryRow = ({ row, revRow, historyTakeoverCallback }) => {
+const HistoryRow = ({ row, revRow, restoreCallback }) => {
   const store = useContext(storeContext)
   const { user, addNotification } = store
 
@@ -19,15 +19,17 @@ const HistoryRow = ({ row, revRow, historyTakeoverCallback }) => {
     [revRow, row],
   )
 
-  const onClickWiderspruchUebernehmen = useCallback(() => {
+  const onClickRestore = useCallback(() => {
     console.log('TODO:')
+    // need to attach to the winner, that is row
+    // otherwise risk to still have lower depth and thus loosing
   }, [])
 
   return (
     <History
       rev={revRow.rev}
       dataArray={dataArray}
-      onClickWiderspruchUebernehmen={onClickWiderspruchUebernehmen}
+      onClickRestore={onClickRestore}
     />
   )
 }
