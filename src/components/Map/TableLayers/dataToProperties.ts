@@ -1,4 +1,4 @@
-import htmlFromLexical from '../../../utils/htmlFromLexical'
+import textFromLexical from '../../../utils/textFromLexical'
 
 const dataToProperties = async ({ row, richTextFields }) => {
   const richTextFieldNames = richTextFields.map((f) => f.name)
@@ -6,7 +6,7 @@ const dataToProperties = async ({ row, richTextFields }) => {
   for (const d of Object.entries(row.data)) {
     const [key, value] = d
     if (richTextFieldNames.includes(key)) {
-      dat[key] = await htmlFromLexical(value)
+      dat[key] = await textFromLexical(value)
     } else {
       dat[key] = value
     }

@@ -49,9 +49,7 @@ const Popup = ({ layersData, mapSize = {} }) => {
                   </a>
                 )}
               >
-                <Value>
-                  <div dangerouslySetInnerHTML={{ __html: value }} />
-                </Value>
+                <Value>{value}</Value>
               </Linkify>
             </Row>
           ))}
