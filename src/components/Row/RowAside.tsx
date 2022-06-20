@@ -4,7 +4,13 @@ import { observer } from 'mobx-react-lite'
 import StoreContext from '../../storeContext'
 import History from './History'
 
-const RowAside = ({ row, activeConflict, setActiveConflict, showHistory }) => {
+const RowAside = ({
+  row,
+  activeConflict,
+  setActiveConflict,
+  showHistory,
+  setShowHistory,
+}) => {
   // const params = useParams()
   // const url = params['*']
   // const showHistory = url?.endsWith('history')
@@ -21,7 +27,10 @@ const RowAside = ({ row, activeConflict, setActiveConflict, showHistory }) => {
     () => setActiveConflict(null),
     [setActiveConflict],
   )
-  const restoreCallback = useCallback(() => setShowHistory(null), [])
+  const restoreCallback = useCallback(
+    () => setShowHistory(null),
+    [setShowHistory],
+  )
 
   return (
     <>
