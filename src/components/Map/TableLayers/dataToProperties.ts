@@ -1,13 +1,16 @@
-const dataToProperties = ({ row, richTextFields }) => {
+import textFromLexical from '../../../utils/textFromLexical'
+
+const dataToProperties = async ({ row, richTextFields }) => {
   const richTextFieldNames = richTextFields.map((f) => f.name)
   const dat = {}
-  Object.entries(row.data).forEach(([key, value]) => {
+  for (const d of Object.entries(row.data)) {
+    const [key, value] = d
     if (richTextFieldNames.includes(key)) {
-      dat[key] = `(rich-text kann hier nicht dargestellt werden)`
+      dat[key] = await textFromLexical(value)
     } else {
       dat[key] = value
     }
-  })
+  }
   return dat
 }
 
