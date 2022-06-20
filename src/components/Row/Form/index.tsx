@@ -377,7 +377,6 @@ const RowForm = ({
               )
               break
             case 'rich-text':
-              console.log('RowForm, rich-text, value:', row.data?.[f.name])
               return (
                 <RichText
                   key={`${row.id}/${f.id}/rich-text/${
