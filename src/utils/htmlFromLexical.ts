@@ -3,7 +3,7 @@ import { $generateHtmlFromNodes } from '@lexical/html'
 
 const editor = createEditor()
 
-const textFromLexical = (value) =>
+const htmlFromLexical = (value) =>
   new Promise((resolve) => {
     editor.parseEditorState(value, () => {
       const html = $generateHtmlFromNodes(editor, null)
@@ -11,4 +11,4 @@ const textFromLexical = (value) =>
     })
   })
 
-export default textFromLexical
+export default htmlFromLexical

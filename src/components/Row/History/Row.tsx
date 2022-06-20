@@ -1,22 +1,15 @@
-import React, { useCallback, useContext, useMemo } from 'react'
-import { observer } from 'mobx-react-lite'
+import React, { useCallback, useMemo } from 'react'
 import SparkMD5 from 'spark-md5'
-import { v1 as uuidv1 } from 'uuid'
-import isEqual from 'lodash/isEqual'
 import { Session } from '@supabase/supabase-js'
 
 import History from '../../shared/History'
-import storeContext from '../../../storeContext'
-import checkForOnlineError from '../../../utils/checkForOnlineError'
 import createDataArrayForRevComparison from '../../../utils/createDataArrayForRevComparison'
 import { supabase } from '../../../supabaseClient'
-import { dexie, QueuedUpdate, Row } from '../../../dexieClient'
+import { dexie, QueuedUpdate } from '../../../dexieClient'
 
 // TODO: what to do with rtf fields?
 const HistoryRow = ({ row, revRow, restoreCallback }) => {
   const session: Session = supabase.auth.session()
-  const store = useContext(storeContext)
-  const { addNotification } = store
 
   const dataArray = useMemo(
     () => createDataArrayForRevComparison({ row, revRow }),
@@ -34,7 +27,7 @@ const HistoryRow = ({ row, revRow, restoreCallback }) => {
       geometry: revRow.geometry,
       data: revRow.data,
       depth,
-      parent_rev: is.rev,
+      parent_rev: row.rev,
       deleted: revRow.deleted,
       client_rev_at: new window.Date().toISOString(),
       client_rev_by: session.user?.email ?? session.user?.id,
@@ -51,13 +44,16 @@ const HistoryRow = ({ row, revRow, restoreCallback }) => {
       row.id,
       JSON.stringify(row),
     )
+    restoreCallback()
     dexie.queued_updates.add(update)
-    const dataToUpdate = { ...revData }
-    dataToUpdate.id = row.id
-    delete dataToUpdate.row_id
-    dataToUpdate.conflicts = row.conflicts
-    return dexie.rows.update(this.id, dataToUpdate)
+    const localUpdate = { ...revData }
+    localUpdate.id = row.id
+    delete localUpdate.row_id
+    // conflicts have not changed
+    localUpdate.conflicts = row.conflicts
+    return dexie.rows.update(this.id, localUpdate)
   }, [
+    restoreCallback,
     revRow.data,
     revRow.deleted,
     revRow.geometry,

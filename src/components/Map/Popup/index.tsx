@@ -5,6 +5,7 @@ const Container = styled.div`
   overflow: auto;
   max-height: ${(props) => `${props.maxheight}px`};
   max-width: ${(props) => `${props.maxwidth}px`};
+  margin-right: -5px;
 `
 const Row = styled.div`
   display: grid;
@@ -30,30 +31,34 @@ const Value = styled.div`
   overflow-wrap: anywhere;
 `
 
-const Popup = ({ layersData, mapSize = {} }) => (
-  <Container maxheight={mapSize.y - 40} maxwidth={mapSize.x - 60}>
-    {layersData.map((ld) => (
-      <div key={ld.label}>
-        <Title>{ld.label}</Title>
-        {ld.properties.map(([key, value], index) => (
-          <Row key={`${key}/${index}`}>
-            <Label>{`${key}:`}</Label>
-            <Linkify
-              componentDecorator={(decoratedHref, decoratedText, key) => (
-                <a target="blank" href={decoratedHref} key={key}>
-                  {decoratedText}
-                </a>
-              )}
-            >
-              <Value>
-                <div dangerouslySetInnerHTML={{ __html: value }} />
-              </Value>
-            </Linkify>
-          </Row>
-        ))}
-      </div>
-    ))}
-  </Container>
-)
+const Popup = ({ layersData, mapSize = {} }) => {
+  // console.log('Popup', { mapSize, x: mapSize.x, y: mapSize.y })
+
+  return (
+    <Container maxheight={mapSize.y - 40} maxwidth={mapSize.x - 60}>
+      {layersData.map((ld) => (
+        <div key={ld.label}>
+          <Title>{ld.label}</Title>
+          {ld.properties.map(([key, value], index) => (
+            <Row key={`${key}/${index}`}>
+              <Label>{`${key}:`}</Label>
+              <Linkify
+                componentDecorator={(decoratedHref, decoratedText, key) => (
+                  <a target="blank" href={decoratedHref} key={key}>
+                    {decoratedText}
+                  </a>
+                )}
+              >
+                <Value>
+                  <div dangerouslySetInnerHTML={{ __html: value }} />
+                </Value>
+              </Linkify>
+            </Row>
+          ))}
+        </div>
+      ))}
+    </Container>
+  )
+}
 
 export default Popup
