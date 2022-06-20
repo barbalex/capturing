@@ -98,7 +98,7 @@ const RowForm = ({
       'project_manager',
       'project_editor',
     ].includes(projectUser.role)
-
+ 
     const labelFields = (table.row_label ?? [])
       .filter((l) => !!l.field)
       .map((l) => l.field)

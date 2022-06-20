@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import SparkMD5 from 'spark-md5'
 import { Session } from '@supabase/supabase-js'
 
@@ -11,10 +11,12 @@ import { dexie, QueuedUpdate } from '../../../dexieClient'
 const HistoryRow = ({ row, revRow, restoreCallback }) => {
   const session: Session = supabase.auth.session()
 
-  const dataArray = useMemo(
-    () => createDataArrayForRevComparison({ row, revRow }),
-    [revRow, row],
-  )
+  const [dataArray, setDataArray] = useState([])
+  useEffect(() => {
+    createDataArrayForRevComparison({ row, revRow }).then((value) =>
+      setDataArray(value),
+    )
+  }, [revRow, row])
 
   const onClickRestore = useCallback(() => {
     // need to attach to the winner, that is row

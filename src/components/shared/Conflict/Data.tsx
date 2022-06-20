@@ -13,7 +13,7 @@ const Row = styled.div`
   padding-bottom: 5px;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom: ${(props) =>
-    props['data-last'] ? '1px solid rgba(0, 0, 0, 0.1)' : 'none'}; 
+    props['data-last'] ? '1px solid rgba(0, 0, 0, 0.1)' : 'none'};
   .Difference > del {
     background-color: rgb(201, 238, 211);
     text-decoration: none;
@@ -38,8 +38,8 @@ const ConflictData = ({ dataArray, loading }) => {
   return dataArray.map((d, index) => {
     // need to use get to enable passing paths as key, for instance 'person.name'
     // also stringify because Diff split's it
-    let inputA = toStringIfPossible(d.valueInRow)
-    let inputB = toStringIfPossible(d.valueInRev)
+    let inputA = toStringIfPossible(d.valueInRev)
+    let inputB = toStringIfPossible(d.valueInRow)
     // explicitly show when only one of the values is empty
     if (inputA !== inputB) {
       inputA = inputA ?? '(nichts)'

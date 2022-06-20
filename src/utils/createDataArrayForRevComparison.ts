@@ -1,8 +1,29 @@
-const createDataArrayForRevComparison = ({ row, revRow }) => {
+import { dexie, Field } from '../dexieClient'
+import textFromLexical from './textFromLexical'
+
+const createDataArrayForRevComparison = async ({ row, revRow }) => {
   const rowData = row.data ?? {}
   const revRowData = revRow.data ?? {}
   const dataKeys = [...Object.keys(rowData), ...Object.keys(revRowData)]
   const uniqueDataKeys = [...new Set(dataKeys)]
+
+  // build field/value for data field
+  const data = []
+  for (const key of uniqueDataKeys) {
+    let valueInRow = row.data?.[key]
+    let valueInRev = revRow.data?.[key]
+    // rich-text fields: need to build a string value
+    const field: Field = await dexie.fields.where({ name: key }).first()
+    if (field.widget_type === 'rich-text') {
+      valueInRow = await textFromLexical(row.data?.[key])
+      valueInRev = await textFromLexical(revRow.data?.[key])
+    }
+    data.push({
+      valueInRow,
+      valueInRev,
+      label: key,
+    })
+  }
 
   return [
     {
@@ -15,12 +36,7 @@ const createDataArrayForRevComparison = ({ row, revRow }) => {
       valueInRev: revRow?.geometry,
       label: 'Geometrie',
     },
-    // map all data keys
-    ...uniqueDataKeys.map((k) => ({
-      valueInRow: row.data?.[k],
-      valueInRev: revRow.data?.[k],
-      label: k,
-    })),
+    ...data,
     {
       valueInRow: row.client_rev_at,
       valueInRev: revRow.client_rev_at,
