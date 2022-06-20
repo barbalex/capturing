@@ -41,12 +41,14 @@ const TableLayers = () => {
           .toArray(),
       ])
 
-      // console.log('TableLayers', { table, layerStyle, richTextFields })
+      // console.log('TableLayers', { table, layerStyle, richTextFields, rows })
       // convert geometry collection into feature collection to add properties (style and data)
       if (rows.length) {
-        const data = {
-          type: 'FeatureCollection',
-          features: rows.map((row) => ({
+        const features = []
+        for (const row of rows) {
+          const dataProperties = await dataToProperties({ row, richTextFields })
+
+          features.push({
             geometry: row.geometry,
             type: 'Feature',
             properties: {
@@ -54,9 +56,13 @@ const TableLayers = () => {
                 layerStyle,
                 extraProps: row.id === rowId ? { color: 'red' } : {},
               }),
-              ...dataToProperties({ row, richTextFields }),
+              ...dataProperties,
             },
-          })),
+          })
+        }
+        const data = {
+          type: 'FeatureCollection',
+          features,
         }
 
         _layers.push(
