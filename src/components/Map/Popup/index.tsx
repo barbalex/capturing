@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import Linkify from 'react-linkify'
 
-
 const Container = styled.div`
   overflow: auto;
   max-height: ${(props) => `${props.maxheight}px`};
@@ -31,8 +30,7 @@ const Value = styled.div`
   overflow-wrap: anywhere;
 `
 
-const Popup = ({ layersData, mapSize = {}, }) => {
-
+const Popup = ({ layersData, mapSize = {} }) => {
   return (
     <Container maxheight={mapSize.y - 40} maxwidth={mapSize.x - 60}>
       {layersData.map((ld) => (
@@ -41,15 +39,21 @@ const Popup = ({ layersData, mapSize = {}, }) => {
           {ld.properties.map(([key, value], index) => (
             <Row key={`${key}/${index}`}>
               <Label>{`${key}:`}</Label>
-                <Linkify
-                  componentDecorator={(decoratedHref, decoratedText, key) => (
-                    <a target="blank" href={decoratedHref} key={key}>
-                      {decoratedText}
-                    </a>
+              <Linkify
+                componentDecorator={(decoratedHref, decoratedText, key) => (
+                  <a target="blank" href={decoratedHref} key={key}>
+                    {decoratedText}
+                  </a>
+                )}
+              >
+                <Value>
+                  {value.startsWith('<') ? (
+                    <div dangerouslySetInnerHTML={{ __html: value }} />
+                  ) : (
+                    value
                   )}
-                >
-                  <Value>{value}</Value>
-                </Linkify>
+                </Value>
+              </Linkify>
             </Row>
           ))}
         </div>
