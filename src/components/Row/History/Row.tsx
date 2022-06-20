@@ -7,7 +7,6 @@ import createDataArrayForRevComparison from '../../../utils/createDataArrayForRe
 import { supabase } from '../../../supabaseClient'
 import { dexie, QueuedUpdate } from '../../../dexieClient'
 
-// TODO: what to do with rtf fields?
 const HistoryRow = ({ row, revRow, restoreCallback }) => {
   const session: Session = supabase.auth.session()
 
@@ -53,18 +52,9 @@ const HistoryRow = ({ row, revRow, restoreCallback }) => {
     delete localUpdate.row_id
     // conflicts have not changed
     localUpdate.conflicts = row.conflicts
-    return dexie.rows.update(this.id, localUpdate)
-  }, [
-    restoreCallback,
-    revRow.data,
-    revRow.deleted,
-    revRow.geometry,
-    revRow.parent_id,
-    revRow.table_id,
-    row,
-    session.user?.email,
-    session.user?.id,
-  ])
+    console.log('HistoryRow, onClickRestore:', { update, revData, row, revRow })
+    return dexie.rows.update(row.id, localUpdate)
+  }, [restoreCallback, revRow, row, session.user?.email, session.user?.id])
 
   return (
     <History
