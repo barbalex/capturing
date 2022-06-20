@@ -28,7 +28,6 @@ const RowAside = ({
     [setActiveConflict],
   )
   const restoreCallback = useCallback(() => {
-    // TODO: need to get rich-text field to update
     setShowHistory(null)
   }, [setShowHistory])
 

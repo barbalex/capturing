@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import Slider from 'react-slick'
 import { useQuery } from 'react-query'
@@ -80,4 +79,4 @@ const RowHistory = ({ row, restoreCallback }) => {
   )
 }
 
-export default observer(RowHistory)
+export default RowHistory

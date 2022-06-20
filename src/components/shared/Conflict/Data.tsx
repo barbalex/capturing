@@ -35,7 +35,7 @@ const ConflictData = ({ dataArray, loading }) => {
 
   if (loading) return <Spinner message="lade Daten" />
 
-  return dataArray.map((d, index) => {
+  return dataArray.map((d, index) => { 
     // need to use get to enable passing paths as key, for instance 'person.name'
     // also stringify because Diff split's it
     let inputA = toStringIfPossible(d.valueInRev)
