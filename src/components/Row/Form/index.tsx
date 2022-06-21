@@ -407,7 +407,6 @@ const RowForm = ({
               break
           }
         })}
-
         {online && !showFilter && row?.conflicts?.map && (
           <ConflictList
             key={`${row.id}/conflicts`}

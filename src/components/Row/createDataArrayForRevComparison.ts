@@ -1,5 +1,5 @@
-import { dexie, Field } from '../dexieClient'
-import textFromLexical from './textFromLexical'
+import { dexie, Field } from '../../dexieClient'
+import textFromLexical from '../../utils/textFromLexical'
 
 const createDataArrayForRevComparison = async ({ row, revRow }) => {
   const rowData = row.data ?? {}

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Session } from '@supabase/supabase-js'
 
 import History from '../../shared/History'
-import createDataArrayForRevComparison from '../../../utils/createDataArrayForRevComparison'
+import createDataArrayForRevComparison from '../createDataArrayForRevComparison'
 import { supabase } from '../../../supabaseClient'
 import { Row } from '../../../dexieClient'
 
