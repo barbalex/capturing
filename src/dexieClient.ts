@@ -1251,7 +1251,12 @@ export class Row implements IRow {
     })()
   }
 
-  async updateOnServer({ was, is, session }: RowUpdateProps) {
+  async updateOnServer({
+    was,
+    is,
+    session,
+    isConflictDeletion,
+  }: RowUpdateProps) {
     const client_rev_at = new window.Date().toISOString()
     const client_rev_by = session.user?.email ?? session.user?.id
     const depth = is.depth + 1
@@ -1289,6 +1294,8 @@ export class Row implements IRow {
       JSON.stringify(was),
     )
     dexie.queued_updates.add(update)
+    // if a conflicting revision was updated, no need to update this row
+    if (isConflictDeletion) return
     return dexie.rows.update(this.id, {
       rev,
       depth,

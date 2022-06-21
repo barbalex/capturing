@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite'
 
 import StoreContext from '../../storeContext'
 import History from './History'
+import Conflict from './Conflict'
 
 const RowAside = ({
   row,
@@ -19,14 +20,6 @@ const RowAside = ({
 
   // console.log('RowForm rendering', { row, showHistory })
 
-  const conflictDisposalCallback = useCallback(
-    () => setActiveConflict(null),
-    [setActiveConflict],
-  )
-  const conflictSelectionCallback = useCallback(
-    () => setActiveConflict(null),
-    [setActiveConflict],
-  )
   const restoreCallback = useCallback(() => {
     setShowHistory(null)
   }, [setShowHistory])
@@ -36,16 +29,11 @@ const RowAside = ({
       {online && (
         <>
           {activeConflict ? (
-            <div
+            <Conflict
               rev={activeConflict}
-              id={row.id}
               row={row}
-              conflictDisposalCallback={conflictDisposalCallback}
-              conflictSelectionCallback={conflictSelectionCallback}
               setActiveConflict={setActiveConflict}
-            >
-              TODO: conflict
-            </div>
+            />
           ) : showHistory ? (
             <History row={row} restoreCallback={restoreCallback} />
           ) : null}
