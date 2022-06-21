@@ -2,37 +2,18 @@ import React, { useCallback, useContext, useMemo } from 'react'
 import md5 from 'blueimp-md5'
 import { v1 as uuidv1 } from 'uuid'
 import { observer } from 'mobx-react-lite'
-import gql from 'graphql-tag'
-import { useQuery } from 'urql'
+import { useQuery } from 'react-query'
+import styled from 'styled-components'
 
-import StoreContext from '../../../storeContext'
-import Conflict from '../../shared/Conflict'
+import { supabase } from '../../supabaseClient'
+import StoreContext from '../../storeContext'
+import Conflict from '../shared/Conflict'
 import createDataArrayForRevComparison from './createDataArrayForRevComparison'
-import checkForOnlineError from '../../../utils/checkForOnlineError'
-import toPgArray from '../../../utils/toPgArray'
-import mutations from '../../../utils/mutations'
+import checkForOnlineError from '../../utils/checkForOnlineError'
+import mutations from '../../utils/mutations'
 
-const eventRevQuery = gql` 
-  query eventRevForConflictQuery($id: uuid!, $rev: String!) {
-    event_rev(where: { event_id: { _eq: $id }, _rev: { _eq: $rev } }) {
-      id
-      __typename
-      event_id
-      kultur_id
-      teilkultur_id
-      person_id
-      beschreibung
-      geplant
-      datum
-      changed
-      changed_by
-      _rev
-      _parent_rev
-      _revisions
-      _depth
-      _deleted
-    }
-  }
+const ErrorContainer = styled.div`
+  padding: 25px;
 `
 
 const RowConflict = ({
@@ -46,17 +27,23 @@ const RowConflict = ({
   const store = useContext(StoreContext)
   const { user, addNotification, addQueuedQuery, db, gqlClient } = store
 
-  // need to use this query to ensure that the person's name is queried
-  const [{ error, data, fetching }] = useQuery({
-    query: eventRevQuery,
-    variables: {
-      rev,
-      id,
-    },
-  })
-  error && checkForOnlineError({ error, store })
+  const { isLoading, isError, error, data:revRow } = useQuery(
+    ['row_revs', 'conflicts', row.id, rev],
+    async () => {
+      const { error, data } = await supabase
+        .from('row_revs')
+        .select()
+        .match({ row_id: row.id, rev })
+        .single()
+        .execute()
 
-  const revRow = useMemo(() => data?.event_rev?.[0] ?? {}, [data?.event_rev])
+      if (error) throw error
+
+      return data
+    },
+  )
+
+  error && checkForOnlineError({ error, store })
 
   const dataArray = useMemo(
     () => createDataArrayForRevComparison({ row, revRow }),
@@ -184,18 +171,20 @@ const RowConflict = ({
     store,
     user.email,
   ])
-  const onClickSchliessen = useCallback(() => setActiveConflict(null), [
-    setActiveConflict,
-  ])
+  const onClickSchliessen = useCallback(
+    () => setActiveConflict(null),
+    [setActiveConflict],
+  )
 
   //console.log('Event Conflict', { dataArray, row, revRow })
+  if (isError) return <ErrorContainer>{error.message}</ErrorContainer>
 
   return (
     <Conflict
       name="Event"
       rev={rev}
       dataArray={dataArray}
-      fetching={fetching}
+      loading={isLoading}
       error={error}
       onClickAktuellUebernehmen={onClickAktuellUebernehmen}
       onClickWiderspruchUebernehmen={onClickWiderspruchUebernehmen}
