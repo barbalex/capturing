@@ -4,6 +4,7 @@ import { useQuery } from 'react-query'
 import styled from 'styled-components'
 
 import { supabase } from '../../supabaseClient'
+import { Row } from '../../dexieClient'
 import StoreContext from '../../storeContext'
 import Conflict from '../shared/Conflict'
 import createDataArrayForRevComparison from './createDataArrayForRevComparison'
@@ -13,37 +14,42 @@ const ErrorContainer = styled.div`
   padding: 25px;
 `
 
-const RowConflict = ({
-  rev,
-  row,
-  setActiveConflict,
-}) => {
+type Props = {
+  rev: any
+  row: Row
+  setActiveConflict: any
+}
+
+const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
   const store = useContext(StoreContext)
 
-  const {
-    isLoading,
-    isError,
-    error,
-    data: revRow,
-  } = useQuery(['row_revs', 'conflicts', row.id, rev], async () => {
-    const { error, data } = await supabase
-      .from('row_revs')
-      .select()
-      .match({ row_id: row.id, rev })
-      .single()
-      .execute()
+  const { isLoading, isError, error, data } = useQuery(
+    ['row_revs', 'conflicts', row.id, rev],
+    async () => {
+      const { error, data } = await supabase
+        .from('row_revs')
+        .select()
+        .match({ row_id: row.id, rev })
+        .single()
+        .execute()
 
-    if (error) throw error
+      if (error) throw error
 
-    return data
-  })
+      const dataArray = await createDataArrayForRevComparison({
+        row,
+        revRow: data,
+      })
+
+      return { revRow: data, dataArray }
+    },
+  )
 
   error && checkForOnlineError({ error, store })
 
-  const dataArray = useMemo(
-    () => createDataArrayForRevComparison({ row, revRow }),
-    [revRow, row],
-  )
+  const revRow = data?.revRow
+  const dataArray = data?.dataArray
+
+  console.log('RowConflict', { row, rev, setActiveConflict, revRow, dataArray })
 
   const onClickAktuellUebernehmen = useCallback(async () => {
     // build new object
@@ -70,11 +76,11 @@ const RowConflict = ({
     setActiveConflict(null)
   }, [
     onClickAktuellUebernehmen,
-    revRow.data,
-    revRow.deleted,
-    revRow.geometry,
-    revRow.parent_id,
-    revRow.table_id,
+    revRow?.data,
+    revRow?.deleted,
+    revRow?.geometry,
+    revRow?.parent_id,
+    revRow?.table_id,
     row,
     setActiveConflict,
   ])
@@ -88,7 +94,7 @@ const RowConflict = ({
 
   return (
     <Conflict
-      name="Event"
+      name={row.label}
       rev={rev}
       dataArray={dataArray}
       loading={isLoading}

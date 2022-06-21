@@ -109,7 +109,6 @@ const RowComponent = ({ filter: showFilter }) => {
               row={row}
               activeConflict={activeConflict}
               setActiveConflict={setActiveConflict}
-              // renderEnforcerOnDataChange={JSON.stringify(row.data)}
             />
             <RowAside
               row={row}
