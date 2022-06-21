@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useQuery } from 'react-query'
 import styled from 'styled-components'
@@ -50,7 +50,7 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
   const revRow = data?.revRow
   const dataArray = data?.dataArray
 
-  console.log('RowConflict', { row, rev, setActiveConflict, revRow, dataArray })
+  // console.log('RowConflict', { row, rev, setActiveConflict, revRow, dataArray })
 
   const onClickAktuellUebernehmen = useCallback(async () => {
     // build new object
@@ -94,11 +94,8 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
   //console.log('Event Conflict', { dataArray, row, revRow })
   if (isError) return <ErrorContainer>{error.message}</ErrorContainer>
 
-  console.log('Row Conflict', { row, label: row.label })
-
   return (
     <Conflict
-      name={row.label}
       rev={rev}
       dataArray={dataArray}
       loading={isLoading}

@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import ListItem from '@mui/material/ListItem'
 import { Link } from 'react-router-dom'
 
+import { Row } from '../../dexieClient'
 import constants from '../../utils/constants'
 
 const StyledListItem = styled(ListItem)`
@@ -18,7 +19,11 @@ const StyledListItem = styled(ListItem)`
   }
 `
 
-const RowRow = ({ row }) => (
+type Props = {
+  row: Row
+}
+
+const RowRow = ({ row }: Props) => (
   <StyledListItem component={Link} to={row.id}>
     {row.label}
   </StyledListItem>

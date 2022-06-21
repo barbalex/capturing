@@ -24,17 +24,18 @@ const Summary = styled.summary`
 `
 const Details = styled.div`
   padding-left: 17px;
+  font-size: 0.8rem;
 `
 const Ul = styled.ul`
   margin-bottom: 0;
 `
 
-const ConflictExplainer = ({ name }) => (
+const ConflictExplainer = () => (
   <OptionalHelp>
     <Summary>Infos und Anleitung</Summary>
     <Details>
       <ExplainText>
-        {`Es gibt einen Konflikt zwischen der aktuellen Version der ${name}
+        {`Es gibt einen Konflikt zwischen der aktuellen Version
             und der unten angezeigten widersprüchlichen.`}
       </ExplainText>
       <ExplainText>
@@ -49,19 +50,15 @@ const ConflictExplainer = ({ name }) => (
             oder während mindestens eine der Personen offline ist
           </li>
         </Ul>
-        {`...an derselben ${name} arbeiten.`}
+        {`...am selben Datensatz arbeiten.`}
       </ExplainText>
       <ExplainText>
-        Es können rasch viele Versionen entstehen, weil vermehrung.ch nach jeder
-        Eingabe in ein Feld eine neue Version speichert.
-      </ExplainText>
-      <ExplainText>
-        {`vermehrung.ch hat den Konflikt erkannt und automatisch eine Version
+        {`erfassen.app hat den Konflikt erkannt und automatisch eine Version
             zum Gewinner erklärt. Das ist die "aktuelle" Version.`}
       </ExplainText>
       <ExplainText>
-        vermehrung.ch weiss aber nicht, ob die aktuelle Version auch korrekt
-        ist. Darum müssen Sie den Konflikt bereinigen:
+        erfassen.app weiss aber nicht, ob die aktuelle Version auch korrekt ist.
+        Darum müssen Sie den Konflikt bereinigen:
       </ExplainText>
       <ul>
         <li>

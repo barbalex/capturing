@@ -40,7 +40,6 @@ const StyledButton = styled(Button)`
 `
 
 const Conflict = ({
-  name,
   rev,
   dataArray,
   loading,
@@ -66,7 +65,7 @@ const Conflict = ({
       <Title>
         Widersprüchliche Version<Rev>{rev}</Rev>
       </Title>
-      <Explainer name={name} />
+      <Explainer  />
       <Data dataArray={dataArray} loading={loading} />
       <ButtonRow>
         <StyledButton
