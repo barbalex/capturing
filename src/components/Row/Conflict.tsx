@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useQuery } from 'react-query'
 import styled from 'styled-components'
@@ -22,6 +22,7 @@ type Props = {
 
 const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
   const store = useContext(StoreContext)
+  const session = supabase.auth.session()
 
   const { isLoading, isError, error, data } = useQuery(
     ['row_revs', 'conflicts', row.id, rev],
@@ -31,7 +32,7 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
         .select()
         .match({ row_id: row.id, rev })
         .single()
-        .execute()
+      // .execute()
 
       if (error) throw error
 
@@ -57,7 +58,7 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
     const is = { ...revRow, deleted: true }
     row.updateOnServer({ was, is, session, isConflictDeletion: true })
     setActiveConflict(null)
-  }, [revRow, row, setActiveConflict])
+  }, [revRow, row, session, setActiveConflict])
   const onClickWiderspruchUebernehmen = useCallback(async () => {
     // need to attach to the winner, that is row
     // otherwise risk to still have lower depth and thus loosing
@@ -82,6 +83,7 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
     revRow?.parent_id,
     revRow?.table_id,
     row,
+    session,
     setActiveConflict,
   ])
   const onClickSchliessen = useCallback(
@@ -91,6 +93,8 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
 
   //console.log('Event Conflict', { dataArray, row, revRow })
   if (isError) return <ErrorContainer>{error.message}</ErrorContainer>
+
+  console.log('Row Conflict', { row, label: row.label })
 
   return (
     <Conflict
