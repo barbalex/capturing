@@ -1,8 +1,6 @@
 import { supabase } from '../supabaseClient'
 import { dexie, QueuedUpdate } from '../dexieClient'
 
-const revTables = ['rows', 'files_meta']
-
 type ProcessQueuedUpdateProps = { queuedUpdate: QueuedUpdate; store: any }
 
 // TODO: test rev table
@@ -15,31 +13,25 @@ const processQueuedUpdate = async ({
   const { online, setOnline } = store
   console.log('processQueuedUpdate', queuedUpdate)
 
-  const isRevTable = revTables.includes(queuedUpdate.table)
   const object = JSON.parse(queuedUpdate.value)
   // remove all local fields
   const localFields = Object.keys(object).filter((k) => k.startsWith('_'))
   localFields.forEach((field) => delete object[field])
-  // TODO: do this separately for rows and files
   // insert rev or upsert regular table
-  if (isRevTable) {
-    const revTableName =
-      queuedUpdate.table === 'rows' ? 'row_revs' : 'files_meta_revs'
+  if (queuedUpdate.table === 'rows') {
     // 1 create row_rev from row or file_rev from file
     const newRevision = {
       ...object,
     }
     delete newRevision.id
     delete newRevision.conflicts
-    delete newRevision.file
-    if (queuedUpdate.table === 'rows') newRevision[`row_id`] = object.id
 
-    console.log('processQueuedUpdate, newRevObject:', {
+    console.log('processQueuedUpdate, rows newRevObject:', {
       newRevision,
       object: JSON.parse(queuedUpdate.value),
     })
     // 2. send revision to server
-    const { error } = await supabase.from(revTableName).insert(newRevision)
+    const { error } = await supabase.from('row_revs').insert(newRevision)
     if (error) {
       // 3. deal with errors
       // TODO: error when updating: "new row violates row-level security policy (USING expression) for table \"projects\""
@@ -55,6 +47,30 @@ const processQueuedUpdate = async ({
       //       inform user, maybe in correct form?. Go on to remove update
       // TODO: else inform user that change can not be written do server. Enable user to delete operation
       // TODO: restore previous value
+      return
+    }
+  } else if (queuedUpdate.table === 'files_meta') {
+    // 1 create row_rev from row or file_rev from file
+    const newRevision = {
+      ...object,
+    }
+    delete newRevision.id
+    delete newRevision.conflicts
+    delete newRevision.file
+
+    console.log('processQueuedUpdate, files_meta, newRevObject:', {
+      newRevision,
+      object: JSON.parse(queuedUpdate.value),
+    })
+    // 2. send revision to server
+    const { error } = await supabase.from('files_meta_revs').insert(newRevision)
+    if (error) {
+      // 3. deal with errors
+      // TODO: error when updating: "new row violates row-level security policy (USING expression) for table \"projects\""
+      console.log(
+        'processQueuedUpdate, files_meta revision table, error inserting:',
+        error,
+      )
       return
     }
   } else if (queuedUpdate.table === 'files') {
