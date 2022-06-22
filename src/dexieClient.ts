@@ -1282,7 +1282,7 @@ export class Row implements IRow {
       client_rev_at,
       client_rev_by,
     }
-    delete isReved.id
+    isConflictDeletion && delete isReved.id
     // console.log('dexie Row, updateOnServer', { is, isReved, row: this })
     const update = new QueuedUpdate(
       undefined,
@@ -1297,7 +1297,7 @@ export class Row implements IRow {
     // now optmistically update local row
     let conflicts = is.conflicts
     if (conflictToRemove) {
-      const currentRow = await dexie.rows.get(is.row_id)
+      const currentRow = await dexie.rows.get(this.id)
       conflicts = (currentRow.conflicts ?? []).filter(
         (c) => c.rev !== conflictToRemove,
       )
