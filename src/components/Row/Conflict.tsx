@@ -37,8 +37,8 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
       if (error) throw error
 
       const dataArray = await createDataArrayForRevComparison({
-        row,
-        revRow: data,
+        row: data,
+        revRow: row,
       })
 
       return { revRow: data, dataArray }

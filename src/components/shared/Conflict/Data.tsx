@@ -53,9 +53,9 @@ const ConflictData = ({ dataArray, loading }) => {
       <Row key={d.label} data-last={index + 1 === dataArray.length}>
         <Key>{`${d.label}:`}</Key>
         {showDiff ? (
-          <Diff inputA={inputB} inputB={inputA} type="sentences" />
+          <Diff inputA={inputA} inputB={inputB} type="sentences" />
         ) : (
-          <div>{inputA}</div>
+          <div>{inputB}</div>
         )}
       </Row>
     )

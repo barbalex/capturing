@@ -18,7 +18,7 @@ const Container = styled.div`
 const Title = styled.h4`
   margin-bottom: 0;
 `
-const TitleRow = styled.div`
+const TitleRow = styled.div` 
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
