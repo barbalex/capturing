@@ -201,16 +201,14 @@ const RowForm = ({
       <FieldsContainer
         onBlur={(e) => {
           // https://github.com/facebook/react/issues/6410#issuecomment-671915381
-          console.log('blur FieldsContainer')
-          // wait for blur to finish
-          setTimeout(() => updateOnServer(), 50)
-          // if (!e.currentTarget.contains(e.relatedTarget)) {
-          //   // focus left the container
-          //   console.log('focusleave')
-          //   updateOnServer()
-          // }
+          // console.log('FieldsContainer onBlur')
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            // focus left the container
+            console.log('Row FieldsContainer focusleave')
+            updateOnServer()
+          }
           // if (e.currentTarget === e.target) {
-          //   console.log('blur (self)')
+          //   console.log('FieldsContainer blur (self)')
           // }
         }}
       >

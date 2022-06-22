@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import FormHelperText from '@mui/material/FormHelperText'
@@ -51,6 +51,12 @@ const StyledDatePicker = styled(DatePicker)`
     background-color: transparent;
   }
 `
+const FocusCatcher = styled.input`
+  width: 0;
+  height: 0;
+  outline: none;
+  border: none;
+`
 
 const TimeField = ({
   value: valuePassed,
@@ -65,6 +71,8 @@ const TimeField = ({
     setStateValue(valuePassed)
   }, [valuePassed])
 
+  const focusCatcherRef = useRef()
+
   const onChange = useCallback(
     (date) => {
       const newValue =
@@ -76,6 +84,8 @@ const TimeField = ({
           name,
         },
       })
+      // focus catcher input to garuantee focusleave event on form to garuantee saving
+      focusCatcherRef.current.focus()
     },
     [name, saveToDb],
   )
@@ -98,6 +108,7 @@ const TimeField = ({
         popperPlacement={popperPlacement}
         timeIntervals={10}
       />
+      <FocusCatcher ref={focusCatcherRef} />
       {!!error && <FormHelperText>{error}</FormHelperText>}
     </StyledFormControl>
   )

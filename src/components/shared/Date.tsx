@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import FormHelperText from '@mui/material/FormHelperText'
@@ -51,6 +51,13 @@ const StyledDatePicker = styled(DatePicker)`
     background-color: transparent;
   }
 `
+const FocusCatcher = styled.input`
+  width: 0;
+  height: 0;
+  outline: none;
+  border: none;
+`
+
 const dateFormat = [
   'dd.MM.yyyy',
   'd.MM.yyyy',
@@ -98,8 +105,11 @@ const DateField = ({
     setStateValue(valuePassed)
   }, [valuePassed])
 
-  const onChangeDatePicker = useCallback(
+  const focusCatcherRef = useRef()
+
+  const onChange = useCallback(
     (date) => {
+      console.log('datepicker changed')
       const newValue =
         date === null
           ? null
@@ -113,6 +123,8 @@ const DateField = ({
           name,
         },
       })
+      // focus catcher input to garuantee focusleave event on form to garuantee saving
+      focusCatcherRef.current.focus()
     },
     [name, saveToDb, showTimeSelect],
   )
@@ -121,18 +133,26 @@ const DateField = ({
   const selected = isValid ? dayjs(stateValue).toDate() : null
 
   // for popperPlacement see https://github.com/Hacker0x01/react-datepicker/issues/1246#issuecomment-361833919
+  /**
+   * PROBLEM
+   * after choosing date/time, focus is outside of form
+   * if user leaves form, form is not blured, thus change is not saved!
+   *
+   * Possible solution: focus something (focuscatcher) inside this component after change?
+   */
   return (
     <StyledFormControl variant="standard">
       <Label htmlFor={name}>{label}</Label>
       <StyledDatePicker
         id={name}
         selected={selected}
-        onChange={onChangeDatePicker}
+        onChange={onChange}
         dateFormat={showTimeSelect ? timeFormat : dateFormat}
         showTimeSelect={showTimeSelect}
         timeCaption="Zeit"
         popperPlacement={popperPlacement}
       />
+      <FocusCatcher ref={focusCatcherRef} />
       {!!error && <FormHelperText>{error}</FormHelperText>}
     </StyledFormControl>
   )

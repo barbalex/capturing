@@ -57,7 +57,7 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
     // build new object
     const was = undefined
     const is = { ...revRow, deleted: 1 }
-    row.updateOnServer({
+    await row.updateOnServer({
       was,
       is,
       session,
@@ -78,7 +78,7 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
       deleted: revRow.deleted,
     }
     const is = { ...row, ...revData }
-    row.updateOnServer({ was, is, session, conflictToRemove: row.rev })
+    await row.updateOnServer({ was, is, session, conflictToRemove: row.rev })
     // now we need to delete the previous conflict
     onClickAktuellUebernehmen()
     setActiveConflict(null)

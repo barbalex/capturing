@@ -1256,13 +1256,12 @@ export class Row implements IRow {
     session,
     isConflictDeletion,
     conflictToRemove, // a rev to optimistically remove from conflicts, because a conflict was solved
-    conflictingVersionBeingDeleted,
   }: RowUpdateProps) {
     const client_rev_at = new window.Date().toISOString()
     const client_rev_by = session.user?.email ?? session.user?.id
     const depth = is.depth + 1
     const revData = {
-      row_id: is.id,
+      row_id: isConflictDeletion ? is.row_id : is.id,
       table_id: is.table_id,
       parent_id: is.parent_id,
       geometry: is.geometry,
@@ -1283,9 +1282,7 @@ export class Row implements IRow {
       client_rev_at,
       client_rev_by,
     }
-    // if (conflictingVersionBeingDeleted) {
-    //   isReved.id === conflictingVersionBeingDeleted.id
-    // }
+    delete isReved.id
     // console.log('dexie Row, updateOnServer', { is, isReved, row: this })
     const update = new QueuedUpdate(
       undefined,
