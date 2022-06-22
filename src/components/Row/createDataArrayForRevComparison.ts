@@ -18,6 +18,16 @@ const createDataArrayForRevComparison = async ({ row, revRow }) => {
       valueInRow = await textFromLexical(row.data?.[key])
       valueInRev = await textFromLexical(revRow.data?.[key])
     }
+    if (field.field_type === 'boolean') {
+      valueInRow =
+        row.data?.[key] === 1 ? true : row.data?.[key] === 0 ? false : undefined
+      valueInRev =
+        revRow.data?.[key] === 1
+          ? true
+          : revRow.data?.[key] === 0
+          ? false
+          : undefined
+    }
     data.push({
       valueInRow,
       valueInRev,
@@ -48,8 +58,10 @@ const createDataArrayForRevComparison = async ({ row, revRow }) => {
       label: 'geändert von',
     },
     {
-      valueInRow: row._deleted,
-      valueInRev: revRow._deleted,
+      valueInRow:
+        row._deleted === 1 ? true : revRow.deleted === 0 ? false : undefined,
+      valueInRev:
+        revRow._deleted === 1 ? true : revRow.deleted === 0 ? false : undefined,
       label: 'gelöscht',
     },
   ]
