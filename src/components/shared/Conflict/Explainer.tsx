@@ -25,9 +25,12 @@ const Summary = styled.summary`
 const Details = styled.div`
   padding-left: 17px;
   font-size: 0.8rem;
+  padding-bottom: 10px;
 `
 const Ul = styled.ul`
+  margin-top: 4px;
   margin-bottom: 0;
+  padding-left: 13px;
 `
 
 const ConflictExplainer = () => (
@@ -60,13 +63,13 @@ const ConflictExplainer = () => (
         erfassen.app weiss aber nicht, ob die aktuelle Version auch korrekt ist.
         Darum müssen Sie den Konflikt bereinigen:
       </ExplainText>
-      <ul>
+      <Ul>
         <li>
           Passen Sie die aktuelle Version wenn nötig an und verwerfen Sie
           anschliessend die widersprüchliche
         </li>
         <li>Oder: Übernehmen Sie die widersprüchliche Version</li>
-      </ul>
+      </Ul>
     </Details>
   </OptionalHelp>
 )
