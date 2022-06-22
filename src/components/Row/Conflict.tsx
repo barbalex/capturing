@@ -54,9 +54,16 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
 
   const onClickAktuellUebernehmen = useCallback(async () => {
     // build new object
-    const was = revRow
-    const is = { ...revRow, deleted: true }
-    row.updateOnServer({ was, is, session, isConflictDeletion: true })
+    const was = undefined
+    const is = { ...revRow, deleted: 1 }
+    row.updateOnServer({
+      was,
+      is,
+      session,
+      isConflictDeletion: true,
+      conflictToRemove: revRow.rev,
+      idOfConflictToRemove: revRow.id,
+    })
     setActiveConflict(null)
   }, [revRow, row, session, setActiveConflict])
   const onClickWiderspruchUebernehmen = useCallback(async () => {
@@ -71,7 +78,7 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
       deleted: revRow.deleted,
     }
     const is = { ...row, ...revData }
-    row.updateOnServer({ was, is, session })
+    row.updateOnServer({ was, is, session, conflictToRemove: row.rev })
     // now we need to delete the previous conflict
     onClickAktuellUebernehmen()
     setActiveConflict(null)
@@ -91,7 +98,7 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
     [setActiveConflict],
   )
 
-  //console.log('Event Conflict', { dataArray, row, revRow })
+  console.log('Event Conflict', { dataArray, row, revRow })
   if (isError) return <ErrorContainer>{error.message}</ErrorContainer>
 
   return (
