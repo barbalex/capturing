@@ -84,6 +84,7 @@ const RichText = ({
       AutoLinkNode,
       LinkNode,
     ],
+    editorState: value ? JSON.stringify(value) : undefined,
   }
 
   const state = useRef()
@@ -135,18 +136,12 @@ const RichText = ({
           {label}
         </StyledInputLabel>
         <Container onBlur={onBlurContainer}>
-          <LexicalComposer
-            initialConfig={editorConfig}
-            // TODO: this is expected since 0.3.4 but does not work
-            // see: https://github.com/facebook/lexical/issues/2461
-            // initialEditorState={value ? JSON.stringify(value) : undefined}
-          >
+          <LexicalComposer initialConfig={editorConfig}>
             <div className="editor-container">
               <ToolbarPlugin />
               <div className="editor-inner">
                 <RichTextPlugin
                   contentEditable={<ContentEditable className="editor-input" />}
-                  initialEditorState={value ? JSON.stringify(value) : undefined}
                 />
                 <HistoryPlugin />
                 <AutoFocusPlugin />
