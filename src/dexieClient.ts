@@ -1255,13 +1255,12 @@ export class Row implements IRow {
     is,
     session,
     isConflictDeletion,
-    conflictToRemove, // a rev to remove from conflicts
-    idOfConflictToRemove
+    conflictToRemove, // a rev to optimistically remove from conflicts, because a conflict was solved
+    conflictingVersionBeingDeleted,
   }: RowUpdateProps) {
     const client_rev_at = new window.Date().toISOString()
     const client_rev_by = session.user?.email ?? session.user?.id
     const depth = is.depth + 1
-    // need to revision here instead of in processQueuedUpdate!
     const revData = {
       row_id: is.id,
       table_id: is.table_id,
@@ -1269,7 +1268,7 @@ export class Row implements IRow {
       geometry: is.geometry,
       data: is.data,
       depth,
-      parent_rev: is.rev,
+      parent_rev: is.rev, // if conflict is removed, need to set that versions parent
       deleted: is.deleted,
       client_rev_at,
       client_rev_by,
@@ -1284,7 +1283,9 @@ export class Row implements IRow {
       client_rev_at,
       client_rev_by,
     }
-    if (idOfConflictToRemove) isReved.id === idOfConflictToRemove
+    // if (conflictingVersionBeingDeleted) {
+    //   isReved.id === conflictingVersionBeingDeleted.id
+    // }
     // console.log('dexie Row, updateOnServer', { is, isReved, row: this })
     const update = new QueuedUpdate(
       undefined,
@@ -1293,31 +1294,30 @@ export class Row implements IRow {
       JSON.stringify(isReved),
       undefined,
       was?.id,
-      was?JSON.stringify(was):undefined,
+      was ? JSON.stringify(was) : undefined,
     )
     dexie.queued_updates.add(update)
-    // if a conflicting revision was updated, no need to update this row
-    if (isConflictDeletion) {
-      // remove conflict if necessary
-      if (conflictToRemove) {
-        const conflicts = (is.conflicts ?? []).filter(
-          (c) => c.rev !== conflictToRemove,
-        )
-        return dexie.rows.update(this.id, { conflicts })
-      }
-      return
+    // now optmistically update local row
+    let conflicts = is.conflicts
+    if (conflictToRemove) {
+      const currentRow = await dexie.rows.get(is.row_id)
+      conflicts = (currentRow.conflicts ?? []).filter(
+        (c) => c.rev !== conflictToRemove,
+      )
     }
+    if (isConflictDeletion) {
+      // if a conflicting revision was deleted,
+      // need only to remove the conflict
+      return dexie.rows.update(this.id, { conflicts })
+    }
+    // now optimistically update this row
     const newVals = {
       rev,
       depth,
       revisions: [rev, ...(is.revisions ?? [])],
+      conflicts,
       client_rev_at,
       client_rev_by,
-    }
-    if (conflictToRemove) {
-      newVals.conflicts = (is.conflicts ?? []).filter(
-        (c) => c.rev !== conflictToRemove,
-      )
     }
     return dexie.rows.update(this.id, newVals)
   }

@@ -21,6 +21,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
   // 2. subscribe for changes and update dexie with changes from subscription
   // TODO: catch errors
   // TODO: Error 413: Payload Too Large. See: https://github.com/supabase/realtime/issues/252
+  // after patch, payload should include id field to enable fetching it with query
   supabase
     .from(tableName)
     // TODO: only subscribe to id for files, then fetch row with separate query?

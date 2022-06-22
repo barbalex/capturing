@@ -74,9 +74,12 @@ const RowForm = ({
   }, [id, unsetError])
 
   const originalRow = useRef<IRow>()
+  const rowState = useRef<IRow>()
   useEffect(() => {
     if (!originalRow.current && row) {
+      console.log('RowForm, setting originalRow to:', row)
       originalRow.current = row
+      rowState.current = row
     }
   }, [row])
 
@@ -114,15 +117,21 @@ const RowForm = ({
   const labelFieldNames = data?.labelFieldNames
 
   const updateOnServer = useCallback(async () => {
+    console.log('RowForm, updateOnServer, called', {
+      originalRowData: originalRow.current?.data,
+      rowStateData: rowState.current.data,
+    })
     // only update if is changed
-    if (isEqual(originalRow.current.data, row.data)) return
+    if (isEqual(originalRow.current.data, rowState.current.data)) return
+
+    console.log('RowForm, updateOnServer, setting row to:', rowState.current)
 
     row.updateOnServer({
       was: originalRow.current,
-      is: row,
+      is: rowState.current,
       session,
     })
-    originalRow.current = row
+    originalRow.current = rowState.current
   }, [row, session])
 
   useEffect(() => {
@@ -137,6 +146,14 @@ const RowForm = ({
       const { name: field, value, type, valueAsNumber } = event.target
       let newValue = type === 'number' ? valueAsNumber : value
       if ([undefined, '', NaN].includes(newValue)) newValue = null
+
+      console.log('RowForm, onBlur', {
+        field,
+        value,
+        type,
+        valueAsNumber,
+        newValue,
+      })
 
       // only update if value has changed
       const previousValue = row?.data?.[field]
@@ -163,8 +180,10 @@ const RowForm = ({
         newData = { ...oldData, [field]: newValue }
       }
 
-      // console.log('RowForm, onBlur, newData:', newData)
-      dexie.rows.update(row.id, { data: newData })
+      rowState.current = { ...row, data: newData }
+      console.log('RowForm, onBlur, rowState set:', rowState.current)
+      await dexie.rows.update(row.id, { data: newData })
+      console.log('RowForm, onBlur, newData written to dexie:', newData)
       // rebuildTree if field is part of label
       if (labelFieldNames.includes(field)) rebuildTree()
     },
@@ -181,11 +200,18 @@ const RowForm = ({
     <ErrorBoundary>
       <FieldsContainer
         onBlur={(e) => {
-          if (!e.currentTarget.contains(e.relatedTarget)) {
-            // focus left the container
-            // https://github.com/facebook/react/issues/6410#issuecomment-671915381
-            updateOnServer()
-          }
+          // https://github.com/facebook/react/issues/6410#issuecomment-671915381
+          console.log('blur FieldsContainer')
+          // wait for blur to finish
+          setTimeout(() => updateOnServer(), 50)
+          // if (!e.currentTarget.contains(e.relatedTarget)) {
+          //   // focus left the container
+          //   console.log('focusleave')
+          //   updateOnServer()
+          // }
+          // if (e.currentTarget === e.target) {
+          //   console.log('blur (self)')
+          // }
         }}
       >
         {(activeConflict || showHistory) && (

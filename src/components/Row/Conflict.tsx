@@ -53,6 +53,7 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
   // console.log('RowConflict', { row, rev, setActiveConflict, revRow, dataArray })
 
   const onClickAktuellUebernehmen = useCallback(async () => {
+    // means: rid conflicting revision, i.e. append new revision which is deleted
     // build new object
     const was = undefined
     const is = { ...revRow, deleted: 1 }
@@ -62,7 +63,6 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
       session,
       isConflictDeletion: true,
       conflictToRemove: revRow.rev,
-      idOfConflictToRemove: revRow.id,
     })
     setActiveConflict(null)
   }, [revRow, row, session, setActiveConflict])
