@@ -32,7 +32,6 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
         .select()
         .match({ row_id: row.id, rev })
         .single()
-      // .execute()
 
       if (error) throw error
 
