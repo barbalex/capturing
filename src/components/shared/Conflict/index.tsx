@@ -65,7 +65,7 @@ const Conflict = ({
       <Title>
         Widersprüchliche Version<Rev>{rev}</Rev>
       </Title>
-      <Explainer  />
+      <Explainer />
       <Data dataArray={dataArray} loading={loading} />
       <ButtonRow>
         <StyledButton
@@ -75,9 +75,14 @@ const Conflict = ({
           startIcon={<FaRegTrashAlt />}
           color="inherit"
         >
-          {diffConflict
-            ? 'grüne (= aktuelle) Version übernehmen'
-            : 'aktuelle Version übernehmen'}
+          {diffConflict ? (
+            <span>
+              widersprüchliche (rote) Version verwerfen
+              <br /> (= aktuelle übernehmen)
+            </span>
+          ) : (
+            'aktuelle Version übernehmen'
+          )}
         </StyledButton>
         <StyledButton
           onClick={onClickWiderspruchUebernehmen}
@@ -86,9 +91,14 @@ const Conflict = ({
           startIcon={<FaExchangeAlt />}
           color="inherit"
         >
-          {diffConflict
-            ? 'rote (= widersprüchliche) Version übernehmen'
-            : 'widersprüchliche Version übernehmen'}
+          {diffConflict ? (
+            <span>
+              widersprüchliche (rote) Version übernehmen
+              <br /> (= aktuelle verwerfen)
+            </span>
+          ) : (
+            'widersprüchliche Version übernehmen'
+          )}
         </StyledButton>
         <StyledButton
           onClick={onClickToggleDiff}
