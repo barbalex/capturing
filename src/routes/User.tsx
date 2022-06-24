@@ -27,8 +27,14 @@ const RiskyButton = styled(Button)`
   border-color: #d84315 !important;
 `
 
+/**
+ * Todo: enable editing email
+ * then edit it in public.users and auth.users
+ */
 const UserPage = () => {
   const store = useContext(StoreContext)
+  const { online } = store
+
   const session = supabase.auth.session()
   const user = supabase.auth.user()
 
@@ -43,13 +49,13 @@ const UserPage = () => {
     useLiveQuery(async () => await dexie.queued_updates.count(), []) ?? 0
 
   const onClickLogout = useCallback(() => {
-    // TODO:
     if (queuedUpdatesCount) return setPendingOperationsDialogOpen(true)
     logout({ store })
   }, [queuedUpdatesCount, store])
 
   const email = useMemo(() => user?.email ?? {}, [user?.email])
 
+  const [resetTitle, setResetTitle] = useState('Passwort zurücksetzen')
   const onClickResetPassword = useCallback(async () => {
     setResetTitle('...')
     const { error } = await supabase.auth.api.resetPasswordForEmail(email)
@@ -70,18 +76,22 @@ const UserPage = () => {
 
   if (!session) return <Login />
 
-  console.log('UserPage rendering', { queuedUpdatesCount })
+  console.log('UserPage rendering', { queuedUpdatesCount, online })
 
   return (
     <ErrorBoundary>
       <Container>
         User
-        <Button onClick={onClickLogout} variant="outlined">
-          abmelden
-        </Button>
-        <Button onClick={onClickResetPassword} variant="outlined">
-          Passwort zurücksetzen
-        </Button>
+        {online && (
+          <>
+            <Button onClick={onClickLogout} variant="outlined">
+              abmelden
+            </Button>
+            <Button onClick={onClickResetPassword} variant="outlined">
+              {resetTitle}
+            </Button>
+          </>
+        )}
       </Container>
       <Dialog
         open={pendingOperationsDialogOpen}

@@ -4,6 +4,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import { FaHome } from 'react-icons/fa'
+import { MdPerson, MdPersonOutline } from 'react-icons/md'
 import styled from 'styled-components'
 import { useResizeDetector } from 'react-resize-detector'
 import { Link, useLocation } from 'react-router-dom'
@@ -12,7 +13,6 @@ import { observer } from 'mobx-react-lite'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import constants from '../../../utils/constants'
 import storeContext from '../../../storeContext'
-import Account from './Account'
 import ServerConnected from './ServerConnected'
 
 const SiteTitle = styled(Button)`
@@ -31,7 +31,6 @@ const SiteTitle = styled(Button)`
 const Spacer = styled.div`
   flex-grow: 1;
 `
-
 const NavButton = styled(Button)`
   color: white !important;
   border-color: rgba(255, 255, 255, 0.5) !important;
@@ -57,6 +56,17 @@ const SubNavButton = styled(Button)`
     outline: 1px solid rgba(255, 255, 255, 0.5) !important;
   }
 `
+const UserIconFilled = styled(MdPersonOutline)`
+  color: white;
+`
+const UserIcon = styled(MdPerson)`
+  color: white;
+`
+// const UserIcon = styled(FaUserCircle)`
+//   color: rgb(74, 20, 140);
+//   /* fill: white; */
+//   background-color: rgba(0, 0, 0, 0);
+// `
 
 const HeaderAuthenticated = () => {
   const store = useContext(storeContext)
@@ -68,6 +78,7 @@ const HeaderAuthenticated = () => {
   const mobile = width && width < constants?.tree?.minimalWindowWidth
   const isHome = pathname === '/'
   const isProject = pathname.includes('/projects')
+  const isUser = pathname.includes('/user')
 
   const onClickTree = useCallback(() => {
     setShowTree(!showTree)
@@ -79,7 +90,7 @@ const HeaderAuthenticated = () => {
     setShowMap(!showMap)
   }, [setShowMap, showMap])
 
-  // console.log({ pathname, showTree, showForm, showMap })
+  console.log({ isUser })
 
   return (
     <ErrorBoundary>
@@ -160,7 +171,15 @@ const HeaderAuthenticated = () => {
             Doku
           </NavButton>
           <ServerConnected />
-          <Account />
+          <IconButton
+            aria-label="Konto"
+            title="Konto und Daten verwalten"
+            component={Link}
+            to="/user"
+            disabled={isUser}
+          >
+            {isUser ? <UserIcon /> : <UserIconFilled />}
+          </IconButton>
         </Toolbar>
       </AppBar>
     </ErrorBoundary>

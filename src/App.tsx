@@ -17,7 +17,6 @@ import DataSynchronisation from './components/Docs/DataSynchronisation'
 import DataVersioning from './components/Docs/DataVersioning'
 import DataHistory from './components/Docs/DataHistory'
 import ProjectsPage from './routes/Projects'
-import Account from './routes/Account'
 import FourOhFour from './routes/404'
 import Layout from './components/Layout'
 import Notifications from './components/Notifications'
@@ -180,7 +179,6 @@ function App() {
                       element={<RowComponent />}
                     />
                   </Route>
-                  <Route path="account" element={<Account />} />
                   <Route path="*" element={<FourOhFour />} />
                 </Routes>
               </Layout>
