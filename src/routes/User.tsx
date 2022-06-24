@@ -62,6 +62,14 @@ const UserPage = () => {
     logout({ store, navigate })
   }, [navigate, queuedUpdatesCount, store])
 
+  const [purgeDialogOpen, setPurgeDialogOpen] = useState(false)
+  const onClickPurge = useCallback(async () => {
+    if (queuedUpdatesCount) return setPurgeDialogOpen(true)
+    await dexie.delete()
+    navigate('/')
+    window.location.reload(true)
+  }, [navigate, queuedUpdatesCount])
+
   const email = useMemo(() => user?.email ?? {}, [user?.email])
 
   const [resetTitle, setResetTitle] = useState('Passwort zurücksetzen')
@@ -91,16 +99,21 @@ const UserPage = () => {
     <ErrorBoundary>
       <Container>
         User
-        {online && (
-          <ButtonsColumn>
-            <Button onClick={onClickLogout} variant="outlined">
-              abmelden
-            </Button>
-            <Button onClick={onClickResetPassword} variant="outlined">
-              {resetTitle}
-            </Button>
-          </ButtonsColumn>
-        )}
+        <ButtonsColumn>
+          {online && (
+            <>
+              <Button onClick={onClickLogout} variant="outlined">
+                abmelden
+              </Button>
+              <Button onClick={onClickResetPassword} variant="outlined">
+                {resetTitle}
+              </Button>
+            </>
+          )}
+          <Button onClick={onClickPurge} variant="outlined">
+            Alle Daten auf diesem Gerät löschen und neu vom Server laden
+          </Button>
+        </ButtonsColumn>
       </Container>
       <Dialog
         open={pendingOperationsDialogOpen}
@@ -137,6 +150,44 @@ const UserPage = () => {
             startIcon={<FaExclamationCircle />}
           >
             Ich will abmelden, obwohl ich Daten verliere
+          </RiskyButton>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={purgeDialogOpen}
+        onClose={() => setPurgeDialogOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        maxWidth="md"
+      >
+        <DialogTitle id="alert-dialog-title">Wirklich löschen?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {`Es gibt noch ${queuedUpdatesCount} ausstehende
+              Operationen, die noch nicht an den Server übermittelt werden konnten. Wenn Sie die Daten auf diesem Gerät löschen, gehen sie verloren.
+              Vermutlich warten Sie besser, bis diese Operationen an den Server
+              übermittelt wurden.`}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setPurgeDialogOpen(false)}
+            color="primary"
+            autoFocus
+            variant="outlined"
+          >
+            Ich verzichte, um keine Daten zu verlieren
+          </Button>
+          <RiskyButton
+            onClick={() => {
+              setPurgeDialogOpen(false)
+              // TODO:
+            }}
+            variant="outlined"
+            startIcon={<FaExclamationCircle />}
+          >
+            Ich will alle Daten auf diesem Gerät löschen, obwohl ich Daten
+            verliere
           </RiskyButton>
         </DialogActions>
       </Dialog>
