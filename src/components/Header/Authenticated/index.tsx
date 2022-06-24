@@ -90,7 +90,7 @@ const HeaderAuthenticated = () => {
     setShowMap(!showMap)
   }, [setShowMap, showMap])
 
-  console.log({ isUser })
+  // console.log({ isUser })
 
   return (
     <ErrorBoundary>
@@ -178,7 +178,7 @@ const HeaderAuthenticated = () => {
             to="/user"
             disabled={isUser}
           >
-            {isUser ? <UserIcon /> : <UserIconFilled />}
+            {isUser ? <UserIconFilled /> : <UserIcon />}
           </IconButton>
         </Toolbar>
       </AppBar>

@@ -76,7 +76,7 @@ const UserPage = () => {
 
   if (!session) return <Login />
 
-  console.log('UserPage rendering', { queuedUpdatesCount, online })
+  // console.log('UserPage rendering', { queuedUpdatesCount, online })
 
   return (
     <ErrorBoundary>
