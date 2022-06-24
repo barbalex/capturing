@@ -3344,10 +3344,10 @@ __metadata:
     dexie-react-hooks: 1.1.1
     eslint: 8.18.0
     eslint-plugin-import: 2.26.0
-    eslint-plugin-react: 7.30.0
+    eslint-plugin-react: 7.30.1
     eslint-plugin-react-hooks: 4.6.0
     file-saver: 2.0.5
-    framer-motion: 6.3.13
+    framer-motion: 6.3.15
     is-uuid: 1.0.2
     leaflet: 1.8.0
     leaflet-draw: 1.0.4
@@ -3393,7 +3393,7 @@ __metadata:
     uuid: 8.3.2
     vite: 2.9.12
     vite-plugin-pwa: 0.12.0
-    vite-plugin-svgr: 2.1.1
+    vite-plugin-svgr: 2.2.0
     wms-capabilities: 0.5.1
   languageName: unknown
   linkType: soft
@@ -4283,9 +4283,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:7.30.0":
-  version: 7.30.0
-  resolution: "eslint-plugin-react@npm:7.30.0"
+"eslint-plugin-react@npm:7.30.1":
+  version: 7.30.1
+  resolution: "eslint-plugin-react@npm:7.30.1"
   dependencies:
     array-includes: ^3.1.5
     array.prototype.flatmap: ^1.3.0
@@ -4303,7 +4303,7 @@ __metadata:
     string.prototype.matchall: ^4.0.7
   peerDependencies:
     eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
-  checksum: 729b7682a0fe6eab068171c159503ac57120ecc7b20067e76300b08879745c16a687e2033378ab45d9a3182da8844d06197a89081be83e1eb21fcceb76e79214
+  checksum: 553fb9ece6beb7c14cf6f84670c786c8ac978c2918421994dcc4edd2385302022e5d5ac4a39fafdb35954e29cecddefed61758040c3c530cafcf651f674a9d51
   languageName: node
   linkType: hard
 
@@ -4589,9 +4589,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:6.3.13":
-  version: 6.3.13
-  resolution: "framer-motion@npm:6.3.13"
+"framer-motion@npm:6.3.15":
+  version: 6.3.15
+  resolution: "framer-motion@npm:6.3.15"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
     framesync: 6.0.1
@@ -4605,7 +4605,7 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: 0b25ac006220754aeb0abb9d3d5d8a305860c26f7e5164385bd0745073e550d69a15481bceeb129494aca40555642786c9ee554b6e9af9a7ef0c5aeb0c1ebd5f
+  checksum: d761745e25c7c81c96e15c73b311afb1b732c31f8deb6dc9f71edff32f4b0495af28580707288ae3827a8c1b2a71e093b7b97746ddf73dc7aaecf5d2a29ce71c
   languageName: node
   linkType: hard
 
@@ -7875,14 +7875,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-svgr@npm:2.1.1":
-  version: 2.1.1
-  resolution: "vite-plugin-svgr@npm:2.1.1"
+"vite-plugin-svgr@npm:2.2.0":
+  version: 2.2.0
+  resolution: "vite-plugin-svgr@npm:2.2.0"
   dependencies:
+    "@rollup/pluginutils": ^4.2.1
     "@svgr/core": ^6.2.1
   peerDependencies:
     vite: ^2.6.0 || 3
-  checksum: eee6fdb12bdcdd383eb11b42d7310137b57722d6ef510dcc653f9428af3935560b8aaa86c22150b32f7eea8fc3550346be32617a9605f717c967f6858900db4a
+  checksum: 43fdab89f3fc61687ec97a50cd96f966110000420dd2d9a12bb70806bc71bed02500df229b2f170cda1be9e01f4c7f6f7f667064af22d63e46fc276021f93c3e
   languageName: node
   linkType: hard
 
