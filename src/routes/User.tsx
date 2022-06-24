@@ -8,6 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { FaExclamationCircle } from 'react-icons/fa'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import StoreContext from '../storeContext'
@@ -15,12 +16,18 @@ import Login from '../components/Login'
 import constants from '../utils/constants'
 import logout from '../utils/logout'
 import { supabase } from '../supabaseClient'
-import { dexie, QueuedUpdate } from '../dexieClient'
+import { dexie } from '../dexieClient'
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 
 const Container = styled.div`
   min-height: calc(100vh - ${constants.appBarHeight}px);
   position: relative;
+  padding: 10px;
+`
+const ButtonsColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `
 const RiskyButton = styled(Button)`
   color: #d84315 !important;
@@ -38,6 +45,8 @@ const UserPage = () => {
   const session = supabase.auth.session()
   const user = supabase.auth.user()
 
+  const navigate = useNavigate()
+
   // console.log('Projects, mapInitiated:', mapInitiated)
 
   useEffect(() => {
@@ -50,8 +59,8 @@ const UserPage = () => {
 
   const onClickLogout = useCallback(() => {
     if (queuedUpdatesCount) return setPendingOperationsDialogOpen(true)
-    logout({ store })
-  }, [queuedUpdatesCount, store])
+    logout({ store, navigate })
+  }, [navigate, queuedUpdatesCount, store])
 
   const email = useMemo(() => user?.email ?? {}, [user?.email])
 
@@ -83,14 +92,14 @@ const UserPage = () => {
       <Container>
         User
         {online && (
-          <>
+          <ButtonsColumn>
             <Button onClick={onClickLogout} variant="outlined">
               abmelden
             </Button>
             <Button onClick={onClickResetPassword} variant="outlined">
               {resetTitle}
             </Button>
-          </>
+          </ButtonsColumn>
         )}
       </Container>
       <Dialog
@@ -117,18 +126,17 @@ const UserPage = () => {
             autoFocus
             variant="outlined"
           >
-            Ich bleibe angemeldet, um die ausstehenden Operationen nicht zu
-            verlieren
+            Ich bleibe angemeldet, um keine Daten zu verlieren
           </Button>
           <RiskyButton
             onClick={() => {
               setPendingOperationsDialogOpen(false)
-              logout({ store })
+              logout({ store, navigate })
             }}
             variant="outlined"
             startIcon={<FaExclamationCircle />}
           >
-            Ich will abmelden, obwohl ich die ausstehenden Operationen verliere
+            Ich will abmelden, obwohl ich Daten verliere
           </RiskyButton>
         </DialogActions>
       </Dialog>
