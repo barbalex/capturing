@@ -26,8 +26,8 @@ const ButtonsColumn = styled.div`
   flex-direction: column;
   gap: 10px;
 `
-const AccordionText = styled.p`
-  margin: 4px 0;
+const AccordionP = styled.p`
+  margin: 8px 0;
 `
 
 /**
@@ -94,6 +94,11 @@ const UserPage = () => {
 
   // console.log('UserPage rendering', { queuedUpdatesCount, online })
 
+  /**
+   * TODO:
+   * add email and method to change it
+   */
+
   return (
     <ErrorBoundary>
       <Container>
@@ -113,11 +118,58 @@ const UserPage = () => {
             Alle Daten auf diesem Gerät löschen und neu vom Server laden
           </Button>
         </ButtonsColumn>
-        <Accordion summary="I care about my personal data 😟">
-          <AccordionText>We don&apos;t want it!</AccordionText>
-          <AccordionText>
+        <Accordion summary="I care about my personal data 🤫">
+          <AccordionP>We don&apos;t want it!</AccordionP>
+          <AccordionP>
             Only your email is needed to recognize and authenticate you.
-          </AccordionText>
+          </AccordionP>
+        </Accordion>
+        <Accordion summary="Who needs subscriptions? 👥">
+          <AccordionP>Whoever creates a project (its owner).</AccordionP>
+          <AccordionP>
+            Additional collaborators, whose emails the owner lists as project
+            users, do <strong>not</strong> need a subscription.
+          </AccordionP>
+          <AccordionP>
+            Collaborators only need to register with their email. Then all
+            projects in which they participate are synced to their app.
+          </AccordionP>
+          <AccordionP>
+            You can simultaneously own projects and collaborate in others.
+          </AccordionP>
+        </Accordion>
+        <Accordion summary="What subscriptions exist? 🛒">
+          <AccordionP>
+            Use the <strong>free 30 day</strong> subscription for testing.
+          </AccordionP>
+          <AccordionP>
+            After it expires, you need a payed subscription to configure own
+            projects and keep them editable.
+          </AccordionP>
+          <AccordionP>
+            We haven&apos;t decided on payed subscriptions yet.
+          </AccordionP>
+        </Accordion>
+        <Accordion summary="What if a subscription expires? 🤔">
+          <AccordionP>
+            It is no more possible to configure projects and edit data 👀.
+          </AccordionP>
+          <AccordionP>
+            You will still be able to read and export it though 😮‍💨.
+          </AccordionP>
+          <AccordionP>
+            Three months after expiration projects are removed from our live
+            servers 😟.
+          </AccordionP>
+          <AccordionP>
+            Backups exist and your data will remain in your app. But as we pay
+            our bills with subscriptions, we won&apos;t feel responsible for
+            your data any more 🤷.
+          </AccordionP>
+          <AccordionP>
+            Of course we will send you an email beforehand - we&apos;d love too
+            keep you ❤️.
+          </AccordionP>
         </Accordion>
       </Container>
       <PendingOperationsDialog

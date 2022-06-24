@@ -17,7 +17,7 @@ const StyledAccordion = styled(Accordion)`
 `
 const StyledAccordionSummary = styled(AccordionSummary)`
   p {
-    font-weight: 500;
+    font-weight: 700;
   }
 `
 
