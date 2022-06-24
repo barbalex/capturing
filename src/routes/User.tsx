@@ -35,8 +35,11 @@ const RiskyButton = styled(Button)`
 `
 
 /**
- * Todo: enable editing email
+ * TODO: enable editing email
  * then edit it in public.users and auth.users
+ * TODO: enhance resetting
+ * 1. do it without reloading and navigating
+ * 2. enable resetting settings while keeping them when resetting data
  */
 const UserPage = () => {
   const store = useContext(StoreContext)
@@ -179,9 +182,11 @@ const UserPage = () => {
             Ich verzichte, um keine Daten zu verlieren
           </Button>
           <RiskyButton
-            onClick={() => {
+            onClick={async () => {
               setPurgeDialogOpen(false)
-              // TODO:
+              await dexie.delete()
+              navigate('/')
+              window.location.reload(true)
             }}
             variant="outlined"
             startIcon={<FaExclamationCircle />}
