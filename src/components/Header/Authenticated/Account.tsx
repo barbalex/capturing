@@ -27,7 +27,7 @@ const RiskyButton = styled(Button)`
 
 const Account = () => {
   const store = useContext(StoreContext)
-  const user = supabase.auth.user()
+  const user = supabase.auth.user() 
   const queuedQueries = 'TODO:'
   const online = 'TODO:'
 
