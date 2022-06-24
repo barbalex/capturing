@@ -6,12 +6,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import Accordion from '@mui/material/Accordion'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
-import Typography from '@mui/material/Typography'
 import { FaExclamationCircle } from 'react-icons/fa'
-import { MdExpandMore } from 'react-icons/md'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -23,6 +18,7 @@ import logout from '../utils/logout'
 import { supabase } from '../supabaseClient'
 import { dexie } from '../dexieClient'
 import ErrorBoundary from '../components/shared/ErrorBoundary'
+import Accordion from '../components/shared/Accordion'
 
 const Container = styled.div`
   min-height: calc(100vh - ${constants.appBarHeight}px);
@@ -38,20 +34,8 @@ const RiskyButton = styled(Button)`
   color: #d84315 !important;
   border-color: #d84315 !important;
 `
-const ExpandIcon = styled(MdExpandMore)`
-  font-size: 1.5rem;
-`
-const StyledAccordion = styled(Accordion)`
-  margin-top: 10px;
-  border-radius: 4px !important;
-  &:before {
-    background-color: transparent;
-  }
-`
-const StyledAccordionSummary = styled(AccordionSummary)`
-  p {
-    font-weight: 500;
-  }
+const AccordionText = styled.p`
+  margin: 4px 0;
 `
 
 /**
@@ -137,24 +121,12 @@ const UserPage = () => {
             Alle Daten auf diesem Gerät löschen und neu vom Server laden
           </Button>
         </ButtonsColumn>
-        <StyledAccordion
-          TransitionProps={{ unmountOnExit: true }}
-          disableGutters
-        >
-          <StyledAccordionSummary
-            expandIcon={<ExpandIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>I care about my personal data 😟</Typography>
-          </StyledAccordionSummary>
-          <AccordionDetails>
-            <Typography>We don&apos;t want it!</Typography>
-            <Typography>
-              Only your email is needed to recognize and authenticate you.
-            </Typography>
-          </AccordionDetails>
-        </StyledAccordion>
+        <Accordion summary="I care about my personal data 😟">
+          <AccordionText>We don&apos;t want it!</AccordionText>
+          <AccordionText>
+            Only your email is needed to recognize and authenticate you.
+          </AccordionText>
+        </Accordion>
       </Container>
       <Dialog
         open={pendingOperationsDialogOpen}
