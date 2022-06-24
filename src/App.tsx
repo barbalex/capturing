@@ -10,6 +10,7 @@ import materialTheme from './utils/materialTheme'
 import { Provider as MobxProvider } from './storeContext'
 import Home from './routes/Home'
 import Docs from './routes/Docs'
+import User from './routes/User'
 import ImageLayerTypes from './components/Docs/ImageLayerTypes'
 import OfflineMaps from './components/Docs/OfflineMaps'
 import DataSynchronisation from './components/Docs/DataSynchronisation'
@@ -134,6 +135,7 @@ function App() {
                     />
                     <Route path="data-history" element={<DataHistory />} />
                   </Route>
+                  <Route path="user" element={<User />} />
                   <Route path="projects/*" element={<ProjectsPage />}>
                     <Route index element={<ProjectsComponent />} />
                     <Route path=":projectId" element={<ProjectComponent />} />
