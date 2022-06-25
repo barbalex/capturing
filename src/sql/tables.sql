@@ -2,7 +2,7 @@ START TRANSACTION;
 
 SET CONSTRAINTS ALL DEFERRED;
 
-CREATE EXTENSION IF NOT EXISTS postgis;
+--CREATE EXTENSION IF NOT EXISTS postgis;
 
 -- set up realtime
 BEGIN;
@@ -22,7 +22,8 @@ CREATE TABLE users (
   email text UNIQUE DEFAULT NULL,
   account_id uuid DEFAULT NULL,
   -- references accounts (id) on delete no action on update cascade,
-  auth_user_id uuid DEFAULT NULL REFERENCES auth.users (id) ON DELETE NO action ON UPDATE CASCADE,
+  -- auth_user_id uuid DEFAULT NULL REFERENCES auth.users (id) ON DELETE NO action ON UPDATE CASCADE,
+  auth_user_id uuid DEFAULT NULL,
   client_rev_at timestamp with time zone DEFAULT now(),
   client_rev_by text DEFAULT NULL,
   server_rev_at timestamp with time zone DEFAULT now(),
@@ -720,12 +721,6 @@ CREATE TABLE tile_layers (
   server_rev_at timestamp with time zone DEFAULT now(),
   deleted integer DEFAULT 0
 );
-
-ALTER TABLE tile_layers
-  ADD COLUMN local_data_size integer DEFAULT NULL;
-
-ALTER TABLE tile_layers
-  ADD COLUMN local_data_bounds jsonb DEFAULT NULL;
 
 CREATE INDEX ON tile_layers USING btree (id);
 
