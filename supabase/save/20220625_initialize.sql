@@ -1,8 +1,7 @@
-START TRANSACTION;
+-- SET CONSTRAINTS ALL DEFERRED;
 
-SET CONSTRAINTS ALL DEFERRED;
+CREATE EXTENSION IF NOT EXISTS postgis;
 
---CREATE EXTENSION IF NOT EXISTS postgis;
 -- set up realtime
 BEGIN;
 DROP publication IF EXISTS supabase_realtime;
@@ -548,7 +547,7 @@ CREATE TABLE public.rows (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   table_id uuid NOT NULL REFERENCES public.tables (id) ON DELETE NO action ON UPDATE CASCADE,
   parent_id uuid DEFAULT NULL REFERENCES public.rows (id) ON DELETE NO action ON UPDATE CASCADE,
-  geometry GEOMETRY(GeometryCollection, 4326) DEFAULT NULL,
+  geometry extensions.GEOMETRY(GeometryCollection, 4326) DEFAULT NULL,
   bbox jsonb DEFAULT NULL,
   data jsonb,
   client_rev_at timestamp with time zone DEFAULT now(),
@@ -609,7 +608,7 @@ CREATE TABLE public.row_revs (
   row_id uuid DEFAULT NULL,
   table_id uuid DEFAULT NULL,
   parent_id uuid DEFAULT NULL,
-  geometry GEOMETRY(GeometryCollection, 4326) DEFAULT NULL,
+  geometry extensions.GEOMETRY(GeometryCollection, 4326) DEFAULT NULL,
   bbox jsonb DEFAULT NULL,
   data jsonb,
   deleted integer DEFAULT 0,
@@ -1116,7 +1115,7 @@ DROP TABLE IF EXISTS public.pvl_geoms CASCADE;
 CREATE TABLE public.pvl_geoms (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
   pvl_id uuid DEFAULT NULL REFERENCES public.vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  geometry GEOMETRY(GeometryCollection, 4326) DEFAULT NULL,
+  geometry extensions.GEOMETRY(GeometryCollection, 4326) DEFAULT NULL,
   properties jsonb DEFAULT NULL,
   bbox_sw_lng real DEFAULT NULL,
   bbox_sw_lat real DEFAULT NULL,
@@ -1151,7 +1150,7 @@ COMMENT ON COLUMN public.pvl_geoms.bbox_ne_lat IS 'bbox of the geometry. Set cli
 ALTER TABLE public.pvl_geoms ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE pvl_geoms;
+  ADD TABLE public.pvl_geoms;
 
 -- not needed because only used client side:
 -- CREATE INDEX ON pvl_geoms USING gist (geometry);
@@ -1171,9 +1170,9 @@ CREATE OR REPLACE FUNCTION public.is_own_account (_auth_user_id uuid, _account_i
         1
       FROM
         auth.users au
-        INNER JOIN public.users pu ON au.id = pu.auth_user_id
+        INNER JOIN public.users users ON au.id = users.auth_user_id
       WHERE
-        pu.account_id = _account_id
+        users.account_id = _account_id
         AND au.id = _auth_user_id);
 
 $$
@@ -1193,12 +1192,12 @@ CREATE OR REPLACE FUNCTION public.is_account_owner_by_project_user (_auth_user_i
         1
       FROM
         auth.users au
-        INNER JOIN public.users pu ON au.id = pu.auth_user_id
-        INNER JOIN public.project_users pu ON pu.user_email = pu.email
-        INNER JOIN public.projects p ON p.id = pu.project_id
+        INNER JOIN public.users users ON au.id = users.auth_user_id
+        INNER JOIN public.project_users project_users ON project_users.user_email = project_users.email
+        INNER JOIN public.projects p ON p.id = project_users.project_id
       WHERE
         au.id = _auth_user_id
-        AND p.account_id = pu.account_id
+        AND p.account_id = users.account_id
         AND p.id = _project_id);
 
 $$
@@ -1218,7 +1217,7 @@ CREATE OR REPLACE FUNCTION public.is_project_user (_auth_user_id uuid)
         1
       FROM
         auth.users users
-        INNER JOIN public.project_users pu ON users.email = pu.user_email
+        INNER JOIN public.project_users project_users ON users.email = project_users.user_email
       WHERE
         users.id = _auth_user_id);
 
@@ -1239,8 +1238,8 @@ CREATE OR REPLACE FUNCTION public.is_news_delivery_user (_auth_user_id uuid)
         1
       FROM
         auth.users au
-        INNER JOIN public.users pu ON pu.auth_user_id = au.id
-        INNER JOIN public.news_delivery nd ON pu.id = nd.user_id
+        INNER JOIN public.users users ON users.auth_user_id = au.id
+        INNER JOIN public.news_delivery nd ON users.id = nd.user_id
       WHERE
         au.id = _auth_user_id);
 
@@ -1261,9 +1260,9 @@ CREATE OR REPLACE FUNCTION public.is_project_user_by_project (_auth_user_id uuid
         1
       FROM
         auth.users users
-        INNER JOIN public.project_users pu ON users.email = pu.user_email
+        INNER JOIN public.project_users project_users ON users.email = project_users.user_email
       WHERE
-        pu.project_id = _project_id
+        project_users.project_id = _project_id
         AND users.id = _auth_user_id);
 
 $$
@@ -1283,8 +1282,8 @@ CREATE OR REPLACE FUNCTION public.is_project_user_by_table (_auth_user_id uuid, 
         1
       FROM
         auth.users users
-        INNER JOIN public.project_users pu ON users.email = pu.user_email
-        INNER JOIN public.projects p ON p.id = pu.project_id
+        INNER JOIN public.project_users project_users ON users.email = project_users.user_email
+        INNER JOIN public.projects p ON p.id = project_users.project_id
         INNER JOIN public.tables tables ON tables.project_id = p.id
       WHERE
         tables.id = _table_id
@@ -1305,8 +1304,8 @@ CREATE OR REPLACE FUNCTION public.is_project_user_by_tile_layer (_auth_user_id u
         1
       FROM
         auth.users users
-        INNER JOIN public.project_users pu ON users.email = pu.user_email
-        INNER JOIN public.projects projects ON projects.id = pu.project_id
+        INNER JOIN public.project_users project_users ON users.email = project_users.user_email
+        INNER JOIN public.projects projects ON projects.id = project_users.project_id
         INNER JOIN public.tile_layers tile_layers ON tile_layers.project_id = projects.id
       WHERE
         tile_layers.id = _tile_layer_id
@@ -1620,7 +1619,7 @@ DROP POLICY IF EXISTS "account owners and same user can view project_users" ON p
 
 CREATE POLICY "account owners and same user can view project_users" ON public.project_users
   FOR SELECT
-    USING (is_account_owner_by_project_user (auth.uid (), project_id)
+    USING (public.is_account_owner_by_project_user (auth.uid (), project_id)
       OR auth.uid () IN (
       -- same user
         SELECT
@@ -1635,25 +1634,25 @@ DROP POLICY IF EXISTS "account owners can insert project_users" ON public.projec
 
 CREATE POLICY "account owners can insert project_users" ON public.project_users
   FOR INSERT
-    WITH CHECK (is_account_owner_by_project_user (auth.uid (), project_id));
+    WITH CHECK (public.is_account_owner_by_project_user (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project owners can update project_users" ON public.project_users;
 
 CREATE POLICY "project owners can update project_users" ON public.project_users
   FOR UPDATE
-    USING (is_account_owner_by_project_user (auth.uid (), project_id)
+    USING (public.is_account_owner_by_project_user (auth.uid (), project_id)
       OR auth.uid () IN (
       -- same user
       SELECT users.auth_user_id FROM public.users users
       WHERE
         email = user_email))
-    WITH CHECK (is_account_owner_by_project_user (auth.uid (), project_id));
+    WITH CHECK (public.is_account_owner_by_project_user (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project owners can delete project_users" ON public.project_users;
 
 CREATE POLICY "project owners can delete project_users" ON public.project_users
   FOR DELETE
-    USING (is_account_owner_by_project_user (auth.uid (), project_id));
+    USING (public.is_account_owner_by_project_user (auth.uid (), project_id));
 
 ---
 --
@@ -2039,8 +2038,6 @@ DROP POLICY IF EXISTS "project managers can delete vector_layers geometries" ON 
 CREATE POLICY "project managers can delete vector_layers geometries" ON public.pvl_geoms
   FOR DELETE
     USING (is_project_manager_by_tile_layer (auth.uid (), pvl_id));
-
-COMMIT TRANSACTION;
 
 -- add some triggers
 -- ensure a project's owner is set as it's user
