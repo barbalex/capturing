@@ -3370,7 +3370,7 @@ __metadata:
     react-error-boundary: 3.1.4
     react-icons: 4.4.0
     react-is: 18.2.0
-    react-leaflet: 4.0.0
+    react-leaflet: 4.0.1
     react-linkify: 1.0.0-alpha
     react-query: 3.39.1
     react-resize-detector: 7.1.2
@@ -6441,16 +6441,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-leaflet@npm:4.0.0":
-  version: 4.0.0
-  resolution: "react-leaflet@npm:4.0.0"
+"react-leaflet@npm:4.0.1":
+  version: 4.0.1
+  resolution: "react-leaflet@npm:4.0.1"
   dependencies:
     "@react-leaflet/core": ^2.0.0
   peerDependencies:
     leaflet: ^1.8.0
     react: ^18.0.0
     react-dom: ^18.0.0
-  checksum: 0da0445c1a5f7c47483b1e629c83f477181e987235022235d97808f3b16eebee5d479963e20c64033f17a4f4cbd7bcf310dd5db5af2b8576be1a09b44f8a3ffd
+  checksum: f5e94c0e3b49f8d7d3c464185f8624ab0ad6958a950dd153974183ed93be1b61216c1cddd09967a85e65762f6696a39dfac086ab770980689405e80b3c43a6c1
   languageName: node
   linkType: hard
 

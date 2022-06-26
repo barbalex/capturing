@@ -47,7 +47,7 @@
     "react-error-boundary": "3.1.4",
     "react-icons": "4.4.0",
     "react-is": "18.2.0",
-    "react-leaflet": "4.0.0",
+    "react-leaflet": "4.0.1",
     "react-linkify": "1.0.0-alpha",
     "react-query": "3.39.1",
     "react-resize-detector": "7.1.2",
