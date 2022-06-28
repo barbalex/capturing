@@ -2,7 +2,7 @@ START TRANSACTION;
 
 SET CONSTRAINTS ALL DEFERRED;
 
---CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE EXTENSION IF NOT EXISTS postgis;
 
 -- set up realtime
 BEGIN;
@@ -11,7 +11,7 @@ CREATE publication supabase_realtime;
 COMMIT;
 
 --
-DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS public.users CASCADE;
 
 CREATE TABLE users (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid (),

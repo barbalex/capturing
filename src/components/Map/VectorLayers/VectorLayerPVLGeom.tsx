@@ -148,7 +148,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
             },
           ]
           const popupContent = ReactDOMServer.renderToString(
-            <Popup layersData={layersData} mapSize={mapSize} />,
+            <Popup layersData={layersData} mapSize={mapSize} />, 
           )
           _layer.bindPopup(popupContent)
         }}
