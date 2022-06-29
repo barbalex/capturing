@@ -1,38 +1,34 @@
-START TRANSACTION;
-
-SET CONSTRAINTS ALL DEFERRED;
-
+-- 01. create lots of stuff
 CREATE EXTENSION IF NOT EXISTS postgis;
 
 -- set up realtime
-BEGIN;
 DROP publication IF EXISTS supabase_realtime;
-CREATE publication supabase_realtime;
-COMMIT;
 
---
+CREATE publication supabase_realtime;
+
+-- 01.1 create tables
 DROP TABLE IF EXISTS public.users CASCADE;
 
 CREATE TABLE users (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  name text DEFAULT NULL,
-  -- email needs to be unique
-  -- project manager can list project users by email without knowing if this user already exists
-  -- then user can create a login (= row in users table) and work in the project
-  email text UNIQUE DEFAULT NULL,
-  account_id uuid DEFAULT NULL,
-  -- references accounts (id) on delete no action on update cascade,
-  -- auth_user_id uuid DEFAULT NULL REFERENCES auth.users (id) ON DELETE NO action ON UPDATE CASCADE,
-  auth_user_id uuid DEFAULT NULL,
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    name text DEFAULT NULL,
+    -- email needs to be unique
+    -- project manager can list project users by email without knowing if this user already exists
+    -- then user can create a login (= row in users table) and work in the project
+    email text UNIQUE DEFAULT NULL,
+    account_id uuid DEFAULT NULL,
+    -- references accounts (id) on delete no action on update cascade,
+    -- auth_user_id uuid DEFAULT NULL REFERENCES auth.users (id) ON DELETE NO action ON UPDATE CASCADE,
+    auth_user_id uuid DEFAULT NULL,
+    client_rev_at timestamp with time zone DEFAULT now(),
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0
 );
 
 -- TODO: errors on remote server: https://github.com/supabase/supabase/issues/6257
 ALTER TABLE "public"."users"
-  ADD FOREIGN KEY ("auth_user_id") REFERENCES "auth"."users" ("id") ON DELETE NO action ON UPDATE CASCADE;
+    ADD FOREIGN KEY ("auth_user_id") REFERENCES "auth"."users" ("id") ON DELETE NO action ON UPDATE CASCADE;
 
 CREATE INDEX ON users USING btree (id);
 
@@ -67,23 +63,23 @@ COMMENT ON COLUMN users.server_rev_at IS 'time of last edit on server';
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE users;
+    ADD TABLE users;
 
 --
 DROP TABLE IF EXISTS accounts CASCADE;
 
 CREATE TABLE accounts (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  -- service_id is not needed - TODO: remove
-  service_id text DEFAULT NULL,
-  -- uid of firebase
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0 -- any more?:
-  -- type
-  -- from
-  -- until
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    -- service_id is not needed - TODO: remove
+    service_id text DEFAULT NULL,
+    -- uid of firebase
+    client_rev_at timestamp with time zone DEFAULT now(),
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0 -- any more?:
+    -- type
+    -- from
+    -- until
 );
 
 CREATE INDEX ON accounts USING btree (id);
@@ -109,11 +105,11 @@ COMMENT ON COLUMN accounts.server_rev_at IS 'time of last edit on server';
 ALTER TABLE accounts ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE accounts;
+    ADD TABLE accounts;
 
 -- need to wait to create this reference until accounts exists:
 ALTER TABLE users
-  ADD FOREIGN KEY (account_id) REFERENCES accounts (id) ON DELETE NO action ON UPDATE CASCADE;
+    ADD FOREIGN KEY (account_id) REFERENCES accounts (id) ON DELETE NO action ON UPDATE CASCADE;
 
 --drop table if exists account_managers cascade;
 --
@@ -133,24 +129,24 @@ ALTER TABLE users
 DROP TABLE IF EXISTS projects CASCADE;
 
 CREATE TABLE projects (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  -- account_id may not be null: is needed for policies
-  -- all account owners would see any project missing an account_id (or none)
-  account_id uuid NOT NULL REFERENCES accounts (id) ON DELETE NO action ON UPDATE CASCADE,
-  name text DEFAULT NULL,
-  label text DEFAULT NULL,
-  crs integer DEFAULT 4326,
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0, -- geometry?
-  use_labels integer DEFAULT 0
-  -- data?
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    -- account_id may not be null: is needed for policies
+    -- all account owners would see any project missing an account_id (or none)
+    account_id uuid NOT NULL REFERENCES accounts (id) ON DELETE NO action ON UPDATE CASCADE,
+    name text DEFAULT NULL,
+    label text DEFAULT NULL,
+    crs integer DEFAULT 4326,
+    client_rev_at timestamp with time zone DEFAULT now(),
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0, -- geometry?
+    use_labels integer DEFAULT 0
+    -- data?
 );
 
 CREATE UNIQUE INDEX account_name_idx ON projects (account_id, name)
 WHERE
-  deleted = 0;
+    deleted = 0;
 
 CREATE INDEX ON projects USING btree (id);
 
@@ -186,50 +182,50 @@ ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 
 -- policies defined after creating project_users because referencing them
 ALTER publication supabase_realtime
-  ADD TABLE projects;
+    ADD TABLE projects;
 
 --
 DROP TYPE IF EXISTS table_type CASCADE;
 
 CREATE TYPE table_type AS enum (
-  'standard',
-  'value_list',
-  'id_value_list'
+    'standard',
+    'value_list',
+    'id_value_list'
 );
 
 DROP TYPE IF EXISTS table_rel_types_enum CASCADE;
 
 CREATE TYPE table_rel_types_enum AS enum (
-  '1',
-  'n'
+    '1',
+    'n'
 );
 
 CREATE TYPE role_types_enum AS enum (
-  'project_reader',
-  'project_editor',
-  'project_manager',
-  'account_manager'
+    'project_reader',
+    'project_editor',
+    'project_manager',
+    'account_manager'
 );
 
 --
 DROP TABLE IF EXISTS project_users CASCADE;
 
 CREATE TABLE project_users (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
-  --user_id uuid default null references users (id) on delete no action on update cascade,
-  user_email text NOT NULL,
-  -- NO reference so project_user can be created before registering,
-  ROLE role_types_enum DEFAULT 'project_reader',
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    project_id uuid NOT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
+    --user_id uuid default null references users (id) on delete no action on update cascade,
+    user_email text NOT NULL,
+    -- NO reference so project_user can be created before registering,
+    ROLE role_types_enum DEFAULT 'project_reader',
+    client_rev_at timestamp with time zone DEFAULT now(),
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0
 );
 
 CREATE UNIQUE INDEX project_users_project_email_idx ON project_users (project_id, user_email)
 WHERE
-  deleted = 0;
+    deleted = 0;
 
 CREATE INDEX ON project_users USING btree (id);
 
@@ -260,41 +256,41 @@ COMMENT ON COLUMN project_users.server_rev_at IS 'time of last edit on server';
 ALTER TABLE project_users ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE project_users;
+    ADD TABLE project_users;
 
 --
 DROP TYPE IF EXISTS table_types_enum CASCADE;
 
 CREATE TYPE table_types_enum AS enum (
-  'standard',
-  'value_list',
-  'id_value_list'
+    'standard',
+    'value_list',
+    'id_value_list'
 );
 
 --
 DROP TABLE IF EXISTS tables CASCADE;
 
 CREATE TABLE tables (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  -- project_id needs to exist for policies to work
-  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
-  parent_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
-  rel_type table_rel_types_enum DEFAULT 'n',
-  name text DEFAULT NULL,
-  label text DEFAULT NULL,
-  singular_label text DEFAULT NULL,
-  row_label jsonb DEFAULT NULL,
-  sort smallint DEFAULT NULL,
-  type table_types_enum DEFAULT 'standard',
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    -- project_id needs to exist for policies to work
+    project_id uuid NOT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
+    parent_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
+    rel_type table_rel_types_enum DEFAULT 'n',
+    name text DEFAULT NULL,
+    label text DEFAULT NULL,
+    singular_label text DEFAULT NULL,
+    row_label jsonb DEFAULT NULL,
+    sort smallint DEFAULT NULL,
+    type table_types_enum DEFAULT 'standard',
+    client_rev_at timestamp with time zone DEFAULT now(),
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0
 );
 
 CREATE UNIQUE INDEX tables_project_name_idx ON tables (project_id, name)
 WHERE
-  deleted = 0;
+    deleted = 0;
 
 CREATE INDEX ON tables USING btree (id);
 
@@ -341,7 +337,7 @@ COMMENT ON COLUMN tables.server_rev_at IS 'time of last edit on server';
 ALTER TABLE tables ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE tables;
+    ADD TABLE tables;
 
 --
 --
@@ -349,12 +345,12 @@ ALTER publication supabase_realtime
 DROP TABLE IF EXISTS field_types CASCADE;
 
 CREATE TABLE field_types (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  value text UNIQUE,
-  sort smallint DEFAULT NULL,
-  comment text,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    value text UNIQUE,
+    sort smallint DEFAULT NULL,
+    comment text,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON field_types USING btree (value);
@@ -378,19 +374,19 @@ COMMENT ON COLUMN field_types.server_rev_at IS 'time of last edit on server';
 ALTER TABLE field_types ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE field_types;
+    ADD TABLE field_types;
 
 --
 DROP TABLE IF EXISTS widget_types CASCADE;
 
 CREATE TABLE widget_types (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  value text UNIQUE,
-  needs_list integer DEFAULT 0,
-  sort smallint DEFAULT NULL,
-  comment text,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    value text UNIQUE,
+    needs_list integer DEFAULT 0,
+    sort smallint DEFAULT NULL,
+    comment text,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON widget_types USING btree (value);
@@ -414,26 +410,26 @@ COMMENT ON COLUMN widget_types.sort IS 'enables sorting at will';
 COMMENT ON COLUMN widget_types.server_rev_at IS 'time of last edit on server';
 
 INSERT INTO widget_types (value, needs_list, sort, comment)
-  VALUES ('text', 0, 1, 'Short field accepting text'), ('textarea', 0, 2, 'Field accepting text, lines can break'), ('markdown', 0, 3, 'Field accepting text, expressing markdown'), ('options-2', 0, 4, 'single boolean field showing one option for true (active) and false (not active)'), ('options-3', 0, 5, 'single boolean field showing true, false and null'), ('options-few', 1, 7, 'short list, showing every entry'), ('options-many', 1, 8, 'long dropdown-list'), ('datepicker', 0, 9, 'enables choosing a date'), ('filepicker', 0, 10, 'enables choosing a file'), ('jes-no', 0, 6, 'boolean field presenting one option for true and false each'), ('datetimepicker', 0, 10, 'enables choosing a date-time'), ('timepicker', 0, 11, 'enables choosing time of day'), ('rich-text', 0, 12, 'enables rich formatting of text')
+    VALUES ('text', 0, 1, 'Short field accepting text'), ('textarea', 0, 2, 'Field accepting text, lines can break'), ('markdown', 0, 3, 'Field accepting text, expressing markdown'), ('options-2', 0, 4, 'single boolean field showing one option for true (active) and false (not active)'), ('options-3', 0, 5, 'single boolean field showing true, false and null'), ('options-few', 1, 7, 'short list, showing every entry'), ('options-many', 1, 8, 'long dropdown-list'), ('datepicker', 0, 9, 'enables choosing a date'), ('filepicker', 0, 10, 'enables choosing a file'), ('jes-no', 0, 6, 'boolean field presenting one option for true and false each'), ('datetimepicker', 0, 10, 'enables choosing a date-time'), ('timepicker', 0, 11, 'enables choosing time of day'), ('rich-text', 0, 12, 'enables rich formatting of text')
 ON CONFLICT ON CONSTRAINT widget_types_value_key
-  DO UPDATE SET
-    comment = excluded.comment, sort = excluded.sort, needs_list = excluded.needs_list;
+    DO UPDATE SET
+        comment = excluded.comment, sort = excluded.sort, needs_list = excluded.needs_list;
 
 ALTER TABLE widget_types ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE widget_types;
+    ADD TABLE widget_types;
 
 --
 DROP TABLE IF EXISTS widgets_for_fields CASCADE;
 
 CREATE TABLE widgets_for_fields (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  field_value text REFERENCES field_types (value) ON DELETE CASCADE ON UPDATE CASCADE,
-  widget_value text REFERENCES widget_types (value) ON DELETE CASCADE ON UPDATE CASCADE,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0,
-  UNIQUE (field_value, widget_value)
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    field_value text REFERENCES field_types (value) ON DELETE CASCADE ON UPDATE CASCADE,
+    widget_value text REFERENCES widget_types (value) ON DELETE CASCADE ON UPDATE CASCADE,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0,
+    UNIQUE (field_value, widget_value)
 );
 
 CREATE INDEX ON widgets_for_fields USING btree (field_value);
@@ -449,51 +445,51 @@ COMMENT ON TABLE widgets_for_fields IS 'Goal: know what widgets can be choosen f
 COMMENT ON COLUMN widgets_for_fields.server_rev_at IS 'time of last edit on server';
 
 INSERT INTO field_types (value, sort, comment)
-  VALUES ('text', 1, 'Example: text'), ('boolean', 2, 'true or false'), ('integer', 3, 'Example: 1'), ('decimal', 4, 'Example: 1.1'), ('date', 5, 'Example: 2021-03-08'), ('date-time', 6, 'Timestamp with time zone. Example: 2021-03-08 10:23:54+01'), ('time', 7, 'Time of day. Example: 10:23'), ('file-reference', 8, 'the id of the file')
+    VALUES ('text', 1, 'Example: text'), ('boolean', 2, 'true or false'), ('integer', 3, 'Example: 1'), ('decimal', 4, 'Example: 1.1'), ('date', 5, 'Example: 2021-03-08'), ('date-time', 6, 'Timestamp with time zone. Example: 2021-03-08 10:23:54+01'), ('time', 7, 'Time of day. Example: 10:23'), ('file-reference', 8, 'the id of the file')
 ON CONFLICT ON CONSTRAINT field_types_pkey
-  DO UPDATE SET
-    comment = excluded.comment;
+    DO UPDATE SET
+        comment = excluded.comment;
 
 ALTER TABLE widgets_for_fields ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE widgets_for_fields;
+    ADD TABLE widgets_for_fields;
 
 INSERT INTO widgets_for_fields (field_value, widget_value)
-  VALUES ('text', 'text'), ('text', 'markdown'), ('boolean', 'options-2'), ('boolean', 'options-3'), ('integer', 'text'), ('decimal', 'text'), ('decimal', 'options-few'), ('decimal', 'options-many'), ('text', 'options-many'), ('integer', 'options-many'), ('text', 'options-few'), ('integer', 'options-few'), ('date', 'datepicker'), ('text', 'textarea'), ('file-reference', 'filepicker'), ('boolean', 'jes-no'), ('date-time', 'datetimepicker'), ('time', 'timepicker'), ('text', 'rich-text')
+    VALUES ('text', 'text'), ('text', 'markdown'), ('boolean', 'options-2'), ('boolean', 'options-3'), ('integer', 'text'), ('decimal', 'text'), ('decimal', 'options-few'), ('decimal', 'options-many'), ('text', 'options-many'), ('integer', 'options-many'), ('text', 'options-few'), ('integer', 'options-few'), ('date', 'datepicker'), ('text', 'textarea'), ('file-reference', 'filepicker'), ('boolean', 'jes-no'), ('date-time', 'datetimepicker'), ('time', 'timepicker'), ('text', 'rich-text')
 ON CONFLICT ON CONSTRAINT widgets_for_fields_field_value_widget_value_key
-  DO NOTHING;
+    DO NOTHING;
 
 --
 DROP TABLE IF EXISTS fields CASCADE;
 
 CREATE TABLE fields (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  -- need table_id for policies
-  table_id uuid NOT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
-  name text DEFAULT NULL,
-  label text DEFAULT NULL,
-  sort smallint DEFAULT 0,
-  is_internal_id integer DEFAULT 0,
-  field_type text DEFAULT NULL REFERENCES field_types (value) ON DELETE NO action ON UPDATE CASCADE,
-  widget_type text DEFAULT NULL REFERENCES widget_types (value) ON DELETE NO action ON UPDATE CASCADE,
-  options_table uuid REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
-  standard_value text DEFAULT NULL,
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    -- need table_id for policies
+    table_id uuid NOT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
+    name text DEFAULT NULL,
+    label text DEFAULT NULL,
+    sort smallint DEFAULT 0,
+    is_internal_id integer DEFAULT 0,
+    field_type text DEFAULT NULL REFERENCES field_types (value) ON DELETE NO action ON UPDATE CASCADE,
+    widget_type text DEFAULT NULL REFERENCES widget_types (value) ON DELETE NO action ON UPDATE CASCADE,
+    options_table uuid REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
+    standard_value text DEFAULT NULL,
+    client_rev_at timestamp with time zone DEFAULT now(),
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0
 );
 
 ALTER TABLE fields
-  ALTER COLUMN field_type SET DEFAULT NULL;
+    ALTER COLUMN field_type SET DEFAULT NULL;
 
 ALTER TABLE fields
-  ALTER COLUMN widget_type SET DEFAULT NULL;
+    ALTER COLUMN widget_type SET DEFAULT NULL;
 
 CREATE UNIQUE INDEX fields_table_name_idx ON fields (table_id, name)
 WHERE
-  deleted = 0;
+    deleted = 0;
 
 CREATE INDEX ON fields USING btree (id);
 
@@ -540,27 +536,27 @@ COMMENT ON COLUMN fields.server_rev_at IS 'time of last edit on server';
 ALTER TABLE fields ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE fields;
+    ADD TABLE fields;
 
 --
 DROP TABLE IF EXISTS ROWS CASCADE;
 
 CREATE TABLE ROWS (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  table_id uuid NOT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
-  parent_id uuid DEFAULT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
-  geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
-  bbox jsonb DEFAULT NULL,
-  data jsonb,
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  rev text DEFAULT NULL,
-  parent_rev text DEFAULT NULL,
-  revisions text[] DEFAULT NULL,
-  depth integer DEFAULT 0,
-  deleted integer DEFAULT 0,
-  conflicts text[] DEFAULT NULL
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    table_id uuid NOT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
+    parent_id uuid DEFAULT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
+    geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
+    bbox jsonb DEFAULT NULL,
+    data jsonb,
+    client_rev_at timestamp with time zone DEFAULT now(),
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    rev text DEFAULT NULL,
+    parent_rev text DEFAULT NULL,
+    revisions text[] DEFAULT NULL,
+    depth integer DEFAULT 0,
+    deleted integer DEFAULT 0,
+    conflicts text[] DEFAULT NULL
 );
 
 CREATE INDEX ON ROWS USING btree (id);
@@ -600,27 +596,27 @@ COMMENT ON COLUMN rows.server_rev_at IS 'time of last edit on server';
 ALTER TABLE ROWS ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE ROWS;
+    ADD TABLE ROWS;
 
 --
 DROP TABLE IF EXISTS row_revs CASCADE;
 
 CREATE TABLE row_revs (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  row_id uuid DEFAULT NULL,
-  table_id uuid DEFAULT NULL,
-  parent_id uuid DEFAULT NULL,
-  geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
-  bbox jsonb DEFAULT NULL,
-  data jsonb,
-  deleted integer DEFAULT 0,
-  client_rev_at timestamp with time zone DEFAULT NULL,
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  rev text DEFAULT NULL,
-  parent_rev text DEFAULT NULL,
-  revisions text[] DEFAULT NULL,
-  depth integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    row_id uuid DEFAULT NULL,
+    table_id uuid DEFAULT NULL,
+    parent_id uuid DEFAULT NULL,
+    geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
+    bbox jsonb DEFAULT NULL,
+    data jsonb,
+    deleted integer DEFAULT 0,
+    client_rev_at timestamp with time zone DEFAULT NULL,
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    rev text DEFAULT NULL,
+    parent_rev text DEFAULT NULL,
+    revisions text[] DEFAULT NULL,
+    depth integer DEFAULT 0
 );
 
 CREATE INDEX ON row_revs USING btree (id);
@@ -659,33 +655,33 @@ ALTER TABLE row_revs ENABLE ROW LEVEL SECURITY;
 
 --
 CREATE TYPE line_cap_enum AS enum (
-  'butt',
-  'round',
-  'square'
+    'butt',
+    'round',
+    'square'
 );
 
 CREATE TYPE line_join_enum AS enum (
-  'arcs',
-  'bevel',
-  'miter',
-  'miter-clip',
-  'round'
+    'arcs',
+    'bevel',
+    'miter',
+    'miter-clip',
+    'round'
 );
 
 CREATE TYPE fill_rule_enum AS enum (
-  'nonzero',
-  'evenodd'
+    'nonzero',
+    'evenodd'
 );
 
 CREATE TYPE tile_layer_type_enum AS enum (
-  'wms',
-  'wmts'
-  -- 'tms'
+    'wms',
+    'wmts'
+    -- 'tms'
 );
 
 CREATE TYPE wms_version_enum AS enum (
-  '1.1.1',
-  '1.3.0'
+    '1.1.1',
+    '1.3.0'
 );
 
 --
@@ -693,33 +689,33 @@ CREATE TYPE wms_version_enum AS enum (
 DROP TABLE IF EXISTS tile_layers CASCADE;
 
 CREATE TABLE tile_layers (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  label text DEFAULT NULL,
-  sort smallint DEFAULT 0,
-  active integer DEFAULT 0,
-  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
-  type tile_layer_type_enum DEFAULT 'wmts',
-  wmts_url_template text DEFAULT NULL,
-  wmts_subdomains text[] DEFAULT NULL,
-  max_zoom decimal DEFAULT 19,
-  min_zoom decimal DEFAULT 0,
-  opacity decimal DEFAULT 1,
-  wms_base_url text DEFAULT NULL,
-  wms_format text DEFAULT NULL,
-  wms_layers text DEFAULT NULL,
-  wms_parameters jsonb DEFAULT NULL,
-  wms_styles text[] DEFAULT NULL,
-  wms_transparent integer DEFAULT 0,
-  wms_version wms_version_enum DEFAULT NULL,
-  wms_info_format text DEFAULT NULL,
-  wms_queryable integer DEFAULT NULL,
-  grayscale integer DEFAULT 0,
-  local_data_size integer DEFAULT NULL,
-  local_data_bounds jsonb DEFAULT NULL,
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    label text DEFAULT NULL,
+    sort smallint DEFAULT 0,
+    active integer DEFAULT 0,
+    project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    type tile_layer_type_enum DEFAULT 'wmts',
+    wmts_url_template text DEFAULT NULL,
+    wmts_subdomains text[] DEFAULT NULL,
+    max_zoom decimal DEFAULT 19,
+    min_zoom decimal DEFAULT 0,
+    opacity decimal DEFAULT 1,
+    wms_base_url text DEFAULT NULL,
+    wms_format text DEFAULT NULL,
+    wms_layers text DEFAULT NULL,
+    wms_parameters jsonb DEFAULT NULL,
+    wms_styles text[] DEFAULT NULL,
+    wms_transparent integer DEFAULT 0,
+    wms_version wms_version_enum DEFAULT NULL,
+    wms_info_format text DEFAULT NULL,
+    wms_queryable integer DEFAULT NULL,
+    grayscale integer DEFAULT 0,
+    local_data_size integer DEFAULT NULL,
+    local_data_bounds jsonb DEFAULT NULL,
+    client_rev_at timestamp with time zone DEFAULT now(),
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON tile_layers USING btree (id);
@@ -737,39 +733,39 @@ COMMENT ON COLUMN tile_layers.local_data_bounds IS 'Array of bounds and their si
 ALTER TABLE tile_layers ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE tile_layers;
+    ADD TABLE tile_layers;
 
 --
 CREATE TYPE vector_layer_type_enum AS enum (
-  'wfs',
-  'upload'
+    'wfs',
+    'upload'
 );
 
 DROP TABLE IF EXISTS vector_layers CASCADE;
 
 CREATE TABLE vector_layers (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  label text DEFAULT NULL,
-  sort smallint DEFAULT 0,
-  active integer DEFAULT 0,
-  project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
-  type vector_layer_type_enum DEFAULT 'wfs',
-  url text DEFAULT NULL, -- WFS url, for example https://maps.zh.ch/wfs/OGDZHWFS
-  max_zoom decimal DEFAULT 19,
-  min_zoom decimal DEFAULT 0,
-  type_name text DEFAULT NULL, -- type name, for example ms:ogd-0119_giszhpub_feuchtgebietinv_79_90_beob_p
-  wfs_version text DEFAULT NULL, -- often: 1.1.0 or 2.0.0
-  output_format text DEFAULT NULL, -- need some form of json. TODO: Convert others?
-  opacity integer DEFAULT 1,
-  max_features integer DEFAULT 1000,
-  feature_count integer DEFAULT NULL,
-  point_count integer DEFAULT NULL,
-  line_count integer DEFAULT NULL,
-  polygon_count integer DEFAULT NULL,
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    label text DEFAULT NULL,
+    sort smallint DEFAULT 0,
+    active integer DEFAULT 0,
+    project_id uuid NOT NULL REFERENCES projects (id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    type vector_layer_type_enum DEFAULT 'wfs',
+    url text DEFAULT NULL, -- WFS url, for example https://maps.zh.ch/wfs/OGDZHWFS
+    max_zoom decimal DEFAULT 19,
+    min_zoom decimal DEFAULT 0,
+    type_name text DEFAULT NULL, -- type name, for example ms:ogd-0119_giszhpub_feuchtgebietinv_79_90_beob_p
+    wfs_version text DEFAULT NULL, -- often: 1.1.0 or 2.0.0
+    output_format text DEFAULT NULL, -- need some form of json. TODO: Convert others?
+    opacity integer DEFAULT 1,
+    max_features integer DEFAULT 1000,
+    feature_count integer DEFAULT NULL,
+    point_count integer DEFAULT NULL,
+    line_count integer DEFAULT NULL,
+    polygon_count integer DEFAULT NULL,
+    client_rev_at timestamp with time zone DEFAULT now(),
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON vector_layers USING btree (id);
@@ -793,42 +789,42 @@ COMMENT ON COLUMN vector_layers.polygon_count IS 'Number of polygon features. Us
 ALTER TABLE vector_layers ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE vector_layers;
+    ADD TABLE vector_layers;
 
 --
 CREATE TYPE marker_type_enum AS enum (
-  'circle',
-  'marker'
+    'circle',
+    'marker'
 );
 
 --
 DROP TABLE IF EXISTS layer_styles CASCADE;
 
 CREATE TABLE layer_styles (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  table_id uuid UNIQUE DEFAULT NULL REFERENCES tables (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  vector_layer_id uuid UNIQUE DEFAULT NULL REFERENCES vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  marker_type marker_type_enum DEFAULT 'circle',
-  circle_marker_radius integer DEFAULT 8,
-  marker_symbol text DEFAULT NULL,
-  marker_size integer DEFAULT 16,
-  marker_weight integer DEFAULT NULL,
-  stroke integer DEFAULT 1,
-  color text DEFAULT '#3388ff',
-  weight integer DEFAULT 3,
-  opacity numeric(2, 1) DEFAULT 1.0,
-  line_cap line_cap_enum DEFAULT 'round',
-  line_join line_join_enum DEFAULT 'round',
-  dash_array text DEFAULT NULL,
-  dash_offset text DEFAULT NULL,
-  fill integer DEFAULT 1,
-  fill_color text DEFAULT NULL,
-  fill_opacity numeric(2, 1) DEFAULT 0.2,
-  fill_rule fill_rule_enum DEFAULT 'evenodd',
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    table_id uuid UNIQUE DEFAULT NULL REFERENCES tables (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    vector_layer_id uuid UNIQUE DEFAULT NULL REFERENCES vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    marker_type marker_type_enum DEFAULT 'circle',
+    circle_marker_radius integer DEFAULT 8,
+    marker_symbol text DEFAULT NULL,
+    marker_size integer DEFAULT 16,
+    marker_weight integer DEFAULT NULL,
+    stroke integer DEFAULT 1,
+    color text DEFAULT '#3388ff',
+    weight integer DEFAULT 3,
+    opacity numeric(2, 1) DEFAULT 1.0,
+    line_cap line_cap_enum DEFAULT 'round',
+    line_join line_join_enum DEFAULT 'round',
+    dash_array text DEFAULT NULL,
+    dash_offset text DEFAULT NULL,
+    fill integer DEFAULT 1,
+    fill_color text DEFAULT NULL,
+    fill_opacity numeric(2, 1) DEFAULT 0.2,
+    fill_rule fill_rule_enum DEFAULT 'evenodd',
+    client_rev_at timestamp with time zone DEFAULT now(),
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON layer_styles USING btree (id);
@@ -882,26 +878,26 @@ COMMENT ON COLUMN layer_styles.server_rev_at IS 'time of last edit on server';
 ALTER TABLE layer_styles ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE layer_styles;
+    ADD TABLE layer_styles;
 
 --
 DROP TABLE IF EXISTS files_meta CASCADE;
 
 CREATE TABLE files_meta (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  row_id uuid NOT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
-  field_id uuid DEFAULT NULL REFERENCES fields (id) ON DELETE NO action ON UPDATE CASCADE,
-  name text DEFAULT NULL,
-  type text DEFAULT NULL, -- https://en.wikipedia.org/wiki/Media_type
-  deleted integer DEFAULT 0,
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  rev text DEFAULT NULL,
-  parent_rev text DEFAULT NULL,
-  revisions text[] DEFAULT NULL,
-  depth integer DEFAULT 0,
-  conflicts text[] DEFAULT NULL
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    row_id uuid NOT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
+    field_id uuid DEFAULT NULL REFERENCES fields (id) ON DELETE NO action ON UPDATE CASCADE,
+    name text DEFAULT NULL,
+    type text DEFAULT NULL, -- https://en.wikipedia.org/wiki/Media_type
+    deleted integer DEFAULT 0,
+    client_rev_at timestamp with time zone DEFAULT now(),
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    rev text DEFAULT NULL,
+    parent_rev text DEFAULT NULL,
+    revisions text[] DEFAULT NULL,
+    depth integer DEFAULT 0,
+    conflicts text[] DEFAULT NULL
 );
 
 CREATE INDEX ON files_meta USING btree (id);
@@ -940,26 +936,26 @@ COMMENT ON COLUMN files_meta.server_rev_at IS 'time of last edit on server';
 ALTER TABLE files_meta ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE files_meta;
+    ADD TABLE files_meta;
 
 --
 DROP TABLE IF EXISTS files_meta_revs CASCADE;
 
 CREATE TABLE files_meta_revs (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  row_id uuid DEFAULT NULL,
-  file_id uuid DEFAULT NULL,
-  field_id uuid DEFAULT NULL,
-  name text DEFAULT NULL,
-  type text DEFAULT NULL,
-  deleted integer DEFAULT 0,
-  client_rev_at timestamp with time zone DEFAULT NULL,
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  rev text DEFAULT NULL,
-  parent_rev text DEFAULT NULL,
-  revisions text[] DEFAULT NULL,
-  depth integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    row_id uuid DEFAULT NULL,
+    file_id uuid DEFAULT NULL,
+    field_id uuid DEFAULT NULL,
+    name text DEFAULT NULL,
+    type text DEFAULT NULL,
+    deleted integer DEFAULT 0,
+    client_rev_at timestamp with time zone DEFAULT NULL,
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    rev text DEFAULT NULL,
+    parent_rev text DEFAULT NULL,
+    revisions text[] DEFAULT NULL,
+    depth integer DEFAULT 0
 );
 
 CREATE INDEX ON files_meta_revs USING btree (id);
@@ -998,12 +994,12 @@ ALTER TABLE files_meta_revs ENABLE ROW LEVEL SECURITY;
 DROP TABLE IF EXISTS version_types CASCADE;
 
 CREATE TABLE version_types (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  value text UNIQUE,
-  sort smallint DEFAULT NULL,
-  comment text,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    value text UNIQUE,
+    sort smallint DEFAULT NULL,
+    comment text,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON version_types USING btree (value);
@@ -1025,27 +1021,27 @@ COMMENT ON COLUMN version_types.sort IS 'enables sorting at will';
 COMMENT ON COLUMN version_types.server_rev_at IS 'time of last edit on server';
 
 INSERT INTO version_types (value, sort, comment)
-  VALUES ('patch', 1, 'Backward compatible bug fixes'), ('minor', 2, 'Backward compatible new features'), ('major', 3, 'Changes that break backward compatibility')
+    VALUES ('patch', 1, 'Backward compatible bug fixes'), ('minor', 2, 'Backward compatible new features'), ('major', 3, 'Changes that break backward compatibility')
 ON CONFLICT ON CONSTRAINT version_types_pkey
-  DO UPDATE SET
-    comment = excluded.comment;
+    DO UPDATE SET
+        comment = excluded.comment;
 
 ALTER TABLE version_types ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE version_types;
+    ADD TABLE version_types;
 
 --
 DROP TABLE IF EXISTS news CASCADE;
 
 CREATE TABLE news (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  time timestamp with time zone DEFAULT now(),
-  version_type text DEFAULT 'minor' REFERENCES version_types (value) ON DELETE NO action ON UPDATE CASCADE,
-  version text DEFAULT NULL,
-  message text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    time timestamp with time zone DEFAULT now(),
+    version_type text DEFAULT 'minor' REFERENCES version_types (value) ON DELETE NO action ON UPDATE CASCADE,
+    version text DEFAULT NULL,
+    message text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON news USING btree (id);
@@ -1073,17 +1069,17 @@ COMMENT ON COLUMN news.server_rev_at IS 'time of last edit on server';
 ALTER TABLE news ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE news;
+    ADD TABLE news;
 
 --
 DROP TABLE IF EXISTS news_delivery CASCADE;
 
 CREATE TABLE news_delivery (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  news_id uuid DEFAULT NULL REFERENCES news (id) ON DELETE NO action ON UPDATE CASCADE,
-  user_id uuid DEFAULT NULL REFERENCES users (id) ON DELETE NO action ON UPDATE CASCADE,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    news_id uuid DEFAULT NULL REFERENCES news (id) ON DELETE NO action ON UPDATE CASCADE,
+    user_id uuid DEFAULT NULL REFERENCES users (id) ON DELETE NO action ON UPDATE CASCADE,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON news_delivery USING btree (id);
@@ -1107,7 +1103,7 @@ COMMENT ON COLUMN news_delivery.server_rev_at IS 'time of last edit on server';
 ALTER TABLE news_delivery ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE news_delivery;
+    ADD TABLE news_delivery;
 
 --
 -- seperate from vector_layers because pvl : pvl_geoms = 1 : n
@@ -1115,18 +1111,18 @@ ALTER publication supabase_realtime
 DROP TABLE IF EXISTS pvl_geoms CASCADE;
 
 CREATE TABLE pvl_geoms (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
-  pvl_id uuid DEFAULT NULL REFERENCES vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
-  properties jsonb DEFAULT NULL,
-  bbox_sw_lng real DEFAULT NULL,
-  bbox_sw_lat real DEFAULT NULL,
-  bbox_ne_lng real DEFAULT NULL,
-  bbox_ne_lat real DEFAULT NULL,
-  client_rev_at timestamp with time zone DEFAULT now(),
-  client_rev_by text DEFAULT NULL,
-  server_rev_at timestamp with time zone DEFAULT now(),
-  deleted integer DEFAULT 0
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
+    pvl_id uuid DEFAULT NULL REFERENCES vector_layers (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
+    properties jsonb DEFAULT NULL,
+    bbox_sw_lng real DEFAULT NULL,
+    bbox_sw_lat real DEFAULT NULL,
+    bbox_ne_lng real DEFAULT NULL,
+    bbox_ne_lat real DEFAULT NULL,
+    client_rev_at timestamp with time zone DEFAULT now(),
+    client_rev_by text DEFAULT NULL,
+    server_rev_at timestamp with time zone DEFAULT now(),
+    deleted integer DEFAULT 0
 );
 
 CREATE INDEX ON pvl_geoms USING btree (id);
@@ -1152,7 +1148,7 @@ COMMENT ON COLUMN pvl_geoms.bbox_ne_lat IS 'bbox of the geometry. Set client-sid
 ALTER TABLE pvl_geoms ENABLE ROW LEVEL SECURITY;
 
 ALTER publication supabase_realtime
-  ADD TABLE pvl_geoms;
+    ADD TABLE pvl_geoms;
 
 -- not needed because only used client side:
 -- CREATE INDEX ON pvl_geoms USING gist (geometry);
@@ -1162,20 +1158,21 @@ ALTER publication supabase_realtime
 -- to ensure they never reference a structur not yet created
 --
 --
+-- 01.2 create functions for policies
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_own_account (_auth_user_id uuid, _account_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users au
-        INNER JOIN public.users pu ON au.id = pu.auth_user_id
-      WHERE
-        pu.account_id = _account_id
-        AND au.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users au
+                INNER JOIN public.users pu ON au.id = pu.auth_user_id
+            WHERE
+                pu.account_id = _account_id
+                AND au.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -1186,21 +1183,21 @@ SECURITY DEFINER;
 --
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_account_owner_by_project_user (_auth_user_id uuid, _project_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users au
-        INNER JOIN public.users pu ON au.id = pu.auth_user_id
-        INNER JOIN project_users ON project_users.user_email = pu.email
-        INNER JOIN projects ON projects.id = project_users.project_id
-      WHERE
-        au.id = _auth_user_id
-        AND projects.account_id = pu.account_id
-        AND projects.id = _project_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users au
+                INNER JOIN public.users pu ON au.id = pu.auth_user_id
+                INNER JOIN project_users ON project_users.user_email = pu.email
+                INNER JOIN projects ON projects.id = project_users.project_id
+            WHERE
+                au.id = _auth_user_id
+                AND projects.account_id = pu.account_id
+                AND projects.id = _project_id);
 
 $$
 LANGUAGE sql
@@ -1211,17 +1208,17 @@ SECURITY DEFINER;
 -- is_project_user is in tables to guarantee correct series of events when creating policies
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_project_user (_auth_user_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-      WHERE
-        users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+            WHERE
+                users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -1232,18 +1229,18 @@ SECURITY DEFINER;
 -- is_news_delivery_user is in tables to guarantee correct series of events when creating policies
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_news_delivery_user (_auth_user_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users au
-        INNER JOIN public.users pu ON pu.auth_user_id = au.id
-        INNER JOIN news_delivery ON pu.id = news_delivery.user_id
-      WHERE
-        au.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users au
+                INNER JOIN public.users pu ON pu.auth_user_id = au.id
+                INNER JOIN news_delivery ON pu.id = news_delivery.user_id
+            WHERE
+                au.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -1254,18 +1251,18 @@ SECURITY DEFINER;
 -- is_project_user_by_project is in tables to guarantee correct series of events when creating policies
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_project_user_by_project (_auth_user_id uuid, _project_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-      WHERE
-        project_users.project_id = _project_id
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+            WHERE
+                project_users.project_id = _project_id
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -1276,20 +1273,20 @@ SECURITY DEFINER;
 -- is_project_user_by_table is in tables to guarantee correct series of events when creating policies
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_project_user_by_table (_auth_user_id uuid, _table_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-        INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN tables ON tables.project_id = projects.id
-      WHERE
-        tables.id = _table_id
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+                INNER JOIN projects ON projects.id = project_users.project_id
+                INNER JOIN tables ON tables.project_id = projects.id
+            WHERE
+                tables.id = _table_id
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -1298,41 +1295,41 @@ SECURITY DEFINER;
 -- Function is owned by postgres which bypasses RLS
 --
 CREATE OR REPLACE FUNCTION is_project_user_by_tile_layer (_auth_user_id uuid, _tile_layer_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-        INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN tile_layers ON tile_layers.project_id = projects.id
-      WHERE
-        tile_layers.id = _tile_layer_id
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+                INNER JOIN projects ON projects.id = project_users.project_id
+                INNER JOIN tile_layers ON tile_layers.project_id = projects.id
+            WHERE
+                tile_layers.id = _tile_layer_id
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
 SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION is_project_manager_by_tile_layer (_auth_user_id uuid, _tile_layer_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-        INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN tile_layers ON tile_layers.project_id = projects.id
-      WHERE
-        tile_layers.id = _tile_layer_id
-        AND project_users.role IN ('account_manager', 'project_manager')
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+                INNER JOIN projects ON projects.id = project_users.project_id
+                INNER JOIN tile_layers ON tile_layers.project_id = projects.id
+            WHERE
+                tile_layers.id = _tile_layer_id
+                AND project_users.role IN ('account_manager', 'project_manager')
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -1340,41 +1337,41 @@ SECURITY DEFINER;
 
 --
 CREATE OR REPLACE FUNCTION is_project_user_by_vector_layer (_auth_user_id uuid, _vector_layer_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-        INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN vector_layers ON vector_layers.project_id = projects.id
-      WHERE
-        vector_layers.id = _vector_layer_id
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+                INNER JOIN projects ON projects.id = project_users.project_id
+                INNER JOIN vector_layers ON vector_layers.project_id = projects.id
+            WHERE
+                vector_layers.id = _vector_layer_id
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
 SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION is_project_manager_by_vector_layer (_auth_user_id uuid, _vector_layer_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-        INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN vector_layers ON vector_layers.project_id = projects.id
-      WHERE
-        vector_layers.id = _vector_layer_id
-        AND project_users.role IN ('account_manager', 'project_manager')
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+                INNER JOIN projects ON projects.id = project_users.project_id
+                INNER JOIN vector_layers ON vector_layers.project_id = projects.id
+            WHERE
+                vector_layers.id = _vector_layer_id
+                AND project_users.role IN ('account_manager', 'project_manager')
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -1384,21 +1381,21 @@ SECURITY DEFINER;
 -- is_project_user_by_row is in tables to guarantee correct series of events when creating policies
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_project_user_by_row (_auth_user_id uuid, _row_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-        INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN tables ON tables.project_id = projects.id
-        INNER JOIN ROWS ON rows.table_id = tables.id
-      WHERE
-        rows.id = _row_id
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+                INNER JOIN projects ON projects.id = project_users.project_id
+                INNER JOIN tables ON tables.project_id = projects.id
+                INNER JOIN ROWS ON rows.table_id = tables.id
+            WHERE
+                rows.id = _row_id
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -1408,64 +1405,64 @@ SECURITY DEFINER;
 --
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_project_editor_or_manager_by_project (_auth_user_id uuid, _project_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-      WHERE
-        project_users.project_id = _project_id
-        AND project_users.role IN ('account_manager', 'project_manager', 'project_editor')
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+            WHERE
+                project_users.project_id = _project_id
+                AND project_users.role IN ('account_manager', 'project_manager', 'project_editor')
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
 SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION is_project_user_by_file_meta (_auth_user_id uuid, _file_meta_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-        INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN tables ON tables.project_id = projects.id
-        INNER JOIN ROWS ON rows.table_id = tables.id
-        INNER JOIN files_meta ON files_meta.row_id = rows.id
-      WHERE
-        files_meta.id = _file_meta_id
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+                INNER JOIN projects ON projects.id = project_users.project_id
+                INNER JOIN tables ON tables.project_id = projects.id
+                INNER JOIN ROWS ON rows.table_id = tables.id
+                INNER JOIN files_meta ON files_meta.row_id = rows.id
+            WHERE
+                files_meta.id = _file_meta_id
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
 SECURITY DEFINER;
 
 CREATE OR REPLACE FUNCTION is_project_editor_or_manager_by_file_meta (_auth_user_id uuid, _file_meta_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-        INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN tables ON tables.project_id = projects.id
-        INNER JOIN ROWS ON rows.table_id = tables.id
-        INNER JOIN files_meta ON files_meta.row_id = rows.id
-      WHERE
-        files_meta.id = _file_meta_id
-        AND project_users.role IN ('account_manager', 'project_manager', 'project_editor')
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+                INNER JOIN projects ON projects.id = project_users.project_id
+                INNER JOIN tables ON tables.project_id = projects.id
+                INNER JOIN ROWS ON rows.table_id = tables.id
+                INNER JOIN files_meta ON files_meta.row_id = rows.id
+            WHERE
+                files_meta.id = _file_meta_id
+                AND project_users.role IN ('account_manager', 'project_manager', 'project_editor')
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -1476,21 +1473,21 @@ SECURITY DEFINER;
 --
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_project_editor_or_manager_by_table (_auth_user_id uuid, _table_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-        INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN tables ON tables.project_id = projects.id
-      WHERE
-        tables.id = _table_id
-        AND project_users.role IN ('account_manager', 'project_manager', 'project_editor')
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+                INNER JOIN projects ON projects.id = project_users.project_id
+                INNER JOIN tables ON tables.project_id = projects.id
+            WHERE
+                tables.id = _table_id
+                AND project_users.role IN ('account_manager', 'project_manager', 'project_editor')
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -1501,22 +1498,22 @@ SECURITY DEFINER;
 --
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_project_editor_or_manager_by_row (_auth_user_id uuid, _row_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-        INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN tables ON tables.project_id = projects.id
-        INNER JOIN ROWS ON rows.table_id = tables.id
-      WHERE
-        rows.id = _row_id
-        AND project_users.role IN ('account_manager', 'project_manager', 'project_editor')
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+                INNER JOIN projects ON projects.id = project_users.project_id
+                INNER JOIN tables ON tables.project_id = projects.id
+                INNER JOIN ROWS ON rows.table_id = tables.id
+            WHERE
+                rows.id = _row_id
+                AND project_users.role IN ('account_manager', 'project_manager', 'project_editor')
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -1526,18 +1523,18 @@ SECURITY DEFINER;
 --
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_project_manager (_auth_user_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-      WHERE
-        project_users.role IN ('account_manager', 'project_manager')
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+            WHERE
+                project_users.role IN ('account_manager', 'project_manager')
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -1548,19 +1545,19 @@ SECURITY DEFINER;
 --
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_project_manager_by_project (_auth_user_id uuid, _project_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-      WHERE
-        project_users.project_id = _project_id
-        AND project_users.role IN ('account_manager', 'project_manager')
-        AND users.id = _auth_user_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+            WHERE
+                project_users.project_id = _project_id
+                AND project_users.role IN ('account_manager', 'project_manager')
+                AND users.id = _auth_user_id);
 
 $$
 LANGUAGE sql
@@ -1571,26 +1568,27 @@ SECURITY DEFINER;
 --
 -- Parameters need to be prefixed because the name clashes with column names
 CREATE OR REPLACE FUNCTION is_project_manager_by_project_by_table (_auth_user_id uuid, _table_id uuid)
-  RETURNS bool
-  AS $$
-  SELECT
-    EXISTS (
-      SELECT
-        1
-      FROM
-        auth.users users
-        INNER JOIN project_users ON users.email = project_users.user_email
-        INNER JOIN projects ON projects.id = project_users.project_id
-        INNER JOIN tables ON tables.project_id = projects.id
-      WHERE
-        project_users.role IN ('account_manager', 'project_manager')
-        AND users.id = _auth_user_id
-        AND tables.id = _table_id);
+    RETURNS bool
+    AS $$
+    SELECT
+        EXISTS (
+            SELECT
+                1
+            FROM
+                auth.users users
+                INNER JOIN project_users ON users.email = project_users.user_email
+                INNER JOIN projects ON projects.id = project_users.project_id
+                INNER JOIN tables ON tables.project_id = projects.id
+            WHERE
+                project_users.role IN ('account_manager', 'project_manager')
+                AND users.id = _auth_user_id
+                AND tables.id = _table_id);
 
 $$
 LANGUAGE sql
 SECURITY DEFINER;
 
+-- 01.3 create policies
 -- Function is owned by postgres which bypasses RLS
 --
 --
@@ -1599,19 +1597,19 @@ SECURITY DEFINER;
 --
 --
 INSERT INTO storage.buckets (id, name)
-  VALUES ('files', 'files');
+    VALUES ('files', 'files');
 
 ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Restricted Access" ON storage.objects
-  FOR SELECT
-  -- USING (is_project_user_by_file_meta (auth.uid (), id));
-    USING (auth.role () = 'authenticated');
+    FOR SELECT
+    -- USING (is_project_user_by_file_meta (auth.uid (), id));
+        USING (auth.role () = 'authenticated');
 
 CREATE POLICY "Restricted insert" ON storage.objects
-  FOR INSERT
-  -- WITH CHECK (is_project_editor_or_manager_by_file_meta (auth.uid (), id));
-    WITH CHECK (auth.role () = 'authenticated');
+    FOR INSERT
+    -- WITH CHECK (is_project_editor_or_manager_by_file_meta (auth.uid (), id));
+        WITH CHECK (auth.role () = 'authenticated');
 
 --
 -- TODO: remove after next new creation
@@ -1620,14 +1618,14 @@ DROP POLICY IF EXISTS "project owners and same user can view project_users" ON p
 DROP POLICY IF EXISTS "account owners and same user can view project_users" ON project_users;
 
 CREATE POLICY "account owners and same user can view project_users" ON project_users
-  FOR SELECT
-    USING (is_account_owner_by_project_user (auth.uid (), project_id)
-      OR auth.uid () IN (
-      -- same user
-        SELECT
-          users.auth_user_id FROM users
-          WHERE
-            email = user_email));
+    FOR SELECT
+        USING (is_account_owner_by_project_user (auth.uid (), project_id)
+            OR auth.uid () IN (
+            -- same user
+                SELECT
+                    users.auth_user_id FROM users
+                    WHERE
+                        email = user_email));
 
 -- TODO: remove after next new creation
 DROP POLICY IF EXISTS "project owners can insert project_users" ON project_users;
@@ -1635,26 +1633,26 @@ DROP POLICY IF EXISTS "project owners can insert project_users" ON project_users
 DROP POLICY IF EXISTS "account owners can insert project_users" ON project_users;
 
 CREATE POLICY "account owners can insert project_users" ON project_users
-  FOR INSERT
-    WITH CHECK (is_account_owner_by_project_user (auth.uid (), project_id));
+    FOR INSERT
+        WITH CHECK (is_account_owner_by_project_user (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project owners can update project_users" ON project_users;
 
 CREATE POLICY "project owners can update project_users" ON project_users
-  FOR UPDATE
-    USING (is_account_owner_by_project_user (auth.uid (), project_id)
-      OR auth.uid () IN (
-      -- same user
-      SELECT users.auth_user_id FROM users
-      WHERE
-        email = user_email))
-    WITH CHECK (is_account_owner_by_project_user (auth.uid (), project_id));
+    FOR UPDATE
+        USING (is_account_owner_by_project_user (auth.uid (), project_id)
+            OR auth.uid () IN (
+            -- same user
+            SELECT users.auth_user_id FROM users
+            WHERE
+                email = user_email))
+        WITH CHECK (is_account_owner_by_project_user (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project owners can delete project_users" ON project_users;
 
 CREATE POLICY "project owners can delete project_users" ON project_users
-  FOR DELETE
-    USING (is_account_owner_by_project_user (auth.uid (), project_id));
+    FOR DELETE
+        USING (is_account_owner_by_project_user (auth.uid (), project_id));
 
 ---
 --
@@ -1662,9 +1660,9 @@ CREATE POLICY "project owners can delete project_users" ON project_users
 DROP POLICY IF EXISTS "Users can view assigned projects and projects of own accounts" ON projects;
 
 CREATE POLICY "Users can view assigned projects and projects of own accounts" ON projects
-  FOR SELECT
-    USING (is_project_user_by_project (auth.uid (), id)
-      OR is_own_account (auth.uid (), account_id));
+    FOR SELECT
+        USING (is_project_user_by_project (auth.uid (), id)
+            OR is_own_account (auth.uid (), account_id));
 
 -- CREATE POLICY "Users can view assigned projects and projects of own accounts" ON projects
 --   FOR SELECT
@@ -1672,194 +1670,194 @@ CREATE POLICY "Users can view assigned projects and projects of own accounts" ON
 DROP POLICY IF EXISTS "account owners can insert projects for own account" ON projects;
 
 CREATE POLICY "account owners can insert projects for own account" ON projects
-  FOR INSERT
-    WITH CHECK (is_own_account (auth.uid (), account_id));
+    FOR INSERT
+        WITH CHECK (is_own_account (auth.uid (), account_id));
 
 DROP POLICY IF EXISTS "Users can update projects assigned and of own accounts" ON projects;
 
 CREATE POLICY "Users can update projects assigned and of own accounts" ON projects
-  FOR UPDATE
-    USING (is_project_user_by_project (auth.uid (), id)
-      OR is_own_account (auth.uid (), account_id))
-      WITH CHECK (is_project_editor_or_manager_by_project (auth.uid (), id)
-      OR is_own_account (auth.uid (), account_id));
+    FOR UPDATE
+        USING (is_project_user_by_project (auth.uid (), id)
+            OR is_own_account (auth.uid (), account_id))
+            WITH CHECK (is_project_editor_or_manager_by_project (auth.uid (), id)
+            OR is_own_account (auth.uid (), account_id));
 
 DROP POLICY IF EXISTS "account owners can delete own projects" ON projects;
 
 CREATE POLICY "account owners can delete own projects" ON projects
-  FOR DELETE
-    USING (is_own_account (auth.uid (), account_id));
+    FOR DELETE
+        USING (is_own_account (auth.uid (), account_id));
 
 DROP POLICY IF EXISTS "project readers, editors and managers can view tables" ON tables;
 
 CREATE POLICY "project readers, editors and managers can view tables" ON tables
-  FOR SELECT
-    USING (is_project_user_by_project (auth.uid (), project_id));
+    FOR SELECT
+        USING (is_project_user_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can insert tables" ON tables;
 
 CREATE POLICY "project managers can insert tables" ON tables
-  FOR INSERT
-    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
+    FOR INSERT
+        WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can update tables" ON tables;
 
 CREATE POLICY "project managers can update tables" ON tables
-  FOR UPDATE
-    USING (is_project_user_by_project (auth.uid (), project_id))
-    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
+    FOR UPDATE
+        USING (is_project_user_by_project (auth.uid (), project_id))
+        WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can delete tables" ON tables;
 
 CREATE POLICY "project managers can delete tables" ON tables
-  FOR DELETE
-    USING (is_project_manager_by_project (auth.uid (), project_id));
+    FOR DELETE
+        USING (is_project_manager_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "Users can view own user" ON users;
 
 CREATE POLICY "Users can view own user" ON users
-  FOR SELECT
-    USING (auth.uid () = users.auth_user_id);
+    FOR SELECT
+        USING (auth.uid () = users.auth_user_id);
 
 DROP POLICY IF EXISTS "Users can insert own user" ON users;
 
 CREATE POLICY "Users can insert own user" ON users
-  FOR INSERT
-    WITH CHECK (auth.uid () = users.auth_user_id);
+    FOR INSERT
+        WITH CHECK (auth.uid () = users.auth_user_id);
 
 DROP POLICY IF EXISTS "Users can update own user" ON users;
 
 CREATE POLICY "Users can update own user" ON users
-  FOR UPDATE
-    USING (auth.uid () = users.auth_user_id)
-    WITH CHECK (auth.uid () = users.auth_user_id);
+    FOR UPDATE
+        USING (auth.uid () = users.auth_user_id)
+        WITH CHECK (auth.uid () = users.auth_user_id);
 
 DROP POLICY IF EXISTS "Users can view own account" ON accounts;
 
 CREATE POLICY "Users can view own account" ON accounts
-  FOR SELECT
-    USING (is_own_account (auth.uid (), id));
+    FOR SELECT
+        USING (is_own_account (auth.uid (), id));
 
 DROP POLICY IF EXISTS "Users can insert own account" ON accounts;
 
 CREATE POLICY "Users can insert own account" ON accounts
-  FOR INSERT
-    WITH CHECK (is_own_account (auth.uid (), id));
+    FOR INSERT
+        WITH CHECK (is_own_account (auth.uid (), id));
 
 DROP POLICY IF EXISTS "Users can update own account" ON accounts;
 
 CREATE POLICY "Users can update own account" ON accounts
-  FOR UPDATE
-    USING (is_own_account (auth.uid (), id))
-    WITH CHECK (is_own_account (auth.uid (), id));
+    FOR UPDATE
+        USING (is_own_account (auth.uid (), id))
+        WITH CHECK (is_own_account (auth.uid (), id));
 
 DROP POLICY IF EXISTS "Users cant delete accounts" ON accounts;
 
 CREATE POLICY "Users cant delete accounts" ON accounts
-  FOR DELETE
-    USING (FALSE);
+    FOR DELETE
+        USING (FALSE);
 
 DROP POLICY IF EXISTS "Users can view layer styles" ON layer_styles;
 
 -- TODO: add OR is_project_user_by_vector_layer
 CREATE POLICY "Users can view layer styles" ON layer_styles
-  FOR SELECT
-    USING (is_project_user_by_table (auth.uid (), table_id)
-      OR is_project_user_by_vector_layer (auth.uid (), vector_layer_id));
+    FOR SELECT
+        USING (is_project_user_by_table (auth.uid (), table_id)
+            OR is_project_user_by_vector_layer (auth.uid (), vector_layer_id));
 
 -- TODO: add OR is_project_user_by_vector_layer
 DROP POLICY IF EXISTS "Managers can insert layer styles" ON layer_styles;
 
 CREATE POLICY "Managers can insert layer styles" ON layer_styles
-  FOR INSERT
-    WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id)
-    OR is_project_manager_by_vector_layer (auth.uid (), vector_layer_id));
+    FOR INSERT
+        WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id)
+        OR is_project_manager_by_vector_layer (auth.uid (), vector_layer_id));
 
 -- TODO: add OR is_project_user_by_vector_layer
 DROP POLICY IF EXISTS "Managers can update insert layer styles" ON layer_styles;
 
 CREATE POLICY "Managers can update insert layer styles" ON layer_styles
-  FOR UPDATE
-    USING (is_project_user_by_table (auth.uid (), table_id)
-      OR is_project_user_by_vector_layer (auth.uid (), vector_layer_id))
-      WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id)
-      OR is_project_manager_by_vector_layer (auth.uid (), vector_layer_id));
+    FOR UPDATE
+        USING (is_project_user_by_table (auth.uid (), table_id)
+            OR is_project_user_by_vector_layer (auth.uid (), vector_layer_id))
+            WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id)
+            OR is_project_manager_by_vector_layer (auth.uid (), vector_layer_id));
 
 -- TODO: add OR is_project_user_by_vector_layer
 DROP POLICY IF EXISTS "Managers can delete layer styles" ON layer_styles;
 
 CREATE POLICY "Managers can delete layer styles" ON layer_styles
-  FOR DELETE
-    USING (is_project_manager_by_project_by_table (auth.uid (), table_id)
-      OR is_project_manager_by_vector_layer (auth.uid (), vector_layer_id));
+    FOR DELETE
+        USING (is_project_manager_by_project_by_table (auth.uid (), table_id)
+            OR is_project_manager_by_vector_layer (auth.uid (), vector_layer_id));
 
 DROP POLICY IF EXISTS "Users can view field types" ON field_types;
 
 CREATE POLICY "Users can view field types" ON field_types
-  FOR SELECT
-    USING (is_project_user (auth.uid ()));
+    FOR SELECT
+        USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "Users can view widget types" ON widget_types;
 
 CREATE POLICY "Users can view widget types" ON widget_types
-  FOR SELECT
-    USING (is_project_user (auth.uid ()));
+    FOR SELECT
+        USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "Users can view widgets for fields" ON widgets_for_fields;
 
 CREATE POLICY "Users can view widgets for fields" ON widgets_for_fields
-  FOR SELECT
-    USING (is_project_user (auth.uid ()));
+    FOR SELECT
+        USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "project readers, editors and managers can view fields" ON fields;
 
 CREATE POLICY "project readers, editors and managers can view fields" ON fields
-  FOR SELECT
-    USING (is_project_user_by_table (auth.uid (), table_id));
+    FOR SELECT
+        USING (is_project_user_by_table (auth.uid (), table_id));
 
 DROP POLICY IF EXISTS "project managers can insert fields" ON fields;
 
 CREATE POLICY "project managers can insert fields" ON fields
-  FOR INSERT
-    WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id));
+    FOR INSERT
+        WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id));
 
 DROP POLICY IF EXISTS "project managers can update fields" ON fields;
 
 CREATE POLICY "project managers can update fields" ON fields
-  FOR UPDATE
-    USING (is_project_user_by_table (auth.uid (), table_id))
-    WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id));
+    FOR UPDATE
+        USING (is_project_user_by_table (auth.uid (), table_id))
+        WITH CHECK (is_project_manager_by_project_by_table (auth.uid (), table_id));
 
 DROP POLICY IF EXISTS "project managers can delete fields" ON fields;
 
 CREATE POLICY "project managers can delete fields" ON fields
-  FOR DELETE
-    USING (is_project_manager_by_project_by_table (auth.uid (), table_id));
+    FOR DELETE
+        USING (is_project_manager_by_project_by_table (auth.uid (), table_id));
 
 DROP POLICY IF EXISTS "project readers, editors and managers can view rows" ON ROWS;
 
 CREATE POLICY "project readers, editors and managers can view rows" ON ROWS
-  FOR SELECT
-    USING (is_project_user_by_table (auth.uid (), table_id));
+    FOR SELECT
+        USING (is_project_user_by_table (auth.uid (), table_id));
 
 DROP POLICY IF EXISTS "project managers and editors can insert rows" ON ROWS;
 
 CREATE POLICY "project managers and editors can insert rows" ON ROWS
-  FOR INSERT
-    WITH CHECK (is_project_editor_or_manager_by_table (auth.uid (), table_id));
+    FOR INSERT
+        WITH CHECK (is_project_editor_or_manager_by_table (auth.uid (), table_id));
 
 DROP POLICY IF EXISTS "project managers and editors can update rows" ON ROWS;
 
 CREATE POLICY "project managers and editors can update rows" ON ROWS
-  FOR UPDATE
-    USING (is_project_user_by_table (auth.uid (), table_id))
-    WITH CHECK (is_project_editor_or_manager_by_table (auth.uid (), table_id));
+    FOR UPDATE
+        USING (is_project_user_by_table (auth.uid (), table_id))
+        WITH CHECK (is_project_editor_or_manager_by_table (auth.uid (), table_id));
 
 DROP POLICY IF EXISTS "project managers and editors can delete rows" ON ROWS;
 
 CREATE POLICY "project managers and editors can delete rows" ON ROWS
-  FOR DELETE
-    USING (is_project_editor_or_manager_by_table (auth.uid (), table_id));
+    FOR DELETE
+        USING (is_project_editor_or_manager_by_table (auth.uid (), table_id));
 
 -- this is problematic
 -- but there is no way to ensure references inside revs
@@ -1869,52 +1867,52 @@ CREATE POLICY "project managers and editors can delete rows" ON ROWS
 DROP POLICY IF EXISTS "authenticated users can view row_revs" ON row_revs;
 
 CREATE POLICY "authenticated users can view row_revs" ON row_revs
-  FOR SELECT
-    USING (auth.role () = 'authenticated');
+    FOR SELECT
+        USING (auth.role () = 'authenticated');
 
 DROP POLICY IF EXISTS "authenticated users can insert row_revs" ON row_revs;
 
 -- inserting possible BUT: revision trigger will fail depending on rls on files table
 CREATE POLICY "authenticated users can insert row_revs" ON row_revs
-  FOR INSERT
-    WITH CHECK (auth.role () = 'authenticated');
+    FOR INSERT
+        WITH CHECK (auth.role () = 'authenticated');
 
 DROP POLICY IF EXISTS "row_revs can not be updated" ON row_revs;
 
 CREATE POLICY "row_revs can not be updated" ON row_revs
-  FOR UPDATE
-    WITH CHECK (FALSE);
+    FOR UPDATE
+        WITH CHECK (FALSE);
 
 DROP POLICY IF EXISTS "row_revs can not be deleted" ON row_revs;
 
 CREATE POLICY "row_revs can not be deleted" ON row_revs
-  FOR DELETE
-    USING (FALSE);
+    FOR DELETE
+        USING (FALSE);
 
 DROP POLICY IF EXISTS "project readers, editors and managers can view files" ON files_meta;
 
 CREATE POLICY "project readers, editors and managers can view files" ON files_meta
-  FOR SELECT
-    USING (is_project_user_by_row (auth.uid (), row_id));
+    FOR SELECT
+        USING (is_project_user_by_row (auth.uid (), row_id));
 
 DROP POLICY IF EXISTS "project managers and editors can insert files" ON files_meta;
 
 CREATE POLICY "project managers and editors can insert files" ON files_meta
-  FOR INSERT
-    WITH CHECK (is_project_editor_or_manager_by_row (auth.uid (), row_id));
+    FOR INSERT
+        WITH CHECK (is_project_editor_or_manager_by_row (auth.uid (), row_id));
 
 DROP POLICY IF EXISTS "project managers and editors can update files" ON files_meta;
 
 CREATE POLICY "project managers and editors can update files" ON files_meta
-  FOR UPDATE
-    USING (is_project_user_by_row (auth.uid (), row_id))
-    WITH CHECK (is_project_editor_or_manager_by_row (auth.uid (), row_id));
+    FOR UPDATE
+        USING (is_project_user_by_row (auth.uid (), row_id))
+        WITH CHECK (is_project_editor_or_manager_by_row (auth.uid (), row_id));
 
 DROP POLICY IF EXISTS "project managers and editors can delete files" ON files_meta;
 
 CREATE POLICY "project managers and editors can delete files" ON files_meta
-  FOR DELETE
-    USING (is_project_editor_or_manager_by_row (auth.uid (), row_id));
+    FOR DELETE
+        USING (is_project_editor_or_manager_by_row (auth.uid (), row_id));
 
 DROP POLICY IF EXISTS "authenticated users can view files_meta_revs" ON files_meta_revs;
 
@@ -1924,692 +1922,669 @@ DROP POLICY IF EXISTS "authenticated users can view files_meta_revs" ON files_me
 -- TODO: find better solution
 -- maybe: allow only users who are editor or manager in any project to read? Fetch this via auth.email()
 CREATE POLICY "authenticated users can view files_meta_revs" ON files_meta_revs
-  FOR SELECT
-    USING (auth.role () = 'authenticated');
+    FOR SELECT
+        USING (auth.role () = 'authenticated');
 
 DROP POLICY IF EXISTS "authenticated users can insert files_meta_revs" ON files_meta_revs;
 
 -- inserting possible BUT: revision trigger will fail depending on rls on files table
 CREATE POLICY "authenticated users can insert files_meta_revs" ON files_meta_revs
-  FOR INSERT
-    WITH CHECK (auth.role () = 'authenticated');
+    FOR INSERT
+        WITH CHECK (auth.role () = 'authenticated');
 
 DROP POLICY IF EXISTS "files_meta_revs can not be updated" ON files_meta_revs;
 
 CREATE POLICY "files_meta_revs can not be updated" ON files_meta_revs
-  FOR UPDATE
-    WITH CHECK (FALSE);
+    FOR UPDATE
+        WITH CHECK (FALSE);
 
 DROP POLICY IF EXISTS "files_meta_revs can not be deleted" ON files_meta_revs;
 
 CREATE POLICY "files_meta_revs can not be deleted" ON files_meta_revs
-  FOR DELETE
-    USING (FALSE);
+    FOR DELETE
+        USING (FALSE);
 
 DROP POLICY IF EXISTS "Users can view version types" ON version_types;
 
 CREATE POLICY "Users can view version types" ON version_types
-  FOR SELECT
-    USING (is_project_user (auth.uid ()));
+    FOR SELECT
+        USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "Users can view news" ON news;
 
 CREATE POLICY "Users can view news" ON news
-  FOR SELECT
-    USING (is_project_user (auth.uid ()));
+    FOR SELECT
+        USING (is_project_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "Users can view their own news delivery" ON news_delivery;
 
 CREATE POLICY "Users can view their own news delivery" ON news_delivery
-  FOR SELECT
-    USING (is_news_delivery_user (auth.uid ()));
+    FOR SELECT
+        USING (is_news_delivery_user (auth.uid ()));
 
 DROP POLICY IF EXISTS "project readers, editors and managers can view tile_layers" ON tile_layers;
 
 CREATE POLICY "project readers, editors and managers can view tile_layers" ON tile_layers
-  FOR SELECT
-    USING (is_project_user_by_project (auth.uid (), project_id));
+    FOR SELECT
+        USING (is_project_user_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can insert tile_layers" ON tile_layers;
 
 CREATE POLICY "project managers can insert tile_layers" ON tile_layers
-  FOR INSERT
-    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
+    FOR INSERT
+        WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can update tile_layers" ON tile_layers;
 
 CREATE POLICY "project managers can update tile_layers" ON tile_layers
-  FOR UPDATE
-    USING (is_project_user_by_project (auth.uid (), project_id))
-    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
+    FOR UPDATE
+        USING (is_project_user_by_project (auth.uid (), project_id))
+        WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can delete tile_layers" ON tile_layers;
 
 CREATE POLICY "project managers can delete tile_layers" ON tile_layers
-  FOR DELETE
-    USING (is_project_manager_by_project (auth.uid (), project_id));
+    FOR DELETE
+        USING (is_project_manager_by_project (auth.uid (), project_id));
 
 --
 DROP POLICY IF EXISTS "project readers, editors and managers can view vector_layers" ON vector_layers;
 
 CREATE POLICY "project readers, editors and managers can view vector_layers" ON vector_layers
-  FOR SELECT
-    USING (is_project_user_by_project (auth.uid (), project_id));
+    FOR SELECT
+        USING (is_project_user_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can insert vector_layers" ON vector_layers;
 
 CREATE POLICY "project managers can insert vector_layers" ON vector_layers
-  FOR INSERT
-    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
+    FOR INSERT
+        WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can update vector_layers" ON vector_layers;
 
 CREATE POLICY "project managers can update vector_layers" ON vector_layers
-  FOR UPDATE
-    USING (is_project_user_by_project (auth.uid (), project_id))
-    WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
+    FOR UPDATE
+        USING (is_project_user_by_project (auth.uid (), project_id))
+        WITH CHECK (is_project_manager_by_project (auth.uid (), project_id));
 
 DROP POLICY IF EXISTS "project managers can delete vector_layers" ON vector_layers;
 
 CREATE POLICY "project managers can delete vector_layers" ON vector_layers
-  FOR DELETE
-    USING (is_project_manager_by_project (auth.uid (), project_id));
+    FOR DELETE
+        USING (is_project_manager_by_project (auth.uid (), project_id));
 
 --
 DROP POLICY IF EXISTS "project readers, editors and managers can view vector_layers geometries" ON pvl_geoms;
 
 CREATE POLICY "project readers, editors and managers can view vector_layers geometries" ON pvl_geoms
-  FOR SELECT
-    USING (is_project_user_by_tile_layer (auth.uid (), pvl_id));
+    FOR SELECT
+        USING (is_project_user_by_tile_layer (auth.uid (), pvl_id));
 
 DROP POLICY IF EXISTS "project managers can insert vector_layers geometries" ON pvl_geoms;
 
 CREATE POLICY "project managers can insert vector_layers geometries" ON pvl_geoms
-  FOR INSERT
-    WITH CHECK (is_project_manager_by_tile_layer (auth.uid (), pvl_id));
+    FOR INSERT
+        WITH CHECK (is_project_manager_by_tile_layer (auth.uid (), pvl_id));
 
 DROP POLICY IF EXISTS "project managers can update vector_layers geometries" ON pvl_geoms;
 
 CREATE POLICY "project managers can update vector_layers geometries" ON pvl_geoms
-  FOR UPDATE
-    USING (is_project_user_by_tile_layer (auth.uid (), pvl_id))
-    WITH CHECK (is_project_manager_by_tile_layer (auth.uid (), pvl_id));
+    FOR UPDATE
+        USING (is_project_user_by_tile_layer (auth.uid (), pvl_id))
+        WITH CHECK (is_project_manager_by_tile_layer (auth.uid (), pvl_id));
 
 DROP POLICY IF EXISTS "project managers can delete vector_layers geometries" ON pvl_geoms;
 
 CREATE POLICY "project managers can delete vector_layers geometries" ON pvl_geoms
-  FOR DELETE
-    USING (is_project_manager_by_tile_layer (auth.uid (), pvl_id));
+    FOR DELETE
+        USING (is_project_manager_by_tile_layer (auth.uid (), pvl_id));
 
-COMMIT TRANSACTION;
-
--- add some triggers
+-- 01.4 add some triggers
 -- ensure a project's owner is set as it's user
 CREATE OR REPLACE FUNCTION projects_set_project_user ()
-  RETURNS TRIGGER
-  AS $$
+    RETURNS TRIGGER
+    AS $$
 BEGIN
-  INSERT INTO project_users (project_id, user_email, ROLE)
-  SELECT
-    NEW.id AS project_id,
-    users.email AS user_email,
-    'account_manager' AS role
-  FROM
-    accounts
-    INNER JOIN users ON accounts.id = users.account_id
-  WHERE
-    accounts.id = NEW.account_id;
-  RETURN NEW;
+    INSERT INTO project_users (project_id, user_email, ROLE)
+    SELECT
+        NEW.id AS project_id,
+        users.email AS user_email,
+        'account_manager' AS role
+    FROM
+        accounts
+        INNER JOIN users ON accounts.id = users.account_id
+    WHERE
+        accounts.id = NEW.account_id;
+    RETURN NEW;
 END;
 $$
 LANGUAGE plpgsql
 SECURITY DEFINER;
 
 CREATE TRIGGER projects_set_project_user
-  AFTER INSERT ON projects
-  FOR EACH ROW
-  EXECUTE PROCEDURE projects_set_project_user ();
+    AFTER INSERT ON projects
+    FOR EACH ROW
+    EXECUTE PROCEDURE projects_set_project_user ();
 
 -- ensure user has auth_user_id set
 CREATE OR REPLACE FUNCTION users_set_auth_user_id ()
-  RETURNS TRIGGER
-  AS $$
+    RETURNS TRIGGER
+    AS $$
 BEGIN
-  UPDATE
-    public.users
-  SET
-    auth_user_id = NEW.id
-  WHERE
-    email = NEW.email;
-  RETURN NEW;
+    UPDATE
+        public.users
+    SET
+        auth_user_id = NEW.id
+    WHERE
+        email = NEW.email;
+    RETURN NEW;
 END;
 $$
 LANGUAGE plpgsql
 SECURITY DEFINER;
 
 CREATE TRIGGER users_set_auth_user_id
-  AFTER INSERT ON auth.users
-  FOR EACH ROW
-  EXECUTE PROCEDURE users_set_auth_user_id ();
+    AFTER INSERT ON auth.users
+    FOR EACH ROW
+    EXECUTE PROCEDURE users_set_auth_user_id ();
 
--- add test-data
+-- 01.4 add test-data
 -- 1. create new user with email alex.barbalex@gmail.com
 INSERT INTO accounts (service_id)
-  VALUES ('test');
+    VALUES ('test');
 
 INSERT INTO users (email, name, account_id, auth_user_id)
-  VALUES ('alex.barbalex@gmail.com', 'test-user', (
-      SELECT
-        id
-      FROM
-        accounts
-      WHERE
-        service_id = 'test'), (
-        SELECT
-          id
-        FROM
-          auth.users
-        WHERE
-          email = 'alex.barbalex@gmail.com'));
+    VALUES ('alex.barbalex@gmail.com', 'test-user', (
+            SELECT
+                id
+            FROM
+                accounts
+            WHERE
+                service_id = 'test'), (
+                SELECT
+                    id
+                FROM
+                    auth.users
+                WHERE
+                    email = 'alex.barbalex@gmail.com'));
 
 INSERT INTO projects (name, label, account_id)
-  VALUES ('test-project', 'test-project', (
-      SELECT
-        id
-      FROM
-        accounts
-      WHERE
-        service_id = 'test'));
+    VALUES ('test-project', 'test-project', (
+            SELECT
+                id
+            FROM
+                accounts
+            WHERE
+                service_id = 'test'));
 
--- 2. choose winner and upsert file
+-- 02. add revision triggers
+-- 02.1 files
 CREATE OR REPLACE FUNCTION files_meta_revs_children (file_id uuid, parent_rev text)
-  RETURNS SETOF files_meta_revs
-  AS $$
-  SELECT
-    *
-  FROM
-    files_meta_revs
-  WHERE
-    files_meta_revs.file_id = $1
-    -- its parent is the file_rev, thus this is its child
-    AND files_meta_revs.parent_rev = $2
+    RETURNS SETOF files_meta_revs
+    AS $$
+    SELECT
+        *
+    FROM
+        files_meta_revs
+    WHERE
+        files_meta_revs.file_id = $1
+        -- its parent is the file_rev, thus this is its child
+        AND files_meta_revs.parent_rev = $2
 $$
 LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION files_meta_revs_leaves (file_id uuid, deleted integer DEFAULT 0)
-  RETURNS SETOF files_meta_revs
-  AS $$
-  SELECT
-    *
-  FROM
-    files_meta_revs
-  WHERE
-    -- of this record
-    file_id = $1
-    -- undeleted
-    AND deleted = $2
-    -- leaves
-    AND NOT EXISTS (
-      SELECT
-        1
-      FROM
-        files_meta_revs_children ($1, files_meta_revs.rev));
+    RETURNS SETOF files_meta_revs
+    AS $$
+    SELECT
+        *
+    FROM
+        files_meta_revs
+    WHERE
+        -- of this record
+        file_id = $1
+        -- undeleted
+        AND deleted = $2
+        -- leaves
+        AND NOT EXISTS (
+            SELECT
+                1
+            FROM
+                files_meta_revs_children ($1, files_meta_revs.rev));
 
 $$
 LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION files_meta_revs_max_depth (file_id uuid, deleted integer DEFAULT 0)
-  RETURNS int
-  AS $$
-  SELECT
-    max(depth)
-  FROM
-    files_meta_revs_leaves ($1, $2);
+    RETURNS int
+    AS $$
+    SELECT
+        max(depth)
+    FROM
+        files_meta_revs_leaves ($1, $2);
 
 $$
 LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION files_meta_revs_winner_rev_value (file_id uuid, deleted integer DEFAULT 0)
-  RETURNS text
-  AS $$
-  SELECT
-    -- here we choose the winning revision
-    max(leaves.rev) AS rev
-  FROM
-    files_meta_revs_leaves ($1, $2) AS leaves
+    RETURNS text
+    AS $$
+    SELECT
+        -- here we choose the winning revision
+        max(leaves.rev) AS rev
+    FROM
+        files_meta_revs_leaves ($1, $2) AS leaves
 WHERE
-  files_meta_revs_max_depth ($1, $2) = leaves.depth
+    files_meta_revs_max_depth ($1, $2) = leaves.depth
 $$
 LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION files_meta_revs_winner (file_id uuid, deleted integer DEFAULT 0)
-  RETURNS SETOF files_meta_revs
-  AS $$
-  SELECT
-    *
-  FROM
-    files_meta_revs_leaves ($1, $2) AS leaves
+    RETURNS SETOF files_meta_revs
+    AS $$
+    SELECT
+        *
+    FROM
+        files_meta_revs_leaves ($1, $2) AS leaves
 WHERE
-  leaves.rev = files_meta_revs_winner_rev_value ($1, $2)
-  OR (leaves.rev IS NULL
-    AND files_meta_revs_winner_rev_value ($1, $2) IS NULL)
+    leaves.rev = files_meta_revs_winner_rev_value ($1, $2)
+    OR (leaves.rev IS NULL
+        AND files_meta_revs_winner_rev_value ($1, $2) IS NULL)
 $$
 LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION file_conflicts_of_winner (file_id uuid, deleted integer DEFAULT 0)
-  RETURNS text[]
-  AS $$
-  SELECT
-    ARRAY (
-      SELECT
-        rev
-      FROM
-        files_meta_revs_leaves ($1, $2)
-      WHERE
-        rev <> files_meta_revs.rev)
-  FROM
-    files_meta_revs_winner ($1, $2) AS files_meta_revs
+    RETURNS text[]
+    AS $$
+    SELECT
+        ARRAY (
+            SELECT
+                rev
+            FROM
+                files_meta_revs_leaves ($1, $2)
+            WHERE
+                rev <> files_meta_revs.rev)
+    FROM
+        files_meta_revs_winner ($1, $2) AS files_meta_revs
 $$
 LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION files_meta_revs_set_winning_revision ()
-  RETURNS TRIGGER
-  AS $$
+    RETURNS TRIGGER
+    AS $$
 BEGIN
-  IF EXISTS (
+    IF EXISTS (
+        SELECT
+            1
+        FROM
+            files_meta_revs_winner (NEW.file_id, 0))
+    -- 1. if a winning undeleted leaf exists, use this
+    --    (else pick a winner from the deleted leaves)
+    THEN
+    INSERT INTO files_meta (id, row_id, field_id, name, type, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
     SELECT
-      1
-    FROM
-      files_meta_revs_winner (NEW.file_id, 0))
-  -- 1. if a winning undeleted leaf exists, use this
-  --    (else pick a winner from the deleted leaves)
-  THEN
-  INSERT INTO files_meta (id, row_id, field_id, name, type, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
-  SELECT
-    winner.file_id,
-    row_id,
-    winner.field_id,
-    winner.name,
-    winner.type,
-    winner.deleted,
-    winner.client_rev_at,
-    winner.client_rev_by,
-    now() AS server_rev_at,
-  winner.rev,
-  winner.revisions,
-  winner.parent_rev,
-  winner.depth,
-  file_conflicts_of_winner (NEW.file_id) AS conflicts
-FROM
-  files_meta_revs_winner (NEW.file_id) AS winner
-ON CONFLICT (id)
-  DO UPDATE SET
-    -- do not update the idrow_id,
-    field_id = excluded.field_id,
-    name = excluded.name,
-    type = excluded.type,
-    deleted = excluded.deleted,
-    client_rev_at = excluded.client_rev_at,
-    client_rev_by = excluded.client_rev_by,
-    server_rev_at = excluded.server_rev_at,
-    rev = excluded.rev,
-    revisions = excluded.revisions,
-    parent_rev = excluded.parent_rev,
-    depth = excluded.depth,
-    conflicts = excluded.conflicts;
-ELSE
-  -- 2. so there is no undeleted winning leaf
-  --    choose winner from deleted leaves
-  --    is necessary to set the winner deleted
-  --    so the client can pick this up
-  INSERT INTO files_meta (id, row_id, field_id, name, type, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
-  SELECT
-    winner.file_id,
-    row_id,
-    winner.field_id,
-    winner.name,
-    winner.type,
-    winner.deleted,
-    winner.client_rev_at,
-    winner.client_rev_by,
-    now() AS server_rev_at,
+        winner.file_id,
+        row_id,
+        winner.field_id,
+        winner.name,
+        winner.type,
+        winner.deleted,
+        winner.client_rev_at,
+        winner.client_rev_by,
+        now() AS server_rev_at,
     winner.rev,
     winner.revisions,
     winner.parent_rev,
     winner.depth,
-    file_conflicts_of_winner (NEW.file_id, 1) AS conflicts
-  FROM
-    files_meta_revs_winner (NEW.file_id, 1) AS winner
+    file_conflicts_of_winner (NEW.file_id) AS conflicts
+FROM
+    files_meta_revs_winner (NEW.file_id) AS winner
 ON CONFLICT (id)
-  DO UPDATE SET
-    -- do not update the row_id,
-    field_id = excluded.field_id,
-    name = excluded.name,
-    type = excluded.type,
-    deleted = excluded.deleted,
-    client_rev_at = excluded.client_rev_at,
-    client_rev_by = excluded.client_rev_by,
-    server_rev_at = excluded.server_rev_at,
-    rev = excluded.rev,
-    revisions = excluded.revisions,
-    parent_rev = excluded.parent_rev,
-    depth = excluded.depth,
-    conflicts = excluded.conflicts;
+    DO UPDATE SET
+        -- do not update the idrow_id,
+        field_id = excluded.field_id,
+        name = excluded.name,
+        type = excluded.type,
+        deleted = excluded.deleted,
+        client_rev_at = excluded.client_rev_at,
+        client_rev_by = excluded.client_rev_by,
+        server_rev_at = excluded.server_rev_at,
+        rev = excluded.rev,
+        revisions = excluded.revisions,
+        parent_rev = excluded.parent_rev,
+        depth = excluded.depth,
+        conflicts = excluded.conflicts;
+ELSE
+    -- 2. so there is no undeleted winning leaf
+    --    choose winner from deleted leaves
+    --    is necessary to set the winner deleted
+    --    so the client can pick this up
+    INSERT INTO files_meta (id, row_id, field_id, name, type, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
+    SELECT
+        winner.file_id,
+        row_id,
+        winner.field_id,
+        winner.name,
+        winner.type,
+        winner.deleted,
+        winner.client_rev_at,
+        winner.client_rev_by,
+        now() AS server_rev_at,
+        winner.rev,
+        winner.revisions,
+        winner.parent_rev,
+        winner.depth,
+        file_conflicts_of_winner (NEW.file_id, 1) AS conflicts
+    FROM
+        files_meta_revs_winner (NEW.file_id, 1) AS winner
+ON CONFLICT (id)
+    DO UPDATE SET
+        -- do not update the row_id,
+        field_id = excluded.field_id,
+        name = excluded.name,
+        type = excluded.type,
+        deleted = excluded.deleted,
+        client_rev_at = excluded.client_rev_at,
+        client_rev_by = excluded.client_rev_by,
+        server_rev_at = excluded.server_rev_at,
+        rev = excluded.rev,
+        revisions = excluded.revisions,
+        parent_rev = excluded.parent_rev,
+        depth = excluded.depth,
+        conflicts = excluded.conflicts;
 END IF;
-  RETURN new;
+    RETURN new;
 END;
 $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_files_meta_revs_set_winning_revision
-  AFTER INSERT ON files_meta_revs
-  FOR EACH ROW
-  EXECUTE PROCEDURE files_meta_revs_set_winning_revision ();
+    AFTER INSERT ON files_meta_revs
+    FOR EACH ROW
+    EXECUTE PROCEDURE files_meta_revs_set_winning_revision ();
 
--- 1. first set the revision fields
---    assumption: client passed in values from the row
---    TODO: client needs to update it's own row though - so this does not make sense? DOES NOT!
--- CREATE OR REPLACE FUNCTION trigger_row_revs_set_revision_fields ()
---   RETURNS TRIGGER
---   AS $$
--- DECLARE
---   new_depth int := NEW.depth + 1;
---   new_rev text := concat(new_depth, '-', md5(concat('{', 'row_id:', NEW.row_id, 'table_id:', NEW.table_id, 'geometry:', NEW.geometry, 'data:', NEW.data, 'deleted:', NEW.deleted, 'parent_rev:', NEW.rev, '}')));
--- BEGIN
---   NEW.parent_rev := NEW.rev;
---   NEW.depth := new_depth;
---   NEW.rev := new_rev;
---   NEW.revisions := array_append(NEW.revisions, new_rev);
---   RETURN new;
--- END;
--- $$
--- LANGUAGE plpgsql;
--- CREATE TRIGGER trigger_row_revs_set_revision_fields
---   BEFORE INSERT ON row_revs FOR EACH ROW
---   EXECUTE PROCEDURE trigger_row_revs_set_revision_fields ();
--- 2. now that the revision fields are set (either by client or before insert trigger),
---    choose winner and upsert row
+-- 02.2 rows
 CREATE OR REPLACE FUNCTION row_revs_children (row_id uuid, parent_rev text)
-  RETURNS SETOF row_revs
-  AS $$
-  SELECT
-    *
-  FROM
-    row_revs
-  WHERE
-    row_revs.row_id = $1
-    -- its parent is the row_rev, thus this is its child
-    AND row_revs.parent_rev = $2
+    RETURNS SETOF row_revs
+    AS $$
+    SELECT
+        *
+    FROM
+        row_revs
+    WHERE
+        row_revs.row_id = $1
+        -- its parent is the row_rev, thus this is its child
+        AND row_revs.parent_rev = $2
 $$
 LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION row_revs_leaves (row_id uuid, deleted integer DEFAULT 0)
-  RETURNS SETOF row_revs
-  AS $$
-  SELECT
-    *
-  FROM
-    row_revs
-  WHERE
-    -- of this record
-    row_id = $1
-    -- undeleted
-    AND deleted = $2
-    -- leaves
-    AND NOT EXISTS (
-      SELECT
-        1
-      FROM
-        row_revs_children ($1, row_revs.rev));
+    RETURNS SETOF row_revs
+    AS $$
+    SELECT
+        *
+    FROM
+        row_revs
+    WHERE
+        -- of this record
+        row_id = $1
+        -- undeleted
+        AND deleted = $2
+        -- leaves
+        AND NOT EXISTS (
+            SELECT
+                1
+            FROM
+                row_revs_children ($1, row_revs.rev));
 
 $$
 LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION row_revs_max_depth (row_id uuid, deleted integer DEFAULT 0)
-  RETURNS int
-  AS $$
-  SELECT
-    max(depth)
-  FROM
-    row_revs_leaves ($1, $2);
+    RETURNS int
+    AS $$
+    SELECT
+        max(depth)
+    FROM
+        row_revs_leaves ($1, $2);
 
 $$
 LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION row_revs_winner_rev_value (row_id uuid, deleted integer DEFAULT 0)
-  RETURNS text
-  AS $$
-  SELECT
-    -- here we choose the winning revision
-    max(leaves.rev) AS rev
-  FROM
-    row_revs_leaves ($1, $2) AS leaves
+    RETURNS text
+    AS $$
+    SELECT
+        -- here we choose the winning revision
+        max(leaves.rev) AS rev
+    FROM
+        row_revs_leaves ($1, $2) AS leaves
 WHERE
-  row_revs_max_depth ($1, $2) = leaves.depth
+    row_revs_max_depth ($1, $2) = leaves.depth
 $$
 LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION row_revs_winner (row_id uuid, deleted integer DEFAULT 0)
-  RETURNS SETOF row_revs
-  AS $$
-  SELECT
-    *
-  FROM
-    row_revs_leaves ($1, $2) AS leaves
+    RETURNS SETOF row_revs
+    AS $$
+    SELECT
+        *
+    FROM
+        row_revs_leaves ($1, $2) AS leaves
 WHERE
-  leaves.rev = row_revs_winner_rev_value ($1, $2)
-  OR (leaves.rev IS NULL
-    AND row_revs_winner_rev_value ($1, $2) IS NULL)
+    leaves.rev = row_revs_winner_rev_value ($1, $2)
+    OR (leaves.rev IS NULL
+        AND row_revs_winner_rev_value ($1, $2) IS NULL)
 $$
 LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION row_conflicts_of_winner (row_id uuid, deleted integer DEFAULT 0)
-  RETURNS text[]
-  AS $$
-  SELECT
-    ARRAY (
-      SELECT
-        rev
-      FROM
-        row_revs_leaves ($1, $2)
-      WHERE
-        rev <> row_revs.rev)
-  FROM
-    row_revs_winner ($1, $2) AS row_revs
+    RETURNS text[]
+    AS $$
+    SELECT
+        ARRAY (
+            SELECT
+                rev
+            FROM
+                row_revs_leaves ($1, $2)
+            WHERE
+                rev <> row_revs.rev)
+    FROM
+        row_revs_winner ($1, $2) AS row_revs
 $$
 LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION row_revs_set_winning_revision ()
-  RETURNS TRIGGER
-  AS $$
+    RETURNS TRIGGER
+    AS $$
 BEGIN
-  IF EXISTS (
+    IF EXISTS (
+        SELECT
+            1
+        FROM
+            row_revs_winner (NEW.row_id, 0))
+    -- 1. if a winning undeleted leaf exists, use this
+    --    (else pick a winner from the deleted leaves)
+    THEN
+    INSERT INTO ROWS (id, table_id, parent_id, geometry, bbox, data, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
     SELECT
-      1
-    FROM
-      row_revs_winner (NEW.row_id, 0))
-  -- 1. if a winning undeleted leaf exists, use this
-  --    (else pick a winner from the deleted leaves)
-  THEN
-  INSERT INTO ROWS (id, table_id, parent_id, geometry, bbox, data, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
-  SELECT
-    winner.row_id,
-    winner.table_id,
-    winner.parent_id,
-    winner.geometry,
-    winner.bbox,
-    winner.data,
-    winner.deleted,
-    winner.client_rev_at,
-    winner.client_rev_by,
-    now() AS server_rev_at,
-  winner.rev,
-  winner.revisions,
-  winner.parent_rev,
-  winner.depth,
-  row_conflicts_of_winner (NEW.row_id) AS conflicts
-FROM
-  row_revs_winner (NEW.row_id) AS winner
-ON CONFLICT (id)
-  DO UPDATE SET
-    -- do not update the id
-    table_id = excluded.table_id,
-    parent_id = excluded.parent_id,
-    geometry = excluded.geometry,
-    bbox = excluded.bbox,
-    data = excluded.data,
-    deleted = excluded.deleted,
-    client_rev_at = excluded.client_rev_at,
-    client_rev_by = excluded.client_rev_by,
-    server_rev_at = excluded.server_rev_at,
-    rev = excluded.rev,
-    revisions = excluded.revisions,
-    parent_rev = excluded.parent_rev,
-    depth = excluded.depth,
-    conflicts = excluded.conflicts;
-ELSE
-  -- 2. so there is no undeleted winning leaf
-  --    choose winner from deleted leaves
-  --    is necessary to set the winner deleted
-  --    so the client can pick this up
-  INSERT INTO ROWS (id, table_id, parent_id, geometry, bbox, data, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
-  SELECT
-    winner.row_id,
-    winner.table_id,
-    winner.parent_id,
-    winner.geometry,
-    winner.bbox,
-    winner.data,
-    winner.deleted,
-    winner.client_rev_at,
-    winner.client_rev_by,
-    now() AS server_rev_at,
+        winner.row_id,
+        winner.table_id,
+        winner.parent_id,
+        winner.geometry,
+        winner.bbox,
+        winner.data,
+        winner.deleted,
+        winner.client_rev_at,
+        winner.client_rev_by,
+        now() AS server_rev_at,
     winner.rev,
     winner.revisions,
     winner.parent_rev,
     winner.depth,
-    row_conflicts_of_winner (NEW.row_id, 1) AS conflicts
-  FROM
-    row_revs_winner (NEW.row_id, 1) AS winner
+    row_conflicts_of_winner (NEW.row_id) AS conflicts
+FROM
+    row_revs_winner (NEW.row_id) AS winner
 ON CONFLICT (id)
-  DO UPDATE SET
-    -- do not update the id
-    table_id = excluded.table_id,
-    parent_id = excluded.parent_id,
-    geometry = excluded.geometry,
-    bbox = excluded.bbox,
-    data = excluded.data,
-    deleted = excluded.deleted,
-    client_rev_at = excluded.client_rev_at,
-    client_rev_by = excluded.client_rev_by,
-    server_rev_at = excluded.server_rev_at,
-    rev = excluded.rev,
-    revisions = excluded.revisions,
-    parent_rev = excluded.parent_rev,
-    depth = excluded.depth,
-    conflicts = excluded.conflicts;
+    DO UPDATE SET
+        -- do not update the id
+        table_id = excluded.table_id,
+        parent_id = excluded.parent_id,
+        geometry = excluded.geometry,
+        bbox = excluded.bbox,
+        data = excluded.data,
+        deleted = excluded.deleted,
+        client_rev_at = excluded.client_rev_at,
+        client_rev_by = excluded.client_rev_by,
+        server_rev_at = excluded.server_rev_at,
+        rev = excluded.rev,
+        revisions = excluded.revisions,
+        parent_rev = excluded.parent_rev,
+        depth = excluded.depth,
+        conflicts = excluded.conflicts;
+ELSE
+    -- 2. so there is no undeleted winning leaf
+    --    choose winner from deleted leaves
+    --    is necessary to set the winner deleted
+    --    so the client can pick this up
+    INSERT INTO ROWS (id, table_id, parent_id, geometry, bbox, data, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
+    SELECT
+        winner.row_id,
+        winner.table_id,
+        winner.parent_id,
+        winner.geometry,
+        winner.bbox,
+        winner.data,
+        winner.deleted,
+        winner.client_rev_at,
+        winner.client_rev_by,
+        now() AS server_rev_at,
+        winner.rev,
+        winner.revisions,
+        winner.parent_rev,
+        winner.depth,
+        row_conflicts_of_winner (NEW.row_id, 1) AS conflicts
+    FROM
+        row_revs_winner (NEW.row_id, 1) AS winner
+ON CONFLICT (id)
+    DO UPDATE SET
+        -- do not update the id
+        table_id = excluded.table_id,
+        parent_id = excluded.parent_id,
+        geometry = excluded.geometry,
+        bbox = excluded.bbox,
+        data = excluded.data,
+        deleted = excluded.deleted,
+        client_rev_at = excluded.client_rev_at,
+        client_rev_by = excluded.client_rev_by,
+        server_rev_at = excluded.server_rev_at,
+        rev = excluded.rev,
+        revisions = excluded.revisions,
+        parent_rev = excluded.parent_rev,
+        depth = excluded.depth,
+        conflicts = excluded.conflicts;
 END IF;
-  RETURN new;
+    RETURN new;
 END;
 $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_row_revs_set_winning_revision
-  AFTER INSERT ON row_revs
-  FOR EACH ROW
-  EXECUTE PROCEDURE row_revs_set_winning_revision ();
+    AFTER INSERT ON row_revs
+    FOR EACH ROW
+    EXECUTE PROCEDURE row_revs_set_winning_revision ();
 
--- need to set server_rev_at on updates to non-revisioned tables
+-- 03. set server_rev_at on updates to non-revisioned tables
 CREATE OR REPLACE FUNCTION set_server_rev_at ()
-  RETURNS TRIGGER
-  AS $$
+    RETURNS TRIGGER
+    AS $$
 BEGIN
-  NEW.server_rev_at = now();
-  RETURN new;
+    NEW.server_rev_at = now();
+    RETURN new;
 END;
 $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER users_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON users
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON users
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 
 -- accounts
 CREATE TRIGGER accounts_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON accounts
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON accounts
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 
 -- projects
 CREATE TRIGGER projects_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON projects
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON projects
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 
 -- tables
 CREATE TRIGGER tables_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON tables
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON tables
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 
 -- field_types
 CREATE TRIGGER field_types_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON field_types
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON field_types
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 
 -- widget_types
 CREATE TRIGGER widget_types_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON widget_types
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON widget_types
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 
 -- fields
 CREATE TRIGGER fields_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON fields
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON fields
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 
 -- project_users
 CREATE TRIGGER project_users_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON project_users
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON project_users
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 
 -- version_types
 CREATE TRIGGER version_types_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON version_types
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON version_types
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 
 -- news
 CREATE TRIGGER news_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON news
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON news
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 
 -- news_delivery
 CREATE TRIGGER news_delivery_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON news_delivery
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON news_delivery
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 
 -- tile_layer
 CREATE TRIGGER tile_layers_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON tile_layers
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON tile_layers
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 
 -- vector_layer
 CREATE TRIGGER vector_layers_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON vector_layers
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON vector_layers
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 
 -- pvl_geoms
 CREATE TRIGGER pvl_geoms_set_server_rev_at
-  BEFORE INSERT OR UPDATE ON pvl_geoms
-  FOR EACH ROW
-  EXECUTE PROCEDURE set_server_rev_at ();
+    BEFORE INSERT OR UPDATE ON pvl_geoms
+    FOR EACH ROW
+    EXECUTE PROCEDURE set_server_rev_at ();
 

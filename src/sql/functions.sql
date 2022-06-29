@@ -1,1 +1,0 @@
--- functions used when creating policies are integrated in tables.sql to guarantee correct series of execution
