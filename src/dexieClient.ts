@@ -1,5 +1,5 @@
 import { IQueuedUpdate } from './dexieClient'
-import Dexie, { DexieTable } from 'dexie'
+import { Dexie, DexieTable } from 'dexie'
 import { v1 as uuidv1 } from 'uuid'
 import { Session } from '@supabase/supabase-js'
 import sortBy from 'lodash/sortBy'
