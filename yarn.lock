@@ -1274,7 +1274,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.17.2, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.19.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.2, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.19.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.2, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.19.4
   resolution: "@babel/runtime@npm:7.19.4"
   dependencies:
@@ -1374,7 +1374,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/is-prop-valid@npm:^1.1.0, @emotion/is-prop-valid@npm:^1.1.2":
+"@emotion/is-prop-valid@npm:^1.1.0, @emotion/is-prop-valid@npm:^1.2.0":
   version: 1.2.0
   resolution: "@emotion/is-prop-valid@npm:1.2.0"
   dependencies:
@@ -1932,18 +1932,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/base@npm:5.0.0-alpha.87":
-  version: 5.0.0-alpha.87
-  resolution: "@mui/base@npm:5.0.0-alpha.87"
+"@mui/base@npm:5.0.0-alpha.103":
+  version: 5.0.0-alpha.103
+  resolution: "@mui/base@npm:5.0.0-alpha.103"
   dependencies:
-    "@babel/runtime": ^7.17.2
-    "@emotion/is-prop-valid": ^1.1.2
-    "@mui/types": ^7.1.4
-    "@mui/utils": ^5.8.6
-    "@popperjs/core": ^2.11.5
-    clsx: ^1.1.1
+    "@babel/runtime": ^7.19.0
+    "@emotion/is-prop-valid": ^1.2.0
+    "@mui/types": ^7.2.0
+    "@mui/utils": ^5.10.9
+    "@popperjs/core": ^2.11.6
+    clsx: ^1.2.1
     prop-types: ^15.8.1
-    react-is: ^17.0.2
+    react-is: ^18.2.0
   peerDependencies:
     "@types/react": ^17.0.0 || ^18.0.0
     react: ^17.0.0 || ^18.0.0
@@ -1951,25 +1951,33 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: ec6ce5f710a7073115043997fd1bbe4dc2b15a4d9211485969bfb2eb79c45b9c5c95018754346730892971f737a89aca89c564dbd08f4eb4635f4fed6047f2da
+  checksum: beabe1be30534f39faf62dc586aaf2e97fb1b3a986fa002fe66124e7a0bc582ef9430ca1945069c4d375e3cf7ffad02f825fdcb9983b472e120bc4ba8f15f19a
   languageName: node
   linkType: hard
 
-"@mui/material@npm:5.8.6":
-  version: 5.8.6
-  resolution: "@mui/material@npm:5.8.6"
+"@mui/core-downloads-tracker@npm:^5.10.11":
+  version: 5.10.11
+  resolution: "@mui/core-downloads-tracker@npm:5.10.11"
+  checksum: 16a1cab20098e55bb217fdbf20fe18e56a3f52ef0daef74f9f078cebf1b2e47906e28f707f70b8d6132bca2b0a56d9a9870364ea1dfce89c53567f30af9205ce
+  languageName: node
+  linkType: hard
+
+"@mui/material@npm:5.10.11":
+  version: 5.10.11
+  resolution: "@mui/material@npm:5.10.11"
   dependencies:
-    "@babel/runtime": ^7.17.2
-    "@mui/base": 5.0.0-alpha.87
-    "@mui/system": ^5.8.6
-    "@mui/types": ^7.1.4
-    "@mui/utils": ^5.8.6
-    "@types/react-transition-group": ^4.4.4
-    clsx: ^1.1.1
-    csstype: ^3.1.0
+    "@babel/runtime": ^7.19.0
+    "@mui/base": 5.0.0-alpha.103
+    "@mui/core-downloads-tracker": ^5.10.11
+    "@mui/system": ^5.10.10
+    "@mui/types": ^7.2.0
+    "@mui/utils": ^5.10.9
+    "@types/react-transition-group": ^4.4.5
+    clsx: ^1.2.1
+    csstype: ^3.1.1
     prop-types: ^15.8.1
-    react-is: ^17.0.2
-    react-transition-group: ^4.4.2
+    react-is: ^18.2.0
+    react-transition-group: ^4.4.5
   peerDependencies:
     "@emotion/react": ^11.5.0
     "@emotion/styled": ^11.3.0
@@ -1983,7 +1991,7 @@ __metadata:
       optional: true
     "@types/react":
       optional: true
-  checksum: 46454541b5ceca578273453b8513e973419fc919329a4b850190bdeb6c602fc61a40c791d844a130560607eb3b798aa2d5f033e21eb98c14e898a431c1071756
+  checksum: 208312fc063ccdfad393e0e86f1d22d1e8e45fdcf6ba9ce5e0914211944f7dec04a2784d04f728f6014d3fe17b1b102e0279a51d9cf94147c45520c662f3be40
   languageName: node
   linkType: hard
 
@@ -2004,22 +2012,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/styled-engine-sc@npm:5.8.0":
-  version: 5.8.0
-  resolution: "@mui/styled-engine-sc@npm:5.8.0"
-  dependencies:
-    prop-types: ^15.8.1
-  peerDependencies:
-    "@types/styled-components": ^5.1.14
-    styled-components: ^5.3.1
-  peerDependenciesMeta:
-    "@types/styled-components":
-      optional: true
-  checksum: 7667fd36e2eeb7eba6a6d8c65aea7e1f83b911fb013cd13ccaf82f97c1a35d1f305d944cef785f0415d051b097fd5da90084815054d20c08354c489f4ddbdefa
-  languageName: node
-  linkType: hard
-
-"@mui/styled-engine@npm:@mui/styled-engine-sc@latest":
+"@mui/styled-engine-sc@npm:5.10.6, @mui/styled-engine@npm:@mui/styled-engine-sc@latest":
   version: 5.10.6
   resolution: "@mui/styled-engine-sc@npm:5.10.6"
   dependencies:
@@ -2035,7 +2028,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/system@npm:^5.8.6":
+"@mui/system@npm:^5.10.10":
   version: 5.10.10
   resolution: "@mui/system@npm:5.10.10"
   dependencies:
@@ -2063,7 +2056,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/types@npm:^7.1.4, @mui/types@npm:^7.2.0":
+"@mui/types@npm:^7.2.0":
   version: 7.2.0
   resolution: "@mui/types@npm:7.2.0"
   peerDependencies:
@@ -2075,7 +2068,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^5.10.9, @mui/utils@npm:^5.8.6":
+"@mui/utils@npm:^5.10.9":
   version: 5.10.9
   resolution: "@mui/utils@npm:5.10.9"
   dependencies:
@@ -2137,7 +2130,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@popperjs/core@npm:^2.11.5, @popperjs/core@npm:^2.9.2":
+"@popperjs/core@npm:^2.11.6, @popperjs/core@npm:^2.9.2":
   version: 2.11.6
   resolution: "@popperjs/core@npm:2.11.6"
   checksum: 47fb328cec1924559d759b48235c78574f2d71a8a6c4c03edb6de5d7074078371633b91e39bbf3f901b32aa8af9b9d8f82834856d2f5737a23475036b16817f0
@@ -2248,6 +2241,22 @@ __metadata:
     estree-walker: ^2.0.1
     picomatch: ^2.2.2
   checksum: 6bc41f22b1a0f1efec3043899e4d3b6b1497b3dea4d94292d8f83b4cf07a1073ecbaedd562a22d11913ff7659f459677b01b09e9598a98936e746780ecc93a12
+  languageName: node
+  linkType: hard
+
+"@rollup/pluginutils@npm:^5.0.0":
+  version: 5.0.2
+  resolution: "@rollup/pluginutils@npm:5.0.2"
+  dependencies:
+    "@types/estree": ^1.0.0
+    estree-walker: ^2.0.2
+    picomatch: ^2.3.1
+  peerDependencies:
+    rollup: ^1.20.0||^2.0.0||^3.0.0
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+  checksum: edea15e543bebc7dcac3b0ac8bc7b8e8e6dbd46e2864dbe5dd28072de1fbd5b0e10d545a610c0edaa178e8a7ac432e2a2a52e547ece1308471412caba47db8ce
   languageName: node
   linkType: hard
 
@@ -2412,7 +2421,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@svgr/core@npm:^6.2.1":
+"@svgr/core@npm:^6.4.0":
   version: 6.5.0
   resolution: "@svgr/core@npm:6.5.0"
   dependencies:
@@ -2486,6 +2495,13 @@ __metadata:
   version: 0.0.39
   resolution: "@types/estree@npm:0.0.39"
   checksum: 412fb5b9868f2c418126451821833414189b75cc6bf84361156feed733e3d92ec220b9d74a89e52722e03d5e241b2932732711b7497374a404fad49087adc248
+  languageName: node
+  linkType: hard
+
+"@types/estree@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@types/estree@npm:1.0.0"
+  checksum: 910d97fb7092c6738d30a7430ae4786a38542023c6302b95d46f49420b797f21619cdde11fa92b338366268795884111c2eb10356e4bd2c8ad5b92941e9e6443
   languageName: node
   linkType: hard
 
@@ -2587,7 +2603,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-transition-group@npm:^4.4.0, @types/react-transition-group@npm:^4.4.4":
+"@types/react-transition-group@npm:^4.4.0, @types/react-transition-group@npm:^4.4.5":
   version: 4.4.5
   resolution: "@types/react-transition-group@npm:4.4.5"
   dependencies:
@@ -3242,9 +3258,9 @@ __metadata:
   dependencies:
     "@fontsource/roboto": 4.5.8
     "@lexical/react": 0.3.11
-    "@mui/material": 5.8.6
-    "@mui/styled-engine": 5.8.0
-    "@mui/styled-engine-sc": 5.8.0
+    "@mui/material": 5.10.11
+    "@mui/styled-engine": 5.10.8
+    "@mui/styled-engine-sc": 5.10.6
     "@react-leaflet/core": 2.1.0
     "@supabase/supabase-js": 1.35.7
     "@turf/bbox": 6.5.0
@@ -3307,12 +3323,12 @@ __metadata:
     spark-md5: 3.0.2
     styled-components: 5.3.6
     tslint-config-prettier: 1.18.0
-    typescript: 4.7.4
-    use-debounce: 8.0.1
+    typescript: 4.8.4
+    use-debounce: 8.0.4
     uuid: 8.3.2
-    vite: 2.9.13
-    vite-plugin-pwa: 0.12.0
-    vite-plugin-svgr: 2.2.0
+    vite: 2.9.15
+    vite-plugin-pwa: 0.12.8
+    vite-plugin-svgr: 2.2.2
     wms-capabilities: 0.5.1
   languageName: unknown
   linkType: soft
@@ -3359,7 +3375,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:^1.1.1, clsx@npm:^1.2.1":
+"clsx@npm:^1.2.1":
   version: 1.2.1
   resolution: "clsx@npm:1.2.1"
   checksum: 30befca8019b2eb7dbad38cff6266cf543091dae2825c856a62a8ccf2c3ab9c2907c4d12b288b73101196767f66812365400a227581484a05f968b0307cfaf12
@@ -3518,7 +3534,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csstype@npm:^3.0.2, csstype@npm:^3.1.0, csstype@npm:^3.1.1":
+"csstype@npm:^3.0.2, csstype@npm:^3.1.1":
   version: 3.1.1
   resolution: "csstype@npm:3.1.1"
   checksum: 1f7b4f5fdd955b7444b18ebdddf3f5c699159f13e9cf8ac9027ae4a60ae226aef9bbb14a6e12ca7dba3358b007cee6354b116e720262867c398de6c955ea451d
@@ -4309,7 +4325,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"estree-walker@npm:^2.0.1":
+"estree-walker@npm:^2.0.1, estree-walker@npm:^2.0.2":
   version: 2.0.2
   resolution: "estree-walker@npm:2.0.2"
   checksum: 6151e6f9828abe2259e57f5fd3761335bb0d2ebd76dc1a01048ccee22fabcfef3c0859300f6d83ff0d1927849368775ec5a6d265dde2f6de5a1be1721cd94efc
@@ -6521,7 +6537,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-transition-group@npm:^4.3.0, react-transition-group@npm:^4.4.2":
+"react-transition-group@npm:^4.3.0, react-transition-group@npm:^4.4.5":
   version: 4.4.5
   resolution: "react-transition-group@npm:4.4.5"
   dependencies:
@@ -6833,7 +6849,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup@npm:^2.43.1, rollup@npm:^2.59.0, rollup@npm:^2.70.2":
+"rollup@npm:>=2.59.0 <2.78.0":
+  version: 2.77.3
+  resolution: "rollup@npm:2.77.3"
+  dependencies:
+    fsevents: ~2.3.2
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    rollup: dist/bin/rollup
+  checksum: b179c68249584565ddb5664a241e8e48c293b2207718d885b08ee25797d98857a383f06b544bb89819407da5a71557f4713309a278f61c4778bb32b1d3321a1c
+  languageName: node
+  linkType: hard
+
+"rollup@npm:^2.43.1, rollup@npm:^2.75.7":
   version: 2.79.1
   resolution: "rollup@npm:2.79.1"
   dependencies:
@@ -7459,23 +7489,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:4.7.4":
-  version: 4.7.4
-  resolution: "typescript@npm:4.7.4"
+"typescript@npm:4.8.4":
+  version: 4.8.4
+  resolution: "typescript@npm:4.8.4"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 5750181b1cd7e6482c4195825547e70f944114fb47e58e4aa7553e62f11b3f3173766aef9c281783edfd881f7b8299cf35e3ca8caebe73d8464528c907a164df
+  checksum: 3e4f061658e0c8f36c820802fa809e0fd812b85687a9a2f5430bc3d0368e37d1c9605c3ce9b39df9a05af2ece67b1d844f9f6ea8ff42819f13bcb80f85629af0
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@4.7.4#~builtin<compat/typescript>":
-  version: 4.7.4
-  resolution: "typescript@patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=bda367"
+"typescript@patch:typescript@4.8.4#~builtin<compat/typescript>":
+  version: 4.8.4
+  resolution: "typescript@patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 96d3030cb01143570567cb4f3a616b10df65f658f0e74e853e77a089a6a954e35c800be7db8b9bfe9a1ae05d9c2897e281359f65e4caa1caf266368e1c4febd3
+  checksum: 563a0ef47abae6df27a9a3ab38f75fc681f633ccf1a3502b1108e252e187787893de689220f4544aaf95a371a4eb3141e4a337deb9895de5ac3c1ca76430e5f0
   languageName: node
   linkType: hard
 
@@ -7603,12 +7633,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-debounce@npm:8.0.1":
-  version: 8.0.1
-  resolution: "use-debounce@npm:8.0.1"
+"use-debounce@npm:8.0.4":
+  version: 8.0.4
+  resolution: "use-debounce@npm:8.0.4"
   peerDependencies:
     react: ">=16.8.0"
-  checksum: c66cb9a33b7b141232432dbdbdceb35573da8efd340e60c7f42e00f36e06c897818b731d9a9211d137a98dfb4acd5d686ff9bbe98b5990411ea6e67ee6e5a83d
+  checksum: 0f8b9e571f68a4694033ec00690bf73d781ac890140ae9ed4b330f71f7adb3f7d7df5cdaa32923c4d03fdc9de8a11be0f84301175ae4f66208af52ad03c55504
   languageName: node
   linkType: hard
 
@@ -7659,45 +7689,45 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-pwa@npm:0.12.0":
-  version: 0.12.0
-  resolution: "vite-plugin-pwa@npm:0.12.0"
+"vite-plugin-pwa@npm:0.12.8":
+  version: 0.12.8
+  resolution: "vite-plugin-pwa@npm:0.12.8"
   dependencies:
     debug: ^4.3.4
     fast-glob: ^3.2.11
     pretty-bytes: ^6.0.0
-    rollup: ^2.70.2
+    rollup: ^2.75.7
     workbox-build: ^6.5.3
     workbox-window: ^6.5.3
   peerDependencies:
-    vite: ^2.0.0
+    vite: ^2.0.0 || ^3.0.0-0
     workbox-build: ^6.4.0
     workbox-window: ^6.4.0
-  checksum: f66e405ca1c884566c37791c518a86880b63b57f51bd21c9498d0bca28f5385bdee1a29885284c9d70eb6d36d9e800de867c816ff190f79456a6f05e90618dde
+  checksum: a7ea6c4ec29eace2931f8b37e51506c33ad73eb3dd9153958c9fec8137a21059eeed2e9455ba851de4829540dbd920590c4395d99c23b1cdb8c69c468a293535
   languageName: node
   linkType: hard
 
-"vite-plugin-svgr@npm:2.2.0":
-  version: 2.2.0
-  resolution: "vite-plugin-svgr@npm:2.2.0"
+"vite-plugin-svgr@npm:2.2.2":
+  version: 2.2.2
+  resolution: "vite-plugin-svgr@npm:2.2.2"
   dependencies:
-    "@rollup/pluginutils": ^4.2.1
-    "@svgr/core": ^6.2.1
+    "@rollup/pluginutils": ^5.0.0
+    "@svgr/core": ^6.4.0
   peerDependencies:
     vite: ^2.6.0 || 3
-  checksum: 43fdab89f3fc61687ec97a50cd96f966110000420dd2d9a12bb70806bc71bed02500df229b2f170cda1be9e01f4c7f6f7f667064af22d63e46fc276021f93c3e
+  checksum: 2de50eeb8373884d049bb412219d1be7d0bf230629f9d49f859b6c8d95b329316c49f0f3f6fde3902d202cd0d7d26af3c7bf439dab9a210c346db3db0edb160b
   languageName: node
   linkType: hard
 
-"vite@npm:2.9.13":
-  version: 2.9.13
-  resolution: "vite@npm:2.9.13"
+"vite@npm:2.9.15":
+  version: 2.9.15
+  resolution: "vite@npm:2.9.15"
   dependencies:
     esbuild: ^0.14.27
     fsevents: ~2.3.2
     postcss: ^8.4.13
     resolve: ^1.22.0
-    rollup: ^2.59.0
+    rollup: ">=2.59.0 <2.78.0"
   peerDependencies:
     less: "*"
     sass: "*"
@@ -7714,7 +7744,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: a5e501b920a448c352e9b3836019dea56c523535f8e8540160708c2e164d84da6655ae39abbba1e2888092f5c6cd03dd06279852422359b51be601914645f49f
+  checksum: 5edf8afc132a598f82a1339aa503514a0e86f6264babe94531b9000d801f157c9a32ae022542404678acca43ee260ade04c4763c4b7b8d381a6b50511b4a1447
   languageName: node
   linkType: hard
 
