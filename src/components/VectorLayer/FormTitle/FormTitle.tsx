@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { withResizeDetector } from 'react-resize-detector'
@@ -11,7 +11,7 @@ import NavButtons from './NavButtons'
 import FilterNumbers from '../../shared/FilterNumbers'
 import Menu from '../../shared/Menu'
 import { dexie, IProjectUser } from '../../../dexieClient'
-import { supabase } from '../../../supabaseClient'
+import storeContext from '../../../storeContext'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
@@ -49,9 +49,7 @@ const TitleSymbols = styled.div`
 
 const VectorLayerFormTitle = ({ totalCount, filteredCount, width }) => {
   const { projectId } = useParams()
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
+  const { session } = useContext(storeContext)
 
   const userMayEdit: boolean = useLiveQuery(async () => {
     const projectUser: IProjectUser = await dexie.project_users.get({

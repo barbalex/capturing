@@ -1,7 +1,7 @@
 import { dexie, Field } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 
-const onMoveField = async ({ idMoved, folderDroppedIn, endIndex, session }) => {
+const onMoveField = async ({ idMoved, folderDroppedIn, endIndex }) => {
   const {
     data: { session },
   } = await supabase.auth.getSession()

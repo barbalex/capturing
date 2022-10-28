@@ -4,7 +4,7 @@ import { supabase } from '../../../supabaseClient'
 const onMoveTileLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
   const {
     data: { session },
-  } = supabase.auth.getSession()
+  } = await supabase.auth.getSession()
 
   const urlArray = folderDroppedIn.split('/')
   const projectId = urlArray[0]
