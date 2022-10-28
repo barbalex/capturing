@@ -1,11 +1,12 @@
-import { useCallback } from 'react'
+import { useCallback, useContext } from 'react'
+import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import Checkbox from '@mui/material/Checkbox'
 import { useNavigate } from 'react-router-dom'
 
 import constants from '../../utils/constants'
 import { dexie, VectorLayer } from '../../dexieClient'
-import { supabase } from '../../supabaseClient'
+import storeContext from '../../storeContext'
 
 // TODO: alter css on isdragging
 const Container = styled.div`
@@ -45,9 +46,7 @@ type Props = {
 
 const VectorLayerItem = ({ item, provided, isDragging }: Props) => {
   const navigate = useNavigate()
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
+  const { session } = useContext(storeContext)
 
   const onClickActive = useCallback(
     async (e) => {
@@ -89,4 +88,4 @@ const VectorLayerItem = ({ item, provided, isDragging }: Props) => {
   )
 }
 
-export default VectorLayerItem
+export default observer(VectorLayerItem)
