@@ -15,7 +15,6 @@ import constants from '../../utils/constants'
 import { dexie, Table } from '../../dexieClient'
 import insertRow from '../../utils/insertRow'
 import FilterNumbers from '../shared/FilterNumbers'
-import { supabase } from '../../supabaseClient'
 import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
 
 const TitleContainer = styled.div`
@@ -49,14 +48,11 @@ type Props = {
 }
 
 const RowsTitle = ({ rowsWithLabel }: Props) => {
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
   const { projectId, tableId } = useParams()
   const navigate = useNavigate()
 
   const store = useContext(storeContext)
-  const { activeNodeArray, removeNode, editingProjects } = store
+  const { activeNodeArray, removeNode, editingProjects, session } = store
   const editing = editingProjects.get(projectId)?.editing ?? false
 
   const [bbox, bboxIsInfinite] = useMemo(() => {

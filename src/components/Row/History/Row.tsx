@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useContext } from 'react'
+import { observer } from 'mobx-react-lite'
 
 import History from '../../shared/History'
 import createDataArrayForRevComparison from '../createDataArrayForRevComparison'
-import { supabase } from '../../../supabaseClient'
 import { Row } from '../../../dexieClient'
+import storeContext from '../../../storeContext'
 
 type Props = {
   row: Row
@@ -12,9 +13,7 @@ type Props = {
 }
 
 const HistoryRow = ({ row, revRow, restoreCallback }: Props) => {
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
+  const { session } = useContext(storeContext)
 
   const [dataArray, setDataArray] = useState([])
   useEffect(() => {
@@ -57,4 +56,4 @@ const HistoryRow = ({ row, revRow, restoreCallback }: Props) => {
   )
 }
 
-export default HistoryRow
+export default observer(HistoryRow)
