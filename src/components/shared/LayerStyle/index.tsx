@@ -1,4 +1,10 @@
-import React, { useEffect, useCallback, useRef, useMemo } from 'react'
+import React, {
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo,
+  useContext,
+} from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
@@ -16,14 +22,13 @@ import {
   FillRuleEnum,
   MarkerTypeEnum,
 } from '../../../dexieClient'
-import { supabase } from '../../../supabaseClient'
 import TextField from '../TextField'
 import RadioButtonGroup from '../RadioButtonGroup'
 import Slider from '../Slider'
 import insertLayerStyle from '../../../utils/insertLayerStyle'
 import MarkerSymbolPicker from './MarkerSymbolPicker'
-
 import constants from '../../../utils/constants'
+import storeContext from '../../../storeContext'
 
 const markerTypeGerman = {
   circle: 'Kreis',
@@ -59,9 +64,7 @@ const FieldsContainer = styled.div`
 `
 
 const LayerStyleForm = ({ userMayEdit, row: layer }) => {
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
+  const { session } = useContext(storeContext)
   const { vectorLayerId, tableId } = useParams()
 
   // Get these numbers for tables?

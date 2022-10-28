@@ -31,7 +31,6 @@ import {
   TableRelTypeEnum,
   QueuedUpdate,
 } from '../../../dexieClient'
-import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Select from '../../shared/Select'
 import Spinner from '../../shared/Spinner'
@@ -79,11 +78,7 @@ const TableForm = ({ showFilter }: TableFormProps) => {
   const { projectId, tableId } = useParams()
 
   const store = useContext(StoreContext)
-  const { filter, errors, rebuildTree } = store
-
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
+  const { filter, errors, rebuildTree, session } = store
 
   const unsetError = useCallback(
     () => () => {
