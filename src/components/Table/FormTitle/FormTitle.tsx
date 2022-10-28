@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { withResizeDetector } from 'react-resize-detector'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
-import { Session } from '@supabase/supabase-js'
 
 import DeleteButton from './DeleteButton'
 import AddButton from './AddButton'
@@ -51,7 +50,9 @@ const TitleSymbols = styled.div`
 
 const TableFormTitle = ({ totalCount, filteredCount, width }) => {
   const { projectId } = useParams()
-  const session: Session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
 
   const userMayEdit: boolean = useLiveQuery(async () => {
     const projectUser: IProjectUser = await dexie.project_users.get({

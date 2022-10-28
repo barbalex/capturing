@@ -52,7 +52,9 @@ const RowsContainer = styled.div`
 `
 
 const TablesComponent = () => {
-  const session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
   const { projectId } = useParams()
   const navigate = useNavigate()
 

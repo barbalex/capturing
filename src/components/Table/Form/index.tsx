@@ -15,7 +15,6 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import Button from '@mui/material/Button'
-import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
@@ -82,7 +81,9 @@ const TableForm = ({ showFilter }: TableFormProps) => {
   const store = useContext(StoreContext)
   const { filter, errors, rebuildTree } = store
 
-  const session: Session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
 
   const unsetError = useCallback(
     () => () => {

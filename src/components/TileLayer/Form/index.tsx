@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useCallback, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
-import { Session } from '@supabase/supabase-js'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 
@@ -39,7 +38,9 @@ const TileLayerForm = () => {
   const store = useContext(storeContext)
   const { errors, rebuildTree } = store
 
-  const session: Session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
 
   const unsetError = useCallback(
     () => () => {
