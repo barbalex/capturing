@@ -23,16 +23,23 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
   // TODO: Error 413: Payload Too Large. See: https://github.com/supabase/realtime/issues/252
   // after patch, payload should include id field to enable fetching it with query
   supabase
-    .from(tableName)
-    // TODO: only subscribe to id for files, then fetch row with separate query?
-    .on('*', (payload) => {
-      // console.log(`${tableName} subscription, payload:`, payload)
-      const payloadErrors = payload.errors
-      if (payloadErrors) return
-      if (payload.new?.file) payload.new.file = hex2buf(payload.new.file)
-      dexie.table(tableNameForDexie).put(payload.new)
-    })
+    .channel(`public:${tableName}`)
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: tableName },
+      (payload) => {
+        // console.log(`${tableName} subscription, payload:`, payload)
+        const payloadErrors = payload.errors
+        if (payloadErrors) return
+        if (payload.new?.file) payload.new.file = hex2buf(payload.new.file)
+        dexie.table(tableNameForDexie).put(payload.new)
+      },
+    )
     .subscribe((status) => {
+      console.log('processTable, status of subscription:', {
+        tableName,
+        status,
+      })
       if (tableName === 'projects') {
         // console.log(`processTable, subscribe callback, status:`, status)
         if (store.subscriptionState !== status) {
