@@ -62,6 +62,7 @@ export const MobxStore = types
     navigate: undefined,
     map: undefined,
     localMaps: {}, // map of: {id,save,delete,size}
+    session: undefined,
   }))
   .actions((self) => {
     // autorun(() => {
@@ -81,6 +82,9 @@ export const MobxStore = types
     })
 
     return {
+      setSession(val) {
+        this.session = val
+      },
       setDiffConflict(val) {
         self.diffConflict = val
       },
