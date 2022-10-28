@@ -40,7 +40,9 @@ const TitleSymbols = styled.div`
 `
 
 const VectorLayersTitle = () => {
-  const session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
   const { projectId } = useParams()
   const navigate = useNavigate()
 

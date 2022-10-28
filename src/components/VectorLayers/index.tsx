@@ -5,7 +5,6 @@ import { Virtuoso } from 'react-virtuoso'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
-import { Session } from '@supabase/supabase-js'
 
 import storeContext from '../../storeContext'
 import Item from './Item'
@@ -43,7 +42,9 @@ window.addEventListener('error', (e) => {
 })
 
 const VectorLayersComponent = () => {
-  const session: Session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
   const { projectId } = useParams()
 
   const store = useContext(storeContext)
@@ -76,9 +77,7 @@ const VectorLayersComponent = () => {
       const vectorLayersToUpdate = []
       for (const [index, res] of result.entries()) {
         const sort = index + 1
-        const vectorLayer = vectorLayers.find(
-          (vl) => vl.id === res.id,
-        )
+        const vectorLayer = vectorLayers.find((vl) => vl.id === res.id)
         if (vectorLayer.sort !== sort) {
           // update sort value
           const was = { ...vectorLayer }
