@@ -15,7 +15,6 @@ import {
   ITileLayer,
   TileLayer,
 } from '../../../dexieClient'
-import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
 import ToggleButtonGroup from '../../shared/ToggleButtonGroup'
@@ -36,11 +35,7 @@ const TileLayerForm = () => {
   const { projectId, tileLayerId } = useParams()
 
   const store = useContext(storeContext)
-  const { errors, rebuildTree } = store
-
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
+  const { errors, rebuildTree, session } = store
 
   const unsetError = useCallback(
     () => () => {

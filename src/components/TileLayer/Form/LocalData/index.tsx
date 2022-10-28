@@ -10,7 +10,6 @@ import Checkbox from '@mui/material/Checkbox'
 import storeContext from '../../../../storeContext'
 import { Comment } from '../../../Table/Form'
 import { dexie, TileLayer } from '../../../../dexieClient'
-import { supabase } from '../../../../supabaseClient'
 import { ProcessingText } from '../../../VectorLayer/Form/DownloadPVL'
 import constants from '../../../../utils/constants'
 import Rejections from './Rejections'
@@ -72,9 +71,6 @@ type Props = {
 }
 
 const LocalData = ({ userMayEdit, row }: Props) => {
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
   const store = useContext(storeContext)
   const {
     localMaps,
@@ -83,6 +79,7 @@ const LocalData = ({ userMayEdit, row }: Props) => {
     mapZoom,
     setLocalMapShow,
     localMapShow,
+    session,
   } = store
 
   useEffect(() => setLocalMapLoading(), [setLocalMapLoading])

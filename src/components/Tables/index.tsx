@@ -15,7 +15,6 @@ import { dexie, Table } from '../../dexieClient'
 import insertTable from '../../utils/insertTable'
 import sortByLabelName from '../../utils/sortByLabelName'
 import FilterNumbers from '../shared/FilterNumbers'
-import { supabase } from '../../supabaseClient'
 
 const Container = styled.div`
   height: 100%;
@@ -52,14 +51,12 @@ const RowsContainer = styled.div`
 `
 
 const TablesComponent = () => {
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
   const { projectId } = useParams()
   const navigate = useNavigate()
 
   const store = useContext(storeContext)
-  const { activeNodeArray, removeNode, formHeight, editingProjects } = store
+  const { activeNodeArray, removeNode, formHeight, editingProjects, session } =
+    store
   const editing = editingProjects.get(projectId)?.editing ?? false
 
   const criteria = { deleted: 0, project_id: projectId }
