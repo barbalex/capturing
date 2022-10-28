@@ -47,7 +47,7 @@ const ResetPassword = ({
   const reset = useCallback(async () => {
     if (!email) setEmailErrorText('Bitte Email-Adresse eingeben')
     setResetTitle('...')
-    const { error } = await supabase.auth.api.resetPasswordForEmail(email)
+    const { error } = await supabase.auth.resetPasswordForEmail(email)
     if (error) {
       setResetTitle('Fehler: Passwort nicht zurückgesetzt')
       setTimeout(() => {

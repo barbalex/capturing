@@ -66,7 +66,7 @@ const LoginWithEmailAndPassword = ({
                 email: emailToUse,
                 password: passwordToUse,
               })
-            : await supabase.auth.signIn({
+            : await supabase.auth.signInWithPassword({
                 email: emailToUse,
                 password: passwordToUse,
               })
@@ -78,7 +78,7 @@ const LoginWithEmailAndPassword = ({
             authType === 'email_signup'
           ) {
             console.log('signing in instead of up')
-            return await supabase.auth.signIn({
+            return await supabase.auth.signInWithPassword({
               email: emailToUse,
               password: passwordToUse,
             })

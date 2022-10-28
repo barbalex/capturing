@@ -41,7 +41,7 @@ const Login = ({ emailErrorText, setEmailErrorText, email, setEmail }) => {
       const emailToUse = emailPassed ?? email ?? emailInput.current.value
       await logout({ store })
       setTimeout(async () => {
-        const { error } = await supabase.auth.signIn({
+        const { error } = await supabase.auth.signInWithOtp({
           email: emailToUse,
         })
         if (error) {
