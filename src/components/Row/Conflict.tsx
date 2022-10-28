@@ -22,7 +22,7 @@ type Props = {
 
 const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
   const store = useContext(StoreContext)
-  const session = supabase.auth.session()
+  const { session } = store
 
   const { isLoading, isError, error, data } = useQuery(
     ['row_revs', 'conflicts', row.id, rev],

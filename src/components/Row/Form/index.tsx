@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useCallback, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
-import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
@@ -10,7 +9,6 @@ import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import ConflictList from '../../shared/ConflictList'
 import { dexie, Row, IRow, Field } from '../../../dexieClient'
-import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Date from '../../shared/Date'
 import Time from '../../shared/Time'
@@ -60,8 +58,7 @@ const RowForm = ({
   const url = params['*']
   const showHistory = url?.endsWith('history')
   const store = useContext(StoreContext)
-  const { filter, online, errors, rebuildTree } = store
-  const session: Session = supabase.auth.session()
+  const { filter, online, errors, rebuildTree, session } = store
 
   const unsetError = useCallback(
     () => () => {

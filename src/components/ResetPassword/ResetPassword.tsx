@@ -81,7 +81,7 @@ const ResetPassword = () => {
       await logout({ store })
       setTimeout(async () => {
         console.log('signing in with:', { emailToUse, passwordToUse })
-        const { session, error } = await supabase.auth.signIn({
+        const { error } = await supabase.auth.signInWithPassword({
           email: emailToUse,
           password: passwordToUse,
         })
@@ -89,7 +89,6 @@ const ResetPassword = () => {
           setEmailErrorText(error.message)
           return setPasswordErrorText(error.message)
         }
-        console.log('session:', session)
         setEmailErrorText('')
         setPasswordErrorText('')
         setSearchParams(searchParams.delete('type'))
@@ -144,7 +143,7 @@ const ResetPassword = () => {
   const reset = useCallback(async () => {
     if (!email) setEmailErrorText('Bitte Email-Adresse eingeben')
     setResetTitle('...')
-    const { error } = await supabase.auth.api.resetPasswordForEmail(email)
+    const { error } = await supabase.auth.resetPasswordForEmail(email)
     if (error) {
       setResetTitle('Fehler: Passwort nicht zurückgesetzt')
       setTimeout(() => {
