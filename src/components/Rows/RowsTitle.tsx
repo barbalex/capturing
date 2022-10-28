@@ -49,7 +49,9 @@ type Props = {
 }
 
 const RowsTitle = ({ rowsWithLabel }: Props) => {
-  const session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
   const { projectId, tableId } = useParams()
   const navigate = useNavigate()
 

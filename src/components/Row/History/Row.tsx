@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Session } from '@supabase/supabase-js'
 
 import History from '../../shared/History'
 import createDataArrayForRevComparison from '../createDataArrayForRevComparison'
@@ -13,7 +12,9 @@ type Props = {
 }
 
 const HistoryRow = ({ row, revRow, restoreCallback }: Props) => {
-  const session: Session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
 
   const [dataArray, setDataArray] = useState([])
   useEffect(() => {

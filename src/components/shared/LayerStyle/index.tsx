@@ -2,7 +2,6 @@ import React, { useEffect, useCallback, useRef, useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
-import { Session } from '@supabase/supabase-js'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 
@@ -60,7 +59,9 @@ const FieldsContainer = styled.div`
 `
 
 const LayerStyleForm = ({ userMayEdit, row: layer }) => {
-  const session: Session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
   const { vectorLayerId, tableId } = useParams()
 
   // Get these numbers for tables?

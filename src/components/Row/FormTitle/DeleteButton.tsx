@@ -5,12 +5,10 @@ import { FaMinus } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { Session } from '@supabase/supabase-js'
 import { useNavigate, resolvePath } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
-import { supabase } from '../../../supabaseClient'
 
 const TitleRow = styled.div`
   display: flex;
@@ -28,9 +26,8 @@ const Title = styled.div`
 const RowDeleteButton = ({ row }) => {
   const navigate = useNavigate()
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeNodeWithChildren } = store
+  const { activeNodeArray, removeNodeWithChildren, session } = store
   // const filter = { todo: 'TODO: was in store' }
-  const session: Session = supabase.auth.session()
 
   const [anchorEl, setAnchorEl] = useState(null)
   const closeMenu = useCallback(() => {

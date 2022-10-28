@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useContext } from 'react'
 import Dropzone from 'react-dropzone'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
-import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import List from '@mui/material/List'
 import FormHelperText from '@mui/material/FormHelperText'
@@ -11,9 +10,9 @@ import FormLabel from '@mui/material/FormLabel'
 
 import ErrorBoundary from '../../../shared/ErrorBoundary'
 import { dexie, FileMeta, Field } from '../../../../dexieClient'
-import { supabase } from '../../../../supabaseClient'
 import FileComponent from './File'
 import insertFile from '../../../../utils/insertFile'
+import storeContext from '../../../../storeContext'
 
 const Container = styled.div`
   padding: 0 8px;
@@ -65,7 +64,7 @@ type Props = {
 }
 
 const Files = ({ field }: Props) => {
-  const session: Session = supabase.auth.session()
+  const { session } = useContext(storeContext)
   const { rowId } = useParams()
   const filesMeta = useLiveQuery(
     async () =>

@@ -1,16 +1,16 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useContext } from 'react'
 import { FaRegTimesCircle } from 'react-icons/fa'
 import { MdFileDownload } from 'react-icons/md'
 import styled from 'styled-components'
-import { Session } from '@supabase/supabase-js'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import fileSaver from 'file-saver'
+import { observer } from 'mobx-react-lite'
 
 import ErrorBoundary from '../../../shared/ErrorBoundary'
 import { dexie, FileMeta, File } from '../../../../dexieClient'
-import { supabase } from '../../../../supabaseClient'
+import storeContext from '../../../../storeContext'
 
 const StyledListItem = styled(ListItem)`
   padding-left: 8px;
@@ -46,7 +46,7 @@ type Props = {
 }
 
 const Files = ({ fileMeta }: Props) => {
-  const session: Session = supabase.auth.session()
+  const { session } = useContext(storeContext)
 
   const onClickRemove = useCallback(
     (e) => {
@@ -117,4 +117,4 @@ const Files = ({ fileMeta }: Props) => {
   )
 }
 
-export default Files
+export default observer(Files)
