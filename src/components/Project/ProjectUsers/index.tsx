@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useContext } from 'react'
 import styled from 'styled-components'
 import { motion, useAnimation } from 'framer-motion'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
@@ -6,15 +6,15 @@ import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import List from '@mui/material/List'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { Session } from '@supabase/supabase-js'
 import { useParams } from 'react-router-dom'
+import { observer } from 'mobx-react-lite'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import constants from '../../../utils/constants'
 import ProjectUsersComponent from './ProjectUsers'
 import AddProjectUser from './AddProjectUser'
 import { dexie } from '../../../dexieClient'
-import { supabase } from '../../../supabaseClient'
+import storeContext from '../../../storeContext'
 
 const TitleRow = styled.div`
   background-color: rgba(248, 243, 254, 1);
@@ -47,7 +47,7 @@ const AddButtonRow = styled.div`
 const AddButton = styled(Button)``
 
 const ProjectUsersIndex = () => {
-  const session: Session = supabase.auth.session()
+  const { session } = useContext(storeContext)
   const { projectId } = useParams()
 
   const [addNew, setAddNew] = useState(false)
@@ -138,4 +138,4 @@ const ProjectUsersIndex = () => {
   )
 }
 
-export default ProjectUsersIndex
+export default observer(ProjectUsersIndex)

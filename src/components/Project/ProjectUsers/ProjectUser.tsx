@@ -1,13 +1,13 @@
-import { useCallback } from 'react'
+import { useCallback, useContext } from 'react'
 import styled from 'styled-components'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import IconButton from '@mui/material/IconButton'
 import { FaRegTimesCircle } from 'react-icons/fa'
-import { Session } from '@supabase/supabase-js'
+import { observer } from 'mobx-react-lite'
 
 import { ProjectUser } from '../../../dexieClient'
-import { supabase } from '../../../supabaseClient'
+import storeContext from '../../../storeContext'
 
 const StyledListItem = styled(ListItem)`
   padding-left: 8px;
@@ -25,7 +25,7 @@ type Props = {
 }
 
 const ProjectUserComponent = ({ projectUser }: Props) => {
-  const session: Session = supabase.auth.session()
+  const { session } = useContext(storeContext)
   const onClickRemove = useCallback(() => {
     projectUser.deleteOnServerAndClient({ session })
   }, [projectUser, session])
@@ -47,4 +47,4 @@ const ProjectUserComponent = ({ projectUser }: Props) => {
   )
 }
 
-export default ProjectUserComponent
+export default observer(ProjectUserComponent)
