@@ -5,7 +5,6 @@ import { Virtuoso } from 'react-virtuoso'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
-import { Session } from '@supabase/supabase-js'
 
 import storeContext from '../../storeContext'
 import Item from './Item'
@@ -43,7 +42,9 @@ window.addEventListener('error', (e) => {
 })
 
 const TileLayersComponent = () => {
-  const session: Session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
   const { projectId } = useParams()
 
   const store = useContext(storeContext)

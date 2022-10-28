@@ -72,7 +72,9 @@ type Props = {
 }
 
 const LocalData = ({ userMayEdit, row }: Props) => {
-  const session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
   const store = useContext(storeContext)
   const {
     localMaps,
