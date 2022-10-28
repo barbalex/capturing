@@ -2,7 +2,6 @@ import { useCallback } from 'react'
 import styled from 'styled-components'
 import Checkbox from '@mui/material/Checkbox'
 import { useNavigate } from 'react-router-dom'
-import { Session } from '@supabase/supabase-js'
 
 import constants from '../../utils/constants'
 import { dexie, TileLayer } from '../../dexieClient'
@@ -46,7 +45,9 @@ type Props = {
 
 const TileLayerItem = ({ item, provided, isDragging }: Props) => {
   const navigate = useNavigate()
-  const session: Session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
 
   const onClickActive = useCallback(
     async (e) => {

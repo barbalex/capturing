@@ -40,7 +40,9 @@ const TitleSymbols = styled.div`
 `
 
 const TileLayersTitle = () => {
-  const session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
   const { projectId } = useParams()
   const navigate = useNavigate()
 
@@ -49,12 +51,8 @@ const TileLayersTitle = () => {
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount, projectUser] = await Promise.all([
-      dexie.tile_layers
-        .where({ deleted: 0, project_id: projectId })
-        .count(), // TODO: pass in filter
-      dexie.tile_layers
-        .where({ deleted: 0, project_id: projectId })
-        .count(),
+      dexie.tile_layers.where({ deleted: 0, project_id: projectId }).count(), // TODO: pass in filter
+      dexie.tile_layers.where({ deleted: 0, project_id: projectId }).count(),
       dexie.project_users.get({
         project_id: projectId,
         user_email: session?.user?.email,

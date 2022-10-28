@@ -9,7 +9,6 @@ import isEqual from 'lodash/isEqual'
 import { useNavigate } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { Session } from '@supabase/supabase-js'
 import { orange } from '@mui/material/colors'
 
 import storeContext from '../../storeContext'
@@ -50,7 +49,9 @@ const ProjectEditIconButton = styled(IconButton)`
 
 const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   // console.log('Node', { data, state, tree, handlers })
-  const session: Session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
   const navigate = useNavigate()
 
   const store = useContext(storeContext)
