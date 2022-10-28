@@ -9,7 +9,6 @@ import StoreContext from '../storeContext'
 import Login from '../components/Login'
 import constants from '../utils/constants'
 import Tree from '../components/Tree'
-import { supabase } from '../supabaseClient'
 import MapComponent from '../components/Map'
 
 const StyledSplitPane = styled(SplitPane)`
@@ -57,8 +56,8 @@ const standardWidth = 500
 
 const ProjectsPage = () => {
   const store = useContext(StoreContext)
-  const session = supabase.auth.session()
-  const { setFormHeight, showTree, showForm, showMap, mapInitiated } = store
+  const { setFormHeight, showTree, showForm, showMap, mapInitiated, session } =
+    store
 
   // console.log('Projects, mapInitiated:', mapInitiated)
 

@@ -67,6 +67,7 @@ function App() {
         // reset some values
         if (!dbStore?.store?.showMap) dbStore.store.mapInitiated = false
         dbStore.store.notifications = {}
+        dbStore.store.session = undefined
         st = MobxStore.create(dbStore?.store)
       } else {
         st = MobxStore.create()
@@ -87,6 +88,12 @@ function App() {
       }
       // persist store on every snapshot
       onSnapshot(st, (ss) => dexie.stores.put({ id: 'store', store: ss }))
+      // refresh session
+      supabase.auth.refreshSession().then((res) => {
+        const session = res?.data?.session
+        console.log('App initializing, refreshing session', { res, session })
+        st.setSession(session)
+      })
     })
 
     return () => {
@@ -98,6 +105,7 @@ function App() {
   useEffect(() => {
     persist().then((val) => console.log('storage is persisted safely:', val))
   }, [])
+
   // console.log('App rendering, store:', store)
 
   // on first render returns null

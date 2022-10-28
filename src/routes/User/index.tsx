@@ -39,10 +39,9 @@ const AccordionP = styled.p`
  */
 const UserPage = () => {
   const store = useContext(StoreContext)
-  const { online } = store
+  const { online, session } = store
 
-  const session = supabase.auth.session()
-  const user = supabase.auth.user()
+  const user = session.user
 
   const navigate = useNavigate()
 

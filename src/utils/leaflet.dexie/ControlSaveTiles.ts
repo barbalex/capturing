@@ -299,7 +299,7 @@ const ControlSaveTiles = L.Control.extend({
         fulfilled: res.fulfilled ?? 0,
         rejected: res.rejected ?? 0,
       })
-      setLocalMapValues(mapValues) 
+      setLocalMapValues(mapValues)
       // set bounds and update size in dexie
       const tileLayer = await dexie.tile_layers.get(layer.id)
       const was = { ...tileLayer }
@@ -312,7 +312,9 @@ const ControlSaveTiles = L.Control.extend({
       }
       dexie.tile_layers.update(layer.id, update)
       const is = await dexie.tile_layers.get(layer.id)
-      const session = supabase.auth.session()
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
       tileLayer.updateOnServer({ was, is, session })
     }
 
