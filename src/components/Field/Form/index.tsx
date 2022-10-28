@@ -8,7 +8,6 @@ import React, {
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
-import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
@@ -23,7 +22,6 @@ import {
   IWidgetType,
   IWidgetForField,
 } from '../../../dexieClient'
-import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Select from '../../shared/Select'
 import Spinner from '../../shared/Spinner'
@@ -49,8 +47,7 @@ type valueType = {
 const FieldForm = ({ showFilter }: FieldFormProps) => {
   const { projectId, fieldId } = useParams()
   const store = useContext(StoreContext)
-  const { filter, errors, rebuildTree } = store
-  const session: Session = supabase.auth.session()
+  const { filter, errors, rebuildTree, session } = store
 
   const unsetError = useCallback(
     () => () => {
