@@ -8,7 +8,6 @@ import styled from 'styled-components'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import Label from '../../shared/Label'
 import { dexie, VectorLayer } from '../../../dexieClient'
-import { supabase } from '../../../supabaseClient'
 import downloadWfs from '../../../utils/downloadWfs'
 import storeContext from '../../../storeContext'
 
@@ -46,11 +45,8 @@ type Props = {
 // = '99999999-9999-9999-9999-999999999999'
 const VectorLayerDownload = ({ row }: Props) => {
   const store = useContext(storeContext)
+  const { session } = store
   const { vectorLayerId, projectId } = useParams()
-
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
 
   // fetch pvl_geoms to see if data exists
   const data = useLiveQuery(async () => {

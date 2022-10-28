@@ -10,7 +10,6 @@ import storeContext from '../../storeContext'
 import Item from './Item'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import { dexie, VectorLayer } from '../../dexieClient'
-import { supabase } from '../../supabaseClient'
 import Title from './Title'
 import HeightPreservingItem from '../shared/HeightPreservingItem'
 
@@ -42,13 +41,10 @@ window.addEventListener('error', (e) => {
 })
 
 const VectorLayersComponent = () => {
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
   const { projectId } = useParams()
 
   const store = useContext(storeContext)
-  const { formHeight, setVectorLayerSorter, rebuildTree } = store
+  const { formHeight, setVectorLayerSorter, rebuildTree, session } = store
 
   const vectorLayers: VectorLayer[] = useLiveQuery(
     async () =>

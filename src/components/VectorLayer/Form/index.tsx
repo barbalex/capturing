@@ -21,7 +21,6 @@ import {
   VectorLayer,
   VectorLayerTypeEnum,
 } from '../../../dexieClient'
-import { supabase } from '../../../supabaseClient'
 import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
 import Select from '../../shared/Select'
@@ -71,11 +70,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
   const { projectId, vectorLayerId } = useParams()
 
   const store = useContext(StoreContext)
-  const { filter, errors, rebuildTree } = store
-
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
+  const { filter, errors, rebuildTree, session } = store
 
   const unsetError = useCallback(
     () => () => {
