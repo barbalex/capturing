@@ -13,7 +13,6 @@ import { orange } from '@mui/material/colors'
 
 import storeContext from '../../storeContext'
 import EditIcon from '../../images/icons/edit_project'
-import { supabase } from '../../supabaseClient'
 import { dexie } from '../../dexieClient'
 
 const Container = styled.div``
@@ -49,9 +48,6 @@ const ProjectEditIconButton = styled(IconButton)`
 
 const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
   // console.log('Node', { data, state, tree, handlers })
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
   const navigate = useNavigate()
 
   const store = useContext(storeContext)
@@ -62,6 +58,7 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     setProjectEditing,
     addNode,
     removeNodeWithChildren,
+    session,
   } = store
   const activeNodeArray = aNARaw.slice()
   const isInActiveNodeArray = isEqual(

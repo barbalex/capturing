@@ -12,7 +12,6 @@ import constants from '../../utils/constants'
 import { dexie } from '../../dexieClient'
 import insertTileLayer from '../../utils/insertTileLayer'
 import FilterNumbers from '../shared/FilterNumbers'
-import { supabase } from '../../supabaseClient'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
@@ -40,14 +39,11 @@ const TitleSymbols = styled.div`
 `
 
 const TileLayersTitle = () => {
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
   const { projectId } = useParams()
   const navigate = useNavigate()
 
   const store = useContext(storeContext)
-  const { activeNodeArray, removeNode } = store
+  const { activeNodeArray, removeNode, session } = store
 
   const data = useLiveQuery(async () => {
     const [filteredCount, totalCount, projectUser] = await Promise.all([

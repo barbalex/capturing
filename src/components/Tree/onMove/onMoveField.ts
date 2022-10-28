@@ -1,10 +1,10 @@
 import { dexie, Field } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 
-const onMoveField = async ({ idMoved, folderDroppedIn, endIndex }) => {
+const onMoveField = async ({ idMoved, folderDroppedIn, endIndex, session }) => {
   const {
     data: { session },
-  } = supabase.auth.getSession()
+  } = await supabase.auth.getSession()
 
   const urlArray = folderDroppedIn.split('/')
   const tableId = urlArray[0]
