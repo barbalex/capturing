@@ -48,7 +48,7 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
         if (status === 'SUBSCRIPTION_ERROR') {
           if (document.visibilityState === 'hidden') {
             // page visible so let realtime reconnect and reload data
-            supabase.removeAllSubscriptions()
+            supabase.removeAllChannels()
             hiddenError = true
           }
         }

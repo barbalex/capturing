@@ -57,11 +57,14 @@ export const MobxStore = types
     localMapLoadingRejected: types.optional(types.number, 0),
     localMapShow: types.map(ShowLocalMapsType),
     diffConflict: types.optional(types.boolean, true),
+    // needed to detect changes in session
+    sessionCounter: types.optional(types.number, 0),
   })
   .volatile(() => ({
     navigate: undefined,
     map: undefined,
     localMaps: {}, // map of: {id,save,delete,size}
+    // beware: change does not provoke rerender
     session: undefined,
   }))
   .actions((self) => {
@@ -82,8 +85,11 @@ export const MobxStore = types
     })
 
     return {
+      incrementSessionCounter() {
+        self.sessionCounter = self.sessionCounter + 1
+      },
       setSession(val) {
-        this.session = val
+        self.session = val
       },
       setDiffConflict(val) {
         self.diffConflict = val

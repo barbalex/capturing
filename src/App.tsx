@@ -68,6 +68,7 @@ function App() {
         if (!dbStore?.store?.showMap) dbStore.store.mapInitiated = false
         dbStore.store.notifications = {}
         dbStore.store.session = undefined
+        dbStore.store.sessionCounter = 0
         st = MobxStore.create(dbStore?.store)
       } else {
         st = MobxStore.create()
@@ -89,17 +90,16 @@ function App() {
       // persist store on every snapshot
       onSnapshot(st, (ss) => dexie.stores.put({ id: 'store', store: ss }))
       // refresh session
-      supabase.auth.refreshSession().then((res) => {
-        const session = res?.data?.session
-        console.log('App initializing, refreshing session', { res, session })
+      supabase.auth.refreshSession()
+      supabase.auth.onAuthStateChange((event, session) => {
         st.setSession(session)
+        st.incrementSessionCounter()
       })
     })
 
     return () => {
-      supabase.removeAllSubscriptions()
+      supabase.removeAllChannels()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

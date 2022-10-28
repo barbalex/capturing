@@ -117,6 +117,7 @@ const ProjectsPage = () => {
     activeNodeArray,
     previousActiveNodeArray,
     session,
+    sessionCounter,
   } = store
 
   // console.log('Projects, mapInitiated:', mapInitiated)
@@ -137,7 +138,9 @@ const ProjectsPage = () => {
     document.title = 'Erfassen: Projekte'
   }, [])
 
-  if (!session) return <Login />
+  // console.log('Projects, session:', { session, sessionCounter })
+
+  if (!session || sessionCounter === 0) return <Login />
 
   /**
    * Idea for preventing map from being re-initialized on tab changes
@@ -203,8 +206,6 @@ const ProjectsPage = () => {
         horizontalNavIds.indexOf(newLastNode)
       ? 'next'
       : 'previous'
-
-  // console.log('Projects rendering', { initial, animate })
 
   return (
     <Container ref={containerEl}>
