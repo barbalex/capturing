@@ -5,7 +5,6 @@ import { FaMinus } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { Session } from '@supabase/supabase-js'
 import { useNavigate, resolvePath, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 
@@ -33,7 +32,9 @@ const VectorLayerDeleteButton = ({ userMayEdit }) => {
   const store = useContext(StoreContext)
   const { activeNodeArray, removeNodeWithChildren } = store
   // const filter = { todo: 'TODO: was in store' }
-  const session: Session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
 
   const deleted: boolean = useLiveQuery(async () => {
     const row: Row = await dexie.vector_layers.get(vectorLayerId)
@@ -51,9 +52,7 @@ const VectorLayerDeleteButton = ({ userMayEdit }) => {
     [],
   )
   const remove = useCallback(async () => {
-    const row: VectorLayer = await dexie.vector_layers.get(
-      vectorLayerId,
-    )
+    const row: VectorLayer = await dexie.vector_layers.get(vectorLayerId)
     row.deleteOnServerAndClient({ session })
     setAnchorEl(null)
     // need to remove node from nodes

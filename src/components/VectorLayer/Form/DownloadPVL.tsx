@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useContext } from 'react'
 import { observer } from 'mobx-react-lite'
-import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 import Button from '@mui/material/Button'
@@ -49,7 +48,9 @@ const VectorLayerDownload = ({ row }: Props) => {
   const store = useContext(storeContext)
   const { vectorLayerId, projectId } = useParams()
 
-  const session: Session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
 
   // fetch pvl_geoms to see if data exists
   const data = useLiveQuery(async () => {

@@ -8,7 +8,6 @@ import React, {
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
-import { Session } from '@supabase/supabase-js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
@@ -74,7 +73,9 @@ const VectorLayerForm = ({ showFilter }: Props) => {
   const store = useContext(StoreContext)
   const { filter, errors, rebuildTree } = store
 
-  const session: Session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
 
   const unsetError = useCallback(
     () => () => {

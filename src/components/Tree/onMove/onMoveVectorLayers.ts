@@ -1,19 +1,18 @@
-import { Session } from '@supabase/supabase-js'
-
 import { dexie, VectorLayer } from '../../../dexieClient'
 import { supabase } from '../../../supabaseClient'
 
 const onMoveVectorLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
-  const session: Session = supabase.auth.session()
+  const {
+    data: { session },
+  } = supabase.auth.getSession()
 
   const urlArray = folderDroppedIn.split('/')
   const projectId = urlArray[0]
 
   // 1. get list
-  const vectorLayers: VectorLayer[] =
-    await dexie.vector_layers
-      .where({ deleted: 0, project_id: projectId })
-      .sortBy('sort')
+  const vectorLayers: VectorLayer[] = await dexie.vector_layers
+    .where({ deleted: 0, project_id: projectId })
+    .sortBy('sort')
   // 2. get index of dragged pvl
   const startIndex = vectorLayers.findIndex((pvl) => pvl.id === idMoved)
   // 3. return if moved node was not pvl
@@ -27,9 +26,7 @@ const onMoveVectorLayers = async ({ idMoved, folderDroppedIn, endIndex }) => {
   const vectorLayersToUpdate = []
   for (const [index, res] of result.entries()) {
     const sort = index + 1
-    const vectorLayer = vectorLayers.find(
-      (vl) => vl.id === res.id,
-    )
+    const vectorLayer = vectorLayers.find((vl) => vl.id === res.id)
     if (vectorLayer.sort !== sort) {
       // update sort value
       const was = { ...vectorLayer }
