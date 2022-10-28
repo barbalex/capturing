@@ -1,18 +1,17 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useContext } from 'react'
 import 'leaflet'
 import 'leaflet-draw'
 import { useMap } from 'react-leaflet'
 import { useParams } from 'react-router-dom'
-import { Session } from '@supabase/supabase-js'
 import getBbox from '@turf/bbox'
+import { observer } from 'mobx-react-lite'
 
 import { dexie, Row } from '../../dexieClient'
-import { supabase } from '../../supabaseClient'
+import storeContext from '../../storeContext'
 
 const DrawControl = () => {
   const map = useMap()
-
-  const session: Session = supabase.auth.session()
+  const { session } = useContext(storeContext)
 
   //console.log('DrawControl, map:', map)
 
@@ -121,4 +120,4 @@ const DrawControl = () => {
   return <div style={{ display: 'none' }} />
 }
 
-export default DrawControl
+export default observer(DrawControl)

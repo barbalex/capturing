@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useCallback, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
-import { Session } from '@supabase/supabase-js'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 
@@ -12,7 +11,6 @@ import JesNo from '../shared/JesNo'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import Spinner from '../shared/Spinner'
 import { dexie, IProject } from '../../dexieClient'
-import { supabase } from '../../supabaseClient'
 import TextField from '../shared/TextField'
 import ProjectUsers from './ProjectUsers'
 
@@ -29,10 +27,9 @@ type ProjectFormProps = {
 }
 
 const ProjectForm = ({ showFilter }: ProjectFormProps) => {
-  const session: Session = supabase.auth.session()
   const { projectId } = useParams()
   const store = useContext(StoreContext)
-  const { filter, errors, rebuildTree } = store
+  const { filter, errors, rebuildTree, session } = store
 
   // console.log('ProjectForm rendering')
 
