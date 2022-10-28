@@ -2,10 +2,14 @@ import { createClient } from '@supabase/supabase-js'
 
 // https://supabase.com/docs/reference/javascript/initializing#with-additional-parameters
 const options = {
-  schema: 'public',
-  autoRefreshToken: true,
-  persistSession: true,
-  detectSessionInUrl: true,
+  db: {
+    schema: 'public',
+  },
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+  },
 }
 
 export const supabase = createClient(
