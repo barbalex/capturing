@@ -10,7 +10,6 @@ import storeContext from '../../storeContext'
 import Item from './Item'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import { dexie, TileLayer } from '../../dexieClient'
-import { supabase } from '../../supabaseClient'
 import Title from './Title'
 import HeightPreservingItem from '../shared/HeightPreservingItem'
 
@@ -42,13 +41,10 @@ window.addEventListener('error', (e) => {
 })
 
 const TileLayersComponent = () => {
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
   const { projectId } = useParams()
 
   const store = useContext(storeContext)
-  const { formHeight, setTileLayerSorter, rebuildTree } = store
+  const { formHeight, setTileLayerSorter, rebuildTree, session } = store
 
   const tileLayers: TileLayer[] = useLiveQuery(
     async () =>

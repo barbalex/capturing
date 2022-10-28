@@ -10,7 +10,6 @@ import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
-import { supabase } from '../../../supabaseClient'
 import { dexie, TileLayer } from '../../../dexieClient'
 
 const TitleRow = styled.div`
@@ -30,11 +29,8 @@ const TileLayerDeleteButton = ({ userMayEdit }) => {
   const navigate = useNavigate()
   const { tileLayerId } = useParams()
   const store = useContext(StoreContext)
-  const { activeNodeArray, removeNodeWithChildren } = store
+  const { activeNodeArray, removeNodeWithChildren, session } = store
   // const filter = { todo: 'TODO: was in store' }
-  const {
-    data: { session },
-  } = supabase.auth.getSession()
 
   const deleted: boolean = useLiveQuery(async () => {
     const row: Row = await dexie.tile_layers.get(tileLayerId)
