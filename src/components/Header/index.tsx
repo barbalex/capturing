@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import styled from 'styled-components'
+import { observer } from 'mobx-react-lite'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
 import Anonymus from './Anonymus'
 import Authenticated from './Authenticated'
-import { supabase } from '../../supabaseClient'
+import storeContext from '../../storeContext'
 
 // TODO: add more header bars for: filter, search, online, account
 // TODO: make this adapt to screen width, see vermehrung
@@ -24,7 +25,7 @@ const StyledAppBar = styled(AppBar)`
   }
 `
 const Header = () => {
-  const session = supabase.auth.session()
+  const { session } = useContext(storeContext)
   // console.log({ session })
 
   return (
@@ -36,4 +37,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default observer(Header)

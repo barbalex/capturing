@@ -5,7 +5,6 @@ import { FaPlus, FaArrowUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams, useNavigate, Link, resolvePath } from 'react-router-dom'
-import { Session } from '@supabase/supabase-js'
 
 import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
@@ -13,7 +12,6 @@ import constants from '../../utils/constants'
 import { dexie } from '../../dexieClient'
 import insertField from '../../utils/insertField'
 import FilterNumbers from '../shared/FilterNumbers'
-import { supabase } from '../../supabaseClient'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
@@ -41,11 +39,10 @@ const TitleSymbols = styled.div`
 `
 
 const FieldsComponent = () => {
-  const session: Session = supabase.auth.session()
   const { projectId, tableId } = useParams()
   const navigate = useNavigate()
   const store = useContext(storeContext)
-  const { activeNodeArray, removeNode } = store
+  const { activeNodeArray, removeNode, session } = store
 
   // console.log('FieldsList rendering')
 

@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { withResizeDetector } from 'react-resize-detector'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
-import { Session } from '@supabase/supabase-js'
 
 import DeleteButton from './DeleteButton'
 import AddButton from './AddButton'
@@ -12,7 +11,7 @@ import NavButtons from './NavButtons'
 import FilterNumbers from '../../shared/FilterNumbers'
 import Menu from '../../shared/Menu'
 import { dexie, IProjectUser } from '../../../dexieClient'
-import { supabase } from '../../../supabaseClient'
+import storeContext from '../../../storeContext'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
@@ -50,7 +49,8 @@ const TitleSymbols = styled.div`
 
 const FieldFormTitle = ({ totalCount, filteredCount, width }) => {
   const { projectId } = useParams()
-  const session: Session = supabase.auth.session()
+  const store = useContext(storeContext)
+  const { session } = store
 
   const userMayEdit: boolean = useLiveQuery(async () => {
     const projectUser: IProjectUser = await dexie.project_users.get({

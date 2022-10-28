@@ -5,13 +5,11 @@ import { Virtuoso } from 'react-virtuoso'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
-import { Session } from '@supabase/supabase-js'
 
 import storeContext from '../../storeContext'
 import Item from './Item'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import { dexie, Project, Field } from '../../dexieClient'
-import { supabase } from '../../supabaseClient'
 import HeightPreservingItem from '../shared/HeightPreservingItem'
 import Title from './Title'
 
@@ -31,10 +29,9 @@ const RowsContainer = styled.div`
 `
 
 const FieldsComponent = () => {
-  const session: Session = supabase.auth.session()
   const { projectId, tableId } = useParams()
   const store = useContext(storeContext)
-  const { formHeight, setFieldSorter, rebuildTree } = store
+  const { formHeight, setFieldSorter, rebuildTree, session } = store
 
   // console.log('FieldsList rendering')
 
