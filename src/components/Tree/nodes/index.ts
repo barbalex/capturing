@@ -43,7 +43,7 @@ const buildNodes = async ({ rowId, editingProjects, nodes }) => {
     const node = {
       id: project.id,
       label: labelFromLabeledTable({
-        object: project,
+        object: project, 
         useLabels: project.use_labels,
       }),
       type: 'project',
@@ -56,7 +56,7 @@ const buildNodes = async ({ rowId, editingProjects, nodes }) => {
     projectNodes.push(node)
   }
 
-  return { id: 'root', children: projectNodes }
+  return projectNodes 
 }
 
 export default buildNodes

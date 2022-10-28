@@ -3308,7 +3308,7 @@ __metadata:
     proj4: 2.8.0
     proj4leaflet: 1.0.2
     react: 18.2.0
-    react-arborist: 1.2.0
+    react-arborist: 2.0.0
     react-beautiful-dnd: 13.1.1
     react-colorful: 5.6.1
     react-datepicker: 4.8.0
@@ -6164,18 +6164,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-arborist@npm:1.2.0":
-  version: 1.2.0
-  resolution: "react-arborist@npm:1.2.0"
+"react-arborist@npm:2.0.0":
+  version: 2.0.0
+  resolution: "react-arborist@npm:2.0.0"
   dependencies:
-    memoize-one: ^6.0.0
     react-dnd: ^14.0.3
     react-dnd-html5-backend: ^14.0.1
     react-window: ^1.8.6
+    redux: ^4.1.1
+    use-sync-external-store: ^1.2.0
   peerDependencies:
     react: ">= 16.14"
     react-dom: ">= 16.14"
-  checksum: 13ef7e044b7f128fa8e1d09fcdb37662e754ea5f656dd3786e218737a2762500a47fa4e78f1f1b53d0e3bd93716d999cd93eaa57d8a142a29b3dd57913281de9
+  checksum: 9c67f211e108dd21795239d5d9a4dddc3e0c8a98dc685ae81c5590170ec5a84b0ba89d63961059755a68b0bf8b526ec74da1e7bf179ab883fba271b4b6bb449d
   languageName: node
   linkType: hard
 
@@ -7672,6 +7673,15 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
   checksum: 8f08eba26d69406b61bb4b8dacdd5a92bd6aef5b53d346dfe87954f7330ee10ecabc937cc7854635155d46053828e85c10b5a5aff7a04720e6a97b9f42999bac
+  languageName: node
+  linkType: hard
+
+"use-sync-external-store@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "use-sync-external-store@npm:1.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 5c639e0f8da3521d605f59ce5be9e094ca772bd44a4ce7322b055a6f58eeed8dda3c94cabd90c7a41fb6fa852210092008afe48f7038792fd47501f33299116a
   languageName: node
   linkType: hard
 

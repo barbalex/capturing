@@ -46,9 +46,10 @@ const ProjectEditIconButton = styled(IconButton)`
   }
 `
 
-const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
-  // console.log('Node', { data, state, tree, handlers })
+const Node = ({ node, style, tree, dragHandle }) => {
   const navigate = useNavigate()
+  const data = node.data
+  // console.log('Node', { node, style, data, tree, dragHandle })
 
   const store = useContext(storeContext)
   const {
@@ -178,16 +179,16 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     (e) => {
       e.stopPropagation()
       // adjust nodes
-      handlers.toggle(e)
+      node.toggle(e)
       // console.log('Node, onClickToggle', { state, data })
-      if (state.isOpen) {
+      if (node.isOpen) {
         removeNodeWithChildren(data.activeNodeArray)
       } else {
         // TODO: add this nodes folders?
         addNode(data.activeNodeArray)
       }
     },
-    [addNode, data, handlers, removeNodeWithChildren, state],
+    [addNode, data.activeNodeArray, node, removeNodeWithChildren],
   )
 
   // if node is project and user is manager, show structure editing IconButton
@@ -197,11 +198,10 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
     : `Projekt-Struktur für "${data.label}" bearbeiten`
 
   return (
-    <Container ref={innerRef} style={styles.row}>
+    <Container style={style} ref={dragHandle}>
       <Indent
-        style={styles.indent}
         data-inactivenodearray={isInActiveNodeArray}
-        isSelected={state.isSelected}
+        isSelected={node.isSelected}
         data-active={isActive}
         onClick={onClickIndent}
       >
@@ -213,7 +213,7 @@ const Node = ({ innerRef, data, styles, handlers, state, tree }) => {
         >
           {!data.childrenCount ? (
             <NoChildren>-</NoChildren>
-          ) : state.isOpen ? (
+          ) : node.isOpen ? (
             <ExpandMoreIcon />
           ) : (
             <ChevronRightIcon />
