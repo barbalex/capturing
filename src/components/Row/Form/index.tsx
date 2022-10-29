@@ -74,7 +74,7 @@ const RowForm = ({
   const rowState = useRef<IRow>()
   useEffect(() => {
     if (!originalRow.current && row) {
-      console.log('RowForm, setting originalRow to:', row)
+      // console.log('RowForm, setting originalRow to:', row)
       originalRow.current = row
       rowState.current = row
     }
