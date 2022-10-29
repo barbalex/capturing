@@ -13,6 +13,13 @@ body {
   scrollbar-color: #4a148c rgba(0, 0, 0, 0.4);
 }
 
+/* material-ui overrides */
+
+/* dim inactive menu icons */
+a + .Mui-disabled {
+  opacity: 0.5;
+}
+
 /*
    * on mobile titles are invisible
    * make them appear on press
