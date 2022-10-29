@@ -138,11 +138,11 @@ const Home = () => {
               </Card>
               <Card>
                 <CardTitle>Wie Sie wollen</CardTitle>
-                Daten-Strukturen und -Felder flexibel konfigurieren.
+                Daten-Strukturen flexibel konfigurieren.
               </Card>
               <Card>
                 <CardTitle>Wo Sie wollen</CardTitle>
-                <p>Kein Internet? Egal!</p>
+                <p>Die Interessanten Dinge passieren kaum im Büro.</p>
                 <p>Erfassen geht mit Ihnen durch Dick und Dünn.</p>
               </Card>
               <Card>
@@ -157,7 +157,11 @@ const Home = () => {
               </Card>
               <Card>
                 <CardTitle>Mit minimalem Aufwand</CardTitle>
-                <p>Keine Installation: Anmelden und loslegen.</p>
+                <p>
+                  Keine Installation:
+                  <br />
+                  Anmelden und loslegen.
+                </p>
               </Card>
               <Card>
                 <CardTitle>Eine für alle, alle für eine</CardTitle>
@@ -173,14 +177,34 @@ const Home = () => {
                 </p>
               </Card>
               <Card>
+                <CardTitle>Kein Internet? Egal!</CardTitle>
+                <p>Offline-Erfassung ist unsere Stärke!</p>
+                <p>
+                  Nur Konfiguration, Synchronisation und Konfliktlösung
+                  benötigen Internet.
+                </p>
+              </Card>
+              <Card>
+                <CardTitle>Faire Preise</CardTitle>
+                <p>Wer Projekte konfiguriert zahlt. BenutzerInnen nicht.</p>
+                <p>Sie zahlen erst, wenn Sie Erfassen produktiv nutzen.</p>
+              </Card>
+              <Card>
                 <CardTitle>Fragen?</CardTitle>
                 <p>Ich helfe Ihnen gerne beim Start.</p>
                 <p>
                   Ihr Anwendungsfall interessiert mich und hilft bei der
                   Weiter-Entwicklung.
                 </p>
-                <p>Sie zahlen erst, wenn Sie Erfassen produktiv nutzen.</p>
                 <p>Kontaktieren Sie mich.</p>
+              </Card>
+              <Card>
+                <CardTitle>Beratung und Mass-Anfertigung</CardTitle>
+                <p>
+                  Ich helfe Ihnen gerne, für ihre Bedürfnisse die richtige
+                  Datenstruktur zu finden.
+                </p>
+                <p>Oder erfassen.ch für besondere Projekte masszuschneidern.</p>
               </Card>
             </CardContainer>
             <BottomSpacer />
