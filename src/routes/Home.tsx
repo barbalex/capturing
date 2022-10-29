@@ -157,11 +157,8 @@ const Home = () => {
               </Card>
               <Card>
                 <CardTitle>Mit minimalem Aufwand</CardTitle>
-                <p>
-                  Keine Installation:
-                  <br />
-                  Anmelden und loslegen.
-                </p>
+                <p>Keine Installation:</p>
+                <p>Anmelden und loslegen.</p>
               </Card>
               <Card>
                 <CardTitle>Eine für alle, alle für eine</CardTitle>
