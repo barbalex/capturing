@@ -7,7 +7,7 @@ const Img = styled.img`
   width: 100%;
   object-fit: cover;
   filter: ${(props) => (props.loading ? 'blur(10px)' : 'blur(0px)')};
-  filter: contrast(0.2) brightness(2);
+  filter: contrast(0.35) brightness(2);
   ${(props) => props.loading && 'clip-path: inset(0);'}
   ${(props) => props.loaded && 'transition: filter 0.5s linear;'}
 `
@@ -26,12 +26,12 @@ const ProgressiveImg = ({ placeholderSrc, src, ...props }) => {
   const customClass =
     placeholderSrc && imgSrc === placeholderSrc ? 'loading' : 'loaded'
 
-    /**
-     * TODO:
-     * use picture element: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/picture
-     * use uploadcare adaptive delivery, but with offline fallback
-     * https://uploadcare.com/docs/delivery/adaptive-delivery/#adaptive-delivery
-     */
+  /**
+   * TODO:
+   * use picture element: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/picture
+   * use uploadcare adaptive delivery, but with offline fallback
+   * https://uploadcare.com/docs/delivery/adaptive-delivery/#adaptive-delivery
+   */
   return (
     <Img
       {...{ src: imgSrc, ...props }}
