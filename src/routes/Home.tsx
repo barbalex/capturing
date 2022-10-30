@@ -133,27 +133,28 @@ const Home = () => {
             </PageTitle>
             <CardContainer>
               <Card>
-                <CardTitle>Was Sie wollen</CardTitle>
+                <CardTitle>Was du willst</CardTitle>
                 Text, Pläne, Fotos, Audio, beliebige Dateien.
               </Card>
               <Card>
-                <CardTitle>Wie Sie wollen</CardTitle>
+                <CardTitle>Wie du willst</CardTitle>
                 Daten-Strukturen flexibel konfigurieren.
               </Card>
               <Card>
-                <CardTitle>Wo Sie wollen</CardTitle>
-                <p>Die Interessanten Dinge passieren kaum im Büro.</p>
-                <p>Erfassen geht mit Ihnen durch Dick und Dünn.</p>
+                <CardTitle>Wo du willst</CardTitle>
+                <p>Die interessanten Dinge passieren selten im Büro.</p>
+                <p>Erfassen geht mit dir durch Dick und Dünn.</p>
               </Card>
               <Card>
-                <CardTitle>Mit wem Sie wollen</CardTitle>
+                <CardTitle>Mit wem du willst</CardTitle>
                 <p>Neue Mitarbeitende einfach ergänzen.</p>
                 <p>Egal, wie viele.</p>
               </Card>
               <Card>
-                <CardTitle>Mit Ihrem Gerät</CardTitle>
+                <CardTitle>Mit deinem Gerät</CardTitle>
                 <p>Handy, Tablet, Notebook, PC…</p>
                 <p>Windows, MacOS, Android, iOS, Linux…</p>
+                <p>Egal was. Egal wieviele.</p>
               </Card>
               <Card>
                 <CardTitle>Mit minimalem Aufwand</CardTitle>
@@ -166,7 +167,7 @@ const Home = () => {
                 <p>Die übrigen können direkt erfassen.</p>
               </Card>
               <Card>
-                <CardTitle>Alle können gleichzeitig arbeiten</CardTitle>
+                <CardTitle>Mit allen gleichzeitig</CardTitle>
                 <p>Daten werden live synchronisiert.</p>
                 <p>Zwei Eingaben widersprechen sich? Kein Problem:</p>
                 <p>
@@ -184,25 +185,25 @@ const Home = () => {
               <Card>
                 <CardTitle>Faire Preise</CardTitle>
                 <p>Es zahlt, wer Projekte konfiguriert.</p>
-                <p>Erst, wenn Sie Erfassen produktiv nutzen!</p>
-                <p>Erfasser*innen zahlen nicht.</p>
+                <p>Erst, wenn du Erfassen produktiv nutzt!</p>
+                <p>Erfassende zahlen nicht.</p>
               </Card>
               <Card>
                 <CardTitle>Fragen?</CardTitle>
-                <p>Ich helfe Ihnen gerne beim Start.</p>
+                <p>Ich helfe gerne beim Start.</p>
                 <p>
-                  Ihr Anwendungsfall interessiert mich und hilft bei der
+                  Dein Anwendungsfall interessiert mich und hilft bei der
                   Weiterentwicklung.
                 </p>
-                <p>Kontaktieren Sie mich.</p>
+                <p>Kontaktiere mich.</p>
               </Card>
               <Card>
                 <CardTitle>Beratung und Mass-Anfertigung</CardTitle>
                 <p>
-                  Gerne helfe ich, die für Ihre Bedürfnisse optimale
+                  Gerne helfe ich, die für deine Bedürfnisse optimale
                   Datenstruktur zu finden.
                 </p>
-                <p>Oder erfassen.ch zu klonen und masszuschneidern.</p>
+                <p>Oder klone und optimiere Erfassen nur für dich.</p>
               </Card>
             </CardContainer>
             <BottomSpacer />
