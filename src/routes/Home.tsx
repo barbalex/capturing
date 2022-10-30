@@ -203,7 +203,7 @@ const Home = () => {
                   Gerne helfe ich, für deine Bedürfnisse die optimale
                   Datenstruktur zu finden.
                 </p>
-                <p>Oder klone und optimiere Erfassen nur für dich.</p>
+                <p>Oder klone und optimiere Erfassen für dich.</p>
               </Card>
             </CardContainer>
             <BottomSpacer />
