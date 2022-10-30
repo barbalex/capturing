@@ -63,7 +63,6 @@ const CardContainer = styled.div`
   }
   p:last-of-type {
     margin-bottom: 0 !important;
-    margin-top: 10px !important;
   }
 `
 const Card = styled(MaterialCard)`
@@ -85,7 +84,7 @@ const Card = styled(MaterialCard)`
   }
 `
 const PageTitle = styled(Typography)`
-  font-size: 2em !important;
+  font-size: 2.5em !important;
   padding-bottom: 15px;
   font-weight: 700 !important;
   text-shadow: 0.5px 0.5px 1px white;
@@ -103,6 +102,7 @@ const PageTitle = styled(Typography)`
 const CardTitle = styled.h3`
   font-weight: 700;
   margin-top: 0;
+  font-size: 1.5em;
 `
 const BottomSpacer = styled.div`
   height: 15px;
@@ -183,25 +183,26 @@ const Home = () => {
               </Card>
               <Card>
                 <CardTitle>Faire Preise</CardTitle>
-                <p>Wer Projekte konfiguriert zahlt. BenutzerInnen nicht.</p>
-                <p>Sie zahlen erst, wenn Sie Erfassen produktiv nutzen.</p>
+                <p>Es zahlt, wer Projekte konfiguriert.</p>
+                <p>Erst, wenn Sie Erfassen produktiv nutzen!</p>
+                <p>Erfasser*innen zahlen nicht.</p>
               </Card>
               <Card>
                 <CardTitle>Fragen?</CardTitle>
                 <p>Ich helfe Ihnen gerne beim Start.</p>
                 <p>
                   Ihr Anwendungsfall interessiert mich und hilft bei der
-                  Weiter-Entwicklung.
+                  Weiterentwicklung.
                 </p>
                 <p>Kontaktieren Sie mich.</p>
               </Card>
               <Card>
                 <CardTitle>Beratung und Mass-Anfertigung</CardTitle>
                 <p>
-                  Ich helfe Ihnen gerne, für ihre Bedürfnisse die richtige
+                  Gerne helfe ich, die für Ihre Bedürfnisse optimale
                   Datenstruktur zu finden.
                 </p>
-                <p>Oder erfassen.ch für besondere Projekte masszuschneidern.</p>
+                <p>Oder erfassen.ch zu klonen und masszuschneidern.</p>
               </Card>
             </CardContainer>
             <BottomSpacer />
