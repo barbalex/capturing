@@ -158,7 +158,7 @@ const Home = () => {
               </Card>
               <Card>
                 <CardTitle>Mit minimalem Aufwand</CardTitle>
-                <p>Keine Installation:</p>
+                <p>Keine Installation.</p>
                 <p>Anmelden und loslegen.</p>
               </Card>
               <Card>
@@ -200,7 +200,7 @@ const Home = () => {
               <Card>
                 <CardTitle>Beratung und Mass-Anfertigung</CardTitle>
                 <p>
-                  Gerne helfe ich, die für deine Bedürfnisse optimale
+                  Gerne helfe ich, für deine Bedürfnisse die optimale
                   Datenstruktur zu finden.
                 </p>
                 <p>Oder klone und optimiere Erfassen nur für dich.</p>
