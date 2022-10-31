@@ -4,11 +4,7 @@ import buildVectorLayerNodes from './vectorLayerNodes'
 import { dexie } from '../../../../dexieClient'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 
-const projectFoldersEditingProject = async ({
-  project,
-  rowId,
-  nodes,
-}) => {
+const projectFoldersEditingProject = async ({ project, rowId, nodes }) => {
   // return if parent does not exist (in nodes)
   if (!isNodeOpen({ nodes, url: ['projects', project.id] })) return []
 
