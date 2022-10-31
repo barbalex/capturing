@@ -470,6 +470,8 @@ CREATE TABLE fields (
     name text DEFAULT NULL,
     label text DEFAULT NULL,
     sort smallint DEFAULT 0,
+    -- added in migration:
+    -- table_ref uuid REFERENCES tables (id) ON DELETE CASCADE ON UPDATE CASCADE,
     is_internal_id integer DEFAULT 0,
     field_type text DEFAULT NULL REFERENCES field_types (value) ON DELETE NO action ON UPDATE CASCADE,
     widget_type text DEFAULT NULL REFERENCES widget_types (value) ON DELETE NO action ON UPDATE CASCADE,
