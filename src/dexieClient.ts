@@ -60,6 +60,7 @@ export interface IField {
   name?: string
   label?: string
   sort?: number
+  table_ref: string
   is_internal_id?: number
   field_type?: string
   widget_type?: string
@@ -78,6 +79,7 @@ export class Field implements IField {
   name?: string
   label?: string
   sort?: number
+  table_ref: string
   is_internal_id?: number
   field_type?: string
   widget_type?: string
@@ -94,6 +96,7 @@ export class Field implements IField {
     name?: string,
     label?: string,
     sort?: number,
+    table_ref: string,
     is_internal_id?: number,
     field_type?: string,
     widget_type?: string,
@@ -109,6 +112,7 @@ export class Field implements IField {
     if (name) this.name = name
     if (label) this.label = label
     if (sort !== undefined) this.sort = sort
+    if (table_ref) this.table_ref = table_ref
     if (is_internal_id !== undefined) this.is_internal_id = is_internal_id
     if (field_type) this.field_type = field_type
     if (widget_type) this.widget_type = widget_type
@@ -1577,11 +1581,11 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(54).stores({
+    this.version(1).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
-        'id, table_id, label, name, field_type, widget_type, options_table, sort, server_rev_at, deleted, [deleted+table_id], [deleted+table_id+widget_type]',
+        'id, table_id, label, name, table_ref, field_type, widget_type, options_table, sort, server_rev_at, deleted, [deleted+table_id], [deleted+table_id+widget_type]',
       // files:
       //   'id, field_id, row_id, [row_id+field_id+deleted+name], [row_id+field_id+deleted], name, server_rev_at, deleted',
       files_meta: 'id, [row_id+field_id+deleted], server_rev_at',

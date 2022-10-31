@@ -276,6 +276,17 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
             disabled={!userMayEdit}
           />
         )}
+        <Select
+          key={`${row.id}table_ref`}
+          name="table_ref"
+          value={row.table_ref}
+          field="table_ref"
+          label="Verknüpfte Tabelle"
+          options={optionsTableValues}
+          saveToDb={onBlur}
+          error={localErrors.table_ref}
+          disabled={!userMayEdit}
+        />
         <TextField
           key={`${row?.id ?? ''}sort`}
           name="sort"
