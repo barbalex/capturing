@@ -52,6 +52,8 @@ Table "fields" {
   "table_id" uuid [unique, default: null]
   "name" text [unique, default: null]
   "label" text [default: null]
+  "sort" integer [default: 0]
+  "table_ref" uuid [default: null]
   "is_internal_id" boolean [default: false]
   "field_type" text
   "widget_type" text
@@ -121,6 +123,8 @@ Ref:"projects"."id" < "tables"."project_id" [update: cascade, delete: no action]
 Ref:"tables"."id" < "tables"."parent_id" [update: cascade, delete: no action]
 
 Ref:"tables"."id" < "fields"."table_id" [update: cascade, delete: no action]
+
+Ref:"tables"."id" < "fields"."table_ref" [update: cascade, delete: cascade]
 
 Ref:"tables"."id" < "fields"."options_table" [update: cascade, delete: no action]
 
