@@ -54,7 +54,8 @@ const RowForm = ({
   showFilter,
 }: RowFormProps) => {
   const params = useParams()
-  const { tableId, projectId } = params
+  const tableId = params?.tableId ?? '99999999-9999-9999-9999-999999999999'
+  const projectId = params?.projectId ?? '99999999-9999-9999-9999-999999999999'
   const url = params['*']
   const showHistory = url?.endsWith('history')
   const store = useContext(StoreContext)
@@ -91,11 +92,15 @@ const RowForm = ({
 
   // TODO: build right queries
   const data = useLiveQuery(async () => {
+    // TODO:
+    // Getting error when running:
+    // Failed to execute 'get' on 'IDBObjectStore': No key or key range specified
+    // caused by first query, dexie.fields.where
     const [fields, projectUser, table] = await Promise.all([
       dexie.fields.where({ deleted: 0, table_id: tableId }).sortBy('sort'),
       dexie.project_users.get({
         project_id: projectId,
-        user_email: session?.user?.email,
+        user_email: session?.user?.email ?? 'none',
       }),
       dexie.ttables.get(tableId),
     ])
