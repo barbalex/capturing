@@ -19,7 +19,8 @@ import { AutoLinkNode, LinkNode } from '@lexical/link'
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin'
 import { ListPlugin } from '@lexical/react/LexicalListPlugin'
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin'
-import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin'
+// deactivated, caused error
+// import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin'
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
 
 import ToolbarPlugin from './ToolbarPlugin'
@@ -150,7 +151,7 @@ const RichText = ({
                 <LinkPlugin />
                 <AutoLinkPlugin />
                 <CodeHighlightPlugin />
-                <MarkdownShortcutPlugin />
+                {/* <MarkdownShortcutPlugin /> */}
                 <OnChangePlugin
                   onChange={onChange}
                   ignoreSelectionChange={true}
