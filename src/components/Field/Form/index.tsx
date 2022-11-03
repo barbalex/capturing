@@ -72,12 +72,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           )
           .toArray(),
         dexie.ttables
-          .filter(
-            (t) =>
-              t.deleted === 0 &&
-              t.project_id === projectId &&
-              t.type === 'standard',
-          )
+          .where({ deleted: 0, project_id: projectId, type: 'standard' })
           .toArray(),
         dexie.fields.get(fieldId),
         dexie.field_types.where({ deleted: 0 }).sortBy('sort'),
