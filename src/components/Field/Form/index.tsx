@@ -168,13 +168,19 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
     if (!!row?.field_type && !row?.widget_type) {
       errors.widget_type = 'Benötigt'
     }
-    if (!!row?.widget_type && !row?.options_table) {
+    if (!!row?.widget_type && !row?.options_table && !row?.table_ref) {
       errors.options_table = 'Benötigt'
     }
     // only set if necessary to reduce rendering
     if (isEqual(errors, localErrors)) return
     setLocalErrors(errors)
-  }, [localErrors, row?.field_type, row?.options_table, row?.widget_type])
+  }, [
+    localErrors,
+    row?.field_type,
+    row?.options_table,
+    row?.widget_type,
+    row?.table_ref,
+  ])
 
   const originalRow = useRef<IField>()
   const rowState = useRef<IField>()
@@ -225,12 +231,15 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
         })
       }
 
-      rowState.current = { ...row, ...{ [field]: newValue } }
-      dexie.fields.update(row.id, { [field]: newValue })
-      if (['name', 'label'].includes(field)) rebuildTree()
+      const newObject = { [field]: newValue }
       if (field === 'table_ref') {
-        // TODO: need to set field_type and widget
+        // TODO: need to set field_type and widget_type
+        newObject.field_type = 'text'
+        newObject.widget_type = 'options-many'
       }
+      rowState.current = { ...row, ...newObject }
+      dexie.fields.update(row.id, newObject)
+      if (['name', 'label'].includes(field)) rebuildTree()
     },
     [filter, rebuildTree, row, showFilter],
   )
@@ -306,6 +315,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           saveToDb={onBlur}
           error={localErrors.table_ref}
           disabled={!userMayEdit}
+          helperText="Dieses Feld verknüpft diese Tabelle mit einer anderen"
         />
         <TextField
           key={`${row?.id ?? ''}sort`}
