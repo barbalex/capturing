@@ -60,6 +60,8 @@ const RowComponent = ({ filter: showFilter }) => {
   const { online } = store
   const filter = 'TODO: was in store'
 
+  console.log('RowComponent', { rowId })
+
   const row: Row = useLiveQuery(
     async () => await dexie.rows.get(rowId),
     [rowId],

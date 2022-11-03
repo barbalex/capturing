@@ -65,10 +65,19 @@ const RowForm = ({
       console.log('TODO: unsetError')
     },
     [],
-  ) // TODO: add errors, unsetError in store
+  )
+
+  // TODO: add errors, unsetError in store
   useEffect(() => {
     unsetError('row')
   }, [id, unsetError])
+
+  console.log('RowForm', {
+    row,
+    tableId,
+    projectId,
+    sessionUserEmail: session?.user?.email,
+  })
 
   const originalRow = useRef<IRow>()
   const rowState = useRef<IRow>()
@@ -90,13 +99,18 @@ const RowForm = ({
       }),
       dexie.ttables.get(tableId),
     ])
+    console.log('RowForm, liveQuery', {
+      fields,
+      projectUser,
+      table,
+    })
     const userMayEdit = [
       'account_manager',
       'project_manager',
       'project_editor',
-    ].includes(projectUser.role)
+    ].includes(projectUser?.role)
 
-    const labelFields = (table.row_label ?? [])
+    const labelFields = (table?.row_label ?? [])
       .filter((l) => !!l.field)
       .map((l) => l.field)
     const fieldsofLabelFields = await dexie.fields.bulkGet(labelFields)
