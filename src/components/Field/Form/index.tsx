@@ -68,7 +68,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
             (t) =>
               t.deleted === 0 &&
               t.project_id === projectId &&
-              ['value_list', 'id_value_list'].includes(t.type),
+              t.type !== 'standard',
           )
           .toArray(),
         dexie.ttables
@@ -76,7 +76,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
             (t) =>
               t.deleted === 0 &&
               t.project_id === projectId &&
-              !['value_list', 'id_value_list'].includes(t.type),
+              t.type === 'standard',
           )
           .toArray(),
         dexie.fields.get(fieldId),
@@ -86,6 +86,8 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           user_email: session?.user?.email,
         }),
       ])
+
+    console.log('Field Form', { row, otherTables, optionsTables })
 
     const useLabels: boolean = project.use_labels
     const userMayEdit: boolean = [
@@ -114,7 +116,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
       })),
       otherTableSelectValues: sortByLabelName({
         // exclude this table
-        objects: (otherTables ?? []).filter((t) => t.id !== row.table_id),
+        objects: (otherTables ?? []).filter((t) => t.id !== row?.table_id),
         useLabels,
       }).map((t) => ({
         value: t.id,
