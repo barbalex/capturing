@@ -507,6 +507,7 @@ CREATE INDEX ON fields USING btree (options_table);
 
 CREATE INDEX ON fields USING btree (deleted);
 
+-- CREATE INDEX ON fields USING btree (table_ref);
 COMMENT ON TABLE fields IS 'Goal: Define fields used per table. Defines structure and presentation of data column in rows. Not versioned (not recorded and only added by manager)';
 
 COMMENT ON COLUMN fields.id IS 'primary key';
