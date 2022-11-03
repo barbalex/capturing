@@ -60,7 +60,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
   }, [fieldId, unsetError])
 
   const data = useLiveQuery(async () => {
-    const [project, optionsTables, row, fieldTypes, projectUser] =
+    const [project, optionsTables, otherTables, row, fieldTypes, projectUser] =
       await Promise.all([
         dexie.projects.get(projectId),
         dexie.ttables
@@ -69,6 +69,14 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
               t.deleted === 0 &&
               t.project_id === projectId &&
               ['value_list', 'id_value_list'].includes(t.type),
+          )
+          .toArray(),
+        dexie.ttables
+          .filter(
+            (t) =>
+              t.deleted === 0 &&
+              t.project_id === projectId &&
+              !['value_list', 'id_value_list'].includes(t.type),
           )
           .toArray(),
         dexie.fields.get(fieldId),
@@ -99,6 +107,14 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
       useLabels,
       optionsTableSelectValues: sortByLabelName({
         objects: optionsTables ?? [],
+        useLabels,
+      }).map((t) => ({
+        value: t.id,
+        label: labelFromLabeledTable({ object: t, useLabels }),
+      })),
+      otherTableSelectValues: sortByLabelName({
+        // exclude this table
+        objects: (otherTables ?? []).filter((t) => t.id !== row.table_id),
         useLabels,
       }).map((t) => ({
         value: t.id,
@@ -138,6 +154,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
   const useLabels: boolean = data?.useLabels
   const row: Field = data?.row
   const optionsTableValues: valueType[] = data?.optionsTableSelectValues
+  const otherTableValues: valueType[] = data?.otherTableSelectValues
   const fieldTypeValues: valueType[] = data?.fieldTypeValues
   const userMayEdit: boolean = data?.userMayEdit
   const widgetTypeValues: valueType[] = data?.widgetTypeValues
@@ -211,6 +228,9 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
       rowState.current = { ...row, ...{ [field]: newValue } }
       dexie.fields.update(row.id, { [field]: newValue })
       if (['name', 'label'].includes(field)) rebuildTree()
+      if (field === 'table_ref') {
+        // TODO: need to set field_type and widget
+      }
     },
     [filter, rebuildTree, row, showFilter],
   )
@@ -282,7 +302,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           value={row.table_ref}
           field="table_ref"
           label="Verknüpfte Tabelle"
-          options={optionsTableValues}
+          options={otherTableValues}
           saveToDb={onBlur}
           error={localErrors.table_ref}
           disabled={!userMayEdit}
