@@ -48,7 +48,9 @@ type Props = {
 }
 
 const RowsTitle = ({ rowsWithLabel }: Props) => {
-  const { projectId, tableId } = useParams()
+  const params = useParams()
+  const projectId = params?.projectId
+  const tableId = params?.tableId2 ?? params?.tableId
   const navigate = useNavigate()
 
   const store = useContext(storeContext)
