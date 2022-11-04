@@ -3348,7 +3348,7 @@ __metadata:
     use-debounce: 8.0.4
     uuid: 9.0.0
     vite: 2.9.15
-    vite-plugin-pwa: 0.12.8
+    vite-plugin-pwa: 0.13.2
     vite-plugin-svgr: 2.2.2
     wms-capabilities: 0.6.0
   languageName: unknown
@@ -6892,7 +6892,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup@npm:^2.43.1, rollup@npm:^2.75.7":
+"rollup@npm:^2.43.1, rollup@npm:^2.79.0":
   version: 2.79.1
   resolution: "rollup@npm:2.79.1"
   dependencies:
@@ -7727,21 +7727,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-pwa@npm:0.12.8":
-  version: 0.12.8
-  resolution: "vite-plugin-pwa@npm:0.12.8"
+"vite-plugin-pwa@npm:0.13.2":
+  version: 0.13.2
+  resolution: "vite-plugin-pwa@npm:0.13.2"
   dependencies:
     debug: ^4.3.4
     fast-glob: ^3.2.11
     pretty-bytes: ^6.0.0
-    rollup: ^2.75.7
-    workbox-build: ^6.5.3
-    workbox-window: ^6.5.3
+    rollup: ^2.79.0
+    workbox-build: ^6.5.4
+    workbox-window: ^6.5.4
   peerDependencies:
-    vite: ^2.0.0 || ^3.0.0-0
-    workbox-build: ^6.4.0
-    workbox-window: ^6.4.0
-  checksum: a7ea6c4ec29eace2931f8b37e51506c33ad73eb3dd9153958c9fec8137a21059eeed2e9455ba851de4829540dbd920590c4395d99c23b1cdb8c69c468a293535
+    vite: ^3.1.0
+    workbox-build: ^6.5.4
+    workbox-window: ^6.5.4
+  checksum: 6a8383dd0782e29c6c0bce0d3838ce5213c37c898fea874802df4f3f70f9cc021a0387f9f18f812da7f3598bf885c471618570ea4da2ca32a6874e8a7213ea16
   languageName: node
   linkType: hard
 
@@ -7919,7 +7919,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workbox-build@npm:^6.5.3":
+"workbox-build@npm:^6.5.4":
   version: 6.5.4
   resolution: "workbox-build@npm:6.5.4"
   dependencies:
@@ -8080,7 +8080,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workbox-window@npm:6.5.4, workbox-window@npm:^6.5.3":
+"workbox-window@npm:6.5.4, workbox-window@npm:^6.5.4":
   version: 6.5.4
   resolution: "workbox-window@npm:6.5.4"
   dependencies:
