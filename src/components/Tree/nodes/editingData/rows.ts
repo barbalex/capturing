@@ -1,7 +1,7 @@
 import { dexie, Row } from '../../../../dexieClient'
 import rowsWithLabelFromRows from '../../../../utils/rowsWithLabelFromRows'
 import isNodeOpen from '../../../../utils/isNodeOpen'
-import rowTableNodes from './rowTableNodes'
+import rowTableNodes from './rowTables'
 
 const rowNodes = async ({ project, table, rowId, nodes }) => {
   // return if parent is not open (in nodes)

@@ -2,7 +2,7 @@ import { dexie, Table } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../../../../utils/isNodeOpen'
-import rowNodes from './rowNodes'
+import rowNodes from './rows'
 
 const tableNodesEditingData = async ({ project, rowId, nodes }) => {
   // console.log('tableNodesEditingData', { nodes: nodes.slice() })
