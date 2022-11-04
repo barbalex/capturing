@@ -1581,11 +1581,11 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(1).stores({
+    this.version(2).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
-        'id, table_id, label, name, table_ref, field_type, widget_type, options_table, sort, server_rev_at, deleted, [deleted+table_id], [deleted+table_id+widget_type]',
+        'id, table_id, label, name, table_ref, field_type, widget_type, options_table, sort, server_rev_at, deleted, [deleted+table_id], [deleted+table_id+widget_type], [deleted+table_ref]',
       // files:
       //   'id, field_id, row_id, [row_id+field_id+deleted+name], [row_id+field_id+deleted], name, server_rev_at, deleted',
       files_meta: 'id, [row_id+field_id+deleted], server_rev_at',
