@@ -23,8 +23,11 @@ type Props = {
   row: Row
 }
 
+// need relative="path" because:
+// react-router follows route hierarchy, NOT path otherwise
+// see: https://reactrouter.com/en/main/components/link#relative
 const RowRow = ({ row }: Props) => (
-  <StyledListItem component={Link} to={row.id}>
+  <StyledListItem component={Link} to={row.id} relative="path">
     {row.label}
   </StyledListItem>
 )
