@@ -54,7 +54,10 @@ const RowForm = ({
   showFilter,
 }: RowFormProps) => {
   const params = useParams()
-  const tableId = params?.tableId ?? '99999999-9999-9999-9999-999999999999'
+  const tableId =
+    params?.tableId2 ??
+    params?.tableId ??
+    '99999999-9999-9999-9999-999999999999'
   const projectId = params?.projectId ?? '99999999-9999-9999-9999-999999999999'
   const url = params['*']
   const showHistory = url?.endsWith('history')
@@ -73,12 +76,12 @@ const RowForm = ({
     unsetError('row')
   }, [id, unsetError])
 
-  // console.log('RowForm', {
-  //   row,
-  //   tableId,
-  //   projectId,
-  //   sessionUserEmail: session?.user?.email,
-  // })
+  console.log('RowForm', {
+    row,
+    tableId,
+    projectId,
+    sessionUserEmail: session?.user?.email,
+  })
 
   const originalRow = useRef<IRow>()
   const rowState = useRef<IRow>()
@@ -94,13 +97,13 @@ const RowForm = ({
     // Got error when running:
     // Failed to execute 'get' on 'IDBObjectStore': No key or key range specified
     // solved by setting standard values!???
-    const [fields, projectUser = {}, table = {}] = await Promise.all([
+    const [fields = [], projectUser = {}, table = {}] = await Promise.all([
       dexie.fields.where({ deleted: 0, table_id: tableId }).sortBy('sort'),
-      dexie.project_users.get({
-        project_id: projectId,
-        user_email: session?.user?.email ?? 'none',
-      }),
-      dexie.ttables.get(tableId),
+      // dexie.project_users.get({
+      //   project_id: projectId,
+      //   user_email: session?.user?.email ?? 'none',
+      // }),
+      // dexie.ttables.get(tableId),
     ])
     const userMayEdit = [
       'account_manager',
