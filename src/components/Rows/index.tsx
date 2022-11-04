@@ -9,7 +9,7 @@ import storeContext from '../../storeContext'
 import RowComponent from './Row'
 import RowsTitle from './RowsTitle'
 import ErrorBoundary from '../shared/ErrorBoundary'
-import rowsWithLabelFromRows from '../../utils/rowsWithLabelFromRows'
+import rowsWithLabelFromRows from '../../utils/rowsWithLabelFromRows' 
 import { dexie, Row } from '../../dexieClient'
 
 const Container = styled.div`
