@@ -51,7 +51,7 @@ const RowsContainer = styled.div`
 `
 
 const TablesComponent = () => {
-  const { projectId, tableId, rowId } = useParams()
+  const { projectId } = useParams()
   const navigate = useNavigate()
 
   // console.log('TablesComponent', { projectId, tableId, rowId })
