@@ -26,10 +26,10 @@ const NavigationSyncController = () => {
     const activeNodeArray = getActiveNodeArrayFromUrl(pathname)
 
     if (!isEqual(activeNodeArray, store.activeNodeArray?.slice())) {
-      console.log('NavigationSyncController', {
-        activeNodeArrayFromUrl: activeNodeArray,
-        activeNodeArrayFromStore: store.activeNodeArray?.slice(),
-      })
+      // console.log('NavigationSyncController', {
+      //   activeNodeArrayFromUrl: activeNodeArray,
+      //   activeNodeArrayFromStore: store.activeNodeArray?.slice(),
+      // })
       setActiveNodeArray(activeNodeArray)
       addNode(activeNodeArray)
     }
