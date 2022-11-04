@@ -1,6 +1,6 @@
-import buildTableNodes from './tableNodes'
-import buildTileLayerNodes from './tileLayerNodes'
-import buildVectorLayerNodes from './vectorLayerNodes'
+import buildTableNodes from './tables'
+import buildTileLayerNodes from './tileLayers'
+import buildVectorLayerNodes from './vectorLayers'
 import { dexie } from '../../../../dexieClient'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 

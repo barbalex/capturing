@@ -1,6 +1,6 @@
 import { dexie } from '../../../../dexieClient'
-import buildRowNodes from './rowNodes'
-import buildFieldNodes from './fieldNodes'
+import buildRowNodes from './rows'
+import buildFieldNodes from './fields'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 
 const tableFoldersEditingProject = async ({ project, table, rowId, nodes }) => {
