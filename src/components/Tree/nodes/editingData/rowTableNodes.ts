@@ -35,10 +35,11 @@ const rowTableNodesEditingProject = async ({
       row.id,
       'tables',
       table.id,
+      'rows',
     ]
 
     const node = {
-      id: table.id,
+      id: `relations/${table.id}`,
       label: labelFromLabeledTable({
         object: table,
         useLabels: project.use_labels,

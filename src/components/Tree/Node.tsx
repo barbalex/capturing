@@ -6,7 +6,7 @@ import {
 import IconButton from '@mui/material/IconButton'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { orange } from '@mui/material/colors'
@@ -47,9 +47,10 @@ const ProjectEditIconButton = styled(IconButton)`
 `
 
 const Node = ({ node, style, tree, dragHandle }) => {
+  const { rowId } = useParams()
   const navigate = useNavigate()
   const data = node.data
-  // console.log('Node', { node, style, data, tree, dragHandle })
+  console.log('Node', { node, style, data, tree, dragHandle, rowId })
 
   const store = useContext(storeContext)
   const {
@@ -67,6 +68,7 @@ const Node = ({ node, style, tree, dragHandle }) => {
     data.activeNodeArray,
   )
   let isActive = isEqual(data.activeNodeArray, activeNodeArray.slice())
+  const editing = editingProjects.get(data.object.project_id)?.editing
   // when not editing, other nodes in activeNodeArray may be active:
   if (
     data.type === 'project' &&
@@ -78,7 +80,7 @@ const Node = ({ node, style, tree, dragHandle }) => {
   }
   if (
     data.type === 'table' &&
-    !editingProjects.get(data.object.project_id)?.editing &&
+    !editing &&
     isInActiveNodeArray &&
     activeNodeArray.length === 5
   ) {
@@ -100,13 +102,13 @@ const Node = ({ node, style, tree, dragHandle }) => {
   }, [session?.user?.email])
 
   const onClickIndent = useCallback(async () => {
-    // console.log({
-    //   data,
-    //   editing,
-    //   isActive,
-    //   activeNodeArray: activeNodeArray.slice(),
-    //   isInActiveNodeArray,
-    // })
+    console.log({
+      data,
+      isActive,
+      activeNodeArray: activeNodeArray.slice(),
+      isInActiveNodeArray,
+      editing,
+    })
     if (
       data.type === 'project' &&
       !editingProjects.get(data.id)?.editing &&
@@ -139,10 +141,7 @@ const Node = ({ node, style, tree, dragHandle }) => {
         return
       }
     }
-    if (
-      data.type === 'table' &&
-      !editingProjects.get(data.object.project_id)?.editing
-    ) {
+    if (data.type === 'table' && !editing && !rowId) {
       // if editing data leave out table (nothing to edit)
       const newANA = [...data.activeNodeArray, 'rows']
       addNode(data.activeNodeArray)

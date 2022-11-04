@@ -187,7 +187,7 @@ function App() {
                       element={<RowComponent />}
                     />
                     <Route
-                      path=":projectId/tables/:tableId/rows/:rowId/tables/*"
+                      path=":projectId/tables/:tableId/rows/:rowId/tables/:tableId2/*"
                       element={<RowsComponent />}
                     />
                   </Route>
