@@ -13,6 +13,7 @@ const rowTableRowNodes = async ({
   rowId,
   rowId2,
 }) => {
+  console.log('rowTableRows')
   // return if parent is not open (in nodes)
   if (
     !isNodeOpen({
@@ -30,6 +31,7 @@ const rowTableRowNodes = async ({
       ],
     })
   ) {
+    console.log('rowTableRows returning due to node not open')
     return []
   }
 
