@@ -8,9 +8,9 @@ const rowTableRowNodes = async ({
   row,
   table2,
   nodes,
-  tableId,
-  tableId2,
-  rowId,
+  // tableId,
+  // tableId2,
+  // rowId,
   rowId2,
 }) => {
   console.log('rowTableRows')
