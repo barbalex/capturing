@@ -50,7 +50,7 @@ const Node = ({ node, style, tree, dragHandle }) => {
   const { rowId } = useParams()
   const navigate = useNavigate()
   const data = node.data
-  console.log('Node', { node, style, data, tree, dragHandle, rowId })
+  // console.log('Node', { node, style, data, tree, dragHandle, rowId })
 
   const store = useContext(storeContext)
   const {
@@ -102,13 +102,13 @@ const Node = ({ node, style, tree, dragHandle }) => {
   }, [session?.user?.email])
 
   const onClickIndent = useCallback(async () => {
-    console.log({
-      data,
-      isActive,
-      activeNodeArray: activeNodeArray.slice(),
-      isInActiveNodeArray,
-      editing,
-    })
+    // console.log({
+    //   data,
+    //   isActive,
+    //   activeNodeArray: activeNodeArray.slice(),
+    //   isInActiveNodeArray,
+    //   editing,
+    // })
     if (
       data.type === 'project' &&
       !editingProjects.get(data.id)?.editing &&

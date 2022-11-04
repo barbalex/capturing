@@ -47,11 +47,11 @@ const rowNodes = async ({ project, table, rowId, nodes }) => {
     const tablesWithRelation = await dexie.ttables.bulkGet(
       tableIdsOfFieldsWithRelation,
     )
-    console.log('rowNodes', {
-      fieldsWithRelation,
-      tableIdsOfFieldsWithRelation,
-      tablesWithRelation,
-    })
+    // console.log('rowNodes', {
+    //   fieldsWithRelation,
+    //   tableIdsOfFieldsWithRelation,
+    //   tablesWithRelation,
+    // })
 
     const node = {
       id: row.id,
