@@ -82,7 +82,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
         }),
       ])
 
-    console.log('Field Form', { row, otherTables, optionsTables })
+    // console.log('Field Form', { row, otherTables, optionsTables })
 
     const useLabels: boolean = project.use_labels
     const userMayEdit: boolean = [

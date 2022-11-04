@@ -60,7 +60,7 @@ const RowComponent = ({ filter: showFilter }) => {
   const { online } = store
   const filter = 'TODO: was in store'
 
-  console.log('RowComponent', { rowId })
+  // console.log('RowComponent', { rowId })
 
   const row: Row = useLiveQuery(
     async () => await dexie.rows.get(rowId),
@@ -68,7 +68,7 @@ const RowComponent = ({ filter: showFilter }) => {
   )
 
   const [showHistory, setShowHistory] = useState(false)
-  console.log('RowForm rendering, row:', row)
+  // console.log('RowForm rendering, row:', row)
 
   const [activeConflict, setActiveConflict] = useState(null)
   // ensure that activeConflict is reset

@@ -33,7 +33,7 @@ const FieldsComponent = () => {
   const store = useContext(storeContext)
   const { formHeight, setFieldSorter, rebuildTree, session } = store
 
-  // console.log('FieldsList rendering')
+  // console.log('FieldsList rendering, tableId:', tableId)
 
   const data = useLiveQuery(async () => {
     const [fields, project] = await Promise.all([

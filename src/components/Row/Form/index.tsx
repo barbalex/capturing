@@ -73,12 +73,12 @@ const RowForm = ({
     unsetError('row')
   }, [id, unsetError])
 
-  console.log('RowForm', {
-    row,
-    tableId,
-    projectId,
-    sessionUserEmail: session?.user?.email,
-  })
+  // console.log('RowForm', {
+  //   row,
+  //   tableId,
+  //   projectId,
+  //   sessionUserEmail: session?.user?.email,
+  // })
 
   const originalRow = useRef<IRow>()
   const rowState = useRef<IRow>()
@@ -90,13 +90,11 @@ const RowForm = ({
     }
   }, [row])
 
-  // TODO: build right queries
   const data = useLiveQuery(async () => {
-    // TODO:
-    // Getting error when running:
+    // Got error when running:
     // Failed to execute 'get' on 'IDBObjectStore': No key or key range specified
-    // caused by first query, dexie.fields.where
-    const [fields, projectUser, table] = await Promise.all([
+    // solved by setting standard values!???
+    const [fields, projectUser = {}, table = {}] = await Promise.all([
       dexie.fields.where({ deleted: 0, table_id: tableId }).sortBy('sort'),
       dexie.project_users.get({
         project_id: projectId,
@@ -104,11 +102,6 @@ const RowForm = ({
       }),
       dexie.ttables.get(tableId),
     ])
-    console.log('RowForm, liveQuery', {
-      fields,
-      projectUser,
-      table,
-    })
     const userMayEdit = [
       'account_manager',
       'project_manager',
