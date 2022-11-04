@@ -17,7 +17,7 @@ const Container = styled.div`
 `
 
 const TreeComponent = React.forwardRef((props, ref) => {
-  const { projectId, rowId } = useParams()
+  const { projectId, rowId, tableId, tableId2, rowId2 } = useParams()
 
   const store = useContext(storeContext)
   const {
@@ -33,6 +33,9 @@ const TreeComponent = React.forwardRef((props, ref) => {
   useEffect(() => {
     buildNodes({
       rowId,
+      tableId,
+      tableId2,
+      rowId2,
       editingProjects,
       nodes,
     }).then((dataBuilt) => setData(dataBuilt))
@@ -41,9 +44,12 @@ const TreeComponent = React.forwardRef((props, ref) => {
     rowId,
     editingProjects,
     activeNodeArray,
-    nodes.length, // need length because array of array is not observed
+    nodes.length,
     nodes,
     treeRebuildCount,
+    tableId,
+    tableId2,
+    rowId2,
   ])
 
   // console.log('Tree, data:', data)

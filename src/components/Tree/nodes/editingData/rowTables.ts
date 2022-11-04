@@ -2,6 +2,7 @@ import { Table } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../../../../utils/isNodeOpen'
+import rowTableRowNodes from './rowTableRows'
 
 const rowTableNodesEditingProject = async ({
   project,
@@ -9,6 +10,10 @@ const rowTableNodesEditingProject = async ({
   row,
   tables,
   nodes,
+  tableId,
+  tableId2,
+  rowId,
+  rowId2,
 }) => {
   // return if parent does not exist (in nodes)
   if (
@@ -17,7 +22,7 @@ const rowTableNodesEditingProject = async ({
       url: ['projects', project.id, 'tables', table.id, 'rows', row.id],
     })
   )
-    return
+    return []
 
   const tablesSorted = sortByLabelName({
     objects: tables,
@@ -25,7 +30,7 @@ const rowTableNodesEditingProject = async ({
   })
 
   const tableNodes = []
-  for (const table: Table of tablesSorted) {
+  for (const table2: Table of tablesSorted) {
     const ownActiveNodeArray = [
       'projects',
       project.id,
@@ -34,25 +39,36 @@ const rowTableNodesEditingProject = async ({
       'rows',
       row.id,
       'tables',
-      table.id,
+      table2.id,
       'rows',
     ]
 
+    const children = await rowTableRowNodes({
+      project,
+      table,
+      row,
+      table2,
+      tableId,
+      tableId2,
+      rowId,
+      rowId2,
+    })
+
     const node = {
-      id: `relations/${table.id}`,
+      id: `${table2.id}/2`,
       label: labelFromLabeledTable({
-        object: table,
+        object: table2,
         useLabels: project.use_labels,
       }),
       type: 'table',
-      object: table,
+      object: table2,
       activeNodeArray: ownActiveNodeArray,
       isOpen: isNodeOpen({
         nodes,
         url: ownActiveNodeArray,
       }),
-      children: [],
-      childrenCount: 0,
+      children,
+      childrenCount: children.length,
     }
     tableNodes.push(node)
   }

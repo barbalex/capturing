@@ -3,7 +3,15 @@ import rowsWithLabelFromRows from '../../../../utils/rowsWithLabelFromRows'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 import rowTableNodes from './rowTables'
 
-const rowNodes = async ({ project, table, rowId, nodes }) => {
+const rowNodes = async ({
+  project,
+  table,
+  rowId,
+  tableId,
+  tableId2,
+  rowId2,
+  nodes,
+}) => {
   // return if parent is not open (in nodes)
   if (
     !isNodeOpen({ nodes, url: ['projects', project.id, 'tables', table.id] })
@@ -26,18 +34,6 @@ const rowNodes = async ({ project, table, rowId, nodes }) => {
   const rowNodes = []
   for (const row: Row of rowsWithLabels) {
     const isOpen = rowId === row.id
-    // const childrenCount = await dexie.ttables
-    //   .where({ deleted: 0, parent_id: table.id })
-    //   .count()
-    // const children = isOpen
-    //   ? await tableNodes({
-    //       useLabels: project.use_labels,
-    //       project,
-    //       tableId,
-    //       fieldId,
-    //       rowId,
-    //     })
-    //   : []
     const fieldsWithRelation = await dexie.fields
       .where({ deleted: 0, table_ref: table.id })
       .toArray()
@@ -76,6 +72,10 @@ const rowNodes = async ({ project, table, rowId, nodes }) => {
         row,
         tables: tablesWithRelation,
         nodes,
+        tableId,
+        tableId2,
+        rowId,
+        rowId2,
       }),
       childrenCount: tablesWithRelation.length,
     }

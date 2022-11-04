@@ -4,7 +4,14 @@ import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 import rowNodes from './rows'
 
-const tableNodesEditingData = async ({ project, rowId, nodes }) => {
+const tableNodesEditingData = async ({
+  project,
+  rowId,
+  tableId,
+  tableId2,
+  rowId2,
+  nodes,
+}) => {
   // console.log('tableNodesEditingData', { nodes: nodes.slice() })
   // return if parent does not exist (in nodes)
   if (!isNodeOpen({ nodes, url: ['projects', project.id] })) return []
@@ -38,7 +45,15 @@ const tableNodesEditingData = async ({ project, rowId, nodes }) => {
       object: table,
       activeNodeArray: ['projects', table.project_id, 'tables', table.id],
       isOpen,
-      children: await rowNodes({ project, table, rowId, nodes }),
+      children: await rowNodes({
+        project,
+        table,
+        rowId,
+        tableId,
+        tableId2,
+        rowId2,
+        nodes,
+      }),
       childrenCount: await dexie.rows
         .where({ deleted: 0, table_id: table.id })
         .count(),

@@ -36,10 +36,10 @@ const processTable = async ({ table: tableName, store, hiddenError }) => {
       },
     )
     .subscribe((status) => {
-      console.log('processTable, status of subscription:', {
-        tableName,
-        status,
-      })
+      // console.log('processTable, status of subscription:', {
+      //   tableName,
+      //   status,
+      // })
       if (tableName === 'projects') {
         // console.log(`processTable, subscribe callback, status:`, status)
         if (store.subscriptionState !== status) {

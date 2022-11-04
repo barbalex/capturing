@@ -5,7 +5,14 @@ import isNodeOpen from '../../../utils/isNodeOpen'
 import tableNodesEditingData from './editingData/tables'
 import projectFoldersEditingProject from './editingProject/projectFolders'
 
-const buildNodes = async ({ rowId, editingProjects, nodes }) => {
+const buildNodes = async ({
+  rowId,
+  tableId,
+  tableId2,
+  rowId2,
+  editingProjects,
+  nodes,
+}) => {
   const projects: Project[] = await dexie.projects
     .where({ deleted: 0 })
     .sortBy('', sortProjectsByLabelName)
@@ -24,6 +31,9 @@ const buildNodes = async ({ rowId, editingProjects, nodes }) => {
       : await tableNodesEditingData({
           project,
           rowId,
+          tableId,
+          tableId2,
+          rowId2,
           nodes,
         })
     const childrenCount = editing
@@ -43,7 +53,7 @@ const buildNodes = async ({ rowId, editingProjects, nodes }) => {
     const node = {
       id: project.id,
       label: labelFromLabeledTable({
-        object: project, 
+        object: project,
         useLabels: project.use_labels,
       }),
       type: 'project',
@@ -56,7 +66,7 @@ const buildNodes = async ({ rowId, editingProjects, nodes }) => {
     projectNodes.push(node)
   }
 
-  return projectNodes 
+  return projectNodes
 }
 
 export default buildNodes

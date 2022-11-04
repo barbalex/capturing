@@ -9,7 +9,7 @@ import storeContext from '../../storeContext'
 import RowComponent from './Row'
 import RowsTitle from './RowsTitle'
 import ErrorBoundary from '../shared/ErrorBoundary'
-import rowsWithLabelFromRows from '../../utils/rowsWithLabelFromRows' 
+import rowsWithLabelFromRows from '../../utils/rowsWithLabelFromRows'
 import { dexie, Row } from '../../dexieClient'
 
 const Container = styled.div`
@@ -25,7 +25,7 @@ const RowsContainer = styled.div`
 type RowsWithLabel = Row & { label: string }
 
 const RowsComponent = () => {
-  const { tableId } = useParams()
+  const { tableId, tableId2 } = useParams()
 
   const store = useContext(storeContext)
   const { formHeight } = store
@@ -35,7 +35,7 @@ const RowsComponent = () => {
   const rowsWithLabel: RowsWithLabel[] =
     useLiveQuery(async () => {
       const rows = await dexie.rows
-        .where({ deleted: 0, table_id: tableId })
+        .where({ deleted: 0, table_id: tableId2 ?? tableId })
         .toArray()
 
       return await rowsWithLabelFromRows(rows)
@@ -44,7 +44,7 @@ const RowsComponent = () => {
   return (
     <ErrorBoundary>
       <Container showfilter={false}>
-        <RowsTitle rowsWithLabel={rowsWithLabel}/>
+        <RowsTitle rowsWithLabel={rowsWithLabel} />
         <RowsContainer>
           <Virtuoso
             height={formHeight}
