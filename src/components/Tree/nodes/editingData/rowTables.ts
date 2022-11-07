@@ -35,9 +35,9 @@ const rowTableNodesEditingProject = async ({
       'projects',
       project.id,
       'tables',
-      table.id,
+      tableId,
       'rows',
-      row.id,
+      rowId,
       'tables',
       table2.id,
       'rows',
@@ -54,8 +54,20 @@ const rowTableNodesEditingProject = async ({
       rowId2,
     })
 
+    console.log('rowTables', {
+      children,
+      project,
+      table,
+      row,
+      table2,
+      tableId,
+      tableId2,
+      rowId,
+      rowId2,
+    })
+
     const node = {
-      id: `${table2.id}/2`,
+      id: `${row.id}/${table2.id}`,
       label: labelFromLabeledTable({
         object: table2,
         useLabels: project.use_labels,

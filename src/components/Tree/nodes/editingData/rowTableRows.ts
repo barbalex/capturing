@@ -8,9 +8,9 @@ const rowTableRowNodes = async ({
   row,
   table2,
   nodes,
-  // tableId,
-  // tableId2,
-  // rowId,
+  tableId,
+  tableId2,
+  rowId,
   rowId2,
 }) => {
   console.log('rowTableRows')
@@ -35,15 +35,23 @@ const rowTableRowNodes = async ({
     return []
   }
 
+  const refFieldsOfTable = await dexie.fields.get({
+    deleted: 0,
+    table_ref: table2.id,
+    table_id: tableId,
+  })
   const row2s = await dexie.rows
-    .where({
-      deleted: 0,
-      table_id: table2.id,
-    })
+    // TODO: add filter for table_ref
+    .filter((r) => r.deleted === 0 && r.table_id === table2.id)
     .toArray()
   const row2sWithLabels = await rowsWithLabelFromRows(row2s)
 
-  console.log('rowNodes', { table, rows, rowsWithLabels })
+  console.log('rowTableRows', {
+    table2,
+    rows,
+    rowsWithLabels,
+    refFieldsOfTable,
+  })
 
   // console.log('rowNodes, rowsWithLabels', rowsWithLabels)
 
@@ -74,9 +82,9 @@ const rowTableRowNodes = async ({
         'projects',
         project.id,
         'tables',
-        table.id,
+        tableId,
         'rows',
-        row.id,
+        rowId,
         'tables',
         table2.id,
         'rows',
