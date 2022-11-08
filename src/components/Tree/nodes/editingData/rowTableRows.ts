@@ -37,11 +37,11 @@ const rowTableRowNodes = async ({
 
   const refFieldsOfTable = await dexie.fields.get({
     deleted: 0,
-    table_ref: table2.id,
+    table_rel: table2.id,
     table_id: tableId,
   })
   const row2s = await dexie.rows
-    // TODO: add filter for table_ref
+    // TODO: add filter for table_rel
     .filter((r) => r.deleted === 0 && r.table_id === table2.id)
     .toArray()
   const row2sWithLabels = await rowsWithLabelFromRows(row2s)
@@ -59,7 +59,7 @@ const rowTableRowNodes = async ({
   for (const row2: Row of row2sWithLabels) {
     const isOpen = rowId2 === row2.id
     // const fieldsWithRelation = await dexie.fields
-    //   .where({ deleted: 0, table_ref: table2.id })
+    //   .where({ deleted: 0, table_rel: table2.id })
     //   .toArray()
     // const tableIdsOfFieldsWithRelation = fieldsWithRelation.map(
     //   (f) => f.table_id,
@@ -92,7 +92,7 @@ const rowTableRowNodes = async ({
       ],
       isOpen,
       // TODO:
-      // if: exist tables with field table_ref referencing this table
+      // if: exist tables with field table_rel referencing this table
       // add table nodes and child row nodes
       children: [],
       childrenCount: 0,

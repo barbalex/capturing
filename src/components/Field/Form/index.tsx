@@ -165,7 +165,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
     if (!!row?.field_type && !row?.widget_type) {
       errors.widget_type = 'Benötigt'
     }
-    if (!!row?.widget_type && !row?.options_table && !row?.table_ref) {
+    if (!!row?.widget_type && !row?.options_table && !row?.table_rel) {
       errors.options_table = 'Benötigt'
     }
     // only set if necessary to reduce rendering
@@ -176,7 +176,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
     row?.field_type,
     row?.options_table,
     row?.widget_type,
-    row?.table_ref,
+    row?.table_rel,
   ])
 
   const originalRow = useRef<IField>()
@@ -229,7 +229,7 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
       }
 
       const newObject = { [field]: newValue }
-      if (field === 'table_ref') {
+      if (field === 'table_rel') {
         // TODO: need to set field_type and widget_type
         newObject.field_type = 'text'
         newObject.widget_type = 'options-many'
@@ -303,14 +303,14 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
           />
         )}
         <Select
-          key={`${row.id}table_ref`}
-          name="table_ref"
-          value={row.table_ref}
-          field="table_ref"
+          key={`${row.id}table_rel`}
+          name="table_rel"
+          value={row.table_rel}
+          field="table_rel"
           label="Verknüpfte Tabelle"
           options={otherTableValues}
           saveToDb={onBlur}
-          error={localErrors.table_ref}
+          error={localErrors.table_rel}
           disabled={!userMayEdit}
           helperText="Dieses Feld verknüpft diese Tabelle mit einer anderen"
         />

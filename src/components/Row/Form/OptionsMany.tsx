@@ -23,11 +23,11 @@ const OptionsMany = ({ field, rowState, onBlur, error, disabled }: Props) => {
       dexie.rows
         .filter(
           (r) =>
-            r.table_id === (field?.options_table ?? field?.table_ref) &&
+            r.table_id === (field?.options_table ?? field?.table_rel) &&
             !!r.data,
         )
         .toArray(),
-      dexie.ttables.get(field?.options_table ?? field?.table_ref),
+      dexie.ttables.get(field?.options_table ?? field?.table_rel),
     )
     return { optionRows, optionTable }
   })
@@ -35,8 +35,8 @@ const OptionsMany = ({ field, rowState, onBlur, error, disabled }: Props) => {
   const optionTable: Table = data?.optionTable
   const isIdValueList = optionTable?.type === 'id_value_list'
   const optionValues = optionRowsData.map((d) => ({
-    value: field?.table_ref ? d.id : isIdValueList ? d.id : d.value,
-    label: field?.table_ref ? optionTable.name : d.value,
+    value: field?.table_rel ? d.id : isIdValueList ? d.id : d.value,
+    label: field?.table_rel ? optionTable.name : d.value,
   }))
   const optionValuesSorted = sortBy(optionValues, 'label')
   console.log('OptionsMany', { optionRowsData, optionTable, field })

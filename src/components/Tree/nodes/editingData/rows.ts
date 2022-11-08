@@ -35,7 +35,7 @@ const rowNodes = async ({
   for (const row: Row of rowsWithLabels) {
     const isOpen = rowId === row.id
     const fieldsWithRelation = await dexie.fields
-      .where({ deleted: 0, table_ref: table.id })
+      .where({ deleted: 0, table_rel: table.id })
       .toArray()
     const tableIdsOfFieldsWithRelation = fieldsWithRelation.map(
       (f) => f.table_id,
@@ -64,7 +64,7 @@ const rowNodes = async ({
       ],
       isOpen,
       // TODO:
-      // if: exist tables with field table_ref referencing this table
+      // if: exist tables with field table_rel referencing this table
       // add table nodes and child row nodes
       children: await rowTableNodes({
         project,
