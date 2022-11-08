@@ -1153,7 +1153,6 @@ export interface IRoleType {
 export interface IRow {
   id: string
   table_id?: string
-  parent_id?: string
   geometry?: string
   bbox?: string
   data?: string
@@ -1172,7 +1171,6 @@ type RowUpdateProps = { row: IRow; session: Session }
 export class Row implements IRow {
   id: string
   table_id?: string
-  parent_id?: string
   geometry?: string
   bbox?: string
   data?: string
@@ -1189,7 +1187,6 @@ export class Row implements IRow {
   constructor(
     id?: string,
     table_id: string,
-    parent_id?: string,
     geometry?: string,
     bbox?: string,
     data?: string,
@@ -1205,7 +1202,6 @@ export class Row implements IRow {
   ) {
     this.id = id ?? uuidv1()
     this.table_id = table_id
-    if (parent_id) this.parent_id = parent_id
     if (geometry) this.geometry = geometry
     if (geometry) this.bbox = getBbox(geometry)
     if (data) this.data = data
@@ -1267,7 +1263,6 @@ export class Row implements IRow {
     const revData = {
       row_id: isConflictDeletion ? is.row_id : is.id,
       table_id: is.table_id,
-      parent_id: is.parent_id,
       geometry: is.geometry,
       data: is.data,
       depth,
@@ -1334,7 +1329,6 @@ export class Row implements IRow {
 export interface ITable {
   id: string
   project_id?: string
-  parent_id?: string
   rel_type?: TableRelTypeEnum
   name?: string
   label?: string
@@ -1353,7 +1347,6 @@ type TableUpdateProps = { row: ITable; session: Session }
 export class Table implements ITable {
   id: string
   project_id?: string
-  parent_id?: string
   rel_type?: TableRelTypeEnum
   name?: string
   label?: string
@@ -1369,7 +1362,6 @@ export class Table implements ITable {
   constructor(
     id?: string,
     project_id?: string,
-    parent_id?: string,
     rel_type?: TableRelTypeEnum,
     name?: string,
     label?: string,
@@ -1384,7 +1376,6 @@ export class Table implements ITable {
   ) {
     this.id = id ?? uuidv1()
     if (project_id) this.project_id = project_id
-    if (parent_id) this.parent_id = parent_id
     this.rel_type = rel_type ?? 'n'
     if (name) this.name = name
     if (label) this.label = label
@@ -1603,10 +1594,10 @@ export class MySubClassedDexie extends Dexie {
       layer_styles: 'id, &table_id, &vector_layer_id, server_rev_at, deleted',
       projects:
         'id, label, name, server_rev_at, deleted, use_labels, [deleted+id]',
-      rows: 'id, server_rev_at, deleted, [deleted+table_id], [deleted+parent_id]',
+      rows: 'id, server_rev_at, deleted, [deleted+table_id]',
       // name tables causes error because used internally, see: https://github.com/dexie/Dexie.js/issues/1537
       ttables:
-        'id, label, name, sort, project_id, parent_id, rel_type, type, server_rev_at, deleted, [deleted+project_id], [deleted+project_id+type], [deleted+parent_id]',
+        'id, label, name, sort, project_id, rel_type, type, server_rev_at, deleted, [deleted+project_id], [deleted+project_id+type]',
       users: 'id, name, &email, auth_user_id, server_rev_at, deleted',
       version_types: 'id, &value, sort, server_rev_at, deleted',
       widget_types: 'id, &value, sort, server_rev_at, deleted',

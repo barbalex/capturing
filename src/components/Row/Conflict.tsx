@@ -71,7 +71,6 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
     const was = row
     const revData = {
       table_id: revRow.table_id,
-      parent_id: revRow.parent_id,
       geometry: revRow.geometry,
       data: revRow.data,
       deleted: revRow.deleted,
@@ -86,7 +85,6 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
     revRow?.data,
     revRow?.deleted,
     revRow?.geometry,
-    revRow?.parent_id,
     revRow?.table_id,
     row,
     session,

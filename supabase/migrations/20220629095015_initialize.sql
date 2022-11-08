@@ -274,7 +274,6 @@ CREATE TABLE tables (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
     -- project_id needs to exist for policies to work
     project_id uuid NOT NULL REFERENCES projects (id) ON DELETE NO action ON UPDATE CASCADE,
-    parent_id uuid DEFAULT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
     rel_type table_rel_types_enum DEFAULT 'n',
     name text DEFAULT NULL,
     label text DEFAULT NULL,
@@ -296,8 +295,6 @@ CREATE INDEX ON tables USING btree (id);
 
 CREATE INDEX ON tables USING btree (project_id);
 
-CREATE INDEX ON tables USING btree (parent_id);
-
 CREATE INDEX ON tables USING btree (name);
 
 CREATE INDEX ON tables USING btree (label);
@@ -313,8 +310,6 @@ COMMENT ON TABLE tables IS 'Goal: Define tables used per project. Rows and files
 COMMENT ON COLUMN tables.id IS 'primary key';
 
 COMMENT ON COLUMN tables.project_id IS 'associated project';
-
-COMMENT ON COLUMN tables.parent_id IS 'parent table';
 
 COMMENT ON COLUMN tables.rel_type IS 'releation with parent table: 1:1 or 1:n';
 
@@ -547,7 +542,6 @@ DROP TABLE IF EXISTS ROWS CASCADE;
 CREATE TABLE ROWS (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
     table_id uuid NOT NULL REFERENCES tables (id) ON DELETE NO action ON UPDATE CASCADE,
-    parent_id uuid DEFAULT NULL REFERENCES ROWS (id) ON DELETE NO action ON UPDATE CASCADE,
     geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
     bbox jsonb DEFAULT NULL,
     data jsonb,
@@ -566,8 +560,6 @@ CREATE INDEX ON ROWS USING btree (id);
 
 CREATE INDEX ON ROWS USING btree (table_id);
 
-CREATE INDEX ON ROWS USING btree (parent_id);
-
 CREATE INDEX ON ROWS USING gist (geometry);
 
 CREATE INDEX ON ROWS USING gin (data);
@@ -579,8 +571,6 @@ COMMENT ON TABLE ROWS IS 'Goal: Collect data. Versioned';
 COMMENT ON COLUMN rows.id IS 'primary key';
 
 COMMENT ON COLUMN rows.table_id IS 'associated table';
-
-COMMENT ON COLUMN rows.parent_id IS 'associated row in the parent table (which means: this row is part of a child table)';
 
 COMMENT ON COLUMN rows.geometry IS 'row geometry (GeometryCollection)';
 
@@ -608,7 +598,6 @@ CREATE TABLE row_revs (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
     row_id uuid DEFAULT NULL,
     table_id uuid DEFAULT NULL,
-    parent_id uuid DEFAULT NULL,
     geometry geometry(GeometryCollection, 4326) DEFAULT NULL,
     bbox jsonb DEFAULT NULL,
     data jsonb,
@@ -626,8 +615,6 @@ CREATE INDEX ON row_revs USING btree (id);
 
 CREATE INDEX ON row_revs USING btree (row_id);
 
-CREATE INDEX ON row_revs USING btree (parent_id);
-
 CREATE INDEX ON row_revs USING btree (server_rev_at);
 
 CREATE INDEX ON row_revs USING btree (rev);
@@ -643,8 +630,6 @@ COMMENT ON TABLE row_revs IS 'Goal: Sync rows and handle conflicts';
 COMMENT ON COLUMN row_revs.id IS 'primary key';
 
 COMMENT ON COLUMN row_revs.row_id IS 'key of table rows';
-
-COMMENT ON COLUMN row_revs.parent_id IS 'associated row in the parent table (which means: this row is part of a child table)';
 
 COMMENT ON COLUMN row_revs.rev IS 'hashed value the fields: row_id, table_id, geometry, data, deleted';
 
@@ -2409,11 +2394,10 @@ BEGIN
     -- 1. if a winning undeleted leaf exists, use this
     --    (else pick a winner from the deleted leaves)
     THEN
-    INSERT INTO ROWS (id, table_id, parent_id, geometry, bbox, data, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
+    INSERT INTO ROWS (id, table_id, geometry, bbox, data, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
     SELECT
         winner.row_id,
         winner.table_id,
-        winner.parent_id,
         winner.geometry,
         winner.bbox,
         winner.data,
@@ -2432,7 +2416,6 @@ ON CONFLICT (id)
     DO UPDATE SET
         -- do not update the id
         table_id = excluded.table_id,
-        parent_id = excluded.parent_id,
         geometry = excluded.geometry,
         bbox = excluded.bbox,
         data = excluded.data,
@@ -2450,11 +2433,10 @@ ELSE
     --    choose winner from deleted leaves
     --    is necessary to set the winner deleted
     --    so the client can pick this up
-    INSERT INTO ROWS (id, table_id, parent_id, geometry, bbox, data, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
+    INSERT INTO ROWS (id, table_id, geometry, bbox, data, deleted, client_rev_at, client_rev_by, server_rev_at, rev, revisions, parent_rev, depth, conflicts)
     SELECT
         winner.row_id,
         winner.table_id,
-        winner.parent_id,
         winner.geometry,
         winner.bbox,
         winner.data,
@@ -2473,7 +2455,6 @@ ON CONFLICT (id)
     DO UPDATE SET
         -- do not update the id
         table_id = excluded.table_id,
-        parent_id = excluded.parent_id,
         geometry = excluded.geometry,
         bbox = excluded.bbox,
         data = excluded.data,

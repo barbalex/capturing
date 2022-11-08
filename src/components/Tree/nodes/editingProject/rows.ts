@@ -41,9 +41,7 @@ const rowNodes = async ({ project, table, rowId, nodes }) => {
         url: ['projects', project.id, 'tables', table.id, 'rows', row.id],
       }),
       children: [],
-      childrenCount: await dexie.ttables
-        .where({ deleted: 0, parent_id: table.id })
-        .count(),
+      childrenCount: 0,
     }
     rowNodes.push(node)
   }

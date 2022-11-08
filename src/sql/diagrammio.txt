@@ -36,11 +36,9 @@ Table "projects" {
 Table "tables" {
   "id" uuid [pk, default: `uuid_generate_v1mc()`]
   "project_id" uuid [unique, default: null]
-  "parent_id" uuid [default: null]
   "rel_type" text
   "name" text [unique, default: null]
   "label" text [default: null]
-  "option_type" text
   "client_rev_at" timestamp [default: `now()`]
   "client_rev_by" uuid [default: null]
   "server_rev_at" timestamp [default: `now()`]
@@ -67,7 +65,6 @@ Table "fields" {
 Table "rows" {
   "id" uuid [pk, default: `uuid_generate_v1mc()`]
   "table_id" uuid [default: null]
-  "parent_id" uuid [default: null]
   "geometry" "geometry(GeometryCollection, 4326)" [default: null]
   "bbox" jsonb [default: null]
   "crs" integer [default: 4326]
@@ -119,8 +116,6 @@ Ref:"accounts"."id" < "users"."account_id" [update: cascade, delete: no action]
 Ref:"accounts"."id" < "projects"."account_id" [update: cascade, delete: no action]
 
 Ref:"projects"."id" < "tables"."project_id" [update: cascade, delete: no action]
-
-Ref:"tables"."id" < "tables"."parent_id" [update: cascade, delete: no action]
 
 Ref:"tables"."id" < "fields"."table_id" [update: cascade, delete: no action]
 

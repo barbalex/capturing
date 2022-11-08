@@ -28,17 +28,13 @@ import {
   ITable,
   Table,
   TableTypeEnum,
-  TableRelTypeEnum,
   QueuedUpdate,
 } from '../../../dexieClient'
 import TextField from '../../shared/TextField'
-import Select from '../../shared/Select'
 import Spinner from '../../shared/Spinner'
-import RadioButtonGroupWithInfo from '../../shared/RadioButtonGroupWithInfo'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
-import RelTypePopover from './RelTypePopover'
 import RowLabel from './RowLabel'
 import LayerStyle from '../../shared/LayerStyle'
 
@@ -52,11 +48,6 @@ export const Comment = styled.p`
   font-weight: 400;
   font-size: 0.8rem;
 `
-
-const relTypeDataSource = Object.values(TableRelTypeEnum).map((v) => ({
-  value: v?.toString(),
-  label: v?.toString(),
-}))
 
 type TableFormProps = {
   showFilter: (boolean) => void
@@ -113,10 +104,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
 
     const useLabels = project.use_labels
 
-    const relTable: Table = await dexie.ttables.get({
-      id: row.parent_id ?? '99999999-9999-9999-9999-999999999999',
-    })
-
     return {
       useLabels,
       tablesValues: sortByLabelName({
@@ -134,15 +121,12 @@ const TableForm = ({ showFilter }: TableFormProps) => {
         })),
       row,
       userMayEdit,
-      relTable,
     }
   }, [projectId, tableId, session?.user?.email])
 
   const useLabels: boolean = data?.useLabels
   const row: Table = data?.row
-  const tablesValues: valueType[] = data?.tablesValues ?? []
   const userMayEdit: boolean = data?.userMayEdit
-  const relTable: Table = data?.relTable
 
   const tableTypeValues = Object.values(TableTypeEnum).map((v) => ({
     value: v,
@@ -369,35 +353,6 @@ const TableForm = ({ showFilter }: TableFormProps) => {
           label="Tabellen-Typ"
           error={errors?.table?.type}
         />
-        <Select
-          key={`${row.id}${row?.parent_id ?? ''}parent_id`}
-          name="parent_id"
-          value={row.parent_id}
-          field="parent_id"
-          label="Verknüpfte Tabelle (Mutter: 1:n, Geschwister: 1:1)"
-          options={tablesValues}
-          saveToDb={onBlur}
-          error={errors?.table?.parent_id}
-          disabled={!userMayEdit}
-        />
-        {!!row.parent_id && (
-          <RadioButtonGroupWithInfo
-            key={`${row?.id ?? ''}rel_type`}
-            value={row.rel_type}
-            name="rel_type"
-            dataSource={relTypeDataSource}
-            onBlur={onBlur}
-            label="Beziehung zur verknüpften Tabelle"
-            error={errors?.table?.rel_type}
-            popover={
-              <RelTypePopover
-                ownTable={row}
-                parentTable={relTable}
-                useLabels={useLabels}
-              />
-            }
-          />
-        )}
         <TextField
           key={`${row?.id ?? ''}sort`}
           name="sort"

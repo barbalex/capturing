@@ -18,7 +18,6 @@ const insertRow = async ({ tableId }: InsertRowProps) => {
   const newRow = new Row(
     revData.row_id, // id
     tableId, // table_id
-    undefined, // parent_id
     undefined, // geometry
     undefined, // bbox
     undefined, // data
