@@ -2270,12 +2270,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supabase/gotrue-js@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "@supabase/gotrue-js@npm:2.2.2"
+"@supabase/gotrue-js@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@supabase/gotrue-js@npm:2.3.0"
   dependencies:
     cross-fetch: ^3.1.5
-  checksum: 7bb021c01c2841389e6f941d9abab022e0dd1d07a45b7359cd60909fb5e0f75fd6ed438c6c190afabb760f3c35644039efbaed29a5594516739ea158c6fd6eea
+  checksum: 80bcaa3590a9b72f55ca28980e54f80a73f9d2644443323c4e6886f5d495f9a4869cd6ec51fb2c0a7b4ddb9fabea11dc3c978770e2a2d80c8468f6db79c4e05a
   languageName: node
   linkType: hard
 
@@ -2307,17 +2307,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supabase/supabase-js@npm:2.0.5":
-  version: 2.0.5
-  resolution: "@supabase/supabase-js@npm:2.0.5"
+"@supabase/supabase-js@npm:2.1.0":
+  version: 2.1.0
+  resolution: "@supabase/supabase-js@npm:2.1.0"
   dependencies:
     "@supabase/functions-js": ^2.0.0
-    "@supabase/gotrue-js": ^2.2.2
+    "@supabase/gotrue-js": ^2.3.0
     "@supabase/postgrest-js": ^1.1.0
     "@supabase/realtime-js": ^2.1.0
     "@supabase/storage-js": ^2.0.0
     cross-fetch: ^3.1.5
-  checksum: 805c3e186505805a1a7f732c9e1866c955d66e6327e7045be5b562d62da8f0836e8b06c8b70238a7c63426350c832e3c8976c725eeda0cd8a44789b869146aea
+  checksum: 4e4e23cb9ba85b6339b3e617525a799c7aeb122a6ed3e39c423d6d75c87d67ef2f74d216d4a2a04e1bc11f4a2962fefbb49a9feed26776cd1c01167d501b2068
   languageName: node
   linkType: hard
 
@@ -3283,7 +3283,7 @@ __metadata:
     "@mui/styled-engine": 5.10.8
     "@mui/styled-engine-sc": 5.10.6
     "@react-leaflet/core": 2.1.0
-    "@supabase/supabase-js": 2.0.5
+    "@supabase/supabase-js": 2.1.0
     "@turf/bbox": 6.5.0
     "@types/leaflet": 1.9.0
     "@types/node": 18.11.9
@@ -3303,7 +3303,7 @@ __metadata:
     eslint-plugin-react: 7.31.10
     eslint-plugin-react-hooks: 4.6.0
     file-saver: 2.0.5
-    framer-motion: 7.6.5
+    framer-motion: 7.6.6
     is-uuid: 1.0.2
     leaflet: 1.9.2
     leaflet-draw: 1.0.4
@@ -4489,9 +4489,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:7.6.5":
-  version: 7.6.5
-  resolution: "framer-motion@npm:7.6.5"
+"framer-motion@npm:7.6.6":
+  version: 7.6.6
+  resolution: "framer-motion@npm:7.6.6"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
     "@motionone/dom": 10.13.1
@@ -4506,7 +4506,7 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: d9a288e009c6b0a7ab8f8d8d6761da2335697468863d5eceaa2cf09ded8f016690b6c7b3fa683f9d14c9bd50dc57c0586fd5c2063d5851520f6982669ad93a65
+  checksum: 2a243dbfb1ceeb2ca54e0113fdc2a388e3d74ae6aa232de6534c80d883b25f227c7ccd4f32b12545bff758bba723e3992407ddc45e859409411096ab90a3f709
   languageName: node
   linkType: hard
 
