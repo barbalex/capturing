@@ -13,7 +13,7 @@
     "@fontsource/roboto": "4.5.8",
     "@lexical/react": "0.6.0",
     "@mui/material": "5.10.14",
-    "@mui/styled-engine": "5.10.14",
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
     "@mui/styled-engine-sc": "5.10.14",
     "@react-leaflet/core": "2.1.0",
     "@supabase/supabase-js": "2.1.0",
