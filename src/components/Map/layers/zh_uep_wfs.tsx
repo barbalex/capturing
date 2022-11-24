@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { GeoJSON, useMapEvent } from 'react-leaflet'
 import axios from 'redaxios'
-// import XMLViewer from 'react-xml-viewer'
+import XMLViewer from 'react-xml-viewer'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -9,14 +9,14 @@ import IconButton from '@mui/material/IconButton'
 import { MdClose } from 'react-icons/md'
 import styled from 'styled-components'
 
-// const customTheme = {
-//   attributeKeyColor: '#0074D9',
-//   attributeValueColor: '#2ECC40',
-// }
+const customTheme = {
+  attributeKeyColor: '#0074D9',
+  attributeValueColor: '#2ECC40',
+}
 
-// const StyledXMLViewer = styled(XMLViewer)`
-//   font-size: small;
-// `
+const StyledXMLViewer = styled(XMLViewer)`
+  font-size: small;
+`
 const StyledDialogContent = styled(DialogContent)`
   padding-top: 0;
 `
@@ -131,8 +131,7 @@ const ZhUepWfs = () => {
           <MdClose />
         </IconButton>
         <StyledDialogContent>
-          {/* <StyledXMLViewer xml={error} theme={customTheme} /> */}
-          <div>TODO: xml-viewer has a problem</div>
+          <StyledXMLViewer xml={error} theme={customTheme} />
         </StyledDialogContent>
       </Dialog>
     </>
