@@ -5,7 +5,7 @@ import { useEffect, useState, useContext, useCallback, useRef } from 'react'
 import { GeoJSON, useMapEvent } from 'react-leaflet'
 import styled from 'styled-components'
 import axios from 'redaxios'
-import XMLViewer from 'react-xml-viewer'
+// import XMLViewer from 'react-xml-viewer'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -24,17 +24,17 @@ import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 import Popup from '../Popup'
 import storeContext from '../../../storeContext'
 
-const StyledXMLViewer = styled(XMLViewer)`
-  font-size: small;
-`
+// const StyledXMLViewer = styled(XMLViewer)`
+//   font-size: small;
+// `
 const StyledDialogContent = styled(DialogContent)`
   padding-top: 0;
 `
 
-const xmlTheme = {
-  attributeKeyColor: '#0074D9',
-  attributeValueColor: '#2ECC40',
-}
+// const xmlTheme = {
+//   attributeKeyColor: '#0074D9',
+//   attributeValueColor: '#2ECC40',
+// }
 
 type Props = {
   layer: VectorLayerType
@@ -197,7 +197,8 @@ const VectorLayerComponent = ({ layer }: Props) => {
           <MdClose />
         </IconButton>
         <StyledDialogContent>
-          <StyledXMLViewer xml={error} theme={xmlTheme} />
+          {/* <StyledXMLViewer xml={error} theme={xmlTheme} /> */}
+          <div>TODO: xml-viewer has a problem</div>
         </StyledDialogContent>
       </Dialog>
     </>
