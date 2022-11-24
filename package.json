@@ -46,7 +46,6 @@
     "react-dropzone": "14.2.3",
     "react-error-boundary": "3.1.4",
     "react-icons": "4.6.0",
-    "react-is": "18.2.0",
     "react-leaflet": "4.1.0",
     "react-linkify": "1.0.0-alpha",
     "react-query": "3.39.2",
@@ -91,7 +90,6 @@
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
   },
   "dev-comments": {
-    "react-is": "is needed by styled-components",
     "buffer": "is undeclared dependency of safe-buffer which is dependency of react-xml-viewer. See: react-xml-viewer"
   }
 }
