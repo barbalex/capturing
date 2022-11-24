@@ -12,7 +12,7 @@
   "dependencies": {
     "@fontsource/roboto": "4.5.8",
     "@lexical/react": "0.6.3",
-    "@mui/material": "5.10.14",
+    "@mui/material": "5.10.15",
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
     "@mui/styled-engine-sc": "5.10.14",
     "@react-leaflet/core": "2.1.0",
@@ -83,7 +83,7 @@
     "tslint-config-prettier": "1.18.0",
     "typescript": "4.9.3",
     "vite": "2.9.15",
-    "vite-plugin-pwa": "0.13.2",
+    "vite-plugin-pwa": "0.12.8",
     "vite-plugin-svgr": "2.2.2"
   },
   "resolutions": {
