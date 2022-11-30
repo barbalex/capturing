@@ -2331,10 +2331,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/router@npm:1.0.3":
-  version: 1.0.3
-  resolution: "@remix-run/router@npm:1.0.3"
-  checksum: 7e535f3c24bf6b0a48aff3de70ee74e5402fe93105aa9bd01f275d5d8f5a9a8a7cadec08d18cf5544d4f24bc9d7a091abc1c9d4ea8efb2893e9077f104a51459
+"@remix-run/router@npm:1.0.4":
+  version: 1.0.4
+  resolution: "@remix-run/router@npm:1.0.4"
+  checksum: db6b1e111fb6e7e22c3d274bd6cef3054a0a989245894fde5735efd9cb46d18511e528e813ff50bcbdd7eda1c559f4e76e9d0c54396624e33396168d80b09c42
   languageName: node
   linkType: hard
 
@@ -2717,10 +2717,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:18.11.9":
-  version: 18.11.9
-  resolution: "@types/node@npm:18.11.9"
-  checksum: cc0aae109e9b7adefc32eecb838d6fad931663bb06484b5e9cbbbf74865c721b03d16fd8d74ad90e31dbe093d956a7c2c306ba5429ba0c00f3f7505103d7a496
+"@types/node@npm:18.11.10":
+  version: 18.11.10
+  resolution: "@types/node@npm:18.11.10"
+  checksum: 0f60cb090b2ee91fcd3dc4311bc1ed7889b92f14644c0069f100776f86474c12eebbcc6c75bc0d7d96b975a103b4d5d6b3c22b4e88bea6e7f4e2b1bb0daf5ea8
   languageName: node
   linkType: hard
 
@@ -3476,7 +3476,7 @@ __metadata:
     "@supabase/supabase-js": 2.1.1
     "@turf/bbox": 6.5.0
     "@types/leaflet": 1.9.0
-    "@types/node": 18.11.9
+    "@types/node": 18.11.10
     "@types/react": 18.0.25
     "@types/react-dom": 18.0.9
     "@typescript-eslint/eslint-plugin": 5.45.0
@@ -3519,7 +3519,7 @@ __metadata:
     react-linkify: 1.0.0-alpha
     react-query: 3.39.2
     react-resize-detector: 7.1.2
-    react-router-dom: 6.4.3
+    react-router-dom: 6.4.4
     react-select: 5.6.1
     react-slick: 0.29.0
     react-split: 2.0.14
@@ -3535,7 +3535,7 @@ __metadata:
     styled-components: 5.3.6
     tslint-config-prettier: 1.18.0
     typescript: 4.9.3
-    use-debounce: 9.0.1
+    use-debounce: 9.0.2
     uuid: 9.0.0
     vite: 3.2.4
     vite-plugin-pwa: 0.13.3
@@ -6681,27 +6681,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:6.4.3":
-  version: 6.4.3
-  resolution: "react-router-dom@npm:6.4.3"
+"react-router-dom@npm:6.4.4":
+  version: 6.4.4
+  resolution: "react-router-dom@npm:6.4.4"
   dependencies:
-    "@remix-run/router": 1.0.3
-    react-router: 6.4.3
+    "@remix-run/router": 1.0.4
+    react-router: 6.4.4
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 67a44d8dc45761a1c88793cac73839bb657168ef61b9473eb39b186b4a3ea1472454fd96f8997dc541cb1e79a723d62f9503cbc9179b63b8f1d634ed6d2b079a
+  checksum: 95f31ae84979b404db7483309e1063fbf724046103dc8b7be7e6df79f7b81e4e63dcdb587f11d8be38e3aaf62b71f9e0d83344ef8d8c5e962de7819c793de781
   languageName: node
   linkType: hard
 
-"react-router@npm:6.4.3":
-  version: 6.4.3
-  resolution: "react-router@npm:6.4.3"
+"react-router@npm:6.4.4":
+  version: 6.4.4
+  resolution: "react-router@npm:6.4.4"
   dependencies:
-    "@remix-run/router": 1.0.3
+    "@remix-run/router": 1.0.4
   peerDependencies:
     react: ">=16.8"
-  checksum: b89c0495c6837b1457915c08c5acc4eb7a2e9e3fae0420faf9bfc6311ecdfe78627cc1034c0e975bccd9aeeb70d1dcc5021322779dd3053d94c47e37339d77eb
+  checksum: d82cc8b8bdf10e02e07d089f9d82987fa161c2f07583c973126f5f8a052c02b3d2339891ddbda1738f877755a407e2c35f0dc1ac52aaa1d2c853774d19753ea7
   languageName: node
   linkType: hard
 
@@ -7901,12 +7901,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-debounce@npm:9.0.1":
-  version: 9.0.1
-  resolution: "use-debounce@npm:9.0.1"
+"use-debounce@npm:9.0.2":
+  version: 9.0.2
+  resolution: "use-debounce@npm:9.0.2"
   peerDependencies:
     react: ">=16.8.0"
-  checksum: dcb4652a512f1d0153038d0a15257879cd8988963fefaaceaec8c76c0d66ce737519cb018d144858e3e0ee811024c55639954b69400f775143d9ec3f46ce83b0
+  checksum: fb7d9a263e6d5e9d246118b90f11298156b7973aaff315d70bfeb154de5fb8c8bcdde3058da2f57d40a014eec6545c3e3a00cb4dbb2d9323adf2a169f8a492bb
   languageName: node
   linkType: hard
 
