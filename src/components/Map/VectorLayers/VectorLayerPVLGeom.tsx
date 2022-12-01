@@ -3,7 +3,7 @@ import { GeoJSON, useMapEvent, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
 import { useDebouncedCallback } from 'use-debounce'
 import * as icons from 'react-icons/md'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import { dexie, LayerStyle, VectorLayer, PVLGeom } from '../../../dexieClient'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'

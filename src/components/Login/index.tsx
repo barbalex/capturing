@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
 import Link from './Link'

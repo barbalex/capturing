@@ -3,7 +3,7 @@ import FormLabel from '@mui/material/FormLabel'
 import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 const StyledFormControl = styled(FormControl)`
   padding-bottom: 19px;

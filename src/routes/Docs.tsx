@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { Outlet, Link, useParams } from 'react-router-dom'
 
 import List from '@mui/material/List'

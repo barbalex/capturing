@@ -5,7 +5,7 @@ import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 import Button from '@mui/material/Button'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import { supabase } from '../../supabaseClient'
 

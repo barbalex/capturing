@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, useContext } from 'react'
 import Dropzone from 'react-dropzone'
 import { observer } from 'mobx-react-lite'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import List from '@mui/material/List'

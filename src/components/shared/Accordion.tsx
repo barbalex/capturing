@@ -3,7 +3,7 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Typography from '@mui/material/Typography'
 import { MdExpandMore } from 'react-icons/md'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 const ExpandIcon = styled(MdExpandMore)`
   font-size: 1.5rem;

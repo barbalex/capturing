@@ -1,6 +1,6 @@
 import React, { useContext, useCallback, useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { FaPlus, FaArrowUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 import { useLiveQuery } from 'dexie-react-hooks'

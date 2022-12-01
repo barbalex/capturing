@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import Button from '@mui/material/Button'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import StoreContext from '../../storeContext'
 import Login from '../../components/Login'

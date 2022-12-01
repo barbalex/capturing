@@ -3,7 +3,7 @@
  */
 import { useEffect, useState, useContext, useCallback, useRef } from 'react'
 import { GeoJSON, useMapEvent } from 'react-leaflet'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import axios from 'redaxios'
 import XMLViewer from 'react-xml-viewer'
 import Dialog from '@mui/material/Dialog'

@@ -11,7 +11,7 @@ import {
   MdVisibilityOff as VisibilityOffIcon,
 } from 'react-icons/md'
 import Button from '@mui/material/Button'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import storeContext from '../../storeContext'
 import { supabase } from '../../supabaseClient'

@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { GeoJSON, useMap } from 'react-leaflet'
 import * as ReactDOMServer from 'react-dom/server'
 import * as icons from 'react-icons/md'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import Popup from '../Popup'
 import { LayerStyle, Table,  } from '../../../dexieClient'

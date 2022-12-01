@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import CircularProgress from '@mui/material/CircularProgress'
 
 const SpinnerContainer = styled.div`

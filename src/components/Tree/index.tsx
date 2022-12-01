@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { Tree } from 'react-arborist'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { observer } from 'mobx-react-lite'
 import { getSnapshot } from 'mobx-state-tree'

@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import Slider from 'react-slick'
 import { useQuery } from 'react-query'
 

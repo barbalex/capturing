@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import * as icons from 'react-icons/md'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import Label from '../../Label'
 import Symbol from './Symbol'

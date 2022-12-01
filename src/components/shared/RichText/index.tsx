@@ -2,7 +2,7 @@ import React, { useRef, useCallback } from 'react'
 import FormHelperText from '@mui/material/FormHelperText'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import isEqual from 'lodash/isEqual'
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer'

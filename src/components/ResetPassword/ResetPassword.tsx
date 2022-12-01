@@ -15,7 +15,7 @@ import {
   MdVisibilityOff as VisibilityOffIcon,
 } from 'react-icons/md'
 import Button from '@mui/material/Button'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { useSearchParams } from 'react-router-dom'
 
 import ErrorBoundary from '../shared/ErrorBoundary'

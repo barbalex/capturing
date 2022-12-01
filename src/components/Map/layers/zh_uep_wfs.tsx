@@ -7,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import { MdClose } from 'react-icons/md'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 const customTheme = {
   attributeKeyColor: '#0074D9',

@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 import Button from '@mui/material/Button'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import Label from '../../shared/Label'

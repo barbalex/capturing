@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { useResizeDetector } from 'react-resize-detector'
 import { observer } from 'mobx-react-lite'
 

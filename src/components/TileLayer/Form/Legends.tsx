@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'redaxios'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import Label from '../../shared/Label'

@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react'
 import { observer } from 'mobx-react-lite'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import Checkbox from '@mui/material/Checkbox'
 import { useNavigate } from 'react-router-dom'
 

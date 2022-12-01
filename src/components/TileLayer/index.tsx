@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import FormTitle from './FormTitle'
 import Form from './Form'

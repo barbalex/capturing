@@ -1,6 +1,6 @@
 import React, { useContext, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import { MdClose as CloseIcon } from 'react-icons/md'

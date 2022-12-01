@@ -1,5 +1,5 @@
 import { Droppable } from 'react-beautiful-dnd'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import TargetElements from './TargetElements'
 

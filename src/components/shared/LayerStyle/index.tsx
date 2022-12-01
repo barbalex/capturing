@@ -6,7 +6,7 @@ import React, {
   useContext,
 } from 'react'
 import { observer } from 'mobx-react-lite'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import isEqual from 'lodash/isEqual'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'

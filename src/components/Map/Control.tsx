@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 const OuterDiv = styled.div`
   ${(props) => !props['data-visible'] && 'visibility: hidden;'}

@@ -5,7 +5,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 import dayjs from 'dayjs'
 import DatePicker from 'react-datepicker'
 import { observer } from 'mobx-react-lite'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 const StyledFormControl = styled(FormControl)`
   margin-bottom: 19px !important;

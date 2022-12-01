@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { arrayMoveImmutable } from 'array-move'
 
 import { dexie, Field, Table, ITable } from '../../../../dexieClient'

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import ListItem from '@mui/material/ListItem'
 import { Link, useParams } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'

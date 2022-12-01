@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { HexColorPicker } from 'react-colorful'
 import FormControl from '@mui/material/FormControl'
 import Input from '@mui/material/Input'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import Label from './Label'
 

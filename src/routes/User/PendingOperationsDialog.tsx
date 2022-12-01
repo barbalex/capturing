@@ -6,7 +6,7 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import Button from '@mui/material/Button'
 import { FaExclamationCircle } from 'react-icons/fa'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { useNavigate } from 'react-router-dom'
 
 import logout from '../../utils/logout'

@@ -4,7 +4,7 @@ import {
   MdExpandMore as ExpandMoreIcon,
 } from 'react-icons/md'
 import IconButton from '@mui/material/IconButton'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import isEqual from 'lodash/isEqual'
 import { useNavigate, useParams } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'

@@ -1,5 +1,5 @@
 import { useCallback, useState, useContext } from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { motion, useAnimation } from 'framer-motion'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
