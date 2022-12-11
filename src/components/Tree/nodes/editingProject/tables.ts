@@ -20,7 +20,7 @@ const tableNodesEditingProject = async ({ project, rowId, nodes }) => {
   })
 
   const tableNodes = []
-  for (const table: Table of tablesSorted) {
+  for (const table of tablesSorted) {
     const ownActiveNodeArray = ['projects', project.id, 'tables', table.id]
 
     const node = {

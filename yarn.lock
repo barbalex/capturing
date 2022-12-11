@@ -44,7 +44,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.11.1, @babel/core@npm:^7.19.6, @babel/core@npm:^7.20.5":
+"@babel/core@npm:^7.11.1, @babel/core@npm:^7.19.6":
   version: 7.20.5
   resolution: "@babel/core@npm:7.20.5"
   dependencies:
@@ -1024,28 +1024,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-react-jsx-self@npm:^7.18.6":
-  version: 7.18.6
-  resolution: "@babel/plugin-transform-react-jsx-self@npm:7.18.6"
-  dependencies:
-    "@babel/helper-plugin-utils": ^7.18.6
-  peerDependencies:
-    "@babel/core": ^7.0.0-0
-  checksum: 7d24e29c63869bb23495c163a92678c1c3341ecf74db420a20c6d3db74cbf5000fe908943f6106494e7225c0168945c150e528162274fd8fc7721966ad26930a
-  languageName: node
-  linkType: hard
-
-"@babel/plugin-transform-react-jsx-source@npm:^7.19.6":
-  version: 7.19.6
-  resolution: "@babel/plugin-transform-react-jsx-source@npm:7.19.6"
-  dependencies:
-    "@babel/helper-plugin-utils": ^7.19.0
-  peerDependencies:
-    "@babel/core": ^7.0.0-0
-  checksum: 1e9e29a4efc5b79840bd4f68e404f5ab7765ce48c7bd22f12f2b185f9c782c66933bdf54a1b21879e4e56e6b50b4e88aca82789ecb1f61123af6dfa9ab16c555
-  languageName: node
-  linkType: hard
-
 "@babel/plugin-transform-regenerator@npm:^7.18.6":
   version: 7.20.5
   resolution: "@babel/plugin-transform-regenerator@npm:7.20.5"
@@ -1739,7 +1717,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jridgewell/sourcemap-codec@npm:1.4.14, @jridgewell/sourcemap-codec@npm:^1.4.10, @jridgewell/sourcemap-codec@npm:^1.4.13":
+"@jridgewell/sourcemap-codec@npm:1.4.14, @jridgewell/sourcemap-codec@npm:^1.4.10":
   version: 1.4.14
   resolution: "@jridgewell/sourcemap-codec@npm:1.4.14"
   checksum: 61100637b6d173d3ba786a5dff019e1a74b1f394f323c1fee337ff390239f053b87266c7a948777f4b1ee68c01a8ad0ab61e5ff4abb5a012a0b091bec391ab97
@@ -2597,6 +2575,117 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@swc/core-darwin-arm64@npm:1.3.22":
+  version: 1.3.22
+  resolution: "@swc/core-darwin-arm64@npm:1.3.22"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-darwin-x64@npm:1.3.22":
+  version: 1.3.22
+  resolution: "@swc/core-darwin-x64@npm:1.3.22"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm-gnueabihf@npm:1.3.22":
+  version: 1.3.22
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.3.22"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-gnu@npm:1.3.22":
+  version: 1.3.22
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.3.22"
+  conditions: os=linux & cpu=arm64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-musl@npm:1.3.22":
+  version: 1.3.22
+  resolution: "@swc/core-linux-arm64-musl@npm:1.3.22"
+  conditions: os=linux & cpu=arm64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-gnu@npm:1.3.22":
+  version: 1.3.22
+  resolution: "@swc/core-linux-x64-gnu@npm:1.3.22"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-musl@npm:1.3.22":
+  version: 1.3.22
+  resolution: "@swc/core-linux-x64-musl@npm:1.3.22"
+  conditions: os=linux & cpu=x64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-arm64-msvc@npm:1.3.22":
+  version: 1.3.22
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.3.22"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-ia32-msvc@npm:1.3.22":
+  version: 1.3.22
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.3.22"
+  conditions: os=win32 & cpu=ia32
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-x64-msvc@npm:1.3.22":
+  version: 1.3.22
+  resolution: "@swc/core-win32-x64-msvc@npm:1.3.22"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core@npm:^1.3.21":
+  version: 1.3.22
+  resolution: "@swc/core@npm:1.3.22"
+  dependencies:
+    "@swc/core-darwin-arm64": 1.3.22
+    "@swc/core-darwin-x64": 1.3.22
+    "@swc/core-linux-arm-gnueabihf": 1.3.22
+    "@swc/core-linux-arm64-gnu": 1.3.22
+    "@swc/core-linux-arm64-musl": 1.3.22
+    "@swc/core-linux-x64-gnu": 1.3.22
+    "@swc/core-linux-x64-musl": 1.3.22
+    "@swc/core-win32-arm64-msvc": 1.3.22
+    "@swc/core-win32-ia32-msvc": 1.3.22
+    "@swc/core-win32-x64-msvc": 1.3.22
+  dependenciesMeta:
+    "@swc/core-darwin-arm64":
+      optional: true
+    "@swc/core-darwin-x64":
+      optional: true
+    "@swc/core-linux-arm-gnueabihf":
+      optional: true
+    "@swc/core-linux-arm64-gnu":
+      optional: true
+    "@swc/core-linux-arm64-musl":
+      optional: true
+    "@swc/core-linux-x64-gnu":
+      optional: true
+    "@swc/core-linux-x64-musl":
+      optional: true
+    "@swc/core-win32-arm64-msvc":
+      optional: true
+    "@swc/core-win32-ia32-msvc":
+      optional: true
+    "@swc/core-win32-x64-msvc":
+      optional: true
+  bin:
+    swcx: run_swcx.js
+  checksum: 5c6fa613502cbfae9985c7e97452649120e50e65695c8243111b422f6dddfebabdbc5ec94a9238e199e6a823a86906635e18e731f8ed45470bca8e4964d11659
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
@@ -2948,18 +3037,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react@npm:3.0.0":
+"@vitejs/plugin-react-swc@npm:3.0.0":
   version: 3.0.0
-  resolution: "@vitejs/plugin-react@npm:3.0.0"
+  resolution: "@vitejs/plugin-react-swc@npm:3.0.0"
   dependencies:
-    "@babel/core": ^7.20.5
-    "@babel/plugin-transform-react-jsx-self": ^7.18.6
-    "@babel/plugin-transform-react-jsx-source": ^7.19.6
-    magic-string: ^0.27.0
-    react-refresh: ^0.14.0
+    "@swc/core": ^1.3.21
   peerDependencies:
     vite: ^4.0.0
-  checksum: 6004e4da8f705288ca9163ff5ba43bf7495c516af527d3b0c2799455cc2933667bd8a5be6759547525abafeecbde9d9bd25e52b0c793637ddf425a013d3435be
+  checksum: 625338ba5c98fd78551b9ad442c6382554ad13f874611a256e7c3175515baf9bf3081b40f055f547e897c1a96faa8f60183b42764c2ba9c6c5c4a60776200a2d
   languageName: node
   linkType: hard
 
@@ -3411,7 +3496,7 @@ __metadata:
     "@types/react-dom": 18.0.9
     "@typescript-eslint/eslint-plugin": 5.46.0
     "@typescript-eslint/parser": 5.46.0
-    "@vitejs/plugin-react": 3.0.0
+    "@vitejs/plugin-react-swc": 3.0.0
     array-move: 4.0.0
     buffer: 6.0.3
     date-fns: 2.29.3
@@ -5441,15 +5526,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"magic-string@npm:^0.27.0":
-  version: 0.27.0
-  resolution: "magic-string@npm:0.27.0"
-  dependencies:
-    "@jridgewell/sourcemap-codec": ^1.4.13
-  checksum: 273faaa50baadb7a2df6e442eac34ad611304fc08fe16e24fe2e472fd944bfcb73ffb50d2dc972dc04e92784222002af46868cb9698b1be181c81830fd95a13e
-  languageName: node
-  linkType: hard
-
 "make-fetch-happen@npm:^10.0.3":
   version: 10.2.1
   resolution: "make-fetch-happen@npm:10.2.1"
@@ -6399,13 +6475,6 @@ __metadata:
     react-native:
       optional: true
   checksum: 369a2bdcf87915659af9e5c55abfd9f52a84e43e0d12dcc108ed17dbe6933558b7b7fc12caa9c10c1a10a8be7df89454b6c96989d8573fedec1a772c94a1f145
-  languageName: node
-  linkType: hard
-
-"react-refresh@npm:^0.14.0":
-  version: 0.14.0
-  resolution: "react-refresh@npm:0.14.0"
-  checksum: dc69fa8c993df512f42dd0f1b604978ae89bd747c0ed5ec595c0cc50d535fb2696619ccd98ae28775cc01d0a7c146a532f0f7fb81dc22e1977c242a4912312f4
   languageName: node
   linkType: hard
 

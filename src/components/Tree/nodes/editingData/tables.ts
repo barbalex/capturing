@@ -29,7 +29,7 @@ const tableNodesEditingData = async ({
   })
 
   const tableNodes = []
-  for (const table: Table of tablesSorted) {
+  for (const table of tablesSorted) {
     const isOpen = isNodeOpen({
       nodes,
       url: ['projects', table.project_id, 'tables', table.id],

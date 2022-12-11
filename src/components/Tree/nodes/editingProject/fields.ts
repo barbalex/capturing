@@ -21,7 +21,7 @@ const fieldNodes = async ({ project, table, nodes }) => {
     .sortBy('sort')
 
   const fieldNodes = []
-  for (const field: Field of fields) {
+  for (const field of fields) {
     const node = {
       id: field.id,
       label: await labelFromLabeledTable({

@@ -22,7 +22,7 @@ const rowNodes = async ({ project, table, rowId, nodes }) => {
   const rowsWithLabels = await rowsWithLabelFromRows(rows)
 
   const rowNodes = []
-  for (const row: Row of rowsWithLabels) {
+  for (const row of rowsWithLabels) {
     const node = {
       id: row.id,
       label: row.label,

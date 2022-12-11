@@ -75,7 +75,7 @@ const MapLegends = () => {
     // TODO:
     // add legends of tables
     // add legends of vector layers
-    for (const row: TileLayer of validTileLayers) {
+    for (const row of validTileLayers) {
       for (const legend of row?._wmsLegends ?? []) {
         let objectUrl
         try {

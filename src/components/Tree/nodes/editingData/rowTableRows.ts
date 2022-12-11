@@ -56,7 +56,7 @@ const rowTableRowNodes = async ({
   // console.log('rowNodes, rowsWithLabels', rowsWithLabels)
 
   const rowNodes = []
-  for (const row2: Row of row2sWithLabels) {
+  for (const row2 of row2sWithLabels) {
     const isOpen = rowId2 === row2.id
     // const fieldsWithRelation = await dexie.fields
     //   .where({ deleted: 0, table_rel: table2.id })
