@@ -25,7 +25,7 @@ const Control = ({ children, position, visible = true }) => {
   const positionClass =
     (position && POSITION_CLASSES[position]) || POSITION_CLASSES.topright
 
-  // prevent click propagation on to map
+  // prevent click propagation on to map 
   // https://stackoverflow.com/a/57013052/712005
   const ref = useRef()
   useEffect(() => {
