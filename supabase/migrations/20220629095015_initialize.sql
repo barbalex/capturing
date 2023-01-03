@@ -465,8 +465,7 @@ CREATE TABLE fields (
     name text DEFAULT NULL,
     label text DEFAULT NULL,
     sort smallint DEFAULT 0,
-    -- added in migration:
-    -- table_rel uuid REFERENCES tables (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    table_rel uuid REFERENCES tables (id) ON DELETE CASCADE ON UPDATE CASCADE,
     is_internal_id integer DEFAULT 0,
     field_type text DEFAULT NULL REFERENCES field_types (value) ON DELETE NO action ON UPDATE CASCADE,
     widget_type text DEFAULT NULL REFERENCES widget_types (value) ON DELETE NO action ON UPDATE CASCADE,
@@ -502,7 +501,7 @@ CREATE INDEX ON fields USING btree (options_table);
 
 CREATE INDEX ON fields USING btree (deleted);
 
--- CREATE INDEX ON fields USING btree (table_rel);
+CREATE INDEX ON fields USING btree (table_rel);
 COMMENT ON TABLE fields IS 'Goal: Define fields used per table. Defines structure and presentation of data column in rows. Not versioned (not recorded and only added by manager)';
 
 COMMENT ON COLUMN fields.id IS 'primary key';
