@@ -27,13 +27,6 @@ function RouterComponent() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="docs/*" element={<Docs />}>
-        <Route path="image-layer-types" element={<ImageLayerTypes />} />
-        <Route path="offline-maps" element={<OfflineMaps />} />
-        <Route path="data-synchronization" element={<DataSynchronisation />} />
-        <Route path="data-versioning" element={<DataVersioning />} />
-        <Route path="data-history" element={<DataHistory />} />
-      </Route>
       <Route path="user" element={<User />} />
       <Route path="projects/*" element={<ProjectsPage />}>
         <Route index element={<ProjectsComponent />} />
@@ -80,6 +73,13 @@ function RouterComponent() {
           path=":projectId/tables/:tableId/rows/:rowId/tables/:tableId2/rows/:rowId2/*"
           element={<RowComponent />}
         />
+      </Route>
+      <Route path="docs/*" element={<Docs />}>
+        <Route path="image-layer-types" element={<ImageLayerTypes />} />
+        <Route path="offline-maps" element={<OfflineMaps />} />
+        <Route path="data-synchronization" element={<DataSynchronisation />} />
+        <Route path="data-versioning" element={<DataVersioning />} />
+        <Route path="data-history" element={<DataHistory />} />
       </Route>
       <Route path="*" element={<FourOhFour />} />
     </Routes>
