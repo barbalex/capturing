@@ -154,10 +154,11 @@ const Node = ({ node, style, tree, dragHandle }) => {
   }, [
     data.type,
     data.id,
-    data.object.project_id,
     data.activeNodeArray,
     editingProjects,
     isActive,
+    editing,
+    rowId,
     addNode,
     navigate,
     setActiveNodeArray,
