@@ -99,11 +99,11 @@ const RowForm = ({
     // solved by setting standard values!???
     const [fields = [], projectUser = {}, table = {}] = await Promise.all([
       dexie.fields.where({ deleted: 0, table_id: tableId }).sortBy('sort'),
-      // dexie.project_users.get({
-      //   project_id: projectId,
-      //   user_email: session?.user?.email ?? 'none',
-      // }),
-      // dexie.ttables.get(tableId),
+      dexie.project_users.get({
+        project_id: projectId,
+        user_email: session?.user?.email ?? 'none',
+      }),
+      dexie.ttables.get(tableId),
     ])
     const userMayEdit = [
       'account_manager',
@@ -136,7 +136,7 @@ const RowForm = ({
     // only update if is changed
     if (isEqual(originalRow.current.data, rowState.current.data)) return
 
-    console.log('RowForm, updateOnServer, setting row to:', rowState.current)
+    // console.log('RowForm, updateOnServer, setting row to:', rowState.current)
 
     row.updateOnServer({
       was: originalRow.current,
@@ -159,13 +159,13 @@ const RowForm = ({
       let newValue = type === 'number' ? valueAsNumber : value
       if ([undefined, '', NaN].includes(newValue)) newValue = null
 
-      console.log('RowForm, onBlur', {
-        field,
-        value,
-        type,
-        valueAsNumber,
-        newValue,
-      })
+      // console.log('RowForm, onBlur', {
+      //   field,
+      //   value,
+      //   type,
+      //   valueAsNumber,
+      //   newValue,
+      // })
 
       // only update if value has changed
       const previousValue = row?.data?.[field]
@@ -204,9 +204,8 @@ const RowForm = ({
 
   // const showDeleted = filter?.row?.deleted !== false || row?.deleted
   const showDeleted = false
-  // console.log('RowForm rendering, row:', { row })
 
-  // console.log('RowForm, row:', row)
+  // console.log('RowForm', { row, userMayEdit, data })
 
   return (
     <ErrorBoundary>
