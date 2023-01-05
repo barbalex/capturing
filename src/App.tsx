@@ -37,6 +37,7 @@ async function persist() {
 
 function App() {
   const [store, setStore] = useState()
+
   useEffect(() => {
     // on first render regenerate store (if exists)
     dexie.stores.get('store').then((dbStore) => {
