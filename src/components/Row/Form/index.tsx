@@ -76,12 +76,12 @@ const RowForm = ({
     unsetError('row')
   }, [id, unsetError])
 
-  console.log('RowForm', {
-    row,
-    tableId,
-    projectId,
-    sessionUserEmail: session?.user?.email,
-  })
+  // console.log('RowForm', {
+  //   row,
+  //   tableId,
+  //   projectId,
+  //   sessionUserEmail: session?.user?.email,
+  // })
 
   const originalRow = useRef<IRow>()
   const rowState = useRef<IRow>()
