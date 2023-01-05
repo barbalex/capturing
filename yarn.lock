@@ -3502,7 +3502,7 @@ __metadata:
     eslint-plugin-react: 7.31.11
     eslint-plugin-react-hooks: 4.6.0
     file-saver: 2.0.5
-    framer-motion: 8.1.4
+    framer-motion: 8.1.8
     is-uuid: 1.0.2
     leaflet: 1.9.3
     leaflet-draw: 1.0.4
@@ -3516,7 +3516,7 @@ __metadata:
     proj4: 2.8.0
     proj4leaflet: 1.0.2
     react: 18.2.0
-    react-arborist: 2.1.1
+    react-arborist: 2.2.0
     react-beautiful-dnd: 13.1.1
     react-colorful: 5.6.1
     react-datepicker: 4.8.0
@@ -3535,7 +3535,7 @@ __metadata:
     react-split-pane: 0.1.92
     react-stylable-diff: 2.0.0
     react-virtualized-auto-sizer: 1.0.7
-    react-virtuoso: 4.0.1
+    react-virtuoso: 4.0.3
     react-xml-viewer: 1.3.0
     redaxios: 0.5.1
     slick-carousel: 1.8.1
@@ -4540,9 +4540,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:8.1.4":
-  version: 8.1.4
-  resolution: "framer-motion@npm:8.1.4"
+"framer-motion@npm:8.1.8":
+  version: 8.1.8
+  resolution: "framer-motion@npm:8.1.8"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
     "@motionone/dom": ^10.15.3
@@ -4554,7 +4554,7 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: 25e2569b17e75741249085aaee8994cf1eb01a6cda32ee00294f5d01238c2ad1e1a0e3c0f4b4afc92dcf0ec1b57137756445f430afbc8000639185dd8d6b145f
+  checksum: fd90ad7528fb5a01bf417f1c5cd07bedd4169be908bc0fc7e88861f410a085ed27cf01e96b271b3cc3eda188afc13e8be7fea555201434f2a50ad0d4a788349b
   languageName: node
   linkType: hard
 
@@ -6209,9 +6209,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-arborist@npm:2.1.1":
-  version: 2.1.1
-  resolution: "react-arborist@npm:2.1.1"
+"react-arborist@npm:2.2.0":
+  version: 2.2.0
+  resolution: "react-arborist@npm:2.2.0"
   dependencies:
     react-dnd: ^14.0.3
     react-dnd-html5-backend: ^14.0.1
@@ -6221,7 +6221,7 @@ __metadata:
   peerDependencies:
     react: ">= 16.14"
     react-dom: ">= 16.14"
-  checksum: 3806eea09594127d3a43d80f08119b2b51a8a14c7891398564c2e80b9d69e5e880a05b1766d2e92766fc5d5e06a1b241d8492375257bbf77c35cefa176914ebc
+  checksum: e2262b36bdd980695cc76b1fdcef79b13435bca55eb81796e07a0bb9e11b5c05cd7623751f086326886c6792133a677fd14f3dc28b99775bf3107b62b0d7b6b5
   languageName: node
   linkType: hard
 
@@ -6613,13 +6613,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:4.0.1":
-  version: 4.0.1
-  resolution: "react-virtuoso@npm:4.0.1"
+"react-virtuoso@npm:4.0.3":
+  version: 4.0.3
+  resolution: "react-virtuoso@npm:4.0.3"
   peerDependencies:
     react: ">=16 || >=17 || >= 18"
     react-dom: ">=16 || >=17 || >= 18"
-  checksum: ef95ab503780014364760fe5956946fa10b9918889df5794468def49ebd1fa4902f0545727b30185a0a2d68b8ac1d1a57829c321fc67b70feb9df01b1f6f3eb3
+  checksum: 828ec62afc4804d1e37373af57eedbbaf61e42e6fa5ab8dd8e6738c41ce607fa0efa403e976c13e340b369562929fc735eddc39166e102aa9732aa26d2547168
   languageName: node
   linkType: hard
 
