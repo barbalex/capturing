@@ -1238,13 +1238,23 @@ export class Row implements IRow {
       const lASorted = sortBy(table.row_label, 'index')
       // array elements are: {field: field_id, text: 'field', index: 1}
       for (const el of lASorted) {
-        // TODO:
         if (el.field) {
           const field: Field = await dexie.fields.get(el.field)
+          // check if field is a relation
+          if (field.table_rel) {
+            // get the row of the relation
+            const relTableRow: Row = await dexie.rows.get(
+              this.data?.[field.name] ?? '',
+            )
+            // extract its label
+            const relTableRowLabel = await relTableRow?.label
+            label += relTableRowLabel ?? ''
+            continue
+          }
           label += this.data?.[field.name] ?? `('${field.name}' ist leer)`
-        } else {
-          label += el.text ?? ''
+          continue
         }
+        label += el.text ?? ''
       }
       return label
     })()

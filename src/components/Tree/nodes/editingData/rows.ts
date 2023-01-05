@@ -1,4 +1,4 @@
-import { dexie, Row } from '../../../../dexieClient'
+import { dexie } from '../../../../dexieClient'
 import rowsWithLabelFromRows from '../../../../utils/rowsWithLabelFromRows'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 import rowTableNodes from './rowTables'
