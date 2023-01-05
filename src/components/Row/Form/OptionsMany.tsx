@@ -3,7 +3,7 @@ import sortBy from 'lodash/sortBy'
 
 import Select from '../../shared/Select'
 
-import { dexie, Row, Field, Table } from '../../../dexieClient'
+import { dexie, Field } from '../../../dexieClient'
 
 type Props = {
   field: Field
@@ -12,34 +12,31 @@ type Props = {
   error: string
   disabled: boolean
 }
-type DataType = {
-  optionRows: Row[]
-  optionTable: Table
-}
 
 const OptionsMany = ({ field, rowState, onBlur, error, disabled }: Props) => {
-  const data: DataType = useLiveQuery(async () => {
-    const [optionRows, optionTable] = await Promise.all(
-      dexie.rows
-        .filter(
-          (r) =>
-            r.table_id === (field?.options_table ?? field?.table_rel) &&
-            !!r.data,
-        )
-        .toArray(),
-      dexie.ttables.get(field?.options_table ?? field?.table_rel),
-    )
-    return { optionRows, optionTable }
+  const options = useLiveQuery(async () => {
+    const optionRows = await dexie.rows
+      .filter(
+        (r) =>
+          r.table_id === (field?.options_table ?? field?.table_rel) && !!r.data,
+      )
+      .toArray()
+
+    const data = []
+    for (const row of optionRows ?? []) {
+      const label = await row.label
+      data.push({ value: row.id, label })
+    }
+
+    return data
   })
-  const optionRowsData = data?.optionRows.map((r) => r.data) ?? []
-  const optionTable: Table = data?.optionTable
-  const isIdValueList = optionTable?.type === 'id_value_list'
-  const optionValues = optionRowsData.map((d) => ({
-    value: field?.table_rel ? d.id : isIdValueList ? d.id : d.value,
-    label: field?.table_rel ? optionTable.name : d.value,
-  }))
+  const optionValues = options ?? []
   const optionValuesSorted = sortBy(optionValues, 'label')
-  console.log('OptionsMany', { optionRowsData, optionTable, field })
+  // console.log('OptionsMany', {
+  //   optionRows,
+  //   field,
+  //   data,
+  // })
 
   return (
     <Select
