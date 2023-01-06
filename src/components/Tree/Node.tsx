@@ -178,8 +178,8 @@ const Node = ({ node, style, dragHandle, nodes }) => {
     [data.id, editingProjects, setProjectEditing],
   )
   const isOpen = useMemo(
-    () => isNodeOpen({ nodes, activeNodeArray: data.activeNodeArray }),
-    [data.activeNodeArray],
+    () => isNodeOpen({ nodes, url: data.activeNodeArray }),
+    [data.activeNodeArray, nodes],
   )
   const onClickToggle = useCallback(
     (e) => {

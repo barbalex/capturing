@@ -1,4 +1,4 @@
-import { dexie, Table } from '../../../../dexieClient'
+import { dexie } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../../../../utils/isNodeOpen'
