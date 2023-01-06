@@ -81,7 +81,15 @@ const TreeComponent = React.forwardRef((props, ref) => {
               height={height}
               width={width}
             >
-              {Node}
+              {({ node, style, tree, dragHandle }) => (
+                <Node
+                  node={node}
+                  style={style}
+                  tree={tree}
+                  dragHandle={dragHandle}
+                  nodes={nodes}
+                />
+              )}
             </Tree>
           )}
         </AutoSizer>

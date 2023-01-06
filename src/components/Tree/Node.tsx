@@ -1,4 +1,4 @@
-import { useContext, useCallback } from 'react'
+import { useContext, useCallback, useMemo } from 'react'
 import {
   MdChevronRight as ChevronRightIcon,
   MdExpandMore as ExpandMoreIcon,
@@ -14,6 +14,7 @@ import { orange } from '@mui/material/colors'
 import storeContext from '../../storeContext'
 import EditIcon from '../../images/icons/edit_project'
 import { dexie } from '../../dexieClient'
+import isNodeOpen from '../../utils/isNodeOpen'
 
 const Container = styled.div``
 const Indent = styled.div`
@@ -46,11 +47,12 @@ const ProjectEditIconButton = styled(IconButton)`
   }
 `
 
-const Node = ({ node, style, tree, dragHandle }) => {
+// tree is passed in but not used
+const Node = ({ node, style, dragHandle, nodes }) => {
   const { rowId } = useParams()
   const navigate = useNavigate()
   const data = node.data
-  // console.log('Node', { node, style, data, tree, dragHandle, rowId })
+  // console.log('Node', { node, style, data, dragHandle, rowId })
 
   const store = useContext(storeContext)
   const {
@@ -175,20 +177,24 @@ const Node = ({ node, style, tree, dragHandle }) => {
     },
     [data.id, editingProjects, setProjectEditing],
   )
+  const isOpen = useMemo(
+    () => isNodeOpen({ nodes, activeNodeArray: data.activeNodeArray }),
+    [data.activeNodeArray],
+  )
   const onClickToggle = useCallback(
     (e) => {
       e.stopPropagation()
       // adjust nodes
       node.toggle(e)
       // console.log('Node, onClickToggle', { state, data })
-      if (node.isOpen) {
+      if (isOpen) {
         removeNodeWithChildren(data.activeNodeArray)
       } else {
         // TODO: add this nodes folders?
         addNode(data.activeNodeArray)
       }
     },
-    [addNode, data.activeNodeArray, node, removeNodeWithChildren],
+    [addNode, data.activeNodeArray, isOpen, node, removeNodeWithChildren],
   )
 
   // if node is project and user is manager, show structure editing IconButton
@@ -213,7 +219,7 @@ const Node = ({ node, style, tree, dragHandle }) => {
         >
           {!data.childrenCount ? (
             <NoChildren>-</NoChildren>
-          ) : node.isOpen ? (
+          ) : isOpen ? (
             <ExpandMoreIcon />
           ) : (
             <ChevronRightIcon />

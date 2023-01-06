@@ -53,7 +53,8 @@ const StyledSplitPane = styled(SplitPane)`
 
 const RowComponent = ({ filter: showFilter }) => {
   const params = useParams()
-  const { rowId } = params
+  const { rowId: rowId1, rowId2, rowId3 } = params
+  const rowId = rowId3 ?? rowId2 ?? rowId1
   // const url = params['*']
   // const showHistory = url?.endsWith('history')
   const store = useContext(StoreContext)
