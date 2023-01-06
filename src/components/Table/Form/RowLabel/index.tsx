@@ -68,7 +68,7 @@ const RowLabel = ({ useLabels, rowState, updateOnServer }: Props) => {
   const onDragEnd = useCallback(
     (result) => {
       // TODO:
-      console.log('onDragEnd, result:', result)
+      // console.log('onDragEnd, result:', result)
       const { destination, source, draggableId } = result
       // if (!destination) {
       //   return
