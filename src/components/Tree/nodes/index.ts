@@ -1,7 +1,8 @@
+// import { getSnapshot } from 'mobx-state-tree'
+
 import { dexie, Project } from '../../../dexieClient'
 import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
-import isNodeOpen from '../../../utils/isNodeOpen'
 import tableNodesEditingData from './editingData/tables'
 import projectFoldersEditingProject from './editingProject/projectFolders'
 
@@ -19,7 +20,6 @@ const buildNodes = async ({
 
   const projectNodes = []
   for (const project of projects) {
-    const isOpen = isNodeOpen({ nodes, url: ['projects', project.id] })
     const editing = editingProjects[project.id]?.editing ?? false
 
     const children = editing
@@ -42,7 +42,7 @@ const buildNodes = async ({
           .where({ deleted: 0, project_id: project.id })
           .count()
 
-    // console.log({
+    // console.log('buildNodes', {
     //   children,
     //   nodes: getSnapshot(nodes),
     //   childrenCount,
@@ -59,12 +59,13 @@ const buildNodes = async ({
       type: 'project',
       object: project,
       activeNodeArray: ['projects', project.id],
-      isOpen, // TODO: what for?
       children,
       childrenCount,
     }
     projectNodes.push(node)
   }
+
+  // console.log('buildNodes', { projectNodes })
 
   return projectNodes
 }

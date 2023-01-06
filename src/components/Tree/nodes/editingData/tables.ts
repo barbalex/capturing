@@ -1,4 +1,6 @@
-import { dexie, Table } from '../../../../dexieClient'
+// import { getSnapshot } from 'mobx-state-tree'
+
+import { dexie } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../../../../utils/isNodeOpen'
@@ -12,7 +14,7 @@ const tableNodesEditingData = async ({
   rowId2,
   nodes,
 }) => {
-  // console.log('tableNodesEditingData', { nodes: nodes.slice() })
+  // console.log('tableNodesEditingData', { nodes: getSnapshot(nodes) })
   // return if parent does not exist (in nodes)
   if (!isNodeOpen({ nodes, url: ['projects', project.id] })) return []
 
@@ -27,14 +29,10 @@ const tableNodesEditingData = async ({
     objects: tables,
     useLabels: project.use_labels,
   })
+  // console.log('tableNodesEditingData', { tablesSorted })
 
   const tableNodes = []
   for (const table of tablesSorted) {
-    const isOpen = isNodeOpen({
-      nodes,
-      url: ['projects', table.project_id, 'tables', table.id],
-    })
-
     const node = {
       id: table.id,
       label: labelFromLabeledTable({
@@ -44,7 +42,6 @@ const tableNodesEditingData = async ({
       type: 'table',
       object: table,
       activeNodeArray: ['projects', table.project_id, 'tables', table.id],
-      isOpen,
       children: await rowNodes({
         project,
         table,
@@ -60,6 +57,7 @@ const tableNodesEditingData = async ({
     }
     tableNodes.push(node)
   }
+  // console.log('tableNodesEditingData', { tableNodes })
 
   return tableNodes
 }

@@ -52,7 +52,7 @@ const Node = ({ node, style, dragHandle, nodes }) => {
   const { rowId } = useParams()
   const navigate = useNavigate()
   const data = node.data
-  // console.log('Node', { node, style, data, dragHandle, rowId })
+  // console.log('Node', getSnapshot(nodes))
 
   const store = useContext(storeContext)
   const {
@@ -184,15 +184,15 @@ const Node = ({ node, style, dragHandle, nodes }) => {
   const onClickToggle = useCallback(
     (e) => {
       e.stopPropagation()
-      // adjust nodes
-      node.toggle(e)
       // console.log('Node, onClickToggle', { state, data })
       if (isOpen) {
-        removeNodeWithChildren(data.activeNodeArray)
+        return removeNodeWithChildren(data.activeNodeArray)
       } else {
         // TODO: add this nodes folders?
         addNode(data.activeNodeArray)
       }
+      // adjust nodes
+      node.toggle(e)
     },
     [addNode, data.activeNodeArray, isOpen, node, removeNodeWithChildren],
   )

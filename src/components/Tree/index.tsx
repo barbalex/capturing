@@ -64,6 +64,10 @@ const TreeComponent = React.forwardRef((props, ref) => {
     [rebuildTree],
   )
 
+  // console.log('TreeComponent', { data, nodes: getSnapshot(nodes) })
+
+  // Key on Tree needed
+  // Without the key in Tree sometimes the tree is not rendered when data changes i.e. children are added
   return (
     <Container ref={ref}>
       {!!data && (
@@ -75,6 +79,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
         >
           {({ height, width }) => (
             <Tree
+              key={JSON.stringify(data)}
               data={data}
               onToggle={onToggle}
               onMove={onMove}

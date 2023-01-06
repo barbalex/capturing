@@ -2,7 +2,7 @@ import { Table } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../../../../utils/isNodeOpen'
-import rowTableRowNodes from './rowTableRows' 
+import rowTableRowNodes from './rowTableRows'
 
 const rowTableNodesEditingProject = async ({
   project,
@@ -54,17 +54,17 @@ const rowTableNodesEditingProject = async ({
       rowId2,
     })
 
-    console.log('rowTables', {
-      children,
-      project,
-      table,
-      row,
-      table2,
-      tableId,
-      tableId2,
-      rowId,
-      rowId2,
-    })
+    // console.log('rowTables', {
+    //   children,
+    //   project,
+    //   table,
+    //   row,
+    //   table2,
+    //   tableId,
+    //   tableId2,
+    //   rowId,
+    //   rowId2,
+    // })
 
     const node = {
       id: `${row.id}/${table2.id}`,

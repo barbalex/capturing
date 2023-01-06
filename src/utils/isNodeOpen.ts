@@ -1,12 +1,13 @@
-import { getSnapshot } from 'mobx-state-tree'
+// import { getSnapshot } from 'mobx-state-tree'
 import isEqual from 'lodash/isEqual'
 
 const isNodeOpen = ({ nodes = [], url }) => {
   if (!url) return false
 
-  console.log('isNodeOpen', { nodes: getSnapshot(nodes), url })
+  const isOpen = nodes.some((n) => isEqual(n, url))
+  // console.log('isNodeOpen', { nodes: getSnapshot(nodes), url, isOpen })
 
-  return nodes.some((n) => isEqual(n, url))
+  return isOpen
 }
 
 export default isNodeOpen

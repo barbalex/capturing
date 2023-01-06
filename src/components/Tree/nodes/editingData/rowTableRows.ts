@@ -1,4 +1,4 @@
-import { dexie, Row } from '../../../../dexieClient'
+import { dexie } from '../../../../dexieClient'
 import rowsWithLabelFromRows from '../../../../utils/rowsWithLabelFromRows'
 import isNodeOpen from '../../../../utils/isNodeOpen'
 
@@ -13,7 +13,7 @@ const rowTableRowNodes = async ({
   rowId,
   rowId2,
 }) => {
-  console.log('rowTableRows')
+  // console.log('rowTableRows')
   // return if parent is not open (in nodes)
   if (
     !isNodeOpen({
@@ -31,7 +31,7 @@ const rowTableRowNodes = async ({
       ],
     })
   ) {
-    console.log('rowTableRows returning due to node not open')
+    // console.log('rowTableRows returning due to node not open')
     return []
   }
 
@@ -57,7 +57,6 @@ const rowTableRowNodes = async ({
 
   const rowNodes = []
   for (const row2 of row2sWithLabels) {
-    const isOpen = rowId2 === row2.id
     // const fieldsWithRelation = await dexie.fields
     //   .where({ deleted: 0, table_rel: table2.id })
     //   .toArray()
@@ -90,7 +89,6 @@ const rowTableRowNodes = async ({
         'rows',
         row2.id,
       ],
-      isOpen,
       // TODO:
       // if: exist tables with field table_rel referencing this table
       // add table nodes and child row nodes
