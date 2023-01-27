@@ -8,7 +8,6 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { MobxStore } from './store'
 import materialTheme from './utils/materialTheme'
 import { Provider as MobxProvider } from './storeContext'
-import Layout from './components/Layout'
 import Notifications from './components/Notifications'
 import { dexie } from './dexieClient'
 import activeNodeArrayFromUrl from './utils/activeNodeArrayFromUrl'
@@ -102,9 +101,7 @@ function App() {
               <ResetPassword />
               <QueuedUpdatesWriter />
               <ApiDetector />
-              <Layout>
-                <RouterComponent />
-              </Layout>
+              <RouterComponent />
               <Notifications />
             </QueryClientProvider>
           </MobxProvider>

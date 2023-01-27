@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Outlet } from 'react-router-dom'
 
 import Header from './Header'
 
@@ -7,15 +8,11 @@ const Container = styled.div`
   width: 100%;
 `
 
-const Layout = ({ children }) => {
-  // console.log('Layout rendering')
-
-  return (
-    <Container>
-      <Header />
-      {children}
-    </Container>
-  )
-}
+const Layout = () => (
+  <Container>
+    <Header />
+    <Outlet />
+  </Container>
+)
 
 export default Layout
