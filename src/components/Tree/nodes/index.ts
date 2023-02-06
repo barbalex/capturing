@@ -4,7 +4,7 @@ import { dexie, Project } from '../../../dexieClient'
 import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import tableNodesEditingData from './editingData/tables'
-import projectFoldersEditingProject from './editingProject/projectFolders'
+import projectFoldersEditingProject from './editingProject/projectFolders' 
 
 const buildNodes = async ({
   rowId,

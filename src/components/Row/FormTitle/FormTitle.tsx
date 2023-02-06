@@ -31,6 +31,7 @@ const Title = styled.div`
   font-weight: bold;
   margin-top: auto;
   margin-bottom: auto;
+  padding-left: 10px;
   user-select: none;
 `
 const TitleSymbols = styled.div`

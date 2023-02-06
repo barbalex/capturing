@@ -34,6 +34,7 @@ const Title = styled.div`
   margin-top: auto;
   margin-bottom: auto;
   padding-right: 40px;
+  padding-left: 10px;
   user-select: none;
   height: 52px;
   line-height: 52px;
