@@ -91,10 +91,12 @@ const getCapabilitiesDataForTileLayer = async ({
         v.toLowerCase().includes('image'),
       )
     const preferedFormat =
-      _wmsFormatValues.find((v) => v?.toLowerCase?.().includes('image/png')) ??
-      _wmsFormatValues.find((v) => v?.toLowerCase?.().includes('png')) ??
-      _wmsFormatValues.find((v) => v?.toLowerCase?.().includes('image/jpeg')) ??
-      _wmsFormatValues.find((v) => v?.toLowerCase?.().includes('jpeg'))
+      _wmsFormatValues?.find((v) => v?.toLowerCase?.().includes('image/png')) ??
+      _wmsFormatValues?.find((v) => v?.toLowerCase?.().includes('png')) ??
+      _wmsFormatValues?.find((v) =>
+        v?.toLowerCase?.().includes('image/jpeg'),
+      ) ??
+      _wmsFormatValues?.find((v) => v?.toLowerCase?.().includes('jpeg'))
     if (preferedFormat) {
       values.wms_format = preferedFormat
     }

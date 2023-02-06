@@ -1,4 +1,4 @@
-import { useEffect, useContext, useRef, useCallback } from 'react'
+import { useEffect, useContext, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from '@emotion/styled'
 import SplitPane from 'react-split-pane'
@@ -45,8 +45,6 @@ const Container = styled.div`
   position: relative;
 `
 
-const standardWidth = 500
-
 /**
  * TODO:
  * try using split (https://github.com/nathancahill/split/tree/master/packages/react-split)
@@ -56,22 +54,12 @@ const standardWidth = 500
 
 const ProjectsPage = () => {
   const store = useContext(StoreContext)
-  const { setFormHeight, showTree, showForm, showMap, mapInitiated, session } =
-    store
+  const { showTree, showForm, showMap, mapInitiated, session } = store
 
   // console.log('Projects, mapInitiated:', mapInitiated)
 
   const containerEl = useRef(null)
   const treeEl = useRef(null)
-
-  const setDimensions = useCallback(() => {
-    setFormHeight(containerEl?.current?.clientHeight ?? standardWidth)
-  }, [setFormHeight])
-  // re-calc dimensions every time containerEl changes
-  useEffect(() => {
-    setDimensions()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setDimensions, containerEl?.current])
 
   useEffect(() => {
     document.title = 'Erfassen: Projekte'

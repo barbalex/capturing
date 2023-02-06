@@ -37,7 +37,6 @@ export const MobxStore = types
     singleColumnView: types.optional(types.boolean, false),
     showTreeInSingleColumnView: types.optional(types.boolean, false),
     subscriptionState: types.optional(types.string, 'INITIAL'),
-    formHeight: types.optional(types.number, 500),
     filterWidth: types.optional(types.number, 500),
     online: types.optional(types.boolean, true),
     // setting bounds works imperatively with map.fitBounds since v3
@@ -175,9 +174,6 @@ export const MobxStore = types
       },
       setOnline(val) {
         self.online = val
-      },
-      setFormHeight(val) {
-        self.formHeight = val
       },
       setFilterWidth(val) {
         self.filterWidth = val

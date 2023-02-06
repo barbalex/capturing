@@ -1,4 +1,4 @@
-import { useEffect, useContext, useRef, useCallback } from 'react'
+import { useEffect, useContext, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from '@emotion/styled'
 import SplitPane from 'react-split-pane'
@@ -45,7 +45,6 @@ const StyledMotionDiv = styled(motion.div)`
   height: 100%;
 `
 
-const standardWidth = 500
 export const resizerWidth = 5
 
 const PageLayout = ({ children }) => children
@@ -108,7 +107,6 @@ const animate = {
 const ProjectsPage = () => {
   const store = useContext(StoreContext)
   const {
-    setFormHeight,
     showTree,
     showForm,
     showMap,
@@ -124,15 +122,6 @@ const ProjectsPage = () => {
 
   const containerEl = useRef(null)
   const treeEl = useRef(null)
-
-  const setDimensions = useCallback(() => {
-    setFormHeight(containerEl?.current?.clientHeight ?? standardWidth)
-  }, [setFormHeight])
-  // re-calc dimensions every time containerEl changes
-  useEffect(() => {
-    setDimensions()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setDimensions, containerEl?.current])
 
   useEffect(() => {
     document.title = 'Erfassen: Projekte'
