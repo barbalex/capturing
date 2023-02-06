@@ -3,7 +3,6 @@ import { observer } from 'mobx-react-lite'
 import styled from '@emotion/styled'
 import { FaPlus } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
-import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate } from 'react-router-dom'
 
@@ -50,12 +49,13 @@ const TitleSymbols = styled.div`
 `
 const FieldsContainer = styled.div`
   height: 100%;
+  overflow: auto;
 `
 
 const Projects = () => {
   const navigate = useNavigate()
   const store = useContext(storeContext)
-  const { formHeight, setProjectEditing } = store
+  const { setProjectEditing } = store
 
   const data = useLiveQuery(async () => {
     const [projects, account, filteredCount, totalCount] = await Promise.all([
@@ -110,15 +110,9 @@ const Projects = () => {
           </TitleSymbols>
         </TitleContainer>
         <FieldsContainer>
-          <Virtuoso
-            height={formHeight}
-            totalCount={projects.length}
-            itemContent={(index) => {
-              const row = projects[index]
-
-              return <Row key={row?.id} row={row} />
-            }}
-          />
+          {projects.map((row) => (
+            <Row key={row?.id} row={row} />
+          ))}
         </FieldsContainer>
       </Container>
     </ErrorBoundary>
