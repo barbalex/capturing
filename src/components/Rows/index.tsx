@@ -1,11 +1,7 @@
-import React, { useContext } from 'react'
-import { observer } from 'mobx-react-lite'
 import styled from '@emotion/styled'
-import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
-import storeContext from '../../storeContext'
 import RowComponent from './Row'
 import RowsTitle from './RowsTitle'
 import ErrorBoundary from '../shared/ErrorBoundary'
@@ -20,15 +16,13 @@ const Container = styled.div`
 `
 const RowsContainer = styled.div`
   height: 100%;
+  overflow: auto;
 `
 
 type RowsWithLabel = Row & { label: string }
 
 const RowsComponent = () => {
   const { tableId, tableId2 } = useParams()
-
-  const store = useContext(storeContext)
-  const { formHeight } = store
 
   // console.log('RowsList rendering')
 
@@ -46,19 +40,13 @@ const RowsComponent = () => {
       <Container showfilter={false}>
         <RowsTitle rowsWithLabel={rowsWithLabel} />
         <RowsContainer>
-          <Virtuoso
-            height={formHeight}
-            totalCount={rowsWithLabel.length}
-            itemContent={(index) => {
-              const row = rowsWithLabel[index]
-
-              return <RowComponent key={row.id} row={row} />
-            }}
-          />
+          {rowsWithLabel.map((row) => (
+            <RowComponent key={row.id} row={row} />
+          ))}
         </RowsContainer>
       </Container>
     </ErrorBoundary>
   )
 }
 
-export default observer(RowsComponent)
+export default RowsComponent
