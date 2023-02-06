@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from '@emotion/styled'
-import { Virtuoso } from 'react-virtuoso'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
@@ -10,7 +9,6 @@ import storeContext from '../../storeContext'
 import Item from './Item'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import { dexie, Project, Field } from '../../dexieClient'
-import HeightPreservingItem from '../shared/HeightPreservingItem'
 import Title from './Title'
 
 const Container = styled.div`
@@ -31,7 +29,7 @@ const RowsContainer = styled.div`
 const FieldsComponent = () => {
   const { projectId, tableId } = useParams()
   const store = useContext(storeContext)
-  const { formHeight, setFieldSorter, rebuildTree, session } = store
+  const { setFieldSorter, rebuildTree, session } = store
 
   // console.log('FieldsList rendering, tableId:', tableId)
 
@@ -115,46 +113,27 @@ const FieldsComponent = () => {
         <RowsContainer>
           {!!items.length && (
             <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable
-                droppableId="droppable"
-                mode="virtual"
-                renderClone={(provided, snapshot, rubric) => (
-                  <Item
-                    provided={provided}
-                    isDragging={snapshot.isDragging}
-                    item={items[rubric.source.index]}
-                    project={project}
-                  />
-                )}
-              >
+              <Droppable droppableId="droppable">
                 {(provided) => (
-                  <Virtuoso
-                    components={{
-                      Item: HeightPreservingItem,
-                    }}
-                    scrollerRef={provided.innerRef}
-                    data={items}
-                    height={formHeight}
-                    totalCount={items.length}
-                    itemContent={(index, item) => {
-                      return (
-                        <Draggable
-                          draggableId={item.id}
-                          index={index}
-                          key={item.id}
-                        >
-                          {(provided) => (
-                            <Item
-                              provided={provided}
-                              item={item}
-                              isDragging={false}
-                              project={project}
-                            />
-                          )}
-                        </Draggable>
-                      )
-                    }}
-                  />
+                  <div {...provided.droppableProps} ref={provided.innerRef}>
+                    {items.map((item, index) => (
+                      <Draggable
+                        draggableId={item.id}
+                        index={index}
+                        key={item.id}
+                      >
+                        {(provided) => (
+                          <Item
+                            provided={provided}
+                            item={item}
+                            isDragging={false}
+                            project={project}
+                          />
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
                 )}
               </Droppable>
             </DragDropContext>
