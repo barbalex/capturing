@@ -3,7 +3,6 @@ import { observer } from 'mobx-react-lite'
 import styled from '@emotion/styled'
 import { FaPlus, FaArrowUp } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
-import { Virtuoso } from 'react-virtuoso'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams, useNavigate, Link, resolvePath } from 'react-router-dom'
 
@@ -48,6 +47,7 @@ const TitleSymbols = styled.div`
 `
 const RowsContainer = styled.div`
   height: 100%;
+  overflow: auto;
 `
 
 const TablesComponent = () => {
@@ -57,8 +57,7 @@ const TablesComponent = () => {
   // console.log('TablesComponent', { projectId, tableId, rowId })
 
   const store = useContext(storeContext)
-  const { activeNodeArray, removeNode, formHeight, editingProjects, session } =
-    store
+  const { activeNodeArray, removeNode, editingProjects, session } = store
   const editing = editingProjects.get(projectId)?.editing ?? false
 
   const criteria = { deleted: 0, project_id: projectId }
@@ -138,15 +137,9 @@ const TablesComponent = () => {
           </TitleSymbols>
         </TitleContainer>
         <RowsContainer>
-          <Virtuoso
-            height={formHeight}
-            totalCount={tables.length}
-            itemContent={(index) => {
-              const row = tables[index]
-
-              return <Row key={row.id} row={row} useLabels={useLabels} />
-            }}
-          />
+          {tables.map((row) => (
+            <Row key={row.id} row={row} useLabels={useLabels} />
+          ))}
         </RowsContainer>
       </Container>
     </ErrorBoundary>
