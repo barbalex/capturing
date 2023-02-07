@@ -25,6 +25,10 @@ const RowsComponent = () => {
   const { tableId, tableId2 } = useParams()
 
   // console.log('RowsList rendering')
+  // TODO:
+  // Check if row has field with table_rel
+  // If so, check if that table is in higher up tableId(s)
+  // If so, then that table's active row's id is the filter value for that field
 
   const rowsWithLabel: RowsWithLabel[] =
     useLiveQuery(async () => {
