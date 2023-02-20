@@ -148,13 +148,13 @@ const Home = () => {
               <Card>
                 <CardTitle>Mit wem du willst</CardTitle>
                 <p>Neue Mitarbeitende einfach ergänzen.</p>
-                <p>Egal, wie viele.</p>
+                <p>Egal wie viele.</p>
               </Card>
               <Card>
                 <CardTitle>Mit deinem Gerät</CardTitle>
                 <p>Handy, Tablet, Notebook, PC…</p>
                 <p>Windows, MacOS, Android, iOS, Linux…</p>
-                <p>Egal was. Egal wieviele.</p>
+                <p>Egal was. Egal wie viele.</p>
               </Card>
               <Card>
                 <CardTitle>Mit minimalem Aufwand</CardTitle>
