@@ -6,8 +6,8 @@ import MaterialCard from '@mui/material/Card'
 
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 import constants from '../utils/constants'
-import image from '../images/puls_vulg.jpg'
-import placeholderSrc from '../images/puls_vulg_small.jpg'
+import image from '../images/lk.webp'
+import placeholderSrc from '../images/lk_small.webp'
 import ProgressiveImg from '../components/shared/ProgressiveImg'
 
 const OuterContainer = styled.div`
@@ -67,12 +67,12 @@ const CardContainer = styled.div`
 `
 const Card = styled(MaterialCard)`
   padding: 30px;
-  /* color: white; */
+  color: #210148;
   background-color: rgba(74, 20, 140, 0.03) !important;
   outline: rgba(74, 20, 140, 0.3) 1px solid;
   font-weight: 700;
   font-size: 1.2em !important;
-  text-shadow: 0.5px 0.5px 1px white;
+  text-shadow: 1px 1px 2px white;
   ul {
     margin-bottom: 0;
   }
@@ -87,8 +87,8 @@ const PageTitle = styled(Typography)`
   font-size: 2.5em !important;
   padding-bottom: 15px;
   font-weight: 700 !important;
-  text-shadow: 0.5px 0.5px 1px white;
-  /* color: white; */
+  text-shadow: 1px 1px 2px white;
+  color: #210148;
   @media (min-width: 700px) {
     padding-bottom: 20px;
   }
@@ -151,7 +151,7 @@ const Home = () => {
                 <p>Egal wie viele.</p>
               </Card>
               <Card>
-                <CardTitle>Mit deinem Gerät</CardTitle>
+                <CardTitle>Mit deinen Geräten</CardTitle>
                 <p>Handy, Tablet, Notebook, PC…</p>
                 <p>Windows, MacOS, Android, iOS, Linux…</p>
                 <p>Egal was. Egal wie viele.</p>
@@ -198,7 +198,7 @@ const Home = () => {
                 <p>Kontaktiere mich.</p>
               </Card>
               <Card>
-                <CardTitle>Beratung und Mass-Anfertigung</CardTitle>
+                <CardTitle>Beratung, Mass-Anfertigung</CardTitle>
                 <p>
                   Gerne helfe ich, für deine Bedürfnisse die optimale
                   Datenstruktur zu finden.
