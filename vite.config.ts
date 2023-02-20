@@ -3,6 +3,9 @@ import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from 'vite-plugin-pwa'
 import svgrPlugin from 'vite-plugin-svgr'
 
+// build works but preview fails:
+// https://github.com/vitejs/vite/issues/10542#issuecomment-1437037545
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -51,12 +54,6 @@ export default defineConfig({
             sizes: '512x512',
             type: 'image/png',
           },
-          // {
-          //   src: '/android-chrome-512x512.png',
-          //   sizes: '512x512',
-          //   type: 'image/png',
-          //   purpose: 'any maskable',
-          // },
         ],
         categories: ['business', 'productivity'],
         screenshots: [],
