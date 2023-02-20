@@ -49,7 +49,7 @@ const OfflineMaps = () => {
         needed for the same area, to account for different zoom levels.
       </p>
       <p>
-        Also: wmts servers will usually fail when requested to deliver very
+        Also: WMTS servers will usually fail when requested to deliver very
         large amounts of data. Their failure-threshold can vary, making
         automated pre-downloading hard.
       </p>

@@ -30,7 +30,7 @@ const ImageLayerTypes = () => {
         </a>
         , defined by the Open Geospatial Consortium.
       </p>
-      <p>A WMS-Server returns a single map image for the requested region.</p>
+      <p>A WMS server returns a single map image for the requested region.</p>
 
       <h3>2. WMTS: Web Map Tiling Service</h3>
       <p>

@@ -63,12 +63,12 @@ const DataSynchronisation = () => {
           Vector data: If it was uploaded to erfassen.app, it is directly
           downloaded.
           <br />
-          If it originates from a wfs service, the app fetches it from the wfs
+          If it originates from a WFS service, the app fetches it from the WFS
           service (if necessary)
         </li>
         <li>
           WMTS image data: TODO: Image data is (not) automatically fetched from
-          the wmts service?
+          the WMTS service?
         </li>
         <li>
           WMS maps are (currently){' '}

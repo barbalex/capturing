@@ -22,9 +22,9 @@ const StyledListItem = styled(ListItem)`
   margin: -1px 0;
   padding: 10px;
   ${(props) =>
-    props['data-active'] && `background-color: rgba(74, 20, 140, 0.03);`}
+    props['data-active'] && `background-color: rgba(74, 20, 140, 0.09);`}
   &:hover {
-    background-color: rgba(74, 20, 140, 0.03);
+    background-color: rgba(74, 20, 140, 0.06);
   }
 `
 

@@ -60,7 +60,7 @@ const DataVersioning = () => {
 
       <ul>
         <li>
-          Rows are never edited. Instead, every edit leads to a new version
+          Rows are never edited. Instead, every edit creates a new version
         </li>
         <li>Rows keep a list of their ancestors (preceding versions)</li>
         <li>
@@ -123,7 +123,7 @@ const DataVersioning = () => {
           </li>
         </ul>
         <li>
-          Changes in a winning tables are immediately synced when the app is
+          Changes in winning tables are immediately synced when the app is
           active and online. Or as soon as that happens
         </li>
         <li>If conflicts exist, the app informs the user</li>
