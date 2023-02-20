@@ -328,7 +328,7 @@ pre::-webkit-scrollbar-thumb {
 }
 
 .emoji.happysmile {
-  background-image: url(./images/emoji/1F642.png);
+  background-image: url(/src/images/emoji/1F642.png);
 }
 
 .toolbar {
@@ -462,7 +462,7 @@ svg.chevron-down {
   display: inline-block;
   height: 8px;
   width: 8px;
-  background-image: url(images/icons/chevron-down.svg);
+  background-image: url(/src/images/icons/chevron-down.svg);
 }
 
 #block-controls button:hover {
@@ -579,7 +579,7 @@ svg.chevron-down {
 }
 
 .link-editor div.link-edit {
-  background-image: url(images/icons/pencil-fill.svg);
+  background-image: url(/src/images/icons/pencil-fill.svg);
   background-size: 16px;
   background-position: center;
   background-repeat: no-repeat;
