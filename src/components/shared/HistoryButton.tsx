@@ -25,9 +25,9 @@ const StyledIconButton = styled(IconButton)`
     'box-shadow:inset 0px 0px 0px 1px rgba(0, 0, 0, 0.04);'}
 `
 
-const HistoryButton = ({ asMenu, showHistory, setShowHistory }) => {
+const HistoryButton = ({ asMenu, showHistory, setShowHistory, level }) => {
   const params = useParams()
-  const { rowId } = params
+  const rowId = params[`rowId${level}`]
   const url = params['*']
   const isHistory = url?.endsWith('history')
   const store = useContext(StoreContext)

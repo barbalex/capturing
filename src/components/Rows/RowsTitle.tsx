@@ -45,12 +45,13 @@ const TitleSymbols = styled.div`
 type RowsWithLabel = Row & { label: string }
 type Props = {
   rowsWithLabel: RowsWithLabel
+  level: number
 }
 
-const RowsTitle = ({ rowsWithLabel }: Props) => {
+const RowsTitle = ({ rowsWithLabel, level }: Props) => {
   const params = useParams()
-  const projectId = params?.projectId
-  const tableId = params?.tableId2 ?? params?.tableId
+  const projectId = params.projectId
+  const tableId = params[`tableId${level}`]
   const navigate = useNavigate()
 
   const store = useContext(storeContext)

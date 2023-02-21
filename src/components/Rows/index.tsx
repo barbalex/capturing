@@ -21,8 +21,9 @@ const RowsContainer = styled.div`
 
 type RowsWithLabel = Row & { label: string }
 
-const RowsComponent = () => {
-  const { tableId, tableId2 } = useParams()
+const RowsComponent = ({ level }) => {
+  const params = useParams()
+  const tableId = params[`tableId${level}`]
 
   // console.log('RowsList rendering')
   // TODO:
@@ -33,7 +34,7 @@ const RowsComponent = () => {
   const rowsWithLabel: RowsWithLabel[] =
     useLiveQuery(async () => {
       const rows = await dexie.rows
-        .where({ deleted: 0, table_id: tableId2 ?? tableId })
+        .where({ deleted: 0, table_id: tableId })
         .toArray()
 
       return await rowsWithLabelFromRows(rows)
@@ -42,7 +43,7 @@ const RowsComponent = () => {
   return (
     <ErrorBoundary>
       <Container showfilter={false}>
-        <RowsTitle rowsWithLabel={rowsWithLabel} />
+        <RowsTitle rowsWithLabel={rowsWithLabel} level={level} />
         <RowsContainer>
           {rowsWithLabel.map((row) => (
             <RowComponent key={row.id} row={row} />

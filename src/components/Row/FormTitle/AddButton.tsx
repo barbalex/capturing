@@ -6,8 +6,9 @@ import { useParams, useNavigate, resolvePath } from 'react-router-dom'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import insertRow from '../../../utils/insertRow'
 
-const RowAddButton = () => {
-  const { tableId } = useParams()
+const RowAddButton = ({ level }) => {
+  const params = useParams()
+  const tableId = params[`tableId${level}`]
   const navigate = useNavigate()
 
   const onClick = useCallback(async () => {

@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState, useContext } from 'react'
 import Dropzone from 'react-dropzone'
 import { observer } from 'mobx-react-lite'
 import styled from '@emotion/styled'
-import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import List from '@mui/material/List'
 import FormHelperText from '@mui/material/FormHelperText'
@@ -61,11 +60,11 @@ const StyledFormLabel = styled(FormLabel)`
 
 type Props = {
   field: Field
+  rowId: string
 }
 
-const Files = ({ field }: Props) => {
+const Files = ({ field, rowId }: Props) => {
   const { session } = useContext(storeContext)
-  const { rowId } = useParams()
   const filesMeta = useLiveQuery(
     async () =>
       await dexie.files_meta

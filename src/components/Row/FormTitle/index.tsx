@@ -7,8 +7,10 @@ import FilterTitle from '../../shared/FilterTitle'
 import FormTitle from './FormTitle'
 import { dexie } from '../../../dexieClient'
 
-const RowFormTitleChooser = ({ row, showHistory,setShowHistory }) => {
-  const { projectId, tableId } = useParams()
+const RowFormTitleChooser = ({ row, showHistory, setShowHistory, level }) => {
+  const params = useParams()
+  const projectId = params.projectId
+  const tableId = params[`tableId${level}`]
   // const store = useContext(storeContext)
   const showFilter = false // TODO:
 
@@ -50,6 +52,7 @@ const RowFormTitleChooser = ({ row, showHistory,setShowHistory }) => {
       table={table}
       showHistory={showHistory}
       setShowHistory={setShowHistory}
+      level={level}
     />
   )
 }

@@ -9,8 +9,10 @@ import StoreContext from '../../../storeContext'
 import { dexie } from '../../../dexieClient'
 import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
 
-const RowNavButtons = () => {
-  const { tableId, rowId } = useParams()
+const RowNavButtons = ({ level }) => {
+  const params = useParams()
+  const tableId = params[`tableId${level}`]
+  const rowId = params[`rowId${level}`]
   const store = useContext(StoreContext)
   const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 

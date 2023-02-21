@@ -63,20 +63,20 @@ function RouterComponent() {
             element={<FieldComponent />}
           />
           <Route
-            path=":projectId/tables/:tableId/rows/*"
-            element={<RowsComponent />}
+            path=":projectId/tables/:tableId1/rows/*"
+            element={<RowsComponent level={1} />}
           />
           <Route
-            path=":projectId/tables/:tableId/rows/:rowId/*"
-            element={<RowComponent />}
+            path=":projectId/tables/:tableId1/rows/:rowId1/*"
+            element={<RowComponent level={1} />}
           />
           <Route
-            path=":projectId/tables/:tableId/rows/:rowId/tables/:tableId2/*"
-            element={<RowsComponent />}
+            path=":projectId/tables/:tableId1/rows/:rowId1/tables/:tableId2/*"
+            element={<RowsComponent level={2} />}
           />
           <Route
-            path=":projectId/tables/:tableId/rows/:rowId/tables/:tableId2/rows/:rowId2/*"
-            element={<RowComponent />}
+            path=":projectId/tables/:tableId1/rows/:rowId1/tables/:tableId2/rows/:rowId2/*"
+            element={<RowComponent level={2} />}
           />
         </Route>
         <Route path="docs/*" element={<Docs />}>

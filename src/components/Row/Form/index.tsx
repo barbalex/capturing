@@ -44,6 +44,7 @@ type RowFormProps = {
   row: Row
   setActiveConflict: (string) => void
   showFilter: (boolean) => void
+  level: number
 }
 
 const RowForm = ({
@@ -52,12 +53,11 @@ const RowForm = ({
   row,
   setActiveConflict,
   showFilter,
+  level,
 }: RowFormProps) => {
   const params = useParams()
   const tableId =
-    params?.tableId2 ??
-    params?.tableId ??
-    '99999999-9999-9999-9999-999999999999'
+    params[`tableId${level}`] ?? '99999999-9999-9999-9999-999999999999'
   const projectId = params?.projectId ?? '99999999-9999-9999-9999-999999999999'
   const url = params['*']
   const showHistory = url?.endsWith('history')
@@ -313,7 +313,7 @@ const RowForm = ({
               )
               break
             case 'filepicker': // TODO:
-              return <Files key={f.id} field={f} />
+              return <Files key={f.id} field={f} rowId={row.id} />
               break
             case 'markdown': // TODO:
               return (

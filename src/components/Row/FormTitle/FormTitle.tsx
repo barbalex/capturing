@@ -49,6 +49,7 @@ const RowFormTitle = ({
   table,
   showHistory,
   setShowHistory,
+  level,
 }) => {
   const title = labelFromLabeledTable({
     object: table,
@@ -61,8 +62,8 @@ const RowFormTitle = ({
       <TitleContainer>
         <Title>{title}</Title>
         <TitleSymbols>
-          <NavButtons />
-          <AddButton />
+          <NavButtons level={level} />
+          <AddButton level={level} />
           <DeleteButton row={row} />
           <ZoomToButton bbox={row.bbox} geometryExists={!!row.geometry} />
           <Menu white={false}>
@@ -72,6 +73,7 @@ const RowFormTitle = ({
               asMenu
               showHistory={showHistory}
               setShowHistory={setShowHistory}
+              level={level}
             />
             <FilterNumbers
               filteredCount={filteredCount}
@@ -88,13 +90,14 @@ const RowFormTitle = ({
     <TitleContainer>
       <Title>{title}</Title>
       <TitleSymbols>
-        <NavButtons />
+        <NavButtons level={level} />
         <AddButton />
         <DeleteButton row={row} />
         <ZoomToButton bbox={row.bbox} geometryExists={!!row.geometry} />
         <HistoryButton
           showHistory={showHistory}
           setShowHistory={setShowHistory}
+          level={level}
         />
         <FilterNumbers filteredCount={filteredCount} totalCount={totalCount} />
       </TitleSymbols>

@@ -51,17 +51,14 @@ const StyledSplitPane = styled(SplitPane)`
   }
 `
 
-const RowComponent = ({ filter: showFilter }) => {
+const RowComponent = ({ filter: showFilter, level }) => {
   const params = useParams()
-  const { rowId: rowId1, rowId2, rowId3 } = params
-  const rowId = rowId3 ?? rowId2 ?? rowId1
+  const rowId = params[`rowId${level}`]
   // const url = params['*']
   // const showHistory = url?.endsWith('history')
   const store = useContext(StoreContext)
   const { online } = store
   const filter = 'TODO: was in store'
-
-  // console.log('RowComponent', { rowId })
 
   const row: Row = useLiveQuery(
     async () => await dexie.rows.get(rowId),
@@ -98,6 +95,7 @@ const RowComponent = ({ filter: showFilter }) => {
           showFilter={showFilter}
           showHistory={showHistory}
           setShowHistory={setShowHistory}
+          level={level}
         />
         <SplitPaneContainer>
           <StyledSplitPane
@@ -112,6 +110,7 @@ const RowComponent = ({ filter: showFilter }) => {
               row={row}
               activeConflict={activeConflict}
               setActiveConflict={setActiveConflict}
+              level={level}
             />
             <RowAside
               row={row}
