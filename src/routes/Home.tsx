@@ -147,7 +147,7 @@ const Home = () => {
               </Card>
               <Card>
                 <CardTitle>Mit wem du willst</CardTitle>
-                <p>Neue Mitarbeitende einfach ergänzen.</p>
+                <p>Mitarbeitende einfach ergänzen.</p>
                 <p>Egal wie viele.</p>
               </Card>
               <Card>
@@ -162,12 +162,12 @@ const Home = () => {
                 <p>Anmelden und loslegen.</p>
               </Card>
               <Card>
-                <CardTitle>Eine für alle, alle für eine</CardTitle>
+                <CardTitle>Eine für alle, alle für eine...</CardTitle>
                 <p>Eine Person konfiguriert.</p>
                 <p>Die übrigen können direkt erfassen.</p>
               </Card>
               <Card>
-                <CardTitle>Mit allen gleichzeitig</CardTitle>
+                <CardTitle>...alle zusammen</CardTitle>
                 <p>Daten werden live synchronisiert.</p>
                 <p>Zwei Eingaben widersprechen sich? Kein Problem:</p>
                 <p>
@@ -186,7 +186,7 @@ const Home = () => {
                 <CardTitle>Faire Preise</CardTitle>
                 <p>Es zahlt, wer Projekte konfiguriert.</p>
                 <p>Erst, wenn du Erfassen produktiv nutzt!</p>
-                <p>Erfassende zahlen nicht.</p>
+                <p>Mitarbeitende zahlen nicht.</p>
               </Card>
               <Card>
                 <CardTitle>Fragen?</CardTitle>
@@ -198,7 +198,7 @@ const Home = () => {
                 <p>Kontaktiere mich.</p>
               </Card>
               <Card>
-                <CardTitle>Beratung, Mass-Anfertigung</CardTitle>
+                <CardTitle>Beratung, Anpassung</CardTitle>
                 <p>
                   Gerne helfe ich, für deine Bedürfnisse die optimale
                   Datenstruktur zu finden.
