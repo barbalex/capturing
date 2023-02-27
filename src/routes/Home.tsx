@@ -6,9 +6,6 @@ import MaterialCard from '@mui/material/Card'
 
 import ErrorBoundary from '../components/shared/ErrorBoundary'
 import constants from '../utils/constants'
-import image from '../images/lk.webp'
-import placeholderSrc from '../images/lk_small.webp'
-import ProgressiveImg from '../components/shared/ProgressiveImg'
 
 const OuterContainer = styled.div`
   height: calc(100% - ${constants.appBarHeight}px);
@@ -117,6 +114,17 @@ const BottomSpacer = styled.div`
   }
 `
 
+const Img = styled.img`
+  display: block;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  filter: ${(props) => (props.loading ? 'blur(10px)' : 'blur(0px)')};
+  filter: opacity(0.18);
+  ${(props) => props.loading && 'clip-path: inset(0);'}
+  ${(props) => props.loaded && 'transition: filter 0.5s linear;'}
+`
+
 const Home = () => {
   useEffect(() => {
     document.title = 'Erfassen: Home'
@@ -125,7 +133,17 @@ const Home = () => {
   return (
     <ErrorBoundary>
       <OuterContainer>
-        <ProgressiveImg src={image} placeholderSrc={placeholderSrc} />
+        <picture>
+          <source
+            srcSet="home_500.avif 500w, home_800.avif 800w, home_1200.avif 1200w, home_2000.avif 2000w, home_2501.avif 2500w"
+            type="image/avif"
+          />
+          <Img
+            src="home_500.webp"
+            srcSet="home_500.webp 500w, home_800.webp 800w, home_1200.webp 1200w, home_2000.webp 2000w, home_2501.webp 2500w"
+            sizes="100vw"
+          />
+        </picture>
         <ScrollContainer>
           <Container>
             <PageTitle align="center" variant="h6" color="inherit">
