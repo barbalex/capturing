@@ -69,7 +69,7 @@ const Card = styled(MaterialCard)`
   outline: rgba(74, 20, 140, 0.3) 1px solid;
   font-weight: 700;
   font-size: 1.2em !important;
-  text-shadow: 1px 1px 2px white;
+  text-shadow: white 0 0 2px, rgba(74, 20, 140, 0.5) 0 0 5px;
   ul {
     margin-bottom: 0;
   }
@@ -84,7 +84,7 @@ const PageTitle = styled(Typography)`
   font-size: 2.5em !important;
   padding-bottom: 15px;
   font-weight: 700 !important;
-  text-shadow: 1px 1px 2px white;
+  text-shadow: white 0 0 2px, rgba(74, 20, 140, 0.5) 0 0 5px;
   color: #210148;
   @media (min-width: 700px) {
     padding-bottom: 20px;
@@ -119,10 +119,7 @@ const Img = styled.img`
   height: 100%;
   width: 100%;
   object-fit: cover;
-  filter: ${(props) => (props.loading ? 'blur(10px)' : 'blur(0px)')};
-  filter: opacity(0.18);
-  ${(props) => props.loading && 'clip-path: inset(0);'}
-  ${(props) => props.loaded && 'transition: filter 0.5s linear;'}
+  filter: opacity(0.16);
 `
 
 const Home = () => {
