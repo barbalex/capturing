@@ -65,7 +65,8 @@ const CardContainer = styled.div`
 const Card = styled(MaterialCard)`
   padding: 30px;
   color: #210148;
-  background-color: rgba(74, 20, 140, 0.03) !important;
+  /* background-color: rgba(74, 20, 140, 0.03) !important; */
+  background-color: rgba(255, 255, 255, 0.7) !important;
   outline: rgba(74, 20, 140, 0.3) 1px solid;
   font-weight: 700;
   font-size: 1.2em !important;
@@ -119,7 +120,7 @@ const Img = styled.img`
   height: 100%;
   width: 100%;
   object-fit: cover;
-  filter: opacity(0.1);
+  filter: opacity(0.3);
 `
 
 const Home = () => {
