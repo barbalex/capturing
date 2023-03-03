@@ -20,7 +20,7 @@ const EditingProject = ({ project }) => {
     }),
     type: 'project',
     object: project,
-    activeNodeArray: url,
+    url,
     children: [],
     childrenCount: 0,
   }

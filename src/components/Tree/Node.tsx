@@ -68,10 +68,10 @@ const Node = ({ node }) => {
   } = store
   const activeNodeArray = aNARaw.slice()
   const isInActiveNodeArray = isEqual(
-    activeNodeArray.slice(0, node.activeNodeArray.length),
-    node.activeNodeArray,
+    activeNodeArray.slice(0, node.url.length),
+    node.url,
   )
-  let isActive = isEqual(node.activeNodeArray, activeNodeArray.slice())
+  let isActive = isEqual(node.url, activeNodeArray.slice())
   const editing = editingProjects.get(node.object.project_id)?.editing
   // when not editing, other nodes in activeNodeArray may be active:
   if (
@@ -106,13 +106,13 @@ const Node = ({ node }) => {
   }, [session?.user?.email])
 
   const onClickIndent = useCallback(async () => {
-    // console.log({
-    //   node,
-    //   isActive,
-    //   activeNodeArray: activeNodeArray.slice(),
-    //   isInActiveNodeArray,
-    //   editing,
-    // })
+    console.log('Node, onClickIndent', {
+      node,
+      isActive,
+      activeNodeArray: activeNodeArray.slice(),
+      isInActiveNodeArray,
+      editing,
+    })
     if (
       node.type === 'project' &&
       !editingProjects.get(node.id)?.editing &&
@@ -156,12 +156,12 @@ const Node = ({ node }) => {
     addNode(node.activeNodeArray)
     navigate(`/${node.activeNodeArray.join('/')}`)
   }, [
-    node.type,
-    node.id,
-    node.activeNodeArray,
-    editingProjects,
+    node,
     isActive,
+    activeNodeArray,
+    isInActiveNodeArray,
     editing,
+    editingProjects,
     rowId,
     addNode,
     navigate,
@@ -184,7 +184,10 @@ const Node = ({ node }) => {
     [node.activeNodeArray, nodes],
   )
 
+  console.log('Node', { isOpen, node })
+
   const onClickToggle = useCallback(() => {
+    console.log('Node, onClickToggle', node)
     toggleNodeSymbol({ node, store, search, navigate })
   }, [navigate, node, search, store])
 
@@ -209,7 +212,7 @@ const Node = ({ node }) => {
           aria-label="toggle"
           size="small"
           onClick={onClickToggle}
-          disabled={!node.childrenCount}
+          // disabled={!node.childrenCount}
         >
           {!node.childrenCount ? (
             <NoChildren>-</NoChildren>
