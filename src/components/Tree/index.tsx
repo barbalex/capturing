@@ -1,10 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react'
-import { useParams } from 'react-router-dom'
-import { Tree } from 'react-arborist'
+import React, { useContext } from 'react'
 import styled from '@emotion/styled'
-import AutoSizer from 'react-virtualized-auto-sizer'
 import { observer } from 'mobx-react-lite'
-import { getSnapshot } from 'mobx-state-tree'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import Node from './Node'
@@ -17,7 +13,7 @@ import IntoViewScroller from './IntoViewScroller'
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  /* overflow: auto; */
+  overflow: auto;
 `
 
 const TreeComponent = React.forwardRef((props, ref) => {
