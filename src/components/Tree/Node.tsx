@@ -195,7 +195,10 @@ const Node = ({ node }) => {
     : `Projekt-Struktur für "${node.label}" bearbeiten`
 
   return (
-    <Container>
+    <Container
+      // need this id to scroll elements into view
+      id={node.id}
+    >
       <Indent
         data-inactivenodearray={isInActiveNodeArray}
         isSelected={isInActiveNodeArray}

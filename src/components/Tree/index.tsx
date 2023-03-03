@@ -1,10 +1,7 @@
-import React, { useContext } from 'react'
 import styled from '@emotion/styled'
-import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import Node from './Node'
-import storeContext from '../../storeContext'
 import { dexie, Project } from '../../dexieClient'
 import sortProjectsByLabelName from '../../utils/sortProjectsByLabelName'
 import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
@@ -16,9 +13,7 @@ const Container = styled.div`
   overflow: auto;
 `
 
-const TreeComponent = React.forwardRef((props, ref) => {
-  const store = useContext(storeContext)
-
+const TreeComponent = () => {
   const projects: Project[] =
     useLiveQuery(
       async () =>
@@ -26,8 +21,6 @@ const TreeComponent = React.forwardRef((props, ref) => {
           .where({ deleted: 0 })
           .sortBy('', sortProjectsByLabelName),
     ) ?? []
-
-  // console.log('Tree, data:', data)
 
   // TODO: re-enable moving vectorLayers, tileLayers, fields
   // const onMove = useCallback(
@@ -37,12 +30,8 @@ const TreeComponent = React.forwardRef((props, ref) => {
   //   [rebuildTree],
   // )
 
-  // console.log('TreeComponent', { data, nodes: getSnapshot(nodes) })
-
-  // Key on Tree needed
-  // Without the key in Tree sometimes the tree is not rendered when data changes i.e. children are added
   return (
-    <Container ref={ref}>
+    <Container>
       {projects.map((project) => {
         const node = {
           id: project.id,
@@ -62,6 +51,6 @@ const TreeComponent = React.forwardRef((props, ref) => {
       <IntoViewScroller />
     </Container>
   )
-})
+}
 
-export default observer(TreeComponent)
+export default TreeComponent
