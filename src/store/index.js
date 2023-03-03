@@ -199,8 +199,22 @@ export const MobxStore = types
       setNavigate(val) {
         return (self.navigate = val)
       },
+      addNodesForNodeArray(nodeArray) {
+        const extraOpenNodes = []
+        nodeArray.forEach((v, i) => {
+          extraOpenNodes.push(nodeArray.slice(0, i + 1))
+        })
+        this.addNodes(extraOpenNodes)
+      },
       setActiveNodeArray(val) {
+        if (isEqual(val, self.activeNodeArray)) {
+          // do not do this if already set
+          // trying to stop vicious cycle of reloading in first start after update
+          return
+        }
         self.previousActiveNodeArray = self.activeNodeArray.slice()
+        // always set missing open nodes?
+        self.addNodesForNodeArray(val)
         self.activeNodeArray = val
       },
       setNodes(val) {

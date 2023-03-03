@@ -1,11 +1,15 @@
+import { useContext } from 'react'
 import styled from '@emotion/styled'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { observer } from 'mobx-react-lite'
 
-import Node from './Node'
 import { dexie, Project } from '../../dexieClient'
 import sortProjectsByLabelName from '../../utils/sortProjectsByLabelName'
-import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
 import IntoViewScroller from './IntoViewScroller'
+import LastTouchedNodeSetter from './LastTouchedNodeSetter'
+import storeContext from '../../storeContext'
+import Editing from './Editing'
+import Viewing from './Viewing'
 
 const Container = styled.div`
   width: 100%;
@@ -14,6 +18,9 @@ const Container = styled.div`
 `
 
 const TreeComponent = () => {
+  const store = useContext(storeContext)
+  const { editingProjects } = store
+
   const projects: Project[] =
     useLiveQuery(
       async () =>
@@ -33,24 +40,18 @@ const TreeComponent = () => {
   return (
     <Container>
       {projects.map((project) => {
-        const node = {
-          id: project.id,
-          label: labelFromLabeledTable({
-            object: project,
-            useLabels: project.use_labels,
-          }),
-          type: 'project',
-          object: project,
-          activeNodeArray: ['projects', project.id],
-          children: [],
-          childrenCount: 0,
-        }
+        const editing = editingProjects[project.id]?.editing ?? false
 
-        return <Node key={project.id} node={node} />
+        return editing ? (
+          <Editing key={project.id} project={project} />
+        ) : (
+          <Viewing key={project.id} project={project} />
+        )
       })}
       <IntoViewScroller />
+      <LastTouchedNodeSetter />
     </Container>
   )
 }
 
-export default TreeComponent
+export default observer(TreeComponent)

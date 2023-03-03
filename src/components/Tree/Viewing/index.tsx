@@ -7,7 +7,7 @@ import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
 
 // TODO: fetch childrenCount
-const EditingProject = ({ project }) => {
+const ViewingProject = ({ project }) => {
   const store = useContext(storeContext)
   const { nodes } = store
 
@@ -34,4 +34,4 @@ const EditingProject = ({ project }) => {
   )
 }
 
-export default observer(EditingProject)
+export default observer(ViewingProject)
