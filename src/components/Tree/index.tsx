@@ -7,11 +7,11 @@ import { observer } from 'mobx-react-lite'
 import { getSnapshot } from 'mobx-state-tree'
 import { useLiveQuery } from 'dexie-react-hooks'
 
-import buildNodes from './nodes'
 import Node from './Node'
 import storeContext from '../../storeContext'
 import { dexie, Project } from '../../dexieClient'
 import sortProjectsByLabelName from '../../utils/sortProjectsByLabelName'
+import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
 
 const Container = styled.div`
   width: 100%;
@@ -40,29 +40,6 @@ const TreeComponent = React.forwardRef((props, ref) => {
 
   console.log('TreeComponent, projects:', projects)
 
-  const [data, setData] = useState([])
-  useEffect(() => {
-    buildNodes({
-      rowId,
-      tableId,
-      tableId2,
-      rowId2,
-      editingProjects,
-      nodes,
-    }).then((dataBuilt) => setData(dataBuilt))
-  }, [
-    projectId,
-    rowId,
-    editingProjects,
-    activeNodeArray,
-    nodes.length,
-    nodes,
-    treeRebuildCount,
-    tableId,
-    tableId2,
-    rowId2,
-  ])
-
   // console.log('Tree, data:', data)
 
   // TODO: re-enable moving vectorLayers, tileLayers, fields
@@ -79,33 +56,23 @@ const TreeComponent = React.forwardRef((props, ref) => {
   // Without the key in Tree sometimes the tree is not rendered when data changes i.e. children are added
   return (
     <Container ref={ref}>
-      {!!data && (
-        <AutoSizer
-          style={{
-            height: '100%',
-            width: '100%',
-          }}
-        >
-          {({ height, width }) => (
-            <Tree
-              key={JSON.stringify(data)}
-              data={data}
-              height={height}
-              width={width}
-            >
-              {({ node, style, tree, dragHandle }) => (
-                <Node
-                  node={node}
-                  style={style}
-                  tree={tree}
-                  dragHandle={dragHandle}
-                  nodes={nodes}
-                />
-              )}
-            </Tree>
-          )}
-        </AutoSizer>
-      )}
+      {projects.map((project) => {
+        const editing = editingProjects[project.id]?.editing ?? false
+        const node = {
+          id: project.id,
+          label: labelFromLabeledTable({
+            object: project,
+            useLabels: project.use_labels,
+          }),
+          type: 'project',
+          object: project,
+          activeNodeArray: ['projects', project.id],
+          children: [],
+          childrenCount: 0,
+        }
+
+        return <Node key={project.id} node={node} />
+      })}
     </Container>
   )
 })

@@ -1,6 +1,6 @@
 import { dexie } from '../../../../dexieClient'
 import rowsWithLabelFromRows from '../../../../utils/rowsWithLabelFromRows'
-import isNodeOpen from '../../../../utils/isNodeOpen'
+import isNodeOpen from '../../isNodeOpen'
 
 const rowTableRowNodes = async ({
   project,

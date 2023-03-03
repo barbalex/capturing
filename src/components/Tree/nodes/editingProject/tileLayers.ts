@@ -1,5 +1,5 @@
 import { dexie, TileLayer } from '../../../../dexieClient'
-import isNodeOpen from '../../../../utils/isNodeOpen'
+import isNodeOpen from '../../isNodeOpen'
 
 const tileLayerNodesEditingProject = async ({ project, nodes }) => {
   // return if parent does not exist (in nodes)

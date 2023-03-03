@@ -3,7 +3,7 @@
 import { dexie } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
-import isNodeOpen from '../../../../utils/isNodeOpen'
+import isNodeOpen from '../../isNodeOpen'
 import rowNodes from './rows'
 
 const tableNodesEditingData = async ({

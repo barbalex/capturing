@@ -2,11 +2,11 @@ import { useContext, useCallback, useMemo } from 'react'
 import {
   MdChevronRight as ChevronRightIcon,
   MdExpandMore as ExpandMoreIcon,
-} from 'react-icons/md' 
+} from 'react-icons/md'
 import IconButton from '@mui/material/IconButton'
 import styled from '@emotion/styled'
 import isEqual from 'lodash/isEqual'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { orange } from '@mui/material/colors'
@@ -14,7 +14,8 @@ import { orange } from '@mui/material/colors'
 import storeContext from '../../storeContext'
 import EditIcon from '../../images/icons/edit_project'
 import { dexie } from '../../dexieClient'
-import isNodeOpen from '../../utils/isNodeOpen'
+import isNodeOpen from './isNodeOpen'
+import toggleNodeSymbol from './toggleNodeSymbol'
 
 const Container = styled.div``
 const Indent = styled.div`
@@ -48,10 +49,10 @@ const ProjectEditIconButton = styled(IconButton)`
 `
 
 // tree is passed in but not used
-const Node = ({ node, style, dragHandle, nodes }) => {
+const Node = ({ node }) => {
   const { rowId } = useParams()
   const navigate = useNavigate()
-  const data = node.data
+  const { search } = useLocation()
   // console.log('Node', getSnapshot(nodes))
 
   const store = useContext(storeContext)
@@ -63,25 +64,26 @@ const Node = ({ node, style, dragHandle, nodes }) => {
     addNode,
     removeNodeWithChildren,
     session,
+    nodes,
   } = store
   const activeNodeArray = aNARaw.slice()
   const isInActiveNodeArray = isEqual(
-    activeNodeArray.slice(0, data.activeNodeArray.length),
-    data.activeNodeArray,
+    activeNodeArray.slice(0, node.activeNodeArray.length),
+    node.activeNodeArray,
   )
-  let isActive = isEqual(data.activeNodeArray, activeNodeArray.slice())
-  const editing = editingProjects.get(data.object.project_id)?.editing
+  let isActive = isEqual(node.activeNodeArray, activeNodeArray.slice())
+  const editing = editingProjects.get(node.object.project_id)?.editing
   // when not editing, other nodes in activeNodeArray may be active:
   if (
-    data.type === 'project' &&
-    !editingProjects.get(data.id)?.editing &&
+    node.type === 'project' &&
+    !editingProjects.get(node.id)?.editing &&
     isInActiveNodeArray &&
     activeNodeArray.length < 4
   ) {
     isActive = true
   }
   if (
-    data.type === 'table' &&
+    node.type === 'table' &&
     !editing &&
     isInActiveNodeArray &&
     activeNodeArray.length === 5
@@ -90,13 +92,13 @@ const Node = ({ node, style, dragHandle, nodes }) => {
   }
 
   // console.log('Node', {
-  //   data,
+  //   node,
   //   editing,
   // })
 
   const userMayEditStructure: boolean = useLiveQuery(async () => {
     const projectUser = await dexie.project_users.get({
-      project_id: data.id,
+      project_id: node.id,
       user_email: session?.user?.email,
     })
 
@@ -105,58 +107,58 @@ const Node = ({ node, style, dragHandle, nodes }) => {
 
   const onClickIndent = useCallback(async () => {
     // console.log({
-    //   data,
+    //   node,
     //   isActive,
     //   activeNodeArray: activeNodeArray.slice(),
     //   isInActiveNodeArray,
     //   editing,
     // })
     if (
-      data.type === 'project' &&
-      !editingProjects.get(data.id)?.editing &&
+      node.type === 'project' &&
+      !editingProjects.get(node.id)?.editing &&
       isActive
     ) {
       // if exists only one standard table, go directly to it's rows
       const tables = await dexie.ttables
         .where({
           deleted: 0,
-          project_id: data.id,
+          project_id: node.id,
           type: 'standard',
         })
         .toArray()
       if (tables.length === 1) {
-        addNode(data.activeNodeArray)
-        addNode([...data.activeNodeArray, 'tables'])
-        addNode([...data.activeNodeArray, 'tables', tables[0]?.id])
-        addNode([...data.activeNodeArray, 'tables', tables[0]?.id, 'rows'])
+        addNode(node.activeNodeArray)
+        addNode([...node.activeNodeArray, 'tables'])
+        addNode([...node.activeNodeArray, 'tables', tables[0]?.id])
+        addNode([...node.activeNodeArray, 'tables', tables[0]?.id, 'rows'])
         setActiveNodeArray([
-          ...data.activeNodeArray,
+          ...node.activeNodeArray,
           'tables',
           tables[0]?.id,
           'rows',
         ])
         navigate(
-          `/${[...data.activeNodeArray, 'tables', tables[0]?.id, 'rows'].join(
+          `/${[...node.activeNodeArray, 'tables', tables[0]?.id, 'rows'].join(
             '/',
           )}`,
         )
         return
       }
     }
-    if (data.type === 'table' && !editing && !rowId) {
-      // if editing data leave out table (nothing to edit)
-      const newANA = [...data.activeNodeArray, 'rows']
-      addNode(data.activeNodeArray)
+    if (node.type === 'table' && !editing && !rowId) {
+      // if editing node leave out table (nothing to edit)
+      const newANA = [...node.activeNodeArray, 'rows']
+      addNode(node.activeNodeArray)
       addNode(newANA)
       navigate(`/${newANA.join('/')}`)
       return
     }
-    addNode(data.activeNodeArray)
-    navigate(`/${data.activeNodeArray.join('/')}`)
+    addNode(node.activeNodeArray)
+    navigate(`/${node.activeNodeArray.join('/')}`)
   }, [
-    data.type,
-    data.id,
-    data.activeNodeArray,
+    node.type,
+    node.id,
+    node.activeNodeArray,
     editingProjects,
     isActive,
     editing,
@@ -171,43 +173,32 @@ const Node = ({ node, style, dragHandle, nodes }) => {
       // console.log('Node, onClickProjectEdit')
       e.stopPropagation()
       setProjectEditing({
-        id: data.id,
-        editing: !editingProjects.get(data.id)?.editing,
+        id: node.id,
+        editing: !editingProjects.get(node.id)?.editing,
       })
     },
-    [data.id, editingProjects, setProjectEditing],
+    [node.id, editingProjects, setProjectEditing],
   )
   const isOpen = useMemo(
-    () => isNodeOpen({ nodes, url: data.activeNodeArray }),
-    [data.activeNodeArray, nodes],
+    () => isNodeOpen({ nodes, url: node.activeNodeArray }),
+    [node.activeNodeArray, nodes],
   )
-  const onClickToggle = useCallback(
-    (e) => {
-      e.stopPropagation()
-      // console.log('Node, onClickToggle', { state, data })
-      if (isOpen) {
-        return removeNodeWithChildren(data.activeNodeArray)
-      } else {
-        // TODO: add this nodes folders?
-        addNode(data.activeNodeArray)
-      }
-      // adjust nodes
-      node.toggle(e)
-    },
-    [addNode, data.activeNodeArray, isOpen, node, removeNodeWithChildren],
-  )
+
+  const onClickToggle = useCallback(() => {
+    toggleNodeSymbol({ node, store, search, navigate })
+  }, [navigate, node, search, store])
 
   // if node is project and user is manager, show structure editing IconButton
-  const showProjectEditIcon = userMayEditStructure && data.type === 'project'
-  const projectEditLabel = editingProjects.get(data.id)?.editing
-    ? `Projekt-Struktur für "${data.label}" nicht bearbeiten`
-    : `Projekt-Struktur für "${data.label}" bearbeiten`
+  const showProjectEditIcon = userMayEditStructure && node.type === 'project'
+  const projectEditLabel = editingProjects.get(node.id)?.editing
+    ? `Projekt-Struktur für "${node.label}" nicht bearbeiten`
+    : `Projekt-Struktur für "${node.label}" bearbeiten`
 
   return (
-    <Container style={style} ref={dragHandle}>
+    <Container>
       <Indent
         data-inactivenodearray={isInActiveNodeArray}
-        isSelected={node.isSelected}
+        isSelected={isInActiveNodeArray}
         data-active={isActive}
         onClick={onClickIndent}
       >
@@ -215,9 +206,9 @@ const Node = ({ node, style, dragHandle, nodes }) => {
           aria-label="toggle"
           size="small"
           onClick={onClickToggle}
-          disabled={!data.childrenCount}
+          disabled={!node.childrenCount}
         >
-          {!data.childrenCount ? (
+          {!node.childrenCount ? (
             <NoChildren>-</NoChildren>
           ) : isOpen ? (
             <ExpandMoreIcon />
@@ -225,7 +216,7 @@ const Node = ({ node, style, dragHandle, nodes }) => {
             <ChevronRightIcon />
           )}
         </IconButton>
-        <Label>{data.label}</Label>
+        <Label>{node.label}</Label>
         {showProjectEditIcon && (
           <ProjectEditIconButton
             aria-label={projectEditLabel}
@@ -235,7 +226,7 @@ const Node = ({ node, style, dragHandle, nodes }) => {
           >
             <EditIcon
               fill={
-                editingProjects.get(data.id)?.editing
+                editingProjects.get(node.id)?.editing
                   ? orange[900]
                   : 'rgba(0, 0, 0, 0.8)'
               }

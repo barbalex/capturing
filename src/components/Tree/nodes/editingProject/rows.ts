@@ -1,6 +1,6 @@
 import { dexie, Row } from '../../../../dexieClient'
 import rowsWithLabelFromRows from '../../../../utils/rowsWithLabelFromRows'
-import isNodeOpen from '../../../../utils/isNodeOpen'
+import isNodeOpen from '../../isNodeOpen'
 
 const rowNodes = async ({ project, table, rowId, nodes }) => {
   // return if parent does not exist (in nodes)

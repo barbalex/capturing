@@ -1,7 +1,7 @@
 import { dexie } from '../../../../dexieClient'
 import buildRowNodes from './rows'
 import buildFieldNodes from './fields'
-import isNodeOpen from '../../../../utils/isNodeOpen'
+import isNodeOpen from '../../isNodeOpen'
 
 const tableFoldersEditingProject = async ({ project, table, rowId, nodes }) => {
   // return if parent does not exist (in nodes)

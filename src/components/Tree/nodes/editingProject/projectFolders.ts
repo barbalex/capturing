@@ -2,7 +2,7 @@ import buildTableNodes from './tables'
 import buildTileLayerNodes from './tileLayers'
 import buildVectorLayerNodes from './vectorLayers'
 import { dexie } from '../../../../dexieClient'
-import isNodeOpen from '../../../../utils/isNodeOpen'
+import isNodeOpen from '../../isNodeOpen'
 
 const projectFoldersEditingProject = async ({ project, rowId, nodes }) => {
   // return if parent does not exist (in nodes)

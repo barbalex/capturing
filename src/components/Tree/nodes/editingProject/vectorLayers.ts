@@ -1,5 +1,5 @@
 import { dexie, VectorLayer } from '../../../../dexieClient'
-import isNodeOpen from '../../../../utils/isNodeOpen'
+import isNodeOpen from '../../isNodeOpen'
 
 const vectorLayerNodesEditingProject = async ({ project, nodes }) => {
   // return if parent does not exist (in nodes)
