@@ -1,15 +1,17 @@
-import React, { useCallback, useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { Tree } from 'react-arborist'
 import styled from '@emotion/styled'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { observer } from 'mobx-react-lite'
 import { getSnapshot } from 'mobx-state-tree'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import buildNodes from './nodes'
 import Node from './Node'
-import onMoveFunction from './onMove'
 import storeContext from '../../storeContext'
+import { dexie, Project } from '../../dexieClient'
+import sortProjectsByLabelName from '../../utils/sortProjectsByLabelName'
 
 const Container = styled.div`
   width: 100%;
@@ -25,9 +27,18 @@ const TreeComponent = React.forwardRef((props, ref) => {
     activeNodeArray,
     nodes,
     treeRebuildCount,
-    rebuildTree,
   } = store
   const editingProjects = getSnapshot(editingProjectsRaw)
+
+  const projects: Project[] =
+    useLiveQuery(
+      async () =>
+        await dexie.projects
+          .where({ deleted: 0 })
+          .sortBy('', sortProjectsByLabelName),
+    ) ?? []
+
+  console.log('TreeComponent, projects:', projects)
 
   const [data, setData] = useState([])
   useEffect(() => {
@@ -54,15 +65,13 @@ const TreeComponent = React.forwardRef((props, ref) => {
 
   // console.log('Tree, data:', data)
 
-  const onToggle = useCallback(() => {
-    // console.log('TreeComponent, this id was toggled:', val)
-  }, [])
-  const onMove = useCallback(
-    (idsMoved, folderDroppedIn, endIndex) => {
-      onMoveFunction({ idsMoved, folderDroppedIn, endIndex, rebuildTree })
-    },
-    [rebuildTree],
-  )
+  // TODO: re-enable moving vectorLayers, tileLayers, fields
+  // const onMove = useCallback(
+  //   (idsMoved, folderDroppedIn, endIndex) => {
+  //     onMoveFunction({ idsMoved, folderDroppedIn, endIndex, rebuildTree })
+  //   },
+  //   [rebuildTree],
+  // )
 
   // console.log('TreeComponent', { data, nodes: getSnapshot(nodes) })
 
@@ -81,8 +90,6 @@ const TreeComponent = React.forwardRef((props, ref) => {
             <Tree
               key={JSON.stringify(data)}
               data={data}
-              onToggle={onToggle}
-              onMove={onMove}
               height={height}
               width={width}
             >
