@@ -66,7 +66,7 @@ const Card = styled(MaterialCard)`
   padding: 30px;
   color: #210148;
   /* background-color: rgba(74, 20, 140, 0.03) !important; */
-  background-color: rgba(255, 255, 255, 0.7) !important;
+  background-color: rgba(255, 255, 255, 0.85) !important;
   outline: rgba(74, 20, 140, 0.3) 1px solid;
   font-weight: 700;
   font-size: 1.2em !important;
