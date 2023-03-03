@@ -12,23 +12,16 @@ import storeContext from '../../storeContext'
 import { dexie, Project } from '../../dexieClient'
 import sortProjectsByLabelName from '../../utils/sortProjectsByLabelName'
 import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
+import IntoViewScroller from './IntoViewScroller'
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
+  /* overflow: auto; */
 `
 
 const TreeComponent = React.forwardRef((props, ref) => {
-  const { projectId, rowId, tableId, tableId2, rowId2 } = useParams()
-
   const store = useContext(storeContext)
-  const {
-    editingProjects: editingProjectsRaw,
-    activeNodeArray,
-    nodes,
-    treeRebuildCount,
-  } = store
-  const editingProjects = getSnapshot(editingProjectsRaw)
 
   const projects: Project[] =
     useLiveQuery(
@@ -37,8 +30,6 @@ const TreeComponent = React.forwardRef((props, ref) => {
           .where({ deleted: 0 })
           .sortBy('', sortProjectsByLabelName),
     ) ?? []
-
-  console.log('TreeComponent, projects:', projects)
 
   // console.log('Tree, data:', data)
 
@@ -57,7 +48,6 @@ const TreeComponent = React.forwardRef((props, ref) => {
   return (
     <Container ref={ref}>
       {projects.map((project) => {
-        const editing = editingProjects[project.id]?.editing ?? false
         const node = {
           id: project.id,
           label: labelFromLabeledTable({
@@ -73,6 +63,7 @@ const TreeComponent = React.forwardRef((props, ref) => {
 
         return <Node key={project.id} node={node} />
       })}
+      <IntoViewScroller />
     </Container>
   )
 })

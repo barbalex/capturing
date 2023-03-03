@@ -24,6 +24,15 @@ export const MobxStore = types
       types.array(types.union(types.string, types.number)),
       [],
     ),
+    // lastTouchedNode is needed to keep the last clicked arrow known
+    // so it does not jump
+    // before using this, activeNodeArray was used instead
+    // but then when an arrow out of sight of the active node
+    // is clicked, the list jumps back to the active node :-(
+    lastTouchedNode: types.optional(
+      types.array(types.union(types.string, types.number)),
+      [],
+    ),
     nodes: types.optional(
       types.array(types.array(types.union(types.string, types.number))),
       [],
@@ -84,6 +93,9 @@ export const MobxStore = types
     })
 
     return {
+      setLastTouchedNode(val) {
+        self.lastTouchedNode = val
+      },
       incrementSessionCounter() {
         self.sessionCounter = self.sessionCounter + 1
       },
