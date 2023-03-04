@@ -21,10 +21,9 @@ const EditingProject = ({ project }) => {
     type: 'project',
     object: project,
     url,
-    childrenCount: 0,
+    childrenCount: 3,
   }
   const isOpen = isNodeOpen({ nodes, url })
-  console.log('Editing, Project, isOpen', isOpen)
 
   return (
     <>

@@ -44,13 +44,6 @@ const TreeComponent = () => {
     <Container>
       {projects.map((project) => {
         const editing = editingProjects.get(project.id)?.editing ?? false
-        // const editing = editingProjects[project.id]?.editing ?? false
-        console.log('TreeComponent', {
-          project,
-          editing,
-          editingProjects,
-          editingThisProject: editingProjects[project.id],
-        })
 
         return editing ? (
           <Editing key={project.id} project={project} />
