@@ -24,6 +24,7 @@ const Indent = styled.div`
   font-weight: ${(props) =>
     props['data-inactivenodearray'] ? 'bold' : 'normal'};
   ${(props) => props['data-active'] && 'color: red;'}
+  margin-left: ${(props) => `${props['data-level'] * 28}px`};
 `
 const Label = styled.div`
   font-size: 1em;
@@ -196,6 +197,7 @@ const Node = ({ node }) => {
         isSelected={isInActiveNodeArray}
         data-active={isActive}
         onClick={onClickIndent}
+        data-level={node.url.length - 2}
       >
         <IconButton
           aria-label="toggle"
