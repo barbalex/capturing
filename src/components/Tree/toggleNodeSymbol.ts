@@ -11,7 +11,7 @@ const toggleNodeSymbol = ({ node, store, search, navigate }) => {
   const openNodes = getSnapshot(nodes)
 
   let newOpenNodes = [...openNodes]
-  if (isNodeOpen({ openNodes, url: node.url })) {
+  if (isNodeOpen({ nodes: openNodes, url: node.url })) {
     // remove all children of this url
     newOpenNodes = newOpenNodes.filter(
       (n) => !isEqual(n.slice(0, node.url.length), node.url),

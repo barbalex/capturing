@@ -7,6 +7,7 @@ import Node from '../Node'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
 import VectorLayers from './VectorLayers'
+import TileLayers from './TileLayers'
 
 const ProjectFolders = ({ project }) => {
   const store = useContext(storeContext)
@@ -84,6 +85,7 @@ const ProjectFolders = ({ project }) => {
     <>
       <Node node={tablesNode} />
       <Node node={tileLayersNode} />
+      {tileLayersOpen && <TileLayers project={project} />}
       <Node node={vectorLayersNode} />
       {vectorLayersOpen && <VectorLayers project={project} />}
     </>

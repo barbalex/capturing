@@ -169,17 +169,14 @@ const Node = ({ node }) => {
     },
     [node.id, editingProjects, setProjectEditing],
   )
-  const isOpen = useMemo(
-    () => isNodeOpen({ nodes, url: node.url }),
-    [node.url, nodes],
-  )
+  const isOpen = isNodeOpen({ nodes, url: node.url })
 
   // console.log('Node', { isOpen, node })
 
-  const onClickToggle = useCallback(() => {
-    console.log('Node, onClickToggle', node)
-    toggleNodeSymbol({ node, store, search, navigate })
-  }, [navigate, node, search, store])
+  const onClickToggle = useCallback(
+    () => toggleNodeSymbol({ node, store, search, navigate }),
+    [navigate, node, search, store],
+  )
 
   // if node is project and user is manager, show structure editing IconButton
   const showProjectEditIcon = userMayEditStructure && node.type === 'project'
