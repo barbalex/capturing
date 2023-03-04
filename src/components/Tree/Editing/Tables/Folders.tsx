@@ -37,8 +37,8 @@ const TableFolders = ({ project, table }) => {
     label: `Datensätze (${data.rowsCount})`,
     type: 'rowsFolder',
     object: table,
-    activeNodeArray: ['projects', project.id, 'tables', table.id, 'rows'],
-    childrenCount: rowsCount,
+    url: ['projects', project.id, 'tables', table.id, 'rows'],
+    childrenCount: data.rowsCount,
   }
   const rowsOpen = isNodeOpen({
     nodes,
@@ -49,7 +49,7 @@ const TableFolders = ({ project, table }) => {
     label: `Felder (${data.fieldsCount})`,
     type: 'fieldsFolder',
     object: table,
-    activeNodeArray: ['projects', project.id, 'tables', table.id, 'fields'],
+    url: ['projects', project.id, 'tables', table.id, 'fields'],
     childrenCount: data.fieldsCount,
   }
   const fieldsOpen = isNodeOpen({
