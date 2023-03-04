@@ -6,6 +6,8 @@ import { dexie } from '../../../../dexieClient'
 import Node from '../../Node'
 import isNodeOpen from '../../isNodeOpen'
 import storeContext from '../../../../storeContext'
+import Rows from './Rows'
+import Fields from './Fields'
 
 const TableFolders = ({ project, table }) => {
   const store = useContext(storeContext)
@@ -60,9 +62,9 @@ const TableFolders = ({ project, table }) => {
   return (
     <>
       <Node node={rowsNode} />
-      {rowsOpen && <div>children</div>}
+      {rowsOpen && <Rows project={project} table={table} />}
       <Node node={fieldsNode} />
-      {fieldsOpen && <div>children</div>}
+      {fieldsOpen && <Fields project={project} table={table} />}
     </>
   )
 }
