@@ -6,6 +6,7 @@ import { dexie } from '../../../dexieClient'
 import Node from '../Node'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
+import VectorLayers from './VectorLayers'
 
 const ProjectFolders = ({ project }) => {
   const store = useContext(storeContext)
@@ -40,50 +41,51 @@ const ProjectFolders = ({ project }) => {
     return { tablesCount, tileLayersCount, vectorLayersCount }
   })
 
-  console.log('Editing, ProjectFolders, data', data)
+  if (!data) return null
 
   const tablesNode = {
     id: `${project.id}/tablesFolder`,
-    label: 'Tabellen',
+    label: `Tabellen (${data.tablesCount})`,
     type: 'projectFolder',
     object: project,
     url: ['projects', project.id, 'tables'],
-    isOpen: isNodeOpen({ nodes, url: ['projects', project.id, 'tables'] }),
-    childrenCount: data?.tablesCount,
+    childrenCount: data.tablesCount,
   }
+  const tablesOpen = isNodeOpen({
+    nodes,
+    url: ['projects', project.id, 'tables'],
+  })
   const tileLayersNode = {
     id: `${project.id}/tileLayersFolder`,
-    label: 'Bild-Karten',
+    label: `Bild-Karten (${data.tileLayersCount})`,
     type: 'tileLayerFolder',
     object: project,
     url: ['projects', project.id, 'tile-layers'],
-    isOpen: isNodeOpen({
-      nodes,
-      url: ['projects', project.id, 'tile-layers'],
-    }),
-    childrenCount: data?.tileLayersCount,
+    childrenCount: data.tileLayersCount,
   }
+  const tileLayersOpen = isNodeOpen({
+    nodes,
+    url: ['projects', project.id, 'tile-layers'],
+  })
   const vectorLayersNode = {
     id: `${project.id}/vectorLayersFolder`,
-    label: 'Vektor-Karten',
+    label: `Vektor-Karten (${data.vectorLayersCount})`,
     type: 'vectorLayerFolder',
     object: project,
     url: ['projects', project.id, 'vector-layers'],
-    isOpen: isNodeOpen({
-      nodes,
-      url: ['projects', project.id, 'vector-layers'],
-    }),
-    childrenCount: data?.vectorLayersCount,
+    childrenCount: data.vectorLayersCount,
   }
-
-  // TODO: show loading indicator
-  if (!data) return null
+  const vectorLayersOpen = isNodeOpen({
+    nodes,
+    url: ['projects', project.id, 'vector-layers'],
+  })
 
   return (
     <>
       <Node node={tablesNode} />
       <Node node={tileLayersNode} />
       <Node node={vectorLayersNode} />
+      {vectorLayersOpen && <VectorLayers project={project} />}
     </>
   )
 }
