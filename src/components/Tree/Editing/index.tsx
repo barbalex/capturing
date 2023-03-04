@@ -24,11 +24,12 @@ const EditingProject = ({ project }) => {
     childrenCount: 0,
   }
   const isOpen = isNodeOpen({ nodes, url })
+  console.log('Editing, Project, isOpen', isOpen)
 
   return (
     <>
       <Node node={node} />
-      {isOpen && <Folders />}
+      {isOpen && <Folders project={project} />}
     </>
   )
 }

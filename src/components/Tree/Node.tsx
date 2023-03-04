@@ -106,13 +106,13 @@ const Node = ({ node }) => {
   }, [session?.user?.email])
 
   const onClickIndent = useCallback(async () => {
-    console.log('Node, onClickIndent', {
-      node,
-      isActive,
-      activeNodeArray: activeNodeArray.slice(),
-      isInActiveNodeArray,
-      editing,
-    })
+    // console.log('Node, onClickIndent', {
+    //   node,
+    //   isActive,
+    //   activeNodeArray: activeNodeArray.slice(),
+    //   isInActiveNodeArray,
+    //   editing,
+    // })
     if (
       node.type === 'project' &&
       !editingProjects.get(node.id)?.editing &&
@@ -149,8 +149,6 @@ const Node = ({ node }) => {
   }, [
     node,
     isActive,
-    activeNodeArray,
-    isInActiveNodeArray,
     editing,
     editingProjects,
     rowId,
@@ -175,7 +173,7 @@ const Node = ({ node }) => {
     [node.url, nodes],
   )
 
-  console.log('Node', { isOpen, node })
+  // console.log('Node', { isOpen, node })
 
   const onClickToggle = useCallback(() => {
     console.log('Node, onClickToggle', node)
@@ -203,7 +201,7 @@ const Node = ({ node }) => {
           aria-label="toggle"
           size="small"
           onClick={onClickToggle}
-          // disabled={!node.childrenCount}
+          disabled={!node.childrenCount}
         >
           {!node.childrenCount ? (
             <NoChildren>-</NoChildren>

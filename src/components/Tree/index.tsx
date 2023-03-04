@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import styled from '@emotion/styled'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { observer } from 'mobx-react-lite'
+import { getSnapshot } from 'mobx-state-tree'
 
 import { dexie, Project } from '../../dexieClient'
 import sortProjectsByLabelName from '../../utils/sortProjectsByLabelName'
@@ -37,10 +38,19 @@ const TreeComponent = () => {
   //   [rebuildTree],
   // )
 
+  // console.log('TreeComponent, projects', projects)
+
   return (
     <Container>
       {projects.map((project) => {
-        const editing = editingProjects[project.id]?.editing ?? false
+        const editing = editingProjects.get(project.id)?.editing ?? false
+        // const editing = editingProjects[project.id]?.editing ?? false
+        console.log('TreeComponent', {
+          project,
+          editing,
+          editingProjects,
+          editingThisProject: editingProjects[project.id],
+        })
 
         return editing ? (
           <Editing key={project.id} project={project} />

@@ -1,9 +1,18 @@
+import { useContext } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { observer } from 'mobx-react-lite'
 
 import { dexie } from '../../../dexieClient'
 import Node from '../Node'
+import isNodeOpen from '../isNodeOpen'
+import storeContext from '../../../storeContext'
 
-const ProjectFolders = () => {
+const ProjectFolders = ({ project }) => {
+  const store = useContext(storeContext)
+  const { nodes } = store
+
+  console.log('Editing, ProjectFolders', { project, nodes })
+
   const data = useLiveQuery(async () => {
     const [tablesCount, tileLayersCount, vectorLayersCount] = await Promise.all(
       [
@@ -31,12 +40,14 @@ const ProjectFolders = () => {
     return { tablesCount, tileLayersCount, vectorLayersCount }
   })
 
+  console.log('Editing, ProjectFolders, data', data)
+
   const tablesNode = {
     id: `${project.id}/tablesFolder`,
     label: 'Tabellen',
     type: 'projectFolder',
     object: project,
-    activeNodeArray: ['projects', project.id, 'tables'],
+    url: ['projects', project.id, 'tables'],
     isOpen: isNodeOpen({ nodes, url: ['projects', project.id, 'tables'] }),
     childrenCount: data?.tablesCount,
   }
@@ -45,7 +56,7 @@ const ProjectFolders = () => {
     label: 'Bild-Karten',
     type: 'tileLayerFolder',
     object: project,
-    activeNodeArray: ['projects', project.id, 'tile-layers'],
+    url: ['projects', project.id, 'tile-layers'],
     isOpen: isNodeOpen({
       nodes,
       url: ['projects', project.id, 'tile-layers'],
@@ -57,7 +68,7 @@ const ProjectFolders = () => {
     label: 'Vektor-Karten',
     type: 'vectorLayerFolder',
     object: project,
-    activeNodeArray: ['projects', project.id, 'vector-layers'],
+    url: ['projects', project.id, 'vector-layers'],
     isOpen: isNodeOpen({
       nodes,
       url: ['projects', project.id, 'vector-layers'],
@@ -77,4 +88,4 @@ const ProjectFolders = () => {
   )
 }
 
-export default ProjectFolders
+export default observer(ProjectFolders)
