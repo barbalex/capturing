@@ -127,34 +127,25 @@ const Node = ({ node }) => {
         })
         .toArray()
       if (tables.length === 1) {
-        addNode(node.activeNodeArray)
-        addNode([...node.activeNodeArray, 'tables'])
-        addNode([...node.activeNodeArray, 'tables', tables[0]?.id])
-        addNode([...node.activeNodeArray, 'tables', tables[0]?.id, 'rows'])
-        setActiveNodeArray([
-          ...node.activeNodeArray,
-          'tables',
-          tables[0]?.id,
-          'rows',
-        ])
-        navigate(
-          `/${[...node.activeNodeArray, 'tables', tables[0]?.id, 'rows'].join(
-            '/',
-          )}`,
-        )
+        addNode(node.url)
+        addNode([...node.url, 'tables'])
+        addNode([...node.url, 'tables', tables[0]?.id])
+        addNode([...node.url, 'tables', tables[0]?.id, 'rows'])
+        setActiveNodeArray([...node.url, 'tables', tables[0]?.id, 'rows'])
+        navigate(`/${[...node.url, 'tables', tables[0]?.id, 'rows'].join('/')}`)
         return
       }
     }
     if (node.type === 'table' && !editing && !rowId) {
       // if editing node leave out table (nothing to edit)
-      const newANA = [...node.activeNodeArray, 'rows']
-      addNode(node.activeNodeArray)
+      const newANA = [...node.url, 'rows']
+      addNode(node.url)
       addNode(newANA)
       navigate(`/${newANA.join('/')}`)
       return
     }
-    addNode(node.activeNodeArray)
-    navigate(`/${node.activeNodeArray.join('/')}`)
+    addNode(node.url)
+    navigate(`/${node.url.join('/')}`)
   }, [
     node,
     isActive,
@@ -180,8 +171,8 @@ const Node = ({ node }) => {
     [node.id, editingProjects, setProjectEditing],
   )
   const isOpen = useMemo(
-    () => isNodeOpen({ nodes, url: node.activeNodeArray }),
-    [node.activeNodeArray, nodes],
+    () => isNodeOpen({ nodes, url: node.url }),
+    [node.url, nodes],
   )
 
   console.log('Node', { isOpen, node })

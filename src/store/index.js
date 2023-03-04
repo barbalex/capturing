@@ -238,6 +238,7 @@ export const MobxStore = types
         })
       },
       addNode(url) {
+        console.log('store, addNode, url:', url)
         // add all parent nodes
         const addedOpenNodes = []
         for (let i = 1; i <= url.length; i++) {

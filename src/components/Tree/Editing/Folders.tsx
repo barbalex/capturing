@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 
-import { dexie } from '../../dexieClient'
+import { dexie } from '../../../dexieClient'
 import Node from '../Node'
 
 const ProjectFolders = () => {
