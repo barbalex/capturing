@@ -5,8 +5,8 @@ import Node from '../Node'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
+import Folders from './Folders'
 
-// TODO: fetch childrenCount
 const EditingProject = ({ project }) => {
   const store = useContext(storeContext)
   const { nodes } = store
@@ -21,7 +21,6 @@ const EditingProject = ({ project }) => {
     type: 'project',
     object: project,
     url,
-    children: [],
     childrenCount: 0,
   }
   const isOpen = isNodeOpen({ nodes, url })
@@ -29,7 +28,7 @@ const EditingProject = ({ project }) => {
   return (
     <>
       <Node node={node} />
-      {isOpen && <div>children</div>}
+      {isOpen && <Folders />}
     </>
   )
 }
