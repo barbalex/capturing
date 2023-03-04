@@ -1,6 +1,4 @@
 import buildTableNodes from './tables'
-import buildTileLayerNodes from './tileLayers'
-import buildVectorLayerNodes from './vectorLayers'
 import { dexie } from '../../../../dexieClient'
 import isNodeOpen from '../../isNodeOpen'
 
@@ -22,48 +20,6 @@ const projectFoldersEditingProject = async ({ project, rowId, nodes }) => {
         nodes,
       }),
       childrenCount: await dexie.ttables
-        .where({
-          deleted: 0,
-          project_id: project.id,
-        })
-        .count(),
-    },
-    {
-      id: `${project.id}/tileLayersFolder`,
-      label: 'Bild-Karten',
-      type: 'tileLayerFolder',
-      object: project,
-      activeNodeArray: ['projects', project.id, 'tile-layers'],
-      isOpen: isNodeOpen({
-        nodes,
-        url: ['projects', project.id, 'tile-layers'],
-      }),
-      children: await buildTileLayerNodes({
-        project,
-        nodes,
-      }),
-      childrenCount: await dexie.tile_layers
-        .where({
-          deleted: 0,
-          project_id: project.id,
-        })
-        .count(),
-    },
-    {
-      id: `${project.id}/vectorLayersFolder`,
-      label: 'Vektor-Karten',
-      type: 'vectorLayerFolder',
-      object: project,
-      activeNodeArray: ['projects', project.id, 'vector-layers'],
-      isOpen: isNodeOpen({
-        nodes,
-        url: ['projects', project.id, 'vector-layers'],
-      }),
-      children: await buildVectorLayerNodes({
-        project,
-        nodes,
-      }),
-      childrenCount: await dexie.vector_layers
         .where({
           deleted: 0,
           project_id: project.id,
