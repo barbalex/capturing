@@ -14,8 +14,6 @@ const ProjectFolders = ({ project }) => {
   const store = useContext(storeContext)
   const { nodes } = store
 
-  console.log('Editing, ProjectFolders', { project, nodes })
-
   const data = useLiveQuery(async () => {
     const [tablesCount, tileLayersCount, vectorLayersCount] = await Promise.all(
       [

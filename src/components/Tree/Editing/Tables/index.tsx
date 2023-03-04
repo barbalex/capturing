@@ -8,6 +8,7 @@ import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../../isNodeOpen'
 import storeContext from '../../../../storeContext'
+import Folders from './Folders'
 
 const TableNode = ({ project, table }) => {
   const store = useContext(storeContext)
@@ -17,13 +18,14 @@ const TableNode = ({ project, table }) => {
     dexie.rows.where({ deleted: 0, table_id: table.id }).count(),
   )
   const url = ['projects', project.id, 'tables', table.id]
+  const label = labelFromLabeledTable({
+    object: table,
+    useLabels: project.use_labels,
+  })
 
   const node = {
     id: table.id,
-    label: labelFromLabeledTable({
-      object: table,
-      useLabels: project.use_labels,
-    }),
+    label: `${label} (${childrenCount})`,
     type: 'table',
     object: table,
     url,
@@ -35,7 +37,12 @@ const TableNode = ({ project, table }) => {
     url,
   })
 
-  return <Node node={node} />
+  return (
+    <>
+      <Node node={node} />
+      {isOpen && <Folders project={project} table={table} />}
+    </>
+  )
 }
 
 const ObservedTableNode = observer(TableNode)
