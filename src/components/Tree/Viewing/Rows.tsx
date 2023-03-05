@@ -1,14 +1,22 @@
+import { useContext } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { observer } from 'mobx-react-lite'
 
 import { dexie } from '../../../dexieClient'
 import Node from '../Node'
 import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
+import isNodeOpen from '../isNodeOpen'
+import storeContext from '../../../storeContext'
+import RelatedTables from './RelatedTables'
 
 // TODO: show related rows as children
 // 1. get list of fields
 // 2. get list of related tables
 // 3. build folders for all related tables
 const ViewingRows = ({ project, table }) => {
+  const store = useContext(storeContext)
+  const { nodes } = store
+
   const data = useLiveQuery(async () => {
     const rows = await dexie.rows
       .where({
@@ -53,18 +61,31 @@ const ViewingRows = ({ project, table }) => {
   if (!rows) return null
 
   return rows.map((row) => {
+    const url = ['projects', project.id, 'tables', table.id, 'rows', row.id]
     const node = {
       id: row.id,
       label: row.label,
       type: 'row',
       object: row,
-      url: ['projects', project.id, 'tables', table.id, 'rows', row.id],
+      url,
       childrenCount: 0,
       projectId: project.id,
     }
+    const isOpen = isNodeOpen({ url, nodes })
 
-    return <Node key={row.id} node={node} />
+    return (
+      <div key={row.id}>
+        <Node node={node} />
+        {isOpen && (
+          <RelatedTables
+            project={project}
+            tables={[...tablesRelatedTo, ...tablesRelatedFrom]}
+            url={url}
+          />
+        )}
+      </div>
+    )
   })
 }
 
-export default ViewingRows
+export default observer(ViewingRows)
