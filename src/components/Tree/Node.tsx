@@ -2,11 +2,11 @@ import { useContext, useCallback, useMemo } from 'react'
 import {
   MdChevronRight as ChevronRightIcon,
   MdExpandMore as ExpandMoreIcon,
-} from 'react-icons/md' 
+} from 'react-icons/md'
 import IconButton from '@mui/material/IconButton'
 import styled from '@emotion/styled'
 import isEqual from 'lodash/isEqual'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { orange } from '@mui/material/colors'
@@ -14,7 +14,8 @@ import { orange } from '@mui/material/colors'
 import storeContext from '../../storeContext'
 import EditIcon from '../../images/icons/edit_project'
 import { dexie } from '../../dexieClient'
-import isNodeOpen from '../../utils/isNodeOpen'
+import isNodeOpen from './isNodeOpen'
+import toggleNodeSymbol from './toggleNodeSymbol'
 
 const Container = styled.div``
 const Indent = styled.div`
@@ -23,6 +24,7 @@ const Indent = styled.div`
   font-weight: ${(props) =>
     props['data-inactivenodearray'] ? 'bold' : 'normal'};
   ${(props) => props['data-active'] && 'color: red;'}
+  margin-left: ${(props) => `${props['data-level'] * 28}px`};
 `
 const Label = styled.div`
   font-size: 1em;
@@ -48,10 +50,10 @@ const ProjectEditIconButton = styled(IconButton)`
 `
 
 // tree is passed in but not used
-const Node = ({ node, style, dragHandle, nodes }) => {
-  const { rowId } = useParams()
+const Node = ({ node }) => {
+  const { rowId, projectId } = useParams()
   const navigate = useNavigate()
-  const data = node.data
+  const { search } = useLocation()
   // console.log('Node', getSnapshot(nodes))
 
   const store = useContext(storeContext)
@@ -63,25 +65,26 @@ const Node = ({ node, style, dragHandle, nodes }) => {
     addNode,
     removeNodeWithChildren,
     session,
+    nodes,
   } = store
   const activeNodeArray = aNARaw.slice()
   const isInActiveNodeArray = isEqual(
-    activeNodeArray.slice(0, data.activeNodeArray.length),
-    data.activeNodeArray,
+    activeNodeArray.slice(0, node.url.length),
+    node.url,
   )
-  let isActive = isEqual(data.activeNodeArray, activeNodeArray.slice())
-  const editing = editingProjects.get(data.object.project_id)?.editing
+  let isActive = isEqual(node.url, activeNodeArray.slice())
+  const editing = editingProjects.get(node.projectId)?.editing
   // when not editing, other nodes in activeNodeArray may be active:
   if (
-    data.type === 'project' &&
-    !editingProjects.get(data.id)?.editing &&
+    node.type === 'project' &&
+    !editing &&
     isInActiveNodeArray &&
     activeNodeArray.length < 4
   ) {
     isActive = true
   }
   if (
-    data.type === 'table' &&
+    node.type === 'table' &&
     !editing &&
     isInActiveNodeArray &&
     activeNodeArray.length === 5
@@ -89,14 +92,9 @@ const Node = ({ node, style, dragHandle, nodes }) => {
     isActive = true
   }
 
-  // console.log('Node', {
-  //   data,
-  //   editing,
-  // })
-
   const userMayEditStructure: boolean = useLiveQuery(async () => {
     const projectUser = await dexie.project_users.get({
-      project_id: data.id,
+      project_id: node.id,
       user_email: session?.user?.email,
     })
 
@@ -104,120 +102,101 @@ const Node = ({ node, style, dragHandle, nodes }) => {
   }, [session?.user?.email])
 
   const onClickIndent = useCallback(async () => {
-    // console.log({
-    //   data,
+    // console.log('Node, onClickIndent', {
+    //   node,
     //   isActive,
     //   activeNodeArray: activeNodeArray.slice(),
     //   isInActiveNodeArray,
     //   editing,
     // })
-    if (
-      data.type === 'project' &&
-      !editingProjects.get(data.id)?.editing &&
-      isActive
-    ) {
+    if (node.type === 'project' && !editing && isActive) {
       // if exists only one standard table, go directly to it's rows
       const tables = await dexie.ttables
         .where({
           deleted: 0,
-          project_id: data.id,
+          project_id: node.id,
           type: 'standard',
         })
         .toArray()
       if (tables.length === 1) {
-        addNode(data.activeNodeArray)
-        addNode([...data.activeNodeArray, 'tables'])
-        addNode([...data.activeNodeArray, 'tables', tables[0]?.id])
-        addNode([...data.activeNodeArray, 'tables', tables[0]?.id, 'rows'])
-        setActiveNodeArray([
-          ...data.activeNodeArray,
-          'tables',
-          tables[0]?.id,
-          'rows',
-        ])
-        navigate(
-          `/${[...data.activeNodeArray, 'tables', tables[0]?.id, 'rows'].join(
-            '/',
-          )}`,
-        )
+        addNode(node.url)
+        addNode([...node.url, 'tables'])
+        addNode([...node.url, 'tables', tables[0]?.id])
+        addNode([...node.url, 'tables', tables[0]?.id, 'rows'])
+        setActiveNodeArray([...node.url, 'tables', tables[0]?.id, 'rows'])
+        navigate(`/${[...node.url, 'tables', tables[0]?.id, 'rows'].join('/')}`)
         return
       }
     }
-    if (data.type === 'table' && !editing && !rowId) {
-      // if editing data leave out table (nothing to edit)
-      const newANA = [...data.activeNodeArray, 'rows']
-      addNode(data.activeNodeArray)
+    if (node.type === 'table' && !editing && !rowId) {
+      // if editing node leave out table (nothing to edit)
+      const newANA = [...node.url, 'rows']
+      addNode(node.url)
       addNode(newANA)
       navigate(`/${newANA.join('/')}`)
       return
     }
-    addNode(data.activeNodeArray)
-    navigate(`/${data.activeNodeArray.join('/')}`)
-  }, [
-    data.type,
-    data.id,
-    data.activeNodeArray,
-    editingProjects,
-    isActive,
-    editing,
-    rowId,
-    addNode,
-    navigate,
-    setActiveNodeArray,
-  ])
+    addNode(node.url)
+    navigate(`/${node.url.join('/')}`)
+  }, [node, isActive, editing, rowId, addNode, navigate, setActiveNodeArray])
 
   const onClickProjectEdit = useCallback(
     async (e) => {
-      // console.log('Node, onClickProjectEdit')
+      // stop propagation to prevent onClickIndent
       e.stopPropagation()
       setProjectEditing({
-        id: data.id,
-        editing: !editingProjects.get(data.id)?.editing,
+        id: node.id,
+        editing: !editing,
       })
     },
-    [data.id, editingProjects, setProjectEditing],
+    [setProjectEditing, node.id, editing],
   )
-  const isOpen = useMemo(
-    () => isNodeOpen({ nodes, url: data.activeNodeArray }),
-    [data.activeNodeArray, nodes],
-  )
+  const isOpen = isNodeOpen({ nodes, url: node.url })
+
+  // console.log('Node', { isOpen, node })
+
   const onClickToggle = useCallback(
-    (e) => {
-      e.stopPropagation()
-      // console.log('Node, onClickToggle', { state, data })
-      if (isOpen) {
-        return removeNodeWithChildren(data.activeNodeArray)
-      } else {
-        // TODO: add this nodes folders?
-        addNode(data.activeNodeArray)
-      }
-      // adjust nodes
-      node.toggle(e)
+    (event) => {
+      toggleNodeSymbol({ node, store, search, navigate })
+      // stop propagation to prevent onClickIndent
+      event.stopPropagation()
     },
-    [addNode, data.activeNodeArray, isOpen, node, removeNodeWithChildren],
+    [navigate, node, search, store],
   )
 
   // if node is project and user is manager, show structure editing IconButton
-  const showProjectEditIcon = userMayEditStructure && data.type === 'project'
-  const projectEditLabel = editingProjects.get(data.id)?.editing
-    ? `Projekt-Struktur für "${data.label}" nicht bearbeiten`
-    : `Projekt-Struktur für "${data.label}" bearbeiten`
+  const showProjectEditIcon = userMayEditStructure && node.type === 'project'
+  const projectEditLabel = editing
+    ? `Projekt-Struktur für "${node.label}" nicht bearbeiten`
+    : `Projekt-Struktur für "${node.label}" bearbeiten`
+
+  const level = editing
+    ? node.url.length - 2
+    : node.url.length > 4
+    ? node.url.length - 4
+    : node.url.length > 2
+    ? node.url.length - 3
+    : node.url.length - 2
 
   return (
-    <Container style={style} ref={dragHandle}>
+    <Container
+      // need id to scroll elements into view
+      id={node.id}
+    >
       <Indent
         data-inactivenodearray={isInActiveNodeArray}
-        isSelected={node.isSelected}
+        isSelected={isInActiveNodeArray}
         data-active={isActive}
         onClick={onClickIndent}
+        data-level={level}
       >
         <IconButton
           aria-label="toggle"
           size="small"
           onClick={onClickToggle}
-          disabled={!data.childrenCount}
+          disabled={!node.childrenCount}
         >
-          {!data.childrenCount ? (
+          {!node.childrenCount ? (
             <NoChildren>-</NoChildren>
           ) : isOpen ? (
             <ExpandMoreIcon />
@@ -225,7 +204,7 @@ const Node = ({ node, style, dragHandle, nodes }) => {
             <ChevronRightIcon />
           )}
         </IconButton>
-        <Label>{data.label}</Label>
+        <Label>{node.label}</Label>
         {showProjectEditIcon && (
           <ProjectEditIconButton
             aria-label={projectEditLabel}
@@ -235,7 +214,7 @@ const Node = ({ node, style, dragHandle, nodes }) => {
           >
             <EditIcon
               fill={
-                editingProjects.get(data.id)?.editing
+                editingProjects.get(node.id)?.editing
                   ? orange[900]
                   : 'rgba(0, 0, 0, 0.8)'
               }

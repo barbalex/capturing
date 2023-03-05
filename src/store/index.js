@@ -24,6 +24,15 @@ export const MobxStore = types
       types.array(types.union(types.string, types.number)),
       [],
     ),
+    // lastTouchedNode is needed to keep the last clicked arrow known
+    // so it does not jump
+    // before using this, activeNodeArray was used instead
+    // but then when an arrow out of sight of the active node
+    // is clicked, the list jumps back to the active node :-(
+    lastTouchedNode: types.optional(
+      types.array(types.union(types.string, types.number)),
+      [],
+    ),
     nodes: types.optional(
       types.array(types.array(types.union(types.string, types.number))),
       [],
@@ -84,6 +93,9 @@ export const MobxStore = types
     })
 
     return {
+      setLastTouchedNode(val) {
+        self.lastTouchedNode = val
+      },
       incrementSessionCounter() {
         self.sessionCounter = self.sessionCounter + 1
       },
@@ -187,8 +199,22 @@ export const MobxStore = types
       setNavigate(val) {
         return (self.navigate = val)
       },
+      addNodesForNodeArray(nodeArray) {
+        const extraOpenNodes = []
+        nodeArray.forEach((v, i) => {
+          extraOpenNodes.push(nodeArray.slice(0, i + 1))
+        })
+        this.addNodes(extraOpenNodes)
+      },
       setActiveNodeArray(val) {
+        if (isEqual(val, self.activeNodeArray)) {
+          // do not do this if already set
+          // trying to stop vicious cycle of reloading in first start after update
+          return
+        }
         self.previousActiveNodeArray = self.activeNodeArray.slice()
+        // always set missing open nodes?
+        self.addNodesForNodeArray(val)
         self.activeNodeArray = val
       },
       setNodes(val) {
@@ -212,6 +238,7 @@ export const MobxStore = types
         })
       },
       addNode(url) {
+        console.log('store, addNode, url:', url)
         // add all parent nodes
         const addedOpenNodes = []
         for (let i = 1; i <= url.length; i++) {

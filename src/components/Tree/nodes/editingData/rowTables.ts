@@ -1,7 +1,7 @@
 import { Table } from '../../../../dexieClient'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
-import isNodeOpen from '../../../../utils/isNodeOpen'
+import isNodeOpen from '../../isNodeOpen'
 import rowTableRowNodes from './rowTableRows'
 
 const rowTableNodesEditingProject = async ({

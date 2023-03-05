@@ -121,7 +121,6 @@ const ProjectsPage = () => {
   // console.log('Projects, mapInitiated:', mapInitiated)
 
   const containerEl = useRef(null)
-  const treeEl = useRef(null)
 
   useEffect(() => {
     document.title = 'Erfassen: Projekte'
@@ -204,7 +203,7 @@ const ProjectsPage = () => {
         maxSize={-10}
         resizerStyle={{ width: treeResizerWidth }}
       >
-        {showTree ? <Tree ref={treeEl} /> : <></>}
+        {showTree ? <Tree /> : <></>}
         <StyledSplitPane
           split="vertical"
           size={formPaneSize}

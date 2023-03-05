@@ -19,7 +19,7 @@ const NavigationSyncController = () => {
   }, [])
 
   const store = useContext(storeContext)
-  const { setActiveNodeArray, setNavigate, addNode } = store
+  const { setActiveNodeArray, setNavigate } = store
 
   // need to update activeNodeArray on every navigation
   useEffect(() => {
@@ -31,7 +31,6 @@ const NavigationSyncController = () => {
       //   activeNodeArrayFromStore: store.activeNodeArray?.slice(),
       // })
       setActiveNodeArray(activeNodeArray)
-      addNode(activeNodeArray)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, setActiveNodeArray, store.activeNodeArray])
