@@ -46,9 +46,8 @@ const ViewingRows = ({ project, table }) => {
 
   console.log('ViewingRows', {
     table: table.name,
-    rows,
-    tablesRelatedTo,
-    tablesRelatedFrom,
+    tablesRelatedTo: tablesRelatedTo?.map((t) => t.name),
+    tablesRelatedFrom: tablesRelatedFrom?.map((t) => t.name),
   })
 
   if (!rows) return null
