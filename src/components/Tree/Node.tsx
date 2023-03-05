@@ -92,8 +92,6 @@ const Node = ({ node }) => {
     isActive = true
   }
 
-  console.log('Node', node)
-
   const userMayEditStructure: boolean = useLiveQuery(async () => {
     const projectUser = await dexie.project_users.get({
       project_id: node.id,
