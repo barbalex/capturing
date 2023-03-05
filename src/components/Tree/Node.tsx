@@ -169,22 +169,18 @@ const Node = ({ node }) => {
   const projectEditLabel = editing
     ? `Projekt-Struktur für "${node.label}" nicht bearbeiten`
     : `Projekt-Struktur für "${node.label}" bearbeiten`
+
   const level = editing
     ? node.url.length - 2
+    : node.url.length > 4
+    ? node.url.length - 4
     : node.url.length > 2
     ? node.url.length - 3
     : node.url.length - 2
-  console.log('Node', {
-    editing,
-    node,
-    url: node.url,
-    level,
-    projectId,
-  })
 
   return (
     <Container
-      // need this id to scroll elements into view
+      // need id to scroll elements into view
       id={node.id}
     >
       <Indent

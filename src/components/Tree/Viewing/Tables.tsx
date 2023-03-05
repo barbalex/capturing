@@ -8,6 +8,7 @@ import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
+import Rows from './Rows'
 
 const TableNode = ({ project, table }) => {
   const store = useContext(storeContext)
@@ -40,7 +41,7 @@ const TableNode = ({ project, table }) => {
   return (
     <>
       <Node node={node} />
-      {isOpen && <div>children</div>}
+      {isOpen && <Rows project={project} table={table} />}
     </>
   )
 }
