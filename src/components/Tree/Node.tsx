@@ -160,7 +160,7 @@ const Node = ({ node }) => {
 
   const onClickProjectEdit = useCallback(
     async (e) => {
-      // console.log('Node, onClickProjectEdit')
+      // stop propagation to prevent onClickIndent
       e.stopPropagation()
       setProjectEditing({
         id: node.id,
@@ -174,7 +174,11 @@ const Node = ({ node }) => {
   // console.log('Node', { isOpen, node })
 
   const onClickToggle = useCallback(
-    () => toggleNodeSymbol({ node, store, search, navigate }),
+    (event) => {
+      toggleNodeSymbol({ node, store, search, navigate })
+      // stop propagation to prevent onClickIndent
+      event.stopPropagation()
+    },
     [navigate, node, search, store],
   )
 
