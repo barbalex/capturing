@@ -43,19 +43,16 @@ const ViewingRows = ({ project, table }) => {
 
     return {
       rows: rowsWithLabels,
-      tablesRelatedTo,
-      tablesRelatedFrom,
+      relatedTables: [...(tablesRelatedTo ?? []), ...(tablesRelatedFrom ?? [])],
     }
   })
 
   const rows = data?.rows
-  const tablesRelatedTo = data?.tablesRelatedTo
-  const tablesRelatedFrom = data?.tablesRelatedFrom
+  const relatedTables = data?.relatedTables
 
   console.log('ViewingRows', {
     table: table.name,
-    tablesRelatedTo: tablesRelatedTo?.map((t) => t.name),
-    tablesRelatedFrom: tablesRelatedFrom?.map((t) => t.name),
+    relatedTables: relatedTables?.map((t) => t.name),
   })
 
   if (!rows) return null
@@ -77,11 +74,7 @@ const ViewingRows = ({ project, table }) => {
       <div key={row.id}>
         <Node node={node} />
         {isOpen && (
-          <RelatedTables
-            project={project}
-            tables={[...tablesRelatedTo, ...tablesRelatedFrom]}
-            url={url}
-          />
+          <RelatedTables project={project} tables={relatedTables} url={url} />
         )}
       </div>
     )
