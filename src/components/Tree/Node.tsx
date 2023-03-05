@@ -51,7 +51,7 @@ const ProjectEditIconButton = styled(IconButton)`
 
 // tree is passed in but not used
 const Node = ({ node }) => {
-  const { rowId } = useParams()
+  const { rowId, projectId } = useParams()
   const navigate = useNavigate()
   const { search } = useLocation()
   // console.log('Node', getSnapshot(nodes))
@@ -73,11 +73,11 @@ const Node = ({ node }) => {
     node.url,
   )
   let isActive = isEqual(node.url, activeNodeArray.slice())
-  const editing = editingProjects.get(node.object.project_id)?.editing
+  const editing = editingProjects.get(node.projectId)?.editing
   // when not editing, other nodes in activeNodeArray may be active:
   if (
     node.type === 'project' &&
-    !editingProjects.get(node.id)?.editing &&
+    !editing &&
     isInActiveNodeArray &&
     activeNodeArray.length < 4
   ) {
@@ -92,10 +92,7 @@ const Node = ({ node }) => {
     isActive = true
   }
 
-  // console.log('Node', {
-  //   node,
-  //   editing,
-  // })
+  console.log('Node', node)
 
   const userMayEditStructure: boolean = useLiveQuery(async () => {
     const projectUser = await dexie.project_users.get({
@@ -114,11 +111,7 @@ const Node = ({ node }) => {
     //   isInActiveNodeArray,
     //   editing,
     // })
-    if (
-      node.type === 'project' &&
-      !editingProjects.get(node.id)?.editing &&
-      isActive
-    ) {
+    if (node.type === 'project' && !editing && isActive) {
       // if exists only one standard table, go directly to it's rows
       const tables = await dexie.ttables
         .where({
@@ -147,16 +140,7 @@ const Node = ({ node }) => {
     }
     addNode(node.url)
     navigate(`/${node.url.join('/')}`)
-  }, [
-    node,
-    isActive,
-    editing,
-    editingProjects,
-    rowId,
-    addNode,
-    navigate,
-    setActiveNodeArray,
-  ])
+  }, [node, isActive, editing, rowId, addNode, navigate, setActiveNodeArray])
 
   const onClickProjectEdit = useCallback(
     async (e) => {
@@ -164,10 +148,10 @@ const Node = ({ node }) => {
       e.stopPropagation()
       setProjectEditing({
         id: node.id,
-        editing: !editingProjects.get(node.id)?.editing,
+        editing: !editing,
       })
     },
-    [node.id, editingProjects, setProjectEditing],
+    [setProjectEditing, node.id, editing],
   )
   const isOpen = isNodeOpen({ nodes, url: node.url })
 
@@ -184,9 +168,21 @@ const Node = ({ node }) => {
 
   // if node is project and user is manager, show structure editing IconButton
   const showProjectEditIcon = userMayEditStructure && node.type === 'project'
-  const projectEditLabel = editingProjects.get(node.id)?.editing
+  const projectEditLabel = editing
     ? `Projekt-Struktur für "${node.label}" nicht bearbeiten`
     : `Projekt-Struktur für "${node.label}" bearbeiten`
+  const level = editing
+    ? node.url.length - 2
+    : node.url.length > 2
+    ? node.url.length - 3
+    : node.url.length - 2
+  console.log('Node', {
+    editing,
+    node,
+    url: node.url,
+    level,
+    projectId,
+  })
 
   return (
     <Container
@@ -198,7 +194,7 @@ const Node = ({ node }) => {
         isSelected={isInActiveNodeArray}
         data-active={isActive}
         onClick={onClickIndent}
-        data-level={node.url.length - 2}
+        data-level={level}
       >
         <IconButton
           aria-label="toggle"

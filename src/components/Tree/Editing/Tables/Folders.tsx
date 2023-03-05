@@ -41,6 +41,7 @@ const TableFolders = ({ project, table }) => {
     object: table,
     url: ['projects', project.id, 'tables', table.id, 'rows'],
     childrenCount: data.rowsCount,
+    projectId: project.id,
   }
   const rowsOpen = isNodeOpen({
     nodes,
@@ -53,6 +54,7 @@ const TableFolders = ({ project, table }) => {
     object: table,
     url: ['projects', project.id, 'tables', table.id, 'fields'],
     childrenCount: data.fieldsCount,
+    projectId: project.id,
   }
   const fieldsOpen = isNodeOpen({
     nodes,

@@ -25,6 +25,7 @@ const VectorLayers = ({ project }) => {
       object: vectorLayer,
       url,
       childrenCount: 0,
+      projectId: project.id,
     }
 
     return <Node key={vectorLayer.id} node={node} />

@@ -25,6 +25,7 @@ const TileLayers = ({ project }) => {
       object: tileLayer,
       url,
       childrenCount: 0,
+      projectId: project.id,
     }
 
     return <Node key={tileLayer.id} node={node} />

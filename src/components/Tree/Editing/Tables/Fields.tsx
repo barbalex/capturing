@@ -36,6 +36,7 @@ const Fields = ({ project, table }) => {
       object: field,
       url,
       childrenCount: 0,
+      projectId: project.id,
     }
 
     return <Node key={field.id} node={node} />

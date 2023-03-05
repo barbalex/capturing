@@ -27,6 +27,7 @@ const Rows = ({ project, table }) => {
       object: row,
       url: ['projects', project.id, 'tables', table.id, 'rows', row.id],
       childrenCount: 0,
+      projectId: project.id,
     }
 
     return <Node key={row.id} node={node} />

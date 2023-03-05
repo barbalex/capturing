@@ -5,6 +5,7 @@ import Node from '../Node'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
+import Tables from './Tables'
 
 // TODO: fetch childrenCount
 const ViewingProject = ({ project }) => {
@@ -23,13 +24,14 @@ const ViewingProject = ({ project }) => {
     url,
     children: [],
     childrenCount: 0,
+    projectId: project.id,
   }
   const isOpen = isNodeOpen({ nodes, url })
 
   return (
     <>
       <Node node={node} />
-      {isOpen && <div>children</div>}
+      {isOpen && <Tables project={project} />}
     </>
   )
 }

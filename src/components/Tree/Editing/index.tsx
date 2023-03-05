@@ -22,6 +22,7 @@ const EditingProject = ({ project }) => {
     object: project,
     url,
     childrenCount: 3,
+    projectId: project.id,
   }
   const isOpen = isNodeOpen({ nodes, url })
 

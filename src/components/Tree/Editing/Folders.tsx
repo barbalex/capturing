@@ -50,6 +50,7 @@ const ProjectFolders = ({ project }) => {
     object: project,
     url: ['projects', project.id, 'tables'],
     childrenCount: data.tablesCount,
+    projectId: project.id,
   }
   const tablesOpen = isNodeOpen({
     nodes,
@@ -62,6 +63,7 @@ const ProjectFolders = ({ project }) => {
     object: project,
     url: ['projects', project.id, 'tile-layers'],
     childrenCount: data.tileLayersCount,
+    projectId: project.id,
   }
   const tileLayersOpen = isNodeOpen({
     nodes,
@@ -74,6 +76,7 @@ const ProjectFolders = ({ project }) => {
     object: project,
     url: ['projects', project.id, 'vector-layers'],
     childrenCount: data.vectorLayersCount,
+    projectId: project.id,
   }
   const vectorLayersOpen = isNodeOpen({
     nodes,

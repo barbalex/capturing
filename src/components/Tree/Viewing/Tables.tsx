@@ -2,13 +2,12 @@ import { useContext } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { observer } from 'mobx-react-lite'
 
-import { dexie, Table } from '../../../../dexieClient'
-import Node from '../../Node'
-import sortByLabelName from '../../../../utils/sortByLabelName'
-import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
-import isNodeOpen from '../../isNodeOpen'
-import storeContext from '../../../../storeContext'
-import Folders from './Folders'
+import { dexie, Table } from '../../../dexieClient'
+import Node from '../Node'
+import sortByLabelName from '../../../utils/sortByLabelName'
+import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
+import isNodeOpen from '../isNodeOpen'
+import storeContext from '../../../storeContext'
 
 const TableNode = ({ project, table }) => {
   const store = useContext(storeContext)
@@ -41,14 +40,14 @@ const TableNode = ({ project, table }) => {
   return (
     <>
       <Node node={node} />
-      {isOpen && <Folders project={project} table={table} />}
+      {isOpen && <div>children</div>}
     </>
   )
 }
 
 const ObservedTableNode = observer(TableNode)
 
-const Tables = ({ project }) => {
+const ViewingTables = ({ project }) => {
   const tables: Table[] = useLiveQuery(() =>
     dexie.ttables
       .where({
@@ -70,4 +69,4 @@ const Tables = ({ project }) => {
   ))
 }
 
-export default Tables
+export default ViewingTables
