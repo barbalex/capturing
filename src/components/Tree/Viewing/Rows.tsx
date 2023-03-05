@@ -4,6 +4,10 @@ import { dexie } from '../../../dexieClient'
 import Node from '../Node'
 import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
 
+// TODO: show related rows as children
+// 1. get list of fields
+// 2. get list of related tables
+// 3. build folders for all related tables
 const ViewingRows = ({ project, table }) => {
   const rows = useLiveQuery(async () => {
     const rows = await dexie.rows
