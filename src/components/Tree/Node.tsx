@@ -172,6 +172,8 @@ const Node = ({ node }) => {
 
   const level = editing
     ? node.url.length - 2
+    : node.url.length > 8
+    ? node.url.length - 6
     : node.url.length > 6
     ? node.url.length - 5
     : node.url.length > 4

@@ -37,19 +37,11 @@ const ViewingRows = ({ project, table }) => {
       const tableRelatedTo = await dexie.ttables.get(field.table_rel)
       tablesRelatedTo[field.name] = tableRelatedTo
     }
-    // const tablesRelatedTo = await dexie.ttables
-    //   .where('id')
-    //   .anyOf(fieldsRelatedTo.map((f) => f.table_rel))
-    //   .toArray()
     const tablesRelatedFrom = {}
     for (const field of fieldsRelatedFrom) {
       const tableRelatedFrom = await dexie.ttables.get(field.table_id)
       tablesRelatedFrom[field.name] = tableRelatedFrom
     }
-    // const tablesRelatedFrom = await dexie.ttables
-    //   .where('id')
-    //   .anyOf(fieldsRelatedFrom.map((f) => f.table_id))
-    //   .toArray()
 
     return {
       rows: rowsWithLabels,

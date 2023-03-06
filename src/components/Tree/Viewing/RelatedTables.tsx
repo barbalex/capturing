@@ -27,12 +27,12 @@ const RelatedTableNode = ({
     deleted: 0,
     table_id: table.id,
   }
-  if (type === 'to') {
-    where.id = row.data[fieldName]
+  if (type === 'to' && row.data?.[fieldName]) {
+    where.id = row.data?.[fieldName]
   }
-  let children = useLiveQuery(() => dexie.rows.where(where).toArray())
+  let children = useLiveQuery(() => dexie.rows.where(where).toArray()) ?? []
   if (type === 'from') {
-    children = children.filter((c) => c.data[fieldName] === row.id)
+    children = children.filter((c) => c.data?.[fieldName] === row.id)
   }
   const url = [...urlPassed, 'tables', table.id]
   const label = labelFromLabeledTable({
@@ -58,7 +58,15 @@ const RelatedTableNode = ({
   return (
     <>
       <Node node={node} />
-      {false && <Rows project={project} table={table} row={row} />}
+      {isOpen && (
+        <Rows
+          project={project}
+          table={table}
+          row={row}
+          url={url}
+          rows={children}
+        />
+      )}
     </>
   )
 }
@@ -89,21 +97,11 @@ const RelatedTables = ({
       : []),
   ]
 
-  // const tablesSorted = sortByLabelName({
-  //   objects: Object.values(tables),
-  //   useLabels: project.use_labels,
-  // })
-
-  console.log('RelatedTables', {
-    tables,
-    tablesRelatedTo,
-    tablesRelatedFrom,
-    firstTable: tables[0],
-  })
+  // TODO: sort tables?
 
   return tables.map((t) => (
     <ObservedTableNode
-      key={t.table.id}
+      key={`${row.id}/${t.table.id}`}
       project={project}
       table={t.table}
       fieldName={t.fieldName}
