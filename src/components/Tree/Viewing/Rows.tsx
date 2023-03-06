@@ -48,7 +48,7 @@ const ViewingRows = ({ project, table }) => {
       tablesRelatedTo,
       tablesRelatedFrom,
     }
-  })
+  }, [table.id])
 
   const rows = data?.rows
   const tablesRelatedTo = data?.tablesRelatedTo

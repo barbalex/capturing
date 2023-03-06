@@ -4,7 +4,6 @@ import { observer } from 'mobx-react-lite'
 
 import { dexie } from '../../../dexieClient'
 import Node from '../Node'
-import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
@@ -35,8 +34,9 @@ const RelatedTableNode = ({
     useLiveQuery(async () => {
       const rows = await dexie.rows.where(where).toArray()
       const rowsWithLabels = await rowsWithLabelFromRows(rows)
+
       return rowsWithLabels
-    }) ?? []
+    }, [table.id, fieldName]) ?? []
   if (type === 'from') {
     children = children.filter((c) => c.data?.[fieldName] === row.id)
   }
