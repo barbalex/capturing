@@ -70,7 +70,7 @@ const Card = styled(MaterialCard)`
   outline: rgba(74, 20, 140, 0.3) 1px solid;
   font-weight: 700;
   font-size: 1.2em !important;
-  text-shadow: white 0 0 2px, rgba(74, 20, 140, 0.3) 0 0 5px;
+  text-shadow: white 0 0 2px, rgba(74, 20, 140, 0.25) 0 0 5px;
   ul {
     margin-bottom: 0;
   }
@@ -85,7 +85,7 @@ const PageTitle = styled(Typography)`
   font-size: 2.5em !important;
   padding-bottom: 15px;
   font-weight: 700 !important;
-  text-shadow: white 0 0 2px, rgba(74, 20, 140, 0.3) 0 0 5px;
+  text-shadow: white 0 0 2px, rgba(74, 20, 140, 0.25) 0 0 5px;
   color: #210148;
   @media (min-width: 700px) {
     padding-bottom: 20px;
