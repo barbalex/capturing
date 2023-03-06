@@ -13,7 +13,7 @@ import RelatedTables from './RelatedTables'
 // 1. get list of fields
 // 2. get list of related tables
 // 3. build folders for all related tables
-const ViewingRows = ({ project, table }) => {
+const ViewingRelatedRows = ({ project, table }) => {
   const store = useContext(storeContext)
   const { nodes } = store
 
@@ -32,44 +32,30 @@ const ViewingRows = ({ project, table }) => {
     const fieldsRelatedFrom = await dexie.fields
       .where({ deleted: 0, table_rel: table.id })
       .toArray()
-    const tablesRelatedTo = {}
-    for (const field of fieldsRelatedTo) {
-      const tableRelatedTo = await dexie.ttables.get(field.table_rel)
-      tablesRelatedTo[field.name] = tableRelatedTo
-    }
-    // const tablesRelatedTo = await dexie.ttables
-    //   .where('id')
-    //   .anyOf(fieldsRelatedTo.map((f) => f.table_rel))
-    //   .toArray()
-    const tablesRelatedFrom = {}
-    for (const field of fieldsRelatedFrom) {
-      const tableRelatedFrom = await dexie.ttables.get(field.table_id)
-      tablesRelatedFrom[field.name] = tableRelatedFrom
-    }
-    // const tablesRelatedFrom = await dexie.ttables
-    //   .where('id')
-    //   .anyOf(fieldsRelatedFrom.map((f) => f.table_id))
-    //   .toArray()
+    const tablesRelatedTo = await dexie.ttables
+      .where('id')
+      .anyOf(fieldsRelatedTo.map((f) => f.table_rel))
+      .toArray()
+    const tablesRelatedFrom = await dexie.ttables
+      .where('id')
+      .anyOf(fieldsRelatedFrom.map((f) => f.table_id))
+      .toArray()
 
     return {
       rows: rowsWithLabels,
-      tablesRelatedTo,
-      tablesRelatedFrom,
+      relatedTables: [...(tablesRelatedTo ?? []), ...(tablesRelatedFrom ?? [])],
     }
   })
 
   const rows = data?.rows
-  const tablesRelatedTo = data?.tablesRelatedTo
-  const tablesRelatedFrom = data?.tablesRelatedFrom
+  const relatedTables = data?.relatedTables
+
+  console.log('ViewingRows', {
+    table: table.name,
+    relatedTables: relatedTables?.map((t) => t.name),
+  })
 
   if (!rows) return null
-
-  // console.log('ViewingRows', {
-  //   table: table.name,
-  //   tablesRelatedTo,
-  //   tablesRelatedFrom,
-  //   rows,
-  // })
 
   return rows.map((row) => {
     const url = ['projects', project.id, 'tables', table.id, 'rows', row.id]
@@ -90,8 +76,7 @@ const ViewingRows = ({ project, table }) => {
         {isOpen && (
           <RelatedTables
             project={project}
-            tablesRelatedTo={tablesRelatedTo}
-            tablesRelatedFrom={tablesRelatedFrom}
+            tables={relatedTables}
             row={row}
             url={url}
           />
@@ -101,4 +86,4 @@ const ViewingRows = ({ project, table }) => {
   })
 }
 
-export default observer(ViewingRows)
+export default observer(ViewingRelatedRows)

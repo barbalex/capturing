@@ -2,21 +2,38 @@ import { useContext } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { observer } from 'mobx-react-lite'
 
-import { dexie, Table } from '../../../dexieClient'
+import { dexie } from '../../../dexieClient'
 import Node from '../Node'
 import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
-import Rows from './Rows'
+import Rows from './RelatedRows'
 
-const TableNode = ({ project, table, url: urlPassed }) => {
+const RelatedTableNode = ({
+  project,
+  table,
+  fieldName,
+  type,
+  row,
+  url: urlPassed,
+}) => {
   const store = useContext(storeContext)
   const { nodes } = store
 
-  const childrenCount = useLiveQuery(() =>
-    dexie.rows.where({ deleted: 0, table_id: table.id }).count(),
-  )
+  // TODO:
+  // depending on type, filter by id
+  const where = {
+    deleted: 0,
+    table_id: table.id,
+  }
+  if (type === 'to') {
+    where.id = row.data[fieldName]
+  }
+  let children = useLiveQuery(() => dexie.rows.where(where).toArray())
+  if (type === 'from') {
+    children = children.filter((c) => c.data[fieldName] === row.id)
+  }
   const url = [...urlPassed, 'tables', table.id]
   const label = labelFromLabeledTable({
     object: table,
@@ -25,11 +42,11 @@ const TableNode = ({ project, table, url: urlPassed }) => {
 
   const node = {
     id: table.id,
-    label: `${label} (${childrenCount})`,
+    label: `${label} (${children?.length})`,
     type: 'table',
     object: table,
     url,
-    childrenCount,
+    childrenCount: children?.length,
     projectId: project.id,
   }
 
@@ -41,24 +58,57 @@ const TableNode = ({ project, table, url: urlPassed }) => {
   return (
     <>
       <Node node={node} />
-      {isOpen && <Rows project={project} table={table} />}
+      {false && <Rows project={project} table={table} row={row} />}
     </>
   )
 }
 
-const ObservedTableNode = observer(TableNode)
+const ObservedTableNode = observer(RelatedTableNode)
 
-const RelatedTables = ({ project, tables, url }) => {
-  const tablesSorted = sortByLabelName({
-    objects: tables,
-    useLabels: project.use_labels,
+const RelatedTables = ({
+  project,
+  tablesRelatedTo,
+  tablesRelatedFrom,
+  row,
+  url,
+}) => {
+  const tables = [
+    ...(Object.entries(tablesRelatedTo).length
+      ? Object.entries(tablesRelatedTo).map((o) => ({
+          fieldName: o[0],
+          table: o[1],
+          type: 'to',
+        }))
+      : []),
+    ...(Object.entries(tablesRelatedFrom).length
+      ? Object.entries(tablesRelatedFrom).map((o) => ({
+          fieldName: o[0],
+          table: o[1],
+          type: 'from',
+        }))
+      : []),
+  ]
+
+  // const tablesSorted = sortByLabelName({
+  //   objects: Object.values(tables),
+  //   useLabels: project.use_labels,
+  // })
+
+  console.log('RelatedTables', {
+    tables,
+    tablesRelatedTo,
+    tablesRelatedFrom,
+    firstTable: tables[0],
   })
 
-  return tablesSorted.map((table) => (
+  return tables.map((t) => (
     <ObservedTableNode
-      key={table.id}
+      key={t.table.id}
       project={project}
-      table={table}
+      table={t.table}
+      fieldName={t.fieldName}
+      type={t.type}
+      row={row}
       url={url}
     />
   ))
