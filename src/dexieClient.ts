@@ -1582,7 +1582,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(6).stores({
+    this.version(7).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
@@ -1604,7 +1604,7 @@ export class MySubClassedDexie extends Dexie {
       layer_styles: 'id, &table_id, &vector_layer_id, server_rev_at, deleted',
       projects:
         'id, label, name, server_rev_at, deleted, use_labels, [deleted+id]',
-      rows: 'id, server_rev_at, deleted, [deleted+table_id]',
+      rows: 'id, server_rev_at, deleted, [deleted+table_id], [deleted+table_id+id]',
       // name tables causes error because used internally, see: https://github.com/dexie/Dexie.js/issues/1537
       ttables:
         'id, label, name, sort, project_id, rel_type, type, server_rev_at, deleted, [deleted+project_id], [deleted+project_id+type]',
