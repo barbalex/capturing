@@ -51,7 +51,7 @@ const ProjectEditIconButton = styled(IconButton)`
 
 // tree is passed in but not used
 const Node = ({ node }) => {
-  const { rowId, projectId } = useParams()
+  const { rowId } = useParams()
   const navigate = useNavigate()
   const { search } = useLocation()
   // console.log('Node', getSnapshot(nodes))
@@ -63,7 +63,6 @@ const Node = ({ node }) => {
     editingProjects,
     setProjectEditing,
     addNode,
-    removeNodeWithChildren,
     session,
     nodes,
   } = store
