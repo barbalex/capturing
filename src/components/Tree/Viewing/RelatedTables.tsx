@@ -22,8 +22,8 @@ const RelatedTableNode = ({
   const store = useContext(storeContext)
   const { nodes } = store
 
-  // TODO:
   // depending on type, filter by id
+  // TODO: do this in lists
   const where = {
     deleted: 0,
     table_id: table.id,
