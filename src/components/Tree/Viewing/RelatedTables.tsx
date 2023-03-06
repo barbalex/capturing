@@ -9,6 +9,7 @@ import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
 import Rows from './RelatedRows'
+import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
 
 const RelatedTableNode = ({
   project,
@@ -30,7 +31,12 @@ const RelatedTableNode = ({
   if (type === 'to' && row.data?.[fieldName]) {
     where.id = row.data?.[fieldName]
   }
-  let children = useLiveQuery(() => dexie.rows.where(where).toArray()) ?? []
+  let children =
+    useLiveQuery(async () => {
+      const rows = await dexie.rows.where(where).toArray()
+      const rowsWithLabels = await rowsWithLabelFromRows(rows)
+      return rowsWithLabels
+    }) ?? []
   if (type === 'from') {
     children = children.filter((c) => c.data?.[fieldName] === row.id)
   }

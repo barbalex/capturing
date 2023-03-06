@@ -1,35 +1,25 @@
-import { useState, useEffect } from 'react'
-
 import Node from '../Node'
 
-const Row = ({ project, url: urlPassed, row }) => {
-  const [label, setLabel] = useState('')
-  useEffect(() => {
-    row?.label.then((label) => setLabel(label))
-  }, [row?.label])
+const ViewingRelatedRows = ({
+  project,
+  table,
+  row,
+  url: urlPassed,
+  rows = [],
+}) =>
+  rows.map((r) => {
+    const url = [...urlPassed, 'rows', r.id]
+    const node = {
+      id: r.id,
+      label: r.label,
+      type: 'row',
+      object: r,
+      url,
+      childrenCount: 0,
+      projectId: project.id,
+    }
 
-  const url = [...urlPassed, 'rows', row.id]
-  const node = {
-    id: row.id,
-    label,
-    type: 'row',
-    object: row,
-    url,
-    childrenCount: 0,
-    projectId: project.id,
-  }
-
-  return <Node node={node} />
-}
-
-const ViewingRelatedRows = ({ project, table, row, url, rows = [] }) =>
-  rows.map((r) => (
-    <Row
-      key={`${row.id}/${table.id}/${r.id}`}
-      project={project}
-      url={url}
-      row={r}
-    />
-  ))
+    return <Node key={`${row.id}/${table.id}/${r.id}`} node={node} />
+  })
 
 export default ViewingRelatedRows
