@@ -22,7 +22,6 @@ const RelatedTableNode = ({
   const { nodes } = store
 
   // depending on type, filter by id
-  // TODO: do this in lists
   const where = {
     deleted: 0,
     table_id: table.id,
