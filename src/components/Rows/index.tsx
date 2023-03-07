@@ -41,7 +41,9 @@ const RowsComponent = ({ level }) => {
 
       const rowsWithLabel = await rowsWithLabelFromRows(rows)
 
-      const parentRow = await dexie.rows.get(parentRowId)
+      const parentRow = parentRowId
+        ? await dexie.rows.get(parentRowId)
+        : undefined
 
       const fieldsRelatedTo = await dexie.fields
         .where(['deleted', 'table_id', 'table_rel'])
