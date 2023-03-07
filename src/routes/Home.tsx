@@ -64,13 +64,13 @@ const CardContainer = styled.div`
 `
 const Card = styled(MaterialCard)`
   padding: 30px;
-  color: #210148;
+  color: #2a005d;
   /* background-color: rgba(74, 20, 140, 0.03) !important; */
   background-color: rgba(255, 255, 255, 0.85) !important;
   outline: rgba(74, 20, 140, 0.3) 1px solid;
   font-weight: 700;
   font-size: 1.2em !important;
-  text-shadow: white 0 0 2px, rgba(74, 20, 140, 0.25) 0 0 5px;
+  /* text-shadow: white 0 0 2px, rgba(74, 20, 140, 0.25) 0 0 5px; */
   ul {
     margin-bottom: 0;
   }
@@ -85,8 +85,8 @@ const PageTitle = styled(Typography)`
   font-size: 2.5em !important;
   padding-bottom: 15px;
   font-weight: 700 !important;
-  text-shadow: white 0 0 2px, rgba(74, 20, 140, 0.25) 0 0 5px;
-  color: #210148;
+  text-shadow: white 0 0 5px;
+  color: #2a005d;
   @media (min-width: 700px) {
     padding-bottom: 20px;
   }
