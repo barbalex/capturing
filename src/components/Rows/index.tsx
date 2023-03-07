@@ -23,6 +23,8 @@ type RowsWithLabel = Row & { label: string }
 
 const RowsComponent = ({ level }) => {
   const params = useParams()
+  const { rowId1 } = params
+
   const tableId = params[`tableId${level}`]
   const parentRowId = params[`rowId${level - 1}`]
 
@@ -43,57 +45,63 @@ const RowsComponent = ({ level }) => {
         ? await dexie.rows.get(parentRowId)
         : undefined
 
-      const fieldsRelatedTo = await dexie.fields
-        .where(['deleted', 'table_id', 'table_rel'])
-        .between([0, tableId, ''], [0, tableId, 'ZZZZZZZZZZZZZZ'])
-        .toArray()
-      const fieldsRelatedFrom = await dexie.fields
-        .where({ deleted: 0, table_rel: tableId })
-        .toArray()
+      const fieldsRelatedTo = rowId1
+        ? await dexie.fields
+            .where(['deleted', 'table_id', 'table_rel'])
+            .between([0, tableId, ''], [0, tableId, 'ZZZZZZZZZZZZZZ'])
+            .toArray()
+        : []
+      const fieldsRelatedFrom = rowId1
+        ? await dexie.fields.where({ deleted: 0, table_rel: tableId }).toArray()
+        : []
       const tablesRelatedTo = {}
-      for (const field of fieldsRelatedTo) {
-        const tableRelatedTo = await dexie.ttables.get(field.table_rel)
-        tablesRelatedTo[field.name] = tableRelatedTo
-      }
       const tablesRelatedFrom = {}
-      for (const field of fieldsRelatedFrom) {
-        const tableRelatedFrom = await dexie.ttables.get(field.table_id)
-        tablesRelatedFrom[field.name] = tableRelatedFrom
+      if (rowId1) {
+        for (const field of fieldsRelatedTo) {
+          const tableRelatedTo = await dexie.ttables.get(field.table_rel)
+          tablesRelatedTo[field.name] = tableRelatedTo
+        }
+        for (const field of fieldsRelatedFrom) {
+          const tableRelatedFrom = await dexie.ttables.get(field.table_id)
+          tablesRelatedFrom[field.name] = tableRelatedFrom
+        }
       }
 
       return { rowsWithLabel, tablesRelatedTo, tablesRelatedFrom, parentRow }
-    }, [tableId, parentRowId]) ?? []
+    }, [tableId, parentRowId, rowId1]) ?? []
 
   let rowsWithLabel: RowsWithLabel[] = data?.rowsWithLabel ?? []
-  const tablesRelatedTo = data?.tablesRelatedTo ?? []
-  const tablesRelatedFrom = data?.tablesRelatedFrom ?? []
-  const parentRow = data?.parentRow
-  const tables = [
-    ...(Object.entries(tablesRelatedTo).length
-      ? Object.entries(tablesRelatedTo).map((o) => ({
-          fieldName: o[0],
-          table: o[1],
-          type: 'to',
-        }))
-      : []),
-    ...(Object.entries(tablesRelatedFrom).length
-      ? Object.entries(tablesRelatedFrom).map((o) => ({
-          fieldName: o[0],
-          table: o[1],
-          type: 'from',
-        }))
-      : []),
-  ]
-  for (const table of tables) {
-    if (table.type === 'to') {
-      rowsWithLabel = rowsWithLabel.filter(
-        (row) => row.data?.[table.fieldName] === parentRowId,
-      )
-    }
-    if (table.type === 'from') {
-      rowsWithLabel = rowsWithLabel.filter(
-        (row) => parentRow.data?.[table.fieldName] === row.id,
-      )
+  if (rowId1) {
+    const tablesRelatedTo = data?.tablesRelatedTo ?? []
+    const tablesRelatedFrom = data?.tablesRelatedFrom ?? []
+    const parentRow = data?.parentRow
+    const tables = [
+      ...(Object.entries(tablesRelatedTo).length
+        ? Object.entries(tablesRelatedTo).map((o) => ({
+            fieldName: o[0],
+            table: o[1],
+            type: 'to',
+          }))
+        : []),
+      ...(Object.entries(tablesRelatedFrom).length
+        ? Object.entries(tablesRelatedFrom).map((o) => ({
+            fieldName: o[0],
+            table: o[1],
+            type: 'from',
+          }))
+        : []),
+    ]
+    for (const table of tables) {
+      if (table.type === 'to') {
+        rowsWithLabel = rowsWithLabel.filter(
+          (row) => row.data?.[table.fieldName] === parentRowId,
+        )
+      }
+      if (table.type === 'from') {
+        rowsWithLabel = rowsWithLabel.filter(
+          (row) => parentRow?.data?.[table.fieldName] === row.id,
+        )
+      }
     }
   }
 

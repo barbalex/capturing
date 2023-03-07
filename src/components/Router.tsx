@@ -33,7 +33,7 @@ function RouterComponent() {
         <Route path="projects/*" element={<ProjectsPage />}>
           <Route index element={<ProjectsComponent />} />
           <Route path=":projectId" element={<ProjectComponent />} />
-          <Route path=":projectId/tables/*" element={<TablesComponent />} />
+          <Route path=":projectId/tables" element={<TablesComponent />} />
           <Route
             path=":projectId/tables/:tableId"
             element={<TableComponent />}
@@ -63,21 +63,26 @@ function RouterComponent() {
             element={<FieldComponent />}
           />
           <Route
-            path=":projectId/tables/:tableId1/rows/*"
+            path=":projectId/tables/:tableId1/rows"
             element={<RowsComponent level={1} />}
           />
           <Route
-            path=":projectId/tables/:tableId1/rows/:rowId1/*"
+            path=":projectId/tables/:tableId1/rows/:rowId1"
             element={<RowComponent level={1} />}
           />
           <Route
-            path=":projectId/tables/:tableId1/rows/:rowId1/tables/:tableId2/*"
+            path=":projectId/tables/:tableId1/rows/:rowId1/tables/:tableId2"
             element={<RowsComponent level={2} />}
           />
           <Route
-            path=":projectId/tables/:tableId1/rows/:rowId1/tables/:tableId2/rows/:rowId2/*"
+            path=":projectId/tables/:tableId1/rows/:rowId1/tables/:tableId2/rows"
+            element={<RowsComponent level={2} />}
+          />
+          <Route
+            path=":projectId/tables/:tableId1/rows/:rowId1/tables/:tableId2/rows/:rowId2"
             element={<RowComponent level={2} />}
           />
+          <Route path="*" element={<FourOhFour />} />
         </Route>
         <Route path="docs/*" element={<Docs />}>
           <Route path="image-layer-types" element={<ImageLayerTypes />} />
@@ -88,6 +93,7 @@ function RouterComponent() {
           />
           <Route path="data-versioning" element={<DataVersioning />} />
           <Route path="data-history" element={<DataHistory />} />
+          <Route path="*" element={<FourOhFour />} />
         </Route>
         <Route path="*" element={<FourOhFour />} />
       </Route>
