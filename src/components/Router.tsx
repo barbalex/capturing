@@ -39,7 +39,7 @@ function RouterComponent() {
             element={<TableComponent />}
           />
           <Route
-            path=":projectId/tile-layers/*"
+            path=":projectId/tile-layers"
             element={<TileLayersComponent />}
           />
           <Route
@@ -47,7 +47,7 @@ function RouterComponent() {
             element={<TileLayerComponent />}
           />
           <Route
-            path=":projectId/vector-layers/*"
+            path=":projectId/vector-layers"
             element={<VectorLayersComponent />}
           />
           <Route
@@ -55,7 +55,7 @@ function RouterComponent() {
             element={<VectorLayerComponent />}
           />
           <Route
-            path=":projectId/tables/:tableId/fields/*"
+            path=":projectId/tables/:tableId/fields"
             element={<FieldsComponent />}
           />
           <Route

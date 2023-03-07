@@ -1582,7 +1582,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(7).stores({
+    this.version(8).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
@@ -1598,7 +1598,7 @@ export class MySubClassedDexie extends Dexie {
       vector_layers:
         'id, label, sort, active, server_rev_at, deleted, [deleted+project_id], [deleted+active], [deleted+active+project_id]',
       pvl_geoms:
-        'id, pvl_id, bbox_sw_lng, bbox_sw_lat, bbox_ne_lng, bbox_ne_lat, server_rev_at, deleted',
+        'id, pvl_id, bbox_sw_lng, bbox_sw_lat, bbox_ne_lng, bbox_ne_lat, server_rev_at, deleted, [deleted+pvl_id]',
       project_users:
         'id, user_email, [project_id+user_email], [deleted+project_id], project_id, server_rev_at, deleted',
       layer_styles: 'id, &table_id, &vector_layer_id, server_rev_at, deleted',
