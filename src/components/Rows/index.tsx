@@ -26,8 +26,6 @@ const RowsComponent = ({ level }) => {
   const tableId = params[`tableId${level}`]
   const parentRowId = params[`rowId${level - 1}`]
 
-  console.log('RowsList', { level, parentRowId })
-  // TODO:
   // Check if row has field with table_rel
   // If so, check if that table is in higher up tableId(s)
   // If so, then that table's active row's id is the filter value for that field
