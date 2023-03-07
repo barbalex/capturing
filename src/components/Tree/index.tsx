@@ -2,7 +2,6 @@ import { useContext } from 'react'
 import styled from '@emotion/styled'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { observer } from 'mobx-react-lite'
-import { getSnapshot } from 'mobx-state-tree'
 
 import { dexie, Project } from '../../dexieClient'
 import sortProjectsByLabelName from '../../utils/sortProjectsByLabelName'
