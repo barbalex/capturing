@@ -49,18 +49,19 @@ const TableNode = ({ project, table }) => {
 const ObservedTableNode = observer(TableNode)
 
 const ViewingTables = ({ project }) => {
-  const tables: Table[] = useLiveQuery(
-    () =>
-      dexie.ttables
-        .where({
-          deleted: 0,
-          project_id: project.id,
-        })
-        .toArray(),
-    [project.id],
-  )
+  const tables: Table[] =
+    useLiveQuery(
+      () =>
+        dexie.ttables
+          .where({
+            deleted: 0,
+            project_id: project.id,
+          })
+          .toArray(),
+      [project.id],
+    ) ?? []
 
-  if (!tables) return null
+  console.log('ViewingTables: tables:', tables)
 
   const tablesSorted = sortByLabelName({
     objects: tables,
