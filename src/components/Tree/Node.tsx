@@ -1,7 +1,7 @@
-import { useContext, useCallback, useMemo } from 'react'
+import { useContext, useCallback } from 'react'
 import {
-  MdChevronRight as ChevronRightIcon,
-  MdExpandMore as ExpandMoreIcon,
+  MdChevronRight as ClosedWithChildrenIcon,
+  MdExpandMore as OpenWithChildrenIcon,
 } from 'react-icons/md'
 import IconButton from '@mui/material/IconButton'
 import styled from '@emotion/styled'
@@ -49,12 +49,10 @@ const ProjectEditIconButton = styled(IconButton)`
   }
 `
 
-// tree is passed in but not used
 const Node = ({ node }) => {
   const { rowId } = useParams()
   const navigate = useNavigate()
   const { search } = useLocation()
-  // console.log('Node', getSnapshot(nodes))
 
   const store = useContext(storeContext)
   const {
@@ -101,13 +99,6 @@ const Node = ({ node }) => {
   }, [session?.user?.email])
 
   const onClickIndent = useCallback(async () => {
-    // console.log('Node, onClickIndent', {
-    //   node,
-    //   isActive,
-    //   activeNodeArray: activeNodeArray.slice(),
-    //   isInActiveNodeArray,
-    //   editing,
-    // })
     if (node.type === 'project' && !editing && isActive) {
       // if exists only one standard table, go directly to it's rows
       const tables = await dexie.ttables
@@ -202,9 +193,9 @@ const Node = ({ node }) => {
           {!node.childrenCount ? (
             <NoChildren>-</NoChildren>
           ) : isOpen ? (
-            <ExpandMoreIcon />
+            <OpenWithChildrenIcon />
           ) : (
-            <ChevronRightIcon />
+            <ClosedWithChildrenIcon />
           )}
         </IconButton>
         <Label>{node.label}</Label>
