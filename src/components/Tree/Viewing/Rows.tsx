@@ -42,26 +42,33 @@ const ViewingRows = ({ project, table }) => {
       const tableRelatedFrom = await dexie.ttables.get(field.table_id)
       tablesRelatedFrom[field.name] = tableRelatedFrom
     }
+    const relatedTables = [
+      ...(Object.entries(tablesRelatedTo).length
+        ? Object.entries(tablesRelatedTo).map((o) => ({
+            fieldName: o[0],
+            table: o[1],
+            type: 'to',
+          }))
+        : []),
+      ...(Object.entries(tablesRelatedFrom).length
+        ? Object.entries(tablesRelatedFrom).map((o) => ({
+            fieldName: o[0],
+            table: o[1],
+            type: 'from',
+          }))
+        : []),
+    ]
 
     return {
       rows: rowsWithLabels,
-      tablesRelatedTo,
-      tablesRelatedFrom,
+      relatedTables,
     }
   }, [table.id])
 
   const rows = data?.rows
-  const tablesRelatedTo = data?.tablesRelatedTo
-  const tablesRelatedFrom = data?.tablesRelatedFrom
+  const relatedTables = data?.relatedTables ?? []
 
   if (!rows) return null
-
-  // console.log('ViewingRows', {
-  //   table: table.name,
-  //   tablesRelatedTo,
-  //   tablesRelatedFrom,
-  //   rows,
-  // })
 
   return rows.map((row) => {
     const url = ['projects', project.id, 'tables', table.id, 'rows', row.id]
@@ -71,7 +78,7 @@ const ViewingRows = ({ project, table }) => {
       type: 'row',
       object: row,
       url,
-      childrenCount: 0,
+      childrenCount: relatedTables.length,
       projectId: project.id,
     }
     const isOpen = isNodeOpen({ url, nodes })
@@ -82,8 +89,7 @@ const ViewingRows = ({ project, table }) => {
         {isOpen && (
           <RelatedTables
             project={project}
-            tablesRelatedTo={tablesRelatedTo}
-            tablesRelatedFrom={tablesRelatedFrom}
+            relatedTables={relatedTables}
             row={row}
             url={url}
           />

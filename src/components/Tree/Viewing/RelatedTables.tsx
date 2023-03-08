@@ -78,33 +78,9 @@ const RelatedTableNode = ({
 
 const ObservedTableNode = observer(RelatedTableNode)
 
-const RelatedTables = ({
-  project,
-  tablesRelatedTo,
-  tablesRelatedFrom,
-  row,
-  url,
-}) => {
-  const tables = [
-    ...(Object.entries(tablesRelatedTo).length
-      ? Object.entries(tablesRelatedTo).map((o) => ({
-          fieldName: o[0],
-          table: o[1],
-          type: 'to',
-        }))
-      : []),
-    ...(Object.entries(tablesRelatedFrom).length
-      ? Object.entries(tablesRelatedFrom).map((o) => ({
-          fieldName: o[0],
-          table: o[1],
-          type: 'from',
-        }))
-      : []),
-  ]
-
-  // TODO: sort tables?
-
-  return tables.map((t) => (
+// TODO: sort tables?
+const RelatedTables = ({ project, relatedTables, row, url }) =>
+relatedTables.map((t) => (
     <ObservedTableNode
       key={`${row.id}/${t.table.id}`}
       project={project}
@@ -115,6 +91,5 @@ const RelatedTables = ({
       url={url}
     />
   ))
-}
 
 export default RelatedTables
