@@ -16,7 +16,7 @@ const MenuButton = styled(IconButton)`
 `
 
 const HeaderMenu = ({ children, title = 'Menu', white = true }) => {
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [anchorEl, setAnchorEl] = useState<HTMLAnchorElement>(null)
   const closeMenu = useCallback(() => {
     setAnchorEl(null)
   }, [])

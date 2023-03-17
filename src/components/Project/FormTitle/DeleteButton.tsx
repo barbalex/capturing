@@ -39,7 +39,7 @@ const ProjectDeleteButton = () => {
     return row.deleted
   }, [projectId])
 
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [anchorEl, setAnchorEl] = useState<HTMLAnchorElement>(null)
   const closeMenu = useCallback(() => {
     setAnchorEl(null)
   }, [])

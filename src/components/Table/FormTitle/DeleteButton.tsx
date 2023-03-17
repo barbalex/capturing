@@ -39,7 +39,7 @@ const TableDeleteButton = ({ userMayEdit }) => {
     return row.deleted
   }, [tableId])
 
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [anchorEl, setAnchorEl] = useState<HTMLAnchorElement>(null)
   const closeMenu = useCallback(() => {
     setAnchorEl(null)
   }, [])
