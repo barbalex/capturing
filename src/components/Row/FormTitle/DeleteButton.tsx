@@ -30,7 +30,7 @@ const RowDeleteButton = ({ row }) => {
   const { activeNodeArray, removeNodeWithChildren, session } = store
   // const filter = { todo: 'TODO: was in store' }
 
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [anchorEl, setAnchorEl] = useState<HTMLAnchorElement>(null)
   const closeMenu = useCallback(() => {
     setAnchorEl(null)
   }, [])

@@ -14,8 +14,8 @@ const StyledPopover = styled(Popover)`
 `
 
 const InfoWithPopover = ({ children }) => {
-  const [popupOpen, changePopupOpen] = useState(false)
-  const [popupAnchorEl, changePopupAnchorEl] = useState(null)
+  const [popupOpen, changePopupOpen] = useState<boolean>(false)
+  const [popupAnchorEl, changePopupAnchorEl] = useState<HTMLAnchorElement>(null)
 
   const onClickFontIcon = useCallback(
     (event) => {
