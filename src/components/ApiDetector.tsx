@@ -8,11 +8,12 @@ import { observer } from 'mobx-react-lite'
 
 import StoreContext from '../storeContext'
 import isOnline from '../utils/isOnline'
+import { IStore } from '../store'
 
 const pollInterval = 10000
 
 const ApiDetector = () => {
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { online, setOnline, session } = store
 
   useEffect(() => {

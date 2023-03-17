@@ -5,7 +5,7 @@ import { onSnapshot } from 'mobx-state-tree'
 import isEqual from 'lodash/isEqual'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
-import { MobxStore } from './store'
+import { MobxStore, IStore } from './store'
 import materialTheme from './utils/materialTheme'
 import { Provider as MobxProvider } from './storeContext'
 import Notifications from './components/Notifications'
@@ -35,7 +35,7 @@ async function persist() {
 }
 
 function App() {
-  const [store, setStore] = useState()
+  const [store, setStore] = useState<IStore>()
 
   useEffect(() => {
     // on first render regenerate store (if exists)

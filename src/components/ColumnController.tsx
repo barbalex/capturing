@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite'
 
 import storeContext from '../storeContext'
 import constants from '../utils/constants'
+import { IStore } from '../store'
 
 const Container = styled.div`
   height: 0;
@@ -14,7 +15,7 @@ const Container = styled.div`
 const ColumnController = () => {
   const { width, ref: resizeRef } = useResizeDetector()
 
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { singleColumnView, setSingleColumnView } = store
 
   useEffect(() => {
