@@ -16,6 +16,7 @@ import EditIcon from '../../images/icons/edit_project'
 import { dexie } from '../../dexieClient'
 import isNodeOpen from './isNodeOpen'
 import toggleNodeSymbol from './toggleNodeSymbol'
+import { IStore } from '../../store'
 
 const Container = styled.div``
 const Indent = styled.div`
@@ -54,7 +55,7 @@ const Node = ({ node }) => {
   const navigate = useNavigate()
   const { search } = useLocation()
 
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const {
     activeNodeArray: aNARaw,
     setActiveNodeArray,

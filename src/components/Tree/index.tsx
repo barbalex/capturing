@@ -10,6 +10,7 @@ import LastTouchedNodeSetter from './LastTouchedNodeSetter'
 import storeContext from '../../storeContext'
 import Editing from './Editing'
 import Viewing from './Viewing'
+import { IStore } from '../../store'
 
 const Container = styled.div`
   width: 100%;
@@ -18,7 +19,7 @@ const Container = styled.div`
 `
 
 const TreeComponent = () => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { editingProjects } = store
 
   const projects: Project[] =

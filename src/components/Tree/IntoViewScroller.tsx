@@ -4,9 +4,10 @@ import { observer } from 'mobx-react-lite'
 import storeContext from '../../storeContext'
 import isElementInViewport from '../../utils/isElementInViewport'
 import getLastIdFromUrl from './getLastIdFromUrl'
+import { IStore } from '../../store'
 
 const IntoViewScroller = () => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { activeNodeArray } = store
   // when opening a folder without activating it, lastTouchedNode is not same as activeNodeArray
   // in this case we do NOT want to scroll to active node that may be out of view
