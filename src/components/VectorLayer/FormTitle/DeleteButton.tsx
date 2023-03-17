@@ -11,6 +11,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import { dexie, VectorLayer } from '../../../dexieClient'
+import { IStore } from '../../../store'
 
 const TitleRow = styled.div`
   display: flex;
@@ -25,10 +26,12 @@ const Title = styled.div`
   user-select: none;
 `
 
-const VectorLayerDeleteButton = ({ userMayEdit }) => {
+type Props = { userMayEdit: boolean }
+
+const VectorLayerDeleteButton = ({ userMayEdit }: Props) => {
   const navigate = useNavigate()
   const { vectorLayerId } = useParams()
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNodeWithChildren, session } = store
   // const filter = { todo: 'TODO: was in store' }
 

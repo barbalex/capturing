@@ -10,6 +10,7 @@ import Label from '../../shared/Label'
 import { dexie, VectorLayer } from '../../../dexieClient'
 import downloadWfs from '../../../utils/downloadWfs'
 import storeContext from '../../../storeContext'
+import { IStore } from '../../../store'
 
 export const ProcessingText = styled.span`
   ${(props) =>
@@ -44,7 +45,7 @@ type Props = {
 
 // = '99999999-9999-9999-9999-999999999999'
 const VectorLayerDownload = ({ row }: Props) => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { session } = store
   const { vectorLayerId, projectId } = useParams()
 

@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import styled from '@emotion/styled'
 
 import ErrorBoundary from '../shared/ErrorBoundary'
@@ -27,4 +26,4 @@ const VectorLayerComponent = ({ filter: showFilter }) => {
   )
 }
 
-export default observer(VectorLayerComponent)
+export default VectorLayerComponent

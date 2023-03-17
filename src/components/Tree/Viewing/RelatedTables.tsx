@@ -2,13 +2,23 @@ import { useContext } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { observer } from 'mobx-react-lite'
 
-import { dexie } from '../../../dexieClient'
+import { dexie, IProject, ITable, IRow } from '../../../dexieClient'
 import Node from '../Node'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
 import Rows from './RelatedRows'
 import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
+import { IStore } from '../../../store'
+
+type Props = {
+  project: IProject
+  table: ITable
+  fieldName: string
+  type: 'from' | 'to'
+  row: IRow
+  url: string[]
+}
 
 const RelatedTableNode = ({
   project,
@@ -17,8 +27,8 @@ const RelatedTableNode = ({
   type,
   row,
   url: urlPassed,
-}) => {
-  const store = useContext(storeContext)
+}: Props) => {
+  const store: IStore = useContext(storeContext)
   const { nodes } = store
 
   // depending on type, filter by id
@@ -80,7 +90,7 @@ const ObservedTableNode = observer(RelatedTableNode)
 
 // TODO: sort tables?
 const RelatedTables = ({ project, relatedTables, row, url }) =>
-relatedTables.map((t) => (
+  relatedTables.map((t) => (
     <ObservedTableNode
       key={`${row.id}/${t.table.id}`}
       project={project}

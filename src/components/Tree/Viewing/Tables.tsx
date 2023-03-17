@@ -2,16 +2,22 @@ import { useContext } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { observer } from 'mobx-react-lite'
 
-import { dexie, Table } from '../../../dexieClient'
+import { dexie, Table, Project } from '../../../dexieClient'
 import Node from '../Node'
 import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
 import Rows from './Rows'
+import { IStore } from '../../../store'
 
-const TableNode = ({ project, table }) => {
-  const store = useContext(storeContext)
+type Props = {
+  project: Project
+  table: Table
+}
+
+const TableNode = ({ project, table }: Props) => {
+  const store: IStore = useContext(storeContext)
   const { nodes } = store
 
   const childrenCount = useLiveQuery(() =>
