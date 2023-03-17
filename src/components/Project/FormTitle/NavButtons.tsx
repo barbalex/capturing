@@ -14,6 +14,7 @@ import styled from '@emotion/styled'
 import StoreContext from '../../../storeContext'
 import { MenuChildrenButton } from '../../Table/FormTitle/NavButtons'
 import { dexie } from '../../../dexieClient'
+import { IStore } from '../../../store'
 import sortProjectsByLabelName from '../../../utils/sortProjectsByLabelName'
 
 const StyledFaArrowDown = styled(FaArrowDown)`
@@ -23,7 +24,7 @@ const StyledFaArrowDown = styled(FaArrowDown)`
 const ProjectNavButtons = () => {
   const { projectId } = useParams()
 
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNode, setHorizontalNavIds, editingProjects } =
     store
   const editing = editingProjects.get(projectId)?.editing ?? false

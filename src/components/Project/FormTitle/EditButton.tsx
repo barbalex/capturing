@@ -7,10 +7,11 @@ import { orange } from '@mui/material/colors'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import storeContext from '../../../storeContext'
 import EditIcon from '../../../images/icons/edit_project'
+import { IStore } from '../../../store'
 
 const ProjectEditButton = () => {
   const { projectId } = useParams()
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { editingProjects, setProjectEditing } = store
   const editing = editingProjects.get(projectId)?.editing ?? false
 

@@ -292,6 +292,4 @@ export const MobxStore = types
     },
   }))
 
-// this errors: Uncaught SyntaxError: Unexpected token 'export'
-// export interface IStore extends Instance<typeof MobxStore> {}
-export interface IStore extends Instance<typeof MobxStore> {}
+export type IStore = Instance<typeof MobxStore>

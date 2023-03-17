@@ -22,6 +22,7 @@ import ErrorBoundary from '../shared/ErrorBoundary'
 import storeContext from '../../storeContext'
 import { supabase } from '../../supabaseClient'
 import logout from '../../utils/logout'
+import { IStore } from '../../store'
 
 const StyledDialog = styled(Dialog)`
   .MuiPaper-root {
@@ -46,7 +47,7 @@ const ResetButton = styled(Button)`
 
 const ResetPassword = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
 
   // TODO: remove type search param to close reset password modal:
   // searchParams.delete('type'), need setSearchParams?

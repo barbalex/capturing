@@ -14,6 +14,7 @@ import { dexie } from '../../dexieClient'
 import insertProject from '../../utils/insertProject'
 import sortProjectsByLabelName from '../../utils/sortProjectsByLabelName'
 import FilterNumbers from '../shared/FilterNumbers'
+import { IStore } from '../../store'
 
 const Container = styled.div`
   height: 100%;
@@ -54,7 +55,7 @@ const FieldsContainer = styled.div`
 
 const Projects = () => {
   const navigate = useNavigate()
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { setProjectEditing } = store
 
   const data = useLiveQuery(async () => {
