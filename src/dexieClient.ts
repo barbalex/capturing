@@ -1240,6 +1240,7 @@ export class Row implements IRow {
       for (const el of lASorted) {
         if (el.field) {
           const field: Field = await dexie.fields.get(el.field)
+          if (!field) continue
           // check if field is a relation
           if (field.table_rel) {
             // get the row of the relation
@@ -1251,6 +1252,8 @@ export class Row implements IRow {
             label += relTableRowLabel ?? ''
             continue
           }
+          if (!field.name)
+            label += '(bitte prüfen Sie die Datensatz-Beschriftung)'
           label += this.data?.[field.name] ?? `('${field.name}' ist leer)`
           continue
         }
