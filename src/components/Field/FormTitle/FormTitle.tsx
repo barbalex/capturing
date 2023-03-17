@@ -12,6 +12,7 @@ import FilterNumbers from '../../shared/FilterNumbers'
 import Menu from '../../shared/Menu'
 import { dexie, IProjectUser } from '../../../dexieClient'
 import storeContext from '../../../storeContext'
+import { IStore } from '../../../store'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
@@ -50,7 +51,7 @@ const TitleSymbols = styled.div`
 
 const FieldFormTitle = ({ totalCount, filteredCount, width }) => {
   const { projectId } = useParams()
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { session } = store
 
   const userMayEdit: boolean = useLiveQuery(async () => {

@@ -28,6 +28,7 @@ import Spinner from '../../shared/Spinner'
 import RadioButtonGroup from '../../shared/RadioButtonGroup'
 import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
+import { IStore } from '../../../store'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -46,7 +47,7 @@ type valueType = {
 // = '99999999-9999-9999-9999-999999999999'
 const FieldForm = ({ showFilter }: FieldFormProps) => {
   const { projectId, fieldId } = useParams()
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { filter, errors, rebuildTree, session } = store
 
   const unsetError = useCallback(

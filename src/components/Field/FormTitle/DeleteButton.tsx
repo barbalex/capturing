@@ -11,6 +11,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import { dexie, Field } from '../../../dexieClient'
+import { IStore } from '../../../store'
 
 const TitleRow = styled.div`
   display: flex;
@@ -28,7 +29,7 @@ const Title = styled.div`
 const FieldDeleteButton = ({ userMayEdit }) => {
   const navigate = useNavigate()
   const { fieldId } = useParams()
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNodeWithChildren, session } = store
   // const filter = { todo: 'TODO: was in store' }
 
