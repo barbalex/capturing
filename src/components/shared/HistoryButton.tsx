@@ -10,6 +10,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import StoreContext from '../../storeContext'
 import ErrorBoundary from './ErrorBoundary'
 import { dexie, Row } from '../../dexieClient'
+import { IStore } from '../../store'
 
 const StyledMenuItem = styled(MenuItem)`
   ${(props) =>
@@ -30,7 +31,7 @@ const HistoryButton = ({ asMenu, showHistory, setShowHistory, level }) => {
   const rowId = params[`rowId${level}`]
   const url = params['*']
   const isHistory = url?.endsWith('history')
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { online } = store
 
   const row: Row =

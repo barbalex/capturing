@@ -11,6 +11,7 @@ import { ReactComponent as DoubleArrowCrossed } from '../../svg/double_arrow_cro
 import Data from './Conflict/Data'
 import StoreContext from '../../storeContext'
 import constants from '../../utils/constants'
+import { IStore } from '../../store'
 
 const Container = styled.div`
   padding: 10px;
@@ -18,7 +19,7 @@ const Container = styled.div`
 const Title = styled.h4`
   margin-bottom: 0;
 `
-const TitleRow = styled.div` 
+const TitleRow = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
@@ -46,7 +47,7 @@ const StyledButton = styled(Button)`
 `
 
 const History = ({ rev, dataArray, onClickRestore }) => {
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { diffConflict, setDiffConflict } = store
 
   const onClickToggleDiff = useCallback(

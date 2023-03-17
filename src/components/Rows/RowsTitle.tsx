@@ -16,6 +16,7 @@ import { dexie, Table } from '../../dexieClient'
 import insertRow from '../../utils/insertRow'
 import FilterNumbers from '../shared/FilterNumbers'
 import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
+import { IStore } from '../../store'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
@@ -54,7 +55,7 @@ const RowsTitle = ({ rowsWithLabel, level }: Props) => {
   const tableId = params[`tableId${level}`]
   const navigate = useNavigate()
 
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { activeNodeArray, removeNode, editingProjects, session } = store
   const editing = editingProjects.get(projectId)?.editing ?? false
 

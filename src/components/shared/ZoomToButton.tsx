@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite'
 import ErrorBoundary from './ErrorBoundary'
 import storeContext from '../../storeContext'
 import boundsFromBbox from '../../utils/boundsFromBbox'
+import { IStore } from '../../store'
 
 type Props = {
   bbox: number[]
@@ -13,7 +14,7 @@ type Props = {
 }
 
 const ZoomToButton = ({ bbox, geometryExists }: Props) => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { showMap, setShowMap, flyToMapBounds } = store
 
   const onClick = useCallback(async () => {

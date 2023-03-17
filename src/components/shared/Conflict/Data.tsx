@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite'
 import toStringIfPossible from '../../../utils/toStringIfPossible'
 import StoreContext from '../../../storeContext'
 import Spinner from '../Spinner'
+import { IStore } from '../../../store'
 
 const Row = styled.div`
   display: flex;
@@ -30,7 +31,7 @@ const Key = styled.div`
 `
 
 const ConflictData = ({ dataArray, loading }) => {
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { diffConflict } = store
 
   if (loading) return <Spinner message="lade Daten" />
