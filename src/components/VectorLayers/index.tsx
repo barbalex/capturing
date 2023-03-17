@@ -10,6 +10,7 @@ import Item from './Item'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import { dexie, VectorLayer } from '../../dexieClient'
 import Title from './Title'
+import { IStore } from '../../store'
 
 const Container = styled.div`
   height: 100%;
@@ -42,7 +43,7 @@ window.addEventListener('error', (e) => {
 const VectorLayersComponent = () => {
   const { projectId } = useParams()
 
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { setVectorLayerSorter, rebuildTree, session } = store
 
   const vectorLayers: VectorLayer[] = useLiveQuery(

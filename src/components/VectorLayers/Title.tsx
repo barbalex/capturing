@@ -12,6 +12,7 @@ import constants from '../../utils/constants'
 import { dexie } from '../../dexieClient'
 import insertVectorLayer from '../../utils/insertVectorLayer'
 import FilterNumbers from '../shared/FilterNumbers'
+import { IStore } from '../../store'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
@@ -42,7 +43,7 @@ const VectorLayersTitle = () => {
   const { projectId } = useParams()
   const navigate = useNavigate()
 
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { activeNodeArray, removeNode, session } = store
 
   const data = useLiveQuery(async () => {

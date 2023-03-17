@@ -31,6 +31,7 @@ import DownloadPVL from './DownloadPVL'
 import constants from '../../../utils/constants'
 import downloadWfs from '../../../utils/downloadWfs'
 import getCapabilitiesDataForVectorLayer from './getCapabilitiesData'
+import { IStore } from '../../../store'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -69,7 +70,7 @@ type Props = {
 const VectorLayerForm = ({ showFilter }: Props) => {
   const { projectId, vectorLayerId } = useParams()
 
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { filter, errors, rebuildTree, session } = store
 
   const unsetError = useCallback(
