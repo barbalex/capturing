@@ -50,9 +50,9 @@ const ProjectUsersIndex = () => {
   const { session } = useContext(storeContext)
   const { projectId } = useParams()
 
-  const [addNew, setAddNew] = useState(false)
+  const [addNew, setAddNew] = useState<boolean>(false)
 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState<boolean>(false)
   const anim = useAnimation()
   const onClickToggle = useCallback(
     async (e) => {

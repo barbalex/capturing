@@ -9,7 +9,7 @@ import storeContext from '../../../storeContext'
 type Props = {
   row: Row
   revRow: any
-  restoreCallback: any
+  restoreCallback: () => void
 }
 
 const HistoryRow = ({ row, revRow, restoreCallback }: Props) => {

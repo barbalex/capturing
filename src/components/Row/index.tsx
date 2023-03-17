@@ -66,10 +66,10 @@ const RowComponent = ({ filter: showFilter, level }) => {
     [rowId],
   )
 
-  const [showHistory, setShowHistory] = useState(false)
+  const [showHistory, setShowHistory] = useState<boolean>(false)
   // console.log('RowForm rendering, row:', row)
 
-  const [activeConflict, setActiveConflict] = useState(null)
+  const [activeConflict, setActiveConflict] = useState<string>(null)
   // ensure that activeConflict is reset
   // when changing dataset
   useEffect(() => {

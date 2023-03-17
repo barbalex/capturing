@@ -45,6 +45,8 @@ const ResetButton = styled(Button)`
   margin-right: 20px !important;
 `
 
+type IAuthType = 'link' | 'email' | 'email_signup' | 'email_reset'
+
 const ResetPassword = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const store: IStore = useContext(storeContext)
@@ -52,12 +54,12 @@ const ResetPassword = () => {
   // TODO: remove type search param to close reset password modal:
   // searchParams.delete('type'), need setSearchParams?
 
-  const [authType, setAuthType] = useState('link') // or: 'email'
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPass, setShowPass] = useState(false)
-  const [emailErrorText, setEmailErrorText] = useState('')
-  const [passwordErrorText, setPasswordErrorText] = useState('')
+  const [authType, setAuthType] = useState<IAuthType>('link') // or: 'email'
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [showPass, setShowPass] = useState<boolean>(false)
+  const [emailErrorText, setEmailErrorText] = useState<string>('')
+  const [passwordErrorText, setPasswordErrorText] = useState<string>('')
 
   const emailInput = useRef(null)
   const passwordInput = useRef(null)
@@ -140,7 +142,7 @@ const ResetPassword = () => {
   const onClickShowPass = useCallback(() => setShowPass(!showPass), [showPass])
   const onMouseDownShowPass = useCallback((e) => e.preventDefault(), [])
 
-  const [resetTitle, setResetTitle] = useState('neues Passwort setzen')
+  const [resetTitle, setResetTitle] = useState<string>('neues Passwort setzen')
   const reset = useCallback(async () => {
     if (!email) setEmailErrorText('Bitte Email-Adresse eingeben')
     setResetTitle('...')

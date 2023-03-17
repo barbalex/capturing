@@ -56,7 +56,7 @@ const Files = ({ fileMeta }: Props) => {
     [fileMeta, session],
   )
 
-  const [blob, setBlob] = useState()
+  const [blob, setBlob] = useState<Blob>()
   useEffect(() => {
     dexie.files.get(fileMeta.id).then((file: File) => {
       if (!file) return
@@ -77,7 +77,7 @@ const Files = ({ fileMeta }: Props) => {
   )
 
   const isImage = fileMeta.type?.includes('image') ?? false
-  const [preview, setPreview] = useState()
+  const [preview, setPreview] = useState<string>()
   useEffect(() => {
     if (isImage && !!blob) {
       let objectUrl
