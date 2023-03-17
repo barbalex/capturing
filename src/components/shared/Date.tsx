@@ -91,6 +91,8 @@ const timeFormat = [
   'dd HH:mm',
 ]
 
+type StateValue = string | number | Date | dayjs.Dayjs | null | undefined
+
 const DateField = ({
   value: valuePassed,
   name,
@@ -100,7 +102,7 @@ const DateField = ({
   popperPlacement = 'auto',
   showTimeSelect = false,
 }) => {
-  const [stateValue, setStateValue] = useState(valuePassed)
+  const [stateValue, setStateValue] = useState<StateValue>(valuePassed)
   useEffect(() => {
     setStateValue(valuePassed)
   }, [valuePassed])

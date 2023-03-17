@@ -24,9 +24,22 @@ const StyledInput = styled(Input)`
   }
   width: 70px;
 `
+type Props = {
+  color?: string
+  onBlur: (any) => void
+  label: string
+  name: string
+  disabled?: boolean
+}
 
-const ColorPicker = ({ color = '#ff0000', onBlur, label, name, disabled }) => {
-  const [val, setVal] = useState('')
+const ColorPicker = ({
+  color = '#ff0000',
+  onBlur,
+  label,
+  name,
+  disabled,
+}: Props) => {
+  const [val, setVal] = useState<string>('')
 
   useEffect(() => {
     setVal(color ?? '')

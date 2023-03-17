@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import Label from '../../shared/Label'
 import constants from '../../../utils/constants'
-import { dexie } from '../../../dexieClient' 
+import { dexie, TileLayer } from '../../../dexieClient'
 
 const Container = styled.div`
   margin: 15px -10px 10px -10px;
@@ -35,9 +35,15 @@ const LegendsContainer = styled.div`
   padding: 10px;
 `
 
+type Props = {
+  row: TileLayer
+}
+type ILegend = [blob, string]
+type ILegends = ILegend[]
+
 // = '99999999-9999-9999-9999-999999999999'
-const TileLayerFormLegends = ({ row }) => {
-  const [legends, setLegends] = useState()
+const TileLayerFormLegends = ({ row }: Props) => {
+  const [legends, setLegends] = useState<ILegends>()
   useEffect(() => {
     // get legends from row
     const _legends = []

@@ -23,14 +23,22 @@ const StyledCheckbox = styled(Checkbox)`
   width: 24px;
 `
 
+type Props = {
+  label: string
+  name: string
+  value: boolean
+  error: string
+  onBlur: (any) => void
+}
+
 const Checkbox2States = ({
   label,
   name,
   value: valuePassed,
   error,
   onBlur,
-}) => {
-  const [stateValue, setStateValue] = useState(valuePassed)
+}: Props) => {
+  const [stateValue, setStateValue] = useState<string>(valuePassed)
   useEffect(() => {
     setStateValue(valuePassed)
   }, [valuePassed])

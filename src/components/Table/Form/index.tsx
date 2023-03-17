@@ -172,7 +172,8 @@ const TableForm = ({ showFilter }: TableFormProps) => {
     }
   }, [updateOnServer])
 
-  const [purgeFieldsDialogOpen, setPurgeFieldsDialogOpen] = useState(false)
+  const [purgeFieldsDialogOpen, setPurgeFieldsDialogOpen] =
+    useState<boolean>(false)
   const onClosePurgeFieldsDialog = useCallback(() => {
     onBlur({ target: { name: 'type', value: 'standard' } })
     setPurgeFieldsDialogOpen(false)
