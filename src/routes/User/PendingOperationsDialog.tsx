@@ -8,9 +8,11 @@ import Button from '@mui/material/Button'
 import { FaExclamationCircle } from 'react-icons/fa'
 import styled from '@emotion/styled'
 import { useNavigate } from 'react-router-dom'
+import { observer } from 'mobx-react-lite'
 
 import logout from '../../utils/logout'
 import StoreContext from '../../storeContext'
+import { IStore } from '../../store'
 
 const RiskyButton = styled(Button)`
   color: #d84315 !important;
@@ -23,7 +25,7 @@ const PendingOperationsDialog = ({
   queuedUpdatesCount,
 }) => {
   const navigate = useNavigate()
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
 
   return (
     <Dialog
@@ -67,4 +69,4 @@ const PendingOperationsDialog = ({
   )
 }
 
-export default PendingOperationsDialog
+export default observer(PendingOperationsDialog)

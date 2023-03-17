@@ -10,6 +10,7 @@ import Item from './Item'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import { dexie, TileLayer } from '../../dexieClient'
 import Title from './Title'
+import { IStore } from '../../store'
 
 const Container = styled.div`
   height: 100%;
@@ -42,7 +43,7 @@ window.addEventListener('error', (e) => {
 const TileLayersComponent = () => {
   const { projectId } = useParams()
 
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { setTileLayerSorter, rebuildTree, session } = store
 
   const tileLayers: TileLayer[] = useLiveQuery(

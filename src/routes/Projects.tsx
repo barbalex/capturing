@@ -10,6 +10,7 @@ import Login from '../components/Login'
 import constants from '../utils/constants'
 import Tree from '../components/Tree'
 import MapComponent from '../components/Map'
+import { IStore } from '../store'
 
 export const StyledSplitPane = styled(SplitPane)`
   .Resizer {
@@ -105,7 +106,7 @@ const animate = {
  */
 
 const ProjectsPage = () => {
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const {
     showTree,
     showForm,

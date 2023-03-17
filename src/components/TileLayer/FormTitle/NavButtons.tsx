@@ -7,11 +7,12 @@ import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../../storeContext'
 import { dexie } from '../../../dexieClient'
+import { IStore } from '../../../store'
 
 const TileLayerNavButtons = () => {
   const { projectId, tileLayerId } = useParams()
 
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 
   const tileLayerIds: string[] =
