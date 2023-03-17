@@ -9,9 +9,10 @@ import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../../isNodeOpen'
 import storeContext from '../../../../storeContext'
 import Folders from './Folders'
+import { IStore } from '../../../../store'
 
 const TableNode = ({ project, table }) => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { nodes } = store
 
   const childrenCount = useLiveQuery(() =>

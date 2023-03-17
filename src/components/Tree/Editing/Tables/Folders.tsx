@@ -8,9 +8,10 @@ import isNodeOpen from '../../isNodeOpen'
 import storeContext from '../../../../storeContext'
 import Rows from './Rows'
 import Fields from './Fields'
+import { IStore } from '../../../../store'
 
 const TableFolders = ({ project, table }) => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { nodes } = store
 
   const data = useLiveQuery(async () => {

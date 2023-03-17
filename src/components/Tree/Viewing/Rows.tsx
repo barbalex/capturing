@@ -2,19 +2,25 @@ import { useContext } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { observer } from 'mobx-react-lite'
 
-import { dexie } from '../../../dexieClient'
+import { dexie, IProject, ITable } from '../../../dexieClient'
 import Node from '../Node'
 import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
 import RelatedTables from './RelatedTables'
+import { IStore } from '../../../store'
 
-// TODO: show related rows as children
+type Props = {
+  project: IProject
+  table: ITable
+}
+
+// show related rows as children
 // 1. get list of fields
 // 2. get list of related tables
 // 3. build folders for all related tables
-const ViewingRows = ({ project, table }) => {
-  const store = useContext(storeContext)
+const ViewingRows = ({ project, table }: Props) => {
+  const store: IStore = useContext(storeContext)
   const { nodes } = store
 
   const data = useLiveQuery(async () => {

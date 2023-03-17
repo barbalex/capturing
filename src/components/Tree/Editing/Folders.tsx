@@ -9,9 +9,10 @@ import storeContext from '../../../storeContext'
 import VectorLayers from './VectorLayers'
 import TileLayers from './TileLayers'
 import Tables from './Tables'
+import { IStore } from '../../../store'
 
 const ProjectFolders = ({ project }) => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { nodes } = store
 
   const data = useLiveQuery(async () => {

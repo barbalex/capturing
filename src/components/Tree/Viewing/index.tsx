@@ -7,10 +7,15 @@ import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
 import Tables from './Tables'
-import { dexie } from '../../../dexieClient'
+import { dexie, IProject } from '../../../dexieClient'
+import { IStore } from '../../../store'
 
-const ViewingProject = ({ project }) => {
-  const store = useContext(storeContext)
+type Props = {
+  project: IProject
+}
+
+const ViewingProject = ({ project }: Props) => {
+  const store: IStore = useContext(storeContext)
   const { nodes, session } = store
 
   // query child tables
