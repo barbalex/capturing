@@ -3,6 +3,7 @@ import { useMap } from 'react-leaflet'
 
 import { TileLayer as TileLayerType } from '../../../../dexieClient'
 import storeContext from '../../../../storeContext'
+import { IStore } from '../../../../store'
 
 type Props = {
   layer: TileLayerType
@@ -10,7 +11,7 @@ type Props = {
 
 const WMTSOffline = ({ layer }: Props) => {
   const map = useMap()
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { setLocalMapValues } = store
 
   console.log('WMTSOffline, layer:', layer)

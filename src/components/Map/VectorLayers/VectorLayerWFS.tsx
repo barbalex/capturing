@@ -23,6 +23,7 @@ import {
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 import Popup from '../Popup'
 import storeContext from '../../../storeContext'
+import { IStore } from '../../../store'
 
 const StyledXMLViewer = styled(XMLViewer)`
   font-size: small;
@@ -42,7 +43,7 @@ type Props = {
 const VectorLayerComponent = ({ layer }: Props) => {
   const [error, setError] = useState()
 
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { addNotification, removeNotificationById, showMap } = store
 
   const removeNotifs = useCallback(() => {

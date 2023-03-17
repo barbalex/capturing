@@ -10,6 +10,7 @@ import xmlToLayersData from '../../../../utils/xmlToLayersData'
 import Popup from '../../Popup'
 import onTileError from './onTileError'
 import storeContext from '../../../../storeContext'
+import { IStore } from '../../../../store'
 
 const StyledPopupContent = styled.div`
   white-space: pre;
@@ -24,7 +25,7 @@ const PopupContainer = styled.div`
 
 const WMS = ({ layer }) => {
   const map = useMap()
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
 
   useMapEvent('click', async (e) => {
     // console.log({ layer })

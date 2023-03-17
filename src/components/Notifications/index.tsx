@@ -5,6 +5,8 @@ import IconButton from '@mui/material/IconButton'
 import { MdClose as CloseIcon } from 'react-icons/md'
 import sortBy from 'lodash/sortBy'
 
+import { IStore } from '../../store'
+
 // z-index needs to cover map, thus so hight
 const Container = styled.div`
   padding: 5px;
@@ -21,7 +23,7 @@ import StoreContext from '../../storeContext'
 import Notification from './Notification'
 
 const Notifications = () => {
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { removeAllNotifications, notifications } = store
 
   const notificationsSorted = sortBy([...notifications.values()], 'time')

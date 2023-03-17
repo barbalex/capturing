@@ -10,6 +10,7 @@ import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 import Popup from '../Popup'
 import storeContext from '../../../storeContext'
 import MapErrorBoundary from '../../../components/shared/MapErrorBoundary'
+import { IStore } from '../../../store'
 
 // const bboxBuffer = 0.01
 
@@ -19,7 +20,7 @@ type Props = {
 const VectorLayerComponent = ({ layer }: Props) => {
   const [data, setData] = useState()
 
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { addNotification, removeNotificationById, showMap } = store
 
   const removeNotifs = useCallback(() => {
@@ -148,7 +149,7 @@ const VectorLayerComponent = ({ layer }: Props) => {
             },
           ]
           const popupContent = ReactDOMServer.renderToString(
-            <Popup layersData={layersData} mapSize={mapSize} />, 
+            <Popup layersData={layersData} mapSize={mapSize} />,
           )
           _layer.bindPopup(popupContent)
         }}
