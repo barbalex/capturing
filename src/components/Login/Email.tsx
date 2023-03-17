@@ -16,6 +16,7 @@ import styled from '@emotion/styled'
 import storeContext from '../../storeContext'
 import { supabase } from '../../supabaseClient'
 import logout from '../../utils/logout'
+import { IStore } from '../../store'
 
 const Container = styled.div`
   display: flex;
@@ -36,7 +37,7 @@ const LoginWithEmailAndPassword = ({
   setPasswordErrorText,
   authType,
 }) => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
 
   const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)

@@ -25,6 +25,7 @@ import Control from './Control'
 import OwnControls from './OwnControls'
 
 import '../../utils/leaflet.dexie/index.ts'
+import { IStore } from '../../store'
 
 const Container = styled.div`
   height: 100%;
@@ -64,7 +65,7 @@ const StyledMapContainer = styled(MapContainer)`
 
 const MapComponent = () => {
   const { rowId } = useParams()
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const {
     bounds: boundsRaw,
     showMap,

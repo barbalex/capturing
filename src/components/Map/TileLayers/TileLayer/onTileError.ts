@@ -1,10 +1,11 @@
 // TODO: need to debounce
-import axios from 'redaxios' 
+import axios from 'redaxios'
 
 import { TileLayer } from '../../../../dexieClient'
 import xmlToJson from '../../../../utils/xmlToJson'
+import { IStore } from '../../../../store'
 
-const onTileError = async (store, map, layer: TileLayer, ignore) => {
+const onTileError = async (store: IStore, map, layer: TileLayer, ignore) => {
   console.log('onTileError', { ignore, map, layer, store })
   const mapSize = map.getSize()
   const bbox = map.getBounds().toBBoxString()

@@ -10,6 +10,7 @@ import styled from '@emotion/styled'
 import { supabase } from '../../supabaseClient'
 import storeContext from '../../storeContext'
 import logout from '../../utils/logout'
+import { IStore } from '../../store'
 
 const Container = styled.div`
   display: flex;
@@ -23,9 +24,9 @@ const StyledInput = styled(Input)`
 `
 
 const Login = ({ emailErrorText, setEmailErrorText, email, setEmail }) => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
 
-  const [buttonTxt, setButtonTxt] = useState('anmelden')
+  const [buttonTxt, setButtonTxt] = useState<string>('anmelden')
 
   const emailInput = useRef(null)
 

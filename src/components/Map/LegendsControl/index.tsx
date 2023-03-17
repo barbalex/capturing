@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import styled from '@emotion/styled'
 import { MdExpandMore, MdExpandLess } from 'react-icons/md'
-import { observer } from 'mobx-react-lite'
 import { motion, useAnimation } from 'framer-motion'
 
 import Legends from './Legends'
@@ -50,8 +49,6 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
 `
 
 const LayersControl = () => {
-  // const store = useContext(storeContext)
-
   const anim = useAnimation()
   const [legendsExpanded, setLegendsExpanded] = useState(false)
 
@@ -97,4 +94,4 @@ const LayersControl = () => {
   )
 }
 
-export default observer(LayersControl)
+export default LayersControl
