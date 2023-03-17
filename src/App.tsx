@@ -81,7 +81,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    persist().then((val) => console.log('storage is persisted safely:', val))
+    persist() //.then((val) => console.log('storage is persisted safely:', val))
   }, [])
 
   // console.log('App rendering, store:', store)
