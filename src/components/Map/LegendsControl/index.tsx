@@ -50,7 +50,7 @@ const StyledExpandMoreIcon = styled(ExpandMoreIcon)`
 
 const LayersControl = () => {
   const anim = useAnimation()
-  const [legendsExpanded, setLegendsExpanded] = useState(false)
+  const [legendsExpanded, setLegendsExpanded] = useState<boolean>(false)
 
   const onToggleApfloraLayersExpanded = useCallback(async () => {
     if (legendsExpanded) {

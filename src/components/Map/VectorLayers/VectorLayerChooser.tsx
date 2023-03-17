@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useLiveQuery } from 'dexie-react-hooks'
+
 import { dexie } from '../../../dexieClient'
 import VectorLayerWFS from './VectorLayerWFS'
 import VectorLayerPVLGeom from './VectorLayerPVLGeom'
@@ -9,16 +10,16 @@ import VectorLayerPVLGeom from './VectorLayerPVLGeom'
  */
 
 const VectorLayerChooser = ({ layer }) => {
-  const [pvlGeomCount, setPvlGeomCount] = useState()
-  useEffect(() => {
-    dexie.pvl_geoms
-      .where({
-        deleted: 0,
-        pvl_id: layer.id,
-      })
-      .count()
-      .then((count) => setPvlGeomCount(count))
-  }, [layer.id])
+  const pvlGeomCount: integer = useLiveQuery(
+    async () =>
+      await dexie.pvl_geoms
+        .where({
+          deleted: 0,
+          pvl_id: layer.id,
+        })
+        .count(),
+    [layer.id],
+  )
 
   // TODO: only accept pre-downloaded layers because of
   // problems filtering by bbox?

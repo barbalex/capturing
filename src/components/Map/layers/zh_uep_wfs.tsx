@@ -8,6 +8,7 @@ import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import { MdClose } from 'react-icons/md'
 import styled from '@emotion/styled'
+import { LatLngBounds } from 'leaflet'
 
 const customTheme = {
   attributeKeyColor: '#0074D9',
@@ -32,8 +33,8 @@ const ZhUepWfs = () => {
   })
   const [error, setError] = useState()
   const [data, setData] = useState()
-  const [zoom, setZoom] = useState(map.getZoom())
-  const [bounds, setBounds] = useState(map.getBounds())
+  const [zoom, setZoom] = useState<number>(map.getZoom())
+  const [bounds, setBounds] = useState<LatLngBounds>(map.getBounds())
 
   // const bbox = `${bounds._northEast.lng},${bounds._northEast.lat},${bounds._southWest.lng},${bounds._southWest.lat}`
   const bbox = `${bounds._southWest.lng},${bounds._southWest.lat},${bounds._northEast.lng},${bounds._northEast.lat}`
@@ -89,7 +90,7 @@ const ZhUepWfs = () => {
       setData(res.data)
     }
     run()
-  }, [bbox])
+  }, [bbox, zoom])
 
   console.log('ZhUepWfs, data:', data)
 
