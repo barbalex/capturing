@@ -158,6 +158,7 @@ const RowLabel = ({ useLabels, rowState, updateOnServer }: Props) => {
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
           // focus left the container
+          console.log('RowLabel updating on server')
           updateOnServer()
         }
       }}
