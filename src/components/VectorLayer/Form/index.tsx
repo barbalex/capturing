@@ -202,7 +202,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
     }
   })
 
-  const [loadingCapabilities, setLoadingCapabilities] = useState(false)
+  const [loadingCapabilities, setLoadingCapabilities] = useState<boolean>(false)
   useEffect(() => {
     // only set if url exists
     if (!row?.url) return

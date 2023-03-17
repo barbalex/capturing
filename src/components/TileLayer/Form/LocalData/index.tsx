@@ -95,8 +95,8 @@ const LocalData = ({ userMayEdit, row }: Props) => {
    */
 
   const localMap = localMaps?.[row.id]
-  const [showProgress, setShowProgress] = useState(false)
-  const [downloading, setDownloading] = useState(false)
+  const [showProgress, setShowProgress] = useState<boolean>(false)
+  const [downloading, setDownloading] = useState<boolean>(false)
 
   const onClickSaveWmts = useCallback(() => {
     setLocalMapLoading()

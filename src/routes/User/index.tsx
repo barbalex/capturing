@@ -52,7 +52,7 @@ const UserPage = () => {
     document.title = 'Erfassen: Benutzer'
   }, [])
   const [pendingOperationsDialogOpen, setPendingOperationsDialogOpen] =
-    useState(false)
+    useState<boolean>(false)
   const queuedUpdatesCount =
     useLiveQuery(async () => await dexie.queued_updates.count(), []) ?? 0
 
@@ -61,7 +61,7 @@ const UserPage = () => {
     logout({ store, navigate })
   }, [navigate, queuedUpdatesCount, store])
 
-  const [purgeDialogOpen, setPurgeDialogOpen] = useState(false)
+  const [purgeDialogOpen, setPurgeDialogOpen] = useState<boolean>(false)
   const onClickPurge = useCallback(async () => {
     if (queuedUpdatesCount) return setPurgeDialogOpen(true)
     await dexie.delete()
@@ -71,7 +71,7 @@ const UserPage = () => {
 
   const email = useMemo(() => user?.email ?? {}, [user?.email])
 
-  const [resetTitle, setResetTitle] = useState('Passwort zurücksetzen')
+  const [resetTitle, setResetTitle] = useState<string>('Passwort zurücksetzen')
   const onClickResetPassword = useCallback(async () => {
     setResetTitle('...')
     const { error } = await supabase.auth.api.resetPasswordForEmail(email)

@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { supabase } from '../supabaseClient'
 
 export default function Auth() {
-  const [loading, setLoading] = useState(false)
-  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState<boolean>(false)
+  const [email, setEmail] = useState<string>('')
 
   const handleLogin = async (e) => {
     e.preventDefault()

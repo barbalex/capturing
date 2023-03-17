@@ -73,9 +73,9 @@ const VectorLayerDownload = ({ row }: Props) => {
   const userMayEdit: boolean = data?.userMayEdit
   const pvlGeomsCount: number = data?.pvlGeomsCount
 
-  const [downloading, setDownloading] = useState(false)
+  const [downloading, setDownloading] = useState<boolean>(false)
 
-  const [removing, setRemoving] = useState(false)
+  const [removing, setRemoving] = useState<boolean>(false)
   const removeText = removing ? 'Daten werden entfernt...' : 'Daten entfernen'
 
   const onClickDownload = useCallback(async () => {
