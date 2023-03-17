@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import { observer } from 'mobx-react-lite'
 
 import storeContext from '../../../../storeContext'
+import { IStore } from '../../../../store'
 
 const Error = styled.p`
   font-size: 0.75rem;
@@ -13,7 +14,7 @@ const Tip = styled.p`
 `
 
 const Rejections = () => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { localMapLoadingFulfilled, localMapLoadingRejected } = store
 
   if (localMapLoadingRejected > 0)

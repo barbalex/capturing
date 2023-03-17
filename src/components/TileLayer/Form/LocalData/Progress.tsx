@@ -5,9 +5,10 @@ import Typography from '@mui/material/Typography'
 import { observer } from 'mobx-react-lite'
 
 import storeContext from '../../../../storeContext'
+import { IStore } from '../../../../store'
 
 const Progress = ({ showProgress, setShowProgress, setDownloading }) => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { localMapLoadingFraction } = store
 
   useEffect(() => {

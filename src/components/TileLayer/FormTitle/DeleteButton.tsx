@@ -11,6 +11,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import { dexie, TileLayer } from '../../../dexieClient'
+import { IStore } from '../../../store'
 
 const TitleRow = styled.div`
   display: flex;
@@ -24,11 +25,12 @@ const Title = styled.div`
   font-weight: 700;
   user-select: none;
 `
+type Props = { userMayEdit: boolean }
 
-const TileLayerDeleteButton = ({ userMayEdit }) => {
+const TileLayerDeleteButton = ({ userMayEdit }: Props) => {
   const navigate = useNavigate()
   const { tileLayerId } = useParams()
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNodeWithChildren, session } = store
   // const filter = { todo: 'TODO: was in store' }
 

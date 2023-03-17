@@ -15,6 +15,7 @@ import ErrorBoundary from '../../components/shared/ErrorBoundary'
 import Accordion from '../../components/shared/Accordion'
 import PendingOperationsDialog from './PendingOperationsDialog'
 import PurgeDialog from './PurgeDialog'
+import { IStore } from '../../store'
 
 const Container = styled.div`
   min-height: calc(100vh - ${constants.appBarHeight}px);
@@ -38,7 +39,7 @@ const AccordionP = styled.p`
  * 2. enable resetting settings while keeping them when resetting data
  */
 const UserPage = () => {
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { online, session } = store
 
   const user = session?.user
