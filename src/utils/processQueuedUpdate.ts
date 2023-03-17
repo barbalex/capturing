@@ -1,7 +1,8 @@
 import { supabase } from '../supabaseClient'
 import { dexie, QueuedUpdate } from '../dexieClient'
+import { IStore } from '../store'
 
-type ProcessQueuedUpdateProps = { queuedUpdate: QueuedUpdate; store: any }
+type ProcessQueuedUpdateProps = { queuedUpdate: QueuedUpdate; store: IStore }
 
 // TODO: test rev table
 // TODO: test regular table
