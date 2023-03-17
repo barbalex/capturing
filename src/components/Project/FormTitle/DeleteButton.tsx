@@ -11,6 +11,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import { dexie, Project } from '../../../dexieClient'
+import { IStore } from '../../../store'
 
 const TitleRow = styled.div`
   display: flex;
@@ -29,7 +30,7 @@ const ProjectDeleteButton = () => {
   const { projectId } = useParams()
   const navigate = useNavigate()
 
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNodeWithChildren, session } = store
   // const filter = { todo: 'TODO: was in store' }
 

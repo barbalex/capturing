@@ -13,6 +13,7 @@ import Spinner from '../shared/Spinner'
 import { dexie, IProject } from '../../dexieClient'
 import TextField from '../shared/TextField'
 import ProjectUsers from './ProjectUsers'
+import { IStore } from '../../store'
 
 const FormContainer = styled.div`
   height: 100%;
@@ -28,7 +29,7 @@ type ProjectFormProps = {
 
 const ProjectForm = ({ showFilter }: ProjectFormProps) => {
   const { projectId } = useParams()
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { filter, errors, rebuildTree, session } = store
 
   // console.log('ProjectForm rendering')

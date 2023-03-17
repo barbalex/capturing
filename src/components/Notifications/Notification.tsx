@@ -6,6 +6,7 @@ import Button from '@mui/material/Button'
 import { MdClose as CloseIcon } from 'react-icons/md'
 
 import StoreContext from '../../storeContext'
+import { IStore } from '../../store'
 
 const Container = styled.div`
   display: flex;
@@ -52,7 +53,7 @@ const colorMap = {
 }
 
 const Notification = ({ notification: n }) => {
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { removeNotificationById } = store
   const {
     title,

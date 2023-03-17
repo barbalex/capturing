@@ -9,6 +9,7 @@ import StoreContext from '../../storeContext'
 import Conflict from '../shared/Conflict'
 import createDataArrayForRevComparison from './createDataArrayForRevComparison'
 import checkForOnlineError from '../../utils/checkForOnlineError'
+import { IStore } from '../../store'
 
 const ErrorContainer = styled.div`
   padding: 25px;
@@ -21,7 +22,7 @@ type Props = {
 }
 
 const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { session } = store
 
   const { isLoading, isError, error, data } = useQuery(

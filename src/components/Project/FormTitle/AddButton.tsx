@@ -7,11 +7,12 @@ import ErrorBoundary from '../../shared/ErrorBoundary'
 import insertProject from '../../../utils/insertProject'
 import { dexie, IAccount } from '../../../dexieClient'
 import storeContext from '../../../storeContext'
+import { IStore } from '../../../store'
 
 const ProjectAddButton = () => {
   const navigate = useNavigate()
 
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { setProjectEditing } = store
 
   const onClick = useCallback(async () => {
