@@ -9,6 +9,7 @@ import storeContext from '../../storeContext'
 import Item from './Item'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import { dexie, Project, Field } from '../../dexieClient'
+import { IStore } from '../../store'
 import Title from './Title'
 
 const Container = styled.div`
@@ -28,7 +29,7 @@ const RowsContainer = styled.div`
 
 const FieldsComponent = () => {
   const { projectId, tableId } = useParams()
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { setFieldSorter, rebuildTree, session } = store
 
   // console.log('FieldsList rendering, tableId:', tableId)

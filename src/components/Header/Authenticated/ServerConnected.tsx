@@ -11,6 +11,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 
 import storeContext from '../../../storeContext'
 import { dexie } from '../../../dexieClient'
+import { IStore } from '../../../store'
 
 const OnlineButton = styled(IconButton)`
   /*cursor: default !important;*/
@@ -22,7 +23,7 @@ const StyledBadge = styled(Badge)`
 `
 
 const ServerConnected = () => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   // serverConnected not so helpful
   const { online } = store
 

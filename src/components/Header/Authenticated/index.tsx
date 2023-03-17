@@ -14,6 +14,7 @@ import ErrorBoundary from '../../shared/ErrorBoundary'
 import constants from '../../../utils/constants'
 import storeContext from '../../../storeContext'
 import ServerConnected from './ServerConnected'
+import { IStore } from '../../../store'
 
 const SiteTitle = styled(Button)`
   display: none;
@@ -69,7 +70,7 @@ const UserIcon = styled(MdPerson)`
 // `
 
 const HeaderAuthenticated = () => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { showTree, showForm, showMap, setShowTree, setShowForm, setShowMap } =
     store
 

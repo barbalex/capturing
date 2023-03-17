@@ -12,6 +12,7 @@ import constants from '../../utils/constants'
 import { dexie } from '../../dexieClient'
 import insertField from '../../utils/insertField'
 import FilterNumbers from '../shared/FilterNumbers'
+import { IStore } from '../../store'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
@@ -41,7 +42,7 @@ const TitleSymbols = styled.div`
 const FieldsComponent = () => {
   const { projectId, tableId } = useParams()
   const navigate = useNavigate()
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { activeNodeArray, removeNode, session } = store
 
   // console.log('FieldsList rendering')

@@ -7,10 +7,11 @@ import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../../storeContext'
 import { dexie } from '../../../dexieClient'
+import { IStore } from '../../../store'
 
 const FieldNavButtons = () => {
   const { tableId, fieldId } = useParams()
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 
   const fieldIds: string[] =
