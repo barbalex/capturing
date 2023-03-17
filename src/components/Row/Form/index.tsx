@@ -19,6 +19,7 @@ import RichText from '../../shared/RichText'
 import OptionsMany from './OptionsMany'
 import OptionsFew from './OptionsFew'
 import Files from './Files'
+import { IStore } from '../../../store'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -61,7 +62,7 @@ const RowForm = ({
   const projectId = params?.projectId ?? '99999999-9999-9999-9999-999999999999'
   const url = params['*']
   const showHistory = url?.endsWith('history')
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { filter, online, errors, rebuildTree, session } = store
 
   const unsetError = useCallback(

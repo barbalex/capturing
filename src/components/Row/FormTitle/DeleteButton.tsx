@@ -9,6 +9,7 @@ import { useNavigate, resolvePath } from 'react-router-dom'
 
 import StoreContext from '../../../storeContext'
 import ErrorBoundary from '../../shared/ErrorBoundary'
+import { IStore } from '../../../store'
 
 const TitleRow = styled.div`
   display: flex;
@@ -25,7 +26,7 @@ const Title = styled.div`
 
 const RowDeleteButton = ({ row }) => {
   const navigate = useNavigate()
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNodeWithChildren, session } = store
   // const filter = { todo: 'TODO: was in store' }
 

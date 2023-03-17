@@ -12,6 +12,7 @@ import Spinner from '../shared/Spinner'
 import FormTitle from './FormTitle'
 import Form from './Form'
 import RowAside from './RowAside'
+import { IStore } from '../../store'
 
 const Container = styled.div`
   height: 100%;
@@ -56,7 +57,7 @@ const RowComponent = ({ filter: showFilter, level }) => {
   const rowId = params[`rowId${level}`]
   // const url = params['*']
   // const showHistory = url?.endsWith('history')
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { online } = store
   const filter = 'TODO: was in store'
 

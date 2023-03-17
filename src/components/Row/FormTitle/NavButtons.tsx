@@ -8,12 +8,17 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import StoreContext from '../../../storeContext'
 import { dexie } from '../../../dexieClient'
 import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
+import { IStore } from '../../../store'
 
-const RowNavButtons = ({ level }) => {
+type Props = {
+  level: number
+}
+
+const RowNavButtons = ({ level }: Props) => {
   const params = useParams()
   const tableId = params[`tableId${level}`]
   const rowId = params[`rowId${level}`]
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 
   const rowIds: string[] =

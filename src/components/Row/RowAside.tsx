@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite'
 import StoreContext from '../../storeContext'
 import History from './History'
 import Conflict from './Conflict'
+import { IStore } from '../../store'
 
 const RowAside = ({
   row,
@@ -15,7 +16,7 @@ const RowAside = ({
   // const params = useParams()
   // const url = params['*']
   // const showHistory = url?.endsWith('history')
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { online } = store
 
   // console.log('RowForm rendering', { row, showHistory })
