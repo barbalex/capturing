@@ -37,6 +37,7 @@ import sortByLabelName from '../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import RowLabel from './RowLabel'
 import LayerStyle from '../../shared/LayerStyle'
+import { IStore } from '../../../store'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -68,7 +69,7 @@ const typeValueLabels = {
 const TableForm = ({ showFilter }: TableFormProps) => {
   const { projectId, tableId } = useParams()
 
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { filter, errors, rebuildTree, session } = store
 
   const unsetError = useCallback(

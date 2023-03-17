@@ -15,6 +15,7 @@ import styled from '@emotion/styled'
 import StoreContext from '../../../storeContext'
 import { dexie } from '../../../dexieClient'
 import sortByLabelName from '../../../utils/sortByLabelName'
+import { IStore } from '../../../store'
 
 export const MenuChildrenButton = styled(Button)`
   font-size: 0.75rem;
@@ -28,7 +29,7 @@ const StyledFaArrowDown = styled(FaArrowDown)`
 
 const TableNavButtons = () => {
   const { projectId, tableId } = useParams()
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNode, editingProjects, setHorizontalNavIds } =
     store
   const editing = editingProjects.get(projectId)?.editing ?? false

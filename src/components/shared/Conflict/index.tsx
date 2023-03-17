@@ -13,6 +13,7 @@ import {
 import Explainer from './Explainer'
 import Data from './Data'
 import StoreContext from '../../../storeContext'
+import { IStore } from '../../../store'
 
 const Container = styled.div`
   padding: 10px;
@@ -48,7 +49,7 @@ const Conflict = ({
   onClickWiderspruchUebernehmen,
   onClickSchliessen,
 }) => {
-  const store = useContext(StoreContext)
+  const store: IStore = useContext(StoreContext)
   const { diffConflict, setDiffConflict } = store
 
   const onClickToggleDiff = useCallback(
