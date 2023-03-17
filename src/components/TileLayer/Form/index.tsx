@@ -23,6 +23,7 @@ import Select from '../../shared/Select'
 import Legends from './Legends'
 import getCapabilitiesDataForTileLayer from './getCapabilitiesData'
 import LocalData from './LocalData'
+import { IStore } from '../../../store'
 
 const FieldsContainer = styled.div`
   padding: 10px;
@@ -34,7 +35,7 @@ const FieldsContainer = styled.div`
 const TileLayerForm = () => {
   const { projectId, tileLayerId } = useParams()
 
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { errors, rebuildTree, session } = store
 
   const unsetError = useCallback(

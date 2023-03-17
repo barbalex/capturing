@@ -7,6 +7,7 @@ import { observer } from 'mobx-react-lite'
 import constants from '../../utils/constants'
 import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
 import storeContext from '../../storeContext'
+import { IStore } from '../../store'
 
 const StyledListItem = styled(ListItem)`
   min-height: ${constants.singleRowHeight};
@@ -23,7 +24,7 @@ const StyledListItem = styled(ListItem)`
 
 const TableRow = ({ row, useLabels }) => {
   const { projectId } = useParams()
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { editingProjects } = store
   const editing = editingProjects.get(projectId)?.editing ?? false
 

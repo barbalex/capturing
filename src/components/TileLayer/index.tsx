@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import styled from '@emotion/styled'
 
 import FormTitle from './FormTitle'
@@ -24,4 +23,4 @@ const TileLayerComponent = ({ filter: showFilter }) => {
   )
 }
 
-export default observer(TileLayerComponent)
+export default TileLayerComponent

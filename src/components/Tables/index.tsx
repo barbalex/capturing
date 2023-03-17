@@ -14,6 +14,7 @@ import { dexie, Table } from '../../dexieClient'
 import insertTable from '../../utils/insertTable'
 import sortByLabelName from '../../utils/sortByLabelName'
 import FilterNumbers from '../shared/FilterNumbers'
+import { IStore } from '../../store'
 
 const Container = styled.div`
   height: 100%;
@@ -56,7 +57,7 @@ const TablesComponent = () => {
 
   // console.log('TablesComponent', { projectId, tableId, rowId })
 
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const { activeNodeArray, removeNode, editingProjects, session } = store
   const editing = editingProjects.get(projectId)?.editing ?? false
 

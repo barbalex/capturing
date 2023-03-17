@@ -14,6 +14,7 @@ import { ProcessingText } from '../../../VectorLayer/Form/DownloadPVL'
 import constants from '../../../../utils/constants'
 import Rejections from './Rejections'
 import Progress from './Progress'
+import { IStore } from '../../../../store'
 
 const Container = styled.div`
   margin: 25px -10px 0 -10px;
@@ -71,7 +72,7 @@ type Props = {
 }
 
 const LocalData = ({ userMayEdit, row }: Props) => {
-  const store = useContext(storeContext)
+  const store: IStore = useContext(storeContext)
   const {
     localMaps,
     showMap,
