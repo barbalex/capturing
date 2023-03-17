@@ -61,8 +61,6 @@ const ViewingTables = ({ project }) => {
       [project.id],
     ) ?? []
 
-  console.log('ViewingTables: tables:', tables)
-
   const tablesSorted = sortByLabelName({
     objects: tables,
     useLabels: project.use_labels,
