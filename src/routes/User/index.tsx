@@ -41,7 +41,7 @@ const UserPage = () => {
   const store = useContext(StoreContext)
   const { online, session } = store
 
-  const user = session.user
+  const user = session?.user
 
   const navigate = useNavigate()
 
