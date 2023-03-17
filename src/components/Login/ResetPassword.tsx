@@ -43,7 +43,7 @@ const ResetPassword = ({
     [setEmail, setEmailErrorText],
   )
 
-  const [resetTitle, setResetTitle] = useState('Neues Passwort setzen')
+  const [resetTitle, setResetTitle] = useState<string>('Neues Passwort setzen')
   const reset = useCallback(async () => {
     if (!email) setEmailErrorText('Bitte Email-Adresse eingeben')
     setResetTitle('...')

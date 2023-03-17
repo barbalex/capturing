@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Marker, Popup, useMapEvents } from 'react-leaflet'
+import { Marker, Popup, useMapEvents,  } from 'react-leaflet'
 
 const LocationMarker = () => {
   const [position, setPosition] = useState(null)

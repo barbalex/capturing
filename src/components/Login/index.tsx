@@ -27,11 +27,13 @@ const ButtonComment = styled.div`
   line-height: 13px;
 `
 
+type IAuthType = 'link' | 'email' | 'email_signup' | 'email_reset'
+
 const Login = () => {
-  const [authType, setAuthType] = useState('link') // values: ['link', 'email', 'email_signup', 'email_reset']
-  const [email, setEmail] = useState('')
-  const [emailErrorText, setEmailErrorText] = useState('')
-  const [passwordErrorText, setPasswordErrorText] = useState('')
+  const [authType, setAuthType] = useState<IAuthType>('link')
+  const [email, setEmail] = useState<string>('')
+  const [emailErrorText, setEmailErrorText] = useState<string>('')
+  const [passwordErrorText, setPasswordErrorText] = useState<string>('')
 
   const onChangeAuthType = useCallback(async (event, at) => {
     // returns null when active auth type was clicked

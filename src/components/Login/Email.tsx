@@ -39,8 +39,8 @@ const LoginWithEmailAndPassword = ({
 }) => {
   const store: IStore = useContext(storeContext)
 
-  const [password, setPassword] = useState('')
-  const [showPass, setShowPass] = useState(false)
+  const [password, setPassword] = useState<string>('')
+  const [showPass, setShowPass] = useState<boolean>(false)
 
   const emailInput = useRef(null)
   const passwordInput = useRef(null)
