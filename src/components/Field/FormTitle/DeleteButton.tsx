@@ -26,9 +26,14 @@ const Title = styled.div`
   user-select: none;
 `
 
-const FieldDeleteButton = ({ userMayEdit }) => {
+interface Props {
+  userMayEdit: boolean
+}
+
+const FieldDeleteButton = ({ userMayEdit }: Props) => {
   const navigate = useNavigate()
   const { fieldId } = useParams()
+
   const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNodeWithChildren, session } = store
   // const filter = { todo: 'TODO: was in store' }

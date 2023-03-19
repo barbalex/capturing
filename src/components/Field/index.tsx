@@ -1,3 +1,4 @@
+import { FC } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from '@emotion/styled'
 
@@ -12,7 +13,11 @@ const Container = styled.div`
   background-color: ${(props) => (props.showfilter ? '#fff3e0' : 'unset')};
 `
 
-const FieldComponent = ({ filter: showFilter }) => {
+interface Props {
+  filter: boolean
+}
+
+const FieldComponent: FC = ({ filter: showFilter }: Props) => {
   const filter = 'TODO: was in store'
 
   // console.log('Project rendering row:', { row, projectId })

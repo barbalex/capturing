@@ -19,8 +19,11 @@ import {
   dexie,
   IField,
   Field,
+  FieldType,
   IWidgetType,
   IWidgetForField,
+  Project,
+  Table,
 } from '../../../dexieClient'
 import TextField from '../../shared/TextField'
 import Select from '../../shared/Select'
@@ -36,16 +39,16 @@ const FieldsContainer = styled.div`
   overflow-y: auto;
 `
 
-type FieldFormProps = {
+interface Props {
   showFilter: (boolean) => void
 }
-type valueType = {
+interface valueType {
   value: string
   label: string
 }
 
 // = '99999999-9999-9999-9999-999999999999'
-const FieldForm = ({ showFilter }: FieldFormProps) => {
+const FieldForm = ({ showFilter }: Props) => {
   const { projectId, fieldId } = useParams()
   const store: IStore = useContext(StoreContext)
   const { filter, errors, rebuildTree, session } = store
@@ -61,27 +64,33 @@ const FieldForm = ({ showFilter }: FieldFormProps) => {
   }, [fieldId, unsetError])
 
   const data = useLiveQuery(async () => {
-    const [project, optionsTables, otherTables, row, fieldTypes, projectUser] =
-      await Promise.all([
-        dexie.projects.get(projectId),
-        dexie.ttables
-          .filter(
-            (t) =>
-              t.deleted === 0 &&
-              t.project_id === projectId &&
-              t.type !== 'standard',
-          )
-          .toArray(),
-        dexie.ttables
-          .where({ deleted: 0, project_id: projectId, type: 'standard' })
-          .toArray(),
-        dexie.fields.get(fieldId),
-        dexie.field_types.where({ deleted: 0 }).sortBy('sort'),
-        dexie.project_users.get({
-          project_id: projectId,
-          user_email: session?.user?.email,
-        }),
-      ])
+    const [project, optionsTables, otherTables, row, fieldTypes, projectUser]: [
+      Project,
+      Table[],
+      Table[],
+      Field,
+      IFieldType[],
+      ProjectUser,
+    ] = await Promise.all([
+      dexie.projects.get(projectId),
+      dexie.ttables
+        .filter(
+          (t) =>
+            t.deleted === 0 &&
+            t.project_id === projectId &&
+            t.type !== 'standard',
+        )
+        .toArray(),
+      dexie.ttables
+        .where({ deleted: 0, project_id: projectId, type: 'standard' })
+        .toArray(),
+      dexie.fields.get(fieldId),
+      dexie.field_types.where({ deleted: 0 }).sortBy('sort'),
+      dexie.project_users.get({
+        project_id: projectId,
+        user_email: session?.user?.email,
+      }),
+    ])
 
     // console.log('Field Form', { row, otherTables, optionsTables })
 
