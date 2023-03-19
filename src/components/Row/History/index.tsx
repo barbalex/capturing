@@ -8,7 +8,7 @@ import 'slick-carousel/slick/slick-theme.css'
 import { supabase } from '../../../supabaseClient'
 import Spinner from '../../shared/Spinner'
 import checkForOnlineError from '../../../utils/checkForOnlineError'
-import Row from './Row'
+import RowComponent from './Row'
 import { Row } from '../../../dexieClient'
 
 const Container = styled.div`
@@ -73,7 +73,7 @@ const RowHistory = ({ row, restoreCallback }: Props) => {
     <Container>
       <Slider {...sliderSettings}>
         {data.map((r) => (
-          <Row
+          <RowComponent
             key={row.rev}
             revRow={r}
             row={row}

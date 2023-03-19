@@ -5,8 +5,10 @@ import { useParams } from 'react-router-dom'
 import RowComponent from './Row'
 import RowsTitle from './RowsTitle'
 import ErrorBoundary from '../shared/ErrorBoundary'
-import rowsWithLabelFromRows from '../../utils/rowsWithLabelFromRows'
-import { dexie, Row } from '../../dexieClient'
+import rowsWithLabelFromRows, {
+  RowWithLabel,
+} from '../../utils/rowsWithLabelFromRows'
+import { dexie, Row, Field } from '../../dexieClient'
 
 const Container = styled.div`
   height: 100%;
@@ -18,10 +20,11 @@ const RowsContainer = styled.div`
   height: 100%;
   overflow: auto;
 `
+interface Props {
+  level: number
+}
 
-type RowsWithLabel = Row & { label: string }
-
-const RowsComponent = ({ level }) => {
+const RowsComponent = ({ level }: Props) => {
   const params = useParams()
   const { rowId1 } = params
 
@@ -35,17 +38,17 @@ const RowsComponent = ({ level }) => {
 
   const data =
     useLiveQuery(async () => {
-      const rows = await dexie.rows
+      const rows: Row[] = await dexie.rows
         .where({ deleted: 0, table_id: tableId })
         .toArray()
 
       const rowsWithLabel = await rowsWithLabelFromRows(rows)
 
-      const parentRow = parentRowId
+      const parentRow: Row | undefined = parentRowId
         ? await dexie.rows.get(parentRowId)
         : undefined
 
-      const fieldsRelatedTo = rowId1
+      const fieldsRelatedTo: Field[] = rowId1
         ? await dexie.fields
             .where(['deleted', 'table_id', 'table_rel'])
             .between([0, tableId, ''], [0, tableId, 'ZZZZZZZZZZZZZZ'])
@@ -70,11 +73,11 @@ const RowsComponent = ({ level }) => {
       return { rowsWithLabel, tablesRelatedTo, tablesRelatedFrom, parentRow }
     }, [tableId, parentRowId, rowId1]) ?? []
 
-  let rowsWithLabel: RowsWithLabel[] = data?.rowsWithLabel ?? []
+  let rowsWithLabel: RowWithLabel[] = data?.rowsWithLabel ?? []
   if (rowId1) {
     const tablesRelatedTo = data?.tablesRelatedTo ?? []
     const tablesRelatedFrom = data?.tablesRelatedFrom ?? []
-    const parentRow = data?.parentRow
+    const parentRow: Row | undefined = data?.parentRow
     const tables = [
       ...(Object.entries(tablesRelatedTo).length
         ? Object.entries(tablesRelatedTo).map((o) => ({

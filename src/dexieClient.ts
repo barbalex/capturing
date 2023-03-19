@@ -1216,7 +1216,7 @@ export class Row implements IRow {
     if (conflicts) this.conflicts = conflicts
   }
 
-  get label() {
+  get label(): string {
     // 1. fetch this row's table
     // 2. read table.row_label
     // 3. fetch all the field's labels
