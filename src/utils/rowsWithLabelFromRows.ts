@@ -1,6 +1,8 @@
 import sortBy from 'lodash/sortBy'
 
-const rowsWithLabelFromRows = async (rows) => {
+import { Row } from '../dexieClient'
+
+const rowsWithLabelFromRows = async (rows: Row[]) => {
   const rowPromises = rows.map((r) =>
     r.label.then((label) => ({ ...r, label })),
   )

@@ -43,8 +43,8 @@ type RowFormProps = {
   activeConflict: string
   id: string
   row: Row
-  setActiveConflict: (string) => void
-  showFilter: (boolean) => void
+  setActiveConflict: () => void
+  showFilter: () => void
   level: number
 }
 

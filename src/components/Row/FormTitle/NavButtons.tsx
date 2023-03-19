@@ -6,7 +6,7 @@ import { Link, resolvePath, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../../storeContext'
-import { dexie } from '../../../dexieClient'
+import { dexie, Row } from '../../../dexieClient'
 import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
 import { IStore } from '../../../store'
 
@@ -23,7 +23,7 @@ const RowNavButtons = ({ level }: Props) => {
 
   const rowIds: string[] =
     useLiveQuery(async () => {
-      const rows = await dexie.rows
+      const rows: Row[] = await dexie.rows
         .where({ deleted: 0, table_id: tableId })
         .toArray()
 

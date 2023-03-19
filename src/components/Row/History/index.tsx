@@ -9,6 +9,7 @@ import { supabase } from '../../../supabaseClient'
 import Spinner from '../../shared/Spinner'
 import checkForOnlineError from '../../../utils/checkForOnlineError'
 import Row from './Row'
+import { Row } from '../../../dexieClient'
 
 const Container = styled.div`
   overflow-y: auto;
@@ -38,7 +39,12 @@ const sliderSettings = {
   infinite: true,
 }
 
-const RowHistory = ({ row, restoreCallback }) => {
+interface Props {
+  row: Row
+  restoreCallback: () => void
+}
+
+const RowHistory = ({ row, restoreCallback }: Props) => {
   const priorRevisions = row?.revisions?.slice(1) ?? []
 
   const { isLoading, isError, error, data } = useQuery(

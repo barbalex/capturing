@@ -148,55 +148,61 @@ export const MobxStore = types
         }
         self.horizontalNavIds = val
       },
-      setMapInitiated(val) {
+      setMapInitiated(val: boolean): void {
         self.mapInitiated = val
       },
-      rebuildTree() {
+      rebuildTree(): void {
         self.treeRebuildCount = self.treeRebuildCount + 1
       },
-      setTreeRebuildCount(val) {
+      setTreeRebuildCount(val: number): void {
         self.treeRebuildCount = val
       },
-      setMap(val) {
+      setMap(val: Map): void {
         self.map = val
       },
-      setTileLayerSorter(val) {
+      setTileLayerSorter(val: string): void {
         self.tileLayerSorter = val
       },
-      setVectorLayerSorter(val) {
+      setVectorLayerSorter(val: string): void {
         self.vectorLayerSorter = val
       },
-      setFieldSorter(val) {
+      setFieldSorter(val: string): void {
         self.fieldSorter = val
       },
-      setBounds(val) {
+      setBounds(val): void {
         self.bounds = val
       },
-      setShowTree(val) {
+      setShowTree(val: boolean): void {
         self.showTree = val
       },
-      setShowForm(val) {
+      setShowForm(val: boolean): void {
         self.showForm = val
       },
-      setShowMap(val) {
+      setShowMap(val: boolean): void {
         self.showMap = val
       },
-      setLocalMapShow({ id, show }) {
+      setLocalMapShow({ id, show }: { id: string; show: boolean }): void {
         self.localMapShow.set(id, { id, show })
       },
-      setProjectEditing({ id, editing }) {
+      setProjectEditing({
+        id,
+        editing,
+      }: {
+        id: string
+        editing: boolean
+      }): void {
         self.editingProjects.set(id, { id, editing })
       },
-      setOnline(val) {
+      setOnline(val: boolean): void {
         self.online = val
       },
-      setFilterWidth(val) {
+      setFilterWidth(val: number): void {
         self.filterWidth = val
       },
-      setShowTreeInSingleColumnView(val) {
+      setShowTreeInSingleColumnView(val: boolean): void {
         self.showTreeInSingleColumnView = val
       },
-      setSubscriptionState(val) {
+      setSubscriptionState(val: 'SUBSCRIBED' | 'INITIAL'): void {
         self.subscriptionState = val
       },
       setNavigate(val: NavigateFunction): void {
