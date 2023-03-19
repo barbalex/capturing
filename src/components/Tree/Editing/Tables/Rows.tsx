@@ -12,9 +12,7 @@ const Rows = ({ project, table }) => {
         table_id: table.id,
       })
       .toArray()
-    const rowsWithLabels = await rowsWithLabelFromRows(rows)
-
-    return rowsWithLabels
+    return await rowsWithLabelFromRows(rows)
   })
 
   if (!rows) return null

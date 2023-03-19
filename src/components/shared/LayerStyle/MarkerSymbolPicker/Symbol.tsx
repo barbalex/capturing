@@ -1,6 +1,13 @@
 import { useCallback } from 'react'
 
-const Symbol = ({ Component, name, onBlur, active }) => {
+interface Props {
+  Component: any
+  name: string
+  onBlur: (event: any) => void
+  active: boolean
+}
+
+const Symbol = ({ Component, name, onBlur, active }: Props) => {
   const onClick = useCallback(() => {
     onBlur({
       target: {

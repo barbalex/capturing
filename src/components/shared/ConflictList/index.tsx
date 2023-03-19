@@ -7,16 +7,17 @@ import Conflict from './Conflict'
 const Konflikte = styled.div`
   margin-bottom: 10px;
 `
-type ConflictListProps = {
+type Props = {
   conflicts: string[]
   activeConflict: string
-  setActiveConflict: (string) => void
+  setActiveConflict: () => void
 }
+
 const ConflictList = ({
   conflicts,
   activeConflict,
   setActiveConflict,
-}: ConflictListProps) => (
+}: Props): React.FC => (
   <Konflikte>
     {[...conflicts].sort().map((conflict) => (
       <Conflict

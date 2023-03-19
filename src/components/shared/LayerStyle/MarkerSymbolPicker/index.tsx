@@ -22,7 +22,12 @@ const SymbolContainer = styled.div`
   }
 `
 
-const MarkerSymbolPicker = ({ onBlur, value }) => {
+interface Props {
+  onBlur: () => void
+  value: string | undefined
+}
+
+const MarkerSymbolPicker = ({ onBlur, value }: Props) => {
   // console.log('MarkerSymbolPicker, images:', icons)
   const wantedIconKeys = useMemo(
     () =>

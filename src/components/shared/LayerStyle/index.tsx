@@ -21,6 +21,7 @@ import {
   LineJoinEnum,
   FillRuleEnum,
   MarkerTypeEnum,
+  VectorLayer,
 } from '../../../dexieClient'
 import TextField from '../TextField'
 import RadioButtonGroup from '../RadioButtonGroup'
@@ -63,7 +64,12 @@ const FieldsContainer = styled.div`
   padding: 15px 10px 10px 10px;
 `
 
-const LayerStyleForm = ({ userMayEdit, row: layer }) => {
+interface Props {
+  userMayEdit: boolean
+  row: VectorLayer
+}
+
+const LayerStyleForm = ({ userMayEdit, row: layer }: Props) => {
   const { session } = useContext(storeContext)
   const { vectorLayerId, tableId } = useParams()
 
