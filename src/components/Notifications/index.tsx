@@ -22,7 +22,7 @@ const StyledIconButton = styled(IconButton)`
 import StoreContext from '../../storeContext'
 import Notification from './Notification'
 
-const Notifications = () => {
+const Notifications: React.FC = () => {
   const store: IStore = useContext(StoreContext)
   const { removeAllNotifications, notifications } = store
 

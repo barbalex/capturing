@@ -45,7 +45,10 @@ export const MobxStore = types
     mapInitiated: types.optional(types.boolean, false),
     singleColumnView: types.optional(types.boolean, false),
     showTreeInSingleColumnView: types.optional(types.boolean, false),
-    subscriptionState: types.optional(types.string, 'INITIAL'),
+    subscriptionState: types.optional(
+      types.enumeration('SUBSCRIBED', 'INITIAL'),
+      'INITIAL',
+    ),
     filterWidth: types.optional(types.number, 500),
     online: types.optional(types.boolean, true),
     // setting bounds works imperatively with map.fitBounds since v3
@@ -196,17 +199,17 @@ export const MobxStore = types
       setSubscriptionState(val) {
         self.subscriptionState = val
       },
-      setNavigate(val) {
+      setNavigate(val: NavigateFunction): void {
         return (self.navigate = val)
       },
-      addNodesForNodeArray(nodeArray) {
+      addNodesForNodeArray(nodeArray): void {
         const extraOpenNodes = []
         nodeArray.forEach((v, i) => {
           extraOpenNodes.push(nodeArray.slice(0, i + 1))
         })
         this.addNodes(extraOpenNodes)
       },
-      setActiveNodeArray(val) {
+      setActiveNodeArray(val: string[]): void {
         if (isEqual(val, self.activeNodeArray)) {
           // do not do this if already set
           // trying to stop vicious cycle of reloading in first start after update
@@ -217,27 +220,27 @@ export const MobxStore = types
         self.addNodesForNodeArray(val)
         self.activeNodeArray = val
       },
-      setNodes(val) {
+      setNodes(val): void {
         // need set to ensure contained arrays are unique
         const set = new Set(val.map(JSON.stringify))
         self.nodes = Array.from(set).map(JSON.parse)
       },
-      removeNode(val) {
+      removeNode(val): void {
         self.nodes = self.nodes.filter((n) => !isEqual(n, val))
       },
-      removeNodeWithChildren(url) {
+      removeNodeWithChildren(url: string[]): boolean {
         self.nodes = self.nodes.filter((n) => {
           const urlPartWithEqualLength = n.slice(0, url.length)
           return !isEqual(urlPartWithEqualLength, url)
         })
       },
-      removeNodesChildren(url) {
+      removeNodesChildren(url: string[]) {
         self.nodes = self.nodes.filter((n) => {
           const urlPartWithEqualLength = n.slice(0, url.length + 1)
           return !isEqual(urlPartWithEqualLength, url)
         })
       },
-      addNode(url) {
+      addNode(url: string[]): void {
         // add all parent nodes
         const addedOpenNodes = []
         for (let i = 1; i <= url.length; i++) {
@@ -245,13 +248,13 @@ export const MobxStore = types
         }
         self.addNodes(addedOpenNodes)
       },
-      addNodes(nodes) {
+      addNodes(nodes): void {
         // need set to ensure contained arrays are unique
         const set = new Set([...self.nodes, ...nodes].map(JSON.stringify))
         const newOpenNodes = Array.from(set).map(JSON.parse)
         self.nodes = newOpenNodes
       },
-      addNotification(valPassed) {
+      addNotification(valPassed): string {
         const val = {
           // set default values
           id: uuidv1(),
@@ -270,26 +273,28 @@ export const MobxStore = types
         }, val.duration)
         return val.id
       },
-      removeNotificationById(id) {
+      removeNotificationById(id: string): void {
         // does not seem to work for many???
         self.notifications.delete(id)
       },
-      removeAllNotifications() {
+      removeAllNotifications(): void {
         self.notifications.clear()
       },
-      setSingleColumnView(val) {
+      setSingleColumnView(val: boolean): void {
         self.singleColumnView = val
       },
     }
   })
   .views((self) => ({
-    get activeNodeArrayAsUrl() {
+    get activeNodeArrayAsUrl(): string {
       return `/${self.activeNodeArray.join('/')}`
     },
-    get serverConnected() {
+    get serverConnected(): boolean {
       // not sure if this is really helpful
       return self.subscriptionState === 'SUBSCRIBED'
     },
   }))
 
 export type IStore = Instance<typeof MobxStore>
+export type IStoreSnapshotIn = SnapshotIn<typeof MobxStore>
+export type IStoreSnapshotOut = SnapshotOut<typeof MobxStore>

@@ -23,18 +23,25 @@ const ResetButton = styled(Button)`
   font-weight: 400 !important;
 `
 
+interface Props {
+  email: string
+  setEmail: (email: string) => void
+  emailErrorText: string
+  setEmailErrorText: (emailErrorText: string) => void
+}
+
 const ResetPassword = ({
   email,
   setEmail,
   emailErrorText,
   setEmailErrorText,
-}) => {
+}: Props) => {
   const emailInput = useRef(null)
 
   const onChangeEmail = useCallback(
-    (e) => {
+    (e: React.ChangeEvent) => {
       setEmailErrorText('')
-      const email = e.target.value
+      const email: string | undefined = e.target.value
       if (!email) {
         setEmailErrorText('Bitte Email-Adresse eingeben')
       }

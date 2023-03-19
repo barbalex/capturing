@@ -10,7 +10,7 @@ const labelFromLabeledTable = ({
   object,
   useLabels = 0,
   singular = false,
-}: Props): Obj =>
+}: Props): string =>
   useLabels === 1
     ? singular
       ? object.singular_label ?? 'Datensatz' // only used for rows of tables

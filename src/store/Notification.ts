@@ -37,5 +37,8 @@ export default types.model('Notification', {
     types.undefined,
   ),
   revertValues: types.union(types.string, types.null, types.undefined),
-  type: types.union(types.string, types.undefined), // 'success', 'warning', 'info', 'error'
+  type: types.union(
+    types.undefined,
+    types.enumeration('type', ['success', 'warning', 'info', 'error']),
+  ),
 })
