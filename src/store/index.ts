@@ -46,7 +46,7 @@ export const MobxStore = types
     singleColumnView: types.optional(types.boolean, false),
     showTreeInSingleColumnView: types.optional(types.boolean, false),
     subscriptionState: types.optional(
-      types.enumeration('SUBSCRIBED', 'INITIAL'),
+      types.enumeration(['SUBSCRIBED', 'INITIAL', 'CLOSED']),
       'INITIAL',
     ),
     filterWidth: types.optional(types.number, 500),

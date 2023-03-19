@@ -42,9 +42,7 @@ const RelatedTableNode = ({
   let children =
     useLiveQuery(async () => {
       const rows = await dexie.rows.where(where).toArray()
-      const rowsWithLabels = await rowsWithLabelFromRows(rows)
-
-      return rowsWithLabels
+      return await rowsWithLabelFromRows(rows)
     }, [table.id, fieldName]) ?? []
   if (type === 'from') {
     children = children.filter((c) => c.data?.[fieldName] === row.id)

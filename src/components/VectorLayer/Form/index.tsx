@@ -18,6 +18,7 @@ import ErrorBoundary from '../../shared/ErrorBoundary'
 import {
   dexie,
   IVectorLayer,
+  ProjectUser,
   VectorLayer,
   VectorLayerTypeEnum,
 } from '../../../dexieClient'
@@ -85,7 +86,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
 
   // const data = {}
   const data = useLiveQuery(async () => {
-    const [row, projectUser] = await Promise.all([
+    const [row, projectUser]: [VectorLayer, ProjectUser] = await Promise.all([
       dexie.vector_layers.get(vectorLayerId),
       dexie.project_users.get({
         project_id: projectId,

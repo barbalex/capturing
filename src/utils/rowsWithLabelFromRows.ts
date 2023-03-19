@@ -2,9 +2,11 @@ import sortBy from 'lodash/sortBy'
 
 import { Row } from '../dexieClient'
 
-const rowsWithLabelFromRows = async (rows: Row[]) => {
+export type RowWithLabel = Row & { label: string }
+
+const rowsWithLabelFromRows = async (rows: Row[]): RowWithLabel[] => {
   const rowPromises = rows.map((r) =>
-    r.label.then((label) => ({ ...r, label })),
+    r.label.then((label: string) => ({ ...r, label })),
   )
   const rowsWithLabel = await Promise.all(rowPromises).then((rowsWithLabel) =>
     sortBy(rowsWithLabel, (r) => r.label),
