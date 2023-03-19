@@ -28,7 +28,7 @@ type Props = {
   name: string
   value: boolean
   error: string
-  onBlur: (any) => void
+  onBlur: () => void
 }
 
 const Checkbox2States = ({

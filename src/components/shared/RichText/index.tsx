@@ -43,19 +43,16 @@ const StyledInputLabel = styled(InputLabel)`
 `
 const Container = styled.div``
 
-type TextFieldProps = {
+type Props = {
   value: string
   label: string
   labelWeight?: number
   name: string
-  type?: string
-  multiLine?: boolean
   disabled?: boolean
-  hintText?: string
-  helperText?: string
   error?: string
-  onBlur: (any) => void
+  onBlur: () => void
   schrinkLabel?: boolean
+  helperText?: string
 }
 
 const RichText = ({
@@ -68,7 +65,7 @@ const RichText = ({
   onBlur,
   schrinkLabel = true,
   helperText = '',
-}: TextFieldProps) => {
+}: Props): React.FC => {
   const editorConfig = {
     theme,
     onError: () => console.log(error),

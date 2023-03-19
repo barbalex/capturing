@@ -21,7 +21,14 @@ const StyledAccordionSummary = styled(AccordionSummary)`
   }
 `
 
-const AccordionComponent = ({ summary, children }) => (
+interface Props {
+  summary: string
+}
+
+const AccordionComponent = ({
+  summary,
+  children,
+}: React.PropsWithChildren<Props>) => (
   <StyledAccordion TransitionProps={{ unmountOnExit: true }} disableGutters>
     <StyledAccordionSummary expandIcon={<ExpandIcon />}>
       <Typography>{summary}</Typography>

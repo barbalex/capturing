@@ -23,12 +23,12 @@ const StyledFormControlLabel = styled(FormControlLabel)`
   }
 `
 
-type Option = {
+interface Option {
   value: text
   label: text
 }
 
-type Props = {
+interface Props {
   value: text[]
   label: text
   name: text
