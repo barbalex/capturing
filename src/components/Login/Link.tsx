@@ -23,7 +23,19 @@ const StyledInput = styled(Input)`
   }
 `
 
-const Login = ({ emailErrorText, setEmailErrorText, email, setEmail }) => {
+interface Props {
+  email: string
+  setEmail: (email: string) => void
+  emailErrorText: string
+  setEmailErrorText: (emailErrorText: string) => void
+}
+
+const Login = ({
+  emailErrorText,
+  setEmailErrorText,
+  email,
+  setEmail,
+}: Props) => {
   const store: IStore = useContext(storeContext)
 
   const [buttonTxt, setButtonTxt] = useState<string>('anmelden')
@@ -33,7 +45,7 @@ const Login = ({ emailErrorText, setEmailErrorText, email, setEmail }) => {
   const fetchLogin = useCallback(
     // callbacks pass email or password
     // because state is not up to date yet
-    async ({ email: emailPassed }) => {
+    async ({ email: emailPassed }: { email: string | undefined }) => {
       setButtonTxt('Email wird verschickt...')
       // need to fetch values from ref
       // why? password-managers enter values but do not blur/change
@@ -66,9 +78,9 @@ const Login = ({ emailErrorText, setEmailErrorText, email, setEmail }) => {
     [email, setEmailErrorText, store],
   )
   const onBlurEmail = useCallback(
-    (e) => {
+    (e: React.FocusEvent) => {
       setEmailErrorText('')
-      const email = e.target.value
+      const email: string | undefined = e.target.value
       if (!email) return
       fetchLogin({ email })
       setEmail(email)
@@ -76,7 +88,7 @@ const Login = ({ emailErrorText, setEmailErrorText, email, setEmail }) => {
     [fetchLogin, setEmail, setEmailErrorText],
   )
   const onKeyPressEmail = useCallback(
-    (e) => {
+    (e: React.KeyboardEvent) => {
       e.key === 'Enter' && onBlurEmail(e)
     },
     [onBlurEmail],

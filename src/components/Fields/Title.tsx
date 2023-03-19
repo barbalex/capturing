@@ -9,7 +9,7 @@ import { useParams, useNavigate, Link, resolvePath } from 'react-router-dom'
 import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import { dexie } from '../../dexieClient'
+import { dexie, ProjectUser } from '../../dexieClient'
 import insertField from '../../utils/insertField'
 import FilterNumbers from '../shared/FilterNumbers'
 import { IStore } from '../../store'
@@ -42,13 +42,18 @@ const TitleSymbols = styled.div`
 const FieldsComponent = () => {
   const { projectId, tableId } = useParams()
   const navigate = useNavigate()
+
   const store: IStore = useContext(storeContext)
   const { activeNodeArray, removeNode, session } = store
 
   // console.log('FieldsList rendering')
 
   const data = useLiveQuery(async () => {
-    const [filteredCount, totalCount, projectUser] = await Promise.all([
+    const [filteredCount, totalCount, projectUser]: [
+      number,
+      number,
+      ProjectUser,
+    ] = await Promise.all([
       dexie.fields.where({ deleted: 0, table_id: tableId }).count(), // TODO: pass in filter
       dexie.fields.where({ deleted: 0, table_id: tableId }).count(),
       dexie.project_users.get({
@@ -66,9 +71,9 @@ const FieldsComponent = () => {
     }
   }, [tableId, projectId, session?.user?.email])
 
-  const filteredCount: integer = data?.filteredCount
-  const totalCount: integer = data?.totalCount
-  const userMayEdit: boolean = data?.userMayEdit
+  const filteredCount = data?.filteredCount
+  const totalCount = data?.totalCount
+  const userMayEdit = data.userMayEdit
 
   const add = useCallback(async () => {
     const newId = await insertField({ tableId })

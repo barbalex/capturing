@@ -53,8 +53,9 @@ const LoginWithEmailAndPassword = ({
       // why? password-managers enter values but do not blur/change
       // if password-manager enters values and user clicks "Anmelden"
       // it will not work without previous blurring
-      const emailToUse = emailPassed ?? email ?? emailInput.current.value
-      const passwordToUse =
+      const emailToUse: string =
+        emailPassed ?? email ?? emailInput.current.value
+      const passwordToUse: string =
         passwordPassed ?? password ?? passwordInput.current.value
       await logout({ store })
       setTimeout(async () => {
@@ -100,7 +101,7 @@ const LoginWithEmailAndPassword = ({
     [authType, email, password, setEmailErrorText, setPasswordErrorText, store],
   )
   const onBlurEmail = useCallback(
-    (e) => {
+    (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setEmailErrorText('')
       const email = e.target.value
       if (!email) {
@@ -113,7 +114,7 @@ const LoginWithEmailAndPassword = ({
     [fetchLogin, password, setEmail, setEmailErrorText],
   )
   const onBlurPassword = useCallback(
-    (e) => {
+    (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setPasswordErrorText('')
       const password = e.target.value
       setPassword(password)
@@ -126,17 +127,20 @@ const LoginWithEmailAndPassword = ({
     [setPasswordErrorText, email, fetchLogin],
   )
   const onKeyPressEmail = useCallback(
-    (e) => {
+    (e: React.KeyboardEvent) => {
       e.key === 'Enter' && onBlurEmail(e)
     },
     [onBlurEmail],
   )
   const onKeyPressPassword = useCallback(
-    (e) => e.key === 'Enter' && onBlurPassword(e),
+    (e: React.KeyboardEvent) => e.key === 'Enter' && onBlurPassword(e),
     [onBlurPassword],
   )
   const onClickShowPass = useCallback(() => setShowPass(!showPass), [showPass])
-  const onMouseDownShowPass = useCallback((e) => e.preventDefault(), [])
+  const onMouseDownShowPass = useCallback(
+    (e: React.MouseEvent) => e.preventDefault(),
+    [],
+  )
 
   return (
     <>
