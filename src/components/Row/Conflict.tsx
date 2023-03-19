@@ -16,9 +16,9 @@ const ErrorContainer = styled.div`
 `
 
 type Props = {
-  rev: any
+  rev: string
   row: Row
-  setActiveConflict: any
+  setActiveConflict: () => void
 }
 
 const RowConflict = ({ rev, row, setActiveConflict }: Props) => {

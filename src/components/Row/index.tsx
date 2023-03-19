@@ -52,7 +52,12 @@ const StyledSplitPane = styled(SplitPane)`
   }
 `
 
-const RowComponent = ({ filter: showFilter, level }) => {
+interface Props {
+  filter: boolean
+  level: number
+}
+
+const RowComponent = ({ filter: showFilter, level }: Props) => {
   const params = useParams()
   const rowId = params[`rowId${level}`]
   // const url = params['*']

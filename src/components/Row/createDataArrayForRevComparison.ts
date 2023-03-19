@@ -1,7 +1,15 @@
-import { dexie, Field } from '../../dexieClient'
+import { dexie, Field, Row } from '../../dexieClient'
 import textFromLexical from '../../utils/textFromLexical'
 
-const createDataArrayForRevComparison = async ({ row, revRow }) => {
+interface Props {
+  row: Row
+  revRow: any
+}
+
+const createDataArrayForRevComparison = async ({
+  row,
+  revRow,
+}: Props): { valueInRow: any; valueInRev: any; label: string }[] => {
   const rowData = row.data ?? {}
   const revRowData = revRow.data ?? {}
   const dataKeys = [...Object.keys(rowData), ...Object.keys(revRowData)]

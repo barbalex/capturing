@@ -5,6 +5,15 @@ import StoreContext from '../../storeContext'
 import History from './History'
 import Conflict from './Conflict'
 import { IStore } from '../../store'
+import { Row } from '../../dexieClient'
+
+interface Props {
+  row: Row
+  activeConflict: string | null
+  setActiveConflict: (activeConflict: string | null) => void
+  showHistory: boolean
+  setShowHistory: (showHistory: boolean) => void
+}
 
 const RowAside = ({
   row,
@@ -12,7 +21,7 @@ const RowAside = ({
   setActiveConflict,
   showHistory,
   setShowHistory,
-}) => {
+}: Props) => {
   // const params = useParams()
   // const url = params['*']
   // const showHistory = url?.endsWith('history')
