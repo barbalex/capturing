@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 
 import constants from '../../utils/constants'
 import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
+import { Field } from '../../dexieClient'
 
 const StyledListItem = styled(ListItem)`
   height: ${constants.singleRowHeight};
@@ -26,7 +27,14 @@ const StyledListItem = styled(ListItem)`
   }
 `
 
-const FieldRow = ({ item, project, provided, isDragging }) => {
+interface Props {
+  item: Field
+  project: Project | undefined
+  provided: DraggableProvided
+  isDragging: boolean
+}
+
+const FieldRow = ({ item, project, provided, isDragging }: Props) => {
   const label = labelFromLabeledTable({
     object: item,
     useLabels: project?.use_labels,

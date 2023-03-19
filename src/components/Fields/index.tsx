@@ -35,7 +35,7 @@ const FieldsComponent = () => {
   // console.log('FieldsList rendering, tableId:', tableId)
 
   const data = useLiveQuery(async () => {
-    const [fields, project] = await Promise.all([
+    const [fields, project]: [Field[], Project] = await Promise.all([
       dexie.fields.where({ deleted: 0, table_id: tableId }).sortBy('sort'),
       dexie.projects.get(projectId),
     ])
@@ -46,8 +46,8 @@ const FieldsComponent = () => {
     }
   }, [tableId, projectId, session?.user?.email])
 
-  const project: Project = data?.project
-  const fields: Fields[] = data?.fields
+  const project = data?.project
+  const fields = data?.fields
 
   const [items, setItems] = useState<Field[]>([])
   useEffect(() => {

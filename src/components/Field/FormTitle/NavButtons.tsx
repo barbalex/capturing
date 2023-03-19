@@ -6,7 +6,7 @@ import { Link, resolvePath, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../../storeContext'
-import { dexie } from '../../../dexieClient'
+import { dexie, Field } from '../../../dexieClient'
 import { IStore } from '../../../store'
 
 const FieldNavButtons = () => {
@@ -16,7 +16,7 @@ const FieldNavButtons = () => {
 
   const fieldIds: string[] =
     useLiveQuery(async () => {
-      const fields = await dexie.fields
+      const fields: Field[] = await dexie.fields
         .where({ deleted: 0, table_id: tableId })
         .sortBy('sort')
       const ids = fields.map((t) => t.id)

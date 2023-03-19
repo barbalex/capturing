@@ -49,7 +49,13 @@ const TitleSymbols = styled.div`
   flex-wrap: wrap;
 `
 
-const FieldFormTitle = ({ totalCount, filteredCount, width }) => {
+interface Props {
+  totalCount: number
+  filteredCount: number
+  width: number
+}
+
+const FieldFormTitle = ({ totalCount, filteredCount, width }: Props) => {
   const { projectId } = useParams()
   const store: IStore = useContext(storeContext)
   const { session } = store
