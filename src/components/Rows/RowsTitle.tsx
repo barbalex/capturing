@@ -12,11 +12,12 @@ import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import ZoomToButton from '../shared/ZoomToButton'
 import constants from '../../utils/constants'
-import { dexie, Table } from '../../dexieClient'
+import { dexie, Table, Project, ProjectUser } from '../../dexieClient'
 import insertRow from '../../utils/insertRow'
 import FilterNumbers from '../shared/FilterNumbers'
 import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
 import { IStore } from '../../store'
+import { RowWithLabel } from '../../utils/rowsWithLabelFromRows'
 
 const TitleContainer = styled.div`
   background-color: rgba(74, 20, 140, 0.1);
@@ -43,9 +44,8 @@ const TitleSymbols = styled.div`
   margin-bottom: auto;
 `
 
-type RowsWithLabel = Row & { label: string }
 type Props = {
-  rowsWithLabel: RowsWithLabel
+  rowsWithLabel: RowWithLabel[]
   level: number
 }
 
@@ -89,23 +89,24 @@ const RowsTitle = ({ rowsWithLabel, level }: Props) => {
       tablesOfProject,
       table,
       project,
-    ] = await Promise.all([
-      dexie.rows.where({ deleted: 0, table_id: tableId }).count(), // TODO: pass in filter
-      dexie.rows.where({ deleted: 0, table_id: tableId }).count(),
-      dexie.project_users.get({
-        project_id: projectId,
-        user_email: session?.user?.email,
-      }),
-      dexie.ttables
-        .where({
-          deleted: 0,
+    ]: [number, number, ProjectUser, Table[], Table, Project] =
+      await Promise.all([
+        dexie.rows.where({ deleted: 0, table_id: tableId }).count(), // TODO: pass in filter
+        dexie.rows.where({ deleted: 0, table_id: tableId }).count(),
+        dexie.project_users.get({
           project_id: projectId,
-          type: 'standard',
-        })
-        .toArray(),
-      dexie.ttables.get(tableId),
-      dexie.projects.get(projectId),
-    ])
+          user_email: session?.user?.email,
+        }),
+        dexie.ttables
+          .where({
+            deleted: 0,
+            project_id: projectId,
+            type: 'standard',
+          })
+          .toArray(),
+        dexie.ttables.get(tableId),
+        dexie.projects.get(projectId),
+      ])
 
     const tableLabel = labelFromLabeledTable({
       object: table,
@@ -126,11 +127,11 @@ const RowsTitle = ({ rowsWithLabel, level }: Props) => {
     }
   }, [tableId, projectId, session?.user?.email])
 
-  const filteredCount: integer = data?.filteredCount
-  const totalCount: integer = data?.totalCount
-  const userMayEdit: boolean = data?.userMayEdit
-  const tablesOfProject: Table[] = data?.tablesOfProject ?? []
-  const tableLabel: string = data?.tableLabel ?? 'Datensätze'
+  const filteredCount = data?.filteredCount
+  const totalCount = data?.totalCount
+  const userMayEdit = data?.userMayEdit
+  const tablesOfProject = data?.tablesOfProject ?? []
+  const tableLabel = data?.tableLabel ?? 'Datensätze'
   const tableLabelToUse = tableLabel
   // console.log('RowsTitle', { tableLabel })
 

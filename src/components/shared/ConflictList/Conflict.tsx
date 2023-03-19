@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react'
-import { observer } from 'mobx-react-lite'
 import styled from '@emotion/styled'
 
 const Konflikt = styled.div`
@@ -11,17 +10,17 @@ const Konflikt = styled.div`
   }
 `
 
-type ConflictProps = {
+type Props = {
   conflict: string
   activeConflict: string
-  setActiveConflict: (string) => void
+  setActiveConflict: () => void
 }
 
 const Conflict = ({
   conflict,
   activeConflict,
   setActiveConflict,
-}: ConflictProps) => {
+}: Props): React.FC => {
   const onClick = useCallback(() => {
     setActiveConflict(
       !activeConflict
@@ -45,4 +44,4 @@ const Conflict = ({
   )
 }
 
-export default observer(Conflict)
+export default Conflict

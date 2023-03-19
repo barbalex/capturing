@@ -30,7 +30,12 @@ const Key = styled.div`
   color: rgba(0, 0, 0, 0.54);
 `
 
-const ConflictData = ({ dataArray, loading }) => {
+interface Props {
+  dataArray: any[]
+  loading: boolean
+}
+
+const ConflictData = ({ dataArray, loading }: Props) => {
   const store: IStore = useContext(StoreContext)
   const { diffConflict } = store
 

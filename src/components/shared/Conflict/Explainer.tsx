@@ -33,7 +33,7 @@ const Ul = styled.ul`
   padding-left: 13px;
 `
 
-const ConflictExplainer = () => (
+const ConflictExplainer: React.FC = () => (
   <OptionalHelp>
     <Summary>Infos und Anleitung</Summary>
     <Details>

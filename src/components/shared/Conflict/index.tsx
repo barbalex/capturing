@@ -40,7 +40,17 @@ const StyledButton = styled(Button)`
   }
 `
 
-const Conflict = ({
+interface Props {
+  rev: string
+  dataArray: any[]
+  loading: boolean
+  error: Error | null
+  onClickAktuellUebernehmen: () => void
+  onClickWiderspruchUebernehmen: () => void
+  onClickSchliessen: () => void
+}
+
+const Conflict: React.FC = ({
   rev,
   dataArray,
   loading,
@@ -48,7 +58,7 @@ const Conflict = ({
   onClickAktuellUebernehmen,
   onClickWiderspruchUebernehmen,
   onClickSchliessen,
-}) => {
+}: Props) => {
   const store: IStore = useContext(StoreContext)
   const { diffConflict, setDiffConflict } = store
 
