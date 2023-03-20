@@ -4,7 +4,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import styled from '@emotion/styled'
 import { BsArrowsMove } from 'react-icons/bs'
 
-import { dexie, Field } from '../../../../../dexieClient'
+import { dexie, Field, ITable } from '../../../../../dexieClient'
 import BetweenCharactersElement from '../BetweenCharacters'
 
 const TargetContainer = styled.div`
@@ -50,6 +50,20 @@ const ElementContainer = styled.div`
   display: flex;
 `
 
+export interface TargetElement {
+  type: 'field' | 'text'
+  field?: Field
+  text?: string
+  index: number
+}
+
+interface Props {
+  rowLabel: any[]
+  rowState: ITable
+  isDraggingOver: boolean
+  provided: DroppableProvided
+}
+
 /**
  * Have two versions:
  * 1. editing
@@ -65,7 +79,12 @@ const ElementContainer = styled.div`
  * 3. remind user to first define the fields
  */
 
-const RowLabelTarget = ({ rowLabel, rowState, isDraggingOver, provided }) => {
+const RowLabelTarget = ({
+  rowLabel,
+  rowState,
+  isDraggingOver,
+  provided,
+}: Props) => {
   const { tableId } = useParams()
 
   // rowLabel: array of {field: id, type: 'field'},{text, type: 'text'}
@@ -79,7 +98,7 @@ const RowLabelTarget = ({ rowLabel, rowState, isDraggingOver, provided }) => {
       [tableId, rowLabel],
     ) ?? []
 
-  const targetElements = rowLabel.map((el) => ({
+  const targetElements: TargetElement[] = rowLabel.map((el) => ({
     type: el.type,
     field: el.field ? targetFields.find((f) => f.id === el.field) : undefined,
     text: el.text,

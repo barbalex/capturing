@@ -1,4 +1,4 @@
-import { useEffect, useContext, useRef } from 'react'
+import { useEffect, useContext, useRef, PropsWithChildren } from 'react'
 import { observer } from 'mobx-react-lite'
 import styled from '@emotion/styled'
 import SplitPane from 'react-split-pane'
@@ -48,7 +48,7 @@ const StyledMotionDiv = styled(motion.div)`
 
 export const resizerWidth = 5
 
-const PageLayout = ({ children }) => children
+const PageLayout = ({ children }): PropsWithChildren => children
 
 const transition1 = { duration: 0.05 }
 const transition2 = { duration: 0.4 }
