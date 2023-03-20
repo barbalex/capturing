@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, PropsWithChildren } from 'react'
 import Popover from '@mui/material/Popover'
 
 import { MdInfoOutline as InfoOutlineIcon } from 'react-icons/md'
@@ -13,7 +13,7 @@ const StyledPopover = styled(Popover)`
   border-radius: 4px;
 `
 
-const InfoWithPopover = ({ children }) => {
+const InfoWithPopover = ({ children }): PropsWithChildren => {
   const [popupOpen, changePopupOpen] = useState<boolean>(false)
   const [popupAnchorEl, changePopupAnchorEl] = useState<HTMLAnchorElement>(null)
 

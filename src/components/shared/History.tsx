@@ -12,6 +12,7 @@ import Data from './Conflict/Data'
 import StoreContext from '../../storeContext'
 import constants from '../../utils/constants'
 import { IStore } from '../../store'
+import { DataForRevComparison } from '../Row/createDataArrayForRevComparison'
 
 const Container = styled.div`
   padding: 10px;
@@ -46,7 +47,13 @@ const StyledButton = styled(Button)`
   }
 `
 
-const History = ({ rev, dataArray, onClickRestore }) => {
+interface Props {
+  rev: string
+  dataArray: DataForRevComparison[]
+  onClickRestore: () => void
+}
+
+const History = ({ rev, dataArray, onClickRestore }: Props) => {
   const store: IStore = useContext(StoreContext)
   const { diffConflict, setDiffConflict } = store
 
@@ -56,12 +63,10 @@ const History = ({ rev, dataArray, onClickRestore }) => {
   )
   const openDocs = useCallback(() => {
     const url = `${constants?.getAppUri()}/docs/data-history`
-    if (typeof window !== 'undefined') {
-      if (window.matchMedia('(display-mode: standalone)').matches) {
-        return window.open(url, '_blank', 'toolbar=no')
-      }
-      window.open(url)
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      return window.open(url, '_blank', 'toolbar=no')
     }
+    window.open(url)
   }, [])
 
   return (
