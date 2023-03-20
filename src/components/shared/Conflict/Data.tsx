@@ -7,6 +7,7 @@ import toStringIfPossible from '../../../utils/toStringIfPossible'
 import StoreContext from '../../../storeContext'
 import Spinner from '../Spinner'
 import { IStore } from '../../../store'
+import { DataForRevComparison } from '../../Row/createDataArrayForRevComparison'
 
 const Row = styled.div`
   display: flex;
@@ -31,7 +32,7 @@ const Key = styled.div`
 `
 
 interface Props {
-  dataArray: any[]
+  dataArray: DataForRevComparison[]
   loading: boolean
 }
 

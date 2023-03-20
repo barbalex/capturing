@@ -53,7 +53,12 @@ const Explainer = styled.p`
  * 3. remind user to first define the fields
  */
 
-const RowLabelTarget = ({ rowLabel, rowState }) => {
+interface Props {
+  rowLabel: any[]
+  rowState: ITable
+}
+
+const RowLabelTarget = ({ rowLabel, rowState }: Props) => {
   return (
     <Container>
       <Droppable droppableId="target" direction="horizontal">

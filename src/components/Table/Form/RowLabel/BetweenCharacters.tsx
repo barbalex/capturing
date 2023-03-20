@@ -2,7 +2,8 @@ import { useCallback } from 'react'
 import TextField from '@mui/material/TextField'
 import styled from '@emotion/styled'
 
-import { dexie } from '../../../../dexieClient'
+import { dexie, ITable } from '../../../../dexieClient'
+import { TargetElement } from './Target/TargetElements'
 
 const Container = styled.div`
   position: relative;
@@ -20,7 +21,18 @@ const StyledTextField = styled(TextField)`
   }
 `
 
-const BetweenCharacters = ({ el, rowState, index, children }) => {
+interface Props {
+  el: TargetElement
+  rowState: ITable
+  index: number
+}
+
+const BetweenCharacters = ({
+  el,
+  rowState,
+  index,
+  children,
+}: Props): PropsWithChildren => {
   const onBlur = useCallback(
     (event) => {
       const clonedRowLabel = [...rowState.current.row_label]

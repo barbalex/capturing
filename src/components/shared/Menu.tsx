@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, PropsWithChildren } from 'react'
 import { observer } from 'mobx-react-lite'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
@@ -15,7 +15,16 @@ const MenuButton = styled(IconButton)`
   ${(props) => props['data-white'] && 'color: white !important;'}
 `
 
-const HeaderMenu = ({ children, title = 'Menu', white = true }) => {
+interface Props {
+  title?: string
+  white?: boolean
+}
+
+const HeaderMenu = ({
+  children,
+  title = 'Menu',
+  white = true,
+}): PropsWithChildren<Props> => {
   const [anchorEl, setAnchorEl] = useState<HTMLAnchorElement>(null)
   const closeMenu = useCallback(() => {
     setAnchorEl(null)
