@@ -93,6 +93,16 @@ const timeFormat = [
 
 type StateValue = string | number | Date | dayjs.Dayjs | null | undefined
 
+interface Props {
+  value: StateValue
+  name: string
+  label: string
+  saveToDb: () => void
+  error?: string
+  popperPlacement?: string
+  showTimeSelect?: boolean
+}
+
 const DateField = ({
   value: valuePassed,
   name,
@@ -101,7 +111,7 @@ const DateField = ({
   error,
   popperPlacement = 'auto',
   showTimeSelect = false,
-}) => {
+}: Props) => {
   const [stateValue, setStateValue] = useState<StateValue>(valuePassed)
   useEffect(() => {
     setStateValue(valuePassed)

@@ -24,9 +24,9 @@ const StyledInput = styled(Input)`
   }
   width: 70px;
 `
-type Props = {
+interface Props {
   color?: string
-  onBlur: (any) => void
+  onBlur: () => void
   label: string
   name: string
   disabled?: boolean
