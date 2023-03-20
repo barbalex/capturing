@@ -5,11 +5,16 @@ interface Props {
   row: Row
   revRow: any
 }
+export interface DataForRevComparison {
+  valueInRow: any
+  valueInRev: any
+  label: string
+}
 
 const createDataArrayForRevComparison = async ({
   row,
   revRow,
-}: Props): { valueInRow: any; valueInRev: any; label: string }[] => {
+}: Props): DataForRevComparison[] => {
   const rowData = row.data ?? {}
   const revRowData = revRow.data ?? {}
   const dataKeys = [...Object.keys(rowData), ...Object.keys(revRowData)]

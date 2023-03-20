@@ -26,7 +26,19 @@ const StyledIconButton = styled(IconButton)`
     'box-shadow:inset 0px 0px 0px 1px rgba(0, 0, 0, 0.04);'}
 `
 
-const HistoryButton = ({ asMenu, showHistory, setShowHistory, level }) => {
+interface Props {
+  asMenu?: boolean
+  showHistory: boolean
+  setShowHistory: (value: boolean) => void
+  level: number
+}
+
+const HistoryButton = ({
+  asMenu,
+  showHistory,
+  setShowHistory,
+  level,
+}: Props) => {
   const params = useParams()
   const rowId = params[`rowId${level}`]
   const url = params['*']
@@ -40,13 +52,6 @@ const HistoryButton = ({ asMenu, showHistory, setShowHistory, level }) => {
   const existMultipleRevisions =
     !!row?.revisions?.length && row?.revisions?.length > 1
   const disabled = !online || !existMultipleRevisions
-
-  // console.log('HistoryButton', {
-  //   row,
-  //   params,
-  //   url,
-  //   isHistory,
-  // })
 
   const onClick = useCallback(() => {
     setShowHistory(!showHistory)

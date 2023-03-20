@@ -27,12 +27,20 @@ const Pre = styled.pre`
 `
 
 const onReload = () => {
-  if (typeof window !== 'undefined') {
-    window.location.reload(true)
-  }
+  window.location.reload(true)
 }
 
-const ErrorFallback = ({ error, componentStack, resetErrorBoundary }) => (
+interface Props {
+  error: Error
+  componentStack: string
+  resetErrorBoundary: () => void
+}
+
+const ErrorFallback = ({
+  error,
+  componentStack,
+  resetErrorBoundary,
+}: Props) => (
   <Container>
     <p>Sorry, ein Fehler ist aufgetreten:</p>
     <PreWrapping>{error.message}</PreWrapping>

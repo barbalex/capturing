@@ -30,7 +30,13 @@ const StyledMenuItem = styled(MenuItem)`
   color: rgba(0, 0, 0, 0.8) !important;
 `
 
-const FilterNumbers = ({ filteredCount, totalCount, asMenu }) => {
+interface Props {
+  filteredCount: number
+  totalCount: number
+  asMenu?: boolean
+}
+
+const FilterNumbers = ({ filteredCount, totalCount, asMenu }: Props) => {
   if (asMenu) {
     return (
       <StyledMenuItem dense>
