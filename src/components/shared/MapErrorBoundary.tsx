@@ -1,19 +1,28 @@
-import { useContext } from 'react'
+import { useContext, PropsWithChildren } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import storeContext from '../../storeContext'
+import { TileLayer } from '../../dexieClient'
 
 const onReload = () => {
-  if (typeof window !== 'undefined') {
-    window.location.reload(true)
-  }
+  window.location.reload(true)
 }
 
-const ErrorFallback = ({ error, store, layer }) => {
+interface ErrorFallbackProps {
+  error: Error
+  addNotification: (notification: { title: string; message: string }) => void
+  layer: TileLayer
+}
+
+const ErrorFallback = ({
+  error,
+  addNotification,
+  layer,
+}: ErrorFallbackProps) => {
   const layerName =
     layer._layerOptions.find((o) => o.value === layer.type_name)?.label ??
     layer.type_name
-  store.addNotification({
+  addNotification({
     title: `Fehler in Vektor-Layer '${layerName}'`,
     message: `${error.message}`,
   })
@@ -21,8 +30,12 @@ const ErrorFallback = ({ error, store, layer }) => {
   return null
 }
 
-const MyErrorBoundary = ({ children, layer }) => {
-  const store = useContext(storeContext)
+interface Props {
+  layer: TileLayer
+}
+
+const MyErrorBoundary = ({ children, layer }): PropsWithChildren<Props> => {
+  const { addNotification } = useContext(storeContext)
 
   return (
     <ErrorBoundary
@@ -31,7 +44,7 @@ const MyErrorBoundary = ({ children, layer }) => {
           error,
           componentStack,
           resetErrorBoundary,
-          store,
+          addNotification,
           layer,
         })
       }

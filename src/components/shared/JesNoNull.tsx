@@ -47,6 +47,15 @@ const dataSource = [
 
 // TODO: test because of change true/false to 1/0
 
+interface Props {
+  value: 1 | 0 | null | undefined
+  label: string
+  name: string
+  error?: string
+  helperText?: string
+  onBlur: () => void
+}
+
 const JesNoNull = ({
   value: valuePassed,
   label,
@@ -54,14 +63,14 @@ const JesNoNull = ({
   error,
   helperText = '',
   onBlur,
-}) => {
+}: Props) => {
   const [stateValue, setStateValue] = useState(valuePassed)
   useEffect(() => {
     setStateValue(valuePassed)
   }, [valuePassed])
 
   const onChangeGroup = useCallback(
-    (event) => {
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       // group only changes if value changes
       let targetValue
       switch (event.target.value) {

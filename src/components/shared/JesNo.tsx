@@ -42,6 +42,15 @@ const dataSource = [
 
 // TODO: test because of change true/false to 1/0
 
+interface Props {
+  value: 1 | 0 | null | undefined
+  label: string
+  name: string
+  error?: string
+  helperText?: string
+  onBlur: () => void
+}
+
 const RadioButtonGroup = ({
   value: valuePassed,
   label,
@@ -49,14 +58,14 @@ const RadioButtonGroup = ({
   error,
   helperText = '',
   onBlur,
-}) => {
+}: Props) => {
   const [stateValue, setStateValue] = useState(valuePassed)
   useEffect(() => {
     setStateValue(valuePassed)
   }, [valuePassed])
 
   const onClickButton = useCallback(
-    (event) => {
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       /**
        * if clicked element is active value: set null
        * Problem: does not work on change event on RadioGroup
