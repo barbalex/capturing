@@ -7,12 +7,18 @@ import { observer } from 'mobx-react-lite'
 import storeContext from '../../../../storeContext'
 import { IStore } from '../../../../store'
 
-const Progress = ({ showProgress, setShowProgress, setDownloading }) => {
+interface Props {
+  showProgress: boolean
+  setShowProgress: (showProgress: boolean) => void
+  setDownloading: (downloading: boolean) => void
+}
+
+const Progress = ({ showProgress, setShowProgress, setDownloading }: Props) => {
   const store: IStore = useContext(storeContext)
   const { localMapLoadingFraction } = store
 
   useEffect(() => {
-    let timeoutID
+    let timeoutID: NodeJS.Timeout | undefined
     if (localMapLoadingFraction === 1) {
       setDownloading(false)
       timeoutID = setTimeout(() => setShowProgress(false), 3000)

@@ -66,7 +66,7 @@ const StyledFormGroup = styled(FormGroup)`
   }
 `
 
-type Props = {
+interface Props {
   userMayEdit: boolean
   row: TileLayer
 }
@@ -120,7 +120,7 @@ const LocalData = ({ userMayEdit, row }: Props) => {
   }, [localMap, row, session, setLocalMapLoading])
 
   const onClickShow = useCallback(
-    (event) => {
+    (event: React.MouseEvent) => {
       setLocalMapShow({ id: row.id, show: event.target.checked })
     },
     [row.id, setLocalMapShow],

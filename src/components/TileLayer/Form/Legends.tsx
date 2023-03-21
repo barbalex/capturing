@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'redaxios'
 import styled from '@emotion/styled'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import Label from '../../shared/Label'
 import constants from '../../../utils/constants'
-import { dexie, TileLayer } from '../../../dexieClient'
+import { TileLayer } from '../../../dexieClient'
 
 const Container = styled.div`
   margin: 15px -10px 10px -10px;
@@ -38,17 +37,16 @@ const LegendsContainer = styled.div`
 type Props = {
   row: TileLayer
 }
-type ILegend = [blob, string]
-type ILegends = ILegend[]
+type Legend = [blob, string]
 
 // = '99999999-9999-9999-9999-999999999999'
-const TileLayerFormLegends = ({ row }: Props) => {
-  const [legends, setLegends] = useState<ILegends>()
+const TileLayerFormLegends = ({ row }: Props): React.FC => {
+  const [legends, setLegends] = useState<Legend[]>()
   useEffect(() => {
     // get legends from row
-    const _legends = []
+    const _legends: Legend[] = []
     for (const legend of row._wmsLegends ?? []) {
-      let objectUrl
+      let objectUrl: string | undefined
       try {
         objectUrl = URL.createObjectURL(
           new Blob([legend[1]], { type: 'image/png' }),
