@@ -11,6 +11,7 @@ import styled from '@emotion/styled'
 import { observer } from 'mobx-react-lite'
 
 import toStringIfPossible from '../../utils/toStringIfPossible'
+import { Option } from '../../dexieClient'
 
 // without slight padding radio is slightly cut off!
 const StyledFormControl = styled(FormControl)`
@@ -45,6 +46,20 @@ const Row = styled.div`
   align-items: center;
 `
 
+interface Props {
+  value: number | string | null | undefined
+  label: string
+  labelSize?: number
+  name: string
+  error?: string
+  helperText?: string
+  dataSource: Option[]
+  noDataMessage?: string
+  onBlur: (event: React.FocusEvent<HTMLInputElement>) => void
+  infoLink?: string
+  infoTitle?: string
+}
+
 const ToggleButtonGroupComponent = ({
   value: valuePassed,
   label,
@@ -57,7 +72,7 @@ const ToggleButtonGroupComponent = ({
   onBlur,
   infoLink,
   infoTitle,
-}) => {
+}: Props) => {
   const [stateValue, setStateValue] = useState(valuePassed)
   useEffect(() => {
     setStateValue(valuePassed)
@@ -89,7 +104,7 @@ const ToggleButtonGroupComponent = ({
     [stateValue, name, onBlur],
   )
   const onChangeGroup = useCallback(
-    (event) => {
+    (event: React.MouseEvent) => {
       // group only changes if value changes
       const targetValue = event.target.value
       // values are passed as strings > need to convert

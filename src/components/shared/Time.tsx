@@ -58,6 +58,15 @@ const FocusCatcher = styled.input`
   border: none;
 `
 
+interface Props {
+  value: string | number | Date | dayjs.Dayjs | null | undefined
+  name: string
+  label: string
+  saveToDb: (event: React.ChangeEvent<HTMLInputElement>) => void
+  error?: string
+  popperPlacement?: string
+}
+
 const TimeField = ({
   value: valuePassed,
   name,
@@ -65,7 +74,7 @@ const TimeField = ({
   saveToDb,
   error,
   popperPlacement = 'auto',
-}) => {
+}: Props) => {
   const [stateValue, setStateValue] = useState(valuePassed)
   useEffect(() => {
     setStateValue(valuePassed)
@@ -74,7 +83,7 @@ const TimeField = ({
   const focusCatcherRef = useRef()
 
   const onChange = useCallback(
-    (date) => {
+    (date: React.SyntheticEvent<any, Event>) => {
       const newValue =
         date === null ? null : dayjs(date).format('YYYY-MM-DD HH:mm')
       setStateValue(newValue)
