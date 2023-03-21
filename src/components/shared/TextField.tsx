@@ -19,8 +19,8 @@ const StyledInputLabel = styled(InputLabel)`
   font-size: 1rem;
 `
 
-type TextFieldProps = {
-  value: string | number
+type Props = {
+  value: string | number | null | undefined
   label: string
   labelWeight?: number
   name: string
@@ -30,7 +30,7 @@ type TextFieldProps = {
   hintText?: string
   helperText?: string
   error?: string
-  onBlur: (any) => void
+  onBlur: () => void
   schrinkLabel?: boolean
   hideLabel?: boolean
 }
@@ -49,8 +49,8 @@ const MyTextField = ({
   onBlur,
   schrinkLabel = true,
   hideLabel = false,
-}: TextFieldProps) => {
-  const [stateValue, setStateValue] = useState(
+}: Props) => {
+  const [stateValue, setStateValue] = useState<string | number>(
     value || value === 0 ? value : '',
   )
   useEffect(() => {
@@ -59,7 +59,7 @@ const MyTextField = ({
   const onChange = useCallback((event) => setStateValue(event.target.value), [])
 
   const onKeyPress = useCallback(
-    (event) => {
+    (event: React.KeyboardEvent) => {
       if (event.key === 'Enter') {
         onBlur(event)
       }

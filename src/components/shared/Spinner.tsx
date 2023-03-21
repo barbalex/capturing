@@ -12,7 +12,11 @@ const SpinnerText = styled.div`
   padding: 10px;
 `
 
-const SpinnerComponent = ({ message }) => (
+interface Props {
+  message?: string
+}
+
+const SpinnerComponent = ({ message }: Props): React.FC => (
   <SpinnerContainer>
     <CircularProgress />
     {!!message && <SpinnerText>{message}</SpinnerText>}

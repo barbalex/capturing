@@ -36,7 +36,7 @@ const SliderComponent = ({
   onBlur,
   helperText,
 }: Props) => {
-  const [value, setValue] = React.useState(valuePassed ?? 0)
+  const [value, setValue] = React.useState<number | number[]>(valuePassed ?? 0)
 
   const handleSliderChange = (event, newValue) => {
     setValue(newValue)
