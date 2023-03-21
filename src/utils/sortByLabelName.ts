@@ -1,13 +1,41 @@
 import { Table, Field, Row } from '../dexieClient'
 import labelFromLabeledTable from './labelFromLabeledTable'
 
-type Objects = Table[] | Field[] | Row[]
+// https://www.typescriptlang.org/docs/handbook/2/conditional-types.html
+type TableOrRowOrField<T extends Table | Row | Field> = T extends Table
+  ? Table
+  : T extends Row
+  ? Row
+  : Field
 type Props = {
-  objects: Objects
+  objects: TableOrRowOrField[]
   useLabels: integer
 }
+
+// overloading the function
+function sortByLabelName({
+  objects,
+  useLabels,
+}: {
+  objects: Table[]
+  useLabels: integer
+}): Table[]
+function sortByLabelName({
+  objects,
+  useLabels,
+}: {
+  objects: Field[]
+  useLabels: integer
+}): Field[]
+function sortByLabelName({
+  objects,
+  useLabels,
+}: {
+  objects: Row[]
+  useLabels: integer
+}): Row[]
 // works for any table with label and name that is not projects itself
-const sortByLabelName = ({ objects, useLabels }: Props): Objects =>
+const sortByLabelName = ({ objects, useLabels }: Props) =>
   objects.sort((a, b) => {
     const al = labelFromLabeledTable({ object: a, useLabels })
     const bl = labelFromLabeledTable({ object: b, useLabels })

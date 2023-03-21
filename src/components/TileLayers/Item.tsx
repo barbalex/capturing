@@ -41,7 +41,9 @@ const RowLink = styled.div`
   justify-content: center;
 `
 type Props = {
-  row: TileLayer
+  item: TileLayer
+  provided: DraggableProvided
+  isDragging: boolean
 }
 
 const TileLayerItem = ({ item, provided, isDragging }: Props) => {

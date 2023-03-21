@@ -9,7 +9,7 @@ import { useParams, useNavigate, Link, resolvePath } from 'react-router-dom'
 import storeContext from '../../storeContext'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import { dexie } from '../../dexieClient'
+import { dexie, ProjectUser } from '../../dexieClient'
 import insertTileLayer from '../../utils/insertTileLayer'
 import FilterNumbers from '../shared/FilterNumbers'
 import { IStore } from '../../store'
@@ -47,7 +47,11 @@ const TileLayersTitle = () => {
   const { activeNodeArray, removeNode, session } = store
 
   const data = useLiveQuery(async () => {
-    const [filteredCount, totalCount, projectUser] = await Promise.all([
+    const [filteredCount, totalCount, projectUser]: [
+      number,
+      number,
+      ProjectUser,
+    ] = await Promise.all([
       dexie.tile_layers.where({ deleted: 0, project_id: projectId }).count(), // TODO: pass in filter
       dexie.tile_layers.where({ deleted: 0, project_id: projectId }).count(),
       dexie.project_users.get({
@@ -66,9 +70,9 @@ const TileLayersTitle = () => {
       ].includes(projectUser?.role),
     }
   }, [projectId, session?.user?.email])
-  const filteredCount: integer = data?.filteredCount
-  const totalCount: integer = data?.totalCount
-  const userMayEdit: boolean = data?.userMayEdit
+  const filteredCount = data?.filteredCount
+  const totalCount = data?.totalCount
+  const userMayEdit = data?.userMayEdit
 
   const add = useCallback(async () => {
     const newId = await insertTileLayer({ projectId })
