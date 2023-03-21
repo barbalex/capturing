@@ -46,7 +46,7 @@ const TileLayersComponent = () => {
   const store: IStore = useContext(storeContext)
   const { setTileLayerSorter, rebuildTree, session } = store
 
-  const tileLayers: TileLayer[] = useLiveQuery(
+  const tileLayers: TileLayer[] | undefined = useLiveQuery(
     async () =>
       await dexie.tile_layers
         .where({ deleted: 0, project_id: projectId })
@@ -61,7 +61,7 @@ const TileLayersComponent = () => {
   }, [tileLayers])
 
   const reorder = useCallback(
-    async (list, startIndex, endIndex) => {
+    async (list: TileLayer[], startIndex: number, endIndex: number) => {
       const result = Array.from(list)
       const [removed] = result.splice(startIndex, 1)
       result.splice(endIndex, 0, removed)
@@ -97,7 +97,7 @@ const TileLayersComponent = () => {
   )
 
   const onDragEnd = useCallback(
-    (result) => {
+    (result: OnDragEndResponder) => {
       if (!result.destination) {
         return
       }

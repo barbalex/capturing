@@ -6,7 +6,7 @@ import { Link, resolvePath, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../../storeContext'
-import { dexie } from '../../../dexieClient'
+import { dexie, TileLayer } from '../../../dexieClient'
 import { IStore } from '../../../store'
 
 const TileLayerNavButtons = () => {
@@ -17,7 +17,7 @@ const TileLayerNavButtons = () => {
 
   const tileLayerIds: string[] =
     useLiveQuery(async () => {
-      const tileLayers = await dexie.tile_layers
+      const tileLayers: TileLayer[] = await dexie.tile_layers
         .where({ deleted: 0, project_id: projectId })
         .sortBy('sort')
 
