@@ -10,7 +10,7 @@ const TableFormTitleChooser = () => {
   const showFilter = false // TODO:
 
   const data = useLiveQuery(async () => {
-    const [filteredCount, totalCount] = await Promise.all([
+    const [filteredCount, totalCount]: [number, number] = await Promise.all([
       dexie.ttables.where({ deleted: 0, project_id: projectId }).count(), // TODO: pass in filter
       dexie.ttables.where({ deleted: 0, project_id: projectId }).count(),
     ])

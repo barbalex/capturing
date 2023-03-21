@@ -49,7 +49,13 @@ const TitleSymbols = styled.div`
   flex-wrap: wrap;
 `
 
-const TableFormTitle = ({ totalCount, filteredCount, width }) => {
+interface Props {
+  totalCount: number
+  filteredCount: number
+  width: number
+}
+
+const TableFormTitle = ({ totalCount, filteredCount, width }: Props) => {
   const { projectId } = useParams()
   const { session } = useContext(storeContext)
 

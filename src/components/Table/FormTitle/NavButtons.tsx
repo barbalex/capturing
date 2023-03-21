@@ -13,7 +13,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import styled from '@emotion/styled'
 
 import StoreContext from '../../../storeContext'
-import { dexie } from '../../../dexieClient'
+import { dexie, Table, Project } from '../../../dexieClient'
 import sortByLabelName from '../../../utils/sortByLabelName'
 import { IStore } from '../../../store'
 
@@ -35,7 +35,7 @@ const TableNavButtons = () => {
   const editing = editingProjects.get(projectId)?.editing ?? false
 
   const data = useLiveQuery(async () => {
-    const [tables, project] = await Promise.all([
+    const [tables, project]: [Table[], Project] = await Promise.all([
       dexie.ttables.where({ deleted: 0, project_id: projectId }).toArray(),
       dexie.projects.get(projectId),
     ])
@@ -49,7 +49,7 @@ const TableNavButtons = () => {
       tableIds: ids,
     }
   }, [projectId])
-  const tableIds: string[] = data?.tableIds ?? []
+  const tableIds = data?.tableIds ?? []
 
   const parentPath = resolvePath(`..`, window.location.pathname)?.pathname
   const activeIndex = tableIds.indexOf(tableId)
