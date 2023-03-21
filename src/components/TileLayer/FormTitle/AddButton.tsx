@@ -6,7 +6,11 @@ import { useParams, useNavigate, resolvePath } from 'react-router-dom'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import insertTileLayer from '../../../utils/insertTileLayer'
 
-const TileLayerAddButton = ({ userMayEdit }) => {
+interface Props {
+  userMayEdit: boolean
+}
+
+const TileLayerAddButton = ({ userMayEdit }: Props) => {
   const { projectId } = useParams()
   const navigate = useNavigate()
 

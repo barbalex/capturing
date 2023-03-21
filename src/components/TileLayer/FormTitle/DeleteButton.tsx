@@ -25,7 +25,9 @@ const Title = styled.div`
   font-weight: 700;
   user-select: none;
 `
-type Props = { userMayEdit: boolean }
+interface Props {
+  userMayEdit: boolean
+}
 
 const TileLayerDeleteButton = ({ userMayEdit }: Props) => {
   const navigate = useNavigate()
@@ -34,10 +36,9 @@ const TileLayerDeleteButton = ({ userMayEdit }: Props) => {
   const { activeNodeArray, removeNodeWithChildren, session } = store
   // const filter = { todo: 'TODO: was in store' }
 
-  const deleted: boolean = useLiveQuery(async () => {
-    const row: Row = await dexie.tile_layers.get(tileLayerId)
-    // only return needed values to minimize re-renders
-    return row?.deleted
+  const deleted = useLiveQuery(async () => {
+    const tileLayer: TileLayer = await dexie.tile_layers.get(tileLayerId)
+    return tileLayer?.deleted === 1
   }, [tileLayerId])
 
   const [anchorEl, setAnchorEl] = useState<HTMLAnchorElement>(null)
@@ -50,8 +51,8 @@ const TileLayerDeleteButton = ({ userMayEdit }: Props) => {
     [],
   )
   const remove = useCallback(async () => {
-    const row: TileLayer = await dexie.tile_layers.get(tileLayerId)
-    row.deleteOnServerAndClient({ session })
+    const tileLayer: TileLayer = await dexie.tile_layers.get(tileLayerId)
+    tileLayer.deleteOnServerAndClient({ session })
     setAnchorEl(null)
     // need to remove node from nodes
     removeNodeWithChildren(activeNodeArray)

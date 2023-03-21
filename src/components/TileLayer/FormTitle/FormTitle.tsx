@@ -48,11 +48,17 @@ const TitleSymbols = styled.div`
   flex-wrap: wrap;
 `
 
-const TileLayerFormTitle = ({ totalCount, filteredCount, width }) => {
+interface Props {
+  totalCount: number
+  filteredCount: number
+  width: number
+}
+
+const TileLayerFormTitle = ({ totalCount, filteredCount, width }: Props) => {
   const { projectId } = useParams()
   const { session } = useContext(storeContext)
 
-  const userMayEdit: boolean = useLiveQuery(async () => {
+  const userMayEdit = useLiveQuery(async () => {
     const projectUser: IProjectUser = await dexie.project_users.get({
       project_id: projectId,
       user_email: session?.user?.email,
