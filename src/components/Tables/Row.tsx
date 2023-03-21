@@ -8,6 +8,7 @@ import constants from '../../utils/constants'
 import labelFromLabeledTable from '../../utils/labelFromLabeledTable'
 import storeContext from '../../storeContext'
 import { IStore } from '../../store'
+import { Row } from '../../dexieClient'
 
 const StyledListItem = styled(ListItem)`
   min-height: ${constants.singleRowHeight};
@@ -22,7 +23,12 @@ const StyledListItem = styled(ListItem)`
   }
 `
 
-const TableRow = ({ row, useLabels }) => {
+interface Props {
+  row: Row
+  useLabels: boolean
+}
+
+const TableRow = ({ row, useLabels }: Props) => {
   const { projectId } = useParams()
   const store: IStore = useContext(storeContext)
   const { editingProjects } = store

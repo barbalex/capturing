@@ -10,7 +10,7 @@ import storeContext from '../../storeContext'
 import Row from './Row'
 import ErrorBoundary from '../shared/ErrorBoundary'
 import constants from '../../utils/constants'
-import { dexie, Table } from '../../dexieClient'
+import { dexie, Project, ProjectUser, Table } from '../../dexieClient'
 import insertTable from '../../utils/insertTable'
 import sortByLabelName from '../../utils/sortByLabelName'
 import FilterNumbers from '../shared/FilterNumbers'
@@ -65,17 +65,22 @@ const TablesComponent = () => {
   if (!editing) criteria.type = 'standard'
 
   const data = useLiveQuery(async () => {
-    const [tables, filteredCount, totalCount, projectUser, project] =
-      await Promise.all([
-        dexie.ttables.where(criteria).toArray(),
-        dexie.ttables.where(criteria).count(), // TODO: pass in filter
-        dexie.ttables.where(criteria).count(),
-        dexie.project_users.get({
-          project_id: projectId,
-          user_email: session?.user?.email,
-        }),
-        dexie.projects.get(projectId),
-      ])
+    const [tables, filteredCount, totalCount, projectUser, project]: [
+      Table[],
+      number,
+      number,
+      ProjectUser,
+      Project,
+    ] = await Promise.all([
+      dexie.ttables.where(criteria).toArray(),
+      dexie.ttables.where(criteria).count(), // TODO: pass in filter
+      dexie.ttables.where(criteria).count(),
+      dexie.project_users.get({
+        project_id: projectId,
+        user_email: session?.user?.email,
+      }),
+      dexie.projects.get(projectId),
+    ])
 
     return {
       tables: sortByLabelName({
@@ -84,7 +89,7 @@ const TablesComponent = () => {
       }),
       filteredCount,
       totalCount,
-      useLabels: project.use_labels,
+      useLabels: project.use_labels === 1,
       userMayEdit: [
         'account_manager',
         'project_manager',
@@ -92,11 +97,12 @@ const TablesComponent = () => {
       ].includes(projectUser?.role),
     }
   }, [projectId, session?.user?.email, criteria])
-  const useLabels: boolean = data?.useLabels
-  const tables: Table[] = data?.tables ?? []
-  const filteredCount: integer = data?.filteredCount
-  const totalCount: integer = data?.totalCount
-  const userMayEdit: boolean = data?.userMayEdit
+
+  const useLabels = data?.useLabels
+  const tables = data?.tables ?? []
+  const filteredCount = data?.filteredCount
+  const totalCount = data?.totalCount
+  const userMayEdit = data?.userMayEdit
 
   const add = useCallback(async () => {
     const newTableId = await insertTable({ projectId })

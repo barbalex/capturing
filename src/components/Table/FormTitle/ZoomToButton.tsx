@@ -1,4 +1,3 @@
-import { observer } from 'mobx-react-lite'
 import { useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import getBbox from '@turf/bbox'
@@ -39,4 +38,4 @@ const ZoomToButtonComponent = () => {
   return <ZoomToButton bbox={bbox} geometryExists={!bboxIsInfinite} />
 }
 
-export default observer(ZoomToButtonComponent)
+export default ZoomToButtonComponent
