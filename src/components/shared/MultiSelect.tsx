@@ -3,13 +3,15 @@ import Select from 'react-select'
 import FormHelperText from '@mui/material/FormHelperText'
 import styled from '@emotion/styled'
 
+import { Option } from '../../dexieClient'
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 19px;
 `
 const Label = styled.div`
-font-size: 0.8rem;
+  font-size: 0.8rem;
   height: 12px !important;
   color: rgb(0, 0, 0, 0.8);
 `
@@ -76,6 +78,20 @@ const StyledSelect = styled(Select)`
   }
 `
 
+interface Props {
+  value: Option[]
+  field?: string
+  label?: string
+  name: string
+  error: string
+  helperText?: string
+  options: Option[]
+  maxHeight?: number
+  isClearable?: boolean
+  noCaret?: boolean
+  onBlur: (event: React.FocusEvent<HTMLInputElement>) => void
+}
+
 const SharedMultiSelect = ({
   value,
   field = '',
@@ -88,7 +104,7 @@ const SharedMultiSelect = ({
   isClearable = true,
   noCaret = false,
   onBlur,
-}) => {
+}: Props) => {
   const onChange = useCallback(
     (options) => {
       const fakeEvent = {

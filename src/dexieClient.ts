@@ -441,10 +441,10 @@ export interface ITileLayer {
   wms_info_format?: string
   wms_queryable?: number
   _wmsLegends?: blob[] // only local!
-  _wmsFormatOptions?: optionsList[] // local
-  _layerOptions?: optionsList[] // local
-  _legendUrls?: legendUrlList[] // local
-  _infoFormatOptions?: optionsList[] // local
+  _wmsFormatOptions?: Option[] // local
+  _layerOptions?: Option[] // local
+  _legendUrls?: LegendUrlOption[] // local
+  _infoFormatOptions?: Option[] // local
   grayscale?: number
   local_data_size?: number
   local_data_bounds?: dataBounds[]
@@ -478,11 +478,12 @@ export enum FillRuleEnum {
   evenodd = 'evenodd',
 }
 
-type optionsList = {
+export interface Option {
   label: string | number
   value: string | number
 }
-type legendUrlList = {
+
+type LegendUrlOption = {
   title: string
   url: string
   name: string
@@ -511,10 +512,10 @@ export class TileLayer implements ITileLayer {
   wms_info_format?: string
   wms_queryable?: number
   _wmsLegends?: blob[] // local
-  _wmsFormatOptions?: optionsList[] // local
-  _layerOptions?: optionsList[] // local
-  _legendUrls?: legendUrlList[] // local
-  _infoFormatOptions?: optionsList[] // local
+  _wmsFormatOptions?: Option[] // local
+  _layerOptions?: Option[] // local
+  _legendUrls?: LegendUrlOption[] // local
+  _infoFormatOptions?: Option[] // local
   grayscale?: number
   local_data_size?: number
   local_data_bounds?: dataBounds[]
@@ -545,10 +546,10 @@ export class TileLayer implements ITileLayer {
     wms_info_format?: string,
     wms_queryable?: number,
     _wmsLegends?: blob[],
-    _wmsFormatOptions?: optionsList[],
-    _layerOptions?: optionsList[],
-    _legendUrls?: legendUrlList[],
-    _infoFormatOptions?: optionsList[],
+    _wmsFormatOptions?: Option[],
+    _layerOptions?: Option[],
+    _legendUrls?: LegendUrlOption[],
+    _infoFormatOptions?: Option[],
     grayscale?: number,
     local_data_size?: number,
     local_data_bounds?: dataBounds[],
@@ -635,10 +636,10 @@ export interface IVectorLayer {
   min_zoom?: number
   opacity?: number
   type_name?: string
-  _layerOptions?: optionsList[]
+  _layerOptions?: Option[]
   wfs_version?: string
   output_format?: string
-  _outputFormatOptions?: optionsList[]
+  _outputFormatOptions?: Option[]
   max_features?: number
   feature_count?: number
   point_count?: number
@@ -666,10 +667,10 @@ export class VectorLayer implements IVectorLayer {
   min_zoom?: number
   opacity?: number
   type_name?: string
-  _layerOptions?: optionsList[]
+  _layerOptions?: Option[]
   wfs_version?: string
   output_format?: string
-  _outputFormatOptions?: optionsList[]
+  _outputFormatOptions?: Option[]
   max_features?: number
   feature_count?: number
   point_count?: number
@@ -692,10 +693,10 @@ export class VectorLayer implements IVectorLayer {
     min_zoom?: number,
     opacity?: number,
     type_name?: string,
-    _layerOptions?: optionsList[],
+    _layerOptions?: Option[],
     wfs_version?: string,
     output_format?: string,
-    _outputFormatOptions?: optionsList[],
+    _outputFormatOptions?: Option[],
     max_features?: number,
     feature_count?: number,
     point_count?: number,

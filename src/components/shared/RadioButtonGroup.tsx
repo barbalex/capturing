@@ -9,6 +9,7 @@ import styled from '@emotion/styled'
 import { observer } from 'mobx-react-lite'
 
 import toStringIfPossible from '../../utils/toStringIfPossible'
+import { Option } from '../../dexieClient'
 
 // without slight padding radio is slightly cut off!
 const StyledFormControl = styled(FormControl)`
@@ -43,6 +44,18 @@ const StyledFormHelperText = styled(FormHelperText)`
   line-height: 1.3em;
 `
 
+interface Props {
+  value: any
+  label: string
+  labelSize?: number
+  name: string
+  error?: string
+  helperText?: string
+  dataSource: Option[]
+  noDataMessage?: string
+  onBlur: (event: React.ChangeEvent<HTMLInputElement>) => void
+}
+
 const RadioButtonGroup = ({
   value: valuePassed,
   label,
@@ -53,14 +66,14 @@ const RadioButtonGroup = ({
   dataSource = [],
   noDataMessage = undefined,
   onBlur,
-}) => {
+}: Props) => {
   const [stateValue, setStateValue] = useState(valuePassed)
   useEffect(() => {
     setStateValue(valuePassed)
   }, [valuePassed])
 
   const onClickButton = useCallback(
-    (event) => {
+    (event: React.MouseEvent) => {
       /**
        * if clicked element is active value: set null
        * Problem: does not work on change event on RadioGroup
@@ -85,7 +98,7 @@ const RadioButtonGroup = ({
     [stateValue, name, onBlur],
   )
   const onChangeGroup = useCallback(
-    (event) => {
+    (event: React.ChangeEvent) => {
       // group only changes if value changes
       const targetValue = event.target.value
       // values are passed as strings > need to convert
