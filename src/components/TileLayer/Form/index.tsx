@@ -14,6 +14,7 @@ import {
   TileLayerTypeEnum,
   ITileLayer,
   TileLayer,
+  ProjectUser,
 } from '../../../dexieClient'
 import TextField from '../../shared/TextField'
 import Spinner from '../../shared/Spinner'
@@ -49,7 +50,7 @@ const TileLayerForm = () => {
   }, [tileLayerId, unsetError])
 
   const data = useLiveQuery(async () => {
-    const [row, projectUser] = await Promise.all([
+    const [row, projectUser]: [TileLayer, ProjectUser] = await Promise.all([
       dexie.tile_layers.get(tileLayerId),
       dexie.project_users.get({
         project_id: projectId,
@@ -68,8 +69,8 @@ const TileLayerForm = () => {
     }
   }, [projectId, tileLayerId, session?.user?.email])
 
-  const row: TileLayer = data?.row
-  const userMayEdit: boolean = data?.userMayEdit
+  const row = data?.row
+  const userMayEdit = data?.userMayEdit
 
   const tileLayerTypeValues = Object.values(TileLayerTypeEnum).map((v) => ({
     value: v,
@@ -118,7 +119,7 @@ const TileLayerForm = () => {
   }, [updateOnServer])
 
   const onBlur = useCallback(
-    async (event) => {
+    async (event: React.FocusEventHandler<HTMLDivElement>) => {
       const { name: field, value, type, valueAsNumber } = event.target
       let newValue = type === 'number' ? valueAsNumber : value
       if ([undefined, '', NaN].includes(newValue)) newValue = null

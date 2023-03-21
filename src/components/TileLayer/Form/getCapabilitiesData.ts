@@ -3,9 +3,10 @@ import axios from 'redaxios'
 import fetchCapabilities from '../../../utils/getCapabilities'
 import { dexie, TileLayer } from '../../../dexieClient'
 
-type Props = {
+interface Props {
   row: TileLayer
   returnValue: boolean
+  rebuildTree: () => void
 }
 
 const getCapabilitiesDataForTileLayer = async ({
@@ -55,7 +56,7 @@ const getCapabilitiesDataForTileLayer = async ({
     row.wms_layers?.includes?.(lUrl.name),
   )
 
-  const _legendBlobs = []
+  const _legendBlobs: [Blob, string] = []
   for (const lUrl of legendUrlsToUse) {
     let res
     try {

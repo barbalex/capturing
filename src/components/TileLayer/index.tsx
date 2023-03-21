@@ -10,7 +10,11 @@ const Container = styled.div`
   background-color: ${(props) => (props.showfilter ? '#fff3e0' : 'unset')};
 `
 
-const TileLayerComponent = ({ filter: showFilter }) => {
+interface Props {
+  filter?: boolean
+}
+
+const TileLayerComponent = ({ filter: showFilter }: Props) => {
   const filter = 'TODO: was in store'
 
   if (!showFilter && filter.show) return null
