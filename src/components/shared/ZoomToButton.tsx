@@ -8,7 +8,7 @@ import storeContext from '../../storeContext'
 import boundsFromBbox from '../../utils/boundsFromBbox'
 import { IStore } from '../../store'
 
-type Props = {
+interface Props {
   bbox: number[]
   geometryExists: boolean
 }

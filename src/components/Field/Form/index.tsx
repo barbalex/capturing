@@ -19,7 +19,6 @@ import {
   dexie,
   IField,
   Field,
-  FieldType,
   IWidgetType,
   IWidgetForField,
   Project,
