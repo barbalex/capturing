@@ -6,7 +6,11 @@ import { useParams, useNavigate, resolvePath } from 'react-router-dom'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import insertTable from '../../../utils/insertTable'
 
-const TableAddButton = ({ userMayEdit }) => {
+interface Props {
+  userMayEdit: boolean
+}
+
+const TableAddButton = ({ userMayEdit }: Props) => {
   const { projectId } = useParams()
   const navigate = useNavigate()
 

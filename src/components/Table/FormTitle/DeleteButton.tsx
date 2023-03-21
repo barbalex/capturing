@@ -26,17 +26,21 @@ const Title = styled.div`
   user-select: none;
 `
 
-const TableDeleteButton = ({ userMayEdit }) => {
+interface Props {
+  userMayEdit: boolean
+}
+
+const TableDeleteButton = ({ userMayEdit }: Props) => {
   const navigate = useNavigate()
   const { tableId } = useParams()
   const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNodeWithChildren, session } = store
   // const filter = { todo: 'TODO: was in store' }
 
-  const deleted: boolean = useLiveQuery(async () => {
-    const row: Row = await dexie.ttables.get(tableId)
+  const deleted = useLiveQuery(async () => {
+    const table: Table = await dexie.ttables.get(tableId)
     // only return needed values to minimize re-renders
-    return row.deleted
+    return table.deleted === 1
   }, [tableId])
 
   const [anchorEl, setAnchorEl] = useState<HTMLAnchorElement>(null)
@@ -49,8 +53,8 @@ const TableDeleteButton = ({ userMayEdit }) => {
     [],
   )
   const remove = useCallback(async () => {
-    const row: Table = await dexie.ttables.get(tableId)
-    row.deleteOnServerAndClient({ session })
+    const table: Table = await dexie.ttables.get(tableId)
+    table.deleteOnServerAndClient({ session })
     setAnchorEl(null)
     // need to remove node from nodes
     removeNodeWithChildren(activeNodeArray)
