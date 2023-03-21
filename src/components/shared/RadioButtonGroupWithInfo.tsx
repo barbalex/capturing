@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite'
 
 import RadioButtonGroup from './RadioButtonGroup'
 import InfoWithPopover from './InfoWithPopover'
+import { Option } from '../../dexieClient'
 
 const Container = styled.div`
   display: flex;
@@ -11,6 +12,16 @@ const Container = styled.div`
   align-items: center;
   break-inside: avoid;
 `
+
+interface Props {
+  label: string
+  name: string
+  value: any
+  error?: string
+  dataSource: Option[]
+  onBlur: (event: React.ChangeEvent<HTMLInputElement>) => void
+  popover: React.ReactNode
+}
 
 const RadioButtonGroupWithInfo = ({
   label,
@@ -20,7 +31,7 @@ const RadioButtonGroupWithInfo = ({
   dataSource,
   onBlur,
   popover,
-}) => (
+}: Props) => (
   <Container>
     <RadioButtonGroup
       value={value}

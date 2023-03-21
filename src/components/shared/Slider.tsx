@@ -15,6 +15,17 @@ const Input = styled(MuiInput)`
   width: 40px;
 `
 
+interface Props {
+  value: number | number[] | undefined
+  name: string
+  label: string
+  step?: number
+  min?: number
+  max?: number
+  onBlur: (event: React.ChangeEvent<HTMLInputElement>) => void
+  helperText?: string
+}
+
 const SliderComponent = ({
   value: valuePassed,
   name,
@@ -24,7 +35,7 @@ const SliderComponent = ({
   max = 100,
   onBlur,
   helperText,
-}) => {
+}: Props) => {
   const [value, setValue] = React.useState(valuePassed ?? 0)
 
   const handleSliderChange = (event, newValue) => {

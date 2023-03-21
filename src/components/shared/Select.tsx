@@ -3,6 +3,8 @@ import Select from 'react-select'
 import FormHelperText from '@mui/material/FormHelperText'
 import styled from '@emotion/styled'
 
+import { Option } from '../../dexieClient'
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -70,9 +72,24 @@ const StyledSelect = styled(Select)`
   }
 `
 
-const emptyValue = {
+const emptyValue: Option = {
   value: '',
   label: '',
+}
+
+interface Props {
+  value: Option
+  field?: string
+  label?: string
+  name: string
+  error?: string
+  helperText?: string
+  options: Option[]
+  loading?: boolean
+  maxHeight?: number
+  isClearable?: boolean
+  noCaret?: boolean
+  saveToDb: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const SharedSelect = ({
@@ -88,7 +105,7 @@ const SharedSelect = ({
   isClearable = true,
   noCaret = false,
   saveToDb,
-}) => {
+}: Props) => {
   const [stateValue, setStateValue] = useState(valuePassed)
   useEffect(() => {
     setStateValue(valuePassed)
