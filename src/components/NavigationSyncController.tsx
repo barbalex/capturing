@@ -11,6 +11,9 @@ import { IStore } from '../store'
 const NavigationSyncController = () => {
   const { pathname } = useLocation()
 
+  const store: IStore = useContext(storeContext)
+  const { setActiveNodeArray, setNavigate } = store
+
   const navigate = useNavigate()
   // enable navigating in store > set this as store value
   // (can't be passed when creating store yet)
@@ -18,9 +21,6 @@ const NavigationSyncController = () => {
     setNavigate(navigate)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const store: IStore = useContext(storeContext)
-  const { setActiveNodeArray, setNavigate } = store
 
   // need to update activeNodeArray on every navigation
   useEffect(() => {
