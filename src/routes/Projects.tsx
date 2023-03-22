@@ -105,7 +105,7 @@ const animate = {
  * - animate changeds of columns
  */
 
-const ProjectsPage = () => {
+const ProjectsPage = (): React.FC => {
   const store: IStore = useContext(StoreContext)
   const {
     showTree,

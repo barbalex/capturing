@@ -51,6 +51,7 @@ const UserPage = () => {
   useEffect(() => {
     document.title = 'Erfassen: Benutzer'
   }, [])
+
   const [pendingOperationsDialogOpen, setPendingOperationsDialogOpen] =
     useState<boolean>(false)
   const queuedUpdatesCount =

@@ -19,6 +19,12 @@ const RiskyButton = styled(Button)`
   border-color: #d84315 !important;
 `
 
+interface Props {
+  pendingOperationsDialogOpen: boolean
+  setPendingOperationsDialogOpen: (value: boolean) => void
+  queuedUpdatesCount: number
+}
+
 const PendingOperationsDialog = ({
   pendingOperationsDialogOpen,
   setPendingOperationsDialogOpen,
