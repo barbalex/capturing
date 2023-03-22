@@ -7,7 +7,7 @@ import styled from '@emotion/styled'
 
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import Label from '../../shared/Label'
-import { dexie, VectorLayer } from '../../../dexieClient'
+import { dexie, ProjectUser, VectorLayer } from '../../../dexieClient'
 import downloadWfs from '../../../utils/downloadWfs'
 import storeContext from '../../../storeContext'
 import { IStore } from '../../../store'
@@ -39,7 +39,7 @@ const UL = styled.ul`
 `
 const LI = styled.li``
 
-type Props = {
+interface Props {
   row: VectorLayer
 }
 
@@ -51,13 +51,14 @@ const VectorLayerDownload = ({ row }: Props) => {
 
   // fetch pvl_geoms to see if data exists
   const data = useLiveQuery(async () => {
-    const [pvlGeomsCount, projectUser] = await Promise.all([
-      dexie.pvl_geoms.where({ deleted: 0, pvl_id: vectorLayerId }).count(),
-      dexie.project_users.get({
-        project_id: projectId,
-        user_email: session?.user?.email,
-      }),
-    ])
+    const [pvlGeomsCount, projectUser]: [number, ProjectUser] =
+      await Promise.all([
+        dexie.pvl_geoms.where({ deleted: 0, pvl_id: vectorLayerId }).count(),
+        dexie.project_users.get({
+          project_id: projectId,
+          user_email: session?.user?.email,
+        }),
+      ])
 
     const userRole = projectUser?.role
     const userMayEdit = ['account_manager', 'project_manager'].includes(
@@ -70,8 +71,8 @@ const VectorLayerDownload = ({ row }: Props) => {
     }
   }, [projectId, vectorLayerId, session?.user?.email])
 
-  const userMayEdit: boolean = data?.userMayEdit
-  const pvlGeomsCount: number = data?.pvlGeomsCount
+  const userMayEdit = data?.userMayEdit
+  const pvlGeomsCount = data?.pvlGeomsCount
 
   const [downloading, setDownloading] = useState<boolean>(false)
 

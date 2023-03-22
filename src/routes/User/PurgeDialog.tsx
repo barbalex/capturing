@@ -15,11 +15,17 @@ const RiskyButton = styled(Button)`
   border-color: #d84315 !important;
 `
 
+interface Props {
+  purgeDialogOpen: boolean
+  setPurgeDialogOpen: (value: boolean) => void
+  queuedUpdatesCount: number
+}
+
 const PurgeDialog = ({
   purgeDialogOpen,
   setPurgeDialogOpen,
   queuedUpdatesCount,
-}) => {
+}: Props) => {
   const navigate = useNavigate()
 
   return (

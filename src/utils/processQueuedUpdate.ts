@@ -2,15 +2,15 @@ import { supabase } from '../supabaseClient'
 import { dexie, QueuedUpdate } from '../dexieClient'
 import { IStore } from '../store'
 
-type ProcessQueuedUpdateProps = { queuedUpdate: QueuedUpdate; store: IStore }
+interface Props {
+  queuedUpdate: QueuedUpdate
+  store: IStore
+}
 
 // TODO: test rev table
 // TODO: test regular table
 
-const processQueuedUpdate = async ({
-  queuedUpdate,
-  store,
-}: ProcessQueuedUpdateProps) => {
+const processQueuedUpdate = async ({ queuedUpdate, store }: Props) => {
   const { online, setOnline } = store
   console.log('processQueuedUpdate', queuedUpdate)
 
