@@ -8,7 +8,7 @@ const Container = styled.div`
   width: 100%;
 `
 
-const Layout = () => (
+const Layout = (): React.FC => (
   <Container>
     <Header />
     <Outlet />

@@ -19,10 +19,18 @@ const ColumnController = () => {
   const { singleColumnView, setSingleColumnView } = store
 
   useEffect(() => {
-    if (width > constants?.tree?.minimalWindowWidth && singleColumnView) {
+    if (
+      width !== undefined &&
+      width > constants?.tree?.minimalWindowWidth &&
+      singleColumnView
+    ) {
       setSingleColumnView(false)
     }
-    if (width < constants?.tree?.minimalWindowWidth && !singleColumnView) {
+    if (
+      width !== undefined &&
+      width < constants?.tree?.minimalWindowWidth &&
+      !singleColumnView
+    ) {
       setSingleColumnView(true)
     }
   }, [setSingleColumnView, singleColumnView, width])
