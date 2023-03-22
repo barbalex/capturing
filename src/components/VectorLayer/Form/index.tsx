@@ -64,7 +64,7 @@ const Title = styled.div`
   margin-bottom: auto;
 `
 
-type Props = {
+interface Props {
   showFilter: () => void
 }
 

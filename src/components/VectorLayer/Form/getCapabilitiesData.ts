@@ -69,7 +69,7 @@ const getCapabilitiesDataForVectorLayer = async ({
   }
 
   // 3. label
-  const _label =
+  const _label: string | undefined =
     capabilities?.['OWS:SERVICEIDENTIFICATION']?.['OWS:TITLE']?.['#text']
   if (!row.label) {
     values.label = _label

@@ -3,8 +3,13 @@ import axios from 'redaxios'
 
 import xmlToJson from './xmlToJson'
 
-const getCapabilities = async ({ url, service = 'WFS' }) => {
-  // Exaple url to get: https://wms.zh.ch/FnsSVOZHWMS?service=WMS&request=GetCapabilities 
+interface Props {
+  url: string
+  service?: 'WMS' | 'WFS'
+}
+
+const getCapabilities = async ({ url, service = 'WFS' }: Props) => {
+  // Exaple url to get: https://wms.zh.ch/FnsSVOZHWMS?service=WMS&request=GetCapabilities
   let res
   try {
     res = await axios.get(`${url}?service=${service}&request=GetCapabilities`)
