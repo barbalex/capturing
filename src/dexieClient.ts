@@ -31,7 +31,7 @@ export class Account implements IAccount {
     server_rev_at?: Date,
     deleted: number,
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     if (service_id) this.service_id = id
     if (client_rev_at) this.client_rev_at = id
     if (client_rev_by) this.client_rev_by = client_rev_by
@@ -106,7 +106,7 @@ export class Field implements IField {
     server_rev_at?: Date,
     deleted: number,
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     if (table_id) this.table_id = table_id
     if (name) this.name = name
     if (label) this.label = label
@@ -236,7 +236,7 @@ export class FileMeta implements IFileMeta {
     depth?: number,
     conflicts?: string[],
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     if (row_id) this.row_id = row_id
     if (field_id) this.field_id = field_id
     if (name) this.name = name
@@ -287,7 +287,7 @@ export class File implements IFile {
   file: blob
 
   constructor(id?: string, file: blob) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     this.file = file
   }
 }
@@ -319,7 +319,7 @@ export class New implements INew {
     server_rev_at?: Date,
     deleted: number,
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     if (time) this.time = time
     if (version_type) this.version_type = version_type
     if (version) this.version = version
@@ -349,7 +349,7 @@ export class NewsDelivery implements INewsDelivery {
     server_rev_at?: Date,
     deleted: number,
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     if (news_id) this.news_id = news_id
     if (user_id) this.user_id = user_id
     if (server_rev_at) this.server_rev_at = server_rev_at
@@ -557,7 +557,7 @@ export class TileLayer implements ITileLayer {
     server_rev_at?: Date,
     deleted: number,
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     if (label) this.label = label
     if (sort !== undefined) this.sort = sort
     this.active = active ?? 1
@@ -706,7 +706,7 @@ export class VectorLayer implements IVectorLayer {
     server_rev_at?: Date,
     deleted: number,
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     if (label) this.label = label
     if (sort !== undefined) this.sort = sort
     this.active ?? 1
@@ -812,7 +812,7 @@ export class PVLGeom implements IPVLGeom {
     server_rev_at?: Date,
     deleted: number,
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     this.pvl_id = pvl_id
     this.geometry = geometry
     if (properties) this.properties = properties
@@ -942,7 +942,7 @@ export class LayerStyle implements ILayerStyle {
     server_rev_at?: Date,
     deleted: number,
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     if (table_id) this.table_id = table_id
     if (vector_layer_id) this.vector_layer_id = vector_layer_id
     this.marker_type = marker_type ?? 'circle'
@@ -1029,7 +1029,7 @@ export class ProjectUser implements IProjectUser {
     server_rev_at?: Date,
     deleted: number,
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     this.project_id = project_id
     this.user_email = user_email
     this.role = role ?? RoleTypeEnum.project_reader
@@ -1103,7 +1103,7 @@ export class Project implements IProject {
     deleted: number,
     use_labels: number,
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     if (account_id) this.account_id = account_id
     if (name) this.name = name
     this.label = label ?? name ?? undefined // TODO: test
@@ -1200,7 +1200,7 @@ export class Row implements IRow {
     deleted: number,
     conflicts?: string[],
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     this.table_id = table_id
     if (geometry) this.geometry = geometry
     if (geometry) this.bbox = getBbox(geometry)
@@ -1387,7 +1387,7 @@ export class Table implements ITable {
     server_rev_at?: Date,
     deleted: number,
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     if (project_id) this.project_id = project_id
     this.rel_type = rel_type ?? 'n'
     if (name) this.name = name
@@ -1462,7 +1462,7 @@ export class User implements IUser {
     server_rev_at?: Date,
     deleted: number,
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     if (name) this.name = name
     if (email) this.email = email
     if (account_id) this.account_id = account_id
@@ -1509,7 +1509,7 @@ export class WidgetForField implements IWidgetForField {
     widget_value: string,
     server_rev_at?: Date,
   ) {
-    this.id = id ?? Crypto.randomUUID()
+    this.id = id ?? window.crypto.randomUUID()
     if (field_value) this.field_value = field_value
     if (widget_value) this.widget_value = widget_value
     if (server_rev_at) this.server_rev_at = server_rev_at
