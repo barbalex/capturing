@@ -1,10 +1,15 @@
 import getCapabilities from '../../../utils/getCapabilities'
-import { dexie } from '../../../dexieClient'
+import { dexie, VectorLayer } from '../../../dexieClient'
+
+interface Props {
+  row: VectorLayer
+  returnValue?: boolean
+}
 
 const getCapabilitiesDataForVectorLayer = async ({
   row,
   returnValue = false,
-}) => {
+}: Props) => {
   if (!row) return
   if (!row.url) return
 

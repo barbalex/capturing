@@ -18,6 +18,7 @@ import ErrorBoundary from '../../shared/ErrorBoundary'
 import {
   dexie,
   IVectorLayer,
+  Option,
   ProjectUser,
   VectorLayer,
   VectorLayerTypeEnum,
@@ -64,7 +65,7 @@ const Title = styled.div`
 `
 
 type Props = {
-  showFilter: (boolean) => void
+  showFilter: () => void
 }
 
 // = '99999999-9999-9999-9999-999999999999'
@@ -105,8 +106,8 @@ const VectorLayerForm = ({ showFilter }: Props) => {
     }
   }, [projectId, vectorLayerId, session?.user?.email])
 
-  const row: VectorLayer = data?.row
-  const userMayEdit: boolean = data?.userMayEdit
+  const row = data?.row
+  const userMayEdit = data?.userMayEdit
 
   // need original row to be able to roll back optimistic ui updates
   const originalRow = useRef<IVectorLayer>()
@@ -150,7 +151,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
   }, [updateOnServer])
 
   const onBlur = useCallback(
-    async (event) => {
+    async (event: React.ChangeEvent) => {
       const { name: field, value, type, valueAsNumber } = event.target
       let newValue = type === 'number' ? valueAsNumber : value
       if ([undefined, '', NaN].includes(newValue)) newValue = null
@@ -189,7 +190,7 @@ const VectorLayerForm = ({ showFilter }: Props) => {
     [filter, rebuildTree, row, showFilter, store],
   )
 
-  const typeValues = Object.values(VectorLayerTypeEnum).map((v) => {
+  const typeValues: Option[] = Object.values(VectorLayerTypeEnum).map((v) => {
     const comment =
       v === 'wfs'
         ? 'Web-Feature-Service verwenden'
