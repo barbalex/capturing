@@ -1,10 +1,11 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 
-import { dexie, TileLayer } from '../../../dexieClient'
+import { dexie, Project, TileLayer } from '../../../dexieClient'
 import Node from '../Node'
+import { TreeNode } from '../Viewing'
 
-const TileLayers = ({ project }) => {
-  const tileLayers: TileLayer[] = useLiveQuery(() =>
+const TileLayers = ({ project }: { project: Project }) => {
+  const tileLayers: TileLayer[] | undefined = useLiveQuery(() =>
     dexie.tile_layers
       .where({
         deleted: 0,
@@ -18,7 +19,7 @@ const TileLayers = ({ project }) => {
   return tileLayers.map((tileLayer) => {
     const url = ['projects', project.id, 'tile-layers', tileLayer.id]
 
-    const node = {
+    const node: TreeNode = {
       id: tileLayer.id,
       label: tileLayer.label ?? '(ohne Beschriftung)',
       type: 'tile_layer',

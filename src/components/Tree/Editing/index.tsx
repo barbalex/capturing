@@ -7,13 +7,15 @@ import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
 import Folders from './Folders'
 import { IStore } from '../../../store'
+import { Project } from '../../../dexieClient'
+import { TreeNode } from '../Viewing'
 
-const EditingProject = ({ project }) => {
+const EditingProject = ({ project }: { project: Project }) => {
   const store: IStore = useContext(storeContext)
   const { nodes } = store
 
   const url = ['projects', project.id]
-  const node = {
+  const node: TreeNode = {
     id: project.id,
     label: labelFromLabeledTable({
       object: project,

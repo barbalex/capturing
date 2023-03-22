@@ -1,10 +1,11 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 
-import { dexie, VectorLayer } from '../../../dexieClient'
+import { dexie, Project, VectorLayer } from '../../../dexieClient'
 import Node from '../Node'
+import { TreeNode } from '../Viewing'
 
-const VectorLayers = ({ project }) => {
-  const vectorLayers: VectorLayer[] = useLiveQuery(() =>
+const VectorLayers = ({ project }: { project: Project }) => {
+  const vectorLayers: VectorLayer[] | undefined = useLiveQuery(() =>
     dexie.vector_layers
       .where({
         deleted: 0,
@@ -18,7 +19,7 @@ const VectorLayers = ({ project }) => {
   return vectorLayers.map((vectorLayer) => {
     const url = ['projects', project.id, 'vector-layers', vectorLayer.id]
 
-    const node = {
+    const node: TreeNode = {
       id: vectorLayer.id,
       label: vectorLayer.label ?? '(ohne Beschriftung)',
       type: 'vector_layer',
