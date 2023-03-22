@@ -1,4 +1,14 @@
+import { Project, Table } from '../../../dexieClient'
 import Node from '../Node'
+import { TreeNode } from './index'
+
+interface Props {
+  project: Project
+  table: Table
+  row: RowWithLabel
+  url: string[]
+  rows: RowWithLabel[]
+}
 
 const ViewingRelatedRows = ({
   project,
@@ -6,10 +16,10 @@ const ViewingRelatedRows = ({
   row,
   url: urlPassed,
   rows = [],
-}) =>
+}: Props) =>
   rows.map((r) => {
     const url = [...urlPassed, 'rows', r.id]
-    const node = {
+    const node: TreeNode = {
       id: r.id,
       label: r.label,
       type: 'row',

@@ -15,6 +15,7 @@ import {
   VectorLayer,
   TileLayer,
   Row,
+  ProjectUser,
 } from '../../../dexieClient'
 import { IStore } from '../../../store'
 
@@ -52,13 +53,13 @@ const ViewingProject = ({ project }: Props) => {
   // if none and user may not edit structure: do not render
   const data =
     useLiveQuery(async () => {
-      const tablesCount = await dexie.ttables
+      const tablesCount: number = await dexie.ttables
         .where({
           deleted: 0,
           project_id: project.id,
         })
         .count()
-      const projectUser = await dexie.project_users.get({
+      const projectUser: ProjectUser = await dexie.project_users.get({
         project_id: project.id,
         user_email: session?.user?.email,
       })
@@ -76,7 +77,7 @@ const ViewingProject = ({ project }: Props) => {
   if (tablesCount === 0 && !userMayEditStructure) return null
 
   const url = ['projects', project.id]
-  const node = {
+  const node: TreeNode = {
     id: project.id,
     label: labelFromLabeledTable({
       object: project,

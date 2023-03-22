@@ -1,6 +1,6 @@
 import isUuid from 'is-uuid'
 
-const getLastIdFromUrl = (url) => {
+const getLastIdFromUrl = (url: string[]) => {
   if (!url) return undefined
   if (url.length === 0) return undefined
   const last = url.at(-1)
