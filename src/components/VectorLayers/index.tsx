@@ -46,7 +46,7 @@ const VectorLayersComponent = () => {
   const store: IStore = useContext(storeContext)
   const { setVectorLayerSorter, rebuildTree, session } = store
 
-  const vectorLayers: VectorLayer[] = useLiveQuery(
+  const vectorLayers: VectorLayer[] | undefined = useLiveQuery(
     async () =>
       await dexie.vector_layers
         .where({ deleted: 0, project_id: projectId })
@@ -61,7 +61,7 @@ const VectorLayersComponent = () => {
   }, [vectorLayers])
 
   const reorder = useCallback(
-    async (list, startIndex, endIndex) => {
+    async (list: VectorLayer[], startIndex: number, endIndex: number) => {
       const result = Array.from(list)
       const [removed] = result.splice(startIndex, 1)
       result.splice(endIndex, 0, removed)
