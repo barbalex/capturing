@@ -123,7 +123,7 @@ const Img = styled.img`
   filter: opacity(0.3);
 `
 
-const Home = () => {
+const Home = (): React.FC => {
   useEffect(() => {
     document.title = 'Erfassen: Home'
   }, [])

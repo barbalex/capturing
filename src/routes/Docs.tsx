@@ -28,7 +28,7 @@ const StyledListItem = styled(ListItem)`
   }
 `
 
-const Docs = () => {
+const Docs = (): React.FC => {
   const params = useParams()
 
   useEffect(() => {

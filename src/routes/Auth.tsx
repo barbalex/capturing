@@ -6,7 +6,7 @@ export default function Auth() {
   const [loading, setLoading] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
 
     try {
