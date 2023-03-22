@@ -1,7 +1,7 @@
 -- https://dbdiagram.io/d/6048d556fcdcb6230b237d7f
 
 Table "users" {
-  "id" uuid [pk, default: `uuid_generate_v1mc()`]
+  "id" uuid [pk, default: `gen_random_uuid()`]
   "name" text [default: null]
   "email" text [default: null]
   "account_id" uuid [default: null]
@@ -13,7 +13,7 @@ Table "users" {
 }
 
 Table "accounts" {
-  "id" uuid [pk, default: `uuid_generate_v1mc()`]
+  "id" uuid [pk, default: `gen_random_uuid()`]
   "service_id" text [default: null]
   "client_rev_at" timestamp [default: `now()`]
   "client_rev_by" uuid [default: null]
@@ -22,7 +22,7 @@ Table "accounts" {
 }
 
 Table "projects" {
-  "id" uuid [pk, default: `uuid_generate_v1mc()`]
+  "id" uuid [pk, default: `gen_random_uuid()`]
   "account_id" uuid [unique, default: null]
   "name" text [unique, default: null]
   "label" text [default: null]
@@ -34,7 +34,7 @@ Table "projects" {
 }
 
 Table "tables" {
-  "id" uuid [pk, default: `uuid_generate_v1mc()`]
+  "id" uuid [pk, default: `gen_random_uuid()`]
   "project_id" uuid [unique, default: null]
   "rel_type" text
   "name" text [unique, default: null]
@@ -46,7 +46,7 @@ Table "tables" {
 }
 
 Table "fields" {
-  "id" uuid [pk, default: `uuid_generate_v1mc()`]
+  "id" uuid [pk, default: `gen_random_uuid()`]
   "table_id" uuid [unique, default: null]
   "name" text [unique, default: null]
   "label" text [default: null]
@@ -63,7 +63,7 @@ Table "fields" {
 }
 
 Table "rows" {
-  "id" uuid [pk, default: `uuid_generate_v1mc()`]
+  "id" uuid [pk, default: `gen_random_uuid()`]
   "table_id" uuid [default: null]
   "geometry" "geometry(GeometryCollection, 4326)" [default: null]
   "bbox" jsonb [default: null]
@@ -81,7 +81,7 @@ Table "rows" {
 }
 
 Table "files" {
-  "id" uuid [pk, default: `uuid_generate_v1mc()`]
+  "id" uuid [pk, default: `gen_random_uuid()`]
   "row_id" uuid [default: null]
   "field_id" uuid [default: null]
   "name" text [default: null]
@@ -101,7 +101,7 @@ Table "files" {
 }
 
 Table "project_users" {
-  "id" uuid [pk, default: `uuid_generate_v1mc()`]
+  "id" uuid [pk, default: `gen_random_uuid()`]
   "project_id" uuid [default: null]
   "user_email" text [default: null]
   "role" text
