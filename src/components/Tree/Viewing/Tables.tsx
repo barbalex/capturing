@@ -10,6 +10,7 @@ import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
 import Rows from './Rows'
 import { IStore } from '../../../store'
+import { TreeNode } from './index'
 
 type Props = {
   project: Project
@@ -20,7 +21,7 @@ const TableNode = ({ project, table }: Props) => {
   const store: IStore = useContext(storeContext)
   const { nodes } = store
 
-  const childrenCount = useLiveQuery(() =>
+  const childrenCount: number | undefined = useLiveQuery(() =>
     dexie.rows.where({ deleted: 0, table_id: table.id }).count(),
   )
   const url = ['projects', project.id, 'tables', table.id]
@@ -29,7 +30,7 @@ const TableNode = ({ project, table }: Props) => {
     useLabels: project.use_labels,
   })
 
-  const node = {
+  const node: TreeNode = {
     id: table.id,
     label: `${label} (${childrenCount})`,
     type: 'table',
@@ -54,7 +55,7 @@ const TableNode = ({ project, table }: Props) => {
 
 const ObservedTableNode = observer(TableNode)
 
-const ViewingTables = ({ project }) => {
+const ViewingTables = ({ project }: { project: Project }) => {
   const tables: Table[] =
     useLiveQuery(
       () =>

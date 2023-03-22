@@ -2,21 +2,25 @@ import { useContext } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { observer } from 'mobx-react-lite'
 
-import { dexie, IProject, ITable, IRow } from '../../../dexieClient'
+import { dexie, Project, Table, Row, Project } from '../../../dexieClient'
 import Node from '../Node'
 import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
 import Rows from './RelatedRows'
-import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
+import rowsWithLabelFromRows, {
+  RowWithLabel,
+} from '../../../utils/rowsWithLabelFromRows'
 import { IStore } from '../../../store'
+import { RelatedTable } from './Rows'
+import { TreeNode } from './index'
 
-type Props = {
-  project: IProject
-  table: ITable
+interface RelatedTableNodeProps {
+  project: Project
+  table: Table
   fieldName: string
   type: 'from' | 'to'
-  row: IRow
+  row: Row
   url: string[]
 }
 
@@ -27,7 +31,7 @@ const RelatedTableNode = ({
   type,
   row,
   url: urlPassed,
-}: Props) => {
+}: RelatedTableNodeProps) => {
   const store: IStore = useContext(storeContext)
   const { nodes } = store
 
@@ -41,7 +45,7 @@ const RelatedTableNode = ({
   }
   let children =
     useLiveQuery(async () => {
-      const rows = await dexie.rows.where(where).toArray()
+      const rows: Row[] = await dexie.rows.where(where).toArray()
       return await rowsWithLabelFromRows(rows)
     }, [table.id, fieldName]) ?? []
   if (type === 'from') {
@@ -53,7 +57,7 @@ const RelatedTableNode = ({
     useLabels: project.use_labels,
   })
 
-  const node = {
+  const node: TreeNode = {
     id: table.id,
     label: `${label} (${children?.length})`,
     type: 'table',
@@ -86,8 +90,20 @@ const RelatedTableNode = ({
 
 const ObservedTableNode = observer(RelatedTableNode)
 
+interface RelatedTablesProps {
+  project: Project
+  relatedTables: RelatedTable[]
+  row: RowWithLabel
+  url: string[]
+}
+
 // TODO: sort tables?
-const RelatedTables = ({ project, relatedTables, row, url }) =>
+const RelatedTables = ({
+  project,
+  relatedTables,
+  row,
+  url,
+}: RelatedTablesProps) =>
   relatedTables.map((t) => (
     <ObservedTableNode
       key={`${row.id}/${t.table.id}`}

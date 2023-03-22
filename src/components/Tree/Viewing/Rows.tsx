@@ -2,17 +2,24 @@ import { useContext } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { observer } from 'mobx-react-lite'
 
-import { dexie, IProject, ITable } from '../../../dexieClient'
+import { dexie, Field, Project, Row, Table } from '../../../dexieClient'
 import Node from '../Node'
 import rowsWithLabelFromRows from '../../../utils/rowsWithLabelFromRows'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
 import RelatedTables from './RelatedTables'
 import { IStore } from '../../../store'
+import { TreeNode } from './index'
 
-type Props = {
-  project: IProject
-  table: ITable
+interface Props {
+  project: Project
+  table: Table
+}
+
+export interface RelatedTable {
+  fieldName: string
+  table: Table
+  type: 'to' | 'from'
 }
 
 // show related rows as children
@@ -24,31 +31,31 @@ const ViewingRows = ({ project, table }: Props) => {
   const { nodes } = store
 
   const data = useLiveQuery(async () => {
-    const rows = await dexie.rows
+    const rows: Row[] = await dexie.rows
       .where({
         deleted: 0,
         table_id: table.id,
       })
       .toArray()
     const rowsWithLabels = await rowsWithLabelFromRows(rows)
-    const fieldsRelatedTo = await dexie.fields
+    const fieldsRelatedTo: Field[] = await dexie.fields
       .where(['deleted', 'table_id', 'table_rel'])
       .between([0, table.id, ''], [0, table.id, 'ZZZZZZZZZZZZZZ'])
       .toArray()
-    const fieldsRelatedFrom = await dexie.fields
+    const fieldsRelatedFrom: Field[] = await dexie.fields
       .where({ deleted: 0, table_rel: table.id })
       .toArray()
     const tablesRelatedTo = {}
     for (const field of fieldsRelatedTo) {
-      const tableRelatedTo = await dexie.ttables.get(field.table_rel)
+      const tableRelatedTo: Table[] = await dexie.ttables.get(field.table_rel)
       tablesRelatedTo[field.name] = tableRelatedTo
     }
     const tablesRelatedFrom = {}
     for (const field of fieldsRelatedFrom) {
-      const tableRelatedFrom = await dexie.ttables.get(field.table_id)
+      const tableRelatedFrom: Table[] = await dexie.ttables.get(field.table_id)
       tablesRelatedFrom[field.name] = tableRelatedFrom
     }
-    const relatedTables = [
+    const relatedTables: RelatedTable[] = [
       ...(Object.entries(tablesRelatedTo).length
         ? Object.entries(tablesRelatedTo).map((o) => ({
             fieldName: o[0],
@@ -78,7 +85,7 @@ const ViewingRows = ({ project, table }: Props) => {
 
   return rows.map((row) => {
     const url = ['projects', project.id, 'tables', table.id, 'rows', row.id]
-    const node = {
+    const node: TreeNode = {
       id: row.id,
       label: row.label,
       type: 'row',
