@@ -1,11 +1,17 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 
-import { dexie, Field } from '../../../../dexieClient'
+import { dexie, Field, Project, Table } from '../../../../dexieClient'
 import Node from '../../Node'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
+import { TreeNode } from '../../Viewing'
 
-const Fields = ({ project, table }) => {
-  const fields: Field[] = useLiveQuery(() =>
+interface Props {
+  project: Project
+  table: Table
+}
+
+const Fields = ({ project, table }: Props) => {
+  const fields: Field[] | undefined = useLiveQuery(() =>
     dexie.fields
       .where({
         deleted: 0,
@@ -26,7 +32,7 @@ const Fields = ({ project, table }) => {
       field.id,
     ]
 
-    const node = {
+    const node: TreeNode = {
       id: field.id,
       label: labelFromLabeledTable({
         object: field,

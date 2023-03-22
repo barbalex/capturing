@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { observer } from 'mobx-react-lite'
 
-import { dexie, Table } from '../../../../dexieClient'
+import { dexie, Project, Table } from '../../../../dexieClient'
 import Node from '../../Node'
 import sortByLabelName from '../../../../utils/sortByLabelName'
 import labelFromLabeledTable from '../../../../utils/labelFromLabeledTable'
@@ -10,12 +10,18 @@ import isNodeOpen from '../../isNodeOpen'
 import storeContext from '../../../../storeContext'
 import Folders from './Folders'
 import { IStore } from '../../../../store'
+import { TreeNode } from '../../Viewing'
 
-const TableNode = ({ project, table }) => {
+interface TableNodeProps {
+  project: Project
+  table: Table
+}
+
+const TableNode = ({ project, table }: TableNodeProps) => {
   const store: IStore = useContext(storeContext)
   const { nodes } = store
 
-  const childrenCount = useLiveQuery(() =>
+  const childrenCount: number | undefined = useLiveQuery(() =>
     dexie.rows.where({ deleted: 0, table_id: table.id }).count(),
   )
   const url = ['projects', project.id, 'tables', table.id]
@@ -24,7 +30,7 @@ const TableNode = ({ project, table }) => {
     useLabels: project.use_labels,
   })
 
-  const node = {
+  const node: TreeNode = {
     id: table.id,
     label: `${label} (${childrenCount})`,
     type: 'table',
@@ -49,7 +55,7 @@ const TableNode = ({ project, table }) => {
 
 const ObservedTableNode = observer(TableNode)
 
-const Tables = ({ project }) => {
+const Tables = ({ project }: { project: Project }) => {
   const tables: Table[] = useLiveQuery(() =>
     dexie.ttables
       .where({
