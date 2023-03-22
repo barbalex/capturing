@@ -8,7 +8,7 @@ type InsertRowProps = {
 
 const insertRow = async ({ tableId }: InsertRowProps) => {
   const revData = {
-    row_id: Crypto.randomUUID(),
+    row_id: window.crypto.randomUUID(),
     table_id: tableId,
     depth: 1,
     deleted: 0,

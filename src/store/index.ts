@@ -250,7 +250,7 @@ export const MobxStore = types
       addNotification(valPassed): string {
         const val = {
           // set default values
-          id: Crypto.randomUUID(),
+          id: window.crypto.randomUUID(),
           time: Date.now(),
           duration: 10000, // standard value: 10000
           dismissable: true,
