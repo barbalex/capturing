@@ -1,7 +1,16 @@
 import isNodeOpen from './isNodeOpen'
 import openNode from '../openNode'
+import { TreeNode } from './Viewing'
+import { IStoreSnapshotOut } from '../../store'
 
-const toggleNode = ({ node, store, navigate, search }) => {
+interface Props {
+  node: TreeNode
+  store: IStoreSnapshotOut
+  navigate: (url: string) => void
+  search: string
+}
+
+const toggleNode = ({ node, store, navigate, search }: Props) => {
   if (!node.url) throw new Error('passed node has no url')
   const { nodes, activeNodeArray, setLastTouchedNode, setOpenNodes } = store
 

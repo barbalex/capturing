@@ -7,11 +7,41 @@ import labelFromLabeledTable from '../../../utils/labelFromLabeledTable'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
 import Tables from './Tables'
-import { dexie, IProject } from '../../../dexieClient'
+import {
+  dexie,
+  Project,
+  Table,
+  Field,
+  VectorLayer,
+  TileLayer,
+  Row,
+} from '../../../dexieClient'
 import { IStore } from '../../../store'
 
-type Props = {
-  project: IProject
+interface Props {
+  project: Project
+}
+
+export interface TreeNode {
+  id: string
+  label: string
+  type:
+    | 'project'
+    | 'table'
+    | 'field'
+    | 'vector_layer'
+    | 'tile_layer'
+    | 'row'
+    | 'projectFolder'
+    | 'tileLayerFolder'
+    | 'vectorLayerFolder'
+    | 'rowsFolder'
+    | 'fieldsFolder'
+  object: Project | Table | Row | Field | VectorLayer | TileLayer
+  url: string[]
+  children: TreeNode[]
+  childrenCount: number
+  projectId: string
 }
 
 const ViewingProject = ({ project }: Props) => {

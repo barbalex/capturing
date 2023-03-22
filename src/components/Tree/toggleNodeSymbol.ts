@@ -3,8 +3,18 @@ import { getSnapshot } from 'mobx-state-tree'
 
 import isNodeOpen from './isNodeOpen'
 import isNodeInActiveNodePath from './isNodeInActiveNodePath'
+import { IStoreSnapshotOut } from '../../store'
 
-const toggleNodeSymbol = ({ node, store, search, navigate }) => {
+import { TreeNode } from './Viewing'
+
+interface Props {
+  node: TreeNode
+  store: IStoreSnapshotOut
+  search: string
+  navigate: (url: string) => void
+}
+
+const toggleNodeSymbol = ({ node, store, search, navigate }: Props) => {
   if (!node.url) throw new Error('passed node has no url')
   const { nodes, setNodes, activeNodeArray, setLastTouchedNode } = store
 
