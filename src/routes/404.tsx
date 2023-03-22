@@ -15,7 +15,7 @@ const Container = styled.div`
 
 import { ReactComponent as Pen } from '../images/pen.svg'
 
-const FourOhFour = () => {
+const FourOhFour = (): React.FC => {
   return (
     <Container>
       <StyledPen /> <p>sorry, nothing here &#128546;</p>

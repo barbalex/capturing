@@ -40,8 +40,10 @@ const RowLink = styled.div`
   flex-direction: column;
   justify-content: center;
 `
-type Props = {
-  row: VectorLayer
+interface Props {
+  item: VectorLayer
+  provided: DraggableProvided
+  isDragging: boolean
 }
 
 const VectorLayerItem = ({ item, provided, isDragging }: Props) => {
@@ -49,7 +51,7 @@ const VectorLayerItem = ({ item, provided, isDragging }: Props) => {
   const { session } = useContext(storeContext)
 
   const onClickActive = useCallback(
-    async (e) => {
+    async (e: React.MouseEvent) => {
       e.preventDefault()
       e.stopPropagation()
       const was = { ...item }
