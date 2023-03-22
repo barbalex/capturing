@@ -31,14 +31,15 @@ type Props = { userMayEdit: boolean }
 const VectorLayerDeleteButton = ({ userMayEdit }: Props) => {
   const navigate = useNavigate()
   const { vectorLayerId } = useParams()
+
   const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNodeWithChildren, session } = store
   // const filter = { todo: 'TODO: was in store' }
 
-  const deleted: boolean = useLiveQuery(async () => {
-    const row: Row = await dexie.vector_layers.get(vectorLayerId)
+  const deleted = useLiveQuery(async () => {
+    const row: VectorLayer = await dexie.vector_layers.get(vectorLayerId)
     // only return needed values to minimize re-renders
-    return row?.deleted
+    return row?.deleted === 1
   }, [vectorLayerId])
 
   const [anchorEl, setAnchorEl] = useState<HTMLAnchorElement>(null)
@@ -47,12 +48,14 @@ const VectorLayerDeleteButton = ({ userMayEdit }: Props) => {
   }, [])
 
   const onClickButton = useCallback(
-    (event) => setAnchorEl(event.currentTarget),
+    (event: React.MouseEvent) => setAnchorEl(event.currentTarget),
     [],
   )
   const remove = useCallback(async () => {
-    const row: VectorLayer = await dexie.vector_layers.get(vectorLayerId)
-    row.deleteOnServerAndClient({ session })
+    const vectorLayer: VectorLayer = await dexie.vector_layers.get(
+      vectorLayerId,
+    )
+    vectorLayer.deleteOnServerAndClient({ session })
     setAnchorEl(null)
     // need to remove node from nodes
     removeNodeWithChildren(activeNodeArray)
@@ -73,7 +76,7 @@ const VectorLayerDeleteButton = ({ userMayEdit }: Props) => {
         aria-label="Vektor-Karte löschen"
         title="Vektor-Karte löschen"
         onClick={onClickButton}
-        disabled={deleted === 1 || !userMayEdit}
+        disabled={deleted ?? !userMayEdit}
         size="large"
       >
         <FaMinus />

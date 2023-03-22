@@ -6,7 +6,7 @@ import { useParams, useNavigate, resolvePath } from 'react-router-dom'
 import ErrorBoundary from '../../shared/ErrorBoundary'
 import insertVectorLayer from '../../../utils/insertVectorLayer'
 
-const VectorLayerAddButton = ({ userMayEdit }) => {
+const VectorLayerAddButton = ({ userMayEdit }: { userMayEdit: boolean }) => {
   const { projectId } = useParams()
   const navigate = useNavigate()
 
