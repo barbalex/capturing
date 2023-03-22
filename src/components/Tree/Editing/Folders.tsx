@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { observer } from 'mobx-react-lite'
 
-import { dexie } from '../../../dexieClient'
+import { dexie, Project } from '../../../dexieClient'
 import Node from '../Node'
 import isNodeOpen from '../isNodeOpen'
 import storeContext from '../../../storeContext'
@@ -10,41 +10,44 @@ import VectorLayers from './VectorLayers'
 import TileLayers from './TileLayers'
 import Tables from './Tables'
 import { IStore } from '../../../store'
+import { TreeNode } from '../Viewing'
 
-const ProjectFolders = ({ project }) => {
+const ProjectFolders = ({ project }: { project: Project }) => {
   const store: IStore = useContext(storeContext)
   const { nodes } = store
 
   const data = useLiveQuery(async () => {
-    const [tablesCount, tileLayersCount, vectorLayersCount] = await Promise.all(
-      [
-        dexie.ttables
-          .where({
-            deleted: 0,
-            project_id: project.id,
-          })
-          .count(),
-        dexie.tile_layers
-          .where({
-            deleted: 0,
-            project_id: project.id,
-          })
-          .count(),
-        dexie.vector_layers
-          .where({
-            deleted: 0,
-            project_id: project.id,
-          })
-          .count(),
-      ],
-    )
+    const [tablesCount, tileLayersCount, vectorLayersCount]: [
+      number,
+      number,
+      number,
+    ] = await Promise.all([
+      dexie.ttables
+        .where({
+          deleted: 0,
+          project_id: project.id,
+        })
+        .count(),
+      dexie.tile_layers
+        .where({
+          deleted: 0,
+          project_id: project.id,
+        })
+        .count(),
+      dexie.vector_layers
+        .where({
+          deleted: 0,
+          project_id: project.id,
+        })
+        .count(),
+    ])
 
     return { tablesCount, tileLayersCount, vectorLayersCount }
   })
 
   if (!data) return null
 
-  const tablesNode = {
+  const tablesNode: TreeNode = {
     id: `${project.id}/tablesFolder`,
     label: `Tabellen (${data.tablesCount})`,
     type: 'projectFolder',
@@ -57,7 +60,7 @@ const ProjectFolders = ({ project }) => {
     nodes,
     url: ['projects', project.id, 'tables'],
   })
-  const tileLayersNode = {
+  const tileLayersNode: TreeNode = {
     id: `${project.id}/tileLayersFolder`,
     label: `Bild-Karten (${data.tileLayersCount})`,
     type: 'tileLayerFolder',
@@ -70,7 +73,7 @@ const ProjectFolders = ({ project }) => {
     nodes,
     url: ['projects', project.id, 'tile-layers'],
   })
-  const vectorLayersNode = {
+  const vectorLayersNode: TreeNode = {
     id: `${project.id}/vectorLayersFolder`,
     label: `Vektor-Karten (${data.vectorLayersCount})`,
     type: 'vectorLayerFolder',

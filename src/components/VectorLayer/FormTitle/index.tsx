@@ -11,13 +11,9 @@ const VectorLayerFormTitleChooser = () => {
   const showFilter = false // TODO:
 
   const data = useLiveQuery(async () => {
-    const [filteredCount, totalCount] = await Promise.all([
-      dexie.vector_layers
-        .where({ deleted: 0, project_id: projectId })
-        .count(), // TODO: pass in filter
-      dexie.tile_layers
-        .where({ deleted: 0, project_id: projectId })
-        .count(),
+    const [filteredCount, totalCount]: [number, number] = await Promise.all([
+      dexie.vector_layers.where({ deleted: 0, project_id: projectId }).count(), // TODO: pass in filter
+      dexie.tile_layers.where({ deleted: 0, project_id: projectId }).count(),
     ])
 
     return { filteredCount, totalCount }

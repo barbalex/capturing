@@ -15,7 +15,7 @@ const VectorLayerNavButtons = () => {
   const store: IStore = useContext(StoreContext)
   const { activeNodeArray, removeNode, setHorizontalNavIds } = store
 
-  const vectorLayerIds: string[] =
+  const vectorLayerIds: string[] | undefined =
     useLiveQuery(async () => {
       const vectorLayers: VectorLayer[] = await dexie.vector_layers
         .where({ deleted: 0, project_id: projectId })
