@@ -3,10 +3,10 @@ import { observer } from 'mobx-react-lite'
 import { getSnapshot } from 'mobx-state-tree'
 
 import storeContext from '../../storeContext'
-import { IStore } from '../../store'
+import { IStoreSnapshotOut } from '../../store'
 
 const LastTouchedNodeSetter = () => {
-  const store: IStore = useContext(storeContext)
+  const store: IStoreSnapshotOut = useContext(storeContext)
   const { activeNodeArray, setLastTouchedNode } = store
 
   useEffect(() => {

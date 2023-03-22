@@ -13,10 +13,11 @@ import { orange } from '@mui/material/colors'
 
 import storeContext from '../../storeContext'
 import EditIcon from '../../images/icons/edit_project'
-import { dexie } from '../../dexieClient'
+import { dexie, Table } from '../../dexieClient'
 import isNodeOpen from './isNodeOpen'
 import toggleNodeSymbol from './toggleNodeSymbol'
-import { IStore } from '../../store'
+import { IStoreSnapshotOut } from '../../store'
+import { TreeNode } from './Viewing'
 
 const Container = styled.div``
 const Indent = styled.div`
@@ -50,12 +51,16 @@ const ProjectEditIconButton = styled(IconButton)`
   }
 `
 
-const Node = ({ node }) => {
+interface Props {
+  node: TreeNode
+}
+
+const Node = ({ node }: Props): React.FC => {
   const { rowId } = useParams()
   const navigate = useNavigate()
   const { search } = useLocation()
 
-  const store: IStore = useContext(storeContext)
+  const store: IStoreSnapshotOut = useContext(storeContext)
   const {
     activeNodeArray: aNARaw,
     setActiveNodeArray,
@@ -65,13 +70,15 @@ const Node = ({ node }) => {
     session,
     nodes,
   } = store
-  const activeNodeArray = aNARaw.slice()
+  const activeNodeArray: string[] = aNARaw.slice()
   const isInActiveNodeArray = isEqual(
     activeNodeArray.slice(0, node.url.length),
     node.url,
   )
   let isActive = isEqual(node.url, activeNodeArray.slice())
-  const editing = editingProjects.get(node.projectId)?.editing
+  const editing: boolean | undefined = editingProjects.get(
+    node.projectId,
+  )?.editing
   // when not editing, other nodes in activeNodeArray may be active:
   if (
     node.type === 'project' &&
@@ -90,7 +97,7 @@ const Node = ({ node }) => {
     isActive = true
   }
 
-  const userMayEditStructure: boolean = useLiveQuery(async () => {
+  const userMayEditStructure = useLiveQuery(async () => {
     const projectUser = await dexie.project_users.get({
       project_id: node.id,
       user_email: session?.user?.email,
@@ -102,7 +109,7 @@ const Node = ({ node }) => {
   const onClickIndent = useCallback(async () => {
     if (node.type === 'project' && !editing && isActive) {
       // if exists only one standard table, go directly to it's rows
-      const tables = await dexie.ttables
+      const tables: Table[] = await dexie.ttables
         .where({
           deleted: 0,
           project_id: node.id,
@@ -132,7 +139,7 @@ const Node = ({ node }) => {
   }, [node, isActive, editing, rowId, addNode, navigate, setActiveNodeArray])
 
   const onClickProjectEdit = useCallback(
-    async (e) => {
+    async (e: React.MouseEvent) => {
       // stop propagation to prevent onClickIndent
       e.stopPropagation()
       setProjectEditing({
@@ -147,7 +154,7 @@ const Node = ({ node }) => {
   // console.log('Node', { isOpen, node })
 
   const onClickToggle = useCallback(
-    (event) => {
+    (event: React.MouseEvent) => {
       toggleNodeSymbol({ node, store, search, navigate })
       // stop propagation to prevent onClickIndent
       event.stopPropagation()
