@@ -1,6 +1,11 @@
 import isEqual from 'lodash/isEqual'
 
-const isNodeOpen = ({ nodes, url }) => {
+interface Props {
+  nodes: string[]
+  url: string
+}
+
+const isNodeOpen = ({ nodes, url }: Props) => {
   if (!url) return false
   if (!nodes) return false
 

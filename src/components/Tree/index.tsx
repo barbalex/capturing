@@ -22,13 +22,12 @@ const TreeComponent = () => {
   const store: IStore = useContext(storeContext)
   const { editingProjects } = store
 
-  const projects: Project[] =
-    useLiveQuery(
-      async () =>
-        await dexie.projects
-          .where({ deleted: 0 })
-          .sortBy('', sortProjectsByLabelName),
-    ) ?? []
+  const projects: Project[] | undefined = useLiveQuery(
+    async () =>
+      await dexie.projects
+        .where({ deleted: 0 })
+        .sortBy('', sortProjectsByLabelName),
+  )
 
   // TODO: re-enable moving vectorLayers, tileLayers, fields
   // const onMove = useCallback(
@@ -42,7 +41,7 @@ const TreeComponent = () => {
 
   return (
     <Container>
-      {projects.map((project) => {
+      {(projects ?? []).map((project) => {
         const editing = editingProjects.get(project.id)?.editing ?? false
 
         return editing ? (

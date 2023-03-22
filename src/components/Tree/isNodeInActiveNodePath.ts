@@ -1,6 +1,13 @@
 import isEqual from 'lodash/isEqual'
 
-const isNodeInActiveNodePath = ({ node, activeNodeArray }) => {
+import { TreeNode } from './Viewing'
+
+interface Props {
+  node: TreeNode
+  activeNodeArray: string[]
+}
+
+const isNodeInActiveNodePath = ({ node, activeNodeArray }: Props) => {
   if (!node) return false
   if (!node.url) return false
   if (!activeNodeArray) return false
