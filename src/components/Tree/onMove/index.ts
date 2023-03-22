@@ -1,3 +1,4 @@
+// not used any more since rebuilding tree from components
 import onMoveVectorLayers from './onMoveVectorLayers'
 import onMoveTileLayers from './onMoveTileLayers'
 import onMoveField from './onMoveField'

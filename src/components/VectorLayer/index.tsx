@@ -11,7 +11,7 @@ const Container = styled.div`
   background-color: ${(props) => (props.showfilter ? '#fff3e0' : 'unset')};
 `
 
-const VectorLayerComponent = ({ filter: showFilter }) => {
+const VectorLayerComponent = ({ filter: showFilter }: { filter?: boolean }) => {
   const filter = 'TODO: was in store'
 
   if (!showFilter && filter.show) return null
