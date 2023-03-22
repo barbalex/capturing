@@ -1,4 +1,3 @@
-import { v1 as uuidv1 } from 'uuid'
 import SparkMD5 from 'spark-md5'
 
 import { dexie, Row, QueuedUpdate } from '../dexieClient'
@@ -9,7 +8,7 @@ type InsertRowProps = {
 
 const insertRow = async ({ tableId }: InsertRowProps) => {
   const revData = {
-    row_id: uuidv1(),
+    row_id: Crypto.randomUUID(),
     table_id: tableId,
     depth: 1,
     deleted: 0,

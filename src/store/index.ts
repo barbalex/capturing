@@ -1,6 +1,5 @@
 import { types, onAction } from 'mobx-state-tree'
 // import { autorun } from 'mobx'
-import { v1 as uuidv1 } from 'uuid'
 import isEqual from 'lodash/isEqual'
 
 import NotificationType from './Notification'
@@ -16,27 +15,15 @@ import ShowLocalMapsType from './ShowLocalMaps'
 export const MobxStore = types
   .model({
     editingProjects: types.map(EditingProjectType),
-    activeNodeArray: types.optional(
-      types.array(types.union(types.string, types.number)),
-      [],
-    ),
-    previousActiveNodeArray: types.optional(
-      types.array(types.union(types.string, types.number)),
-      [],
-    ),
+    activeNodeArray: types.optional(types.array(types.string), []),
+    previousActiveNodeArray: types.optional(types.array(types.string), []),
     // lastTouchedNode is needed to keep the last clicked arrow known
     // so it does not jump
     // before using this, activeNodeArray was used instead
     // but then when an arrow out of sight of the active node
     // is clicked, the list jumps back to the active node :-(
-    lastTouchedNode: types.optional(
-      types.array(types.union(types.string, types.number)),
-      [],
-    ),
-    nodes: types.optional(
-      types.array(types.array(types.union(types.string, types.number))),
-      [],
-    ),
+    lastTouchedNode: types.optional(types.array(types.string), []),
+    nodes: types.optional(types.array(types.array(types.string)), []),
     notifications: types.map(NotificationType),
     showTree: types.optional(types.boolean, true),
     showForm: types.optional(types.boolean, true),
@@ -263,7 +250,7 @@ export const MobxStore = types
       addNotification(valPassed): string {
         const val = {
           // set default values
-          id: uuidv1(),
+          id: Crypto.randomUUID(),
           time: Date.now(),
           duration: 10000, // standard value: 10000
           dismissable: true,
