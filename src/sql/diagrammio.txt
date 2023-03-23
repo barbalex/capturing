@@ -7,18 +7,18 @@ Table "users" {
   "account_id" uuid [default: null]
   "auth_user_id" text
   "client_rev_at" timestamp [default: `now()`]
-  "client_rev_by" uuid [default: null]
+  "client_rev_by" text [default: null]
   "server_rev_at" timestamp [default: `now()`]
-  "deleted" boolean [default: false]
+  "deleted" integer [default: 0]
 }
 
 Table "accounts" {
   "id" uuid [pk, default: `gen_random_uuid()`]
   "service_id" text [default: null]
   "client_rev_at" timestamp [default: `now()`]
-  "client_rev_by" uuid [default: null]
+  "client_rev_by" text [default: null]
   "server_rev_at" timestamp [default: `now()`]
-  "deleted" boolean [default: false]
+  "deleted" integer [default: 0]
 }
 
 Table "projects" {
@@ -28,9 +28,9 @@ Table "projects" {
   "label" text [default: null]
   "crs" integer [default: 4326]
   "client_rev_at" timestamp [default: `now()`]
-  "client_rev_by" uuid [default: null]
+  "client_rev_by" text [default: null]
   "server_rev_at" timestamp [default: `now()`]
-  "deleted" boolean [default: false]
+  "deleted" integer [default: 0]
 }
 
 Table "tables" {
@@ -40,9 +40,9 @@ Table "tables" {
   "name" text [unique, default: null]
   "label" text [default: null]
   "client_rev_at" timestamp [default: `now()`]
-  "client_rev_by" uuid [default: null]
+  "client_rev_by" text [default: null]
   "server_rev_at" timestamp [default: `now()`]
-  "deleted" boolean [default: false]
+  "deleted" integer [default: 0]
 }
 
 Table "fields" {
@@ -58,7 +58,7 @@ Table "fields" {
   "options_table" uuid
   "standard_value" text
   "client_rev_at" timestamp [default: `now()`]
-  "client_rev_by" uuid [default: null]
+  "client_rev_by" text [default: null]
   "server_rev_at" timestamp [default: `now()`]
 }
 
@@ -70,13 +70,13 @@ Table "rows" {
   "crs" integer [default: 4326]
   "data" jsonb
   "client_rev_at" timestamp [default: `now()`]
-  "client_rev_by" uuid [default: null]
+  "client_rev_by" text [default: null]
   "server_rev_at" timestamp [default: `now()`]
   "rev" text [default: null]
   "parent_rev" text [default: null]
   "revisions" text [default: null]
   "depth" integer [default: 1]
-  "deleted" boolean [default: false]
+  "deleted" integer [default: 0]
   "conflicts" text [default: null]
 }
 
@@ -90,13 +90,13 @@ Table "files" {
   "file" blob [default: null]
   "hash" text [default: 1]
   "client_rev_at" timestamp [default: `now()`]
-  "client_rev_by" uuid [default: null]
+  "client_rev_by" text [default: null]
   "server_rev_at" timestamp [default: `now()`]
   "rev" text [default: null]
   "parent_rev" text [default: null]
   "revisions" text [default: null]
   "depth" integer [default: 1]
-  "deleted" boolean [default: false]
+  "deleted" integer [default: 0]
   "conflicts" text [default: null]
 }
 
@@ -106,10 +106,69 @@ Table "project_users" {
   "user_email" text [default: null]
   "role" text
   "client_rev_at" timestamp [default: `now()`]
-  "client_rev_by" uuid [default: null]
+  "client_rev_by" text [default: null]
   "server_rev_at" timestamp [default: `now()`]
-  "deleted" boolean [default: false]
+  "deleted" integer [default: 0]
 }
+
+Table "vector_layers" {
+  "id" uuid [pk, default: `gen_random_uuid()`]
+  "label" text [default: null]
+  "sort" smallint [default: 0]
+  "active" integer [default: 0]
+  "project_id" uuid [unique, default: null]
+  "type" text [default: 'wfs']
+  "url" text [default: null]
+  "max_zoom" decimal [default: 19]
+  "min_zoom" decimal [default: 0]
+  "type_name" text [default: null]
+  "wfs_version" text [default: null]
+  "output_format" text [default: null]
+  "opacity" integer [default: 1]
+  "max_features" integer [default: 1000] 
+  "feature_count" integer [default: null]
+  "point_count" integer [default: null]
+  "line_count" integer [default: null]
+  "polygon_count" integer [default: null]
+  "client_rev_at" timestamp [default: `now()`]
+  "client_rev_by" text [default: null]
+  "server_rev_at" timestamp [default: `now()`]
+  "deleted" integer [default: 0]
+}
+
+Table "tile_layers" {
+  "id" uuid [pk, default: `gen_random_uuid()`]
+  "label" text [default: null]
+  "sort" smallint [default: 0]
+  "active" integer [default: 0]
+  "project_id" uuid [unique, default: null]
+  "type" text [default: 'wmts']
+  "wmts_url_template" text [default: null]
+  "wmts_subdomains" text[] [default: null]
+  "max_zoom" decimal [default: 19]
+  "min_zoom" decimal [default: 0]
+  "opacity" decimal [default: 1]
+  "wms_base_url" text [default: null]
+  "wms_format" text [default: null]
+  "wms_layers" text [default: null]
+  "wms_parameters" jsonb [default: null]
+  "wms_styles" text[] [default: null]
+  "wms_transparent" integer [default: 0]
+  "wms_version" wms_version_enum [default: null]
+  "wms_info_format" text [default: null]
+  "wms_queryable" integer [default: null]
+  "grayscale" integer [default: 0]
+  "local_data_size" integer [default: null]
+  "local_data_bounds" jsonb [default: null]
+  "client_rev_at" timestamp [default: `now()`]
+  "client_rev_by" text [default: null]
+  "server_rev_at" timestamp [default: `now()`]
+  "deleted" integer [default: 0]
+}
+
+Ref:"projects"."id" < "tile_layers"."project_id" [update: cascade, delete: restrict]
+
+Ref:"projects"."id" < "vector_layers"."project_id" [update: cascade, delete: restrict]
 
 Ref:"accounts"."id" < "users"."account_id" [update: cascade, delete: no action]
 
