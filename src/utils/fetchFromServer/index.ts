@@ -1,4 +1,5 @@
 import processTable from './processTable'
+import { IStoreSnapshotOut } from '../../store'
 
 // per table:
 // 1. get last_updated_at from dexie
@@ -21,20 +22,20 @@ import processTable from './processTable'
 
 let hiddenError = false
 
-function visibilityListener() {
+function visibilityListener(): void {
   if (document.visibilityState === 'visible' && hiddenError) {
     console.log('restarting fetch stream due to visibility changes', store)
     startStream() //going visible, start stopped stream
   }
 }
 
-const fetchFromServer = (store) => {
+const fetchFromServer = (store: IStoreSnapshotOut): void => {
   document.addEventListener('visibilitychange', visibilityListener)
 
   startStream(store)
 }
 
-const startStream = async (store) => {
+const startStream = async (store: IStoreSnapshotOut): void => {
   // console.log('fetchFromServer starting stream')
   hiddenError = false
   processTable({ table: 'projects', store, hiddenError })

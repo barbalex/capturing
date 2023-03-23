@@ -2,12 +2,23 @@ import { supabase } from '../../supabaseClient'
 import { dexie, File } from '../../dexieClient'
 import hex2buf from '../hex2buf'
 import downloadWfs from '../downloadWfs'
+import { IStoreSnapshotOut } from '../../store'
 
 import addCapabilitiesToIncoming from './addCapabilitiesToIncoming'
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 
-const processTable = async ({ table: tableName, store, hiddenError }) => {
+interface Props {
+  table: string
+  store: IStoreSnapshotOut
+  hiddenError: boolean
+}
+
+const processTable = async ({
+  table: tableName,
+  store,
+  hiddenError,
+}: Props) => {
   // dexie does not accept 'tables' as a table name > named it ttables
   const tableNameForDexie = tableName === 'tables' ? 'ttables' : tableName
   // 1. get last_updated_at from dexie
