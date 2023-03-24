@@ -81,7 +81,7 @@ const RouterComponent = (): React.FC => (
         <Route path="*" element={<FourOhFour />} />
       </Route>
       <Route path="docs/*" element={<Docs />}>
-        <Route index element={() => null} />
+        <Route index element={null} />
         <Route path="image-layer-types" element={<ImageLayerTypes />} />
         <Route path="offline-maps" element={<OfflineMaps />} />
         <Route path="data-synchronization" element={<DataSynchronisation />} />
