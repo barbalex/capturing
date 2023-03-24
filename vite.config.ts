@@ -28,7 +28,8 @@ export default defineConfig({
         'favicon.svg',
         'favicon.ico',
         'robots.txt',
-        'apple-touch-icon.png',
+        'favicon_192.png',
+        'favicon_512.png',
       ],
       // https://developer.mozilla.org/en-US/docs/Web/Manifest
       manifest: {
@@ -45,12 +46,12 @@ export default defineConfig({
             purpose: 'maskable any',
           },
           {
-            src: '/android-chrome-192x192.png',
+            src: '/favicon_192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: '/android-chrome-512x512.png',
+            src: '/favicon_512.png',
             sizes: '512x512',
             type: 'image/png',
           },
