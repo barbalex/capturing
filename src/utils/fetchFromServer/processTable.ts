@@ -5,6 +5,8 @@ import downloadWfs from '../downloadWfs'
 import { IStoreSnapshotOut } from '../../store'
 
 import addCapabilitiesToIncoming from './addCapabilitiesToIncoming'
+import { TableClass } from '../../dexieClient'
+import { PostgrestError } from '@supabase/supabase-js'
 
 const fallbackRevAt = '1970-01-01T00:01:0.0Z'
 
@@ -22,13 +24,13 @@ const processTable = async ({
   // dexie does not accept 'tables' as a table name > named it ttables
   const tableNameForDexie = tableName === 'tables' ? 'ttables' : tableName
   // 1. get last_updated_at from dexie
-  const last = await dexie
+  const last: TableClass | undefined = await dexie
     .table(tableNameForDexie)
     .orderBy('server_rev_at')
     .reverse()
     .first()
   // console.log(`ServerSubscriber, last ${tableName} in dexie:`, last)
-  const lastUpdatedAt = last?.server_rev_at ?? fallbackRevAt
+  const lastUpdatedAt: string = last?.server_rev_at ?? fallbackRevAt
   // 2. subscribe for changes and update dexie with changes from subscription
   // TODO: catch errors
   // TODO: Error 413: Payload Too Large. See: https://github.com/supabase/realtime/issues/252
@@ -67,10 +69,11 @@ const processTable = async ({
     })
   // console.log(`processTable:`, { tableName, tableNameForDexie })
   // 3. fetch all with newer last_updated_at
-  const { data, error } = await supabase
-    .from(tableName)
-    .select('*')
-    .gte('server_rev_at', lastUpdatedAt)
+  const { data, error }: { data: TableClass[]; error: PostgrestError | null } =
+    await supabase
+      .from(tableName)
+      .select('*')
+      .gte('server_rev_at', lastUpdatedAt)
   if (error) {
     return console.log(
       `ServerSubscriber, error fetching ${tableName} from supabase:`,

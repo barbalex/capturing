@@ -1,8 +1,13 @@
-import { dexie } from '../../dexieClient'
+import { dexie, TableClass } from '../../dexieClient'
 import getCapabilitiesDataForTileLayer from '../../components/TileLayer/Form/getCapabilitiesData'
 import getCapabilitiesDataForVectorLayer from '../../components/VectorLayer/Form/getCapabilitiesData'
 
-const addCapabilitiesToIncoming = async ({ object, tableName }) => {
+interface Props {
+  object: TableClass
+  tableName: string
+}
+
+const addCapabilitiesToIncoming = async ({ object, tableName }: Props) => {
   const existing = await dexie[tableName].get(object.id)
   if (!existing) return object
   let capabilities = {}

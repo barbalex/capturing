@@ -1638,4 +1638,77 @@ export class MySubClassedDexie extends Dexie {
   }
 }
 
+export type TableClass =
+  | Account
+  | Field
+  | FileMeta
+  | File
+  | New
+  | NewsDelivery
+  | TileLayer
+  | VectorLayer
+  | PVLGeom
+  | Project
+  | ProjectUser
+  | LayerStyle
+  | Row
+  | Table
+  | User
+  | WidgetForField
+export type TableInterface =
+  | IAccount
+  | IField
+  | IFileMeta
+  | IFile
+  | INew
+  | INewsDelivery
+  | ITileLayer
+  | IVectorLayer
+  | IPVLGeom
+  | IProject
+  | IProjectUser
+  | ILayerStyle
+  | IRow
+  | ITable
+  | IUser
+  | IWidgetForField
+
+export type TableClassesIndexed = {
+  accounts: Account
+  fields: Field
+  files_meta: FileMeta
+  files: File
+  news: New
+  news_delivery: NewsDelivery
+  tile_layers: TileLayer
+  vector_layers: VectorLayer
+  pvl_geoms: PVLGeom
+  projects: Project
+  project_users: ProjectUser
+  layer_styles: LayerStyle
+  rows: Row
+  ttables: Table
+  users: User
+  widgets_for_fields: WidgetForField
+}
+
+export type TableInterfacesIndexed = {
+  accounts: IAccount
+  fields: IField
+  files_meta: IFileMeta
+  files: IFile
+  news: INew
+  news_delivery: INewsDelivery
+  tile_layers: ITileLayer
+  vector_layers: IVectorLayer
+  pvl_geoms: IPVLGeom
+  projects: IProject
+  project_users: IProjectUser
+  layer_styles: ILayerStyle
+  rows: IRow
+  ttables: ITable
+  users: IUser
+  widgets_for_fields: IWidgetForField
+}
+
 export const dexie = new MySubClassedDexie()
