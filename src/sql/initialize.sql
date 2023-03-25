@@ -1481,6 +1481,20 @@ $$
 LANGUAGE sql
 SECURITY DEFINER;
 
+-- example to test:
+-- SELECT
+--   EXISTS (
+--     SELECT
+--       1
+--     FROM
+--       auth.users users
+--       INNER JOIN project_users ON users.email = project_users.user_email
+--       INNER JOIN projects ON projects.id = project_users.project_id
+--       INNER JOIN tables ON tables.project_id = projects.id
+--     WHERE
+--       tables.id = 'fe96e1f0-c4b1-11ed-91a6-29a9c477fa15'
+--       AND project_users.role IN ('account_manager', 'project_manager', 'project_editor')
+--       AND users.id = 'e967703e-9e8d-4060-aae8-d06bf3ac15a5');
 -- Function is owned by postgres which bypasses RLS
 --
 --
