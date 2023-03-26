@@ -7,7 +7,7 @@ import axios from 'redaxios'
  * https://github.com/supabase/supabase/discussions/357#discussioncomment-2516469
  */
 
-const isOnline = async (token) => {
+const isOnline = async (token: string) => {
   const config = {
     timeout: 5000, // timeout error happens after 5 seconds
     headers: {
