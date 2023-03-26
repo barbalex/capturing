@@ -8,14 +8,12 @@ import {
 import styled from '@emotion/styled'
 import { observer } from 'mobx-react-lite'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { useNavigate } from 'react-router-dom'
 
 import storeContext from '../../../storeContext'
 import { dexie } from '../../../dexieClient'
 import { IStore } from '../../../store'
 
-const OnlineButton = styled(IconButton)`
-  /*cursor: default !important;*/
-`
 const StyledBadge = styled(Badge)`
   .MuiBadge-badge {
     background-color: rgba(0, 0, 0, 0);
@@ -27,16 +25,14 @@ const ServerConnected = () => {
   // serverConnected not so helpful
   const { online } = store
 
+  const navigate = useNavigate()
+
   const queuedUpdatesCount: number = useLiveQuery(
     async () => await dexie.queued_updates.count(),
   )
   // if (queuedUpdatesCount >= 0) {
   //   console.log('ServerConnected, queuedUpdatesCount:', queuedUpdatesCount)
   // }
-  const showQueuedQueries = 'TODO!'
-  const setShowQueuedQueries = useCallback(() => {
-    // TODO:
-  }, [])
   const title = online
     ? 'Sie sind mit dem Server verbunden'
     : queuedUpdatesCount
@@ -47,11 +43,11 @@ const ServerConnected = () => {
   // 1. add menu to link to info
   // 2. add menu to list and edit pending queries
   const onClick = useCallback(() => {
-    setShowQueuedQueries(!showQueuedQueries)
-  }, [showQueuedQueries, setShowQueuedQueries])
+    navigate('/queued-updates')
+  }, [navigate])
 
   return (
-    <OnlineButton
+    <IconButton
       color="inherit"
       aria-label={title}
       title={title}
@@ -60,7 +56,7 @@ const ServerConnected = () => {
       <StyledBadge color="primary" badgeContent={queuedUpdatesCount} max={999}>
         {online ? <NetworkOn /> : <NetworkOff />}
       </StyledBadge>
-    </OnlineButton>
+    </IconButton>
   )
 }
 
