@@ -1,10 +1,10 @@
 import { supabase } from '../supabaseClient'
 import { dexie, QueuedUpdate } from '../dexieClient'
-import { IStore } from '../store'
+import { IStoreSnapshotOut } from '../store'
 
 interface Props {
   queuedUpdate: QueuedUpdate
-  store: IStore
+  store: IStoreSnapshotOut
 }
 
 // TODO: test rev table

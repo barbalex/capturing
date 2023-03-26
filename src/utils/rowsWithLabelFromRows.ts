@@ -8,8 +8,8 @@ const rowsWithLabelFromRows = async (rows: Row[]): RowWithLabel[] => {
   const rowPromises = rows.map((r) =>
     r.label.then((label: string) => ({ ...r, label })),
   )
-  const rowsWithLabel = await Promise.all(rowPromises).then((rowsWithLabel) =>
-    sortBy(rowsWithLabel, (r) => r.label),
+  const rowsWithLabel: RowWithLabel[] = await Promise.all(rowPromises).then(
+    (rowsWithLabel) => sortBy(rowsWithLabel, (r) => r.label),
   )
   return rowsWithLabel
 }
