@@ -1,4 +1,4 @@
-const activeNodeArrayFromUrl = (url: string) => {
+const activeNodeArrayFromUrl = (url: string): string[] => {
   // need to remove hash or query
   const urlToUse = url.split(/[?#]/)[0]
   if (urlToUse.startsWith('/')) {
