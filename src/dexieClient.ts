@@ -1584,7 +1584,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(8).stores({
+    this.version(9).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
@@ -1616,7 +1616,7 @@ export class MySubClassedDexie extends Dexie {
       widgets_for_fields:
         'id, [field_value+widget_value], server_rev_at, deleted, [deleted+field_value]',
       stores: 'id',
-      queued_updates: '++id',
+      queued_updates: '++id, time',
     })
     this.accounts.mapToClass(Account)
     this.fields.mapToClass(Field)
