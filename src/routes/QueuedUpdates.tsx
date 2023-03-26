@@ -17,7 +17,7 @@ const QueuedUpdatesComponent = (): React.FC => {
   const { session, sessionCounter } = store
 
   useEffect(() => {
-    document.title = 'Erfassen: Projekte'
+    document.title = 'Erfassen: Warteschlange'
   }, [])
 
   // console.log('Projects, session:', { session, sessionCounter })

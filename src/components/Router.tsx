@@ -23,6 +23,7 @@ import FieldComponent from './Field'
 import RowsComponent from './Rows'
 import RowComponent from './Row'
 import Layout from './Layout'
+import QueuedUpdates from '../routes/QueuedUpdates'
 
 const RouterComponent = (): React.FC => (
   <Routes>
@@ -80,6 +81,7 @@ const RouterComponent = (): React.FC => (
         />
         <Route path="*" element={<FourOhFour />} />
       </Route>
+      <Route path="queued-updates/*" element={<QueuedUpdates />} />
       <Route path="docs/*" element={<Docs />}>
         <Route index element={null} />
         <Route path="image-layer-types" element={<ImageLayerTypes />} />
