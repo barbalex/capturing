@@ -1,6 +1,6 @@
 import { dexie, TileLayer, QueuedUpdate } from '../dexieClient'
 
-type Props = {
+interface Props {
   projectId: string
 }
 

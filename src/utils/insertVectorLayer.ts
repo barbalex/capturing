@@ -1,6 +1,6 @@
 import { dexie, VectorLayer, QueuedUpdate } from '../dexieClient'
 
-type Props = {
+interface Props {
   projectId: string
 }
 
