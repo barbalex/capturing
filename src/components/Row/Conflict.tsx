@@ -7,7 +7,9 @@ import { supabase } from '../../supabaseClient'
 import { Row } from '../../dexieClient'
 import StoreContext from '../../storeContext'
 import Conflict from '../shared/Conflict'
-import createDataArrayForRevComparison from './createDataArrayForRevComparison'
+import createDataArrayForRevComparison, {
+  DataForRevComparison,
+} from './createDataArrayForRevComparison'
 import checkForOnlineError from '../../utils/checkForOnlineError'
 import { IStore } from '../../store'
 
@@ -36,16 +38,17 @@ const RowConflict = ({ rev, row, setActiveConflict }: Props) => {
 
       if (error) throw error
 
-      const dataArray = await createDataArrayForRevComparison({
-        row: data,
-        revRow: row,
-      })
+      const dataArray: DataForRevComparison[] =
+        await createDataArrayForRevComparison({
+          row: data,
+          revRow: row,
+        })
 
       return { revRow: data, dataArray }
     },
   )
 
-  error && checkForOnlineError({ error, store })
+  ;(error as PostgrestError) && checkForOnlineError({ error, store })
 
   const revRow = data?.revRow
   const dataArray = data?.dataArray
