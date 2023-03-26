@@ -37,7 +37,7 @@
     "localforage": "1.10.0",
     "lodash": "4.17.21",
     "mobx": "6.9.0",
-    "mobx-react-lite": "3.4.3",
+    "mobx-react-lite": "4.0.2",
     "mobx-state-tree": "5.1.8",
     "proj4": "2.9.0",
     "proj4leaflet": "1.0.2",
