@@ -1,12 +1,14 @@
 // https://davidwalsh.name/convert-xml-json
 // https://www.xml.com/pub/a/2006/05/31/converting-between-xml-and-json.html
+// TODO: why not use https://www.npmjs.com/package/fast-xml-parser?
+// or: https://www.npmjs.com/package/xml-js
 /**
  * Getting xml
  * Extracting an array of:
  * - layer title
  * - properties
  */
-const xmlToJson = (xml) => {
+const xmlToJson = (xml: Document): object => {
   // Create the return object
   let obj = {}
 

@@ -7,7 +7,23 @@ const geometryTypes = [
   'MultiPolygon',
 ]
 
-const featureFromWfsGml = ({ xmlFeature, typeName }) => {
+interface Props {
+  xmlFeature: object | undefined
+  typeName: string
+}
+export interface GeometryFeature {
+  type: string
+  properties: object
+  geometry: {
+    type: string | undefined
+    coordinates: number[] | number[][]
+  }
+}
+
+const featureFromWfsGml = ({
+  xmlFeature = {},
+  typeName,
+}: Props): GeometryFeature => {
   const props = Object.entries(xmlFeature?.[typeName?.toUpperCase?.()]).filter(
     ([key]) => key.startsWith('MS:'),
   )
@@ -32,6 +48,7 @@ const featureFromWfsGml = ({ xmlFeature, typeName }) => {
   const gml5 = gml4[gml5Key]?.['#text']
   // console.log('featureFromWfsGml, gml5:', gml5)
   const geometryType = gml2Key?.replace('GML:', '')
+  const geometryTypeIsArray = geometryType?.toLowerCase?.().includes('multi')
   const coordinates = gml5
     .split(' ')
     .filter((o) => !!o)
@@ -45,9 +62,9 @@ const featureFromWfsGml = ({ xmlFeature, typeName }) => {
       type: geometryTypes.find((t) =>
         t.toLowerCase().includes(geometryType?.toLowerCase?.()),
       ),
-      coordinates: geometryType?.toLowerCase?.().includes('multi')
-        ? [coordinates]
-        : coordinates,
+      coordinates: geometryTypeIsArray
+        ? [coordinates as number[]]
+        : (coordinates as number[]),
     },
   }
 
