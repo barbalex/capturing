@@ -1,10 +1,14 @@
 import { LayerStyle } from '../dexieClient'
 
-type Props = {
+interface Props {
   layerStyle: LayerStyle
+  extraProps?: Record<string, unknown>
 }
 
-const layerstyleToProperties = ({ layerStyle: style, extraProps }: Props) => {
+const layerstyleToProperties = ({
+  layerStyle: style,
+  extraProps,
+}: Props): Record<string, unknown> => {
   if (!style) return {}
 
   // TODO: add missing styles for points?

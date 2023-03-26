@@ -1,9 +1,9 @@
 import { Table, Field, Row, Project } from '../dexieClient'
 
 type Obj = Project | Table | Field | Row
-type Props = {
+interface Props {
   object: Obj
-  useLabels: integer
+  useLabels: number
 }
 // works for any table with label and name that is not projects itself
 const labelFromLabeledTable = ({
