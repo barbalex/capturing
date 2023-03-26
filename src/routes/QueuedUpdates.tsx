@@ -5,15 +5,15 @@ import styled from '@emotion/styled'
 import StoreContext from '../storeContext'
 import Login from '../components/Login'
 import constants from '../utils/constants'
-import { IStore } from '../store'
+import { IStoreSnapshotOut } from '../store'
 
 const Container = styled.div`
   min-height: calc(100vh - ${constants.appBarHeight}px);
   position: relative;
 `
 
-const ProjectsPage = (): React.FC => {
-  const store: IStore = useContext(StoreContext)
+const QueuedUpdatesComponent = (): React.FC => {
+  const store: IStoreSnapshotOut = useContext(StoreContext)
   const { session, sessionCounter } = store
 
   useEffect(() => {
@@ -27,4 +27,4 @@ const ProjectsPage = (): React.FC => {
   return <Container>TODO</Container>
 }
 
-export default observer(ProjectsPage)
+export default observer(QueuedUpdatesComponent)
