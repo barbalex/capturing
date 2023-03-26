@@ -1,6 +1,6 @@
 import { dexie, PVLGeom, QueuedUpdate } from '../dexieClient'
 
-type Props = {
+interface Props {
   pvlId: string
 }
 

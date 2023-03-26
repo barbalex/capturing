@@ -2,11 +2,11 @@ import SparkMD5 from 'spark-md5'
 
 import { dexie, Row, QueuedUpdate } from '../dexieClient'
 
-type InsertRowProps = {
+interface Props {
   tableId: string
 }
 
-const insertRow = async ({ tableId }: InsertRowProps) => {
+const insertRow = async ({ tableId }: Props) => {
   const revData = {
     row_id: window.crypto.randomUUID(),
     table_id: tableId,

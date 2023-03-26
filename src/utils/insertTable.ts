@@ -1,10 +1,10 @@
 import { dexie, Table, QueuedUpdate } from '../dexieClient'
 
-type InsertTableProps = {
+interface Props {
   projectId: string
 }
 
-const insertTable = async ({ projectId }: InsertTableProps) => {
+const insertTable = async ({ projectId }: Props) => {
   const newTable = new Table(undefined, projectId)
   const update = new QueuedUpdate(
     undefined,
