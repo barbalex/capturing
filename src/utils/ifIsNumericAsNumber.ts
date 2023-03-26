@@ -1,3 +1,3 @@
 import isNumeric from './isNumeric'
 
-export default (value) => (isNumeric(value) ? +value : value)
+export default (value: unknown): unknown => (isNumeric(value) ? +value : value)

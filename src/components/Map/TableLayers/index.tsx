@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useParams } from 'react-router-dom'
 
-import { dexie, Table } from '../../../dexieClient'
+import { dexie, Field, LayerStyle, Table } from '../../../dexieClient'
 import TableLayer from './TableLayer'
 import layerstyleToProperties from '../../../utils/layerstyleToProperties'
 import dataToProperties from './dataToProperties'
@@ -22,24 +22,27 @@ const TableLayers = () => {
 
     const _layers = []
     for (const table of tables) {
-      const [rows, layerStyle, richTextFields] = await Promise.all([
-        dexie.rows
-          .filter(
-            (row) =>
-              row.deleted === 0 && row.table_id === table.id && !!row.geometry,
-          )
-          .toArray(),
-        dexie.layer_styles.get({
-          table_id: table.id,
-        }),
-        dexie.fields
-          .where({
+      const [rows, layerStyle, richTextFields]: [Row[], LayerStyle, Field[]] =
+        await Promise.all([
+          dexie.rows
+            .filter(
+              (row) =>
+                row.deleted === 0 &&
+                row.table_id === table.id &&
+                !!row.geometry,
+            )
+            .toArray(),
+          dexie.layer_styles.get({
             table_id: table.id,
-            widget_type: 'rich-text',
-            deleted: 0,
-          })
-          .toArray(),
-      ])
+          }),
+          dexie.fields
+            .where({
+              table_id: table.id,
+              widget_type: 'rich-text',
+              deleted: 0,
+            })
+            .toArray(),
+        ])
 
       // console.log('TableLayers', { table, layerStyle, richTextFields, rows })
       // convert geometry collection into feature collection to add properties (style and data)

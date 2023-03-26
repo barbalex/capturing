@@ -1,6 +1,6 @@
 import { dexie, File, QueuedUpdate } from '../dexieClient'
 
-type Props = {
+interface Props {
   file: blob
 }
 

@@ -9,12 +9,21 @@ import { observer } from 'mobx-react-lite'
 import StoreContext from '../storeContext'
 import isOnline from '../utils/isOnline'
 import { IStore } from '../store'
+import { Session } from '@supabase/supabase-js'
 
 const pollInterval = 10000
 
 const ApiDetector = () => {
   const store: IStore = useContext(StoreContext)
-  const { online, setOnline, session } = store
+  const {
+    online,
+    setOnline,
+    session,
+  }: {
+    online: boolean
+    setOnline: (online: boolean) => void
+    session: Session
+  } = store
 
   useEffect(() => {
     let isActive = true

@@ -1,6 +1,6 @@
 import { dexie, ProjectUser, QueuedUpdate } from '../dexieClient'
 
-type Props = {
+interface Props {
   projectId: string
   email: string
   role: string

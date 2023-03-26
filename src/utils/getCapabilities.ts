@@ -8,7 +8,10 @@ interface Props {
   service?: 'WMS' | 'WFS'
 }
 
-const getCapabilities = async ({ url, service = 'WFS' }: Props) => {
+const getCapabilities = async ({
+  url,
+  service = 'WFS',
+}: Props): object | undefined => {
   // Exaple url to get: https://wms.zh.ch/FnsSVOZHWMS?service=WMS&request=GetCapabilities
   let res
   try {

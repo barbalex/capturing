@@ -1,14 +1,11 @@
 import { dexie, Field, QueuedUpdate } from '../dexieClient'
 
-type InsertFieldProps = {
+interface Props {
   tableId: string
 }
 
-const insertField = async ({ tableId }: InsertFieldProps) => { 
-  const newField = new Field(
-    undefined,
-    tableId,
-  )
+const insertField = async ({ tableId }: Props) => {
+  const newField = new Field(undefined, tableId)
   const update = new QueuedUpdate(
     undefined,
     undefined,

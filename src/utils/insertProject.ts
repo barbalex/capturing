@@ -1,10 +1,10 @@
-import { dexie, Project, IAccount, QueuedUpdate } from '../dexieClient'
+import { dexie, Project, Account, QueuedUpdate } from '../dexieClient'
 
-type InsertProjectProps = {
-  account: IAccount
+interface Props {
+  account: Account
 }
 
-const insertProject = async ({ account }: InsertProjectProps) => {  
+const insertProject = async ({ account }: Props) => {
   const newProject = new Project(
     undefined,
     account?.id,

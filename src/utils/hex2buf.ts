@@ -1,6 +1,6 @@
 // https://stackoverflow.com/a/43131635/712005
 
-const hex2buf = (hex) => {
+const hex2buf = (hex: string): Uint8Array => {
   // need to remove postgreSQL's preset \x
   const realHex = hex.substring(2)
   return new Uint8Array(
