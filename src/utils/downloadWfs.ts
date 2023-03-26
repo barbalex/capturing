@@ -4,14 +4,16 @@ import sumBy from 'lodash/sumBy'
 
 import { dexie, PVLGeom, VectorLayer } from '../dexieClient'
 import xmlToJson from './xmlToJson'
-import featureFromWfsGml from './featureFromWfsGml'
+import featureFromWfsGml, { GeometryFeature } from './featureFromWfsGml'
+import { IStoreSnapshotOut } from '../store'
 
-type Props = {
+interface Props {
   pvl: VectorLayer
+  store: IStoreSnapshotOut
 }
 
 // TODO: do this in worker
-const downloadWfs = async ({ pvl, store }: Props) => {
+const downloadWfs = async ({ pvl, store }: Props): void => {
   const { addNotification, removeNotificationById } = store
   if (
     !(
@@ -65,13 +67,13 @@ const downloadWfs = async ({ pvl, store }: Props) => {
     })
     return false
   }
-  let features
+  let features: GeometryFeature[]
   const isXml = pvl.output_format.toLowerCase().includes('gml')
   if (isXml) {
     const parser = new window.DOMParser()
     const parsedXml = xmlToJson(parser.parseFromString(res.data, 'text/html'))
-    const xmlFeatures =
-      parsedXml?.HTML?.BODY?.['WFS:FEATURECOLLECTION']?.['WFS:MEMBER']
+    const xmlFeatures: object[] =
+      parsedXml?.HTML?.BODY?.['WFS:FEATURECOLLECTION']?.['WFS:MEMBER'] ?? []
     features = xmlFeatures.map((xmlFeature) =>
       featureFromWfsGml({ xmlFeature, typeName: pvl.type_name }),
     )
@@ -80,7 +82,7 @@ const downloadWfs = async ({ pvl, store }: Props) => {
   }
   // console.log('downloadWfs, features:', features)
   // 3. build PVLGeoms
-  const pvlGeoms = features.map(
+  const pvlGeoms: PVLGeom[] = features.map(
     (feature) =>
       new PVLGeom(undefined, pvl.id, feature.geometry, feature.properties),
   )
