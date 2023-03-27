@@ -30,14 +30,17 @@ const NoOpsContainer = styled.div`
 `
 const OuterContainer = styled.div`
   height: calc(100vh - ${constants.appBarHeight}px - 15px - 23px - 23px);
-  overflow-x: hidden;
+  width: 100%;
+  overflow-x: auto;
   overflow-y: auto;
 `
 const QueriesContainer = styled.div`
   padding: 0 15px;
   display: grid;
-  grid-template-columns: 180px auto auto auto auto auto 100px;
-  column-gap: 5px;
+  grid-template-columns: auto auto auto auto auto auto auto;
+  column-gap: 10px;
+  /* align-items: center; */
+
   > * {
     position: relative;
   }
@@ -120,11 +123,12 @@ const QueuedUpdatesComponent = (): React.FC => {
         <QueriesContainer>
           <Heading>Zeit</Heading>
           <Heading>Tabelle</Heading>
+          <Heading>ID</Heading>
           <Heading>Feld / Operation</Heading>
           <Heading>vorher</Heading>
           <Heading>nachher</Heading>
           <RevertHeading>widerrufen</RevertHeading>
-          {queuedUpdates.reverse().map((qu, i) => (
+          {queuedUpdates.map((qu, i) => (
             <QueuedUpdateComponent key={qu.id} qu={qu} index={i} />
           ))}
         </QueriesContainer>
