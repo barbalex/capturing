@@ -64,54 +64,24 @@ const QueuedUpdateComponent = ({ qu, index }) => {
     id,
     time,
     table,
-    revert_id,
-    value: is,
+    is,
     was,
     isInsert, // derive from rev?
   } = qu
 
   const onClickRevert = useCallback(() => {
-    if (table && revert_id && was) {
-      // TODO:
-      store.updateModelValue({
-        table: table,
-        id: revert_id,
-        value: revertValue,
-      })
-    } else if (table && revert_id && revertValues) {
+    if (table && was) {
+      // TODO: should client_rev_at and client_rev_by be updated?
       store.updateModelValues({
         table: table,
-        id: revert_id,
-        values: JSON.parse(revertValues),
+        id: 'TODO:',
+        values: JSON.parse(was),
       })
     }
     removeQueuedQueryById(id)
-  }, [
-    id,
-    removeQueuedQueryById,
-    revertField,
-    rowId,
-    table,
-    revertValue,
-    revertValues,
-    store,
-  ])
+  }, [id, removeQueuedQueryById, store, table, was])
 
   const timeValue = dayjs(time).format('YYYY.MM.DD HH:mm:ss')
-  // was:
-  // ${DateTime.fromMillis(time).toFormat(
-  //   'yyyy.LL.dd HH.mm.ss',
-  // )
-  console.log('QueuedUpdate', {
-    timeValue,
-    revertTable: table,
-    revertId: rowId,
-    revertField,
-    revertValue,
-    revertValues,
-    newValue,
-    isInsert,
-  })
 
   return (
     <>
