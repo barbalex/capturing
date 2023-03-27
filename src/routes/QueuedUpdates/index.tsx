@@ -7,7 +7,7 @@ import styled from '@emotion/styled'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate } from 'react-router-dom'
 
-import { dexie, QueuedUpdate } from '../../dexieClient'
+import { dexie, QueuedUpdate, tables } from '../../dexieClient'
 import StoreContext from '../../storeContext'
 import Login from '../../components/Login'
 import constants from '../../utils/constants'
@@ -64,13 +64,15 @@ const QueuedUpdatesComponent = (): React.FC => {
     document.title = 'Erfassen: Warteschlange'
   }, [])
 
-  const queuedUpdates =
+  const rawQueuedUpdates =
     useLiveQuery(
       async (): QueuedUpdate[] =>
         await dexie.queued_updates.orderBy('time').reverse().toArray(),
     ) ?? []
 
-  console.log('QueuedUpdates, queuedUpdates:', queuedUpdates)
+  const queuedUpdates = rawQueuedUpdates.filter((q) => tables.includes(q.table))
+
+  console.log('QueuedUpdates', { queuedUpdates, tables, rawQueuedUpdates })
 
   const onClickCloseIcon = useCallback(() => {
     if (window.history.state && window.history.state.idx > 0) {
@@ -123,8 +125,8 @@ const QueuedUpdatesComponent = (): React.FC => {
           <Heading>vorher</Heading>
           <Heading>nachher</Heading>
           <RevertHeading>widerrufen</RevertHeading>
-          {queuedUpdates.reverse().map((qq, i) => (
-            <QueuedUpdateComponent key={qq.id} qq={qq} index={i} />
+          {queuedUpdates.reverse().map((qu, i) => (
+            <QueuedUpdateComponent key={qu.id} qu={qu} index={i} />
           ))}
         </QueriesContainer>
       </OuterContainer>

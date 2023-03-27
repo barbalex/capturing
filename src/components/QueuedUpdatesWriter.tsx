@@ -6,12 +6,16 @@ import { observer } from 'mobx-react-lite'
 import storeContext from '../storeContext'
 import processQueuedUpdate from '../utils/processQueuedUpdate'
 import { IStore } from '../store'
+import { tables } from '../dexieClient'
 
 const QueuedUpdatesWriter = () => {
   const store: IStore = useContext(storeContext)
   const { online } = store
   const queuedUpdates: QueuedUpdate[] | undefined = useLiveQuery(
-    async () => await dexie.queued_updates.orderBy('id').toArray(),
+    async () =>
+      await dexie.queued_updates.where('table').anyOf(tables).sortBy('id'),
+    // .orderBy('id'),
+    // .toArray(),
   )
   useEffect(() => {
     const queuedUpdate = (queuedUpdates ?? [])[0]

@@ -57,33 +57,31 @@ const valFromValue = (value) => {
   return value ?? '(leer)'
 }
 
-const QueuedQuery = ({ qq, index }) => {
+const QueuedUpdateComponent = ({ qu, index }) => {
   const store = useContext(StoreContext)
   const { removeQueuedQueryById } = store
   const {
     id,
     time,
-    revertTable,
-    revertId,
-    revertField,
-    revertValue,
-    revertValues,
-    newValue,
-    isInsert,
-  } = qq
+    table,
+    revert_id,
+    value: is,
+    was,
+    isInsert, // derive from rev?
+  } = qu
 
   const onClickRevert = useCallback(() => {
-    if (revertTable && revertId && revertField) {
+    if (table && revert_id && was) {
+      // TODO:
       store.updateModelValue({
-        table: revertTable,
-        id: revertId,
-        field: revertField,
+        table: table,
+        id: revert_id,
         value: revertValue,
       })
-    } else if (revertTable && revertId && revertValues) {
+    } else if (table && revert_id && revertValues) {
       store.updateModelValues({
-        table: revertTable,
-        id: revertId,
+        table: table,
+        id: revert_id,
         values: JSON.parse(revertValues),
       })
     }
@@ -92,8 +90,8 @@ const QueuedQuery = ({ qq, index }) => {
     id,
     removeQueuedQueryById,
     revertField,
-    revertId,
-    revertTable,
+    rowId,
+    table,
     revertValue,
     revertValues,
     store,
@@ -106,8 +104,8 @@ const QueuedQuery = ({ qq, index }) => {
   // )
   console.log('QueuedUpdate', {
     timeValue,
-    revertTable,
-    revertId,
+    revertTable: table,
+    revertId: rowId,
     revertField,
     revertValue,
     revertValues,
@@ -118,8 +116,8 @@ const QueuedQuery = ({ qq, index }) => {
   return (
     <>
       <Value bt={index === 0}>{timeValue}</Value>
-      <Value bt={index === 0}>{revertTable}</Value>
-      <Value bt={index === 0}>{revertId}</Value>
+      <Value bt={index === 0}>{table}</Value>
+      <Value bt={index === 0}>{rowId}</Value>
       <Value bt={index === 0}>
         {isInsert ? 'neuer Datensatz' : revertField}
       </Value>
@@ -151,4 +149,4 @@ const QueuedQuery = ({ qq, index }) => {
   )
 }
 
-export default observer(QueuedQuery)
+export default observer(QueuedUpdateComponent)

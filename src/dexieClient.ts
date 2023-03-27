@@ -1525,9 +1525,9 @@ export interface IQueuedUpdate {
   id?: number
   time: Date
   table: TableType
-  value: string // json of value
+  is: string // json of value
   revert_id?: string // only set on update, is undefined on insert
-  revert_value?: string // json of previous value. Only set on update, is undefined on insert
+  was?: string // json of previous value. Only set on update, is undefined on insert
 }
 
 // use a class to automatically set time
@@ -1535,27 +1535,27 @@ export class QueuedUpdate implements IQueuedUpdate {
   id?: number
   time?: Date
   table: TableType
-  value: string
+  is: string
   file: Blob
   revert_id?: string
-  revert_value?: string
+  was?: string
 
   constructor(
     id?: number,
     time: Date,
     table: TableType,
-    value: string,
+    is: string,
     file: Blob,
     revert_id?: string,
-    revert_value?: string,
+    was?: string,
   ) {
     if (id) this.id = id
     this.time = new Date().toISOString()
     this.table = table
-    this.value = value
+    this.is = is
     this.file = file
     if (revert_id) this.revert_id = revert_id
-    if (revert_value) this.revert_value = revert_value
+    if (was) this.was = was
   }
 }
 
@@ -1584,7 +1584,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('capturing')
-    this.version(9).stores({
+    this.version(10).stores({
       accounts: 'id, server_rev_at, deleted',
       field_types: 'id, &value, sort, server_rev_at, deleted',
       fields:
@@ -1616,7 +1616,7 @@ export class MySubClassedDexie extends Dexie {
       widgets_for_fields:
         'id, [field_value+widget_value], server_rev_at, deleted, [deleted+field_value]',
       stores: 'id',
-      queued_updates: '++id, time',
+      queued_updates: '++id, time, table',
     })
     this.accounts.mapToClass(Account)
     this.fields.mapToClass(Field)
@@ -1636,6 +1636,30 @@ export class MySubClassedDexie extends Dexie {
     this.widgets_for_fields.mapToClass(WidgetForField)
   }
 }
+
+export const tables = [
+  'accounts',
+  'field_types',
+  'fields',
+  'files',
+  'files_meta',
+  'layer_styles',
+  'news',
+  'news_delivery',
+  'project_users',
+  'projects',
+  'pvl_geoms',
+  'queued_updates',
+  'rows',
+  'stores',
+  'tile_layers',
+  'tables',
+  'users',
+  'vector_layers',
+  'version_types',
+  'widget_types',
+  'widgets_for_fields',
+]
 
 export type TableType =
   | 'accounts'
