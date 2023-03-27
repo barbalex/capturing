@@ -132,9 +132,9 @@ export class Field implements IField {
       undefined,
       undefined,
       'fields',
+      this.id,
       JSON.stringify(isReved),
       undefined,
-      this.id,
       JSON.stringify(was),
     )
     return dexie.queued_updates.add(update)
@@ -261,9 +261,9 @@ export class FileMeta implements IFileMeta {
       undefined,
       undefined,
       'files_meta', // processQueuedUpdate writes this into row_revs
+      this.id,
       JSON.stringify(isReved),
       this.file, // TODO: add file not from this
-      was?.id,
       was ? JSON.stringify(was) : null,
     )
     return dexie.queued_updates.add(update)
@@ -602,9 +602,9 @@ export class TileLayer implements ITileLayer {
       undefined,
       undefined,
       'tile_layers',
+      this.id,
       JSON.stringify(isReved),
       undefined,
-      this.id,
       JSON.stringify(was),
     )
     return await dexie.queued_updates.add(update)
@@ -741,9 +741,9 @@ export class VectorLayer implements IVectorLayer {
       undefined,
       undefined,
       'vector_layers',
+      this.id,
       JSON.stringify(isReved),
       undefined,
-      this.id,
       JSON.stringify(was),
     )
     return await dexie.queued_updates.add(update)
@@ -836,9 +836,9 @@ export class PVLGeom implements IPVLGeom {
       undefined,
       undefined,
       'pvl_geoms',
+      this.id,
       JSON.stringify(isReved),
       undefined,
-      this.id,
       JSON.stringify(was),
     )
     return await dexie.queued_updates.add(update)
@@ -976,9 +976,9 @@ export class LayerStyle implements ILayerStyle {
       undefined,
       undefined,
       'layer_styles',
+      this.id,
       JSON.stringify(isReved),
       undefined,
-      this.id,
       JSON.stringify(was),
     )
     return dexie.queued_updates.add(update)
@@ -1047,9 +1047,9 @@ export class ProjectUser implements IProjectUser {
       undefined,
       undefined,
       'projects',
+      this.id,
       JSON.stringify(isReved),
       undefined,
-      this.id,
       JSON.stringify(was),
     )
     return dexie.queued_updates.add(update)
@@ -1124,9 +1124,9 @@ export class Project implements IProject {
       undefined,
       undefined,
       'projects',
+      this.id,
       JSON.stringify(isReved),
       undefined,
-      this.id,
       JSON.stringify(was),
     )
     return dexie.queued_updates.add(update)
@@ -1299,9 +1299,9 @@ export class Row implements IRow {
       undefined,
       undefined,
       'rows', // processQueuedUpdate writes this into row_revs
+      this.id,
       JSON.stringify(isReved),
       undefined,
-      was?.id,
       was ? JSON.stringify(was) : undefined,
     )
     dexie.queued_updates.add(update)
@@ -1411,9 +1411,9 @@ export class Table implements ITable {
       undefined,
       undefined,
       'tables',
+      this.id,
       JSON.stringify(isReved),
       undefined,
-      this.id,
       JSON.stringify(was),
     )
     return await dexie.queued_updates.add(update)
@@ -1525,8 +1525,9 @@ export interface IQueuedUpdate {
   id?: number
   time: Date
   table: TableType
+  tableId: string
   is: string // json of value
-  revert_id?: string // only set on update, is undefined on insert
+  file: Blob
   was?: string // json of previous value. Only set on update, is undefined on insert
 }
 
@@ -1535,26 +1536,26 @@ export class QueuedUpdate implements IQueuedUpdate {
   id?: number
   time?: Date
   table: TableType
+  tableId: string
   is: string
   file: Blob
-  revert_id?: string
   was?: string
 
   constructor(
     id?: number,
     time: Date,
     table: TableType,
+    tableId: string,
     is: string,
     file: Blob,
-    revert_id?: string,
     was?: string,
   ) {
     if (id) this.id = id
     this.time = new Date().toISOString()
     this.table = table
+    if (revert_id) this.revert_id = revert_id
     this.is = is
     this.file = file
-    if (revert_id) this.revert_id = revert_id
     if (was) this.was = was
   }
 }
