@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton'
 
 import StoreContext from '../../storeContext'
 import { QueuedUpdate } from '../../dexieClient'
+import syntaxHighlightJson from '../../utils/syntaxHighlightJson'
 
 // to hover and style row, see: https://stackoverflow.com/a/48109479/712005
 const Value = styled.div`
@@ -44,6 +45,24 @@ const Value = styled.div`
     background-color: rgba(0, 0, 0, 0.05);
   }
 `
+const JsonValue = styled.pre`
+  margin: 0;
+  .string {
+    color: green;
+  }
+  .number {
+    color: darkorange;
+  }
+  .boolean {
+    color: blue;
+  }
+  .null {
+    color: magenta;
+  }
+  .key {
+    color: red;
+  }
+`
 const Icon = styled.div`
   justify-self: center;
   padding: 5px 0;
@@ -69,8 +88,11 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
   const { id, time, table, is: isRaw, was: wasRaw } = qu
 
   const is = JSON.parse(isRaw)
-  const isInsert = is.revisions.length === 1
   const was = wasRaw ? JSON.parse(wasRaw) : null
+  const isInsert = is.revisions.length === 1
+  const isDeletion = was?.deleted === 0 && is.deleted === 1
+  const isUndeletion = was?.deleted === 1 && is.deleted === 0
+  const showDataProperty = !!is?.data
 
   const onClickRevert = useCallback(() => {
     if (table && was) {
@@ -85,16 +107,56 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
   }, [id, removeQueuedQueryById, store, table, was])
 
   const timeValue = dayjs(time).format('YYYY.MM.DD HH:mm:ss')
+  const showWasValue =
+    !isInsert &&
+    !isDeletion &&
+    wasRaw &&
+    ((showDataProperty && was.data) || false)
+  const wasValue = syntaxHighlightJson(
+    JSON.stringify(showDataProperty ? was?.data ?? '' : was, undefined, 2),
+  )
+  const showIsValue = !isInsert && !isDeletion && isRaw
+  const isValue = syntaxHighlightJson(
+    JSON.stringify(showDataProperty ? is.data : is, undefined, 2),
+  )
+  const rowId = isInsert ? is.id : is.tableId
 
   return (
     <>
       <Value bt={index === 0}>{timeValue}</Value>
       <Value bt={index === 0}>{table}</Value>
+      <Value bt={index === 0}>{rowId}</Value>
       <Value bt={index === 0}>
-        {isInsert ? 'neuer Datensatz' : 'Änderung'}
+        {isInsert
+          ? 'neuer Datensatz'
+          : isDeletion
+          ? 'Löschung'
+          : isUndeletion
+          ? 'Wiederherstellung'
+          : 'Änderung'}
       </Value>
-      <Value bt={index === 0}>{wasRaw}</Value>
-      <Value bt={index === 0}>{isRaw}</Value>
+      <Value bt={index === 0}>
+        {showWasValue ? (
+          <JsonValue
+            dangerouslySetInnerHTML={{
+              __html: wasValue,
+            }}
+          ></JsonValue>
+        ) : (
+          ' '
+        )}
+      </Value>
+      <Value bt={index === 0}>
+        {showIsValue ? (
+          <JsonValue
+            dangerouslySetInnerHTML={{
+              __html: isValue,
+            }}
+          ></JsonValue>
+        ) : (
+          ' '
+        )}
+      </Value>
       <Icon bt={index === 0}>
         <RevertButton
           title="widerrufen"
