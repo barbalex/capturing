@@ -14,7 +14,7 @@ const processQueuedUpdate = async ({ queuedUpdate, store }: Props) => {
   const { online, setOnline } = store
   console.log('processQueuedUpdate', queuedUpdate)
 
-  const object = JSON.parse(queuedUpdate.value)
+  const object = JSON.parse(queuedUpdate.is)
   // remove all local fields
   const localFields = Object.keys(object).filter((k) => k.startsWith('_'))
   localFields.forEach((field) => delete object[field])
@@ -29,7 +29,7 @@ const processQueuedUpdate = async ({ queuedUpdate, store }: Props) => {
 
     console.log('processQueuedUpdate, rows newRevObject:', {
       newRevision,
-      object: JSON.parse(queuedUpdate.value),
+      object: JSON.parse(queuedUpdate.is),
     })
     // 2. send revision to server
     const { error } = await supabase.from('row_revs').insert(newRevision)
@@ -61,7 +61,7 @@ const processQueuedUpdate = async ({ queuedUpdate, store }: Props) => {
 
     console.log('processQueuedUpdate, files_meta, newRevObject:', {
       newRevision,
-      object: JSON.parse(queuedUpdate.value),
+      object: JSON.parse(queuedUpdate.is),
     })
     // 2. send revision to server
     const { error } = await supabase.from('files_meta_revs').insert(newRevision)
