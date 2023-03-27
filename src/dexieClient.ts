@@ -1524,7 +1524,7 @@ export interface IStore {
 export interface IQueuedUpdate {
   id?: number
   time: Date
-  table: string
+  table: TableType
   value: string // json of value
   revert_id?: string // only set on update, is undefined on insert
   revert_value?: string // json of previous value. Only set on update, is undefined on insert
@@ -1534,7 +1534,7 @@ export interface IQueuedUpdate {
 export class QueuedUpdate implements IQueuedUpdate {
   id?: number
   time?: Date
-  table: string
+  table: TableType
   value: string
   file: Blob
   revert_id?: string
@@ -1543,7 +1543,7 @@ export class QueuedUpdate implements IQueuedUpdate {
   constructor(
     id?: number,
     time: Date,
-    table: string,
+    table: TableType,
     value: string,
     file: Blob,
     revert_id?: string,
@@ -1636,6 +1636,29 @@ export class MySubClassedDexie extends Dexie {
     this.widgets_for_fields.mapToClass(WidgetForField)
   }
 }
+
+export type TableType =
+  | 'accounts'
+  | 'field_types'
+  | 'fields'
+  | 'files'
+  | 'files_meta'
+  | 'layer_styles'
+  | 'news'
+  | 'news_delivery'
+  | 'project_users'
+  | 'projects'
+  | 'pvl_geoms'
+  | 'queued_updates'
+  | 'rows'
+  | 'stores'
+  | 'tile_layers'
+  | 'tables'
+  | 'users'
+  | 'vector_layers'
+  | 'version_types'
+  | 'widget_types'
+  | 'widgets_for_fields'
 
 export type TableClass =
   | Account
