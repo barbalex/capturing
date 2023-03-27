@@ -6,6 +6,7 @@ import { FaUndoAlt } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
 
 import StoreContext from '../../storeContext'
+import { QueuedUpdate } from '../../dexieClient'
 
 // to hover and style row, see: https://stackoverflow.com/a/48109479/712005
 const Value = styled.div`
@@ -30,7 +31,7 @@ const Value = styled.div`
     width: 1px;
     z-index: 2;
   }
-  &:nth-child(5n + 5)::after {
+  &:nth-of-type(5n + 5)::after {
     bottom: -1px;
     right: 0;
     left: -1000%;
@@ -57,17 +58,19 @@ const valFromValue = (value) => {
   return value ?? '(leer)'
 }
 
-const QueuedUpdateComponent = ({ qu, index }) => {
+interface Props {
+  qu: QueuedUpdate
+  index: number
+}
+
+const QueuedUpdateComponent = ({ qu, index }: Props) => {
   const store = useContext(StoreContext)
   const { removeQueuedQueryById } = store
-  const {
-    id,
-    time,
-    table,
-    is,
-    was,
-    isInsert, // derive from rev?
-  } = qu
+  const { id, time, table, is: isRaw, was: wasRaw } = qu
+
+  const is = JSON.parse(isRaw)
+  const isInsert = is.revisions.length === 1
+  const was = wasRaw ? JSON.parse(wasRaw) : null
 
   const onClickRevert = useCallback(() => {
     if (table && was) {
@@ -87,24 +90,11 @@ const QueuedUpdateComponent = ({ qu, index }) => {
     <>
       <Value bt={index === 0}>{timeValue}</Value>
       <Value bt={index === 0}>{table}</Value>
-      <Value bt={index === 0}>{rowId}</Value>
       <Value bt={index === 0}>
-        {isInsert ? 'neuer Datensatz' : revertField}
+        {isInsert ? 'neuer Datensatz' : 'Änderung'}
       </Value>
-      <Value bt={index === 0}>
-        {isInsert
-          ? ''
-          : revertField
-          ? valFromValue(revertValue)
-          : JSON.parse(revertValues)}
-      </Value>
-      <Value bt={index === 0}>
-        {isInsert
-          ? ''
-          : revertField
-          ? valFromValue(newValue)
-          : JSON.parse(newValue)}
-      </Value>
+      <Value bt={index === 0}>{wasRaw}</Value>
+      <Value bt={index === 0}>{isRaw}</Value>
       <Icon bt={index === 0}>
         <RevertButton
           title="widerrufen"
