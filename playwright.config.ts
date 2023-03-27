@@ -12,7 +12,7 @@ import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
   webServer: {
     command: 'npm run dev',
-    url: 'http://localhost:5173',
+    url: 'http://localhost:5172',
     reuseExistingServer: !process.env.CI,
   },
   testDir: './tests',
@@ -42,7 +42,7 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL:
       process.env.NODE_ENV === 'dev'
-        ? 'http://localhost:5173'
+        ? 'http://localhost:5172'
         : 'https://capturing.app',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
