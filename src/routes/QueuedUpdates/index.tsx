@@ -120,7 +120,6 @@ const QueuedUpdatesComponent = (): React.FC => {
         <QueriesContainer>
           <Heading>Zeit</Heading>
           <Heading>Tabelle</Heading>
-          <Heading>ID</Heading>
           <Heading>Feld / Operation</Heading>
           <Heading>vorher</Heading>
           <Heading>nachher</Heading>
