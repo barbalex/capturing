@@ -23,6 +23,7 @@ const insertPVLGeom = async ({ pvlId }: Props) => {
     undefined,
     undefined,
     'pvl_geoms',
+    undefined,
     JSON.stringify(newPVLGeom),
     undefined,
     undefined,

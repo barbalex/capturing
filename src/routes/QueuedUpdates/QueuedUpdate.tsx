@@ -87,11 +87,11 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
   const { removeQueuedQueryById } = store
   const { id, time, table, is: isRaw, was: wasRaw } = qu
 
-  const is = JSON.parse(isRaw)
+  const is = isRaw ? JSON.parse(isRaw) : {}
   const was = wasRaw ? JSON.parse(wasRaw) : null
-  const isInsert = is.revisions.length === 1
-  const isDeletion = was?.deleted === 0 && is.deleted === 1
-  const isUndeletion = was?.deleted === 1 && is.deleted === 0
+  const isInsert = is?.revisions?.length === 1
+  const isDeletion = was?.deleted === 0 && is?.deleted === 1
+  const isUndeletion = was?.deleted === 1 && is?.deleted === 0
   const showDataProperty = !!is?.data
 
   const onClickRevert = useCallback(() => {
@@ -117,9 +117,9 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
   )
   const showIsValue = !isInsert && !isDeletion && isRaw
   const isValue = syntaxHighlightJson(
-    JSON.stringify(showDataProperty ? is.data : is, undefined, 2),
+    JSON.stringify(showDataProperty ? is?.data : is, undefined, 2),
   )
-  const rowId = isInsert ? is.id : is.tableId
+  const rowId = isInsert ? is?.id : is?.tableId
 
   return (
     <>

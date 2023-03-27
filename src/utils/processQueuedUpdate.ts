@@ -14,7 +14,7 @@ const processQueuedUpdate = async ({ queuedUpdate, store }: Props) => {
   const { online, setOnline } = store
   console.log('processQueuedUpdate', queuedUpdate)
 
-  const object = JSON.parse(queuedUpdate.is)
+  const object = queuedUpdate.is?JSON.parse(queuedUpdate.is):{}
   // remove all local fields
   const localFields = Object.keys(object).filter((k) => k.startsWith('_'))
   localFields.forEach((field) => delete object[field])

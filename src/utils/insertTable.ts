@@ -10,6 +10,7 @@ const insertTable = async ({ projectId }: Props) => {
     undefined,
     undefined,
     'tables',
+    undefined,
     JSON.stringify(newTable),
     undefined,
     undefined,

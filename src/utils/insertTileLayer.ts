@@ -33,6 +33,7 @@ const insertTileLayer = async ({ projectId }: Props) => {
     undefined,
     undefined,
     'tile_layers',
+    undefined,
     JSON.stringify(newTileLayer),
     undefined,
     undefined,

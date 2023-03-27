@@ -21,6 +21,7 @@ const insertProjectUser = async ({ projectId, email, role }: Props) => {
     undefined,
     undefined,
     'project_users',
+    undefined,
     JSON.stringify(newProjectUser),
     undefined,
     undefined,

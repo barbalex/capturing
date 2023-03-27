@@ -34,6 +34,7 @@ const insertRow = async ({ tableId }: Props) => {
     undefined,
     undefined,
     'rows',
+    undefined,
     JSON.stringify(newRow),
     undefined,
     undefined,

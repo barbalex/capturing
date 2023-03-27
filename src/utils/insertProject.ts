@@ -20,6 +20,7 @@ const insertProject = async ({ account }: Props) => {
     undefined,
     undefined,
     'projects',
+    undefined,
     JSON.stringify(newProject),
     undefined,
     undefined,

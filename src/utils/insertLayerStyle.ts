@@ -11,6 +11,7 @@ const insertLayerStyle = async ({ tableId, vectorLayerId }: Props) => {
     undefined,
     undefined,
     'layer_styles',
+    undefined,
     JSON.stringify(newLayerStyle),
     undefined,
     undefined,

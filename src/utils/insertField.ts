@@ -10,6 +10,7 @@ const insertField = async ({ tableId }: Props) => {
     undefined,
     undefined,
     'fields',
+    undefined,
     JSON.stringify(newField),
     undefined,
     undefined,

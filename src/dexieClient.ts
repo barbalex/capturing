@@ -1553,7 +1553,7 @@ export class QueuedUpdate implements IQueuedUpdate {
     if (id) this.id = id
     this.time = new Date().toISOString()
     this.table = table
-    if (revert_id) this.revert_id = revert_id
+    if (tableId) this.tableId = tableId
     this.is = is
     this.file = file
     if (was) this.was = was
