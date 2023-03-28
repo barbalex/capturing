@@ -37,8 +37,8 @@ const OuterContainer = styled.div`
 const QueriesContainer = styled.div`
   padding: 0 15px;
   display: grid;
-  grid-template-columns: auto auto auto auto auto auto auto;
-  column-gap: 10px;
+  grid-template-columns: 5em 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  column-gap: 15px;
   /* align-items: center; */
 
   > * {
@@ -74,6 +74,7 @@ const QueuedUpdatesComponent = (): React.FC => {
     ) ?? []
 
   const queuedUpdates = rawQueuedUpdates.filter((q) => tables.includes(q.table))
+  console.log('QueuedUpdatesComponent, queuedUpdates:', queuedUpdates)
 
   const onClickCloseIcon = useCallback(() => {
     if (window.history.state && window.history.state.idx > 0) {
@@ -118,11 +119,13 @@ const QueuedUpdatesComponent = (): React.FC => {
       <OuterContainer>
         <QueriesContainer>
           <Heading>Zeit</Heading>
+          <Heading>Projekt</Heading>
+          <Heading>DB-Tabelle</Heading>
           <Heading>Tabelle</Heading>
           <Heading>ID</Heading>
           <Heading>Operation</Heading>
-          <Heading>vorher</Heading>
-          <Heading>nachher</Heading>
+          <Heading>Wert vorher</Heading>
+          <Heading>Wert nachher</Heading>
           <RevertHeading>widerrufen</RevertHeading>
           {queuedUpdates.map((qu, i) => (
             <QueuedUpdateComponent key={qu.id} qu={qu} index={i} />

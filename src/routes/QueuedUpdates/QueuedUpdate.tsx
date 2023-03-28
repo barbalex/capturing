@@ -4,9 +4,10 @@ import dayjs from 'dayjs'
 import { observer } from 'mobx-react-lite'
 import { FaUndoAlt } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import StoreContext from '../../storeContext'
-import { QueuedUpdate } from '../../dexieClient'
+import { dexie, Project, Table, QueuedUpdate } from '../../dexieClient'
 import syntaxHighlightJson from '../../utils/syntaxHighlightJson'
 
 // to hover and style row, see: https://stackoverflow.com/a/48109479/712005
@@ -47,6 +48,11 @@ const Value = styled.div`
 `
 const JsonValue = styled.pre`
   margin: 0;
+  overflow-x: auto;
+  &:hover,
+  &:focus {
+    width: min-content;
+  }
   .string {
     color: green;
   }
@@ -85,7 +91,7 @@ interface Props {
 const QueuedUpdateComponent = ({ qu, index }: Props) => {
   const store = useContext(StoreContext)
   const { removeQueuedQueryById } = store
-  const { id, time, table, is: isRaw, was: wasRaw } = qu
+  const { id, time, table: tableName, is: isRaw, was: wasRaw } = qu
 
   const is = isRaw ? JSON.parse(isRaw) : {}
   const was = wasRaw ? JSON.parse(wasRaw) : null
@@ -94,8 +100,31 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
   const isUndeletion = was?.deleted === 1 && is?.deleted === 0
   const showDataProperty = !!is?.data
 
+  // TODO: get project and table from is
+  // console.log('QueuedUpdateComponent, is:', is)
+  const data = useLiveQuery(async () => {
+    let project: Project | undefined
+    let table: Table | undefined
+    if (is?.table_id) {
+      // TODO: get table
+      table = await dexie.ttables.get(is.table_id)
+    }
+    if (is?.project_id) {
+      // TODO: get project
+      project = await dexie.projects.get(is.project_id)
+    }
+    if (table?.project_id) {
+      project = await dexie.projects.get(table.project_id)
+    }
+
+    return { project, table }
+  }, [is.table_id, is.project_id])
+
+  const table = data?.table?.label ?? data?.table?.name
+  const project = data?.project?.label ?? data?.project?.name
+
   const onClickRevert = useCallback(() => {
-    if (table && was) {
+    if (tableName && was) {
       // TODO: should client_rev_at and client_rev_by be updated?
       // store.updateModelValues({
       //   table: table,
@@ -104,7 +133,7 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
       // })
     }
     removeQueuedQueryById(id)
-  }, [removeQueuedQueryById, table, was, id])
+  }, [removeQueuedQueryById, tableName, was, id])
 
   const timeValue = dayjs(time).format('YYYY.MM.DD HH:mm:ss')
   const showWasValue =
@@ -119,14 +148,17 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
   const isValue = syntaxHighlightJson(
     JSON.stringify(showDataProperty ? is?.data : is, undefined, 2),
   )
-  const rowId = isInsert ? is?.id : is?.tableId
+  const rowId = isInsert ? is?.id : qu.tableId
+  const bt = index === 0
 
   return (
     <>
-      <Value bt={index === 0}>{timeValue}</Value>
-      <Value bt={index === 0}>{table}</Value>
-      <Value bt={index === 0}>{rowId}</Value>
-      <Value bt={index === 0}>
+      <Value bt={bt}>{timeValue}</Value>
+      <Value bt={bt}>{project}</Value>
+      <Value bt={bt}>{tableName}</Value>
+      <Value bt={bt}>{table}</Value>
+      <Value bt={bt}>{rowId}</Value>
+      <Value bt={bt}>
         {isInsert
           ? 'neuer Datensatz'
           : isDeletion
@@ -135,7 +167,7 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
           ? 'Wiederherstellung'
           : 'Änderung'}
       </Value>
-      <Value bt={index === 0}>
+      <Value bt={bt}>
         {showWasValue ? (
           <JsonValue
             dangerouslySetInnerHTML={{
@@ -146,7 +178,7 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
           ' '
         )}
       </Value>
-      <Value bt={index === 0}>
+      <Value bt={bt}>
         {showIsValue ? (
           <JsonValue
             dangerouslySetInnerHTML={{
@@ -157,7 +189,7 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
           ' '
         )}
       </Value>
-      <Icon bt={index === 0}>
+      <Icon bt={bt}>
         <RevertButton
           title="widerrufen"
           aria-label="widerrufen"

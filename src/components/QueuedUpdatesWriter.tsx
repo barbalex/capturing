@@ -24,8 +24,8 @@ const QueuedUpdatesWriter = () => {
     if (!online) return
     if (!queuedUpdate) return
 
-    // TODO: re-activate (good to test queued updates form)
-    processQueuedUpdate({ queuedUpdate, store })
+    // dactivate to test queued updates form
+    // processQueuedUpdate({ queuedUpdate, store })
 
     // Get this to restart when online status or queuedUpdates change
   }, [queuedUpdates, online, store])
