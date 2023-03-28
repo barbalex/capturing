@@ -144,8 +144,8 @@ const QueuedUpdatesComponent = (): React.FC => {
       </TitleRow>
       {queuedUpdates.length === 0 ? (
         <NoOpsContainer>
-          Alle Ihre Änderungen
-          wurden erfolgreich zum Server übertragen.<br/> Daher gibt es keine ausstehenden Operationen.
+          Alle Ihre Änderungen wurden erfolgreich zum Server übertragen.
+          <br /> Daher gibt es keine ausstehenden Operationen.
         </NoOpsContainer>
       ) : (
         <OuterContainer>
@@ -159,10 +159,9 @@ const QueuedUpdatesComponent = (): React.FC => {
             <Heading>Wert vorher</Heading>
             <Heading>Wert nachher</Heading>
             <RevertHeading>widerrufen</RevertHeading>
-                {queuedUpdates.map((qu) => (
-                  <QueuedUpdateComponent key={qu.id} qu={qu} />
-                ))}
-            )}
+            {queuedUpdates.map((qu) => (
+              <QueuedUpdateComponent key={qu.id} qu={qu} />
+            ))}
           </QueriesContainer>
         </OuterContainer>
       )}
