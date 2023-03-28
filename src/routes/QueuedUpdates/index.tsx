@@ -74,7 +74,6 @@ const QueuedUpdatesComponent = (): React.FC => {
     ) ?? []
 
   const queuedUpdates = rawQueuedUpdates.filter((q) => tables.includes(q.table))
-  console.log('QueuedUpdatesComponent, queuedUpdates:', queuedUpdates)
 
   const onClickCloseIcon = useCallback(() => {
     if (window.history.state && window.history.state.idx > 0) {
