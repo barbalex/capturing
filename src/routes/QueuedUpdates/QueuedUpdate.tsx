@@ -124,8 +124,13 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
   const project = data?.project?.label ?? data?.project?.name
 
   const onClickRevert = useCallback(() => {
-    if (tableName && was) {
+    if (isInsert || isUndeletion) {
+      // TODO: set deleted to 1
+    } else if (isDeletion) {
+      // TODO: set deleted to 0
+    } else if (tableName && was) {
       // TODO: should client_rev_at and client_rev_by be updated?
+      // TODO: set data to was.data
       // store.updateModelValues({
       //   table: table,
       //   id: 'TODO:',
