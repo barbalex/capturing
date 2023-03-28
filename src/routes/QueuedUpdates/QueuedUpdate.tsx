@@ -97,14 +97,14 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
   const onClickRevert = useCallback(() => {
     if (table && was) {
       // TODO: should client_rev_at and client_rev_by be updated?
-      store.updateModelValues({
-        table: table,
-        id: 'TODO:',
-        values: JSON.parse(was),
-      })
+      // store.updateModelValues({
+      //   table: table,
+      //   id: 'TODO:',
+      //   values: JSON.parse(was),
+      // })
     }
     removeQueuedQueryById(id)
-  }, [id, removeQueuedQueryById, store, table, was])
+  }, [removeQueuedQueryById, table, was, id])
 
   const timeValue = dayjs(time).format('YYYY.MM.DD HH:mm:ss')
   const showWasValue =
