@@ -11,7 +11,7 @@ import { dexie, QueuedUpdate, tables } from '../../dexieClient'
 import StoreContext from '../../storeContext'
 import Login from '../../components/Login'
 import constants from '../../utils/constants'
-import { IStoreSnapshotOut } from '../../store'
+import { IStoreSnapshotOut,  } from '../../store'
 import QueuedUpdateComponent from './QueuedUpdate'
 
 const Container = styled.div`

@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from 'react'
+import React, { useContext, useCallback, useMemo } from 'react'
 import styled from '@emotion/styled'
 import dayjs from 'dayjs'
 import { observer } from 'mobx-react-lite'
@@ -90,15 +90,16 @@ interface Props {
 
 const QueuedUpdateComponent = ({ qu, index }: Props) => {
   const store = useContext(StoreContext)
-  const { removeQueuedQueryById } = store
+  const { rebuildTree, session } = store
   const { id, time, table: tableName, is: isRaw, was: wasRaw } = qu
 
-  const is = isRaw ? JSON.parse(isRaw) : {}
+  const is = useMemo(() => (isRaw ? JSON.parse(isRaw) : {}), [isRaw])
   const was = wasRaw ? JSON.parse(wasRaw) : null
   const isInsert = is?.revisions?.length === 1
   const isDeletion = was?.deleted === 0 && is?.deleted === 1
   const isUndeletion = was?.deleted === 1 && is?.deleted === 0
   const showDataProperty = !!is?.data
+  const rowId = isInsert ? is?.id : qu.tableId
 
   // TODO: get project and table from is
   // console.log('QueuedUpdateComponent, is:', is)
@@ -116,6 +117,10 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
     if (table?.project_id) {
       project = await dexie.projects.get(table.project_id)
     }
+    if (!project && is?.account_id) {
+      // this is itself a project
+      project = await dexie.projects.get(is.id)
+    }
 
     return { project, table }
   }, [is.table_id, is.project_id])
@@ -124,21 +129,50 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
   const project = data?.project?.label ?? data?.project?.name
 
   const onClickRevert = useCallback(() => {
-    if (isInsert || isUndeletion) {
-      // TODO: set deleted to 1
-    } else if (isDeletion) {
-      // TODO: set deleted to 0
-    } else if (tableName && was) {
-      // TODO: should client_rev_at and client_rev_by be updated?
-      // TODO: set data to was.data
-      // store.updateModelValues({
-      //   table: table,
-      //   id: 'TODO:',
-      //   values: JSON.parse(was),
-      // })
+    // 1. create value
+    // use is as base
+    const val = {
+      ...is,
+      client_rev_at: new window.Date().toISOString(),
+      client_rev_by: session.user?.email ?? session.user?.id,
     }
-    removeQueuedQueryById(id)
-  }, [removeQueuedQueryById, tableName, was, id])
+    if (isInsert || isUndeletion) {
+      val.deleted = 1
+    } else if (isDeletion) {
+      val.deleted = 0
+    } else if (tableName && was) {
+      // set data to was.data
+      val.data = { ...was.data }
+    }
+    // 2. update in dexie
+    dexie.table(tableName).update(rowId, val)
+    rebuildTree()
+    // 3. update on server
+    const update = new QueuedUpdate(
+      undefined,
+      undefined,
+      tableName,
+      rowId,
+      JSON.stringify(val),
+      undefined,
+      JSON.stringify(is),
+    )
+    dexie.queued_updates.add(update)
+    // 4. remove this queued update
+    dexie.queued_updates.delete(id)
+  }, [
+    is,
+    session.user?.email,
+    session.user?.id,
+    isInsert,
+    isUndeletion,
+    isDeletion,
+    tableName,
+    was,
+    rowId,
+    rebuildTree,
+    id,
+  ])
 
   const timeValue = dayjs(time).format('YYYY.MM.DD HH:mm:ss')
   const showWasValue =
@@ -153,7 +187,6 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
   const isValue = syntaxHighlightJson(
     JSON.stringify(showDataProperty ? is?.data : is, undefined, 2),
   )
-  const rowId = isInsert ? is?.id : qu.tableId
   const bt = index === 0
 
   return (
