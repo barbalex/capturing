@@ -5,7 +5,7 @@ const constants = {
   singleRowHeight: 48,
   getAppUri: () =>
     window?.location?.hostname === 'localhost'
-      ? `http://${window.location.hostname}:3000`
+      ? `http://${window.location.hostname}:5172`
       : 'https://erfassen.app',
   tree: {
     minimalWidth: 331,
