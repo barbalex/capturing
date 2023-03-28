@@ -6,12 +6,6 @@ const DataSynchronisation = () => {
   return (
     <Container>
       <h1>Data Synchronisation</h1>
-
-      <p>
-        Synchronisation will be used in the following sense: The act of making
-        data available locally (= offline).
-      </p>
-
       <h3>1. Goal</h3>
       <ul>
         <li>Every user</li>
