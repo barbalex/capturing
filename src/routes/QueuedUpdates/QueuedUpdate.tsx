@@ -95,10 +95,11 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
 
   const is = useMemo(() => (isRaw ? JSON.parse(isRaw) : {}), [isRaw])
   const was = wasRaw ? JSON.parse(wasRaw) : null
-  const isInsert = is?.revisions?.length === 1
+  const isInsert =
+    is?.revisions?.length === 1 || (tableName === 'projects' && !wasRaw)
   const isDeletion = was?.deleted === 0 && is?.deleted === 1
   const isUndeletion = was?.deleted === 1 && is?.deleted === 0
-  const showDataProperty = !!is?.data
+  const showDataProperty = false //!!is?.data
   const rowId = isInsert ? is?.id : qu.tableId
 
   // TODO: get project and table from is
@@ -125,7 +126,10 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
     return { project, table }
   }, [is.table_id, is.project_id])
 
-  const table = data?.table?.label ?? data?.table?.name
+  let table = data?.table?.label ?? data?.table?.name
+  if (tableName === 'projects') {
+    table = 'Projekte'
+  }
   const project = data?.project?.label ?? data?.project?.name
 
   const onClickRevert = useCallback(() => {
@@ -175,11 +179,11 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
   ])
 
   const timeValue = dayjs(time).format('YYYY.MM.DD HH:mm:ss')
-  const showWasValue =
-    !isInsert &&
-    !isDeletion &&
-    wasRaw &&
-    ((showDataProperty && was.data) || false)
+  const showWasValue = !isInsert && !!wasRaw
+  // !isInsert &&
+  // !isDeletion &&
+  // wasRaw &&
+  // ((showDataProperty && was.data) || false)
   const wasValue = syntaxHighlightJson(
     JSON.stringify(showDataProperty ? was?.data ?? '' : was, undefined, 2),
   )
