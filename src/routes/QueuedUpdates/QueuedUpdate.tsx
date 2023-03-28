@@ -11,41 +11,7 @@ import { dexie, Project, Table, QueuedUpdate } from '../../dexieClient'
 import syntaxHighlightJson from '../../utils/syntaxHighlightJson'
 
 // to hover and style row, see: https://stackoverflow.com/a/48109479/712005
-const Value = styled.div`
-  padding: 5px 0;
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: -1000%;
-    left: -1000%;
-    z-index: 1;
-    ${(props) => props.bt && 'border-top: 1px solid rgba(74,20,140,0.1);'}
-    border-bottom: 1px solid rgba(74,20,140,0.1);
-  }
-  &:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: -1px;
-    width: 1px;
-    z-index: 2;
-  }
-  &:nth-of-type(5n + 5)::after {
-    bottom: -1px;
-    right: 0;
-    left: -1000%;
-    height: 1px;
-    z-index: 3;
-    width: auto;
-    top: auto;
-  }
-  &:hover::before {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-`
+const Value = styled.div``
 const JsonValue = styled.pre`
   margin: 0;
   overflow-x: auto;
@@ -69,9 +35,10 @@ const JsonValue = styled.pre`
     color: red;
   }
 `
-const Icon = styled.div`
-  justify-self: center;
-  padding: 5px 0;
+const Icon = styled.div``
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
 `
 const RevertButton = styled(IconButton)`
   z-index: 4;
@@ -88,7 +55,7 @@ interface Props {
   index: number
 }
 
-const QueuedUpdateComponent = ({ qu, index }: Props) => {
+const QueuedUpdateComponent = ({ qu }: Props) => {
   const store = useContext(StoreContext)
   const { rebuildTree, session } = store
   const { id, time, table: tableName, is: isRaw, was: wasRaw } = qu
@@ -191,16 +158,15 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
   const isValue = syntaxHighlightJson(
     JSON.stringify(showDataProperty ? is?.data : is, undefined, 2),
   )
-  const bt = index === 0
 
   return (
     <>
-      <Value bt={bt}>{timeValue}</Value>
-      <Value bt={bt}>{project}</Value>
-      <Value bt={bt}>{tableName}</Value>
-      <Value bt={bt}>{table}</Value>
-      <Value bt={bt}>{rowId}</Value>
-      <Value bt={bt}>
+      <Value>{timeValue}</Value>
+      <Value>{project}</Value>
+      <Value>{tableName}</Value>
+      <Value>{table}</Value>
+      <Value>{rowId}</Value>
+      <Value>
         {isInsert
           ? 'neuer Datensatz'
           : isDeletion
@@ -209,7 +175,7 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
           ? 'Wiederherstellung'
           : 'Änderung'}
       </Value>
-      <Value bt={bt}>
+      <Value>
         {showWasValue ? (
           <JsonValue
             dangerouslySetInnerHTML={{
@@ -220,7 +186,7 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
           ' '
         )}
       </Value>
-      <Value bt={bt}>
+      <Value>
         {showIsValue ? (
           <JsonValue
             dangerouslySetInnerHTML={{
@@ -231,15 +197,17 @@ const QueuedUpdateComponent = ({ qu, index }: Props) => {
           ' '
         )}
       </Value>
-      <Icon bt={bt}>
-        <RevertButton
-          title="widerrufen"
-          aria-label="widerrufen"
-          onClick={onClickRevert}
-          size="small"
-        >
-          <FaUndoAlt />
-        </RevertButton>
+      <Icon>
+        <ButtonContainer>
+          <RevertButton
+            title="widerrufen"
+            aria-label="widerrufen"
+            onClick={onClickRevert}
+            size="small"
+          >
+            <FaUndoAlt />
+          </RevertButton>
+        </ButtonContainer>
       </Icon>
     </>
   )

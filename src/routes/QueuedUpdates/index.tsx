@@ -11,7 +11,7 @@ import { dexie, QueuedUpdate, tables } from '../../dexieClient'
 import StoreContext from '../../storeContext'
 import Login from '../../components/Login'
 import constants from '../../utils/constants'
-import { IStoreSnapshotOut,  } from '../../store'
+import { IStoreSnapshotOut } from '../../store'
 import QueuedUpdateComponent from './QueuedUpdate'
 
 const Container = styled.div`
@@ -24,12 +24,14 @@ const TitleRow = styled.div`
 `
 const Title = styled.h3`
   padding: 15px 15px 0 15px;
+  margin: 0;
 `
 const NoOpsContainer = styled.div`
-  padding: 0 15px;
+  padding: 30px 15px !important;
+  grid-column: 1 / -1;
 `
 const OuterContainer = styled.div`
-  height: calc(100vh - ${constants.appBarHeight}px - 15px - 23px - 23px);
+  height: calc(100vh - ${constants.appBarHeight}px - 52px);
   width: 100%;
   overflow-x: auto;
   overflow-y: auto;
@@ -37,21 +39,46 @@ const OuterContainer = styled.div`
 const QueriesContainer = styled.div`
   padding: 0 15px;
   display: grid;
-  grid-template-columns: 5em 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  column-gap: 15px;
-  /* align-items: center; */
-
-  > * {
-    position: relative;
+  grid-template-columns: 5em 1fr 1fr 1fr 1fr 1fr 1fr 1fr 5em;
+  grid-template-rows: 1fr;
+  column-gap: 16px;
+  > div:nth-of-type(9n + 1) {
+    margin: 0 -8px 0 0;
+    padding: 5px 8px 5px 0;
   }
-  overflow: hidden;
+  > div:nth-of-type(9n + 2),
+  > div:nth-of-type(9n + 3),
+  > div:nth-of-type(9n + 4),
+  > div:nth-of-type(9n + 5),
+  > div:nth-of-type(9n + 6),
+  > div:nth-of-type(9n + 7),
+  > div:nth-of-type(9n + 8) {
+    margin: 0 -8px 0 -8px;
+    padding: 5px 8px 5px 8px;
+  }
+  > div:nth-of-type(9n + 9) {
+    margin: 0 0 0 -8px;
+    padding: 5px 0 5px 8px;
+  }
+  > div {
+    border-bottom: 1px solid rgba(74, 20, 140, 0.15);
+  }
 `
 const Heading = styled.div`
   font-weight: 700;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  border-bottom: 1px solid rgba(74, 20, 140, 0.1);
+  z-index: 5;
 `
 const RevertHeading = styled.div`
   font-weight: 700;
-  justify-self: center;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  border-bottom: 1px solid rgba(74, 20, 140, 0.1);
+  z-index: 5;
 `
 const CloseIcon = styled(IconButton)`
   margin-right: 5px !important;
@@ -84,7 +111,7 @@ const QueuedUpdatesComponent = (): React.FC => {
   }, [navigate])
   const openDocs = useCallback(() => {
     // TODO: better docs for this
-    const url = `${constants?.getAppUri()}/docs/data-versioning`
+    const url = `${constants?.getAppUri()}/docs/data-synchronization`
     if (window.matchMedia('(display-mode: standalone)').matches) {
       return window.open(url, '_blank', 'toolbar=no')
     }
@@ -115,22 +142,30 @@ const QueuedUpdatesComponent = (): React.FC => {
           </CloseIcon>
         </div>
       </TitleRow>
-      <OuterContainer>
-        <QueriesContainer>
-          <Heading>Zeit</Heading>
-          <Heading>Projekt</Heading>
-          <Heading>DB-Tabelle</Heading>
-          <Heading>Tabelle</Heading>
-          <Heading>ID</Heading>
-          <Heading>Operation</Heading>
-          <Heading>Wert vorher</Heading>
-          <Heading>Wert nachher</Heading>
-          <RevertHeading>widerrufen</RevertHeading>
-          {queuedUpdates.map((qu, i) => (
-            <QueuedUpdateComponent key={qu.id} qu={qu} index={i} />
-          ))}
-        </QueriesContainer>
-      </OuterContainer>
+      {queuedUpdates.length === 0 ? (
+        <NoOpsContainer>
+          Alle Ihre Änderungen
+          wurden erfolgreich zum Server übertragen.<br/> Daher gibt es keine ausstehenden Operationen.
+        </NoOpsContainer>
+      ) : (
+        <OuterContainer>
+          <QueriesContainer>
+            <Heading>Zeit</Heading>
+            <Heading>Projekt</Heading>
+            <Heading>Interne Tabelle</Heading>
+            <Heading>Tabelle</Heading>
+            <Heading>ID</Heading>
+            <Heading>Operation</Heading>
+            <Heading>Wert vorher</Heading>
+            <Heading>Wert nachher</Heading>
+            <RevertHeading>widerrufen</RevertHeading>
+                {queuedUpdates.map((qu) => (
+                  <QueuedUpdateComponent key={qu.id} qu={qu} />
+                ))}
+            )}
+          </QueriesContainer>
+        </OuterContainer>
+      )}
     </Container>
   )
 }
