@@ -75,8 +75,6 @@ const QueuedUpdatesComponent = (): React.FC => {
 
   const queuedUpdates = rawQueuedUpdates.filter((q) => tables.includes(q.table))
 
-  console.log('QueuedUpdates', { queuedUpdates, tables, rawQueuedUpdates })
-
   const onClickCloseIcon = useCallback(() => {
     if (window.history.state && window.history.state.idx > 0) {
       navigate(-1)
@@ -92,8 +90,6 @@ const QueuedUpdatesComponent = (): React.FC => {
     }
     window.open(url)
   }, [])
-
-  // console.log('Projects, session:', { session, sessionCounter })
 
   if (!session || sessionCounter === 0) return <Login />
 
@@ -124,7 +120,7 @@ const QueuedUpdatesComponent = (): React.FC => {
           <Heading>Zeit</Heading>
           <Heading>Tabelle</Heading>
           <Heading>ID</Heading>
-          <Heading>Feld / Operation</Heading>
+          <Heading>Operation</Heading>
           <Heading>vorher</Heading>
           <Heading>nachher</Heading>
           <RevertHeading>widerrufen</RevertHeading>
