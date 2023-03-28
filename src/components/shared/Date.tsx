@@ -121,7 +121,6 @@ const DateField = ({
 
   const onChange = useCallback(
     (date) => {
-      console.log('datepicker changed')
       const newValue =
         date === null
           ? null
