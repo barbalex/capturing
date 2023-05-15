@@ -73,7 +73,7 @@ const FieldsComponent = () => {
 
   const filteredCount = data?.filteredCount
   const totalCount = data?.totalCount
-  const userMayEdit = data.userMayEdit
+  const userMayEdit = data?.userMayEdit
 
   const add = useCallback(async () => {
     const newId = await insertField({ tableId })
