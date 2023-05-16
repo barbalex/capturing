@@ -26,6 +26,7 @@ Table "projects" {
   "account_id" uuid [unique, default: null]
   "name" text [unique, default: null]
   "label" text [default: null]
+  "use_labels" integer [default: null]
   "crs" integer [default: 4326]
   "client_rev_at" timestamp [default: `now()`]
   "client_rev_by" text [default: null]
@@ -39,6 +40,9 @@ Table "tables" {
   "rel_type" text
   "name" text [unique, default: null]
   "label" text [default: null]
+  "singular_label" text [default: null]
+  "row_label" jsonb [default: null]
+  "sort" smallint [default: null]
   "client_rev_at" timestamp [default: `now()`]
   "client_rev_by" text [default: null]
   "server_rev_at" timestamp [default: `now()`]
@@ -80,15 +84,12 @@ Table "rows" {
   "conflicts" text [default: null]
 }
 
-Table "files" {
+Table "files_meta" {
   "id" uuid [pk, default: `gen_random_uuid()`]
   "row_id" uuid [default: null]
   "field_id" uuid [default: null]
   "name" text [default: null]
   "type" text [default: null]
-  "description" text [default: null]
-  "file" blob [default: null]
-  "hash" text [default: 1]
   "client_rev_at" timestamp [default: `now()`]
   "client_rev_by" text [default: null]
   "server_rev_at" timestamp [default: `now()`]
@@ -184,9 +185,9 @@ Ref:"tables"."id" < "fields"."options_table" [update: cascade, delete: no action
 
 Ref:"tables"."id" < "rows"."table_id" [update: cascade, delete: no action]
 
-Ref:"rows"."id" < "files"."row_id" [update: cascade, delete: no action]
+Ref:"rows"."id" < "files_meta"."row_id" [update: cascade, delete: no action]
 
-Ref:"fields"."id" < "files"."field_id" [update: cascade, delete: no action]
+Ref:"fields"."id" < "files_meta"."field_id" [update: cascade, delete: no action]
 
 Ref:"projects"."id" < "project_users"."project_id" [update: cascade, delete: no action]
 
