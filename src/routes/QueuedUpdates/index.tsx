@@ -1,7 +1,8 @@
-import { useEffect, useContext, useCallback } from 'react'
+import { useEffect, useContext, useCallback, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { FaTimes } from 'react-icons/fa'
 import IconButton from '@mui/material/IconButton'
+import Button from '@mui/material/Button'
 import { IoMdInformationCircleOutline } from 'react-icons/io'
 import styled from '@emotion/styled'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -118,6 +119,9 @@ const QueuedUpdatesComponent = (): React.FC => {
     window.open(url)
   }, [])
 
+  const [pureData, setPureData] = useState(true)
+  const onClickPureData = useCallback(() => setPureData(!pureData), [pureData])
+
   if (!session || sessionCounter === 0) return <Login />
 
   return (
@@ -133,6 +137,18 @@ const QueuedUpdatesComponent = (): React.FC => {
           >
             <IoMdInformationCircleOutline />
           </IconButton>
+          <Button
+            title={
+              pureData
+                ? 'Metadaten für Versionierung und Dokumentation einblenden'
+                : 'Metadaten für Versionierung und Dokumentation ausblenden'
+            }
+            onClick={onClickPureData}
+          >
+            {pureData
+              ? 'Vollständige Daten anzeigen'
+              : 'Nur die Daten selbst anzeigen'}
+          </Button>
           <CloseIcon
             title="schliessen"
             aria-label="schliessen"
@@ -160,7 +176,7 @@ const QueuedUpdatesComponent = (): React.FC => {
             <Heading>Wert nachher</Heading>
             <RevertHeading>widerrufen</RevertHeading>
             {queuedUpdates.map((qu) => (
-              <QueuedUpdateComponent key={qu.id} qu={qu} />
+              <QueuedUpdateComponent key={qu.id} qu={qu} pureData={pureData} />
             ))}
           </QueriesContainer>
         </OuterContainer>

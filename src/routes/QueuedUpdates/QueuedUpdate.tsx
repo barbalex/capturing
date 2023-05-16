@@ -9,6 +9,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import StoreContext from '../../storeContext'
 import { dexie, Project, Table, QueuedUpdate } from '../../dexieClient'
 import syntaxHighlightJson from '../../utils/syntaxHighlightJson'
+import extractPureData from '../../utils/extractPureData'
 
 // to hover and style row, see: https://stackoverflow.com/a/48109479/712005
 const Value = styled.div``
@@ -52,10 +53,10 @@ const valFromValue = (value) => {
 
 interface Props {
   qu: QueuedUpdate
-  index: number
+  pureData: boolean
 }
 
-const QueuedUpdateComponent = ({ qu }: Props) => {
+const QueuedUpdateComponent = ({ qu, pureData }: Props) => {
   const store = useContext(StoreContext)
   const { rebuildTree, session } = store
   const { id, time, table: tableName, is: isRaw, was: wasRaw } = qu
@@ -66,7 +67,6 @@ const QueuedUpdateComponent = ({ qu }: Props) => {
     is?.revisions?.length === 1 || (tableName === 'projects' && !wasRaw)
   const isDeletion = was?.deleted === 0 && is?.deleted === 1
   const isUndeletion = was?.deleted === 1 && is?.deleted === 0
-  const showDataProperty = false //!!is?.data
   const rowId = isInsert ? is?.id : qu.tableId
 
   // TODO: get project and table from is
@@ -152,11 +152,11 @@ const QueuedUpdateComponent = ({ qu }: Props) => {
   // wasRaw &&
   // ((showDataProperty && was.data) || false)
   const wasValue = syntaxHighlightJson(
-    JSON.stringify(showDataProperty ? was?.data ?? '' : was, undefined, 2),
+    JSON.stringify(pureData ? extractPureData(was) ?? '' : was, undefined, 2),
   )
   const showIsValue = !isInsert && !isDeletion && isRaw
   const isValue = syntaxHighlightJson(
-    JSON.stringify(showDataProperty ? is?.data : is, undefined, 2),
+    JSON.stringify(pureData ? extractPureData(is) : is, undefined, 2),
   )
 
   return (
