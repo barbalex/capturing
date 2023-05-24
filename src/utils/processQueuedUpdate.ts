@@ -14,7 +14,7 @@ const processQueuedUpdate = async ({ queuedUpdate, store }: Props) => {
   const { online, setOnline } = store
   console.log('processQueuedUpdate', queuedUpdate)
 
-  const object = queuedUpdate.is?JSON.parse(queuedUpdate.is):{}
+  const object = queuedUpdate.is ? JSON.parse(queuedUpdate.is) : {}
   // remove all local fields
   const localFields = Object.keys(object).filter((k) => k.startsWith('_'))
   localFields.forEach((field) => delete object[field])
@@ -36,10 +36,11 @@ const processQueuedUpdate = async ({ queuedUpdate, store }: Props) => {
     if (error) {
       // 3. deal with errors
       // TODO: error when updating: "new row violates row-level security policy (USING expression) for table \"projects\""
-      console.log(
-        'processQueuedUpdate, revision table, error inserting:',
+      console.log('processQueuedUpdate, revision table, error inserting:', {
         error,
-      )
+        data: JSON.parse(queuedUpdate.is),
+        session: store.session,
+      })
       // TODO: if error due to offline, set online to false (error.message.includes('Failed to fetch')?). Return
       // TODO: if error due to auth, renew auth (error.message.includes('JWT')?) and return
       // TODO: if error due to exact same change (same rev): ignore error. Go on to remove update
