@@ -114,7 +114,7 @@ const MapComponent = () => {
           {!!rowId && <DrawControl />}
           <TableLayers />
           <VectorLayers key={`${vectorLayerSorter}/vectorLayers`} />
-          <TileLayers key={`${tileLayerSorter}/tileLayers`} />{' '}
+          <TileLayers key={`${tileLayerSorter}/tileLayers`} />
           <Control position="topright" visible={true}>
             <OwnControls />
           </Control>
