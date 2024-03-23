@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import { BsArrowsMove } from 'react-icons/bs'
 
 import { dexie, Field, ITable } from '../../../../../dexieClient'
-import BetweenCharactersElement from '../BetweenCharacters'
+import BetweenCharactersElement from './BetweenCharacters'
 
 const TargetContainer = styled.div`
   display: flex;

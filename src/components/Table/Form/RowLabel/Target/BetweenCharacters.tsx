@@ -2,8 +2,8 @@ import { useCallback } from 'react'
 import TextField from '@mui/material/TextField'
 import styled from '@emotion/styled'
 
-import { dexie, ITable } from '../../../../dexieClient'
-import { TargetElement } from './Target/TargetElements'
+import { dexie, ITable } from '../../../../../dexieClient'
+import { TargetElement } from './TargetElements'
 
 const Container = styled.div`
   position: relative;
